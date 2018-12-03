@@ -338,9 +338,16 @@
 				.then(() => this.toggleOverlay({source: 'collections', display: false}))
 		},
 		watch: {
-			'$route' () {
-				this.categoryName && this.setupContentForCategory()
-			}
+			categoryName(newCategoryName, oldCategoryName) {
+				if (oldCategoryName !== newCategoryName) {
+					this.setupContentForCategory()
+				}
+			},
+			rootCategoryName(newRootCategoryName, oldRootCategoryName) {
+				if (oldRootCategoryName !== newRootCategoryName) {
+					this.setupContentForCategory()
+				}
+			},
 		},
 	}
 </script>

@@ -108,8 +108,8 @@
 			resetAndReloadProgress() {
 				return Promise.all([this.deleteProgress(), this.setupCourse()])
 			},
-			async resetProgress() {
-				await this.confirmAndExecute(
+			resetProgress() {
+				this.confirmAndExecute(
 					this.$t('user.progressReset.progressHeader'),
 					this.$t('user.progressReset.progressConfirmation'),
 					() => {
@@ -122,8 +122,8 @@
 					}
 				)
 			},
-			async resetQuestions() {
-				await this.confirmAndExecute(
+			resetQuestions() {
+				this.confirmAndExecute(
 					this.$t('user.progressReset.questionsHeader'),
 					this.$t('user.progressReset.questionsConfirmation'),
 					() => {
@@ -136,8 +136,8 @@
 					}
 				)
 			},
-			async resetCollections() {
-				await this.confirmAndExecute(
+			resetCollections() {
+				this.confirmAndExecute(
 					this.$t('user.progressReset.collectionsHeader'),
 					this.$t('user.progressReset.collectionsConfirmation'),
 					() => {

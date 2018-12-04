@@ -2,22 +2,13 @@
 	<div>
         <router-link class="button is-primary margin bottom" :to="{'name': 'users-add'}">Dodaj Użytkownika</router-link>
 		<users-list :users="users" v-show="!isLoading">
-			<div slot="search">
-				<wnl-users-search @search="onSearch"/>
-				<template v-if="searchPhrase">
-					<span>Aktualne wyszukiwanie:</span>
-					<span class="tag is-success">
-						{{ searchPhrase }}
-						<button class="delete is-small" @click="clearSearch"></button>
-					</span>
-				</template>
-			</div>
+			<wnl-search-input @search="onSearch" :availableFields="searchAvailableFields" slot="search" />
 			<wnl-pagination v-if="paginationMeta.last_page > 1"
 				:currentPage="page"
 				:lastPage="paginationMeta.last_page"
 				@changePage="onPageChange"
 				slot="pagination"
-				class="annotations__pagination"
+				class="users__pagination"
 			/>
 		</users-list>
 		<wnl-text-loader v-if="isLoading"></wnl-text-loader>
@@ -27,7 +18,7 @@
 <style lang="sass">
 	@import 'resources/assets/sass/variables'
 
-	.annotations__pagination .pagination-list
+	.users__pagination .pagination-list
 		justify-content: center
 		margin-top: $margin-medium
 </style>
@@ -38,10 +29,10 @@
 	import {getApiUrl} from 'js/utils/env'
 	import UsersList from "./UsersList";
 	import WnlPagination from "js/components/global/Pagination";
-	import WnlUsersSearch from "./Search";
+	import WnlSearchInput from 'js/components/global/SearchInput';
 
 	export default {
-		components: {UsersList, WnlUsersSearch, WnlPagination},
+		components: {UsersList, WnlSearchInput, WnlPagination},
 		data() {
 			return {
 				users: [],
@@ -51,14 +42,20 @@
 				perPage: 50,
 				page: 1,
 				includes: 'roles',
-				paginationMeta: {}
+				paginationMeta: {},
+				searchAvailableFields: [
+					{value: 'id', title: 'ID'},
+					{value: 'email', title: 'Email'},
+					{value: 'full_name', title: 'Imię i nazwisko'},
+				]
 			}
 		},
 		methods: {
 			...mapActions(['addAutoDismissableAlert']),
 			async fetchUsers() {
 				try {
-					const {data: {data, ...paginationMeta}} = await axios.post(getApiUrl('users/.filter'), this.getRequestParams())
+					const response = await axios.post(getApiUrl('users/.filter'), this.getRequestParams())
+					const {data: {data, ...paginationMeta}} = response;
 
 					this.paginationMeta = paginationMeta
 					if (paginationMeta.total === 0) {
@@ -86,12 +83,6 @@
 				this.searchPhrase = phrase
 				this.searchFields = fields
 
-				await this.fetchUsers()
-			},
-			async clearSearch() {
-				this.searchPhrase = ''
-				this.searchFields = []
-				this.page = 1
 				await this.fetchUsers()
 			},
 			async onPageChange(page) {

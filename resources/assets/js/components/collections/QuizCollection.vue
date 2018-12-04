@@ -1,16 +1,14 @@
 <template>
 	<div class="collections-quiz">
 		<p class="title is-4">Zapisane pytania kontrolne ({{howManyQuestions}})</p>
-		<div v-if="isLoaded || howManyQuestions === 0">
-			<div class="pagination-container">
-				<wnl-pagination v-if="lastPage && lastPage > 1"
-					:currentPage="currentPage"
-					:lastPage="lastPage"
-					@changePage="changePage"
-				/>
-			</div>
+		<div v-show="isLoaded">
+			<wnl-pagination v-if="lastPage && lastPage > 1"
+							:currentPage="currentPage"
+							:lastPage="lastPage"
+							@changePage="changePage"
+			/>
 			<wnl-quiz-widget
-				v-if="howManyQuestions > 0"
+				v-if="isLoaded && howManyQuestions > 0"
 				:questions="getQuestionsWithAnswers"
 				:getReaction="getReaction"
 				@changeQuestion="performChangeQuestion"
@@ -22,7 +20,7 @@
 				W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań kontrolnych. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> przy wybranym pytaniu!
 			</div>
 		</div>
-		<wnl-text-loader v-else></wnl-text-loader>
+		<wnl-text-loader v-if="!isLoaded"></wnl-text-loader>
 	</div>
 </template>
 
@@ -36,6 +34,7 @@
 <style lang="sass">
 	.collections-quiz .pagination-list
 		justify-content: center
+		margin-bottom: 10px
 </style>
 
 <script>

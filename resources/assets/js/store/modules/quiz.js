@@ -447,6 +447,7 @@ const actions = {
 
 	resetState({state, commit}) {
 		commit(types.QUIZ_RESET_PROGRESS)
+		commit(types.QUIZ_SET_PAGINATION, {page: 1, last_page: 1})
 	},
 
 	destroyQuiz({commit}){

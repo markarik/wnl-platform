@@ -8,7 +8,7 @@
 							@changePage="changePage"
 			/>
 			<wnl-quiz-widget
-				v-if="howManyQuestions > 0"
+				v-if="isLoaded && howManyQuestions > 0"
 				:questions="getQuestionsWithAnswers"
 				:getReaction="getReaction"
 				@changeQuestion="performChangeQuestion"

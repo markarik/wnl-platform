@@ -1,5 +1,19 @@
 {
   "related_slides": {
     "value": "related_slides"
+  },
+  "quiz_question": {
+    "value": "quiz_question",
+    "actions": {
+      "select_answer": {
+        "value": "select_answer"
+      },
+      "open": {
+        "value": "open"
+      },
+      "check_answer": {
+        "value": "check_answer"
+      }
+    }
   }
 }

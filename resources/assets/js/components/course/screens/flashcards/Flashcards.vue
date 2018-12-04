@@ -52,6 +52,7 @@
 						:flashcard="flashcard"
 						:index="index + 1"
 						:context="{type: context, id: screenData.id}"
+						@userEvent="trackUserEvent"
 				/>
 			</ol>
 		</div>
@@ -179,8 +180,11 @@
 	import * as mutationsTypes from "js/store/mutations-types";
 	import WnlFlashcardItem from 'js/components/course/screens/flashcards/FlashcardItem';
 	import {ANSWERS_MAP} from 'js/consts/flashcard';
+	import features from 'js/consts/events_map/features.json';
+	import emits_events from 'js/mixins/emits-events'
 
 	export default {
+		mixins: [emits_events],
 		props: {
 			screenData: {
 				type: Object,
@@ -235,6 +239,12 @@
 					answer: 'unsolved'
 				}))
 			},
+			trackUserEvent(payload) {
+				this.emitUserEvent({
+					feature: features.flashcards.value,
+					...payload
+				})
+			}
 		},
 		async mounted() {
 			const resources = get(this.screenData, 'meta.resources', []);
@@ -249,6 +259,14 @@
 			}))
 
 			this.applicableSetsIds = resources.map(({id}) => id);
+
+			resources.forEach(({id}) => {
+				this.trackUserEvent({
+					feature_component: features.flashcards.feature_components.set.value,
+					action: features.flashcards.feature_components.set.actions.open.value,
+					target: id
+				})
+			})
 		}
 	}
 </script>

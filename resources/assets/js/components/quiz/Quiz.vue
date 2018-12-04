@@ -32,6 +32,7 @@
 				@selectAnswer="onAnswerSelect"
 				@resetState="resetState"
 				@checkQuiz="onCheckQuiz"
+				@userEvent="onUserEvent"
 			/>
 			<wnl-text-loader class="margin vertical" v-else></wnl-text-loader>
 		</div>
@@ -66,7 +67,8 @@
 		data() {
 			return {
 				emptyQuizSet: false,
-				feature: features.quiz_set
+				feature: features.quiz_set,
+				quizSetId: 0
 			}
 		},
 		props: ['screenData', 'readOnly'],
@@ -116,12 +118,12 @@
 					this.setupQuestions(meta.resources[0])
 				}
 
-				const quizSetId = meta.resources[0].id
+				this.quizSetId = meta.resources[0].id
 
 				this.emitUserEvent({
 					feature: this.feature.value,
 					action: this.feature.actions.open.value,
-					target: quizSetId
+					target: this.quizSetId
 				})
 			},
 			onUserEvent(payload) {
@@ -136,6 +138,12 @@
 				}
 			},
 			onCheckQuiz(force = false) {
+				this.emitUserEvent({
+					feature: this.feature.value,
+					action: this.feature.actions.check_answers.value,
+					target: this.quizSetId
+				})
+
 				this.checkQuiz(force).then(() => {
 					if (this.isComplete) {
 						if (!force) {

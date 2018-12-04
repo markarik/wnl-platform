@@ -367,6 +367,7 @@
 			// TODO: Pass class name as props
 			this.scrollableContainer = document.getElementsByClassName('scrollable-main-container')[0]
 			this.scrollableContainer.addEventListener('scroll', this.onScroll)
+			this.$emit('testStart')
 		},
 		beforeDestroy() {
 			this.scrollableContainer.removeEventListener('scroll', this.onScroll)

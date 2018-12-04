@@ -46,7 +46,7 @@ export const reaction = {
 
 				if (error.response.status === 404) {
 					this.addAutoDismissableAlert({
-						type: 'error',
+						type: 'warning',
 						text: this.$t('ui.error.notFound'),
 					});
 				} else {

@@ -17,6 +17,9 @@ class User extends Authenticatable
 
 	const SUBSCRIPTION_DATES_CACHE_KEY = '%s-%s-subscription-dates';
 	const CACHE_VER = '2';
+	const SUBSCRIPTION_STATUS_INACTIVE = 'inactive';
+	const SUBSCRIPTION_STATUS_AWAITING = 'awaiting';
+	const SUBSCRIPTION_STATUS_ACTIVE = 'active';
 
 	protected $casts = [
 		'invoice'            => 'boolean',
@@ -250,16 +253,18 @@ class User extends Authenticatable
 
 	protected function getSubscriptionStatus($dates)
 	{
+		if ($this->isAdmin() || $this->isModerator()) return self::SUBSCRIPTION_STATUS_ACTIVE;
+
 		list ($min, $max) = $dates;
 
 		if (!$min || !$max) {
-			return 'inactive';
+			return self::SUBSCRIPTION_STATUS_INACTIVE;
 		}
 
-		if ($this->isAdmin() || $this->isModerator() || ($min->isPast() && $max->isFuture())) return 'active';
-		if ($min->isFuture() && $max->isFuture()) return 'awaiting';
+		if ($min->isPast() && $max->isFuture()) return self::SUBSCRIPTION_STATUS_ACTIVE;
+		if ($min->isFuture() && $max->isFuture()) return self::SUBSCRIPTION_STATUS_AWAITING;
 
-		return 'inactive';
+		return self::SUBSCRIPTION_STATUS_INACTIVE;
 	}
 
 	protected function getSubscriptionDates()

@@ -41,13 +41,17 @@ services:
     volumes:
       - ${LOCAL_CODE_PATH}:/code
     command: /code/bethink/wnl-platform/artisan queue:work --queue=default --tries=3 --daemon
+    depends_on:
+      - redis
 
   laravel-queue-worker:
-      container_name: laravel-queue-worker
-      image: bethink/php:7.2.7-fpm-alpine3.7
-      volumes:
-        - ${LOCAL_CODE_PATH}:/code
-      command: /code/bethink/wnl-platform/artisan queue:work --queue=notifications --tries=3 --daemon
+    container_name: laravel-queue-worker
+    image: bethink/php:7.2.7-fpm-alpine3.7
+    volumes:
+      - ${LOCAL_CODE_PATH}:/code
+    command: /code/bethink/wnl-platform/artisan queue:work --queue=notifications --tries=3 --daemon
+    depends_on:
+      - redis
 
   composer:
     container_name: composer
@@ -83,6 +87,9 @@ services:
     command: node /code/bethink/wnl-chat/server.js
     ports:
       - "9663:9663"
+    depends_on:
+      - rabbit
+      - redis
 
   sad:
       container_name: sad

@@ -143,7 +143,7 @@
 					const markActivity = () => this.isUserActive = true;
 					['mousemove', 'keydown', 'click', 'touchstart'].forEach(
 						eventName => window.addEventListener(eventName, markActivity)
-                    );
+					);
 
 					setInterval(() => {
 						if (!this.isUserActive) {

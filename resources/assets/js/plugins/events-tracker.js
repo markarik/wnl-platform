@@ -89,7 +89,10 @@ const EventsTracker = {
 
 		Vue.prototype.$trackUserActivity = async () => {
 			eventsQueue.push(async () => {
-				socket.emit(EVENTS.USER_ACTIVITY_EVENT, await getSharedEventContext())
+				socket.emit(EVENTS.USER_ACTIVITY_EVENT, {
+					...await getSharedEventContext(),
+					status: true
+				})
 			})
 		};
 	}

@@ -36,29 +36,34 @@ class UserNotificationApiController extends ApiController
 		return $this->respondOk($data);
 	}
 
-	public function query(Request $request)
-	{
+	public function queryForUser(Request $request) {
 		$user = User::fetch($request->route('id'));
 
 		if (!$user) {
 			return $this->respondNotFound();
 		}
 
-		$notifications = $user->notifications();
-		$notifications = $this->applyFilters($notifications, $request)->get();
+		$notificationsQuery = $user->notifications();
 
-		if (!$notifications) {
-			return $this->respondNotFound();
+		$notificationsQuery->where('channel', $request->get('channel'));
+
+		if ($request->has('unread')) {
+			$operator = $request->get('unread') ? '=' : '<>';
+			$notificationsQuery->where('read_at', $operator, null);
 		}
 
-		if (!$user->can('viewMultiple', Notification::class)) {
-			return $this->respondForbidden();
+		if ($request->has('older_than')) {
+			$olderThan = Carbon::createFromTimestamp($request->get('older_than'));
+			$notificationsQuery->where('created_at', '<', $olderThan);
 		}
 
-		$resource = new Collection($notifications, new NotificationTransformer, 'user_notifications');
-		$data = $this->fractal->createData($resource)->toArray();
+		if ($request->has('limit')) {
+			$notificationsQuery->limit($request->get('limit'));
+		}
 
-		return $this->respondOk($data);
+		$notifications = $notificationsQuery->orderBy('created_at', 'desc')->get();
+
+		return $this->transformAndRespond($notifications);
 	}
 
 	public function patch(Request $request)

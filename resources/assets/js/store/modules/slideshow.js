@@ -8,16 +8,10 @@ import {reactionsGetters, reactionsActions, reactionsMutations} from 'js/store/m
 
 function _fetchReactables(presentables) {
 	let slideIds = presentables.map(presentable => presentable.slide_id)
-	let data     = {
-		query: {
-			where: [
-				['reactable_type', 'App\\Models\\Slide']
-			],
-			whereInMulti: [['reactable_id', slideIds], ['reaction_id', [4,5]]],
-		},
-	}
 
-	return axios.post(getApiUrl('reactables/.search'), data)
+	return axios.post(getApiUrl('reactables/current/savedSlides'), {
+		slideIds
+	})
 		.then(response => {
 			let bookmarked = {}
 			let watched = {}

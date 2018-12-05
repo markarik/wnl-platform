@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Models\User;
 use Auth;
 use App\Models\Reactable;
 use Illuminate\Http\Request;
@@ -13,13 +14,18 @@ class ReactablesApiController extends ApiController
 		$this->resourceName = config('papi.resources.reactables');
 	}
 
-	public function query(Request $request)
-	{
-		$user = Auth::user();
+	public function getSavedSlidesForUser(Request $request, $userId) {
+		$user = User::fetch($userId);
 
-		$reactablesQuery = Reactable::where('user_id', $user->id);
-		$reactablesQuery = $this->applyFilters($reactablesQuery, $request);
-		$reactables = $reactablesQuery->get();
+		if (Auth::user()->id !== $user->id) {
+			return $this->respondForbidden();
+		}
+
+		$reactables = Reactable::where('reactable_type', 'App\\Models\\Slide')
+			->where('user_id', $user->id)
+			->whereIn('reactable_id', $request->get('slideIds'))
+			->whereIn('reaction_id', [4,5])
+			->get();
 
 		return $this->transformAndRespond($reactables);
 	}

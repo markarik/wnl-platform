@@ -285,6 +285,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Reactables
 	Route::post("{$r['reactables']}/.search", 'ReactablesApiController@query');
+	Route::post("{$r['reactables']}/{userId}/savedSlides", 'ReactablesApiController@getSavedSlidesForUser');
 
 	// Public image upload
 	Route::post("upload", 'UploadApiController@post');

@@ -19,6 +19,7 @@ use Monolog\Handler\RavenHandler;
 use Monolog\Logger;
 use Validator;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Routing\UrlGenerator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
+		$this->forceHttpsLinks();
 		$this->registerModelObservers();
 		$this->registerSentryLogger();
 		$this->registerCustomValidators();
@@ -125,5 +127,12 @@ class AppServiceProvider extends ServiceProvider
 				'job' => $event->job->resolveName(),
 			]);
 		});
+	}
+
+	private function forceHttpsLinks() {
+		$url = app(UrlGenerator::class);
+		if (env('APP_ENV') !== 'dev') {
+			$url->forceScheme('https');
+		}
 	}
 }

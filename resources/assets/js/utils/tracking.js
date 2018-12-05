@@ -1,9 +1,12 @@
-import {isProduction} from './env'
-
-export function gaEvent(category, action) {
-
-	if (isProduction && typeof ga === 'function') {
-		ga('send', 'event', category, action);
+export function gaEvent(category, action, label) {
+	console.log('ga', category, action, label)
+	if (typeof ga === 'function') {
+		ga('send', 'event', category, action, label);
 	}
+}
 
+export function gaPageView() {
+	if (typeof ga === 'function') {
+		ga('send', 'pageview');
+	}
 }

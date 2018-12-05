@@ -54,37 +54,6 @@ class TasksTest extends ApiTestCase
 	}
 
 	/** @test */
-	public function query_tasks_paginated()
-	{
-		$limit = 10;
-		$user = factory(User::class)->create();
-		$user->roles()->attach(Role::byName('moderator'));
-		$tasks = factory(Task::class, 10)->create();
-		$data = [
-			'query' => [
-				'where' => [
-					['status', 'open'],
-				],
-			],
-			'order' => [
-				'created_at' => 'desc',
-			],
-			'limit' => $limit,
-		];
-
-		$response = $this
-			->actingAs($user)
-			->json('POST', $this->url('/tasks/.query'), $data);
-
-		$response
-			->assertStatus(200)
-			->assertJson([
-				'data'     => [],
-				'per_page' => $limit,
-			]);
-	}
-
-	/** @test */
 	public function get_tasks_unauthorized()
 	{
 		$user = factory(User::class)->create();

@@ -91,7 +91,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Slides
 		Route::get("{$r['slides']}/.search", 'SlidesApiController@search');
 		Route::post("{$r['slides']}/.search", 'SlidesApiController@search');
-		Route::post("{$r['slides']}/.query", 'SlidesApiController@query');
 		Route::get('slides/.updateCharts/{slideId}', 'SlidesApiController@updateCharts');
 		Route::get("{$r['slides']}/{id}", 'SlidesApiController@get');
 		Route::put("{$r['slides']}/{id}", 'SlidesApiController@put');
@@ -165,8 +164,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['slideshow-builder']}/{slideshowId}", 'SlideshowBuilderApiController@get');
 		Route::get("{$r['slideshow-builder']}", 'SlideshowBuilderApiController@getEmpty');
 
-		// Route preserved for backward compatibility. To be removed in next release.
-		Route::post("{$r['slideshow-builder']}/.query", 'SlideshowBuilderApiController@query');
 
 		// Quiz Stats
 		Route::get("{$r['quiz-sets']}/{id}/stats", 'QuizStatsApiController@get');
@@ -208,7 +205,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
 
 	Route::get("{$r['profiles']}/.search", "UserProfilesApiController@search");
-	Route::post("{$r['profiles']}/.query", "UserProfilesApiController@query");
 
 	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'UserAvatarApiController@post');
 
@@ -308,7 +304,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Tasks
 	Route::post("{$r['tasks']}/.filter", 'TasksApiController@filter');
-	Route::post("{$r['tasks']}/.query", 'TasksApiController@query');
 	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');
 	Route::patch("{$r['tasks']}/{id}", 'TasksApiController@patch');
 

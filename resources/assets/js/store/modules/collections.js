@@ -109,19 +109,8 @@ const actions = {
 	},
 	fetchSlidesByTagName({commit}, {tagName, ids}) {
 		commit(types.SLIDES_LOADING, true);
-		return axios.post(getApiUrl('slides/.query'), {
-			select: ['slides.*'],
-			query: {
-				whereHas: {
-					tags: {
-						where: [['tags.name', '=', tagName]]
-					}
-				},
-				whereIn: ['slides.id', ids],
-				where: [['presentables.presentable_type', 'App\\Models\\Category']]
-			},
-			join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
-			order: {'presentables.order_number': 'asc'}
+		return axios.post(getApiUrl(`slides/category/${tagName}`), {
+			slideIds: ids
 		}).then(({data}) => {
 			commit(types.COLLECTIONS_SET_SLIDES, data)
 			commit(types.SLIDES_LOADING, false);

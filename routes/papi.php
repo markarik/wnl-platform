@@ -97,6 +97,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::put("{$r['slides']}/{id}", 'SlidesApiController@put');
 		Route::post("{$r['slides']}/{id}/.detach", 'SlidesApiController@detach');
 		Route::post("{$r['slides']}", 'SlidesApiController@post');
+		Route::post(
+			"{$r['slides']}/category/{tagName}",
+			'SlidesApiController@getFromCategoryByTagName'
+		);
 
 		// Presentables
 		Route::post("{$r['presentables']}/.search", 'PresentablesApiController@query');

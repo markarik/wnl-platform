@@ -174,6 +174,12 @@ $factory->define(App\Models\Slide::class, function (Faker\Generator $faker) {
 	];
 });
 
+$factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
+	return [
+		'name' => $faker->name
+	];
+});
+
 $factory->define(App\Models\Coupon::class, function (Faker\Generator $faker) {
 	return [
 		'name'         => 'Testowy kupon',

@@ -16,6 +16,7 @@ use App\Models\Presentable;
 use App\Jobs\SearchImportAll;
 use App\Models\Screen;
 use App\Models\Slide;
+use App\Models\Tag;
 use Auth;
 use Artisan;
 use Illuminate\Http\Request;
@@ -156,6 +157,28 @@ class SlidesApiController extends ApiController
 		}
 
 		return $this->respondOk();
+	}
+
+	public function getFromCategoryByTagName(Request $request) {
+		$tagName = $request->route('tagName');
+		$tag = Tag::where('name', $tagName)->first();
+
+		if (empty($tag)) {
+			return $this->respondNotFound();
+		}
+
+		$slides = Slide
+			::select('slides.*')
+			->whereHas('tags', function($query) use ($tag) {
+				$query->where('name', $tag->name);
+			})
+			->whereIn('slides.id', $request->get('slideIds'))
+			->where('presentables.presentable_type', 'App\\Models\\Category')
+			->join('presentables', 'slides.id', '=', 'presentables.slide_id')
+			->orderBy('presentables.order_number', 'asc')
+			->get();
+
+		return $this->transformAndRespond($slides);
 	}
 
 	public function search(Request $request) {

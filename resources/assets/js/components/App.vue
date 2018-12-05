@@ -46,6 +46,7 @@
 	import sessionStore from 'js/services/sessionStore';
 	import {startTracking} from 'js/services/activityMonitor';
 	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection'
+	import {USER_ACTIVITY_TRACKING_INTERVAL} from 'js/plugins/events-tracker';
 
 	export default {
 		name: 'App',
@@ -135,7 +136,23 @@
 					this.setLayout(this.$breakpoints.currentBreakpoint())
 					this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
 						this.setLayout(currentLayout)
-					})
+					});
+
+					// Setup user activity tracking
+					this.isUserActive = false;
+					const markActivity = () => this.isUserActive = true;
+					['mousemove', 'keydown', 'click', 'touchstart'].forEach(
+						eventName => window.addEventListener(eventName, markActivity)
+                    );
+
+					setInterval(() => {
+						if (!this.isUserActive) {
+							return;
+						}
+
+						this.isUserActive = false;
+						this.$trackUserActivity()
+					}, USER_ACTIVITY_TRACKING_INTERVAL);
 
 					return this.courseSetup(1)
 				})

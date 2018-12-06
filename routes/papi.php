@@ -55,6 +55,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// Groups
 		Route::post("{$r['groups']}/.filter", 'GroupsApiController@filter');
+		Route::post("{$r['groups']}", 'GroupsApiController@post');
+		Route::put("{$r['groups']}/{id}", 'GroupsApiController@put');
 	});
 
 	// Count

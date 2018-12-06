@@ -1,6 +1,9 @@
 <template>
 	<div class="groups">
-		<p class="title is-3">Edycja grup</p>
+		<h3 class="title is-3">
+			Edycja grup
+			<router-link class="button is-success" :to="{name: 'group-edit', params: { id: 'new' } }">+ Dodaj grupę</router-link>
+		</h3>
 		<wnl-pagination
 				v-if="lastPage > 1"
 				:currentPage="page"
@@ -59,7 +62,7 @@
 				const {data: {data, ...paginationMeta}} = response;
 				this.groups = data;
 				this.lastPage = paginationMeta.last_page;
-			}
+			},
 		},
 		mounted() {
 			this.fetch();

@@ -1,7 +1,9 @@
 import * as io from 'socket.io-client'
 import {envValue} from 'js/utils/env'
+import {gaEvent, gaPageView} from 'js/utils/tracking';
 const EVENTS = {
 	USER_EVENT: 'track_user_event',
+	USER_ACTIVITY_EVENT: 'track_user_activity_event',
 	ROUTE_CHANGE_EVENT: 'track_route_change_event'
 }
 
@@ -66,6 +68,14 @@ const EventsTracker = {
 				contextRoute[column] = value;
 			});
 
+			const gaCategory = [
+				...(payload.context ? [payload.context] : []),
+				...(payload.subcontext ? [payload.subcontext] : []),
+				...(payload.feature ? [payload.feature]: []),
+				...(payload.feature_component ? [payload.feature_component] : []),
+			].join('-');
+
+			gaEvent(gaCategory, payload.action, payload.target);
 			eventsQueue.push(async () => {
 				socket.emit(EVENTS.USER_EVENT, {
 					...payload,
@@ -76,13 +86,23 @@ const EventsTracker = {
 		};
 
 		Vue.prototype.$trackUrlChange = (payload) => {
+			gaPageView();
 			eventsQueue.push(async () => {
 				socket.emit(EVENTS.ROUTE_CHANGE_EVENT, {
 					...payload,
 					...(await getSharedEventContext()),
 				})
 			})
-		}
+		};
+
+		Vue.prototype.$trackUserActivity = async () => {
+			eventsQueue.push(async () => {
+				socket.emit(EVENTS.USER_ACTIVITY_EVENT, {
+					...await getSharedEventContext(),
+					status: true
+				})
+			})
+		};
 	}
 }
 

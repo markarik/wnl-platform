@@ -1,9 +1,15 @@
-import {isProduction} from './env'
+// First pageview is tracked from blade, don't duplicate this event
+let isFirstPageview = true;
 
-export function gaEvent(category, action) {
-
-	if (isProduction && typeof ga === 'function') {
-		ga('send', 'event', category, action);
+export function gaEvent(category, action, label) {
+	if (typeof ga === 'function') {
+		ga('send', 'event', category, action, label);
 	}
+}
 
+export function gaPageView() {
+	if (typeof ga === 'function' && !isFirstPageview) {
+		ga('send', 'pageview');
+	}
+	isFirstPageview = false;
 }

@@ -43,12 +43,13 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex';
 	import {Form as WnlForm, Text as WnlText, Textarea as WnlTextarea, Datepicker as WnlDatepicker} from 'js/components/global/form';
 	import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
+	import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
 
 	export default {
 		name: 'DashboardNewsEdit',
+		mixins: [dashboardNewsMessageArguments],
 		data() {
 			return {
 				datepickerConfig: {
@@ -70,7 +71,6 @@
 			WnlDashboardNewsContent
 		},
 		computed: {
-			...mapGetters(['currentUserName']),
 			formResourceRoute() {
 				return this.isEdit ? `site_wide_messages/${this.id}` : 'site_wide_messages';
 			},
@@ -79,11 +79,6 @@
 			},
 			isEdit() {
 				return this.id !== 'new';
-			},
-			messageArguments() {
-				return {
-					currentUserName: this.currentUserName
-				};
 			},
 		},
 		methods: {

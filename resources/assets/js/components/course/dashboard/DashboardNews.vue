@@ -12,9 +12,11 @@
 	import store from 'js/services/messagesStore';
 	import {mapGetters} from 'vuex';
 	import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
+	import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
 
 	export default {
 		name: 'DashboardNews',
+		mixins: [dashboardNewsMessageArguments],
 		data() {
 			return {
 				showNews: false
@@ -31,11 +33,6 @@
 			},
 			newsStoreKey() {
 				return `seen-dashboard-news-${this.dashboardNews.id}`;
-			},
-			messageArguments() {
-				return {
-					currentUserName: this.currentUserName
-				};
 			},
 		},
 		methods: {

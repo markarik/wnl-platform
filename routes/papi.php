@@ -288,7 +288,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::delete("{$r['reactions']}", 'ReactionsApiController@destroy');
 
 	// Reactables
-	Route::post("{$r['reactables']}/.search", 'ReactablesApiController@query');
 	Route::post("{$r['reactables']}/{userId}/savedSlides", 'ReactablesApiController@getSavedSlidesForUser');
 
 	// Public image upload

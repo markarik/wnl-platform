@@ -5,6 +5,7 @@
 		</p>
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'lessons' }">Edycja lekcji</router-link></li>
+			<li><router-link :to="{ name: 'groups' }">Edycja grup</router-link></li>
 		</ul>
 
 		<p class="menu-label">

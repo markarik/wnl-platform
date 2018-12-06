@@ -11,12 +11,12 @@
 		>
 			<wnl-text name="slug">Tytuł</wnl-text>
 			<wnl-textarea name="message">Treść</wnl-textarea>
-            <p>Możesz użyć następujących parametrów:</p>
-            <ul class="message-help">
-                <li v-for="argumentKey in Object.keys(messageArguments)">
+			<p>Możesz użyć następujących parametrów:</p>
+			<ul class="message-help">
+				<li v-for="argumentKey in Object.keys(messageArguments)">
 					<span v-pre>{{</span>{{argumentKey}}<span v-pre>}}</span>
 				</li>
-            </ul>
+			</ul>
 			<wnl-datepicker name="start_date" :config="datepickerConfig">Wyświetlaj od</wnl-datepicker>
 			<wnl-datepicker name="end_date" :config="datepickerConfig">Wyświetlaj do</wnl-datepicker>
 		</wnl-form>

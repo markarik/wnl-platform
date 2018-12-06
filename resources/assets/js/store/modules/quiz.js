@@ -35,19 +35,12 @@ function fetchQuizSetStats(id) {
 }
 
 function _fetchQuestionsCollectionByTagName(tagName, ids, page = 1) {
-	return axios.post(getApiUrl('quiz_questions/.search'), {
-		query: {
-			whereHas: {
-				tags: {
-					where: [['tags.name', '=', tagName]]
-				}
-			},
-			whereIn: ['id', ids],
-		},
+	return axios.post(getApiUrl('quiz_questions/byTagName'), {
+		tag_name: tagName,
+		ids,
 		include: DEFAULT_INCLUDE,
 		page,
-		limit: 30
-	})
+	});
 }
 
 function _fetchSingleQuestion(id) {

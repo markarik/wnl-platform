@@ -44,9 +44,8 @@
 	import Navbar from 'js/components/global/Navbar.vue'
 	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';
-	import {startTracking} from 'js/services/activityMonitor';
+	import {startActivityTracking} from 'js/services/activityMonitor';
 	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection'
-	import {USER_ACTIVITY_TRACKING_INTERVAL} from 'js/plugins/events-tracker';
 
 	export default {
 		name: 'App',
@@ -121,7 +120,19 @@
 						})
 
 					// Setup time tracking
-					startTracking(this.currentUserId);
+					const activitiesConfig = {
+						sadActivity: {
+							incrementBy: 1000 * 60,
+							inactivityTime: 1000 * 60,
+							handle: this.$trackUserActivity,
+						},
+						activityMonitor: {
+							incrementBy: 1000 * 60 * 10,
+							inactivityTime: 1000 * 60 * 30,
+							handle: userId => axios.put(getApiUrl(`users/${userId}/state/time`)),
+						},
+					};
+					startActivityTracking(this.currentUserId, activitiesConfig);
 
 					this.$router.afterEach((to) => {
 						!to.params.keepsNavOpen && this.resetLayout()
@@ -137,22 +148,6 @@
 					this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
 						this.setLayout(currentLayout)
 					});
-
-					// Setup user activity tracking
-					this.isUserActive = false;
-					const markActivity = () => this.isUserActive = true;
-					['mousemove', 'keydown', 'click', 'touchstart'].forEach(
-						eventName => window.addEventListener(eventName, markActivity)
-					);
-
-					setInterval(() => {
-						if (!this.isUserActive) {
-							return;
-						}
-
-						this.isUserActive = false;
-						this.$trackUserActivity()
-					}, USER_ACTIVITY_TRACKING_INTERVAL);
 
 					return this.courseSetup(1)
 				})

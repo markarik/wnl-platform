@@ -2,6 +2,7 @@ import * as io from 'socket.io-client'
 import {envValue} from 'js/utils/env'
 const EVENTS = {
 	USER_EVENT: 'track_user_event',
+	USER_ACTIVITY_EVENT: 'track_user_activity_event',
 	ROUTE_CHANGE_EVENT: 'track_route_change_event'
 }
 
@@ -82,7 +83,16 @@ const EventsTracker = {
 					...(await getSharedEventContext()),
 				})
 			})
-		}
+		};
+
+		Vue.prototype.$trackUserActivity = async () => {
+			eventsQueue.push(async () => {
+				socket.emit(EVENTS.USER_ACTIVITY_EVENT, {
+					...await getSharedEventContext(),
+					status: true
+				})
+			})
+		};
 	}
 }
 

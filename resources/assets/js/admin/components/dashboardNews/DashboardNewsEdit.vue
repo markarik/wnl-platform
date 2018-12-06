@@ -13,8 +13,8 @@
 			<wnl-textarea name="message">Treść</wnl-textarea>
 			<p>Możesz użyć następujących parametrów:</p>
 			<ul class="message-help">
-				<li v-for="argumentKey in Object.keys(messageArguments)">
-					<span v-pre>{{</span>{{argumentKey}}<span v-pre>}}</span>
+				<li v-for="(value, key) in messageArguments" :key="key">
+					<span v-pre>{{</span>{{key}}<span v-pre>}}</span>
 				</li>
 			</ul>
 			<wnl-datepicker name="start_date" :config="datepickerConfig">Wyświetlaj od</wnl-datepicker>

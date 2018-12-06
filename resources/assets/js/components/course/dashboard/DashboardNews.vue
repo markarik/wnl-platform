@@ -10,7 +10,7 @@
 
 <script>
 	import store from 'js/services/messagesStore';
-	import { mapGetters } from 'vuex';
+	import {mapGetters} from 'vuex';
 	import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
 
 	export default {

@@ -43,7 +43,7 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex';
+	import {mapGetters} from 'vuex';
 	import {Form as WnlForm, Text as WnlText, Textarea as WnlTextarea, Datepicker as WnlDatepicker} from 'js/components/global/form';
 	import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
 

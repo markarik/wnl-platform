@@ -21,16 +21,15 @@
 				type: String,
 				default: ''
 			},
+			messageArguments: {
+				type: Object,
+				default: {}
+			},
 		},
 		computed: {
 			...mapGetters(['currentUserName']),
-			arguments: function () {
-				return {
-					currentUserName: this.currentUserName
-				};
-			},
 			parsedMessage: function () {
-				return injectArguments(this.message, this.arguments);
+				return injectArguments(this.message, this.messageArguments);
 			},
 		},
 	}

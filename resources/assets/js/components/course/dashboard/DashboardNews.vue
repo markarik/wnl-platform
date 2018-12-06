@@ -21,6 +21,7 @@
 		mixins: [dashboardNewsMessageArguments],
 		data() {
 			return {
+				featureContext: context.dashboard.features.news_message,
 				showNews: false
 			};
 		},
@@ -38,7 +39,7 @@
 		},
 		methods: {
 			closed() {
-				this.track(context.dashboard.features.news_message.actions.close.value);
+				this.track(this.featureContext.actions.close.value);
 				this.showNews = false;
 				store.set(this.newsStoreKey, true);
 			},
@@ -46,7 +47,7 @@
 				const href = target.getAttribute('href');
 
 				if (target && href) {
-					this.track(context.dashboard.features.news_message.actions.click_link.value);
+					this.track(this.featureContext.actions.click_link.value);
 
 					if (/^https?:\/\//.test(href)) {
 						// External links always open in a new tab
@@ -80,7 +81,7 @@
 			},
 			track(action) {
 				this.$trackUserEvent({
-					feature: context.dashboard.features.news_message.value,
+					feature: this.featureContext.value,
 					action,
 					target: this.dashboardNews.id,
 					context: context.dashboard.value,
@@ -91,7 +92,7 @@
 			this.showNews = this.dashboardNews && !this.hasSeenNews;
 
 			if (this.showNews) {
-				this.track(context.dashboard.features.news_message.actions.open.value);
+				this.track(this.featureContext.actions.open.value);
 			}
 		},
 	}

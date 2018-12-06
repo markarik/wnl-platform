@@ -14,6 +14,7 @@
 	import store from 'js/services/messagesStore';
 	import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
 	import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
+	import context from 'js/consts/events_map/context.json';
 
 	export default {
 		name: 'DashboardNews',
@@ -37,6 +38,7 @@
 		},
 		methods: {
 			closed() {
+				this.track(context.dashboard.features.news_message.actions.close.value);
 				this.showNews = false;
 				store.set(this.newsStoreKey, true);
 			},
@@ -44,6 +46,8 @@
 				const href = target.getAttribute('href');
 
 				if (target && href) {
+					this.track(context.dashboard.features.news_message.actions.click_link.value);
+
 					if (/^https?:\/\//.test(href)) {
 						// External links always open in a new tab
 						event.preventDefault();
@@ -74,9 +78,21 @@
 					}
 				}
 			},
+			track(action) {
+				this.$trackUserEvent({
+					feature: context.dashboard.features.news_message.value,
+					action,
+					target: this.dashboardNews.id,
+					context: context.dashboard.value,
+				});
+			},
 		},
 		mounted() {
 			this.showNews = this.dashboardNews && !this.hasSeenNews;
+
+			if (this.showNews) {
+				this.track(context.dashboard.features.news_message.actions.open.value);
+			}
 		},
 	}
 </script>

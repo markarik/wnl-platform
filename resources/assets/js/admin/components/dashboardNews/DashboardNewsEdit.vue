@@ -9,7 +9,7 @@
 				@submitSuccess="onSubmitSucess"
 				@change="onChange"
 		>
-			<wnl-text name="slug">Slug</wnl-text>
+			<wnl-text name="slug">Tytuł</wnl-text>
 			<wnl-textarea name="message">Treść</wnl-textarea>
 			<wnl-datepicker name="start_date" :config="datepickerConfig">Wyświetlaj od</wnl-datepicker>
 			<wnl-datepicker name="end_date" :config="datepickerConfig">Wyświetlaj do</wnl-datepicker>

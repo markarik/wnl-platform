@@ -7,7 +7,6 @@
 </template>
 
 <script>
-	import {mapGetters} from 'vuex';
 	import injectArguments from 'js/utils/injectArguments';
 
 	export default {
@@ -27,7 +26,6 @@
 			},
 		},
 		computed: {
-			...mapGetters(['currentUserName']),
 			parsedMessage: function () {
 				return injectArguments(this.message, this.messageArguments);
 			},

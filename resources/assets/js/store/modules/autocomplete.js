@@ -18,16 +18,6 @@ const mutations = {
 	},
 }
 
-function getTagSearchConditions(name, tags = []) {
-	const where = [
-		['name', 'like', `%${name}%`]
-	]
-
-	const whereNotIn = ['id',  tags.map(tag => tag.id)]
-
-	return { query: { where, whereNotIn }, limit: [5, 0] }
-}
-
 // Actions
 const actions = {
 	requestUsersAutocomplete({}, data) {
@@ -35,9 +25,10 @@ const actions = {
 		return axios.get(getApiUrl(`user_profiles/.search?q=${query}`))
 	},
 	requestTagsAutocomplete({}, { name, tags }) {
-		const conditions = getTagSearchConditions(name, tags)
-
-		return axios.post(getApiUrl('tags/.search'), conditions)
+		return axios.post(getApiUrl('tags/matchingName'), {
+			name,
+			excludedIds: tags.map(({id}) => id)
+		})
 	}
 };
 

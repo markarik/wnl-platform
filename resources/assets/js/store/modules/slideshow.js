@@ -36,22 +36,10 @@ function _fetchReactables(presentables) {
 }
 
 function _fetchPresentables(slideshowId, type) {
-	let data = {
-		query: {
-			where: [
-				['presentable_type', type],
-				['presentable_id', '=', slideshowId],
-			],
-		},
-		join: [
-			['slides', 'presentables.slide_id', '=', 'slides.id'],
-		],
-		order: {
-			order_number: 'asc',
-		},
-	}
-
-	return axios.post(getApiUrl('presentables/.search'), data)
+	return axios.post(getApiUrl('presentables/slides'), {
+		presentable_type: type,
+		presentable_id: slideshowId
+	})
 }
 
 function getInitialState() {

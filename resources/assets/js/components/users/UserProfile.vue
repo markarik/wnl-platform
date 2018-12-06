@@ -393,13 +393,6 @@ export default {
 				})
 			}
 			const userId = this.$route.params.userId
-			const dataForComments = {
-				query: {
-					where: [
-						['user_id', userId]
-					]
-				}
-			}
 			const dataForQnaQuestions = {
 				query: {
 					where: [
@@ -417,7 +410,7 @@ export default {
 				include: 'reactions'
 			}
 			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
-			const promisedAllComments = axios.post(getApiUrl(`comments/.count`), dataForComments)
+			const promisedAllComments = axios.get(getApiUrl(`users/${userId}/comments`))
 			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
 			const promisedAllAnswers = axios.post(getApiUrl(`qna_answers/.search`), dataForQnaAnswers)
 

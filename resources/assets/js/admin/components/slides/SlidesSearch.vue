@@ -123,19 +123,14 @@ export default {
 						})
 			},
 			getSlideId (slideshowId) {
-				const conditions = {
-					query: {
-						where: [
-							['presentable_type', '=', 'App\\Models\\Slideshow'],
-							['presentable_id', '=', slideshowId],
-							['order_number', '=', this.slideNumber],
-						]
-					}
-				}
-				return axios.post('/papi/v1/presentables/.search', conditions)
-						.then(response => {
-							return response.data[0].slide_id
-						})
+				return axios.post('/papi/v1/presentables/slides/byOrderNumber', {
+				  presentable_type: 'App\\Models\\Slideshow',
+					presentable_id: slideshowId,
+					order_number: this.slideNumber
+				})
+				.then(response => {
+					return response.data[0].slide_id
+				})
 			},
 	},
 }

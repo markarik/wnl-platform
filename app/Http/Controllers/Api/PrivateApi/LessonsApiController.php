@@ -2,9 +2,11 @@
 
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\Transformers\ScreenTransformer;
 use App\Http\Requests\Course\UpdateLesson;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
+use League\Fractal\Resource\Collection;
 
 class LessonsApiController extends ApiController
 {
@@ -25,5 +27,18 @@ class LessonsApiController extends ApiController
 		$lesson->update($request->all());
 
 		return $this->respondOk();
+	}
+
+	public function getScreens(Request $request, $lessonId) {
+		$lesson = Lesson::find($lessonId);
+
+		if (!$lesson) {
+			return $this->respondNotFound();
+		}
+
+		$resource = new Collection($lesson->screens, new ScreenTransformer(), config('papi.resources.screens'));
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
 	}
 }

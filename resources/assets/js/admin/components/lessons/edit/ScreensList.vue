@@ -75,23 +75,10 @@
 			lessonId() {
 				return this.$route.params.lessonId
 			},
-			screensListApiUrl() {
-				return getApiUrl('screens/.search')
-			}
 		},
 		methods: {
 			fetchScreens() {
-				const conditions = {
-					query: {
-						where: [
-							['lesson_id', '=', this.$route.params.lessonId],
-						]
-					},
-					order: {
-						'order_number': 'asc'
-					}
-				}
-				return axios.post(this.screensListApiUrl, conditions)
+				return axios.get(getApiUrl('lessons/screens'))
 						.then((response) => {
 							this.screens = response.data
 						})

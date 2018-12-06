@@ -6,8 +6,6 @@ const EVENTS = {
 	ROUTE_CHANGE_EVENT: 'track_route_change_event'
 }
 
-export const USER_ACTIVITY_TRACKING_INTERVAL = 60 * 1000;
-
 const createEventsQueue = () => {
 	const events = []
 	let started = false

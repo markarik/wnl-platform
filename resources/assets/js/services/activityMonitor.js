@@ -8,13 +8,13 @@ let activitiesConfig;
 
 export const startActivityTracking = (userId, config) => {
 	activitiesConfig = config;
-    EVENTS.forEach((event) => {
-        document.addEventListener(event, throttle(() => track(userId), THROTTLE_TIME), true)
-    });
+	EVENTS.forEach((event) => {
+		document.addEventListener(event, throttle(() => track(userId), THROTTLE_TIME), true)
+	});
 }
 
 const track = (userId) => {
-	forOwn(activitiesConfig, (config, eventName) => {
+	Object.entries(activitiesConfig).forEach(([eventName, config]) => {
 		if (!trackingIntervalIds[eventName]) {
 			trackingIntervalIds[eventName] = window.setInterval(() => config.handle(userId), config.incrementBy)
 		}
@@ -25,7 +25,7 @@ const track = (userId) => {
 }
 
 const stopTracking = eventName => {
-    window.clearInterval(trackingIntervalIds[eventName]);
+	window.clearInterval(trackingIntervalIds[eventName]);
 	trackingIntervalIds[eventName] = null
 	inactivityTimerIds[eventName] = null
 }

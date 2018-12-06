@@ -19,6 +19,10 @@
 		z-index: $z-index-alerts
 		text-align: center
 
+		/deep/ .notification
+			strong
+				color: inherit
+
 </style>
 <script>
 import Alert from 'js/components/global/GlobalAlert'

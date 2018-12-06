@@ -12,8 +12,11 @@
 			<wnl-text name="slug">Tytuł</wnl-text>
 			<wnl-textarea name="message">Treść</wnl-textarea>
 			<p>Możesz użyć następujących parametrów:</p>
-			<ul class="message-help">
-				<li v-for="(value, key) in messageArguments" :key="key">
+			<ul class="message-arguments">
+				<li
+						class="message-argument"
+						v-for="(value, key) in messageArguments" :key="key"
+				>
 					<span v-pre>{{</span>{{key}}<span v-pre>}}</span>
 				</li>
 			</ul>
@@ -35,11 +38,12 @@
 	.notification
 		max-width: 900px
 
-	.message-help
+	.message-arguments
 		list-style: disc
 		margin-bottom: 10px
-		/deep/ li
-			margin-left: 30px
+
+	.message-argument
+		margin-left: 30px
 </style>
 
 <script>

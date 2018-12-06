@@ -17,7 +17,7 @@
 						class="message-argument"
 						v-for="(value, key) in messageArguments" :key="key"
 				>
-					<span v-pre>{{</span>{{key}}<span v-pre>}}</span>
+					<span>{{escapeArgumentKey(key)}}</span>
 				</li>
 			</ul>
 			<wnl-datepicker name="start_date" :config="datepickerConfig">Wyświetlaj od</wnl-datepicker>
@@ -93,7 +93,10 @@
 			},
 			onChange({formData}) {
 				this.formData = formData
-			}
+			},
+			escapeArgumentKey(key) {
+				return `{{${key}}}`;
+			},
 		},
 	}
 </script>

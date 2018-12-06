@@ -4,13 +4,14 @@
 			:message="dashboardNews.message"
 			:messageArguments="messageArguments"
 			:slug="dashboardNews.slug"
-			@onClose="seenCurrentNews"
+			@onClose="closed"
+			@onContentClick="contentClicked"
 	/>
 </template>
 
 <script>
-	import store from 'js/services/messagesStore';
 	import {mapGetters} from 'vuex';
+	import store from 'js/services/messagesStore';
 	import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
 	import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
 
@@ -26,7 +27,6 @@
 			WnlDashboardNewsContent
 		},
 		computed: {
-			...mapGetters(['currentUserName', 'hasRole']),
 			...mapGetters('siteWideMessages', ['dashboardNews']),
 			hasSeenNews() {
 				return !!store.get(this.newsStoreKey);
@@ -36,9 +36,43 @@
 			},
 		},
 		methods: {
-			seenCurrentNews() {
+			closed() {
 				this.showNews = false;
 				store.set(this.newsStoreKey, true);
+			},
+			contentClicked({target}) {
+				const href = target.getAttribute('href');
+
+				if (target && href) {
+					if (/^https?:\/\//.test(href)) {
+						// External links always open in a new tab
+						event.preventDefault();
+						window.open(target.href);
+					} else {
+						// Internal links
+						const { altKey, ctrlKey, metaKey, shiftKey, button, defaultPrevented } = event;
+
+						// don't handle with control keys
+						if (metaKey || altKey || ctrlKey || shiftKey) return;
+						// don't handle when preventDefault called
+						if (defaultPrevented) return;
+						// don't handle right clicks
+						if (button !== undefined && button !== 0) return;
+						// don't handle if `target="_blank"`
+						if (target && target.getAttribute) {
+							const linkTarget = target.getAttribute('target');
+							if (/\b_blank\b/i.test(linkTarget)) return;
+						}
+						// don't handle same page links/anchors
+						const url = new URL(target.href);
+						const to = url.pathname;
+
+						if (window.location.pathname !== to) {
+							event.preventDefault();
+							this.$router.push(to);
+						}
+					}
+				}
 			},
 		},
 		mounted() {

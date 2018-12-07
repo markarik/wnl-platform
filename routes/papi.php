@@ -112,7 +112,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post($r['qna-questions'], 'QnaQuestionsApiController@post');
 		Route::get("{$r['qna-questions']}/latest", 'QnaQuestionsApiController@getLatest');
 		Route::post("{$r['qna-questions']}/byIds", 'QnaQuestionsApiController@getByIds');
-		Route::post("{$r['qna-questions']}/byTag", 'QnaQuestionsApiController@getByTag');
+		Route::post("{$r['qna-questions']}/byTags", 'QnaQuestionsApiController@getByTags');
 		Route::get("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@get');
 		Route::put("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@put');
 		Route::delete("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@delete');

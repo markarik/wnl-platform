@@ -108,7 +108,8 @@ class UsersApiController extends ApiController
 			return $this->respondForbidden();
 		}
 
-		$resource = new Collection($user->qnaQuestions, new QnaQuestionTransformer(), config('papi.resources.qna-questions'));
+		$userQnaQuestions = $user->qnaQuestions ?? [];
+		$resource = new Collection($userQnaQuestions, new QnaQuestionTransformer(), config('papi.resources.qna-questions'));
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);

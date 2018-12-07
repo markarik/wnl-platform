@@ -183,7 +183,8 @@ export const commentsActions = {
 	},
 	async fetchComments({commit, dispatch}, {...args}) {
 		const response = await _fetchComments(...args)
-		if (!response.data.hasOwnProperty('included')) {
+    console.log(response)
+    if (!response.data.hasOwnProperty('included')) {
 			return
 		}
 

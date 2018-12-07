@@ -401,8 +401,12 @@ export default {
 			}
 			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
 			const promisedAllComments = axios.get(getApiUrl(`users/${userId}/comments`))
-			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`users/${userId}/qna_questions`), dataForQnaQuestions)
-			const promisedAllAnswers = axios.post(getApiUrl(`users=${userId}/qna_answers`), dataForQnaAnswers)
+			const promisedQnaQuestionsCompetency = axios.get(getApiUrl(`users/${userId}/qna_questions`), {
+				params: dataForQnaQuestions
+			})
+			const promisedAllAnswers = axios.get(getApiUrl(`users/${userId}/qna_answers`), {
+				params: dataForQnaAnswers
+			})
 
 			this.isLoading = true
 

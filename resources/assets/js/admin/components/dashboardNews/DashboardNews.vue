@@ -11,9 +11,9 @@
 		</h3>
 		<table class="table dashboard-news">
 			<tr>
-				<th>Slug</th>
-				<th>Start date</th>
-				<th>End date</th>
+				<th>Tytuł</th>
+				<th>Wyświetlaj od</th>
+				<th>Wyświetlaj do</th>
 			</tr>
 			<tr
 					class="dashboard-news__item"
@@ -30,7 +30,6 @@
 		</table>
 	</div>
 </template>
-
 
 <style lang="sass" scoped>
 	.dashboard-news__item

@@ -10,14 +10,13 @@
 </style>
 
 <script>
-	import Qna from 'js/components/qna/Qna'
-	import axios from 'axios'
-	import {getApiUrl} from 'js/utils/env'
-	import {mapActions} from 'vuex'
-	import emits_events from 'js/mixins/emits-events'
+	import Qna from 'js/components/qna/Qna';
+	import axios from 'axios';
+	import {getApiUrl} from 'js/utils/env';
+	import {mapActions} from 'vuex';
+	import emits_events from 'js/mixins/emits-events';
 	import features from 'js/consts/events_map/features.json';
-
-	const PLACEHOLDER_RGX = /{{(.*)}}/g;
+	import injectArguments from 'js/utils/injectArguments';
 
 	export default {
 		name: 'Page',
@@ -65,25 +64,6 @@
 					})
 				}
 			},
-			injectArguments(content) {
-				const matches = content.match(PLACEHOLDER_RGX)
-				let missing = []
-
-				if (!matches) return content
-
-				matches.forEach(match => {
-					const argName = match.replace(/{{|}}/g, '')
-					const value = this.arguments[argName] || ''
-					if (!value) missing.push(argName)
-					content = content.replace(match, value)
-				})
-				if (missing.length > 0) {
-					$wnl.logger.warning('Missing page template arguments: '
-						+ missing.join(','))
-				}
-
-				return content
-			},
 			fetch() {
 				const url = getApiUrl(`pages/${this.slug}?include=tags`)
 
@@ -108,7 +88,7 @@
 		},
 		watch:{
 			content(newValue) {
-				this.content = this.injectArguments(newValue)
+				this.content = injectArguments(newValue, this.arguments);
 			},
 			tags(newValue) {
 				this.fetchQuestionsByTags({tags: newValue})

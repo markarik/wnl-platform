@@ -2,7 +2,6 @@
 
 namespace Tests\Api\Slides;
 
-use App\Http\Controllers\Api\Transformers\SlideTransformer;
 use App\Models\Category;
 use App\Models\Slide;
 use App\Models\Tag;
@@ -55,10 +54,13 @@ class SlidesTest extends ApiTestCase
 				]
 			);
 
-		$transformer = new SlideTransformer();
-
-		$expectedResponse = $categories->first()->slides->map(function($slide) use ($transformer) {
-			return $transformer->transform($slide);
+		$expectedResponse = $categories->first()->slides->map(function($slide) {
+			return [
+				'content'       => $slide->content,
+				'is_functional' => $slide->is_functional,
+				'snippet'       => $slide->snippet,
+				'id'            => $slide->id
+			];
 		});
 
 		$response->assertJson($expectedResponse->toArray());

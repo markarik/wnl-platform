@@ -1,4 +1,4 @@
-const PLACEHOLDER_RGX = /{{(.*)}}/g;
+const PLACEHOLDER_RGX = /{{[a-z0-9]*}}/gi;
 
 export default function injectArguments(content, args) {
 	const matches = content.match(PLACEHOLDER_RGX);

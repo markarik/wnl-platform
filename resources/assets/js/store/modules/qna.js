@@ -6,19 +6,7 @@ import { set, delete as destroy } from 'vue'
 import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions'
 import {commentsGetters, commentsMutations, commentsActions, commentsState} from 'js/store/modules/comments'
 
-// API
- function _getQuestions(query, limit, include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles') {
-	let data = {
-		include,
-		query,
-		order: {
-			id: 'desc',
-		},
-		limit
-	}
-
-	return axios.post(getApiUrl('qna_questions/.search'), data);
-}
+const include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
 
 function _resolveQuestion(questionId, status = true) {
 	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
@@ -31,38 +19,33 @@ function _getQuestionsByTags(tags) {
 		return Promise.reject('No tags passed to search for Q&A questions.')
 	}
 
-	return _getQuestions({
-		hasIn: {
-			tags: ['tags.id', tags.map((tag) => tag.id)]
-		}
+	return axios.post(getApiUrl('qna_questions/byTags'), {
+		tags_ids: tags.map((tag) => tag.id),
+		include
 	});
 }
 
 function _getQuestionsByIds(ids) {
-	return _getQuestions({
-		whereIn: ['id', ids],
+	return axios.post(getApiUrl('qna_questions/byIds'), {
+		ids,
+		include
 	})
 }
 
-function _getQuestionsLatest(limit = 10) {
-	return _getQuestions({
-		whereDoesntHave: {
-			tags: {
-				where: [ ['tags.id', '=', 69] ],
-			},
-		},
-	}, [limit, 0], 'tags,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles');
+function _getQuestionsLatest() {
+	return axios.get(getApiUrl('qna_questions/latest'), {
+		params: {
+			include: `tags,${include}`
+		}
+	});
 }
 
 function _getQuestionsByTagName(tagName, ids) {
-	return _getQuestions({
-		whereHas: {
-			tags: {
-				where: [['tags.name', '=', tagName]]
-			}
-		},
-		whereIn: ['id', ids],
-	})
+	return axios.post(getApiUrl('qna_questions/byTags'), {
+		tags_names: [tagName],
+		ids,
+		include
+	});
 }
 
 function _handleGetQuestionsSuccess({commit, dispatch}, {data}) {

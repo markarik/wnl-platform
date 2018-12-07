@@ -111,4 +111,48 @@ class QnaQuestionsApiController extends ApiController
 
 		return $this->respondOk($data);
 	}
+
+	public function getByIds(Request $request) {
+		$ids = $request->get('ids');
+
+		$qnaQuestions = QnaQuestion::whereIn('id', $ids)
+			->get();
+
+		return $this->transformAndRespond($qnaQuestions);
+	}
+
+	public function getByTags(Request $request) {
+		$qnaQuestionsQuery = QnaQuestion::select();
+
+		if ($request->has('tags_names')) {
+			$tagsNames = $request->get('tags_names');
+			$qnaQuestionsQuery->whereHas('tags', function ($query) use ($tagsNames) {
+				$query->whereIn('tags.name', $tagsNames);
+			});
+		}
+
+		if ($request->has('tags_ids')) {
+			$tagsIds = $request->get('tags_ids');
+			$qnaQuestionsQuery->whereHas('tags', function ($query) use ($tagsIds) {
+				$query->whereIn('tags.id', $tagsIds);
+			});
+		}
+
+		if ($request->has('ids')) {
+			$ids = $request->get('ids');
+			$qnaQuestionsQuery->whereIn('id', $ids);
+		}
+
+		$qnaQuestions = $qnaQuestionsQuery->get();
+
+		return $this->transformAndRespond($qnaQuestions);
+	}
+
+	public function getLatest(Request $request) {
+		$qnaQuestions = QnaQuestion::whereDoesntHave('tags', function($query) {
+			$query->where('tags.id', 69);
+		})->limit(10)->get();
+
+		return $this->transformAndRespond($qnaQuestions);
+	}
 }

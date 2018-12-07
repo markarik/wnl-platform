@@ -394,25 +394,15 @@ export default {
 			}
 			const userId = this.$route.params.userId
 			const dataForQnaQuestions = {
-				query: {
-					where: [
-						['user_id', userId]
-					]
-				},
 				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
 			}
 			const dataForQnaAnswers = {
-				query: {
-					where: [
-						['user_id', userId]
-					]
-				},
 				include: 'reactions'
 			}
 			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
 			const promisedAllComments = axios.get(getApiUrl(`users/${userId}/comments`))
-			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
-			const promisedAllAnswers = axios.post(getApiUrl(`qna_answers/.search`), dataForQnaAnswers)
+			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`users/${userId}/qna_questions`), dataForQnaQuestions)
+			const promisedAllAnswers = axios.post(getApiUrl(`users=${userId}/qna_answers`), dataForQnaAnswers)
 
 			this.isLoading = true
 
@@ -454,15 +444,10 @@ export default {
 			}).catch(exception => $wnl.logger.capture(exception))
 		},
 		loadQuestionsForAnswers(questionsIds) {
-			const userId = this.$route.params.userId
-			const data = {
-				query: {
-					whereIn:
-						['id', questionsIds]
-				},
+			return axios.post(getApiUrl(`qna_questions/byIds`), {
+				ids: questionsIds,
 				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
-			}
-			return axios.post(getApiUrl(`qna_questions/.search`), data)
+			})
 		},
 	},
 	mounted() {

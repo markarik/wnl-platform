@@ -36,53 +36,6 @@ class QuestionsTest extends ApiTestCase
 			->assertStatus(200);
 	}
 
-	/** @test * */
-	public function search_qna_questions()
-	{
-		$user = User::find(1);
-
-		$data = [
-			'query' => [
-				'hasIn' => [
-					'tags' => ['tags.id', [5, 6]],
-				],
-			],
-		];
-		$response = $this
-			->actingAs($user)
-			->json('POST', $this->url('/qna_questions/.search'), $data);
-
-		$response
-			->assertStatus(200);
-	}
-
-	/** @test * */
-	public function search_qna_questions_by_tag_name()
-	{
-		$user = User::find(1);
-
-		$data = [
-			'query' => [
-				'whereHas' => [
-					'tags' => [
-						'where' => [
-							['tags.name', '=', 'Kardiologia 1'],
-						],
-					],
-				],
-				'whereIn'  => ['id', [1, 2, 3]],
-			],
-		];
-
-		$response = $this
-			->actingAs($user)
-			->json('POST', $this->url('/qna_questions/.search'), $data);
-
-		$response
-			->assertStatus(200);
-	}
-
-	/** @test */
 	public function get_qna_question_lesson_context()
 	{
 		$user = factory(User::class)->create();

@@ -110,17 +110,18 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// Q&A Questions
 		Route::post($r['qna-questions'], 'QnaQuestionsApiController@post');
+		Route::get("{$r['qna-questions']}/latest", 'QnaQuestionsApiController@getLatest');
+		Route::post("{$r['qna-questions']}/byIds", 'QnaQuestionsApiController@getByIds');
+		Route::post("{$r['qna-questions']}/byTag", 'QnaQuestionsApiController@getByTag');
 		Route::get("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@get');
 		Route::put("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@put');
 		Route::delete("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@delete');
-		Route::post("{$r['qna-questions']}/.search", 'QnaQuestionsApiController@query');
 
 		// Q&A Answers
 		Route::post($r['qna-answers'], 'QnaAnswersApiController@post');
 		Route::get("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@get');
 		Route::put("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@put');
 		Route::delete("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@delete');
-		Route::post("{$r['qna-answers']}/.search", 'QnaAnswersApiController@query');
 
 		// Quiz Sets
 		Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
@@ -218,6 +219,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::patch("{$r['users']}/{userId}/forget", 'UsersApiController@forget');
 	Route::get("{$r['users']}/{id}/{$r['comments']}", 'UsersApiController@getComments');
+	Route::get("{$r['users']}/{id}/{$r['qna-answers']}", 'UsersApiController@getQnaAnswers');
+	Route::get("{$r['users']}/{id}/{$r['qna-questions']}", 'UsersApiController@getQnaQuestions');
 
 	Route::get("{$r['users']}/{userId}/{$r['user-personal-data']}", 'UserPersonalDataApiController@get');
 	Route::post("{$r['users']}/{userId}/{$r['user-personal-data']}", 'UserPersonalDataApiController@post');

@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\CommentTransformer;
+use App\Http\Controllers\Api\Transformers\QnaAnswerTransformer;
+use App\Http\Controllers\Api\Transformers\QnaQuestionTransformer;
 use App\Http\Requests\User\PostUser;
 use App\Http\Requests\User\UpdateUser;
+use App\Models\QnaAnswer;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -80,6 +83,32 @@ class UsersApiController extends ApiController
 		}
 
 		$resource = new Collection($user->comments, new CommentTransformer(), config('papi.resources.comments'));
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
+	}
+
+	public function getQnaAnswers(Request $request, $userId) {
+		$user = User::fetch($userId);
+
+		if ($user->id !== Auth::user()->id) {
+			return $this->respondForbidden();
+		}
+
+		$resource = new Collection($user->qnaAnswers, new QnaAnswerTransformer(), config('papi.resources.qna-answers'));
+		$data = $this->fractal->createData($resource)->toArray();
+
+		return $this->respondOk($data);
+	}
+
+	public function getQnaQuestions(Request $request, $userId) {
+		$user = User::fetch($userId);
+
+		if ($user->id !== Auth::user()->id) {
+			return $this->respondForbidden();
+		}
+
+		$resource = new Collection($user->qnaQuestions, new QnaQuestionTransformer(), config('papi.resources.qna-questions'));
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);

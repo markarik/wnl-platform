@@ -90,7 +90,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// Slides
 		Route::get("{$r['slides']}/.search", 'SlidesApiController@search');
-		Route::post("{$r['slides']}/.search", 'SlidesApiController@search');
 		Route::get('slides/.updateCharts/{slideId}', 'SlidesApiController@updateCharts');
 		Route::get("{$r['slides']}/{id}", 'SlidesApiController@get');
 		Route::put("{$r['slides']}/{id}", 'SlidesApiController@put');
@@ -133,7 +132,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['comments']}/{id}", 'CommentsApiController@get');
 		Route::put("{$r['comments']}/{id}", 'CommentsApiController@put');
 		Route::delete("{$r['comments']}/{id}", 'CommentsApiController@delete');
-		Route::post("{$r['comments']}/.search", 'CommentsApiController@query');
+		Route::post("{$r['comments']}/query", 'CommentsApiController@query');
 
 		// Chat Messages
 		Route::post(

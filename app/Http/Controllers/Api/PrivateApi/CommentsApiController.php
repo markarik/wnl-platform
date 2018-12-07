@@ -66,4 +66,20 @@ class CommentsApiController extends ApiController
 
 		return $this->respondOk();
 	}
+
+	public function query(Request $request) {
+		$commentableId = $request->get('commentable_id');
+		$commentableType = $request->get('commentable_type');
+
+		$commentsQuery = Comment::where('commentable_id', $commentableId)
+			->where('commentable_type', $commentableType);
+
+		if ($request->has('comment_id')) {
+			$commentsQuery->where('comment_id', $request->get('comment_id'));
+		}
+
+		$comments = $commentsQuery->orderBy('id', 'asc')->get();
+
+		return $this->transformAndRespond($comments);
+	}
 }

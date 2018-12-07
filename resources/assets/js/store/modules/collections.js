@@ -119,14 +119,7 @@ const actions = {
 		})
 	},
 	addSlideToCollection({commit}, slideId) {
-		return axios.post(getApiUrl('slides/.search'), {
-			query: {
-				where: [['id', '=', slideId]],
-			},
-			order: {
-				id: 'desc',
-			},
-		}).then(({data}) => {
+		return axios.get(getApiUrl(`slides/${slideId}`)).then(({data}) => {
 			data && data.length && commit(types.COLLECTIONS_APPEND_SLIDE, data[0]);
 		})
 	},

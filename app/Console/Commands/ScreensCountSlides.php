@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Api\PrivateApi\EditionsApiController;
 use App\Models\Screen;
 use Illuminate\Console\Command;
 

@@ -33,7 +33,11 @@ class EditionsApiController extends ApiController
 		return $this->respondOk($data);
 	}
 
-	public static function key($userId) {
+	protected static function key($userId) {
 		return sprintf(self::CACHE_KEY_PATTERN, self::CACHE_VERSION, $userId);
+	}
+
+	public static function clearCache($userId) {
+		\Cache::tags('editions')->forget(self::key($userId));
 	}
 }

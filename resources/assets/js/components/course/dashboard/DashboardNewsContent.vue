@@ -2,7 +2,7 @@
 	<div class="notification content">
 		<button class="delete" @click="$emit('onClose')"></button>
 		<p class="has-text-centered"><strong v-html="slug"></strong></p>
-		<span v-html="parsedMessage"></span>
+		<span v-html="parsedMessage" @click="$emit('onContentClick', $event)"></span>
 	</div>
 </template>
 

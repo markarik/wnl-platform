@@ -129,7 +129,7 @@
 			trackNextLessonClick() {
 				this.$trackUserEvent({
 					feature: context.dashboard.features.next_lesson.value,
-					actions: context.dashboard.features.next_lesson.actions.click_link.value,
+					action: context.dashboard.features.next_lesson.actions.click_link.value,
 					target: this.nextLesson.id,
 					context: context.dashboard.value,
 				})

@@ -32,8 +32,7 @@ class UserNotificationsTest extends ApiTestCase
 			->assertStatus(200);
 	}
 
-	/** @test */
-	public function get_notifications_for_user() {
+	public function test_get_notifications_for_user() {
 		$user = factory(User::class)->create();
 		$userChannel = "channel-user-{$user->id}";
 
@@ -80,12 +79,16 @@ class UserNotificationsTest extends ApiTestCase
 				'older_than' => Carbon::now()->timestamp
 			]);
 
-		$transformer = new NotificationTransformer();
 		$expectedResponse = $notificationsUnread
 			->concat($notificationsMonthOld)
 			->sortByDesc('created_at')
-			->map(function($notification) use ($transformer) {
-				return $transformer->transform($notification);
+			->map(function($notification) {
+				return [
+					'id'      => $notification->id,
+					'read_at' => $notification->read_at->timestamp ?? null,
+					'seen_at' => $notification->seen_at->timestamp ?? null,
+					'channel' => $notification->channel,
+				];
 			});
 
 		$response->assertJson($expectedResponse->toArray());

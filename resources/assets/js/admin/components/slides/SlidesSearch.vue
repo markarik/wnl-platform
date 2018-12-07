@@ -47,6 +47,7 @@
 
 <script>
 import {resource} from 'js/utils/config'
+import {getApiUrl} from 'js/utils/env'
 
 export default {
 	name: 'SlidesSearch',
@@ -109,7 +110,7 @@ export default {
 				}
 			},
 			getSlideshowId() {
-				return axios.get(`/papi/v1/screens/${this.screenId}`)
+				return axios.get(getApiUrl(`screens/${this.screenId}`))
 						.then(response => {
 							let resources    = response.data.meta.resources
 							let resourceName = resource('slideshows')
@@ -123,8 +124,8 @@ export default {
 						})
 			},
 			getSlideId (slideshowId) {
-				return axios.post('/papi/v1/presentables/slides/byOrderNumber', {
-				  presentable_type: 'App\\Models\\Slideshow',
+				return axios.post(getApiUrl('presentables/slides/byOrderNumber'), {
+					presentable_type: 'App\\Models\\Slideshow',
 					presentable_id: slideshowId,
 					order_number: this.slideNumber
 				})

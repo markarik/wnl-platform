@@ -13,9 +13,18 @@ class TagsApiController extends ApiController
 	}
 
 	public function byName(Request $request) {
-		$matchingTags = Tag::whereNotIn('id', $request->get('excludedIds'))
-			->where('name', 'like', "%{$request->get('name')}%")
-			->get();
+		$request->validate([
+			'excludedIds' => 'array',
+			'name' => 'string',
+		]);
+
+		$matchingTagsQuery = Tag::where('name', 'like', "%{$request->get('name')}%");
+
+		if ($request->has('excludedIds')) {
+			$matchingTagsQuery->whereNotIn('id', $request->get('excludedIds'));
+		}
+
+		$matchingTags = $matchingTagsQuery->get();
 
 		return $this->transformAndRespond($matchingTags);
 	}

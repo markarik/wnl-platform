@@ -160,6 +160,10 @@ class SlidesApiController extends ApiController
 	}
 
 	public function getFromCategoryByTagName(Request $request) {
+		$request->validate([
+			'slideIds' => 'array',
+		]);
+
 		$tagName = $request->route('tagName');
 		$tag = Tag::where('name', $tagName)->first();
 

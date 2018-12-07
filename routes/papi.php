@@ -74,7 +74,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
 
 		// Lessons
-		Route::get("{$r['lessons']}/screens", 'LessonsApiController@getScreens');
+		Route::get("{$r['lessons']}/{id}/screens", 'LessonsApiController@getScreens');
 		Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
 		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
 

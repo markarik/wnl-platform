@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\Api\ApiController;
 use App\Models\Reaction;
-use App\Models\Slide;
-use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 

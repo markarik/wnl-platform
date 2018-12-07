@@ -113,6 +113,10 @@ class QnaQuestionsApiController extends ApiController
 	}
 
 	public function getByIds(Request $request) {
+		$request->validate([
+			'ids' => 'array',
+		]);
+
 		$ids = $request->get('ids');
 
 		$qnaQuestions = QnaQuestion::whereIn('id', $ids)
@@ -123,6 +127,12 @@ class QnaQuestionsApiController extends ApiController
 
 	public function getByTags(Request $request) {
 		$qnaQuestionsQuery = QnaQuestion::select();
+
+		$request->validate([
+			'tags_name' => 'array',
+			'tags_ids' => 'array',
+			'ids' => 'array',
+		]);
 
 		if ($request->has('tags_names')) {
 			$tagsNames = $request->get('tags_names');
@@ -148,9 +158,11 @@ class QnaQuestionsApiController extends ApiController
 		return $this->transformAndRespond($qnaQuestions);
 	}
 
-	public function getLatest(Request $request) {
-		$qnaQuestions = QnaQuestion::whereDoesntHave('tags', function($query) {
-			$query->where('tags.id', 69);
+	public function getLatest() {
+		$workshopsTag = Tag::where('name', 'Warsztaty')->first();
+
+		$qnaQuestions = QnaQuestion::whereDoesntHave('tags', function($query) use ($workshopsTag) {
+			$query->where('tags.id', $workshopsTag->id);
 		})->limit(10)->get();
 
 		return $this->transformAndRespond($qnaQuestions);

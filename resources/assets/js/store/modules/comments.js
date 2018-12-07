@@ -1,4 +1,3 @@
-import { merge } from 'lodash'
 import axios from 'axios'
 import { set, delete as destroy } from 'vue'
 
@@ -19,7 +18,7 @@ function _fetchComments(...commentsQuery) {
 	const requestParams = {
 		commentable_type: commentsQuery.commentable_type,
 		commentable_id: commentsQuery.commentable_id,
-    include: 'profiles,reactions'
+		include: 'profiles,reactions'
 	}
 
 	if (commentsQuery.hasOwnProperty('comment_id')) {
@@ -183,8 +182,7 @@ export const commentsActions = {
 	},
 	async fetchComments({commit, dispatch}, {...args}) {
 		const response = await _fetchComments(...args)
-    console.log(response)
-    if (!response.data.hasOwnProperty('included')) {
+		if (!response.data.hasOwnProperty('included')) {
 			return
 		}
 

@@ -35,7 +35,7 @@ function getSlideshowId(screenId) {
 }
 
 function getSlideId(slideshowId, slideNumber) {
-	return axios.post('/papi/v1/presentables/slides/byOrderNumber', {
+	return axios.post(getApiUrl('presentables/slides/byOrderNumber'), {
 		presentable_type: 'App\\Models\\Slideshow',
 		presentable_id: slideshowId,
 		order_number: slideNumber - 1

@@ -78,7 +78,7 @@
 		},
 		methods: {
 			fetchScreens() {
-				return axios.get(getApiUrl('lessons/screens'))
+				return axios.get(getApiUrl(`lessons/${this.lessonId}/screens`))
 						.then((response) => {
 							this.screens = response.data
 						})

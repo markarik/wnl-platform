@@ -11,6 +11,12 @@
 		>
 			<wnl-text name="slug">Tytuł</wnl-text>
 			<wnl-textarea name="message">Treść</wnl-textarea>
+			<p class="message-links-info">
+				Jeżeli chcesz umieścić link do strony wewnątrz platformy, użyj relatywnego adresu.
+				Na przykład: <code>/app/courses/1</code> zamiast <code>https://platforma.wiecejnizlek.pl/app/courses/1</code>.
+				Pamiętaj o ukośniku <code>/</code> na początku adresu!
+				Dzięki temu strona otworzy się szybciej i bez przeładowania strony.
+			</p>
 			<p>Możesz użyć następujących parametrów:</p>
 			<ul class="message-arguments">
 				<li
@@ -37,6 +43,9 @@
 <style lang="sass" scoped>
 	.notification
 		max-width: 900px
+
+	.message-links-info
+		margin-bottom: 10px
 
 	.message-arguments
 		list-style: disc

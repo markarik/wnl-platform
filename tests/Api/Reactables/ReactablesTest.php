@@ -2,7 +2,6 @@
 
 namespace Tests\Api\Slides;
 
-use App\Http\Controllers\Api\Transformers\ReactableTransformer;
 use App\Models\Reactable;
 use App\Models\Reaction;
 use App\Models\Slide;
@@ -62,30 +61,42 @@ class ReactablesTest extends ApiTestCase
 				]
 			);
 
-		$transformer = new ReactableTransformer();
-
-		$bookmarkReactables = Reactable::where('reactable_type', 'App\\Models\\Slide')
+		$bookmarks = Reactable::where('reactable_type', 'App\\Models\\Slide')
 			->whereIn('reactable_id', $bookmarkedSlides->pluck('id'))
 			->get();
-		$bookmarks = $bookmarkReactables->map(function($reactable) use ($transformer) {
-			return $transformer->transform($reactable);
-		});
 
-		$watchReactables = Reactable::where('reactable_type', 'App\\Models\\Slide')
+		$watchs = Reactable::where('reactable_type', 'App\\Models\\Slide')
 			->whereIn('reactable_id', $watchedSlides->pluck('id'))
 			->get();
-		$watchs = $watchReactables->map(function($reactable) use ($transformer) {
-			return $transformer->transform($reactable);
-		});
 
-		$otherReactables = Reactable::where('reactable_type', 'App\\Models\\Slide')
+		$others = Reactable::where('reactable_type', 'App\\Models\\Slide')
 			->whereIn('reactable_id', $otherSlides->pluck('id'))
 			->get();
-		$others = $otherReactables->map(function($reactable) use ($transformer) {
-			return $transformer->transform($reactable);
+
+		$expectedResults = $bookmarks->concat($watchs)->map(function($reactable) {
+			return [
+				'id'             => $reactable->id,
+				'user_id'        => $reactable->user_id,
+				'reaction_id'    => $reactable->reaction_id,
+				'reactable_id'   => $reactable->reactable_id,
+				'reactable_type' => $reactable->reactable_type,
+				'created_at'     => $reactable->created_at->timestamp,
+				'updated_at'     => $reactable->updated_at->timestamp,
+			];
+		});
+		$unexpectedResults = $others->map(function($reactable) {
+			return [
+				'id'             => $reactable->id,
+				'user_id'        => $reactable->user_id,
+				'reaction_id'    => $reactable->reaction_id,
+				'reactable_id'   => $reactable->reactable_id,
+				'reactable_type' => $reactable->reactable_type,
+				'created_at'     => $reactable->created_at->timestamp,
+				'updated_at'     => $reactable->updated_at->timestamp,
+			];
 		});
 
-		$response->assertJson($bookmarks->concat($watchs)->toArray());
-		$response->assertJsonMissing($others->toArray());
+		$response->assertJson($expectedResults->toArray());
+		$response->assertJsonMissing($unexpectedResults->toArray());
 	}
 }

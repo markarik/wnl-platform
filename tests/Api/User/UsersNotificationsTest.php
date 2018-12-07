@@ -2,7 +2,6 @@
 
 namespace Tests\Api\User;
 
-use App\Http\Controllers\Api\Transformers\NotificationTransformer;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\UserSubscription;

@@ -25,7 +25,7 @@ const actions = {
 		return axios.get(getApiUrl(`user_profiles/.search?q=${query}`))
 	},
 	requestTagsAutocomplete({}, { name, tags }) {
-		return axios.post(getApiUrl('tags/matchingName'), {
+		return axios.post(getApiUrl('tags/byName'), {
 			name,
 			excludedIds: tags.map(({id}) => id)
 		})

@@ -82,7 +82,7 @@ export default {
 							return this.getSlideId(slideshowId)
 						})
 						.then(slideId => {
-							this.resourceUrl = `/papi/v1/slides/${slideId}`
+							this.resourceUrl = getApiUrl(`slides/${slideId}`)
 							this.loading = false
 							this.slideId = slideId
 
@@ -99,7 +99,7 @@ export default {
 							this.error = true
 						})
 				} else {
-					this.resourceUrl = `/papi/v1/slides/${this.slideId}`
+					this.resourceUrl = getApiUrl(`slides/${this.slideId}`)
 					this.slideOrderNo = null
 					this.loading = false
 

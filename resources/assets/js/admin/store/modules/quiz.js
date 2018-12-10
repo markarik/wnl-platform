@@ -18,7 +18,7 @@ const state = {
 }
 
 function getSlideshowId(screenId) {
-	return axios.get(`/papi/v1/screens/${screenId}`)
+	return axios.get(getApiUrl(`screens/${screenId}`))
 		.then(response => {
 			let resources = response.data.meta.resources
 			let resourceName = resource('slideshows')
@@ -46,7 +46,7 @@ function getSlideId(slideshowId, slideNumber) {
 }
 
 function getSlideData(slideId) {
-	return axios.get(`/papi/v1/slides/${slideId}?include=context`);
+	return axios.get(getApiUrl()`slides/${slideId}?include=context`);
 }
 
 function getEmptyAnswers(stateAnswers) {

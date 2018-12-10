@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 abstract class ApiTestCase extends TestCase
 {
-	const BASE = '/papi/v1';
+	const BASE = '/papi/v2';
 
 	/**
 	 * Build target URL

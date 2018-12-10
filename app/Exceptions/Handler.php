@@ -65,8 +65,8 @@ class Handler extends ExceptionHandler
 			return redirect()->guest('login');
 		}
 
-		if ($exception instanceof AppGoneException) {
-			return response()->view('errors.410', [], 410);
+		if ($exception instanceof AppUnavailableException) {
+			return response()->view('app_unavailable', [], 200);
 		}
 
 		if (!$production) {

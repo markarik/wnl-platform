@@ -19,7 +19,7 @@
 |
 */
 
-use App\Exceptions\AppGoneException;
+use App\Exceptions\AppUnavailableException;
 
 require __DIR__.'/../bootstrap/autoload.php';
 
@@ -56,7 +56,7 @@ $response = $kernel->handle(
 );
 
 if (env('APP_UNAVAILABLE')) {
-	throw new AppGoneException();
+	throw new AppUnavailableException();
 }
 
 $response->send();

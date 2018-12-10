@@ -15,7 +15,7 @@
 				Jeżeli chcesz umieścić link do strony wewnątrz platformy, użyj relatywnego adresu.
 				Na przykład: <code>/app/courses/1</code> zamiast <code>https://platforma.wiecejnizlek.pl/app/courses/1</code>.
 				Pamiętaj o ukośniku <code>/</code> na początku adresu!
-				Dzięki temu strona otworzy się szybciej i bez przeładowania strony.
+				Dzięki temu strona otworzy się szybciej i bez przeładowania całego widoku.
 			</p>
 			<p>Możesz użyć następujących parametrów:</p>
 			<ul class="message-arguments">

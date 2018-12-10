@@ -80,6 +80,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// Lessons
 		Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
+		Route::post("{$r['lessons']}", 'LessonsApiController@post');
 		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
 
 		// Screens

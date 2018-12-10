@@ -2,7 +2,7 @@
 	<div class="screens-editor">
 		<div class="screens-list">
 			<p class="title is-5">Ekrany</p>
-			<wnl-screens-list :screens="screens" ref="ScreensList"></wnl-screens-list>
+			<wnl-screens-list :lessonId="lessonId" :screens="screens" ref="ScreensList"></wnl-screens-list>
 		</div>
 		<div class="screen-editor" v-if="loaded">
 			<form>
@@ -90,19 +90,19 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import { set } from 'vue'
+	import _ from 'lodash';
+	import { set } from 'vue';
 	import { mapActions } from 'vuex';
 
-	import ScreensList from 'js/admin/components/lessons/edit/ScreensList.vue'
-	import Form from 'js/classes/forms/Form'
-	import Input from 'js/admin/components/forms/Input.vue'
-	import Quill from 'js/admin/components/forms/Quill.vue'
-	import Select from 'js/admin/components/forms/Select.vue'
+	import ScreensList from 'js/admin/components/lessons/edit/ScreensList.vue';
+	import Form from 'js/classes/forms/Form';
+	import Input from 'js/admin/components/forms/Input.vue';
+	import Quill from 'js/admin/components/forms/Quill.vue';
+	import Select from 'js/admin/components/forms/Select.vue';
 
-	import { getApiUrl } from 'js/utils/env'
-	import WnlScreensMetaEditorFlashcards from 'js/admin/components/lessons/edit/ScreensMetaEditorFlashcards'
-	import WnlScreensMetaEditorQuizes from 'js/admin/components/lessons/edit/ScreensMetaEditorQuizes'
+	import { getApiUrl } from 'js/utils/env';
+	import WnlScreensMetaEditorFlashcards from 'js/admin/components/lessons/edit/ScreensMetaEditorFlashcards';
+	import WnlScreensMetaEditorQuizes from 'js/admin/components/lessons/edit/ScreensMetaEditorQuizes';
 
 	let types = {
 		html: {
@@ -132,10 +132,11 @@
 			hasMeta: true,
 			metaEditorComponent: WnlScreensMetaEditorFlashcards,
 		},
-	}
+	};
 
 	export default {
 		name: 'ScreensEditor',
+		props: ['lessonId'],
 		components: {
 			WnlScreensMetaEditorFlashcards,
 			WnlScreensMetaEditorQuizes,
@@ -160,7 +161,7 @@
 		},
 		computed: {
 			screenId() {
-				return this.$route.params.screenId
+				return this.$route.params.screenId;
 			},
 			screenMeta: {
 				get() {
@@ -171,22 +172,22 @@
 				}
 			},
 			loaded() {
-				return !!this.$route.params.screenId
+				return !!this.$route.params.screenId;
 			},
 			screenFormResourceUrl() {
-				return getApiUrl(`screens/${this.$route.params.screenId}`)
+				return getApiUrl(`screens/${this.$route.params.screenId}`);
 			},
 			typesOptions() {
-				return Object.keys(types).map((key, index) => types[key])
+				return Object.keys(types).map((key, index) => types[key]);
 			},
 			currentType() {
-				let type = this.screenForm.type
+				let type = this.screenForm.type;
 				if (type !== null && types.hasOwnProperty(type)) {
-					return types[type]
+					return types[type];
 				}
  			},
 			hasChanged() {
-				return !_.isEqual(this.screenForm.data(), this.screenForm.originalData)
+				return !_.isEqual(this.screenForm.data(), this.screenForm.originalData);
 			},
 		},
 		methods: {
@@ -195,51 +196,51 @@
 				axios.get(this.screenFormResourceUrl)
 					.then(response => {
 						Object.keys(response.data).forEach((field) => {
-							let value = response.data[field]
+							let value = response.data[field];
 							if (_.isObject(value)) {
-								value = JSON.stringify(value)
+								value = JSON.stringify(value);
 							}
-							this.screenForm[field] = value
-							this.screenForm.originalData[field] = value
+							this.screenForm[field] = value;
+							this.screenForm.originalData[field] = value;
 						})
 					})
 			},
 			onSubmit() {
 				if (!this.hasChanged) {
-					return false
+					return false;
 				}
 
-				this.loading = true
+				this.loading = true;
 
 				if (this.currentType.hasMeta) {
-					this.screenForm.meta = unescape(this.screenForm.meta)
+					this.screenForm.meta = unescape(this.screenForm.meta);
 				} else {
-					this.screenForm.meta = '{}'
+					this.screenForm.meta = '{}';
 				}
 
 				this.screenForm.put(this.screenFormResourceUrl)
 					.then(() => {
-						this.loading = false
-						this.screenForm.originalData = this.screenForm.data()
+						this.loading = false;
+						this.screenForm.originalData = this.screenForm.data();
 						this.addAutoDismissableAlert({
 							text: 'Zapisano!',
 							type: 'success',
 						});
-						return this.$refs.ScreensList.fetchScreens()
+						return this.$refs.ScreensList.fetchScreens();
 					})
 					.catch(exception => {
-						this.loading = false
+						this.loading = false;
 						this.addAutoDismissableAlert({
 							text: 'Nie wyszło :(',
 							type: 'error',
 						});
-						$wnl.logger.capture(exception)
+						$wnl.logger.capture(exception);
 					})
 			}
 		},
 		mounted() {
 			if (this.screenId) {
-				this.populateScreenForm()
+				this.populateScreenForm();
 			}
 		},
 		watch: {

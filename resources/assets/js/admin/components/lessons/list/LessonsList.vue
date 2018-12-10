@@ -1,5 +1,6 @@
 <template>
 	<div class="lessons-list">
+		<router-link class="button is-success" :to="{name: 'lessons', params: { lessonId: 'new' } }">+ Dodaj lekcję</router-link>
 		<p class="title is-4">Lista lekcji</p>
 		<wnl-lesson-list-item v-for="lesson in allLessons"
 			:key="lesson.id"

@@ -4,7 +4,6 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\ScreenTransformer;
 use App\Http\Requests\Course\UpdateScreen;
-use App\Models\Lesson;
 use App\Models\Screen;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;

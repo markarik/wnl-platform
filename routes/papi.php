@@ -133,7 +133,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['comments']}/{id}", 'CommentsApiController@get');
 		Route::put("{$r['comments']}/{id}", 'CommentsApiController@put');
 		Route::delete("{$r['comments']}/{id}", 'CommentsApiController@delete');
-		Route::post("{$r['comments']}/query", 'CommentsApiController@query');
+		Route::get("{$r['comments']}/query", 'CommentsApiController@query');
 
 		// Chat Messages
 		Route::post(
@@ -174,7 +174,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Quiz Questions
 		Route::post("{$r['quiz-questions']}/.filter", 'QuizQuestionsApiController@filter');
 		Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
-		Route::post("{$r['quiz-questions']}/byTagName", 'QuizQuestionsApiController@getCollectionByTagName');
+		Route::post("{$r['quiz-questions']}/byTagName", 'QuizQuestionsApiController@getByTagName');
 
 		// Flashcards
 		Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');

@@ -45,7 +45,7 @@ class QuizQuestionsApiController extends ApiController
 		return $this->transformAndRespond($quizQuestion);
 	}
 
-	public function getCollectionByTagName(Request $request) {
+	public function getByTagName(Request $request) {
 
 		$request->validate([
 			'ids' => 'array'

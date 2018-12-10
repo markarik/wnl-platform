@@ -26,12 +26,12 @@ class ReactablesApiController extends ApiController
 			return $this->respondForbidden();
 		}
 
-		$savedReactions = Reaction::whereIn('type', ['watch', 'bookmark'])->get()->pluck('id');
-
 		$reactables = Reactable::where('reactable_type', 'App\\Models\\Slide')
-			->where('user_id', $user->id)
-			->whereIn('reactable_id', $request->get('slideIds'))
-			->whereIn('reaction_id', $savedReactions)
+			->select('reactables.*')
+			->where('reactables.user_id', $user->id)
+			->whereIn('reactables.reactable_id', $request->get('slideIds'))
+			->join('reactions', 'reactions.id', '=', 'reactables.reaction_id')
+			->whereIn('reactions.type', ['watch', 'bookmark'])
 			->get();
 
 		return $this->transformAndRespond($reactables);

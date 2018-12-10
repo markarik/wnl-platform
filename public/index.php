@@ -19,6 +19,8 @@
 |
 */
 
+use App\Exceptions\AppGoneException;
+
 require __DIR__.'/../bootstrap/autoload.php';
 
 /*
@@ -52,6 +54,10 @@ $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 $response = $kernel->handle(
     $request = Illuminate\Http\Request::capture()
 );
+
+if (env('APP_UNAVAILABLE')) {
+	throw new AppGoneException();
+}
 
 $response->send();
 

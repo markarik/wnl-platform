@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Exceptions\AppGoneException;
 use JavaScript;
 
 class AppController extends Controller

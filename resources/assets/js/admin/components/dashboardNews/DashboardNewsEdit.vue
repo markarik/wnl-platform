@@ -23,7 +23,7 @@
 						class="message-argument"
 						v-for="(value, key) in messageArguments" :key="key"
 				>
-					<code>{{escapeArgumentKey(key)}}</code> - {{messageArgumentsDescription[key]}}
+					<code>{{escapeArgumentKey(key)}}</code> - {{value.description}}
 				</li>
 			</ul>
 			<wnl-datepicker name="start_date" :config="datepickerConfig">Wyświetlaj od</wnl-datepicker>

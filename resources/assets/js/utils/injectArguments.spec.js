@@ -6,7 +6,7 @@ describe('injectArguments util', () => {
 		expect(injectArguments(
 			'Witaj {{currentUserName}}!',
 			{
-				currentUserName: 'Zosia',
+				currentUserName: {value: 'Zosia'},
 				ignore: 'Yes please'
 			}
 		)).to.eql('Witaj Zosia!');

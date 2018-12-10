@@ -5,7 +5,10 @@ export default {
 		...mapGetters(['currentUserName']),
 		messageArguments() {
 			return {
-				currentUserName: this.currentUserName
+				currentUserName: {
+					description: 'imię użytkownika',
+					value: this.currentUserName
+				}
 			};
 		}
 	},

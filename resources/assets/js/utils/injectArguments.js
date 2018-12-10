@@ -1,3 +1,5 @@
+import {get} from 'lodash';
+
 const PLACEHOLDER_RGX = /{{[a-z0-9]*}}/gi;
 
 export default function injectArguments(content, args) {
@@ -8,7 +10,8 @@ export default function injectArguments(content, args) {
 
 	matches.forEach(match => {
 		const argName = match.replace(/{{|}}/g, '');
-		const value = args[argName] || '';
+
+		const value = get(args, [argName, 'value'], '');
 		if (!value) missing.push(argName);
 		content = content.replace(match, value);
 	});

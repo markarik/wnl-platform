@@ -68,14 +68,24 @@ class CommentsApiController extends ApiController
 	}
 
 	public function query(Request $request) {
-		$commentableId = $request->get('commentable_id');
-		$commentableType = $request->get('commentable_type');
+		$commentsQuery = Comment::select();
 
-		$commentsQuery = Comment::where('commentable_id', $commentableId)
-			->where('commentable_type', $commentableType);
+		if ($request->has('commentable_id')) {
+			$commentableId = $request->get('commentable_id');
+			$commentsQuery->where('commentable_id', $commentableId);
+		}
+
+		if ($request->has('commentable_type')) {
+			$commentableType = $request->get('commentable_type');
+			$commentsQuery->where('commentable_type', $commentableType);
+		}
 
 		if ($request->has('comment_id')) {
 			$commentsQuery->where('comment_id', $request->get('comment_id'));
+		}
+
+		if ($request->has('user_id')) {
+			$commentsQuery->where('user_id', $request->get('user_id'));
 		}
 
 		$comments = $commentsQuery->orderBy('id', 'asc')->get();

@@ -394,17 +394,21 @@ export default {
 			}
 			const userId = this.$route.params.userId
 			const dataForQnaQuestions = {
-				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles',
+				user_id: userId
 			}
 			const dataForQnaAnswers = {
-				include: 'reactions'
+				include: 'reactions',
+				user_id: userId
 			}
 			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
-			const promisedAllComments = axios.get(getApiUrl(`users/${userId}/comments`))
-			const promisedQnaQuestionsCompetency = axios.get(getApiUrl(`users/${userId}/qna_questions`), {
+			const promisedAllComments = axios.get(getApiUrl('comments/query'), {params: {
+				user_id: userId
+			}})
+			const promisedQnaQuestionsCompetency = axios.get(getApiUrl('qna_questions/query'), {
 				params: dataForQnaQuestions
 			})
-			const promisedAllAnswers = axios.get(getApiUrl(`users/${userId}/qna_answers`), {
+			const promisedAllAnswers = axios.get(getApiUrl('qna_answers/query'), {
 				params: dataForQnaAnswers
 			})
 

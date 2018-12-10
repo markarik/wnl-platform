@@ -113,12 +113,14 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['qna-questions']}/latest", 'QnaQuestionsApiController@getLatest');
 		Route::post("{$r['qna-questions']}/byIds", 'QnaQuestionsApiController@getByIds');
 		Route::post("{$r['qna-questions']}/byTags", 'QnaQuestionsApiController@getByTags');
+		Route::get("{$r['qna-questions']}/query", 'QnaQuestionsApiController@query');
 		Route::get("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@get');
 		Route::put("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@put');
 		Route::delete("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@delete');
 
 		// Q&A Answers
 		Route::post($r['qna-answers'], 'QnaAnswersApiController@post');
+		Route::get("{$r['qna-answers']}/query", 'QnaAnswersApiController@query');
 		Route::get("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@get');
 		Route::put("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@put');
 		Route::delete("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@delete');
@@ -130,10 +132,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// Comments
 		Route::post($r['comments'], 'CommentsApiController@post');
+		Route::get("{$r['comments']}/query", 'CommentsApiController@query');
 		Route::get("{$r['comments']}/{id}", 'CommentsApiController@get');
 		Route::put("{$r['comments']}/{id}", 'CommentsApiController@put');
 		Route::delete("{$r['comments']}/{id}", 'CommentsApiController@delete');
-		Route::get("{$r['comments']}/query", 'CommentsApiController@query');
 
 		// Chat Messages
 		Route::post(
@@ -218,9 +220,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['users']}/{id}/{$r['user-settings']}", 'UserSettingsApiController@put');
 
 	Route::patch("{$r['users']}/{userId}/forget", 'UsersApiController@forget');
-	Route::get("{$r['users']}/{id}/{$r['comments']}", 'UsersApiController@getComments');
-	Route::get("{$r['users']}/{id}/{$r['qna-answers']}", 'UsersApiController@getQnaAnswers');
-	Route::get("{$r['users']}/{id}/{$r['qna-questions']}", 'UsersApiController@getQnaQuestions');
 
 	Route::get("{$r['users']}/{userId}/{$r['user-personal-data']}", 'UserPersonalDataApiController@get');
 	Route::post("{$r['users']}/{userId}/{$r['user-personal-data']}", 'UserPersonalDataApiController@post');

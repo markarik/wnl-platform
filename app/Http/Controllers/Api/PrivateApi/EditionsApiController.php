@@ -22,8 +22,8 @@ class EditionsApiController extends ApiController
 		$user = Auth::user();
 		$key = self::key($user->id, __METHOD__);
 
-		if(Cache::has($key)) {
-			return $this->respondOk(Cache::get($key));
+		if(Cache::tags('editions')->has($key)) {
+			return $this->respondOk(Cache::tags('editions')->get($key));
 		}
 
 		$data = parent::get($id)->getData();
@@ -33,7 +33,11 @@ class EditionsApiController extends ApiController
 		return $this->respondOk($data);
 	}
 
-	public static function key($userId) {
+	protected static function key($userId) {
 		return sprintf(self::CACHE_KEY_PATTERN, self::CACHE_VERSION, $userId);
+	}
+
+	public static function clearCache($userId) {
+		\Cache::tags('editions')->forget(self::key($userId));
 	}
 }

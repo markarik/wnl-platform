@@ -29,6 +29,20 @@
             "value": "click_link"
           }
         }
+      },
+      "news_message": {
+        "value": "news_message",
+        "actions": {
+          "click_link": {
+            "value": "click_link"
+          },
+          "open": {
+            "value": "open"
+          },
+          "close": {
+            "value": "close"
+          }
+        }
       }
     }
   },

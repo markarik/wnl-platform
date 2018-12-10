@@ -30,7 +30,7 @@ export function getUrl(path) {
 }
 
 export function getApiUrl(path) {
-	return getUrl(`papi/v1/${path}`)
+	return getUrl(`papi/v2/${path}`)
 }
 
 export function getImageUrl(filename) {

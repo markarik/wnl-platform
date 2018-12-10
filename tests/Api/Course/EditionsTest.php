@@ -18,7 +18,7 @@ class EditionsTest extends ApiTestCase
 
 		$response = $this
 			->actingAs($user)
-			->json('GET', 'papi/v1/editions/1?include=groups');
+			->json('GET', 'papi/v2/editions/1?include=groups');
 
 		$response
 			->assertStatus(200)

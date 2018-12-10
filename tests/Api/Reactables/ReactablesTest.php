@@ -17,8 +17,7 @@ class ReactablesTest extends ApiTestCase
 
 	use DatabaseTransactions;
 
-	/** @test */
-	public function get_users_saved_slides()
+	public function test_get_users_saved_slides()
 	{
 		$user = factory(User::class)->create();
 

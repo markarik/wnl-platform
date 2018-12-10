@@ -17,8 +17,7 @@ class SlidesTest extends ApiTestCase
 
 	use DatabaseTransactions;
 
-	/** @test */
-	public function get_slides_by_tag_name()
+	public function test_get_slides_by_tag_name()
 	{
 		$user = factory(User::class)->create();
 

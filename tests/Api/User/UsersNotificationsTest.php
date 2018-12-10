@@ -10,8 +10,7 @@ use Tests\Api\ApiTestCase;
 
 class UserNotificationsTest extends ApiTestCase
 {
-	/** @test */
-	public function patch_notifications_mark_as_read()
+	public function test_patch_notifications_mark_as_read()
 	{
 		$user = factory(User::class)->create();
 

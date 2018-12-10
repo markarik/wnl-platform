@@ -18,7 +18,6 @@ class GroupsApiController extends ApiController
 		$group = Group::create([
 			'name' => $request->get('name'),
 			'course_id' => 1,
-			'required_role' => $request->get('required_role'),
 		]);
 
 		return $this->transformAndRespond($group);

@@ -25,7 +25,6 @@ class UpdateGroup extends FormRequest
 	{
 		return [
 			'name'   => 'required|string',
-			'required_role'   => 'string|nullable',
 		];
 	}
 }

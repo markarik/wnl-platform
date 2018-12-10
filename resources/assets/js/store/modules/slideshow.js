@@ -201,7 +201,7 @@ const actions = {
 			.catch(() => commit(types.SLIDESHOW_LOADING_COMMENTS, false))
 	},
 	setupSlideComments({commit, dispatch}, {id, ...args}) {
-		return dispatch('setupSlideshowComments', {...args})
+		return dispatch('setupSlideshowComments', {commentable_id: id, ...args})
 	},
 	resetModule({commit}) {
 		commit(types.RESET_MODULE)

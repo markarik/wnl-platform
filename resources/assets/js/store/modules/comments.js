@@ -6,7 +6,7 @@ import { getApiUrl } from 'js/utils/env'
 import { getModelByResource, modelToResourceMap } from 'js/utils/config'
 import {reactionsGetters, reactionsMutations, reactionsActions, convertToReactable} from 'js/store/modules/reactions'
 
-function _fetchComments(...commentsQuery) {
+function _fetchComments({...commentsQuery}) {
 	if (!commentsQuery.hasOwnProperty('commentable_type')) {
 		return Promise.reject('Commentable type not defined')
 	}
@@ -181,7 +181,7 @@ export const commentsActions = {
 		}
 	},
 	async fetchComments({commit, dispatch}, {...args}) {
-		const response = await _fetchComments(...args)
+		const response = await _fetchComments({...args})
 		if (!response.data.hasOwnProperty('included')) {
 			return
 		}

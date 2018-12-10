@@ -11,7 +11,7 @@ export default function injectArguments(content, args) {
 	matches.forEach(match => {
 		const argName = match.replace(/{{|}}/g, '');
 
-		const value = get(args, [argName, 'value']);
+		const value = get(args, [argName, 'value'], '');
 		if (!value) missing.push(argName);
 		content = content.replace(match, value);
 	});

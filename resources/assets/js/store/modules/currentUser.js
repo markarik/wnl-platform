@@ -1,6 +1,6 @@
-import * as types from '../mutations-types'
-import { getApiUrl } from 'js/utils/env'
-import { set } from 'vue'
+import * as types from '../mutations-types';
+import { getApiUrl } from 'js/utils/env';
+import { set } from 'vue';
 
 let getCurrentUserPromise;
 
@@ -32,7 +32,7 @@ const state = {
 		accountSuspended: false
 	},
 	settings: $wnl.defaultSettings,
-}
+};
 
 // Getters
 const getters = {
@@ -57,40 +57,40 @@ const getters = {
 	currentUserStats: state => state.stats,
 	currentUserSubscriptionDates: state => state.profile.subscription.dates,
 	currentUserSubscriptionActive: state => state.profile.subscription.status === 'active',
-}
+};
 
 // Mutations
 const mutations = {
 	[types.IS_LOADING] (state, isLoading) {
-		set(state, 'loading', isLoading)
+		set(state, 'loading', isLoading);
 	},
 	[types.USERS_SETUP_CURRENT] (state, userData) {
-		set(state, 'profile', userData)
+		set(state, 'profile', userData);
 	},
 	[types.USERS_UPDATE_CURRENT] (state, userData) {
 		Object.keys(userData).forEach((key) => {
-			set(state.profile, key, userData[key])
-		})
+			set(state.profile, key, userData[key]);
+		});
 	},
 	[types.USERS_SETUP_SETTINGS] (state, settings) {
-		set(state, 'settings', settings)
+		set(state, 'settings', settings);
 	},
 	[types.USERS_CHANGE_SETTING] (state, payload) {
-		set(state.settings, payload.setting, payload.value)
+		set(state.settings, payload.setting, payload.value);
 	},
 	[types.USERS_SET_STATS] (state, payload) {
-		set(state, 'stats', payload)
+		set(state, 'stats', payload);
 	},
 	[types.USERS_SET_SUBSCRIPTION] (state, payload) {
-		set(state, 'subscription', payload)
+		set(state, 'subscription', payload);
 	},
 	[types.USERS_SET_IDENTIY] (state, payload) {
-		set(state.profile, 'identity', payload)
+		set(state.profile, 'identity', payload);
 	},
 	[types.USERS_SET_ACCOUNT_SUSPENDED] (state, payload) {
-		set(state.profile, 'accountSuspended', payload)
+		set(state.profile, 'accountSuspended', payload);
 	},
-}
+};
 
 // Actions
 const actions = {
@@ -98,18 +98,18 @@ const actions = {
 		// Make sure that setup happens only once
 		if (!getCurrentUserPromise) {
 			getCurrentUserPromise = Promise
-			.all([
-				dispatch('fetchCurrentUserProfile'),
-				dispatch('fetchUserSettings'),
-			])
-			.then(() => commit(types.IS_LOADING, false))
-			.catch((error) => {
-				$wnl.logger.error(error)
-				commit(types.IS_LOADING, false)
-			})
+				.all([
+					dispatch('fetchCurrentUserProfile'),
+					dispatch('fetchUserSettings'),
+				])
+				.then(() => commit(types.IS_LOADING, false))
+				.catch((error) => {
+					$wnl.logger.error(error);
+					commit(types.IS_LOADING, false);
+				});
 		}
 
-		return getCurrentUserPromise
+		return getCurrentUserPromise;
 	},
 
 	async fetchCurrentUserProfile({ commit }) {
@@ -119,9 +119,9 @@ const actions = {
 			[userResponse, subscriptionResponse] = await Promise.all([
 				axios.get(getApiUrl('users/current/profile?include=roles')),
 				axios.get(getApiUrl('user_subscription/current'))
-			])
+			]);
 		} catch (error) {
-			$wnl.logger.error(error)
+			$wnl.logger.error(error);
 			throw error;
 		}
 
@@ -129,109 +129,109 @@ const actions = {
 		if (!included) {
 			profile.roles = [];
 		} else {
-			const roles = included.roles || {}
+			const roles = included.roles || {};
 			profile.roles = Object.values(roles)
-				.map(role => role.name)
+				.map(role => role.name);
 		}
 
 		const currentUser = {
 			...profile,
 			subscription: subscriptionResponse.data
-		}
+		};
 
 		if (!currentUser.user_id) {
 			$wnl.logger.error('current user returned user with ID 0', {
 				profile: currentUser
-			})
+			});
 			throw new Error('current user returned user with ID 0');
 		}
-		commit(types.USERS_SETUP_CURRENT, currentUser)
+		commit(types.USERS_SETUP_CURRENT, currentUser);
 	},
 
 	fetchCurrentUserStats({commit, getters}) {
 		return new Promise((resolve, reject) => {
 			_fetchUserStats(getters.currentUserId)
-			.then(({data}) => {
-				commit(types.USERS_SET_STATS, data)
-				resolve()
-			})
-			.catch((error) => {
-				$wnl.logger.error(error)
-				reject()
-			})
-		})
+				.then(({data}) => {
+					commit(types.USERS_SET_STATS, data);
+					resolve();
+				})
+				.catch((error) => {
+					$wnl.logger.error(error);
+					reject();
+				});
+		});
 	},
 
 	async fetchUserSettings({ commit }) {
 		try {
 			const { data } = await axios.get(getApiUrl('users/current/settings'));
-			commit(types.USERS_SETUP_SETTINGS, data)
+			commit(types.USERS_SETUP_SETTINGS, data);
 		} catch (error) {
-			$wnl.logger.error(error)
-			throw error
+			$wnl.logger.error(error);
+			throw error;
 		}
 	},
 
 	async fetchUserPersonalData({ commit }) {
 		try {
-			const response = await axios.get(getApiUrl(`users/current/personal_data`))
-			commit(types.USERS_SET_IDENTIY, response.data)
+			const response = await axios.get(getApiUrl('users/current/personal_data'));
+			commit(types.USERS_SET_IDENTIY, response.data);
 		}
 		catch (error) {
 			const emptyResponse = {
 				personalIdentityNumber: null,
 				identityCardNumber: null,
 				passportNumber: null
-			}
+			};
 			if (error.response.status === 404) {
-				commit(types.USERS_SET_IDENTIY, emptyResponse)
+				commit(types.USERS_SET_IDENTIY, emptyResponse);
 			}
-			commit(types.USERS_SET_IDENTIY, emptyResponse)
-			$wnl.logger.error(error)
+			commit(types.USERS_SET_IDENTIY, emptyResponse);
+			$wnl.logger.error(error);
 		}
 	},
 
 	updateCurrentUser({commit}, userData) {
-		commit(types.USERS_UPDATE_CURRENT, userData)
+		commit(types.USERS_UPDATE_CURRENT, userData);
 	},
 
 	changeUserSetting({ commit }, payload) {
-		commit(types.USERS_CHANGE_SETTING, payload)
+		commit(types.USERS_CHANGE_SETTING, payload);
 	},
 
 	setUserIdentity({ commit }, payload) {
-		commit(types.USERS_SET_IDENTIY, payload)
+		commit(types.USERS_SET_IDENTIY, payload);
 	},
 
 	changeUserSettingAndSync({ commit, dispatch }, payload) {
-		dispatch("changeUserSetting", payload)
-		dispatch("syncSettings")
+		dispatch('changeUserSetting', payload);
+		dispatch('syncSettings');
 	},
 
 	toggleChat({ dispatch, getters }) {
-		dispatch("changeUserSettingAndSync", {
-			setting: "chat_on", value: !getters.getSetting("chat_on")
-		})
+		dispatch('changeUserSettingAndSync', {
+			setting: 'chat_on', value: !getters.getSetting('chat_on')
+		});
 	},
 
 	syncSettings({ commit, getters }) {
-		return axios.put(getApiUrl('users/current/settings'), getters.getAllSettings)
+		return axios.put(getApiUrl('users/current/settings'), getters.getAllSettings);
 	},
 
 	deleteAccount({getters}, payload) {
 		return axios.patch(getApiUrl(`users/${getters.currentUserId}/forget`), {
 			password: payload
-		})
+		});
 	}
-}
+};
 
 const _fetchUserStats = (userId) => {
 	return axios.get(getApiUrl(`users/${userId}/state/stats`));
-}
+};
 
 export default {
 	state,
 	getters,
 	mutations,
 	actions
-}
+};

@@ -3,8 +3,8 @@
  * @type {Object}
  */
 
-import _ from 'lodash'
-import {mapActions, mapGetters} from 'vuex'
+import _ from 'lodash';
+import {mapActions, mapGetters} from 'vuex';
 
 export const feed = {
 	computed: {
@@ -15,22 +15,22 @@ export const feed = {
 			'isFetching',
 		]),
 		canShowMore() {
-			return this.hasMore(this.channel)
+			return this.hasMore(this.channel);
 		},
 		fetching() {
-			return this.isFetching(this.channel)
+			return this.isFetching(this.channel);
 		},
 		isEmpty() {
-			return !this.fetching && this.totalNotifications === 0
+			return !this.fetching && this.totalNotifications === 0;
 		},
 		notifications() {
-			return this.getSortedNotifications(this.channel)
+			return this.getSortedNotifications(this.channel);
 		},
 		showEndInfo() {
-			return this.totalNotifications > this.limit && !this.canShowMore
+			return this.totalNotifications > this.limit && !this.canShowMore;
 		},
 		totalNotifications() {
-			return _.size(this.notifications)
+			return _.size(this.notifications);
 		},
 	},
 	methods: {
@@ -38,25 +38,25 @@ export const feed = {
 			'pullNotifications',
 		]),
 		getEventComponent(message) {
-			return `wnl-event-${message.event}`
+			return `wnl-event-${message.event}`;
 		},
 		hasComponentForEvent(message) {
-			const components = this.$options.components
+			const components = this.$options.components;
 
 			return typeof components === 'object' &&
-				Object.keys(components).indexOf(this.getEventComponent(message)) > -1
+				Object.keys(components).indexOf(this.getEventComponent(message)) > -1;
 		},
 		loadMore(event) {
-			event.stopPropagation()
+			event.stopPropagation();
 			if (this.fetching) return;
 
-			const extraParams = this.notificationsParams || {}
+			const extraParams = this.notificationsParams || {};
 
 			this.pullNotifications([this.channel, {
 				limit: this.limit,
 				olderThan: this.getOldestNotification(this.channel).timestamp,
 				...extraParams
-			}])
+			}]);
 		},
 	}
-}
+};

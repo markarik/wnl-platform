@@ -7,4 +7,4 @@ export const units = {
 		seconds: 'sekund',
 		secondsShort: 's',
 	},
-}
+};

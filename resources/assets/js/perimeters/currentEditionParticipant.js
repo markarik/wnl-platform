@@ -12,10 +12,10 @@ export default createPerimeter({
 	isCurrentEditionParticipant() {
 		return this.child &&
 			this.child.subscription &&
-			this.child.subscription.status === 'active'
+			this.child.subscription.status === 'active';
 	},
 
 	isAccountActive() {
-		return this.child && !this.child.accountSuspended
+		return this.child && !this.child.accountSuspended;
 	}
 });

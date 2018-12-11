@@ -14,11 +14,11 @@ const composeItem = ({
 	const to = !isDisabled && routeName ? {
 		name: routeName,
 		params: routeParams
-	} : {}
+	} : {};
 
-	return { text, itemClass, to, isDisabled, method, iconClass, iconTitle, completed, active, meta }
-}
+	return { text, itemClass, to, isDisabled, method, iconClass, iconTitle, completed, active, meta };
+};
 
 export default {
 	composeItem,
-}
+};

@@ -54,4 +54,4 @@ export const notifications = {
 		showUnread: 'Pokaż aktywne',
 		zeroState: 'Tu powiadomimy Cię o wszystkich dyskusjach, które toczą się w ramach kursu - zaglądaj tu często, a nie umkną Ci żadne wydarzenia!',
 	},
-}
+};

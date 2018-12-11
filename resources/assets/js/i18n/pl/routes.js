@@ -13,4 +13,4 @@ export const routes = {
 	myself: {
 		main: 'Konto',
 	},
-}
+};

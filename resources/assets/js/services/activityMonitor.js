@@ -9,23 +9,23 @@ let activitiesConfig;
 export const startActivityTracking = (userId, config) => {
 	activitiesConfig = config;
 	EVENTS.forEach((event) => {
-		document.addEventListener(event, throttle(() => track(userId), THROTTLE_TIME), true)
+		document.addEventListener(event, throttle(() => track(userId), THROTTLE_TIME), true);
 	});
-}
+};
 
 const track = (userId) => {
 	Object.entries(activitiesConfig).forEach(([eventName, config]) => {
 		if (!trackingIntervalIds[eventName]) {
-			trackingIntervalIds[eventName] = window.setInterval(() => config.handle(userId), config.incrementBy)
+			trackingIntervalIds[eventName] = window.setInterval(() => config.handle(userId), config.incrementBy);
 		}
 
-		clearTimeout(inactivityTimerIds[eventName])
-		inactivityTimerIds[eventName] = setTimeout(() => stopTracking(eventName), config.inactivityTime)
-	})
-}
+		clearTimeout(inactivityTimerIds[eventName]);
+		inactivityTimerIds[eventName] = setTimeout(() => stopTracking(eventName), config.inactivityTime);
+	});
+};
 
 const stopTracking = eventName => {
 	window.clearInterval(trackingIntervalIds[eventName]);
-	trackingIntervalIds[eventName] = null
-	inactivityTimerIds[eventName] = null
-}
+	trackingIntervalIds[eventName] = null;
+	inactivityTimerIds[eventName] = null;
+};

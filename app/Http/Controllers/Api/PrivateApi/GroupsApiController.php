@@ -6,10 +6,8 @@ use App\Http\Requests\Course\UpdateGroup;
 use App\Models\Group;
 use Illuminate\Http\Request;
 
-class GroupsApiController extends ApiController
-{
-	public function __construct(Request $request)
-	{
+class GroupsApiController extends ApiController {
+	public function __construct(Request $request) {
 		parent::__construct($request);
 		$this->resourceName = config('papi.resources.groups');
 	}
@@ -34,7 +32,7 @@ class GroupsApiController extends ApiController
 
 		$group->update($request->all());
 
-		foreach($group->lessons as $lesson) {
+		foreach ($group->lessons as $lesson) {
 			$lesson->order_number = array_search($lesson->id, $request->lessons) + 1;
 			$lesson->save();
 		}

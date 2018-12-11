@@ -22,7 +22,7 @@ const getters = {
 		return false;
 	},
 	getLesson: (state) => (courseId, lessonId) => {
-		return _.get(state.courses[courseId], `lessons.${lessonId}`, {}) || {}
+		return _.get(state.courses[courseId], `lessons.${lessonId}`, {}) || {};
 	},
 	getScreen: (state) => (courseId, lessonId, screenId) => {
 		return _.get(state.courses[courseId], `lessons[${lessonId}].screens[${screenId}]`);

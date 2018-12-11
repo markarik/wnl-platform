@@ -57,6 +57,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['groups']}/.filter", 'GroupsApiController@filter');
 		Route::post("{$r['groups']}", 'GroupsApiController@post');
 		Route::put("{$r['groups']}/{id}", 'GroupsApiController@put');
+
+		// Lessons
+		Route::post("{$r['lessons']}", 'LessonsApiController@post');
+		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
 	});
 
 	// Count
@@ -81,8 +85,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Lessons
 		Route::get("{$r['lessons']}/{id}/screens", 'LessonsApiController@getScreens');
 		Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
-		Route::post("{$r['lessons']}", 'LessonsApiController@post');
-		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
 
 		// Screens
 		Route::post("{$r['screens']}", 'ScreensApiController@post');

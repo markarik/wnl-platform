@@ -8,6 +8,7 @@ import Tags from './Tags'
 import SlideIds from './SlideIds'
 import Datepicker from './Datepicker'
 import Checkbox from './Checkbox'
+import Sortable from './Sortable'
 
 export {
 	Form,
@@ -19,5 +20,6 @@ export {
 	Tags,
 	SlideIds,
 	Datepicker,
-	Checkbox
+	Checkbox,
+	Sortable,
 }

@@ -17,6 +17,9 @@ export var formInput = {
 		getErrors() {
 			return this.getterFunction('getErrors', this.name)
 		},
+		data() {
+			return this.getter('getData');
+		},
 		isLoading() {
 			return this.getter('isLoading')
 		},

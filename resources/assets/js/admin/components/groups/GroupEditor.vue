@@ -5,8 +5,6 @@
 			:populate="isEdit"
 			name="GroupEditor"
 			@submitSuccess="onSubmitSuccess"
-			@change="onFormDataChange"
-			:attach="({lessons: lessonIds})"
 			:hideDefaultSubmit="true"
 			class="editor"
 	>
@@ -21,17 +19,9 @@
 
 		<h3>Kolejność lekcji</h3>
 		<small>Lekcję możesz dodać do grupy z poziomu edycji lekcji</small>
-		<ol>
-			<draggable v-model="lessons" @start="drag=true" @end="drag=false">
-				<li
-						class="lesson"
-						v-for="lesson in lessons"
-						:key="lesson.id"
-				>
-					{{lesson.name}}
-				</li>
-			</draggable>
-		</ol>
+		<wnl-sortable name="lessons">
+			<template slot-scope="slotProps">{{slotProps.item.name}}</template>
+		</wnl-sortable>
 	</wnl-form>
 </template>
 
@@ -56,27 +46,15 @@
 
 		.submit
 			width: auto
-
-	.lesson
-		border-top: $border-light-gray
-		cursor: move
-		padding: $margin-base 0
-		margin-left: $margin-base
 </style>
 
 <script>
-	import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit} from 'js/components/global/form';
+	import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Sortable as WnlSortable} from 'js/components/global/form';
 
-	import draggable from 'vuedraggable';
 
 	export default {
 		name: 'GroupEditor',
 		props: ['id'],
-		data() {
-			return {
-				lessons: [],
-			}
-		},
 		computed: {
 			isEdit() {
 				return this.id !== 'new';
@@ -87,15 +65,12 @@
 			resourceRoute() {
 				return this.isEdit ? `groups/${this.id}?include=lessons` : 'groups?include=lessons';
 			},
-			lessonIds(){
-				return this.lessons.map(lesson => lesson.id);
-			}
 		},
 		components: {
 			WnlFormText,
 			WnlForm,
-			draggable,
 			WnlSubmit,
+			WnlSortable,
 		},
 		methods: {
 			onSubmitSuccess(data) {
@@ -103,11 +78,6 @@
 					this.$router.push({ name: 'group-edit', params: { id: data.id } })
 				}
 			},
-			onFormDataChange({formData}) {
-				if (formData.included) {
-					this.lessons = formData.lessons.map(lessonId => formData.included.lessons[lessonId]);
-				}
-			}
 		}
 	}
 </script>

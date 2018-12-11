@@ -4,8 +4,6 @@
             :resource-route="resourceRoute"
             :populate="isEdit"
             name="CourseEditor"
-            @change="onFormDataChange"
-            :attach="({groups: groupIds})"
             :hideDefaultSubmit="true"
             class="editor"
     >
@@ -19,17 +17,9 @@
         >Nazwa</wnl-form-text>
 
         <h3>Kolejność grup lekcji</h3>
-        <ol>
-            <draggable v-model="groups" @start="drag=true" @end="drag=false">
-                <li
-                        class="group"
-                        v-for="group in groups"
-                        :key="group.id"
-                >
-                    {{group.name}}
-                </li>
-            </draggable>
-        </ol>
+        <wnl-sortable name="groups">
+            <template slot-scope="slotProps">{{slotProps.item.name}}</template>
+        </wnl-sortable>
     </wnl-form>
 </template>
 
@@ -54,27 +44,14 @@
 
         .submit
             width: auto
-
-    .group
-        border-top: $border-light-gray
-        cursor: move
-        padding: $margin-base 0
-        margin-left: $margin-base
 </style>
 
 <script>
-	import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit} from 'js/components/global/form';
-
-	import draggable from 'vuedraggable';
+	import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Sortable as WnlSortable} from 'js/components/global/form';
 
 	export default {
 		name: 'CourseEditor',
 		props: ['id'],
-		data() {
-			return {
-				groups: [],
-			}
-		},
 		computed: {
 			isEdit() {
 				return this.id !== 'new';
@@ -85,15 +62,12 @@
 			resourceRoute() {
 				return this.isEdit ? `courses/${this.id}?include=groups` : 'courses?include=groups';
 			},
-			groupIds(){
-				return this.groups.map(group => group.id);
-			}
 		},
 		components: {
 			WnlFormText,
 			WnlForm,
-			draggable,
 			WnlSubmit,
+            WnlSortable,
 		},
 		methods: {
 			onSubmitSuccess(data) {
@@ -101,11 +75,6 @@
 					this.$router.push({ name: 'course-edit', params: { id: data.id } })
 				}
 			},
-			onFormDataChange({formData}) {
-				if (formData.included) {
-					this.groups = formData.groups.map(groupId => formData.included.groups[groupId]);
-				}
-			}
 		}
 	}
 </script>

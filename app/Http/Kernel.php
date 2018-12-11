@@ -3,9 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\CheckIfAppUnavailableMode;
-use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use Illuminate\Routing\Router;
 
 class Kernel extends HttpKernel
 {
@@ -74,12 +72,13 @@ class Kernel extends HttpKernel
 		'account-status' => \App\Http\Middleware\AccountStatus::class,
 	];
 
-	public function __construct(Application $app, Router $router)
-	{
-		if (env('APP_ENV') === 'demo') {
-			$this->prependMiddleware(CheckIfAppUnavailableMode::class);
+	public function bootstrap() {
+
+		parent::bootstrap();
+
+		if ($this->app->environment() == 'demo') {
+			$this->pushMiddleware(CheckIfAppUnavailableMode::class);
 		}
 
-		parent::__construct($app, $router);
 	}
 }

@@ -15,8 +15,9 @@ class CheckIfAppUnavailableMode
 	 */
 	public function handle($request, Closure $next)
 	{
+
 		if (env('APP_UNAVAILABLE')) {
-			return response()->view('app_unavailable', [], 200);
+			return response()->view('app_unavailable', [], 404);
 		}
 
 		return $next($request);

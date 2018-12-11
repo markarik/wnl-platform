@@ -31,6 +31,5 @@ class FlashcardsSet extends Model
 		}
 
 		$this->flashcards()->sync($flashcardsSync);
-
 	}
 }

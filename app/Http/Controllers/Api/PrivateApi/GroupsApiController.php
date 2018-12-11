@@ -32,6 +32,11 @@ class GroupsApiController extends ApiController
 
 		$group->update($request->all());
 
-		return $this->respondOk();
+		foreach($group->lessons as $lesson) {
+			$lesson->order_number = array_search($lesson->id, $request->lessons) + 1;
+			$lesson->save();
+		}
+
+		return $this->transformAndRespond($group);
 	}
 }

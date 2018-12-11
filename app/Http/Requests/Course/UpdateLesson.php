@@ -24,9 +24,9 @@ class UpdateLesson extends FormRequest
 	public function rules()
 	{
 		return [
-            'name'   => 'required|string',
-            'group_id' => 'required|numeric',
-            'is_required' => 'required|boolean',
+			'name' => 'required|string',
+			'group_id' => 'required|numeric',
+			'is_required' => 'required|boolean',
 		];
 	}
 }

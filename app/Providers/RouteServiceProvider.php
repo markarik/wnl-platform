@@ -42,6 +42,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebHookRoutes();
 
         $this->mapPapiRoutes();
+
+        $this->mapPapi2Routes();
     }
 
     /**
@@ -93,13 +95,24 @@ class RouteServiceProvider extends ServiceProvider
 		});
 	}
 
+	// TODO remove after 01.01.2019
 	private function mapPapiRoutes() {
-    	Route::group([
-    		'middleware' => 'papi',
-    		'namespace' => $this->namespace,
+		Route::group([
+			'middleware' => 'papi',
+			'namespace' => $this->namespace,
 			'prefix' => 'papi/v1',
 		], function ($router) {
-    		require base_path('routes/papi.php');
+			require base_path('routes/papi.php');
+		});
+	}
+
+	private function mapPapi2Routes() {
+		Route::group([
+			'middleware' => 'papi',
+			'namespace' => $this->namespace,
+			'prefix' => 'papi/v2',
+		], function ($router) {
+			require base_path('routes/papi.php');
 		});
 	}
 }

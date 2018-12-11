@@ -1,34 +1,31 @@
-import axios from 'axios'
-import {getApiUrl} from 'js/utils/env'
-import {debounce} from 'lodash'
+import {throttle, forOwn} from 'lodash';
 
-const INCREMENT_BY = 1000 * 60 * 10
-const INACTIVITY_TIME = 1000 * 60 * 30
-const DEBOUNCE_TIME = 1000 * 60
+const THROTTLE_TIME = 1000 * 30;
 const EVENTS = ['click', 'touchstart', 'keyup', 'mousemove', 'scroll'];
-let trackingIntervalId = null;
-let inactivityTimerId = null;
+const trackingIntervalIds = {};
+const inactivityTimerIds = {};
+let activitiesConfig;
 
-export const startTracking = (userId) => {
-    EVENTS.forEach((event) => {
-        document.addEventListener(event, debounce(() => track(userId), DEBOUNCE_TIME), true)
-    })
+export const startActivityTracking = (userId, config) => {
+	activitiesConfig = config;
+	EVENTS.forEach((event) => {
+		document.addEventListener(event, throttle(() => track(userId), THROTTLE_TIME), true)
+	});
 }
 
 const track = (userId) => {
-    if (!trackingIntervalId) {
-        trackingIntervalId = window.setInterval(() => {
-            axios.put(getApiUrl(`users/${userId}/state/time`))
-        }, INCREMENT_BY)
-    }
+	Object.entries(activitiesConfig).forEach(([eventName, config]) => {
+		if (!trackingIntervalIds[eventName]) {
+			trackingIntervalIds[eventName] = window.setInterval(() => config.handle(userId), config.incrementBy)
+		}
 
-    clearTimeout(inactivityTimerId)
-    inactivityTimerId = setTimeout(stopTracking, INACTIVITY_TIME)
-
+		clearTimeout(inactivityTimerIds[eventName])
+		inactivityTimerIds[eventName] = setTimeout(() => stopTracking(eventName), config.inactivityTime)
+	})
 }
 
-const stopTracking = () => {
-    window.clearInterval(trackingIntervalId);
-    trackingIntervalId = null
-    inactivityTimerId = null
+const stopTracking = eventName => {
+	window.clearInterval(trackingIntervalIds[eventName]);
+	trackingIntervalIds[eventName] = null
+	inactivityTimerIds[eventName] = null
 }

@@ -44,8 +44,9 @@
 	import Navbar from 'js/components/global/Navbar.vue'
 	import Alerts from 'js/components/global/GlobalAlerts'
 	import sessionStore from 'js/services/sessionStore';
-	import {startTracking} from 'js/services/activityMonitor';
+	import {startActivityTracking} from 'js/services/activityMonitor';
 	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection'
+	import {getApiUrl} from "js/utils/env";
 
 	export default {
 		name: 'App',
@@ -120,7 +121,19 @@
 						})
 
 					// Setup time tracking
-					startTracking(this.currentUserId);
+					const activitiesConfig = {
+						sadActivity: {
+							incrementBy: 1000 * 60,
+							inactivityTime: 1000 * 60,
+							handle: this.$trackUserActivity,
+						},
+						activityMonitor: {
+							incrementBy: 1000 * 60 * 10,
+							inactivityTime: 1000 * 60 * 30,
+							handle: userId => axios.put(getApiUrl(`users/${userId}/state/time`)),
+						},
+					};
+					startActivityTracking(this.currentUserId, activitiesConfig);
 
 					this.$router.afterEach((to) => {
 						!to.params.keepsNavOpen && this.resetLayout()
@@ -135,7 +148,7 @@
 					this.setLayout(this.$breakpoints.currentBreakpoint())
 					this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
 						this.setLayout(currentLayout)
-					})
+					});
 
 					return this.courseSetup(1)
 				})

@@ -2,11 +2,13 @@
 	<div class="notification content">
 		<button class="delete" @click="$emit('onClose')"></button>
 		<p class="has-text-centered"><strong v-html="slug"></strong></p>
-		<span v-html="message"></span>
+		<span v-html="parsedMessage" @click="$emit('onContentClick', $event)"></span>
 	</div>
 </template>
 
 <script>
+	import injectArguments from 'js/utils/injectArguments';
+
 	export default {
 		name: 'DashboardNewsContent',
 		props: {
@@ -17,6 +19,15 @@
 			message: {
 				type: String,
 				default: ''
+			},
+			messageArguments: {
+				type: Object,
+				default: {}
+			},
+		},
+		computed: {
+			parsedMessage: function () {
+				return injectArguments(this.message, this.messageArguments);
 			},
 		},
 	}

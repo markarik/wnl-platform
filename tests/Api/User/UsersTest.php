@@ -13,7 +13,7 @@ class UsersTest extends ApiTestCase
 		$user = factory(User::class)->create();
 
 		$response = $this->actingAs($user)
-			->json('GET', 'papi/v1/users/all');
+			->json('GET', 'papi/v2/users/all');
 
 		$response
 			->assertStatus(403);
@@ -25,7 +25,7 @@ class UsersTest extends ApiTestCase
 		$user = factory(User::class)->create();
 
 		$response = $this->actingAs($user)
-			->json('POST', 'papi/v1/users/.filter', []);
+			->json('POST', 'papi/v2/users/.filter', []);
 
 		$response
 			->assertStatus(403);

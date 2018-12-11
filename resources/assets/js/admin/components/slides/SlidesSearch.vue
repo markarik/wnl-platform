@@ -47,6 +47,7 @@
 
 <script>
 import {resource} from 'js/utils/config'
+import {getApiUrl} from 'js/utils/env';
 
 export default {
 	name: 'SlidesSearch',
@@ -81,7 +82,7 @@ export default {
 							return this.getSlideId(slideshowId)
 						})
 						.then(slideId => {
-							this.resourceUrl = `/papi/v1/slides/${slideId}`
+							this.resourceUrl = getApiUrl(`slides/${slideId}`)
 							this.loading = false
 							this.slideId = slideId
 
@@ -98,7 +99,7 @@ export default {
 							this.error = true
 						})
 				} else {
-					this.resourceUrl = `/papi/v1/slides/${this.slideId}`
+					this.resourceUrl = getApiUrl(`slides/${this.slideId}`)
 					this.slideOrderNo = null
 					this.loading = false
 
@@ -109,7 +110,7 @@ export default {
 				}
 			},
 			getSlideshowId() {
-				return axios.get(`/papi/v1/screens/${this.screenId}`)
+				return axios.get(getApiUrl(`screens/${this.screenId}`))
 						.then(response => {
 							let resources    = response.data.meta.resources
 							let resourceName = resource('slideshows')
@@ -132,7 +133,7 @@ export default {
 						]
 					}
 				}
-				return axios.post('/papi/v1/presentables/.search', conditions)
+				return axios.post(getApiUrl('presentables/.search'), conditions)
 						.then(response => {
 							return response.data[0].slide_id
 						})

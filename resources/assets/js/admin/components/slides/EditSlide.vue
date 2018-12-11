@@ -20,6 +20,7 @@
 <script>
 	import SlidesEditor from 'js/admin/components/slides/SlideEditor'
 	import SlidesSearch from 'js/admin/components/slides/SlidesSearch'
+	import {getApiUrl} from 'js/utils/env';
 
 	export default {
 		name: 'EditSlide',
@@ -56,7 +57,7 @@
 			this.slideId = slideId
 			if (slideId) {
 				this.onResourceUrlFetched({
-					url: `/papi/v1/slides/${slideId}`,
+					url: getApiUrl(`slides/${slideId}`),
 					slideId: slideId,
 				})
 			}

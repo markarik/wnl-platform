@@ -278,7 +278,7 @@
 				const lessonId = _.get(this.routeContext, 'params.lessonId');
 				const payload = {
 					feature: context.dashboard.features.news_feed.value,
-					actions: context.dashboard.features.news_feed.actions.click_link.value,
+					action: context.dashboard.features.news_feed.actions.click_link.value,
 					context: context.dashboard.value,
 				}
 

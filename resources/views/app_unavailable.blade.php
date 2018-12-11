@@ -23,7 +23,7 @@
 		<p class="title is-1">Pracujemy nad nową wersją demo.</p>
 		<p class="subtitle is-3">Zapraszamy w marcu 2019!</p>
 		<p style="margin-top: 40px;">
-			<img src="https://media.giphy.com/media/JDKxRN0Bvmm2c/giphy.gif" alt="z/w">
+			<img src="https://s3.eu-central-1.amazonaws.com/wnl-platform-storage/giphs/app_unavailable.gif" alt="z/w">
 		</p>
 	</div>
 </section>

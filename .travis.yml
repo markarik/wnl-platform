@@ -27,6 +27,7 @@ before_script:
 script:
   - phpunit --filter=Api
   - yarn run test
+  - yarn run lint
 
 after_failure:
   - cat storage/logs/laravel.log | grep testing.ERROR

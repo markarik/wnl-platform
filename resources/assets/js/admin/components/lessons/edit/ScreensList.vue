@@ -72,27 +72,12 @@
 				screens: [],
 			}
 		},
-		computed: {
-			screensListApiUrl() {
-				return getApiUrl('screens/.search');
-			}
-		},
 		methods: {
 			fetchScreens() {
-				const conditions = {
-					query: {
-						where: [
-							['lesson_id', '=', this.lessonId],
-						]
-					},
-					order: {
-						'order_number': 'asc'
-					}
-				};
-				return axios.post(this.screensListApiUrl, conditions)
-						.then((response) => {
-							this.screens = response.data
-						});
+				return axios.get(getApiUrl(`lessons/${this.lessonId}/screens`))
+					.then((response) => {
+						this.screens = response.data
+					});
 			},
 			moveScreen(payload) {
 				this.changed = true;

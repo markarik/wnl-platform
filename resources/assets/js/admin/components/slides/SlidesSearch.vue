@@ -47,7 +47,7 @@
 
 <script>
 import {resource} from 'js/utils/config'
-import {getApiUrl} from 'js/utils/env';
+import {getApiUrl} from 'js/utils/env'
 
 export default {
 	name: 'SlidesSearch',
@@ -124,19 +124,14 @@ export default {
 						})
 			},
 			getSlideId (slideshowId) {
-				const conditions = {
-					query: {
-						where: [
-							['presentable_type', '=', 'App\\Models\\Slideshow'],
-							['presentable_id', '=', slideshowId],
-							['order_number', '=', this.slideNumber],
-						]
-					}
-				}
-				return axios.post(getApiUrl('presentables/.search'), conditions)
-						.then(response => {
-							return response.data[0].slide_id
-						})
+				return axios.post(getApiUrl('presentables/slides/byOrderNumber'), {
+					presentable_type: 'App\\Models\\Slideshow',
+					presentable_id: slideshowId,
+					order_number: this.slideNumber
+				})
+				.then(response => {
+					return response.data[0].slide_id
+				})
 			},
 	},
 }

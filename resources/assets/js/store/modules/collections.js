@@ -109,19 +109,8 @@ const actions = {
 	},
 	fetchSlidesByTagName({commit}, {tagName, ids}) {
 		commit(types.SLIDES_LOADING, true);
-		return axios.post(getApiUrl('slides/.query'), {
-			select: ['slides.*'],
-			query: {
-				whereHas: {
-					tags: {
-						where: [['tags.name', '=', tagName]]
-					}
-				},
-				whereIn: ['slides.id', ids],
-				where: [['presentables.presentable_type', 'App\\Models\\Category']]
-			},
-			join: [['presentables', 'slides.id', '=', 'presentables.slide_id']],
-			order: {'presentables.order_number': 'asc'}
+		return axios.post(getApiUrl(`slides/category/${tagName}`), {
+			slideIds: ids
 		}).then(({data}) => {
 			commit(types.COLLECTIONS_SET_SLIDES, data)
 			commit(types.SLIDES_LOADING, false);
@@ -130,14 +119,7 @@ const actions = {
 		})
 	},
 	addSlideToCollection({commit}, slideId) {
-		return axios.post(getApiUrl('slides/.search'), {
-			query: {
-				where: [['id', '=', slideId]],
-			},
-			order: {
-				id: 'desc',
-			},
-		}).then(({data}) => {
+		return axios.get(getApiUrl(`slides/${slideId}`)).then(({data}) => {
 			data && data.length && commit(types.COLLECTIONS_APPEND_SLIDE, data[0]);
 		})
 	},

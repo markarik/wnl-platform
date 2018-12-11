@@ -15,13 +15,10 @@ class QnaAnswerTransformer extends ApiTransformer
 
 	public function transform(QnaAnswer $answer)
 	{
-		if (empty($answer->question)) {
-			return [];
-		}
 		$data = [
 			'id'            => $answer->id,
 			'text'          => $answer->text,
-			'qna_questions' => $answer->question->id,
+			'qna_questions' => $answer->question->id ?? [],
 			'created_at'    => $answer->created_at->timestamp,
 			'updated_at'    => $answer->updated_at->timestamp,
 		];

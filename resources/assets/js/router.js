@@ -1,14 +1,14 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import store from 'js/store/store'
-import {scrollToTop} from 'js/utils/animations'
-import {resource} from 'js/utils/config'
+import Vue from 'vue';
+import Router from 'vue-router';
+import store from 'js/store/store';
+import {scrollToTop} from 'js/utils/animations';
+import {resource} from 'js/utils/config';
 import moderatorFeatures from 'js/perimeters/moderator';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 import {createSandbox} from 'vue-kindergarten';
-import {getApiUrl} from 'js/utils/env'
+import {getApiUrl} from 'js/utils/env';
 
-Vue.use(Router)
+Vue.use(Router);
 
 let routes = [
 	{
@@ -253,7 +253,7 @@ let routes = [
 		name: 'logout',
 		path: '/logout',
 		beforeEnter: () => {
-			document.getElementById('logout-form').submit()
+			document.getElementById('logout-form').submit();
 		}
 	},
 	{
@@ -280,10 +280,10 @@ let routes = [
 				return next({
 					...data,
 					query: to.query
-				})
+				});
 			}).catch(err => {
-				return next(from)
-			})
+				return next(from);
+			});
 		}
 
 	},
@@ -291,7 +291,7 @@ let routes = [
 		path: '*',
 		redirect: '/app/'
 	}
-]
+];
 
 
 export default new Router({
@@ -305,9 +305,9 @@ export default new Router({
 		if (!from.params.hasOwnProperty('slide') || !to.params.hasOwnProperty('slide') ||
 			parseInt(from.params.screenId) !== parseInt(to.params.screenId))
 		{
-			scrollToTop()
-			return {x: 0, y: 0}
+			scrollToTop();
+			return {x: 0, y: 0};
 		}
 	},
 	routes
-})
+});

@@ -1,53 +1,53 @@
-import * as io from 'socket.io-client'
-import {envValue} from 'js/utils/env'
+import * as io from 'socket.io-client';
+import {envValue} from 'js/utils/env';
 import {gaEvent, gaPageView} from 'js/utils/tracking';
 const EVENTS = {
 	USER_EVENT: 'track_user_event',
 	USER_ACTIVITY_EVENT: 'track_user_activity_event',
 	ROUTE_CHANGE_EVENT: 'track_route_change_event'
-}
+};
 
 const createEventsQueue = () => {
-	const events = []
-	let started = false
+	const events = [];
+	let started = false;
 
 	return {
 		push: (event) => {
-			if (started) event()
-			else events.push(event)
+			if (started) event();
+			else events.push(event);
 		},
 		start: () => {
-			started = true
+			started = true;
 
 			while (events.length >= 1) {
-				events.shift()()
+				events.shift()();
 			}
 		}
-	}
-}
+	};
+};
 
 const EventsTracker = {
 	install(Vue, {store, router}) {
 		const onSocketError = (error) => {
-			$wnl.logger.error(`Socket error: ${error}`)
-		}
+			$wnl.logger.error(`Socket error: ${error}`);
+		};
 
 		const onSocketConnectionError = (err) => {
-			socket.off('connect_error')
-		}
+			socket.off('connect_error');
+		};
 
-		const socket = io(`${envValue('sadHost')}:${envValue('sadPort')}`)
+		const socket = io(`${envValue('sadHost')}:${envValue('sadPort')}`);
 
 		socket.on('error', onSocketError);
 		socket.on('connected', () => {
-			eventsQueue.start()
-		})
+			eventsQueue.start();
+		});
 
-		socket.on('connect_error', onSocketConnectionError)
+		socket.on('connect_error', onSocketConnectionError);
 
 		socket.on('reconnect', () => {
-			socket.on('connect_error', onSocketConnectionError)
-		})
+			socket.on('connect_error', onSocketConnectionError);
+		});
 
 		const eventsQueue = createEventsQueue();
 
@@ -56,7 +56,7 @@ const EventsTracker = {
 			return {
 				client_time: new Date().getTime() / 1000,
 				user_id: store.getters.currentUserId,
-			}
+			};
 		};
 
 		Vue.prototype.$trackUserEvent = async payload => {
@@ -81,8 +81,8 @@ const EventsTracker = {
 					...payload,
 					...(await getSharedEventContext()),
 					context_route: contextRoute,
-				})
-			})
+				});
+			});
 		};
 
 		Vue.prototype.$trackUrlChange = (payload) => {
@@ -91,8 +91,8 @@ const EventsTracker = {
 				socket.emit(EVENTS.ROUTE_CHANGE_EVENT, {
 					...payload,
 					...(await getSharedEventContext()),
-				})
-			})
+				});
+			});
 		};
 
 		Vue.prototype.$trackUserActivity = async () => {
@@ -100,10 +100,10 @@ const EventsTracker = {
 				socket.emit(EVENTS.USER_ACTIVITY_EVENT, {
 					...await getSharedEventContext(),
 					status: true
-				})
-			})
+				});
+			});
 		};
 	}
-}
+};
 
-export default EventsTracker
+export default EventsTracker;

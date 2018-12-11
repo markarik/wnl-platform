@@ -60,4 +60,4 @@ export const lessonsAvailability = {
 		header: 'Liczba ukończonych przez Ciebie lekcji wynosi:',
 		info: '. Pozostaną one otwarte, a zmiana planu nie wpłynie na Twój postęp.'
 	}
-}
+};

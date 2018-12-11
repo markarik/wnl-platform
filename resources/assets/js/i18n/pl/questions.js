@@ -171,4 +171,4 @@ export const questions = {
 		withNumber: 'Pytanie {number}',
 	},
 	zeroState: 'Oho, nie mamy pasujących pytań... Spróbujesz wyłączyć niektóre z filtrów?',
-}
+};

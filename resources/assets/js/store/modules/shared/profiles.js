@@ -1,9 +1,9 @@
-import * as types from '../../mutations-types'
-import {set} from 'vue'
+import * as types from '../../mutations-types';
+import {set} from 'vue';
 
 const profiles = {
 	state () {
-		return {}
+		return {};
 	},
 
 	getters: {
@@ -22,7 +22,7 @@ const profiles = {
 			Object.assign(state, payload);
 		},
 	}
-}
+};
 
 
 export default profiles;

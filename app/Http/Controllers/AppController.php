@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\AppUnavailableException;
 use JavaScript;
 
 class AppController extends Controller

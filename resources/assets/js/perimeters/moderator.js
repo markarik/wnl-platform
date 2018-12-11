@@ -5,7 +5,7 @@ export default createPerimeter({
 
 	can: {
 		access() {
-			return this.isModerator()
+			return this.isModerator();
 		}
 	},
 

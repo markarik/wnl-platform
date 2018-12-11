@@ -17,4 +17,4 @@ export const dashboard = {
 		stream: 'Dyskusje',
 		qna: 'Ostatnie pytania',
 	}
-}
+};

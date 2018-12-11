@@ -1,6 +1,6 @@
-import axios from 'axios'
-import Errors from './Errors'
-import {cloneDeep} from "lodash";
+import axios from 'axios';
+import Errors from './Errors';
+import {cloneDeep} from 'lodash';
 
 export default class Form {
 	/**
@@ -120,13 +120,13 @@ export default class Form {
 			.then(response => {
 				Object.keys(response.data).forEach((field) => {
 					if (exclude.indexOf(field) > -1) {
-						return false
+						return false;
 					}
-					this[field] = response.data[field]
-					this.originalData[field] = cloneDeep(response.data[field])
-				})
-				return response.data
-			})
+					this[field] = response.data[field];
+					this.originalData[field] = cloneDeep(response.data[field]);
+				});
+				return response.data;
+			});
 	}
 
 	/**

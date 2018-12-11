@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 export var alerts = {
 	data() {
@@ -11,42 +11,42 @@ export var alerts = {
 			 */
 			alerts: {},
 			timeouts: {},
-		}
+		};
 	},
 	methods: {
 		removeAlert(timestamp) {
-			Vue.delete(this.alerts, timestamp)
+			Vue.delete(this.alerts, timestamp);
 		},
 		addAlert(message, cssClass = '', fading = false, timeout = 3000) {
-			let timestamp = Date.now()
+			let timestamp = Date.now();
 
-			Vue.set(this.alerts, timestamp, { message, cssClass })
+			Vue.set(this.alerts, timestamp, { message, cssClass });
 
 			if (fading) {
-				this.timeouts[timestamp] = setTimeout(this.removeAlert, timeout, timestamp)
+				this.timeouts[timestamp] = setTimeout(this.removeAlert, timeout, timestamp);
 			}
 		},
 		info(message) {
-			this.addAlert(message, 'is-info')
+			this.addAlert(message, 'is-info');
 		},
 		infoFading(message, timeout = 3000) {
-			this.addAlert(message, 'is-info', true, timeout)
+			this.addAlert(message, 'is-info', true, timeout);
 		},
 		error(message) {
-			this.addAlert(message, 'is-danger')
+			this.addAlert(message, 'is-danger');
 		},
 		errorFading(message, timeout = 3000) {
-			this.addAlert(message, 'is-danger', true, timeout)
+			this.addAlert(message, 'is-danger', true, timeout);
 		},
 		success(message) {
-			this.addAlert(message, 'is-success')
+			this.addAlert(message, 'is-success');
 		},
 		successFading(message, timeout = 3000) {
-			this.addAlert(message, 'is-success', true, timeout)
+			this.addAlert(message, 'is-success', true, timeout);
 		},
 		onDelete(timestamp) {
-			Vue.delete(this.timeouts, timestamp)
-			this.removeAlert(timestamp)
+			Vue.delete(this.timeouts, timestamp);
+			this.removeAlert(timestamp);
 		}
 	}
-}
+};

@@ -5,7 +5,7 @@
             :populate="isEdit"
             name="CourseEditor"
             @change="onFormDataChange"
-            :attach="({lessons: lessonIds})"
+            :attach="({groups: groupIds})"
             :hideDefaultSubmit="true"
             class="editor"
     >

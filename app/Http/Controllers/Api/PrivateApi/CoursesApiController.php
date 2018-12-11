@@ -27,6 +27,8 @@ class CoursesApiController extends ApiController
 			$group->save();
 		}
 
+		EditionsApiController::clearCache();
+
 		return $this->transformAndRespond($course);
 	}
 }

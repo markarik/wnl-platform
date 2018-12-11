@@ -20,6 +20,8 @@ class GroupsApiController extends ApiController
 			'course_id' => 1,
 		]);
 
+		EditionsApiController::clearCache();
+
 		return $this->transformAndRespond($group);
 	}
 
@@ -36,6 +38,8 @@ class GroupsApiController extends ApiController
 			$lesson->order_number = array_search($lesson->id, $request->lessons) + 1;
 			$lesson->save();
 		}
+
+		EditionsApiController::clearCache();
 
 		return $this->transformAndRespond($group);
 	}

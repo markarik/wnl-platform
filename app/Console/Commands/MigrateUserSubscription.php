@@ -70,7 +70,7 @@ class MigrateUserSubscription extends Command
 				);
 			}
 
-			EditionsApiController::clearCache($user->id);
+			EditionsApiController::clearUserCache($user->id);
 		}
 	}
 }

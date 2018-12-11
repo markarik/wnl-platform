@@ -37,7 +37,11 @@ class EditionsApiController extends ApiController
 		return sprintf(self::CACHE_KEY_PATTERN, self::CACHE_VERSION, $userId);
 	}
 
-	public static function clearCache($userId) {
+	public static function clearUserCache($userId) {
 		\Cache::tags('editions')->forget(self::key($userId));
+	}
+
+	public static function clearCache() {
+		\Cache::tags('editions')->flush();
 	}
 }

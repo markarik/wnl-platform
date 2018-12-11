@@ -23,6 +23,6 @@ class CourseTransformer extends ApiTransformer
 	{
 		$groups = $course->groups->sortBy('order_number');
 
-		return $this->collection($groups, new GroupTransformer(), 'groups');
+		return $this->collection($groups, new GroupTransformer(['courses' => $course->id]), 'groups');
 	}
 }

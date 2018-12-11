@@ -26,7 +26,7 @@ class EditionTransformer extends ApiTransformer
 	{
 		$groups = $edition->course->groups->sortBy('order_number');
 
-		return $this->collection($groups, new GroupTransformer($edition->id), 'groups');
+		return $this->collection($groups, new GroupTransformer(['editionId' => $edition->id]), 'groups');
 	}
 
 	public function includeCourse(Edition $edition)

@@ -18,6 +18,12 @@ let routes = [
 		]
 	},
 	{
+		name: 'course-edit',
+		path: '/admin/app/courses/:id',
+		component: require('js/admin/components/courses/CourseEditor'),
+		props: true,
+	},
+	{
 		name: 'groups',
 		path: '/admin/app/groups',
 		component: require('js/admin/components/groups/Groups.vue'),

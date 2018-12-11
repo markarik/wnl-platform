@@ -25,6 +25,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	$r = config('papi.resources');
 
 	Route::group(['middleware' => ['admin']], function () use ($r) {
+		// Courses
+		Route::put("{$r['courses']}/{id}", 'CoursesApiController@put');
+
 		// Flashcards admin
 		Route::put("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@put');
 		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');

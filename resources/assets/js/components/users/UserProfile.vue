@@ -393,33 +393,24 @@ export default {
 				})
 			}
 			const userId = this.$route.params.userId
-			const dataForComments = {
-				query: {
-					where: [
-						['user_id', userId]
-					]
-				}
-			}
 			const dataForQnaQuestions = {
-				query: {
-					where: [
-						['user_id', userId]
-					]
-				},
-				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles',
+				user_id: userId
 			}
 			const dataForQnaAnswers = {
-				query: {
-					where: [
-						['user_id', userId]
-					]
-				},
-				include: 'reactions'
+				include: 'reactions',
+				user_id: userId
 			}
 			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
-			const promisedAllComments = axios.post(getApiUrl(`comments/.count`), dataForComments)
-			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
-			const promisedAllAnswers = axios.post(getApiUrl(`qna_answers/.search`), dataForQnaAnswers)
+			const promisedAllComments = axios.get(getApiUrl('comments/query'), {params: {
+				user_id: userId
+			}})
+			const promisedQnaQuestionsCompetency = axios.get(getApiUrl('qna_questions/query'), {
+				params: dataForQnaQuestions
+			})
+			const promisedAllAnswers = axios.get(getApiUrl('qna_answers/query'), {
+				params: dataForQnaAnswers
+			})
 
 			this.isLoading = true
 
@@ -461,15 +452,10 @@ export default {
 			}).catch(exception => $wnl.logger.capture(exception))
 		},
 		loadQuestionsForAnswers(questionsIds) {
-			const userId = this.$route.params.userId
-			const data = {
-				query: {
-					whereIn:
-						['id', questionsIds]
-				},
+			return axios.post(getApiUrl(`qna_questions/byIds`), {
+				ids: questionsIds,
 				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
-			}
-			return axios.post(getApiUrl(`qna_questions/.search`), data)
+			})
 		},
 	},
 	mounted() {

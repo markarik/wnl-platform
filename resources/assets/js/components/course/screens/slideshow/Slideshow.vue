@@ -544,9 +544,7 @@
 					.listen('.App.Events.Live.LiveContentUpdated', async ({data: {event, subject}}) => {
 						switch (event) {
 							case 'comment-posted':
-								await this.setupSlideComments({id: currentSlideId, query: {
-										where: [['id', subject.id]]
-									}})
+								await this.setupSlideComments({commentable_id: currentSlideId, comment_id: subject.id})
 								break
 						}
 					});

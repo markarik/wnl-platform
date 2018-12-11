@@ -8,16 +8,10 @@ import {reactionsGetters, reactionsActions, reactionsMutations} from 'js/store/m
 
 function _fetchReactables(presentables) {
 	let slideIds = presentables.map(presentable => presentable.slide_id)
-	let data     = {
-		query: {
-			where: [
-				['reactable_type', 'App\\Models\\Slide']
-			],
-			whereInMulti: [['reactable_id', slideIds], ['reaction_id', [4,5]]],
-		},
-	}
 
-	return axios.post(getApiUrl('reactables/.search'), data)
+	return axios.post(getApiUrl('reactables/current/savedSlides'), {
+		slideIds
+	})
 		.then(response => {
 			let bookmarked = {}
 			let watched = {}
@@ -42,22 +36,10 @@ function _fetchReactables(presentables) {
 }
 
 function _fetchPresentables(slideshowId, type) {
-	let data = {
-		query: {
-			where: [
-				['presentable_type', type],
-				['presentable_id', '=', slideshowId],
-			],
-		},
-		join: [
-			['slides', 'presentables.slide_id', '=', 'slides.id'],
-		],
-		order: {
-			order_number: 'asc',
-		},
-	}
-
-	return axios.post(getApiUrl('presentables/.search'), data)
+	return axios.post(getApiUrl('presentables/slides'), {
+		presentable_type: type,
+		presentable_id: slideshowId
+	})
 }
 
 function getInitialState() {
@@ -219,7 +201,7 @@ const actions = {
 			.catch(() => commit(types.SLIDESHOW_LOADING_COMMENTS, false))
 	},
 	setupSlideComments({commit, dispatch}, {id, ...args}) {
-		return dispatch('setupSlideshowComments', {ids: [id], ...args})
+		return dispatch('setupSlideshowComments', {commentable_id: id, ...args})
 	},
 	resetModule({commit}) {
 		commit(types.RESET_MODULE)

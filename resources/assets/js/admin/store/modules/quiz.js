@@ -35,16 +35,11 @@ function getSlideshowId(screenId) {
 }
 
 function getSlideId(slideshowId, slideNumber) {
-	const conditions = {
-		query: {
-			where: [
-				['presentable_type', '=', 'App\\Models\\Slideshow'],
-				['presentable_id', '=', slideshowId],
-				['order_number', '=', slideNumber - 1],
-			]
-		}
-	}
-	return axios.post(getApiUrl('presentables/.search'), conditions)
+	return axios.post(getApiUrl('presentables/slides/byOrderNumber'), {
+		presentable_type: 'App\\Models\\Slideshow',
+		presentable_id: slideshowId,
+		order_number: slideNumber - 1
+	})
 		.then(response => {
 			return response.data[0].slide_id
 		})

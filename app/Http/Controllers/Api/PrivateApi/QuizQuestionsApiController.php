@@ -45,6 +45,31 @@ class QuizQuestionsApiController extends ApiController
 		return $this->transformAndRespond($quizQuestion);
 	}
 
+	public function getByTagName(Request $request) {
+
+		$request->validate([
+			'ids' => 'array'
+		]);
+
+		$ids = $request->get('ids');
+		$page = $request->get('page');
+
+		$tagName = $request->get('tag_name');
+		$tag = Tag::where('name', $tagName)->first();
+
+		if (empty($tag)) {
+			return $this->respondNotFound();
+		}
+
+		$questions = QuizQuestion::select()
+			->whereHas('tags', function ($query) use ($tag) {
+				$query->where('name', $tag->name);
+			})
+			->whereIn('id', $ids);
+
+		return $this->respondOk($this->paginatedResponse($questions, 30, $page));
+	}
+
 	public function post(UpdateQuizQuestion $request)
 	{
 		$question = QuizQuestion::create([

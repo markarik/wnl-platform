@@ -12,12 +12,13 @@ use App\Http\Requests\Course\DetachSlide;
 use App\Http\Requests\Course\PostSlide;
 use App\Http\Requests\Course\UpdateSlide;
 use App\Http\Requests\Course\UpdateSlideChart;
-use App\Models\Presentable;
 use App\Jobs\SearchImportAll;
+use App\Models\Presentable;
 use App\Models\Screen;
 use App\Models\Slide;
-use Auth;
+use App\Models\Tag;
 use Artisan;
+use Auth;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use Lib\SlideParser\Parser;
@@ -156,6 +157,32 @@ class SlidesApiController extends ApiController
 		}
 
 		return $this->respondOk();
+	}
+
+	public function getFromCategoryByTagName(Request $request) {
+		$request->validate([
+			'slideIds' => 'array',
+		]);
+
+		$tagName = $request->route('tagName');
+		$tag = Tag::where('name', $tagName)->first();
+
+		if (empty($tag)) {
+			return $this->respondNotFound();
+		}
+
+		$slides = Slide
+			::select('slides.*')
+			->whereHas('tags', function($query) use ($tag) {
+				$query->where('name', $tag->name);
+			})
+			->whereIn('slides.id', $request->get('slideIds'))
+			->where('presentables.presentable_type', 'App\\Models\\Category')
+			->join('presentables', 'slides.id', '=', 'presentables.slide_id')
+			->orderBy('presentables.order_number', 'asc')
+			->get();
+
+		return $this->transformAndRespond($slides);
 	}
 
 	public function search(Request $request) {

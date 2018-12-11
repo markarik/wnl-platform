@@ -178,30 +178,22 @@ const actions = {
 
 function _getNotifications(channel, userId, options) {
 	const conditions = {
-		query: {
-			where: [
-				['channel', '=', channel],
-			],
-		},
-		order: {
-			created_at: 'desc',
-		},
+		channel
 	}
 
 	if (options.hasOwnProperty('unread')) {
-		 options.unread ? conditions.query.where.push(['read_at', '=', null])
-			: conditions.query.where.push(['read_at', '!=', null])
+		conditions.unread = options.unread
 	}
 
 	if (options.hasOwnProperty('limit')) {
-		conditions.limit = [options.limit, 0]
+		conditions.limit = options.limit
 	}
 
 	if (options.hasOwnProperty('olderThan') && options.olderThan) {
-		conditions.query.where.push(['created_at', '<', `timestamp:${options.olderThan}`])
+		options.older_than = options.olderThan
 	}
 
-	return axios.post(getApiUrl(`users/${userId}/notifications/.search`), conditions)
+	return axios.post(getApiUrl(`users/${userId}/notifications/query`), conditions)
 }
 
 function _updateNotification(userId, notificationId, data) {

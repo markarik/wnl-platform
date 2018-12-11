@@ -1,4 +1,3 @@
-import { merge } from 'lodash'
 import axios from 'axios'
 import { set, delete as destroy } from 'vue'
 
@@ -7,27 +6,25 @@ import { getApiUrl } from 'js/utils/env'
 import { getModelByResource, modelToResourceMap } from 'js/utils/config'
 import {reactionsGetters, reactionsMutations, reactionsActions, convertToReactable} from 'js/store/modules/reactions'
 
-function _fetchComments(ids, model, query = {where: []}) {
-	if (!model) {
-		return Promise.reject('Model not defined')
+function _fetchComments({...commentsQuery}) {
+	if (!commentsQuery.hasOwnProperty('commentable_type')) {
+		return Promise.reject('Commentable type not defined')
 	}
 
-	let data = {
-		query: {
-			...query,
-			where: [
-				['commentable_type', model],
-				...query.where
-			],
-			whereIn: ['commentable_id', ids],
-		},
-		order: {
-			id: 'asc',
-		},
-		include: 'profiles,reactions',
+	if (!commentsQuery.hasOwnProperty('commentable_id')) {
+		return Promise.reject('Commentable id not defined')
 	}
 
-	return axios.post(getApiUrl('comments/.search'), data)
+	const requestParams = {
+		commentable_type: commentsQuery.commentable_type,
+		commentable_id: commentsQuery.commentable_id,
+		include: 'profiles,reactions'
+	}
+
+	if (commentsQuery.hasOwnProperty('comment_id')) {
+		requestParams.comment_id = commentsQuery.comment_id
+	}
+	return axios.get(getApiUrl('comments/query'), {params: requestParams})
 		.then((data) => {
 			return data;
 		})
@@ -178,13 +175,13 @@ export const commentsActions = {
 	async setupComments({commit, dispatch}, {resource, ...args}) {
 		const model = getModelByResource(resource)
 		try {
-			await dispatch('fetchComments', {model, ...args})
+			await dispatch('fetchComments', {commentable_type: model, ...args})
 		} catch (e) {
 			$wnl.logger.error(e)
 		}
 	},
-	async fetchComments({commit, dispatch}, {ids, model, query}) {
-		const response = await _fetchComments(ids, model, query)
+	async fetchComments({commit, dispatch}, {...args}) {
+		const response = await _fetchComments({...args})
 		if (!response.data.hasOwnProperty('included')) {
 			return
 		}

@@ -5,8 +5,6 @@ import {getApiUrl} from 'js/utils/env';
 export const STATUS_IN_PROGRESS = 'in-progress';
 export const STATUS_COMPLETE = 'complete';
 
-const CACHE_VERSION = 1;
-
 const setCourseProgress = ({courseId, lessonId, profileId, ...props}, value) => {
 	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}`), value);
 };

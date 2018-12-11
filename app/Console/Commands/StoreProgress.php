@@ -104,7 +104,6 @@ class StoreProgress extends Command
 					$lessonProgressRaw = $this->redis->get($lessonKey);
 
 					if (!$lessonProgressRaw) continue;
-
 					$lessonProgress = json_decode($lessonProgressRaw);
 
 					$model = UserCourseProgress::firstOrNew([

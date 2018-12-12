@@ -2,34 +2,87 @@
 	<div class="flashcards-list">
 		<h3 class="title">Lista pytań</h3>
 		<router-link :to="{ name: 'flashcards-edit', params: { flashcardId: 'new' } }" class="button is-success margin bottom">+ Nowe pytanie</router-link>
-		<wnl-flashcard-list-item v-for="flashcard in allFlashcards"
-							  :key="flashcard.id"
-							  :content="flashcard.content"
-							  :id="flashcard.id">
-		</wnl-flashcard-list-item>
+
+		<wnl-search-input @search="onSearch" />
+		<wnl-pagination
+			v-if="lastPage > 1"
+			:currentPage="page"
+			:lastPage="lastPage"
+			@changePage="onPageChange"
+			class="pagination"
+		/>
+
+		<wnl-flashcard-list-item v-for="flashcard in flashcards"
+														 :key="flashcard.id"
+														 :content="flashcard.content"
+														 :id="flashcard.id"
+		/>
 	</div>
 </template>
 
-<script>
-	import {mapState, mapActions} from 'vuex'
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+	.pagination /deep/ .pagination-list
+		justify-content: center
+		margin-bottom: $margin-medium
+</style>
 
-	import FlashcardsListItem from 'js/admin/components/flashcards/list/FlashcardsListItem'
+<script>
+	import WnlPagination from 'js/components/global/Pagination';
+	import FlashcardsListItem from 'js/admin/components/flashcards/list/FlashcardsListItem';
+	import WnlSearchInput from 'js/components/global/SearchInput';
+	import {getApiUrl} from 'js/utils/env';
 
 	export default {
 		name: 'FlashcardsList',
 		components: {
 			'wnl-flashcard-list-item': FlashcardsListItem,
+			WnlPagination,
+			WnlSearchInput,
 		},
-		computed: {
-			...mapState('flashcards', {
-				allFlashcards: 'flashcards',
-			})
+		data() {
+			return {
+				flashcards: [],
+				searchPhrase: '',
+				lastPage: 1,
+				page: 1,
+			};
 		},
 		methods: {
-			...mapActions('flashcards', ['setup']),
+			getRequestParams() {
+				const params = {
+					limit: 50,
+					page: this.page,
+					active: [],
+					filters: []
+				};
+
+				if (this.searchPhrase) {
+					params.active = [`search.${this.searchPhrase}`];
+					params.filters = [{search: {phrase: this.searchPhrase, fields: []}}];
+				}
+
+				return params;
+			},
+			onPageChange(page) {
+				this.page = page;
+				this.fetch();
+			},
+			async onSearch({phrase}) {
+				this.page = 1;
+				this.searchPhrase = phrase;
+
+				await this.fetch()
+			},
+			async fetch() {
+				const response = await axios.post(getApiUrl('flashcards/.filter'), this.getRequestParams())
+				const {data: {data, ...paginationMeta}} = response;
+				this.flashcards = data;
+				this.lastPage = paginationMeta.last_page;
+			},
 		},
 		mounted() {
-			this.setup()
+			this.fetch();
 		}
 	}
 </script>

@@ -59,29 +59,29 @@
 </style>
 
 <script>
-	import moment from 'moment'
-	import { getColourForStr } from "js/utils/colors.js"
+import moment from 'moment';
+import { getColourForStr } from 'js/utils/colors.js';
 
-	export default {
-		name: 'UsersList',
-		data() {
-			return {
-				getColourForStr
-			}
+export default {
+	name: 'UsersList',
+	data() {
+		return {
+			getColourForStr
+		};
+	},
+	props: {
+		users: {
+			type: Array,
+			required: true
 		},
-		props: {
-			users: {
-				type: Array,
-				required: true
-			},
+	},
+	methods: {
+		getCreatedDate(user) {
+			return moment(user.created_at * 1000).format('ll');
 		},
-		methods: {
-			getCreatedDate(user) {
-				return moment(user.created_at * 1000).format('ll')
-			},
-			goToDetails(userId) {
-				this.$router.push({ name: 'user-details', params: { userId } })
-			}
+		goToDetails(userId) {
+			this.$router.push({ name: 'user-details', params: { userId } });
 		}
 	}
+};
 </script>

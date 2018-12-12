@@ -105,11 +105,11 @@
 </style>
 
 <script>
-import { decode } from 'he'
-import { isObject, get, truncate, camelCase } from 'lodash'
-import {mapGetters} from 'vuex'
-import { timeFromS } from 'js/utils/time'
-import { sanitizeName } from 'js/store/modules/users'
+import { decode } from 'he';
+import { isObject, get, truncate, camelCase } from 'lodash';
+import {mapGetters} from 'vuex';
+import { timeFromS } from 'js/utils/time';
+import { sanitizeName } from 'js/store/modules/users';
 
 export default {
 	props: {
@@ -121,58 +121,58 @@ export default {
 	data() {
 		return {
 			expanded: false
-		}
+		};
 	},
 	computed: {
 		...mapGetters('course', ['getLesson']),
 		lastEvent() {
-			return _.last(this.events)
+			return _.last(this.events);
 		},
 		iconClass() {
-			return this.expanded ? 'fa-chevron-up' : 'fa-chevron-down'
+			return this.expanded ? 'fa-chevron-up' : 'fa-chevron-down';
 		},
 		text() {
-			return decode(truncate(this.lastEvent.data.subject.text, {length: 256}))
+			return decode(truncate(this.lastEvent.data.subject.text, {length: 256}));
 		},
 		objectText() {
-			if (!this.lastEvent.data.objects) return false
+			if (!this.lastEvent.data.objects) return false;
 
-			return decode(truncate(this.lastEvent.data.objects.text, {length: 256}))
+			return decode(truncate(this.lastEvent.data.objects.text, {length: 256}));
 		},
 		hasMore() {
-			return this.events.length > 1
+			return this.events.length > 1;
 		},
 		action() {
-			return this.$t(`notifications.events.${camelCase(this.lastEvent.data.event)}`)
+			return this.$t(`notifications.events.${camelCase(this.lastEvent.data.event)}`);
 		},
 		rest() {
-			return this.events.slice(0, this.events.length - 1)
+			return this.events.slice(0, this.events.length - 1);
 		}
 	},
 	methods: {
 		displayName(name) {
-			return sanitizeName(name)
+			return sanitizeName(name);
 		},
 		toggleEvents() {
-			this.expanded = !this.expanded
+			this.expanded = !this.expanded;
 		},
 		eventAction(event) {
-			return this.$t(`notifications.events.${camelCase(event.data.event)}`)
+			return this.$t(`notifications.events.${camelCase(event.data.event)}`);
 		},
 		eventText(event) {
-			return decode(truncate(event.data.subject.text, {length: 256}))
+			return decode(truncate(event.data.subject.text, {length: 256}));
 		},
 		eventObject(event) {
-			const objects = event.data.objects
-			const subject = event.data.subject
+			const objects = event.data.objects;
+			const subject = event.data.subject;
 			if (!objects && !subject) return false;
 
 			// Qna Quesiton posted
 			if (subject && !objects) {
-				return this.$tc(`notifications.objects.${_.camelCase(subject.type)}`, 1)
+				return this.$tc(`notifications.objects.${_.camelCase(subject.type)}`, 1);
 			}
 
-			return this.$tc(`notifications.objects.${_.camelCase(objects.type)}`, 1)
+			return this.$tc(`notifications.objects.${_.camelCase(objects.type)}`, 1);
 		},
 	}
 };

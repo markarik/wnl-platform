@@ -35,27 +35,27 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-	import { reaction } from 'js/mixins/reaction'
+import { reaction } from 'js/mixins/reaction';
 
-	export default {
-		name: 'Watch',
-		mixins: [reaction],
-		data() {
-			return {
-				isLoading: false,
-				name: 'watch'
-			}
+export default {
+	name: 'Watch',
+	mixins: [reaction],
+	data() {
+		return {
+			isLoading: false,
+			name: 'watch'
+		};
+	},
+	computed: {
+		...mapGetters(['isMobile']),
+		hasReactedClass() {
+			return this.hasReacted ? 'fa-check' : 'fa-eye';
 		},
-		computed: {
-			...mapGetters(['isMobile']),
-			hasReactedClass() {
-				return this.hasReacted ? 'fa-check' : 'fa-eye'
-			},
-			reactionMessage() {
-				return this.hasReacted ? 'ui.action.watching' : 'ui.action.watch'
-			},
-		}
+		reactionMessage() {
+			return this.hasReacted ? 'ui.action.watching' : 'ui.action.watch';
+		},
 	}
+};
 </script>

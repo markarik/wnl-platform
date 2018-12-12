@@ -28,12 +28,12 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-	export default {
-		name: 'Breadcrumbs',
-		computed: {
-			...mapGetters(['breadcrumbs'])
-		},
-	}
+export default {
+	name: 'Breadcrumbs',
+	computed: {
+		...mapGetters(['breadcrumbs'])
+	},
+};
 </script>

@@ -25,27 +25,27 @@
 </style>
 
 <script>
-	import LessonsList from 'js/admin/components/lessons/list/LessonsList.vue'
-	import LessonEditor from 'js/admin/components/lessons/edit/LessonEditor.vue'
-	import { mapGetters, mapActions } from 'vuex'
+import LessonsList from 'js/admin/components/lessons/list/LessonsList.vue';
+import LessonEditor from 'js/admin/components/lessons/edit/LessonEditor.vue';
+import { mapGetters, mapActions } from 'vuex';
 
-	export default {
-		name: 'Lessons',
-		components: {
-			'wnl-lessons-list': LessonsList,
-			'wnl-lesson-editor': LessonEditor,
+export default {
+	name: 'Lessons',
+	components: {
+		'wnl-lessons-list': LessonsList,
+		'wnl-lesson-editor': LessonEditor,
+	},
+	computed: {
+		...mapGetters('lessons', ['isReady']),
+		lessonId() {
+			return this.$route.params.lessonId;
 		},
-		computed: {
-			...mapGetters('lessons', ['isReady']),
-			lessonId() {
-				return this.$route.params.lessonId
-			},
-		},
-		methods: {
-			...mapActions('lessons', ['setup']),
-		},
-		mounted() {
-			this.setup()
-		}
+	},
+	methods: {
+		...mapActions('lessons', ['setup']),
+	},
+	mounted() {
+		this.setup();
 	}
+};
 </script>

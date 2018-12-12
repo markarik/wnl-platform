@@ -11,25 +11,25 @@
 </template>
 
 <script>
-	import {mapState, mapActions} from 'vuex'
+import {mapState, mapActions} from 'vuex';
 
-	import FlashcardsListItem from 'js/admin/components/flashcards/list/FlashcardsListItem'
+import FlashcardsListItem from 'js/admin/components/flashcards/list/FlashcardsListItem';
 
-	export default {
-		name: 'FlashcardsList',
-		components: {
-			'wnl-flashcard-list-item': FlashcardsListItem,
-		},
-		computed: {
-			...mapState('flashcards', {
-				allFlashcards: 'flashcards',
-			})
-		},
-		methods: {
-			...mapActions('flashcards', ['setup']),
-		},
-		mounted() {
-			this.setup()
-		}
+export default {
+	name: 'FlashcardsList',
+	components: {
+		'wnl-flashcard-list-item': FlashcardsListItem,
+	},
+	computed: {
+		...mapState('flashcards', {
+			allFlashcards: 'flashcards',
+		})
+	},
+	methods: {
+		...mapActions('flashcards', ['setup']),
+	},
+	mounted() {
+		this.setup();
 	}
+};
 </script>

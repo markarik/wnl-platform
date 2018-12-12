@@ -10,21 +10,21 @@
 </template>
 
 <script>
-	export default {
-		name: 'Select',
-		props: ['options', 'value'],
-		data() {
-			return {
-				selected: this.value,
-			}
+export default {
+	name: 'Select',
+	props: ['options', 'value'],
+	data() {
+		return {
+			selected: this.value,
+		};
+	},
+	watch: {
+		selected(newValue) {
+			this.$emit('input', newValue);
 		},
-		watch: {
-			selected(newValue) {
-				this.$emit('input', newValue)
-			},
-			value(newValue) {
-				this.selected = newValue
-			},
-		}
+		value(newValue) {
+			this.selected = newValue;
+		},
 	}
+};
 </script>

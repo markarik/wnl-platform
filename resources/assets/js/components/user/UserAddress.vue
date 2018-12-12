@@ -29,22 +29,22 @@
 </style>
 
 <script>
-	import { Form, Text } from 'js/components/global/form'
-	import IdentityNumber from 'js/components/user/IdentityNumber'
+import { Form, Text } from 'js/components/global/form';
+import IdentityNumber from 'js/components/user/IdentityNumber';
 
-	export default {
-		props: {
-			resourceRoute: {
-				type: String,
-				default: 'users/current/address',
-			},
-			address: {
-				type: Object,
-			},
+export default {
+	props: {
+		resourceRoute: {
+			type: String,
+			default: 'users/current/address',
 		},
-		components: {
-			'wnl-form': Form,
-			'wnl-form-text': Text,
+		address: {
+			type: Object,
 		},
-	}
+	},
+	components: {
+		'wnl-form': Form,
+		'wnl-form-text': Text,
+	},
+};
 </script>

@@ -65,44 +65,44 @@
 </style>
 
 <script>
-	import { swalConfig } from 'js/utils/swal'
+import { swalConfig } from 'js/utils/swal';
 
-	export default {
-		name: 'ScreensListItem',
-		props: ['index', 'screen', 'isFirst', 'isLast'],
-		computed: {
-			to() {
-				return {
-					name: 'screen-edit',
-					params: {
-						lessonId: this.$route.params.lessonId,
-						screenId: this.screen.id,
-					},
-				}
-			},
-			isLink() {
-				return this.screen.type !== 'slideshow'
-			}
+export default {
+	name: 'ScreensListItem',
+	props: ['index', 'screen', 'isFirst', 'isLast'],
+	computed: {
+		to() {
+			return {
+				name: 'screen-edit',
+				params: {
+					lessonId: this.$route.params.lessonId,
+					screenId: this.screen.id,
+				},
+			};
 		},
-		methods: {
-			moveScreen(direction) {
-				this.$emit('moveScreen', {
-					from: this.index,
-					to: direction === 'up' ? this.index - 1 : this.index + 1,
-				})
-			},
-			deleteScreen() {
-				this.$swal(swalConfig({
-						confirmButtonText: 'Usuń ekran',
-						html: `Na pewno chcesz usunąć ekran <strong>${this.screen.name}?</strong>`,
-						showCancelButton: true,
-						type: 'warning',
-					}))
-					.then(
-						(resolve) => this.$emit('deleteScreen', this.screen.id),
-						(reject) => false
-					)
-			}
+		isLink() {
+			return this.screen.type !== 'slideshow';
+		}
+	},
+	methods: {
+		moveScreen(direction) {
+			this.$emit('moveScreen', {
+				from: this.index,
+				to: direction === 'up' ? this.index - 1 : this.index + 1,
+			});
 		},
-	}
+		deleteScreen() {
+			this.$swal(swalConfig({
+				confirmButtonText: 'Usuń ekran',
+				html: `Na pewno chcesz usunąć ekran <strong>${this.screen.name}?</strong>`,
+				showCancelButton: true,
+				type: 'warning',
+			}))
+				.then(
+					(resolve) => this.$emit('deleteScreen', this.screen.id),
+					(reject) => false
+				);
+		}
+	},
+};
 </script>

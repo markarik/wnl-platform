@@ -60,20 +60,20 @@
 </style>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-import UserInfo from 'js/components/users/UserInfo'
+import { mapActions, mapGetters } from 'vuex';
+import UserInfo from 'js/components/users/UserInfo';
 
 export default {
-    name: 'UserAbout',
-    props: ['profile'],
-    components: {
-        'wnl-user-info': UserInfo,
-    },
-    computed: {
-        ...mapGetters(['canShowCloseIconInChat']),
-    },
-    methods: {
-        ...mapActions(['toggleChat']),
-    },
-}
+	name: 'UserAbout',
+	props: ['profile'],
+	components: {
+		'wnl-user-info': UserInfo,
+	},
+	computed: {
+		...mapGetters(['canShowCloseIconInChat']),
+	},
+	methods: {
+		...mapActions(['toggleChat']),
+	},
+};
 </script>

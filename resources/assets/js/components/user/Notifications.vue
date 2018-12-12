@@ -103,66 +103,66 @@
 </style>
 
 <script>
-	import {mapGetters, mapActions} from 'vuex'
-	import Event from 'js/components/user/notifications/Event'
+import {mapGetters, mapActions} from 'vuex';
+import Event from 'js/components/user/notifications/Event';
 
-	export default {
-		name: 'wnl-user-notifications',
-		components: {
-			'wnl-newsfeed-event': Event,
+export default {
+	name: 'wnl-user-notifications',
+	components: {
+		'wnl-newsfeed-event': Event,
+	},
+	data() {
+		return {
+			isActive: false,
+		};
+	},
+	computed: {
+		...mapGetters('notifications', [
+			'getSortedNotifications',
+			'isLoading',
+			'getUnseen',
+			'userChannel',
+			'getOldestNotification'
+		]),
+		empty() {
+			return !this.isLoading && _.size(this.notifications) === 0;
 		},
-		data() {
-			return {
-				isActive: false,
+		hasUnseen() {
+			return this.unseenCount > 0;
+		},
+		unseenCount() {
+			return _.size(this.getUnseen(this.userChannel));
+		},
+		notifications() {
+			return this.getSortedNotifications(this.userChannel);
+		}
+	},
+	methods: {
+		...mapActions('notifications', [
+			'markAllAsSeen',
+			'markAllAsRead',
+			'pullNotifications'
+		]),
+		toggle() {
+			if (!this.isActive && this.hasUnseen) {
+				this.markAllAsSeen(this.userChannel);
 			}
+			this.isActive = !this.isActive;
 		},
-		computed: {
-			...mapGetters('notifications', [
-				'getSortedNotifications',
-				'isLoading',
-				'getUnseen',
-				'userChannel',
-				'getOldestNotification'
-			]),
-			empty() {
-				return !this.isLoading && _.size(this.notifications) === 0
-			},
-			hasUnseen() {
-				return this.unseenCount > 0;
-			},
-			unseenCount() {
-				return _.size(this.getUnseen(this.userChannel))
-			},
-			notifications() {
-				return this.getSortedNotifications(this.userChannel)
-			}
-		},
-		methods: {
-			...mapActions('notifications', [
-				'markAllAsSeen',
-				'markAllAsRead',
-				'pullNotifications'
-			]),
-			toggle() {
-				if (!this.isActive && this.hasUnseen) {
-					this.markAllAsSeen(this.userChannel)
-				}
-				this.isActive = !this.isActive
-			},
-			loadMore() {
-				const channel = this.userChannel
-				const oldest = this.getOldestNotification(channel)
-				const options = {
-					limit: 15,
-					olderThan: oldest.timestamp,
-				}
-				this.pullNotifications([channel, options])
-			}
-		},
-		watch: {
-			'$route' (to, from) {
-				this.isActive = false
-			}
-		},
-	}
+		loadMore() {
+			const channel = this.userChannel;
+			const oldest = this.getOldestNotification(channel);
+			const options = {
+				limit: 15,
+				olderThan: oldest.timestamp,
+			};
+			this.pullNotifications([channel, options]);
+		}
+	},
+	watch: {
+		'$route' (to, from) {
+			this.isActive = false;
+		}
+	},
+};
 </script>

@@ -96,152 +96,152 @@
 </style>
 
 <script>
-	import moment from 'moment'
-	import {nextTick} from 'vue'
-	import {mapActions} from 'vuex'
-	import momentTimezone from 'moment-timezone'
+import moment from 'moment';
+import {nextTick} from 'vue';
+import {mapActions} from 'vuex';
+import momentTimezone from 'moment-timezone';
 
-	import {getApiUrl} from 'js/utils/env'
-	import WnlAutocomplete from 'js/components/global/Autocomplete';
-	import WnlDatepicker from 'js/components/global/Datepicker'
+import {getApiUrl} from 'js/utils/env';
+import WnlAutocomplete from 'js/components/global/Autocomplete';
+import WnlDatepicker from 'js/components/global/Datepicker';
 
-	export default {
-		name: "UserPlan",
-		components: {
-			WnlAutocomplete, WnlDatepicker
+export default {
+	name: 'UserPlan',
+	components: {
+		WnlAutocomplete, WnlDatepicker
+	},
+	props: {
+		user: {
+			type: Object,
+			required: true
 		},
-		props: {
-			user: {
-				type: Object,
-				required: true
-			},
+	},
+	data() {
+		return {
+			userLessons: [],
+			filterPhrase: '',
+			loading: false,
+			lessons: [],
+			selectedLessons: [],
+			lessonInput: ''
+		};
+	},
+	computed: {
+		visibleUserLessons() {
+			if (!this.filterPhrase) return this.userLessons;
+
+			return this.userLessons.filter(({lesson}) => lesson.toLowerCase().startsWith(this.filterPhrase.toLowerCase()));
 		},
-		data() {
-			return {
-				userLessons: [],
-				filterPhrase: '',
-				loading: false,
-				lessons: [],
-				selectedLessons: [],
-				lessonInput: ''
+		autocompleteLessonsItems() {
+			if (this.lessonInput === '') {
+				return [];
 			}
-		},
-		computed: {
-			visibleUserLessons() {
-				if (!this.filterPhrase) return this.userLessons;
 
-				return this.userLessons.filter(({lesson}) => lesson.toLowerCase().startsWith(this.filterPhrase.toLowerCase()));
-			},
-			autocompleteLessonsItems() {
-				if (this.lessonInput === '') {
-					return [];
-				}
-
-				return this.lessons
-					.filter(lesson => !this.userLessons.find(({lesson_id}) => lesson_id === lesson.id) &&
+			return this.lessons
+				.filter(lesson => !this.userLessons.find(({lesson_id}) => lesson_id === lesson.id) &&
 						lesson.name.toLowerCase().includes(this.lessonInput.toLowerCase()) &&
 						!this.selectedLessons.find(({id}) => id === lesson.id)
-					)
-					.slice(0, 10)
+				)
+				.slice(0, 10);
+		}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		addLesson(lesson) {
+			if (!this.selectedLessons.find(({id}) => id === lesson.id)) {
+				this.selectedLessons.push({
+					...lesson,
+					startDate: new Date()
+				});
 			}
+
+			this.lessonInput = '';
 		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			addLesson(lesson) {
-				if (!this.selectedLessons.find(({id}) => id === lesson.id)) {
-					this.selectedLessons.push({
-						...lesson,
-						startDate: new Date()
-					})
+		onStartDateChange(payload, lesson) {
+			this.selectedLessons = this.selectedLessons.map(selectedLesson => {
+				if (lesson.id === selectedLesson.id) {
+					return selectedLesson;
 				}
-
-				this.lessonInput = '';
-			},
-			onStartDateChange(payload, lesson) {
-				this.selectedLessons = this.selectedLessons.map(selectedLesson => {
-					if (lesson.id === selectedLesson.id) {
-						return selectedLesson
-					}
-					return {
-						...selectedLesson,
-						startDate: payload[0]
-					}
-				})
-			},
-			unselectLesson(lesson) {
-				const index = this.selectedLessons.findIndex(selectedLesson => selectedLesson.id === lesson.id)
-				this.selectedLessons.splice(index, 1)
-			},
-			async addLessons() {
-				try {
-					await axios.put(getApiUrl(`user_lesson/${this.user.id}/batch`), {
-						manual_start_dates: this.selectedLessons.map(lesson => {
-							return {
-								lessonId: lesson.id,
-								startDate: lesson.startDate
-							}
-						}),
-						timezone: momentTimezone.tz.guess(),
-					})
-					this.addAutoDismissableAlert({
-						type: 'success',
-						text: 'Dodano'
-					})
-					this.loading = true
-					this.userLessons = await this.getUserLessons()
-					this.selectedLessons = []
-					this.loading = false
-				} catch (e) {
-					this.addAutoDismissableAlert({
-						type: 'error',
-						text: 'Oho, coś poszłó nie tak. Lekcje nie zostały dodane'
-					})
-					$wnl.logger.capture(e)
-				}
-			},
-			async getUserLessons() {
-				const userPlanResponse = await axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`))
-				const { data: {included, ...userLessons}} = userPlanResponse
-
-				const userLessonsList = Object.values(userLessons);
-
-				if (!userLessonsList.length) {
-					return
-				}
-
-				return userLessonsList.map(userLesson => {
-					return {
-						...userLesson,
-						start_date: moment(userLesson.start_date.date).format('ll'),
-						lesson: included.lessons[userLesson.lessons[0]].name
-					}
-				})
-			}
+				return {
+					...selectedLesson,
+					startDate: payload[0]
+				};
+			});
 		},
-		async mounted() {
-			this.loading = true
+		unselectLesson(lesson) {
+			const index = this.selectedLessons.findIndex(selectedLesson => selectedLesson.id === lesson.id);
+			this.selectedLessons.splice(index, 1);
+		},
+		async addLessons() {
 			try {
-				const [userLessons, lessonsResponse] = await Promise.all([
-					this.getUserLessons(),
-					axios.get(getApiUrl(('lessons/all')))
-				])
-				this.lessons = lessonsResponse.data
-				this.userLessons = userLessons
-
-				nextTick(() => {
-					this.$refs.filterInput.focus()
-				})
+				await axios.put(getApiUrl(`user_lesson/${this.user.id}/batch`), {
+					manual_start_dates: this.selectedLessons.map(lesson => {
+						return {
+							lessonId: lesson.id,
+							startDate: lesson.startDate
+						};
+					}),
+					timezone: momentTimezone.tz.guess(),
+				});
+				this.addAutoDismissableAlert({
+					type: 'success',
+					text: 'Dodano'
+				});
+				this.loading = true;
+				this.userLessons = await this.getUserLessons();
+				this.selectedLessons = [];
+				this.loading = false;
 			} catch (e) {
 				this.addAutoDismissableAlert({
-					text: "Nie udało się pobrać planu dla tego użytkownika",
-					type: 'error'
-				})
-				$wnl.logger.capture(e)
-			} finally {
-				this.loading = false
+					type: 'error',
+					text: 'Oho, coś poszłó nie tak. Lekcje nie zostały dodane'
+				});
+				$wnl.logger.capture(e);
 			}
+		},
+		async getUserLessons() {
+			const userPlanResponse = await axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`));
+			const { data: {included, ...userLessons}} = userPlanResponse;
+
+			const userLessonsList = Object.values(userLessons);
+
+			if (!userLessonsList.length) {
+				return;
+			}
+
+			return userLessonsList.map(userLesson => {
+				return {
+					...userLesson,
+					start_date: moment(userLesson.start_date.date).format('ll'),
+					lesson: included.lessons[userLesson.lessons[0]].name
+				};
+			});
+		}
+	},
+	async mounted() {
+		this.loading = true;
+		try {
+			const [userLessons, lessonsResponse] = await Promise.all([
+				this.getUserLessons(),
+				axios.get(getApiUrl(('lessons/all')))
+			]);
+			this.lessons = lessonsResponse.data;
+			this.userLessons = userLessons;
+
+			nextTick(() => {
+				this.$refs.filterInput.focus();
+			});
+		} catch (e) {
+			this.addAutoDismissableAlert({
+				text: 'Nie udało się pobrać planu dla tego użytkownika',
+				type: 'error'
+			});
+			$wnl.logger.capture(e);
+		} finally {
+			this.loading = false;
 		}
 	}
+};
 </script>
 
 <style scoped>

@@ -89,119 +89,119 @@
 </style>
 
 <script>
-	import {isEmpty, uniq} from 'lodash'
-	import {mapActions, mapGetters} from 'vuex'
+import {isEmpty, uniq} from 'lodash';
+import {mapActions, mapGetters} from 'vuex';
 
-	import Accordion from 'js/components/global/accordion/Accordion'
-	import ActiveFilters from 'js/components/questions/ActiveFilters'
-	import QuestionsSearch from 'js/components/questions/QuestionsSearch'
+import Accordion from 'js/components/global/accordion/Accordion';
+import ActiveFilters from 'js/components/questions/ActiveFilters';
+import QuestionsSearch from 'js/components/questions/QuestionsSearch';
 
-	const config = {
-		flattened: ['resolution'],
-		expanded: ['subjects'],
-	}
+const config = {
+	flattened: ['resolution'],
+	expanded: ['subjects'],
+};
 
-	export default {
-		name: 'QuestionsFilters',
-		components: {
-			'wnl-accordion': Accordion,
-			'wnl-active-filters': ActiveFilters,
-			'wnl-questions-search': QuestionsSearch,
+export default {
+	name: 'QuestionsFilters',
+	components: {
+		'wnl-accordion': Accordion,
+		'wnl-active-filters': ActiveFilters,
+		'wnl-questions-search': QuestionsSearch,
+	},
+	props: {
+		activeFilters: {
+			type: Array,
+			required: true,
 		},
-		props: {
-			activeFilters: {
-				type: Array,
-				required: true,
-			},
-			fetchingData: {
-				default: false,
-				type: Boolean,
-			},
-			filters: {
-				type: Object,
-				required: true,
-			},
-			loading: {
-				default: false,
-				type: Boolean,
-			}
+		fetchingData: {
+			default: false,
+			type: Boolean,
 		},
-		data() {
+		filters: {
+			type: Object,
+			required: true,
+		},
+		loading: {
+			default: false,
+			type: Boolean,
+		}
+	},
+	data() {
+		return {
+			activeFiltersHeight: 0,
+			autorefresh: true,
+		};
+	},
+	computed: {
+		...mapGetters(['isChatMounted', 'isChatVisible', 'isMobile']),
+		...mapGetters('questions', [
+			'allQuestionsCount',
+			'matchedQuestionsCount',
+		]),
+		accordionConfig() {
 			return {
-				activeFiltersHeight: 0,
-				autorefresh: true,
-			}
+				disableEmpty: true,
+				expanded: this.expandedItems,
+				flattened: ['quiz-planned', 'quiz-resolution', 'quiz-collection'],
+				isMobile: this.isMobile,
+				itemsNamesSource: this.itemsNamesSource,
+				selectedElements: this.activeFilters,
+			};
 		},
-		computed: {
-			...mapGetters(['isChatMounted', 'isChatVisible', 'isMobile']),
-			...mapGetters('questions', [
-				'allQuestionsCount',
-				'matchedQuestionsCount',
-			]),
-			accordionConfig() {
-				return {
-					disableEmpty: true,
-					expanded: this.expandedItems,
-					flattened: ['quiz-planned', 'quiz-resolution', 'quiz-collection'],
-					isMobile: this.isMobile,
-					itemsNamesSource: this.itemsNamesSource,
-					selectedElements: this.activeFilters,
+		activeParents() {
+			return this.activeFilters.map(this.getParents).reduce((a, b) => a.concat(b));
+		},
+		expandedItems() {
+			const expanded = ['by_taxonomy-subjects'];
+			return this.hasActive ? uniq(expanded.concat(this.activeParents)) : expanded;
+		},
+		hasActive() {
+			return this.activeFilters.length > 0;
+		},
+		itemsNamesSource() {
+			return 'questions.filters.items';
+		},
+		listableFilters() {
+			return Object.entries(this.filters).reduce((acc, [key, val]) => {
+				if (['list', 'tags'].includes(val.type)) {
+					acc[key] = val;
 				}
-			},
-			activeParents() {
-				return this.activeFilters.map(this.getParents).reduce((a, b) => a.concat(b))
-			},
-			expandedItems() {
-				const expanded = ['by_taxonomy-subjects']
-				return this.hasActive ? uniq(expanded.concat(this.activeParents)) : expanded
-			},
-			hasActive() {
-				return this.activeFilters.length > 0
-			},
-			itemsNamesSource() {
-				return 'questions.filters.items'
-			},
-			listableFilters() {
-				return Object.entries(this.filters).reduce((acc, [key, val]) => {
-					if (['list', 'tags'].includes(val.type)) {
-						acc[key] = val
-					}
-					return acc
-				}, {})
-			}
+				return acc;
+			}, {});
+		}
+	},
+	methods: {
+		...mapActions(['toggleChat']),
+		getParents(filter) {
+			return filter.split('.').map((item, index, splitted) => {
+				return splitted.slice(0, index).join('.');
+			});
 		},
-		methods: {
-			...mapActions(['toggleChat']),
-			getParents(filter) {
-				return filter.split('.').map((item, index, splitted) => {
-					return splitted.slice(0, index).join('.')
-				})
-			},
-			emitValueToList(value) {
-				this.$emit('search', value)
-			},
-			onActiveFiltersChanged(payload) {
-				this.$emit('activeFiltersChanged', {
-					refresh: this.autorefresh,
-					...payload
-				})
-			},
-			onAutorefreshChange(autorefresh) {
-				this.autorefresh = autorefresh
-			},
-			onItemToggled({path, selected}) {
-				this.$emit('activeFiltersChanged', {
-					active: selected,
-					filter: path,
-					refresh: this.autorefresh,
-				})
-			},
-			onRefresh(payload) {
-				this.$emit('activeFiltersChanged', {refresh: true, ...payload})
-			},
-			setActiveFiltersHeight(height) {
-				this.activeFiltersHeight = height
-			},
+		emitValueToList(value) {
+			this.$emit('search', value);
 		},
-	}
+		onActiveFiltersChanged(payload) {
+			this.$emit('activeFiltersChanged', {
+				refresh: this.autorefresh,
+				...payload
+			});
+		},
+		onAutorefreshChange(autorefresh) {
+			this.autorefresh = autorefresh;
+		},
+		onItemToggled({path, selected}) {
+			this.$emit('activeFiltersChanged', {
+				active: selected,
+				filter: path,
+				refresh: this.autorefresh,
+			});
+		},
+		onRefresh(payload) {
+			this.$emit('activeFiltersChanged', {refresh: true, ...payload});
+		},
+		setActiveFiltersHeight(height) {
+			this.activeFiltersHeight = height;
+		},
+	},
+};
 </script>

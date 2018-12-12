@@ -51,115 +51,115 @@
 </style>
 
 <script>
-	import _ from 'lodash'
+import _ from 'lodash';
 
-	import { getApiUrl } from 'js/utils/env'
-	import { alerts } from 'js/mixins/alerts'
+import { getApiUrl } from 'js/utils/env';
+import { alerts } from 'js/mixins/alerts';
 
-	import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vue'
+import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vue';
 
-	export default {
-		name: 'ScreensList',
-		components: {
-			'wnl-screens-list-item': ScreensListItem
+export default {
+	name: 'ScreensList',
+	components: {
+		'wnl-screens-list-item': ScreensListItem
+	},
+	mixins: [ alerts ],
+	data() {
+		return {
+			changed: false,
+			loading: false,
+			screens: [],
+		};
+	},
+	computed: {
+		lessonId() {
+			return this.$route.params.lessonId;
 		},
-		mixins: [ alerts ],
-		data() {
-			return {
-				changed: false,
-				loading: false,
-				screens: [],
+	},
+	methods: {
+		fetchScreens() {
+			return axios.get(getApiUrl(`lessons/${this.lessonId}/screens`))
+				.then((response) => {
+					this.screens = response.data;
+				});
+		},
+		moveScreen(payload) {
+			this.changed = true;
+			this.screens.splice(payload.to, 0, this.screens.splice(payload.from, 1)[0]);
+		},
+		saveOrder() {
+			if (!this.changed) {
+				return false;
 			}
-		},
-		computed: {
-			lessonId() {
-				return this.$route.params.lessonId
-			},
-		},
-		methods: {
-			fetchScreens() {
-				return axios.get(getApiUrl(`lessons/${this.lessonId}/screens`))
-						.then((response) => {
-							this.screens = response.data
-						})
-			},
-			moveScreen(payload) {
-				this.changed = true
-				this.screens.splice(payload.to, 0, this.screens.splice(payload.from, 1)[0]);
-			},
-			saveOrder() {
-				if (!this.changed) {
-					return false
-				}
 
-				this.loading = true
+			this.loading = true;
 
-				let promises = []
-				_.forEach(this.screens, (screen, index) => {
-					promises.push(
-						axios.patch(getApiUrl(`screens/${screen.id}`), {
-							order_number: index
-						})
-					)
+			let promises = [];
+			_.forEach(this.screens, (screen, index) => {
+				promises.push(
+					axios.patch(getApiUrl(`screens/${screen.id}`), {
+						order_number: index
+					})
+				);
+			});
+
+			Promise.all(promises)
+				.then(() => {
+					this.loading = false;
+					this.changed = false;
+					this.successFading('Kolejność zachowana!', 2000);
 				})
-
-				Promise.all(promises)
-					.then(() => {
-						this.loading = false
-						this.changed = false
-						this.successFading('Kolejność zachowana!', 2000)
-					})
-					.catch((error) => {
-						$wnl.logger.error(error)
-						this.errorFading('Nie wyszło, sorry :())', 2000)
-					})
-			},
-			addScreen() {
-				let defaultData = {
-					lesson_id: this.lessonId,
-					name: 'Nowy ekran',
-					content: '',
-					order_number: 100,
-					type: 'html',
-					meta: '{}',
-				}
-
-				this.loading = true
-
-				axios.post(getApiUrl('screens'), defaultData)
-					.then(() => {
-						return this.fetchScreens()
-					})
-					.then(() => {
-						this.loading = false
-						this.successFading('Ekran dodany!', 2000)
-					})
-					.catch((error) => {
-						$wnl.logger.error(error)
-						this.errorFading('Nie wyszło, sorry. :()', 2000)
-						this.loading = false
-					})
-			},
-			deleteScreen(id) {
-				this.loading = true
-
-				axios.delete(getApiUrl(`screens/${id}`))
-					.then(() => {
-						return this.fetchScreens()
-					})
-					.then(() => {
-						this.loading = false
-						this.successFading('Ekran usunięty!', 2000)
-					})
-					.catch((error) => {
-						this.loading = false
-						$wnl.logger.error(error)
-						this.errorFading('Nie wyszło, sorry. :()', 2000)
-					})
-			},
+				.catch((error) => {
+					$wnl.logger.error(error);
+					this.errorFading('Nie wyszło, sorry :())', 2000);
+				});
 		},
-		mounted() {
-			this.fetchScreens()
-		}
+		addScreen() {
+			let defaultData = {
+				lesson_id: this.lessonId,
+				name: 'Nowy ekran',
+				content: '',
+				order_number: 100,
+				type: 'html',
+				meta: '{}',
+			};
+
+			this.loading = true;
+
+			axios.post(getApiUrl('screens'), defaultData)
+				.then(() => {
+					return this.fetchScreens();
+				})
+				.then(() => {
+					this.loading = false;
+					this.successFading('Ekran dodany!', 2000);
+				})
+				.catch((error) => {
+					$wnl.logger.error(error);
+					this.errorFading('Nie wyszło, sorry. :()', 2000);
+					this.loading = false;
+				});
+		},
+		deleteScreen(id) {
+			this.loading = true;
+
+			axios.delete(getApiUrl(`screens/${id}`))
+				.then(() => {
+					return this.fetchScreens();
+				})
+				.then(() => {
+					this.loading = false;
+					this.successFading('Ekran usunięty!', 2000);
+				})
+				.catch((error) => {
+					this.loading = false;
+					$wnl.logger.error(error);
+					this.errorFading('Nie wyszło, sorry. :()', 2000);
+				});
+		},
+	},
+	mounted() {
+		this.fetchScreens();
 	}
+};
 </script>

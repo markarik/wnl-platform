@@ -62,11 +62,11 @@
 </style>
 
 <script>
-	import autocompleteNav from 'js/mixins/autocomplete-nav'
+import autocompleteNav from 'js/mixins/autocomplete-nav';
 
-	export default {
-		name: 'Autocomplete',
-		props: ['items', 'onItemChosen', 'isDown'],
-		mixins: [autocompleteNav],
-	}
+export default {
+	name: 'Autocomplete',
+	props: ['items', 'onItemChosen', 'isDown'],
+	mixins: [autocompleteNav],
+};
 </script>

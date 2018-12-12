@@ -52,39 +52,39 @@
 </style>
 
 <script>
-	import { Form, Quill, Submit } from 'js/components/global/form'
-	import { fontColors } from 'js/utils/colors'
+import { Form, Quill, Submit } from 'js/components/global/form';
+import { fontColors } from 'js/utils/colors';
 
-	export default {
-		name: 'NewAnswerForm',
-		components: {
-			'wnl-form': Form,
-			'wnl-quill': Quill,
-			'wnl-submit': Submit,
+export default {
+	name: 'NewAnswerForm',
+	components: {
+		'wnl-form': Form,
+		'wnl-quill': Quill,
+		'wnl-submit': Submit,
+	},
+	props: ['questionId'],
+	computed: {
+		name() {
+			return `QnaNewAnswer-${this.questionId}`;
 		},
-		props: ['questionId'],
-		computed: {
-			name() {
-				return `QnaNewAnswer-${this.questionId}`
-			},
-			attachedData() {
-				return {
-					question_id: this.questionId
-				}
-			},
-			toolbar() {
-				return [
-					['bold', 'italic', 'underline', 'link'],
-					[{ color: fontColors }],
-					['clean'],
-					[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
-				]
-			}
+		attachedData() {
+			return {
+				question_id: this.questionId
+			};
 		},
-		methods: {
-			onSubmitSuccess() {
-				this.$emit('submitSuccess')
-			},
+		toolbar() {
+			return [
+				['bold', 'italic', 'underline', 'link'],
+				[{ color: fontColors }],
+				['clean'],
+				[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+			];
+		}
+	},
+	methods: {
+		onSubmitSuccess() {
+			this.$emit('submitSuccess');
 		},
-	}
+	},
+};
 </script>

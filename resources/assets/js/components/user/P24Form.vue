@@ -23,37 +23,37 @@
 </template>
 
 <script>
-	import {mapGetters} from 'vuex';
-	import {isEmpty} from 'lodash';
+import {mapGetters} from 'vuex';
+import {isEmpty} from 'lodash';
 
-	export default {
-		props: {
-			paymentData: {
-				type: Object,
-				default: () => ({}),
-			},
-			userData: {
-				type: Object,
-				default: () => ({})
-			},
-			productName: {
-				type: String,
-				required: true
-			}
+export default {
+	props: {
+		paymentData: {
+			type: Object,
+			default: () => ({}),
 		},
-		data() {
-			return {
-				isEmpty
-			}
+		userData: {
+			type: Object,
+			default: () => ({})
 		},
-		computed: {
-			...mapGetters(['currentUser']),
-			returnUrl() {
-				return window.location.href
-			},
-			amount() {
-			    return this.paymentData.amount * 100
-			}
+		productName: {
+			type: String,
+			required: true
+		}
+	},
+	data() {
+		return {
+			isEmpty
+		};
+	},
+	computed: {
+		...mapGetters(['currentUser']),
+		returnUrl() {
+			return window.location.href;
+		},
+		amount() {
+			    return this.paymentData.amount * 100;
 		}
 	}
+};
 </script>

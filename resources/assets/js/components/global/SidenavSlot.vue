@@ -72,16 +72,16 @@
 
 <script>
 import { mapActions } from 'vuex';
-	import Breadcrumbs from 'js/components/global/Breadcrumbs'
-	import SidenavItem from 'js/components/global/SidenavItem'
+import Breadcrumbs from 'js/components/global/Breadcrumbs';
+import SidenavItem from 'js/components/global/SidenavItem';
 
-	export default {
-		props: ['isVisible', 'isDetached', 'hasChat', 'direction', 'isMaxWidth'],
-		methods: {
-			...mapActions(['closeSidenavs']),
-			onClick(event) {
-				event.target === this.$refs.slot && this.closeSidenavs()
-			}
+export default {
+	props: ['isVisible', 'isDetached', 'hasChat', 'direction', 'isMaxWidth'],
+	methods: {
+		...mapActions(['closeSidenavs']),
+		onClick(event) {
+			event.target === this.$refs.slot && this.closeSidenavs();
 		}
 	}
+};
 </script>

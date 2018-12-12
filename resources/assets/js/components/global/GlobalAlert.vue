@@ -7,7 +7,7 @@
 	</div>
 </template>
 <script>
-import {ALERT_TYPES} from "js/consts/alert";
+import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
 	props: {
@@ -26,18 +26,18 @@ export default {
 	methods: {
 		typeToClass(type) {
 			switch(type) {
-				case ALERT_TYPES.ERROR:
-					return 'is-danger'
-				case ALERT_TYPES.SUCCESS:
-					return 'is-success'
-				case ALERT_TYPES.INFO:
-					return 'is-info'
-				case ALERT_TYPES.WARNING:
-					return 'is-warning'
-				default:
-					return 'is-primary'
+			case ALERT_TYPES.ERROR:
+				return 'is-danger';
+			case ALERT_TYPES.SUCCESS:
+				return 'is-success';
+			case ALERT_TYPES.INFO:
+				return 'is-info';
+			case ALERT_TYPES.WARNING:
+				return 'is-warning';
+			default:
+				return 'is-primary';
 			}
 		},
 	}
-}
+};
 </script>

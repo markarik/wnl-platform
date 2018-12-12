@@ -90,160 +90,160 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import { set } from 'vue'
-	import { mapActions } from 'vuex';
+import _ from 'lodash';
+import { set } from 'vue';
+import { mapActions } from 'vuex';
 
-	import ScreensList from 'js/admin/components/lessons/edit/ScreensList.vue'
-	import Form from 'js/classes/forms/Form'
-	import Input from 'js/admin/components/forms/Input.vue'
-	import Quill from 'js/admin/components/forms/Quill.vue'
-	import Select from 'js/admin/components/forms/Select.vue'
+import ScreensList from 'js/admin/components/lessons/edit/ScreensList.vue';
+import Form from 'js/classes/forms/Form';
+import Input from 'js/admin/components/forms/Input.vue';
+import Quill from 'js/admin/components/forms/Quill.vue';
+import Select from 'js/admin/components/forms/Select.vue';
 
-	import { getApiUrl } from 'js/utils/env'
-	import WnlScreensMetaEditorFlashcards from 'js/admin/components/lessons/edit/ScreensMetaEditorFlashcards'
-	import WnlScreensMetaEditorQuizes from 'js/admin/components/lessons/edit/ScreensMetaEditorQuizes'
+import { getApiUrl } from 'js/utils/env';
+import WnlScreensMetaEditorFlashcards from 'js/admin/components/lessons/edit/ScreensMetaEditorFlashcards';
+import WnlScreensMetaEditorQuizes from 'js/admin/components/lessons/edit/ScreensMetaEditorQuizes';
 
-	let types = {
-		html: {
-			text: 'Tekst',
-			value: 'html',
-			hasMeta: false,
-		},
-		quiz: {
-			text: 'Zestaw pytań',
-			value: 'quiz',
-			hasMeta: true,
-			metaEditorComponent: WnlScreensMetaEditorQuizes,
-		},
-		end: {
-			text: 'Zakończenie',
-			value: 'end',
-			hasMeta: false,
-		},
-		mockexam: {
-			text: 'Próbny egzamin',
-			value: 'mockexam',
-			hasMeta: false,
-		},
-		flashcards: {
-			text: 'Powtórki',
-			value: 'flashcards',
-			hasMeta: true,
-			metaEditorComponent: WnlScreensMetaEditorFlashcards,
-		},
-	}
+let types = {
+	html: {
+		text: 'Tekst',
+		value: 'html',
+		hasMeta: false,
+	},
+	quiz: {
+		text: 'Zestaw pytań',
+		value: 'quiz',
+		hasMeta: true,
+		metaEditorComponent: WnlScreensMetaEditorQuizes,
+	},
+	end: {
+		text: 'Zakończenie',
+		value: 'end',
+		hasMeta: false,
+	},
+	mockexam: {
+		text: 'Próbny egzamin',
+		value: 'mockexam',
+		hasMeta: false,
+	},
+	flashcards: {
+		text: 'Powtórki',
+		value: 'flashcards',
+		hasMeta: true,
+		metaEditorComponent: WnlScreensMetaEditorFlashcards,
+	},
+};
 
-	export default {
-		name: 'ScreensEditor',
-		components: {
-			WnlScreensMetaEditorFlashcards,
-			WnlScreensMetaEditorQuizes,
-			'quill': Quill,
-			'wnl-form-input': Input,
-			'wnl-screens-list': ScreensList,
-			'wnl-select': Select,
+export default {
+	name: 'ScreensEditor',
+	components: {
+		WnlScreensMetaEditorFlashcards,
+		WnlScreensMetaEditorQuizes,
+		'quill': Quill,
+		'wnl-form-input': Input,
+		'wnl-screens-list': ScreensList,
+		'wnl-select': Select,
+	},
+	data() {
+		return {
+			ready: false,
+			loading: false,
+			screenForm: new Form({
+				content: null,
+				meta: null,
+				name: null,
+				type: null,
+			}),
+			screens: [],
+			quiz_sets: [],
+		};
+	},
+	computed: {
+		screenId() {
+			return this.$route.params.screenId;
 		},
-		data() {
-			return {
-				ready: false,
-				loading: false,
-				screenForm: new Form({
-					content: null,
-					meta: null,
-					name: null,
-					type: null,
-				}),
-				screens: [],
-				quiz_sets: [],
+		screenMeta: {
+			get() {
+				return JSON.parse(this.screenForm.meta);
+			},
+			set(screenMeta) {
+				this.screenForm.meta = JSON.stringify(screenMeta);
 			}
 		},
-		computed: {
-			screenId() {
-				return this.$route.params.screenId
-			},
-			screenMeta: {
-				get() {
-					return JSON.parse(this.screenForm.meta);
-				},
-				set(screenMeta) {
-					this.screenForm.meta = JSON.stringify(screenMeta);
-				}
-			},
-			loaded() {
-				return !!this.$route.params.screenId
-			},
-			screenFormResourceUrl() {
-				return getApiUrl(`screens/${this.$route.params.screenId}`)
-			},
-			typesOptions() {
-				return Object.keys(types).map((key, index) => types[key])
-			},
-			currentType() {
-				let type = this.screenForm.type
-				if (type !== null && types.hasOwnProperty(type)) {
-					return types[type]
-				}
+		loaded() {
+			return !!this.$route.params.screenId;
+		},
+		screenFormResourceUrl() {
+			return getApiUrl(`screens/${this.$route.params.screenId}`);
+		},
+		typesOptions() {
+			return Object.keys(types).map((key, index) => types[key]);
+		},
+		currentType() {
+			let type = this.screenForm.type;
+			if (type !== null && types.hasOwnProperty(type)) {
+				return types[type];
+			}
  			},
-			hasChanged() {
-				return !_.isEqual(this.screenForm.data(), this.screenForm.originalData)
-			},
+		hasChanged() {
+			return !_.isEqual(this.screenForm.data(), this.screenForm.originalData);
 		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			populateScreenForm() {
-				axios.get(this.screenFormResourceUrl)
-					.then(response => {
-						Object.keys(response.data).forEach((field) => {
-							let value = response.data[field]
-							if (_.isObject(value)) {
-								value = JSON.stringify(value)
-							}
-							this.screenForm[field] = value
-							this.screenForm.originalData[field] = value
-						})
-					})
-			},
-			onSubmit() {
-				if (!this.hasChanged) {
-					return false
-				}
-
-				this.loading = true
-
-				if (this.currentType.hasMeta) {
-					this.screenForm.meta = unescape(this.screenForm.meta)
-				} else {
-					this.screenForm.meta = '{}'
-				}
-
-				this.screenForm.put(this.screenFormResourceUrl)
-					.then(() => {
-						this.loading = false
-						this.screenForm.originalData = this.screenForm.data()
-						this.addAutoDismissableAlert({
-							text: 'Zapisano!',
-							type: 'success',
-						});
-						return this.$refs.ScreensList.fetchScreens()
-					})
-					.catch(exception => {
-						this.loading = false
-						this.addAutoDismissableAlert({
-							text: 'Nie wyszło :(',
-							type: 'error',
-						});
-						$wnl.logger.capture(exception)
-					})
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		populateScreenForm() {
+			axios.get(this.screenFormResourceUrl)
+				.then(response => {
+					Object.keys(response.data).forEach((field) => {
+						let value = response.data[field];
+						if (_.isObject(value)) {
+							value = JSON.stringify(value);
+						}
+						this.screenForm[field] = value;
+						this.screenForm.originalData[field] = value;
+					});
+				});
+		},
+		onSubmit() {
+			if (!this.hasChanged) {
+				return false;
 			}
-		},
-		mounted() {
-			if (this.screenId) {
-				this.populateScreenForm()
+
+			this.loading = true;
+
+			if (this.currentType.hasMeta) {
+				this.screenForm.meta = unescape(this.screenForm.meta);
+			} else {
+				this.screenForm.meta = '{}';
 			}
-		},
-		watch: {
-			'$route': 'populateScreenForm'
+
+			this.screenForm.put(this.screenFormResourceUrl)
+				.then(() => {
+					this.loading = false;
+					this.screenForm.originalData = this.screenForm.data();
+					this.addAutoDismissableAlert({
+						text: 'Zapisano!',
+						type: 'success',
+					});
+					return this.$refs.ScreensList.fetchScreens();
+				})
+				.catch(exception => {
+					this.loading = false;
+					this.addAutoDismissableAlert({
+						text: 'Nie wyszło :(',
+						type: 'error',
+					});
+					$wnl.logger.capture(exception);
+				});
 		}
+	},
+	mounted() {
+		if (this.screenId) {
+			this.populateScreenForm();
+		}
+	},
+	watch: {
+		'$route': 'populateScreenForm'
 	}
+};
 </script>

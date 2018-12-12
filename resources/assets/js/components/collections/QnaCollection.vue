@@ -15,21 +15,21 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-	import Qna from 'js/components/qna/Qna'
+import Qna from 'js/components/qna/Qna';
 
-	export default {
-		name: 'QnaCollection',
-		components: {
-			'wnl-qna': Qna,
+export default {
+	name: 'QnaCollection',
+	components: {
+		'wnl-qna': Qna,
+	},
+	props: ['rootCategoryName', 'categoryName'],
+	computed: {
+		...mapGetters('qna', ['loading', 'questions']),
+		isZeroState() {
+			return !this.loading && Object.keys(this.questions).length === 0;
 		},
-		props: ['rootCategoryName', 'categoryName'],
-		computed: {
-			...mapGetters('qna', ['loading', 'questions']),
-			isZeroState() {
-				return !this.loading && Object.keys(this.questions).length === 0
-			},
-		},
-	}
+	},
+};
 </script>

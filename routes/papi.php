@@ -52,6 +52,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::delete("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@delete');
 		Route::put("{$r['quiz-questions']}/{id}/restore", 'QuizQuestionsApiController@restore');
 		Route::get("{$r['quiz-questions']}/trashed/{id}", 'QuizQuestionsApiController@getWithTrashed');
+
+		// Orders
+		Route::post("{$r['orders']}/.filter", 'OrdersApiController@filter');
 	});
 
 	// Count

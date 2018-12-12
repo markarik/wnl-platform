@@ -46,6 +46,10 @@
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'dashboard-news' }">Dashboard newsy</router-link></li>
 		</ul>
+		<p class="menu-label">Zamówienia</p>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'orders' }">Lista zamówień</router-link></li>
+		</ul>
 	</aside>
 </template>
 

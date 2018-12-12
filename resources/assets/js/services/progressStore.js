@@ -32,39 +32,35 @@ const completeSubsection = (lessonState, payload) => {
 	const stateWithScreen = _getScreenProgress(lessonState, payload);
 	const stateWithSections = _getSectionProgress(stateWithScreen, payload);
 
-	if (!stateWithSections.screens[screenId].sections[sectionId].subsections) {
-		stateWithSections.screens[screenId].sections[sectionId].subsections = {
+	if (!lessonState.screens[screenId].sections[sectionId].subsections) {
+		lessonState.screens[screenId].sections[sectionId].subsections = {
 			[subsectionId]: {
 				status: STATUS_COMPLETE
 			}
 		};
 	} else {
-		stateWithSections.screens[screenId].sections[sectionId].subsections = {
-			...stateWithSections.screens[screenId].sections[sectionId].subsections,
+		lessonState.screens[screenId].sections[sectionId].subsections = {
+			...lessonState.screens[screenId].sections[sectionId].subsections,
 			[subsectionId]: {
 				status: STATUS_COMPLETE
 			}
 		};
 	}
 
-	setLessonProgress(payload, stateWithSections);
+	setLessonProgress(payload, lessonState);
 
 	return stateWithSections;
 };
 
 const completeScreen = (lessonState, {screenId, route, ...payload}) => {
-	const updatedState = {...lessonState};
+	lessonState.route = route;
+	lessonState.screens = lessonState.screens || {};
+	lessonState.screens[screenId] = lessonState.screens[screenId] || {};
+	lessonState.screens[screenId].status = STATUS_COMPLETE;
 
-	updatedState.route = route;
+	setLessonProgress(payload, lessonState);
 
-	updatedState.screens = lessonState.screens || {};
-	updatedState.screens[screenId] = updatedState.screens[screenId] || {};
-	updatedState.screens[screenId].status = STATUS_COMPLETE;
-
-
-	setLessonProgress(payload, updatedState);
-
-	return updatedState;
+	return lessonState;
 };
 
 const completeLesson = (courseState, payload) => {

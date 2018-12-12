@@ -96,9 +96,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::patch("{$r['screens']}/{id}", 'ScreensApiController@patch');
 		Route::delete("{$r['screens']}/{id}", 'ScreensApiController@delete');
 
-		// Editions
-		Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
-
 		// Slides
 		Route::get("{$r['slides']}/.search", 'SlidesApiController@search');
 		Route::get('slides/.updateCharts/{slideId}', 'SlidesApiController@updateCharts');

@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Http\Controllers\Api\PrivateApi\EditionsApiController;
+use App\Http\Controllers\Api\PrivateApi\CoursesApiController;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\UserLesson;
@@ -44,7 +44,7 @@ class OrderPaid implements ShouldQueue
 		$this->handleInstalments();
 		$this->sendConfirmation();
 
-		EditionsApiController::clearUserCache($this->order->user->id);
+		CoursesApiController::clearUserCache($this->order->user->id);
 		\Cache::forget(User::getSubscriptionKey($this->order->user->id));
 	}
 

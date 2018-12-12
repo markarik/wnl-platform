@@ -42,7 +42,7 @@ class Lesson extends Model
 		})->get();
 	}
 
-	public function isAvailable($user = null, $editionId = 1)
+	public function isAvailable($user = null)
 	{
 		$user = $user ?? \Auth::user();
 		if ($user) {
@@ -59,7 +59,7 @@ class Lesson extends Model
 		return false;
 	}
 
-	public function isAccessible($user = null, $editionId = 1)
+	public function isAccessible($user = null)
 	{
 		$user = $user ?? \Auth::user();
 		if ($user) {
@@ -74,7 +74,7 @@ class Lesson extends Model
 		return false;
 	}
 
-	public function startDate($user = null, $editionId = 1)
+	public function startDate($user = null)
 	{
 		$user = $user ?? \Auth::user();
 		if ($user) {

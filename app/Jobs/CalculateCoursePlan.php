@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Http\Controllers\Api\PrivateApi\EditionsApiController;
+use App\Http\Controllers\Api\PrivateApi\CoursesApiController;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\UserLesson;
 use Carbon\Carbon;
@@ -65,7 +65,7 @@ class CalculateCoursePlan
 
 		DB::commit();
 
-		EditionsApiController::clearUserCache($this->user->id);
+		CoursesApiController::clearUserCache($this->user->id);
 
 		return $plan;
 	}

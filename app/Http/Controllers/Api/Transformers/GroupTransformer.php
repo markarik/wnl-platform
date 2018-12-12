@@ -21,9 +21,8 @@ class GroupTransformer extends ApiTransformer
 		$data = [
 			'id'            => $group->id,
 			'name'          => $group->name,
-			'editions'      => $group->course_id
+			'courses'      => $group->course_id
 		];
-
 
 		if ($this->parent) {
 			$data = array_merge($data, $this->parent);

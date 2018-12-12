@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Api\PrivateApi\EditionsApiController;
+use App\Http\Controllers\Api\PrivateApi\CoursesApiController;
 use App\Models\Screen;
 use Illuminate\Console\Command;
 
@@ -61,7 +61,7 @@ class ScreensCountSlides extends Command
 		}
 
 		// TODO: https://bethink.atlassian.net/browse/PLAT-506 !!
-		EditionsApiController::clearCache();
+		CoursesApiController::clearCache();
 
 		return;
 	}

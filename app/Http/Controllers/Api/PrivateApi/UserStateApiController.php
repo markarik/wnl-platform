@@ -77,6 +77,12 @@ class UserStateApiController extends ApiController
 	{
 		$lesson = $request->lesson;
 
+		if (empty($lesson)) {
+			\Log::error('Trying to save empty progress for lesson');
+			// return OK because we want to make it transparent for a user.
+			return $this->respondOk();
+		}
+
 		Redis::set(self::getLessonRedisKey($id, $courseId, $lessonId), json_encode($lesson));
 
 		return $this->respondOk();

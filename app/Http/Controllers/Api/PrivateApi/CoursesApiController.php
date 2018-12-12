@@ -13,6 +13,7 @@ class CoursesApiController extends ApiController
 	const CACHE_VERSION = '1';
 	const CACHE_KEY_PATTERN = 'courses-%s-%s';
 	const CACHE_TTL = 60 * 24;
+	const CACHE_TAG = 'courses';
 
 	public function __construct(Request $request)
 	{
@@ -25,13 +26,13 @@ class CoursesApiController extends ApiController
 		$user = Auth::user();
 		$key = self::key($user->id);
 
-		if(Cache::tags('courses')->has($key)) {
-			return $this->respondOk(Cache::tags('courses')->get($key));
+		if(Cache::tags(self::CACHE_TAG)->has($key)) {
+			return $this->respondOk(Cache::tags(self::CACHE_TAG)->get($key));
 		}
 
 		$data = parent::get($id)->getData();
 
-		Cache::tags('courses')->put($key, $data, self::CACHE_TTL);
+		Cache::tags(self::CACHE_TAG)->put($key, $data, self::CACHE_TTL);
 
 		return $this->respondOk($data);
 	}
@@ -62,10 +63,10 @@ class CoursesApiController extends ApiController
 	}
 
 	public static function clearUserCache($userId) {
-		\Cache::tags('courses')->forget(self::key($userId));
+		\Cache::tags(self::CACHE_TAG)->forget(self::key($userId));
 	}
 
 	public static function clearCache() {
-		\Cache::tags('courses')->flush();
+		\Cache::tags(self::CACHE_TAG)->flush();
 	}
 }

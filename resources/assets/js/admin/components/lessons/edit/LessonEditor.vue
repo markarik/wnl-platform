@@ -1,12 +1,5 @@
 <template>
 	<div class="lesson-editor">
-		<wnl-alert v-for="(alert, timestamp) in alerts"
-			:alert="alert"
-			cssClass="fixed"
-			:key="timestamp"
-			:timestamp="timestamp"
-			@delete="onDelete"
-		></wnl-alert>
 		<form @submit.prevent="lessonFormSubmit">
 			<div class="field is-grouped">
 				<div class="control">
@@ -58,15 +51,16 @@
 
 <script>
 	import _ from 'lodash';
+	import { mapActions } from 'vuex';
 
 	import Form from 'js/classes/forms/Form';
 	import { getApiUrl } from 'js/utils/env';
-	import { alerts } from 'js/mixins/alerts';
 
 	import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue';
 	import Input from 'js/admin/components/forms/Input.vue';
 	import Select from 'js/admin/components/forms/Select.vue';
 	import Checkbox from 'js/admin/components/forms/Checkbox.vue';
+	import {ALERT_TYPES} from 'js/consts/alert';
 
 	export default {
 		name: 'LessonEditor',
@@ -77,7 +71,6 @@
 			'wnl-select': Select,
 			'wnl-form-checkbox': Checkbox,
 		},
-		mixins: [ alerts ],
 		data() {
 			return {
 				form: new Form({
@@ -104,6 +97,9 @@
 			}
 		},
 		methods: {
+			...mapActions([
+				'addAutoDismissableAlert',
+			]),
 			fetchGroups() {
 				return axios.get(getApiUrl('groups/all'))
 					.then((response) => {
@@ -124,7 +120,10 @@
 				this.form[this.method](this.resourceUrl)
 					.then(response => {
 						this.loading = false;
-						this.successFading('Lekcja zapisana!', 2000);
+						this.addAutoDismissableAlert({
+							text: 'Lekcja zapisana!',
+							type: ALERT_TYPES.SUCCESS,
+						});
 						this.form.originalData = this.form.data();
 
 						if (!this.isEdit) {
@@ -133,7 +132,10 @@
 					})
 					.catch(exception => {
 						this.loading = false;
-						this.errorFading('Nie udało się :(', 2000);
+						this.addAutoDismissableAlert({
+							text: 'Nie udało się :(',
+							type: ALERT_TYPES.ERROR,
+						});
 						$wnl.logger.capture(exception);
 					});
 			}

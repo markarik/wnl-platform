@@ -40,7 +40,6 @@
 	import { mapActions } from 'vuex';
 	import moment from 'moment'
 	import {getApiUrl} from "js/utils/env";
-	import {MESSAGE_TARGETS} from "js/consts/siteWideMessage";
 	import {ALERT_TYPES} from "js/consts/alert";
 
 	export default {
@@ -74,22 +73,8 @@
 		},
 		async mounted() {
 			try {
-				const {data} = await axios.post(getApiUrl('site_wide_messages/.filter'), {
-					filters: [
-						{
-							query: {
-								where: {
-									target: MESSAGE_TARGETS.DASHBOARD_NEWS,
-								}
-							}
-						}
-					],
-					limit: 100,
-					order: {
-						created_at: 'desc'
-					}
-				});
-				this.dashboardNewsList = Object.values(data.data);
+				const {data} = await axios.get(getApiUrl('site_wide_messages/dashboard_news'));
+				this.dashboardNewsList = Object.values(data);
 			} catch (error) {
 				$wnl.logger.error(error);
 				this.addAutoDismissableAlert({

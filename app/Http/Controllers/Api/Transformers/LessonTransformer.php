@@ -20,7 +20,6 @@ class LessonTransformer extends ApiTransformer
 
 	public function transform(Lesson $lesson)
 	{
-		$editionId = $this->parent->get('editionId');
 
 		$data = [
 			'id'           => $lesson->id,
@@ -28,7 +27,6 @@ class LessonTransformer extends ApiTransformer
 			'group_id'     => $lesson->group_id,
 			'groups'       => $lesson->group_id,
 			'order_number' => $lesson->order_number,
-			'editions'     => $editionId,
 			'is_required'  => $lesson->is_required,
 		];
 

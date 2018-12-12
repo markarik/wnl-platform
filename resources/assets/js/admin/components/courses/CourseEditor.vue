@@ -1,49 +1,49 @@
 <template>
-    <wnl-form
-            :method="method"
-            :resource-route="resourceRoute"
-            :populate="isEdit"
-            name="CourseEditor"
-            :hideDefaultSubmit="true"
-            class="editor"
-    >
-        <div class="header">
-            <h2 class="title is-2">Edycja kursu <span v-if="isEdit">(Id: {{id}})</span></h2>
-            <wnl-submit class="submit"/>
-        </div>
-        <wnl-form-text
-                name="name"
-                class="margin top bottom"
-        >Nazwa</wnl-form-text>
+	<wnl-form
+			:method="method"
+			:resource-route="resourceRoute"
+			:populate="isEdit"
+			name="CourseEditor"
+			:hideDefaultSubmit="true"
+			class="editor"
+	>
+		<div class="header">
+			<h2 class="title is-2">Edycja kursu <span v-if="isEdit">(Id: {{id}})</span></h2>
+			<wnl-submit class="submit"/>
+		</div>
+		<wnl-form-text
+				name="name"
+				class="margin top bottom"
+		>Nazwa</wnl-form-text>
 
-        <h3>Kolejność grup lekcji</h3>
-        <wnl-sortable name="groups">
-            <template slot-scope="slotProps">{{slotProps.item.name}}</template>
-        </wnl-sortable>
-    </wnl-form>
+		<h3>Kolejność grup lekcji</h3>
+		<wnl-sortable name="groups">
+			<template slot-scope="slotProps">{{slotProps.item.name}}</template>
+		</wnl-sortable>
+	</wnl-form>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
-    @import 'resources/assets/sass/variables'
-    @import 'resources/assets/sass/mixins'
+	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
 
-    .editor
-        max-width: 800px
+	.editor
+		max-width: 800px
 
-    .header
-        +small-shadow-bottom()
-        align-items: flex-start
-        display: flex
-        justify-content: space-between
-        background: $color-white
-        margin-bottom: $margin-medium
-        padding-top: $margin-small
-        position: sticky
-        top: -$margin-big
-        z-index: 101
+	.header
+		+small-shadow-bottom()
+		align-items: flex-start
+		display: flex
+		justify-content: space-between
+		background: $color-white
+		margin-bottom: $margin-medium
+		padding-top: $margin-small
+		position: sticky
+		top: -$margin-big
+		z-index: 101
 
-        .submit
-            width: auto
+		.submit
+			width: auto
 </style>
 
 <script>
@@ -67,7 +67,7 @@
 			WnlFormText,
 			WnlForm,
 			WnlSubmit,
-            WnlSortable,
+			WnlSortable,
 		},
 		methods: {
 			onSubmitSuccess(data) {

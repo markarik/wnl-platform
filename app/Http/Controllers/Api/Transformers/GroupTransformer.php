@@ -11,8 +11,6 @@ class GroupTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['lessons'];
 
-	protected $editionId;
-
 	public function __construct($parent = null)
 	{
 		$this->parent = $parent;
@@ -38,7 +36,6 @@ class GroupTransformer extends ApiTransformer
 	{
 		$lessons = $group->lessons->sortBy('order_number');
 		$meta = collect([
-			'editionId' => $this->parent['editionId'] ?? null,
 			'groupId'   => $group->id,
 		]);
 

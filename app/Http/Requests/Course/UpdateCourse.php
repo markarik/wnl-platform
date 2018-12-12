@@ -25,6 +25,7 @@ class UpdateCourse extends FormRequest
 	{
 		return [
 			'name'   => 'required|string',
+			'groups' => 'required|array',
 		];
 	}
 }

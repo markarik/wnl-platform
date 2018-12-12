@@ -24,7 +24,6 @@ class SubsectionsTransformer extends ApiTransformer
 			'name'        => $subsection->name,
 			'lessons'     => $this->parent->get('lessonId') ?? $subsection->section->screen->lesson_id,
 			'groups'      => $this->parent->get('groupId') ?? $subsection->section->screen->lesson->group->id,
-			'editions'    => $this->parent->get('editionId'),
 			'screens'     => $subsection->section->screen_id,
 			'sections'    => $subsection->section->id,
 			'slide'       => $subsection->first_slide + 1,

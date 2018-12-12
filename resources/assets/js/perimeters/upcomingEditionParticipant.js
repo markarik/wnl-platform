@@ -5,13 +5,13 @@ export default createPerimeter({
 
 	can: {
 		access() {
-			return this.isUpcomingEditionParticipant()
+			return this.isUpcomingEditionParticipant();
 		}
 	},
 
 	isUpcomingEditionParticipant() {
 		return this.child &&
 			this.child.subscription &&
-			this.child.subscription.status === 'awaiting'
+			this.child.subscription.status === 'awaiting';
 	},
 });

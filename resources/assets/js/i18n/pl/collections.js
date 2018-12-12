@@ -1,6 +1,6 @@
 export const collections = {
 	slides: {
-        savedSlidesTitle: 'Zapisane slajdy',
-        showOnlySaved: 'Pokaż tylko zapisane'
-    },
-}
+		savedSlidesTitle: 'Zapisane slajdy',
+		showOnlySaved: 'Pokaż tylko zapisane'
+	},
+};

@@ -1,8 +1,8 @@
-import _ from 'lodash'
-import Vue from 'vue'
-import Raven from 'raven-js'
-import RavenVue from 'raven-js/plugins/vue'
-import { isDev, isDebug, envValue } from 'js/utils/env'
+import _ from 'lodash';
+import Vue from 'vue';
+import Raven from 'raven-js';
+import RavenVue from 'raven-js/plugins/vue';
+import { isDev, isDebug, envValue } from 'js/utils/env';
 
 export default class Logger {
 	// Log levels as per https://tools.ietf.org/html/rfc5424
@@ -25,12 +25,12 @@ export default class Logger {
 			'notice'    : 5,
 			'info'      : 6,
 			'debug'     : 7,
-		}
+		};
 	}
 
 	constructor(options = {}) {
-		this.level     = envValue('APP_LOG_LEVEL')
-		this.levelCode = Logger.LEVELS[this.level]
+		this.level     = envValue('APP_LOG_LEVEL');
+		this.levelCode = Logger.LEVELS[this.level];
 
 		if (this.useExternal(this.levelCode)) {
 			Raven
@@ -40,33 +40,33 @@ export default class Logger {
 					appVersion: envValue('appVersion')
 				})
 				.addPlugin(RavenVue, Vue)
-				.install()
+				.install();
 		}
 	}
 
 	useExternal(levelCode) {
-		return !isDev() && levelCode < 7
+		return !isDev() && levelCode < 7;
 	}
 
 	log(level, [message, extra = {}]) {
 		if (Logger.LEVELS[level] <= this.levelCode) {
 			if (this.useExternal(Logger.LEVELS[level])) {
-				Raven.captureMessage(message, { level, extra })
+				Raven.captureMessage(message, { level, extra });
 			}
 
 			if (isDebug()) {
-				this.consolePrint(level, message, extra)
+				this.consolePrint(level, message, extra);
 			}
 		}
 	}
 
 	capture(exception) {
 		if (this.useExternal()) {
-			Raven.captureException(exception)
+			Raven.captureException(exception);
 		}
 
 		if (isDebug()) {
-			this.error(exception.message, exception.stack)
+			this.error(exception.message, exception.stack);
 		}
 	}
 
@@ -80,52 +80,52 @@ export default class Logger {
 	 */
 	consolePrint(level, message, extra = {}) {
 		if (!Logger.LEVELS.hasOwnProperty(level)) {
-			level = 'debug'
+			level = 'debug';
 		}
 
 		let levelCode = Logger.LEVELS[level],
-			header = `${_.upperCase(level)}: ${message}`
+			header = `${_.upperCase(level)}: ${message}`;
 
 		if (levelCode <= Logger.LEVELS.error) {
-			console.error(header, extra)
+			console.error(header, extra);
 		} else if (levelCode <= Logger.LEVELS.warning) {
-			console.warn(header, extra)
+			console.warn(header, extra);
 		} else if (levelCode <= Logger.LEVELS.info) {
-			console.info(header, extra)
+			console.info(header, extra);
 		} else {
-			console.debug(header, extra)
+			console.debug(header, extra);
 		}
 	}
 
 	emergency(...args) {
-		this.log(Logger.EMERGENCY, args)
+		this.log(Logger.EMERGENCY, args);
 	}
 
 	alert(...args) {
-		this.log(Logger.ALERT, args)
+		this.log(Logger.ALERT, args);
 	}
 
 	critical(...args) {
-		this.log(Logger.CRITICAL, args)
+		this.log(Logger.CRITICAL, args);
 	}
 
 	error(...args) {
-		this.log(Logger.ERROR, args)
+		this.log(Logger.ERROR, args);
 	}
 
 	warning(...args) {
-		this.log(Logger.WARNING, args)
+		this.log(Logger.WARNING, args);
 	}
 
 	notice(...args) {
-		this.log(Logger.NOTICE, args)
+		this.log(Logger.NOTICE, args);
 	}
 
 	info(...args) {
-		this.log(Logger.INFO, args)
+		this.log(Logger.INFO, args);
 	}
 
 	debug(...args) {
-		this.log(Logger.DEBUG, args)
+		this.log(Logger.DEBUG, args);
 	}
 }

@@ -1,4 +1,4 @@
-import {mapActions} from "vuex";
+import {mapActions} from 'vuex';
 
 export const reaction = {
 	props: ['module', 'reactableResource', 'reactableId', 'updateLocally', 'state', 'reactionsDisabled'],
@@ -7,30 +7,30 @@ export const reaction = {
 			isLoading: false,
 			isReady: false,
 			wasJustClicked: false,
-		}
+		};
 	},
 	computed: {
 		hasReacted() {
-			return this.state.hasReacted
+			return this.state.hasReacted;
 		},
 		count() {
-			return this.state.count
+			return this.state.count;
 		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		setReaction(payload) {
-			return this.$store.dispatch(`${this.module}/setReaction`, payload)
+			return this.$store.dispatch(`${this.module}/setReaction`, payload);
 		},
 		getReaction(resource, id, reactionName) {
-			return this.$store.getters[`${this.module}/getReaction`](resource, id, reactionName)
+			return this.$store.getters[`${this.module}/getReaction`](resource, id, reactionName);
 		},
 		async toggleReaction() {
 			if (this.isLoading || this.reactionsDisabled) {
-				return false
+				return false;
 			}
-			this.wasJustClicked = true
-			this.isLoading = true
+			this.wasJustClicked = true;
+			this.isLoading = true;
 
 			try {
 				await this.setReaction({
@@ -57,11 +57,11 @@ export const reaction = {
 				}
 			}
 
-			this.isLoading = false
-			this.wasJustClicked = false
+			this.isLoading = false;
+			this.wasJustClicked = false;
 		},
 	},
 	mounted() {
-		this.isReady = true
+		this.isReady = true;
 	}
-}
+};

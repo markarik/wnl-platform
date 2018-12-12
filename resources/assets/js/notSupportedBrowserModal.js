@@ -23,12 +23,12 @@
 			background = document.getElementById('notSupportedBrowserModalBackground'),
 			closeButton = document.getElementById('notSupportedBrowserModalClose');
 
-		modal.classList.add('is-active')
+		modal.classList.add('is-active');
 		closeButton.addEventListener('click', function() {
-			modal.classList.remove('is-active')
+			modal.classList.remove('is-active');
 		});
 		background.addEventListener('click', function() {
-			modal.classList.remove('is-active')
+			modal.classList.remove('is-active');
 		});
 		setCookie(cookieName, true);
 	}
@@ -80,12 +80,12 @@
 	function setCookie(cname, cvalue, exdays) {
 		var d = new Date(), expires;
 		d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-		expires = "expires="+d.toUTCString();
-		document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+		expires = 'expires='+d.toUTCString();
+		document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
 	}
 
 	function getCookie(cname) {
-		var name = cname + "=";
+		var name = cname + '=';
 		var ca = document.cookie.split(';');
 		for(var i = 0; i < ca.length; i++) {
 			var c = ca[i];
@@ -96,6 +96,6 @@
 				return c.substring(name.length, c.length);
 			}
 		}
-		return "";
+		return '';
 	}
-}())
+}());

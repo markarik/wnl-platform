@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-Vue.use(Router)
+Vue.use(Router);
 
 let routes = [
 	{
@@ -128,16 +128,16 @@ let routes = [
 		name: 'logout',
 		path: '/logout',
 		beforeEnter: () => {
-			document.getElementById('logout-form').submit()
+			document.getElementById('logout-form').submit();
 		}
 	},
-]
+];
 
 export default new Router({
 	mode: 'history',
 	linkActiveClass: 'is-active',
 	scrollBehavior: () => {
-		return {x: 0, y: 0}
+		return {x: 0, y: 0};
 	},
 	routes
-})
+});

@@ -1,13 +1,13 @@
-import axios from 'axios'
-import * as types from 'js/store/mutations-types'
-import {set} from 'vue'
+import axios from 'axios';
+import * as types from 'js/store/mutations-types';
+import {set} from 'vue';
 
-import { getApiUrl } from 'js/utils/env'
+import { getApiUrl } from 'js/utils/env';
 
 const defaultValue = {
 	hasReacted: false,
 	count: 0
-}
+};
 
 export const convertToReactable = (instance) => {
 	return {
@@ -16,12 +16,12 @@ export const convertToReactable = (instance) => {
 		downvote: defaultValue,
 		bookmark: defaultValue,
 		thanks: defaultValue
-	}
-}
+	};
+};
 
 export const reactionsGetters = {
 	getReaction: state => (reactableResource, id, reaction) => state[reactableResource][id][reaction] || defaultValue,
-}
+};
 
 export const reactionsMutations = {
 	[types.SET_REACTION] (state, payload) {
@@ -32,9 +32,9 @@ export const reactionsMutations = {
 				hasReacted: payload.hasReacted,
 				count: payload.count
 			}
-		)
+		);
 	},
-}
+};
 
 export const reactionsActions = {
 	setReaction({commit, dispatch}, payload) {
@@ -46,11 +46,11 @@ export const reactionsActions = {
 				},
 				// hasReacted should represent new state
 	 			method = payload.hasReacted ? 'delete' : 'post',
-				params = payload.hasReacted ? { params: data } : [data]
+				params = payload.hasReacted ? { params: data } : [data];
 
-			return axios[method](getApiUrl(`reactions`), params)
+			return axios[method](getApiUrl('reactions'), params)
 				.then((response) => {
-					const hasReacted = !payload.hasReacted
+					const hasReacted = !payload.hasReacted;
 					const count = hasReacted ? payload.count + 1 : payload.count - 1;
 
 					commit(types.SET_REACTION, {
@@ -59,12 +59,12 @@ export const reactionsActions = {
 						reactableResource: payload.reactableResource,
 						reactableId: payload.reactableId,
 						reaction: payload.reaction,
-					})
+					});
 
-					resolve(response)
+					resolve(response);
 				})
-				.catch(reject)
-		})
+				.catch(reject);
+		});
 	},
 
 	markManyAsReacted({commit}, payload) {
@@ -74,7 +74,7 @@ export const reactionsActions = {
 
 		return new Promise((resolve, reject) => {
 			const serializedPayload = payload.map((reaction) => {
-				const hasReacted = true
+				const hasReacted = true;
 				const count = reaction.count + 1;
 
 				commit(types.SET_REACTION, {
@@ -83,21 +83,21 @@ export const reactionsActions = {
 					reactableResource: reaction.reactableResource,
 					reactableId: reaction.reactableId,
 					reaction: reaction.reaction,
-				})
+				});
 
 				return {
 					'reactable_resource' : reaction.reactableResource,
 					'reactable_id'       : reaction.reactableId,
 					'reaction_type'      : reaction.reaction,
-				}
-			})
+				};
+			});
 
-			return axios.post(getApiUrl(`reactions`), serializedPayload)
+			return axios.post(getApiUrl('reactions'), serializedPayload)
 				.then((response) => resolve(response))
 				.catch(error => {
-					$wnl.logger.error(error)
-					reject()
-				})
-		})
+					$wnl.logger.error(error);
+					reject();
+				});
+		});
 	},
-}
+};

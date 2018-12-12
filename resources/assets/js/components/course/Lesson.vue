@@ -269,25 +269,29 @@
 					return !startedScreens[id] || startedScreens[id].status === STATUS_IN_PROGRESS;
 				});
 			},
-			updateLessonProgress() {
+			async updateLessonProgress() {
 				if (typeof this.screenId !== 'undefined') {
 					if (this.currentSection) {
 						if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
-							this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id})
+							await this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id})
 						}
 					}
 
 					if (this.currentSubsection) {
 						if (this.getSectionSubsectionsCheckpoints(this.currentSection.id).includes(this.slide)) {
-							this.completeSubsection({...this.lessonProgressContext, sectionId: this.currentSection.id, subsectionId: this.currentSubsection.id})
+							await this.completeSubsection({
+								...this.lessonProgressContext,
+								sectionId: this.currentSection.id,
+								subsectionId: this.currentSubsection.id
+							})
 						}
 					}
 
 					if (this.shouldCompleteScreen()) {
-						this.completeScreen(this.lessonProgressContext);
+						await this.completeScreen(this.lessonProgressContext);
 
 						if (this.shouldCompleteLesson()) {
-							this.completeLesson(this.lessonProgressContext)
+							await this.completeLesson(this.lessonProgressContext)
 						}
 					}
 

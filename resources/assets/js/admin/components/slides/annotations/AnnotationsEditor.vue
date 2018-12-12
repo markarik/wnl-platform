@@ -44,17 +44,6 @@
 				<legend class="annotation-tags__legend">Tagi</legend>
 				<wnl-tags :defaultTags="annotation.tags || []" ref="tags" @insertTag="onFieldChange"></wnl-tags>
 			</fieldset>
-			<div class="level-item">
-				<a class="button is-danger"
-					 :disabled="!annotation.id"
-					 @click="onDelete">Usuń
-				</a>
-				<a class="button" @click="isVisible = true">Podgląd</a>
-				<a class="button is-primary"
-					 :disabled="form.errors.any() || !annotation.description"
-					 @click="onSubmit">Zapisz
-				</a>
-			</div>
 			<template v-if="annotation.id">
 				<div class="title is-4">Dane do edytora</div>
 				<div class="title is-5 annotations-editor__title">Typ przypisu</div>
@@ -125,6 +114,17 @@
 					</div>
 				</div>
 			</template>
+			<div class="level-item">
+				<a class="button is-danger"
+					 :disabled="!annotation.id"
+					 @click="onDelete">Usuń
+				</a>
+				<a class="button" @click="isVisible = true">Podgląd</a>
+				<a class="button is-primary"
+					 :disabled="form.errors.any() || !annotation.description"
+					 @click="onSubmit">Zapisz
+				</a>
+			</div>
 		</form>
 		<wnl-modal :isModalVisible="isVisible" @closeModal="isVisible = false" v-if="isVisible">
 			<wnl-preview-modal :content="annotation.description"/>

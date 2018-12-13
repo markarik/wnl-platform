@@ -6,7 +6,7 @@
 						class="item"
 						v-for="item in inputValue"
 				>
-					<slot v-bind:item="data.included[name][item]" />
+					<slot v-bind:item="formData.included[name][item]" />
 				</li>
 			</draggable>
 		</ol>

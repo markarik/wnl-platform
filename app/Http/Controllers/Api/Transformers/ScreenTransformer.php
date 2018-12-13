@@ -16,7 +16,7 @@ class ScreenTransformer extends ApiTransformer
 
 	public function __construct($parentData = [])
 	{
-		$this->parent = collect($parentData);
+		$this->parent = $parentData;
 	}
 
 	public function transform(Screen $screen)
@@ -28,9 +28,9 @@ class ScreenTransformer extends ApiTransformer
 			'meta'         => $screen->meta,
 			'order_number' => $screen->order_number,
 			'tags'         => $screen->tags,
-			'lessons'      => $this->parent->get('lessonId') ?? $screen->lesson_id,
-			'groups'       => $this->parent->get('groupId') ?? $screen->lesson->group->id,
-			'editions'     => $this->parent->get('editionId'),
+			'lessons'      => $this->parent['lessonId'] ?? $screen->lesson_id,
+			'groups'       => $this->parent['groupId'] ?? $screen->lesson->group->id,
+			'editions'     => $this->parent['editionId'],
 		];
 
 		if (!empty($screen->meta['slides_count'])) {
@@ -48,10 +48,10 @@ class ScreenTransformer extends ApiTransformer
 	{
 		$sections = $screen->sections->sortBy('order_number');
 
-		$meta = collect([
+		$meta = [
 			'screenId' => $screen->id,
-		]);
-		$meta = $meta->merge($this->parent);
+		];
+		$meta = array_merge($meta, $this->parent);
 
 		return $this->collection($sections, new SectionsTransformer($meta), 'sections');
 	}

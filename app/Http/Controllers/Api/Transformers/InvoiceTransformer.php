@@ -13,12 +13,12 @@ class InvoiceTransformer extends ApiTransformer
 
 	public function __construct($parentData = [])
 	{
-		$this->parent = collect($parentData);
+		$this->parent = $parentData;
 	}
 
 	public function transform(Invoice $invoice)
 	{
-		$orderId = $this->parent->get('order_id');
+		$orderId = $this->parent['order_id'];
 
 		return [
 			'id' => $invoice->id,

@@ -9,15 +9,16 @@ use App\Http\Controllers\Api\ApiTransformer;
 
 class PaymentTransformer extends ApiTransformer
 {
+	protected $parent;
 
 	public function __construct($parentData = [])
 	{
-		$this->parent = collect($parentData);
+		$this->parent = $parentData;
 	}
 
 	public function transform(Payment $payment)
 	{
-		$orderId = $this->parent->get('order_id');
+		$orderId = $this->parent['order_id'];
 
 		$data = [
 			'id' => $payment->id,

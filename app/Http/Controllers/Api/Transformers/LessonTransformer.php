@@ -15,12 +15,12 @@ class LessonTransformer extends ApiTransformer
 
 	public function __construct($parentData = [])
 	{
-		$this->parent = collect($parentData);
+		$this->parent = $parentData;
 	}
 
 	public function transform(Lesson $lesson)
 	{
-		$editionId = $this->parent->get('editionId');
+		$editionId = $this->parent['editionId'];
 
 		$data = [
 			'id'           => $lesson->id,
@@ -37,7 +37,7 @@ class LessonTransformer extends ApiTransformer
 		$data['startDate'] = $lesson->startDate()->timestamp ?? null;
 
 		if ($this->parent) {
-			$data = array_merge($data, $this->parent->toArray());
+			$data = array_merge($data, $this->parent);
 		}
 
 		return $data;
@@ -47,10 +47,10 @@ class LessonTransformer extends ApiTransformer
 	{
 		$screens = $lesson->screens;
 
-		$meta = collect([
+		$meta = [
 			'lessonId' => $lesson->id,
-		]);
-		$meta = $meta->merge($this->parent);
+		];
+		$meta = array_merge($meta, $this->parent);
 
 		return $this->collection($screens, new ScreenTransformer($meta), 'screens');
 	}

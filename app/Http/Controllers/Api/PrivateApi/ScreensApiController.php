@@ -43,6 +43,8 @@ class ScreensApiController extends ApiController
 
 		$screen->update($request->all());
 
+		CoursesApiController::clearCache();
+
 		return $this->respondOk();
 	}
 

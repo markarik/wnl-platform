@@ -108,7 +108,9 @@
 				return moment(this.user.created_at * 1000).format('ll')
 			},
 			activeTabName() {
-				return this.$route.hash.replace('#', '') || 'summary';
+				const hash = this.$route.hash.replace('#', '');
+				const tabNames = Object.keys(this.tabs);
+				return tabNames.includes(hash) ? hash : tabNames[0];
 			}
 		},
 		methods: {

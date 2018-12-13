@@ -16,7 +16,7 @@ class PaymentsCheck extends DataIntegrityCheck {
 
 		if ($incorrectInstalments->count() > 0) {
 			$this->handleError(__METHOD__, [
-				'orders.id' => $incorrectInstalments->pluck('id'),
+				'orders.id' => $incorrectInstalments->pluck('id')->toArray(),
 			]);
 		}
 	}

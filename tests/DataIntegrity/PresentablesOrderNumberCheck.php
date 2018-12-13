@@ -16,9 +16,9 @@ class PresentablesOrderNumberCheck extends DataIntegrityCheck {
 				'presentables' => $incorrectPresentables->map(function($presentable) {
 					return [
 						'presentable_id' => $presentable->presentable_id,
-						'type' => $presentable->presentable_type
+						'presentable_type' => $presentable->presentable_type
 					];
-				})
+				})->toArray()
 			]);
 		}
 	}

@@ -30,10 +30,10 @@ class GroupTransformer extends ApiTransformer
 	public function includeLessons(Group $group)
 	{
 		$lessons = $group->lessons->sortBy('order_number');
-		$meta = collect([
+		$meta = [
 			'editionId' => $this->editionId,
 			'groupId'   => $group->id,
-		]);
+		];
 
 		return $this->collection($lessons, new LessonTransformer($meta), 'lessons');
 	}

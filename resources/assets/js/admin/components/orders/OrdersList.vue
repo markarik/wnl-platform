@@ -2,7 +2,7 @@
 	<div class="orders-list">
 		<h3 class="title">Lista zamówień</h3>
 
-		<wnl-search-input @search="onSearch" />
+		<wnl-search-input @search="onSearch" class="search" />
 		<wnl-pagination
 			v-if="lastPage > 1"
 			:currentPage="page"
@@ -11,7 +11,7 @@
 			class="pagination"
 		/>
 
-		<table class="table">
+		<table class="table" v-if="!isLoading">
 			<thead>
 			<tr>
 				<th>ID</th>
@@ -38,6 +38,7 @@
 			</tr>
 			</tbody>
 		</table>
+		<wnl-text-loader v-else></wnl-text-loader>
 
 	</div>
 </template>
@@ -50,6 +51,9 @@
 
 	.row
 		cursor: pointer
+
+	.search
+		margin-bottom: $margin-base
 </style>
 
 <script>
@@ -69,6 +73,7 @@
 				searchPhrase: '',
 				lastPage: 1,
 				page: 1,
+				isLoading: true
 			};
 		},
 		methods: {
@@ -98,10 +103,12 @@
 				await this.fetch()
 			},
 			async fetch() {
+				this.isLoading = true;
 				const response = await axios.post(getApiUrl('orders/.filter'), this.getRequestParams())
 				const {data: {data, ...paginationMeta}} = response;
 				this.orders = data;
 				this.lastPage = paginationMeta.last_page;
+				this.isLoading = false;
 			},
 			translateShippingStatus(order) {
 				return this.$t(`orders.tags.shipping.${order.shipping_status}`)

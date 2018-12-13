@@ -50,6 +50,8 @@
 			padding: 10px 10px
 			&__input
 				border-radius: 50%
+	.active-search
+		margin-top: $margin-base
 </style>
 <script>
 	import {isEqual} from 'lodash'

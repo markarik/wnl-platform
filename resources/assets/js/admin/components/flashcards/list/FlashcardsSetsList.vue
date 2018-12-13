@@ -29,9 +29,6 @@
 	.search
 		margin: $margin-big 0
 
-		/deep/ .active-search
-			margin-top: $margin-base
-
 	.pagination /deep/ .pagination-list
 		justify-content: center
 		margin-bottom: $margin-medium

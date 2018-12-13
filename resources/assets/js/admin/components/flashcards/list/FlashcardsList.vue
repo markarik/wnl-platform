@@ -3,7 +3,7 @@
 		<h3 class="title">Lista pytań</h3>
 		<router-link :to="{ name: 'flashcards-edit', params: { flashcardId: 'new' } }" class="button is-success margin bottom">+ Nowe pytanie</router-link>
 
-		<wnl-search-input @search="onSearch" class="flashcards-search"/>
+		<wnl-search-input @search="onSearch" class="search"/>
 		<wnl-pagination
 			v-if="lastPage > 1"
 			:currentPage="page"
@@ -25,10 +25,6 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
-	.flashcards-search
-		/deep/ .active-search
-			margin-top: $margin-base
-
 	.search
 		margin-bottom: $margin-base
 

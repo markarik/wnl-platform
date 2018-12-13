@@ -62,7 +62,7 @@
 		methods: {
 			getRequestParams() {
 				const params = {
-					limit: 20,
+					limit: 50,
 					page: this.page,
 					active: [],
 					filters: []

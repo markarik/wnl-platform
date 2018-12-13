@@ -30,7 +30,7 @@ class ScreenTransformer extends ApiTransformer
 			'tags'         => $screen->tags,
 			'lessons'      => $this->parent['lessonId'] ?? $screen->lesson_id,
 			'groups'       => $this->parent['groupId'] ?? $screen->lesson->group->id,
-			'editions'     => $this->parent['editionId'],
+			'editions'     => $this->parent['editionId'] ?? null,
 		];
 
 		if (!empty($screen->meta['slides_count'])) {

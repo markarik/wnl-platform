@@ -18,7 +18,7 @@ class InvoiceTransformer extends ApiTransformer
 
 	public function transform(Invoice $invoice)
 	{
-		$orderId = $this->parent['order_id'];
+		$orderId = $this->parent['order_id'] ?? null;
 
 		return [
 			'id' => $invoice->id,

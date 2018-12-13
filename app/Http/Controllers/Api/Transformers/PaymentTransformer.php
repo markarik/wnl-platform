@@ -18,7 +18,7 @@ class PaymentTransformer extends ApiTransformer
 
 	public function transform(Payment $payment)
 	{
-		$orderId = $this->parent['order_id'];
+		$orderId = $this->parent['order_id'] ?? null;
 
 		$data = [
 			'id' => $payment->id,

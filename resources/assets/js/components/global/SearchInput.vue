@@ -26,7 +26,7 @@
 				<label :for="field.value" class="search-settings__field__label checkbox">{{field.title}}</label>
 			</div>
 		</div>
-		<div v-if="searchPhrase">
+		<div v-if="searchPhrase" class="active-search">
 			<span>Aktualne wyszukiwanie:</span>
 			<span class="tag is-success">
 				{{ searchPhrase }}

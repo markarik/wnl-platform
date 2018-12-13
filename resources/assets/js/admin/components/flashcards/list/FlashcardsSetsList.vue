@@ -12,11 +12,14 @@
 			class="pagination"
 		/>
 
-		<wnl-flashcards-sets-list-item v-for="flashcardsSet in flashcardsSets"
-							  :key="flashcardsSet.id"
-							  :name="flashcardsSet.name"
-							  :id="flashcardsSet.id"
-		/>
+		<div v-if="!isLoading">
+			<wnl-flashcards-sets-list-item v-for="flashcardsSet in flashcardsSets"
+																		 :key="flashcardsSet.id"
+																		 :name="flashcardsSet.name"
+																		 :id="flashcardsSet.id"
+			/>
+		</div>
+		<wnl-text-loader v-else></wnl-text-loader>
 	</div>
 </template>
 
@@ -24,7 +27,10 @@
 	@import 'resources/assets/sass/variables'
 
 	.search
-		margin-bottom: $margin-medium
+		margin: $margin-big 0
+
+		/deep/ .active-search
+			margin-top: $margin-base
 
 	.pagination /deep/ .pagination-list
 		justify-content: center
@@ -50,12 +56,13 @@
 				searchPhrase: '',
 				lastPage: 1,
 				page: 1,
+				isLoading: true
 			};
 		},
 		methods: {
 			getRequestParams() {
 				const params = {
-					limit: 50,
+					limit: 20,
 					page: this.page,
 					active: [],
 					filters: []
@@ -79,10 +86,12 @@
 				await this.fetch()
 			},
 			async fetch() {
+				this.isLoading = true;
 				const response = await axios.post(getApiUrl('flashcards_sets/.filter'), this.getRequestParams())
 				const {data: {data, ...paginationMeta}} = response;
 				this.flashcardsSets = data;
 				this.lastPage = paginationMeta.last_page;
+				this.isLoading = false;
 			},
 		},
 		mounted() {

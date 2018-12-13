@@ -3,7 +3,7 @@
 		<h3 class="title">Lista pytań</h3>
 		<router-link :to="{ name: 'flashcards-edit', params: { flashcardId: 'new' } }" class="button is-success margin bottom">+ Nowe pytanie</router-link>
 
-		<wnl-search-input @search="onSearch" />
+		<wnl-search-input @search="onSearch" class="flashcards-search"/>
 		<wnl-pagination
 			v-if="lastPage > 1"
 			:currentPage="page"
@@ -12,16 +12,26 @@
 			class="pagination"
 		/>
 
-		<wnl-flashcard-list-item v-for="flashcard in flashcards"
-														 :key="flashcard.id"
-														 :content="flashcard.content"
-														 :id="flashcard.id"
-		/>
+		<div v-if="!isLoading">
+			<wnl-flashcard-list-item v-for="flashcard in flashcards"
+															 :key="flashcard.id"
+															 :content="flashcard.content"
+															 :id="flashcard.id"
+			/>
+		</div>
+		<wnl-text-loader v-else></wnl-text-loader>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	.flashcards-search
+		/deep/ .active-search
+			margin-top: $margin-base
+
+	.search
+		margin-bottom: $margin-base
+
 	.pagination /deep/ .pagination-list
 		justify-content: center
 		margin-bottom: $margin-medium
@@ -46,6 +56,7 @@
 				searchPhrase: '',
 				lastPage: 1,
 				page: 1,
+				isLoading: true
 			};
 		},
 		methods: {
@@ -75,10 +86,13 @@
 				await this.fetch()
 			},
 			async fetch() {
+				this.isLoading = true;
 				const response = await axios.post(getApiUrl('flashcards/.filter'), this.getRequestParams())
 				const {data: {data, ...paginationMeta}} = response;
 				this.flashcards = data;
 				this.lastPage = paginationMeta.last_page;
+
+				this.isLoading = false;
 			},
 		},
 		mounted() {

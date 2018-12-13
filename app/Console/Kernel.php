@@ -73,5 +73,9 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('invoices:jpk-send')
 			->monthlyOn(1, '06:00');
+
+		$schedule
+			->command('data-integrity:check')
+			->dailyAt('04:00');
 	}
 }

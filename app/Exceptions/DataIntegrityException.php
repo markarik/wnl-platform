@@ -1,11 +1,5 @@
 <?php
 
-
 namespace App\Exceptions;
 
-
-
-class DataIntegrityException extends \Exception
-{
-
-}
+class DataIntegrityException extends \Exception {}

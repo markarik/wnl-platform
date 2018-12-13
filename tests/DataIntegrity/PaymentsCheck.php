@@ -1,67 +1,22 @@
 <?php
 namespace Tests\DataIntegrity;
 
-class PaymentsCheck extends DataIntegrityTestCase {
+class PaymentsCheck extends DataIntegrityCheck {
 	public function check() {
-		$orders = \DB::table('orders')
-			->select(['id', 'paid_amount'])
-			->where('canceled', 0)
-			->get();
-
-		foreach ($orders as $order) {
-			$this->checkInstalments($order);
-			$this->checkInvoices($order);
-			$this->checkPayments($order);
-		}
+		$this->checkInstalments();
 	}
 
-	private function checkInstalments($order) {
-		$incorrectInstalments = \DB::table('order_instalments')
-			->selectRaw('order_id, sum(paid_amount) as sum')
-			->where('order_id', $order->id)
-			->groupBy('order_id')
-			->having('sum', '<>', $order->paid_amount)
-			->first();
+	private function checkInstalments() {
+		$incorrectInstalments = \DB::table('orders')
+			->selectRaw('orders.id, orders.paid_amount, SUM(order_instalments.paid_amount) as paid_instalments')
+			->join('order_instalments', 'orders.id', '=', 'order_instalments.order_id')
+			->groupBy('orders.id')
+			->havingRaw('SUM(order_instalments.paid_amount) != orders.paid_amount')
+			->get();
 
 		if (!empty($incorrectInstalments)) {
 			$this->handleError(__METHOD__, [
-				'order.id' => $order->id,
-				'order.paid_amount' => $order->paid_amount,
-				'instalments.sum(paid_amount)' => $incorrectInstalments->sum
-			]);
-		}
-	}
-
-	private function checkInvoices($order) {
-		$incorrectInvoices = \DB::table('invoices')
-			->selectRaw('order_id, sum(amount) as sum')
-			->where('order_id', $order->id)
-			->groupBy('order_id')
-			->having('sum', '<>', $order->paid_amount)
-			->first();
-
-		if (!empty($incorrectInvoices)) {
-			$this->handleError(__METHOD__, [
-				'order.id' => $order->id,
-				'order.paid_amount' => $order->paid_amount,
-				'invoices.sum(amount)' => $incorrectInvoices->sum
-			]);
-		}
-	}
-
-	private function checkPayments($order) {
-		$incorrectPayments = \DB::table('payments')
-			->selectRaw('order_id, sum(amount) as sum')
-			->where('order_id', $order->id)
-			->groupBy('order_id')
-			->having('sum', '<>', $order->paid_amount)
-			->first();
-
-		if (!empty($incorrectPayments)) {
-			$this->handleError(__METHOD__, [
-				'order.id' => $order->id,
-				'order.paid_amount' => $order->paid_amount,
-				'payments.sum(amount)' => $incorrectPayments->sum
+				'orders.id' => $incorrectInstalments->pluck('id'),
 			]);
 		}
 	}

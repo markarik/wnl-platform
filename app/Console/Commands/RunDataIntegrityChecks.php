@@ -26,6 +26,6 @@ class RunDataIntegrityChecks extends Command
 	public function handle() {
 		(new PaymentsCheck())->check();
 
-		return $this->output->note("DONE!");
+		return $this->output->text("Checked!");
 	}
 }

@@ -24,6 +24,8 @@ class RunDataIntegrityChecks extends Command
 	 * @return mixed
 	 */
 	public function handle() {
-		(new PaymentsCheck())->test();
+		(new PaymentsCheck())->check();
+
+		return $this->output->note("DONE!");
 	}
 }

@@ -3,7 +3,7 @@ namespace Tests\DataIntegrity;
 
 use App\Exceptions\DataIntegrityException;
 
-class DataIntegrityTestCase {
+abstract class DataIntegrityTestCase {
 
 	protected function handleError($name, $context) {
 		$sentryClient = new \Raven_Client(env('SENTRY_DSN'));
@@ -11,4 +11,6 @@ class DataIntegrityTestCase {
 			'extra' => $context
 		]);
 	}
+
+	public abstract function check();
 }

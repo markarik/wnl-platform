@@ -2,7 +2,7 @@
 namespace Tests\DataIntegrity;
 
 class PaymentsCheck extends DataIntegrityTestCase {
-	public function test() {
+	public function check() {
 		$orders = \DB::table('orders')
 			->select(['id', 'paid_amount'])
 			->where('canceled', 0)

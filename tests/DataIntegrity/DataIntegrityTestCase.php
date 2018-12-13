@@ -11,9 +11,4 @@ class DataIntegrityTestCase {
 			'extra' => $context
 		]);
 	}
-
-	public function routeNotificationForSlack()
-	{
-		return env('SLACK_QUEUE_MONITORING');
-	}
 }

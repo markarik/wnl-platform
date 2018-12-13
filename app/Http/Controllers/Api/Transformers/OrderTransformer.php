@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\ApiTransformer;
 class OrderTransformer extends ApiTransformer
 {
 
-	protected $availableIncludes = ['invoices', 'payments'];
+	protected $availableIncludes = ['invoices', 'payments', 'study_buddy'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -51,16 +51,6 @@ class OrderTransformer extends ApiTransformer
 			];
 		}
 
-		if ($order->studyBuddy) [
-			$data['studyBuddy'] = [
-				'id'        => $order->studyBuddy->id,
-				'code'      => $order->studyBuddy->code,
-				'recipient' => $order->studyBuddy->recipient,
-				'refunded'  => $order->studyBuddy->refunded,
-				'status'    => $order->studyBuddy->status,
-			],
-		];
-
 		if (is_null($order->method) || $order->method === 'instalments') {
 			$data['instalments'] = $order->instalments;
 		}
@@ -90,5 +80,16 @@ class OrderTransformer extends ApiTransformer
 		];
 
 		return $this->collection($payments, new PaymentTransformer($meta), 'payments');
+	}
+
+	public function includeStudyBuddy(Order $order)
+	{
+		if ($order->studyBuddy) {
+			$meta = [
+				'order_id' => $order->id
+			];
+
+			return $this->item($order->studyBuddy, new StudyBuddyTransformer($meta), 'study_buddy');
+		}
 	}
 }

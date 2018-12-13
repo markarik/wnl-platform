@@ -117,7 +117,7 @@
 				const userId = this.$route.params.userId
 				try {
 					const include = [
-						'roles', 'profile', 'subscription', 'orders.invoices', 'billing', 'settings', 'coupons','user_address', 'orders.payments'
+						'roles', 'profile', 'subscription', 'orders.invoices', 'billing', 'settings', 'coupons','user_address', 'orders.payments', 'orders.study_buddy'
 					].join(',')
 					const response = await axios.get(getApiUrl(`users/${userId}?include=${include}`))
 					const {included, ...user} = response.data
@@ -139,6 +139,7 @@
 						return {
 							...order,
 							invoices: (order.invoices || []).map(invoiceId => included.invoices[invoiceId]),
+							studyBuddy: order.study_buddy ? included.study_buddy[order.study_buddy[0]] : null,
 							payments: (order.payments || []).map(paymentId => included.payments[paymentId])
 						}
 					})

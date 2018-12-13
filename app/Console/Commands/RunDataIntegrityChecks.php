@@ -3,9 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\QnaQuestion;
-use App\Models\Tag;
 use Tests\DataIntegrity\PaymentsCheck;
+use Tests\DataIntegrity\PresentablesOrderNumberCheck;
 
 class RunDataIntegrityChecks extends Command
 {
@@ -25,6 +24,7 @@ class RunDataIntegrityChecks extends Command
 	 */
 	public function handle() {
 		(new PaymentsCheck())->check();
+		(new PresentablesOrderNumberCheck())->check();
 
 		return $this->output->text("Checked!");
 	}

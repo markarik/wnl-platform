@@ -14,7 +14,7 @@ class PaymentsCheck extends DataIntegrityCheck {
 			->havingRaw('SUM(order_instalments.paid_amount) != orders.paid_amount')
 			->get();
 
-		if (!empty($incorrectInstalments)) {
+		if ($incorrectInstalments->count() > 0) {
 			$this->handleError(__METHOD__, [
 				'orders.id' => $incorrectInstalments->pluck('id'),
 			]);

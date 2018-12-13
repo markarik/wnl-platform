@@ -30,6 +30,8 @@ class ScreensApiController extends ApiController
 			'name' => $request->input('name'),
 		]);
 
+		CoursesApiController::clearCache();
+
 		return $this->respondOk();
 	}
 
@@ -56,6 +58,8 @@ class ScreensApiController extends ApiController
 		$screen = Screen::create($serializedData);
 		$resource = new Item($screen, new ScreenTransformer, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();
+
+		CoursesApiController::clearCache();
 
 		return $this->respondOk($data);
 	}

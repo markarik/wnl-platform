@@ -16,7 +16,7 @@
 			<tr>
 				<th>ID</th>
 				<th>Data</th>
-				<th>Użytkownik</th>
+				<th>Id użytkownika</th>
 				<th>Produkt</th>
 				<th>Status wysyłki</th>
 				<th>Wpłata</th>

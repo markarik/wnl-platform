@@ -103,9 +103,10 @@ class StoreProgress extends Command
 					$lessonKey = UserStateApiController::getLessonRedisKey($userId, 1, $lessonId);
 					$lessonProgressRaw = $this->redis->get($lessonKey);
 
-					if (!$lessonProgressRaw) continue;
-
+					if (empty($lessonProgressRaw)) continue;
 					$lessonProgress = json_decode($lessonProgressRaw);
+
+					if (empty($lessonProgress)) continue;
 
 					$model = UserCourseProgress::firstOrNew([
 						'user_id' => $userId,

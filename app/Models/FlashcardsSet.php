@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class FlashcardsSet extends Model
 {
+	use Searchable;
+
 	protected $fillable = ['description', 'mind_maps_text', 'name', 'lesson_id'];
 
 	public function flashcards()

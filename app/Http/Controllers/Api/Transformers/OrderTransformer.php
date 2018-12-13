@@ -22,7 +22,7 @@ class OrderTransformer extends ApiTransformer
 	{
 		$data = [
 			'id'          => $order->id,
-			'user_id'        => $order->user_id,
+			'user_id'     => $order->user_id,
 			'paid'        => $order->paid,
 			'paid_amount' => $order->paid_amount,
 			'method'      => $order->method,

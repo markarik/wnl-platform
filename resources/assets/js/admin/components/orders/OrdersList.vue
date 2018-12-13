@@ -13,19 +13,28 @@
 
 		<table class="table">
 			<thead>
-			<th>ID</th>
-			<th>Data</th>
-			<th>Produkt</th>
-			<th>Status</th>
-			<th>Wpłata</th>
+			<tr>
+				<th>ID</th>
+				<th>Data</th>
+				<th>Użytkownik</th>
+				<th>Produkt</th>
+				<th>Status wysyłki</th>
+				<th>Wpłata</th>
+				<th>Kupon</th>
+			</tr>
 			</thead>
 			<tbody>
-			<tr v-for="order in orders">
+			<tr v-for="order in orders" @click="goToOrder(order)" class="row">
 				<td>{{order.id}}</td>
 				<td>{{order.created_at}}</td>
+				<td>{{order.user_id}}</td>
 				<td>{{order.product.name}}</td>
-				<td>{{order.status}}</td>
-				<td>{{order.paid_amount}} / {{order.total}}PLN</td>
+				<td>{{translateShippingStatus(order)}}</td>
+				<td>
+					<span class="icon has-text-success	" v-if="order.paid"><i class="fa fa-check"></i></span>
+					{{order.paid_amount}} / {{order.total}}PLN
+				</td>
+				<td><span class="icon has-text-success	" v-if="order.coupon" :title="order.coupon.name"><i class="fa fa-check"></i></span></td>
 			</tr>
 			</tbody>
 		</table>
@@ -38,6 +47,9 @@
 	.pagination /deep/ .pagination-list
 		justify-content: center
 		margin-bottom: $margin-medium
+
+	.row
+		cursor: pointer
 </style>
 
 <script>
@@ -70,7 +82,7 @@
 
 				if (this.searchPhrase) {
 					params.active = [`search.${this.searchPhrase}`];
-					params.filters = [{search: {phrase: this.searchPhrase, fields: []}}];
+					params.filters = [{search: {phrase: this.searchPhrase, fields: ['id']}}];
 				}
 
 				return params;
@@ -91,6 +103,12 @@
 				this.orders = data;
 				this.lastPage = paginationMeta.last_page;
 			},
+			translateShippingStatus(order) {
+				return this.$t(`orders.tags.shipping.${order.shipping_status}`)
+			},
+			goToOrder(order){
+				this.$router.push({ name: 'user-details', params: { userId: order.user_id } })
+			}
 		},
 		mounted() {
 			this.fetch();

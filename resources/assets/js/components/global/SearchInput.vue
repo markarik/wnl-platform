@@ -66,7 +66,7 @@
 			 */
 			availableFields: {
 				type: Array,
-				default: [],
+				default: () => [],
 			},
 		},
 		data() {

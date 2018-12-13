@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class Order extends Model
 {
+	use Searchable;
+
 	protected $casts = [
 		'paid'        => 'boolean',
 		'canceled'    => 'boolean',

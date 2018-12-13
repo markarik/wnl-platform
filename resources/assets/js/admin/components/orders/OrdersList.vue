@@ -24,7 +24,7 @@
 			</tr>
 			</thead>
 			<tbody>
-			<tr v-for="order in orders" @click="goToOrder(order)" class="row">
+			<tr v-for="order in orders" @click="goToOrder(order)" class="row" :key="order.id">
 				<td>{{order.id}}</td>
 				<td>{{order.created_at}}</td>
 				<td>{{order.user_id}}</td>
@@ -34,7 +34,7 @@
 					<span class="icon has-text-success	" v-if="order.paid"><i class="fa fa-check"></i></span>
 					{{order.paid_amount}} / {{order.total}}PLN
 				</td>
-				<td><span class="icon has-text-success	" v-if="order.coupon" :title="order.coupon.name"><i class="fa fa-check"></i></span></td>
+				<td><span class="icon has-text-success" v-if="order.coupon" :title="order.coupon.name"><i class="fa fa-check"></i></span></td>
 			</tr>
 			</tbody>
 		</table>

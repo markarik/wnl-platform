@@ -58,9 +58,55 @@
 			},
 		},
 		methods: {
-			downloadPlan() {
-				axios.get(getApiUrl(`user_lesson/${this.currentUserId}/exportPlan`))
-			}
+			async downloadPlan() {
+				try {
+					const response = await axios.request({
+						url: getApiUrl(`user_lesson/${this.currentUserId}/exportPlan`),
+						responseType: 'blob',
+					})
+
+					this.downloadFile(response.data, 'plan_pracy.csv')
+				} catch (err) {
+					this.handleDownloadFailure()
+				}
+			},
+			downloadFile(responseData, fileName) {
+				const data = window.URL.createObjectURL(responseData);
+				const link = document.createElement('a')
+				link.style.display = 'none';
+				// For Firefox it is necessary to insert the link into body
+				document.body.appendChild(link);
+				link.href = data
+				link.setAttribute('download', fileName)
+				link.click()
+
+				setTimeout(function() {
+					window.URL.revokeObjectURL(link.href)
+					document.removeChild(link);
+				}, 100)
+			},
+			handleDownloadFailure() {
+				if (err.response.status === 404) {
+					return this.addAutoDismissableAlert({
+						text: 'Nie udało się znaleźć Twojego planu pracy. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
+						type: 'error'
+					})
+				}
+
+				if (err.response.status === 403) {
+					return this.addAutoDismissableAlert({
+						text: 'Nie masz uprawnień do pobrania planu.',
+						type: 'error'
+					})
+				}
+
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+					type: 'error'
+				})
+
+				$wnl.logger.capture(err)
+			},
 		}
 	}
 </script>

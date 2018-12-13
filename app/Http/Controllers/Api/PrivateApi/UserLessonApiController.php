@@ -109,21 +109,23 @@ class UserLessonApiController extends ApiController
 
 		$userLessons = UserLesson::where('user_id', $userId)->get();
 
-		$csv_data = $userLessons->reduce(
-			function($data, $userLesson) {
-				$data[] = [
-					Lesson::where('id', $userLesson['lesson_id'])->pluck('name')[0],
-					$userLesson->start_date->toDateTimeString()
-				];
-				return $data;
-			},
-			[
-				[
-					trans('Nazwa lekcji'),
-					trans('Data rozpoczęcia'),
-				]
-			]
-		);
+		$csv_data = [];
+
+		foreach($userLessons as $userLesson) {
+			$csv_data[] = [
+				"name" => Lesson::where('id', $userLesson['lesson_id'])->pluck('name')[0],
+				"start_date" => Carbon::parse($userLesson->start_date)->format('m/d/Y')
+			];
+		};
+
+		usort($csv_data, function($a, $b) {
+			return strtotime($a["start_date"]) - strtotime($b["start_date"]);
+		});
+
+		array_unshift($csv_data, [
+			"name" => "Subject",
+			"start_date" => "Start date"
+		]);
 
 		return new StreamedResponse(
 			function() use($csv_data) {
@@ -135,8 +137,8 @@ class UserLessonApiController extends ApiController
 			},
 			200,
 			[
-				'Content-type'        => 'csv',
-				'Content-Disposition' => 'attachment; filename=planPracy.csv'
+				'Content-type'        => 'text/csv',
+				'Content-Disposition' => 'attachment; filename=plan_pracy.csv'
 			]
 		);
 	}

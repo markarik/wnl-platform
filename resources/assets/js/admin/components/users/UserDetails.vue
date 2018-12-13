@@ -160,10 +160,16 @@
 			changeTab(name) {
 				this.activeTab.active = false;
 				this.tabs[name].active = true;
+				this.$router.replace({ hash: `#${name}` })
 			},
 		},
 		async mounted() {
 			await this.setup()
+			const urlTabName = this.$route.hash.replace('#', '');
+
+			if (urlTabName) {
+				this.changeTab(urlTabName)
+			}
 		}
 	}
 </script>

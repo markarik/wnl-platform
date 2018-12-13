@@ -107,7 +107,7 @@
 				return this.$t(`orders.tags.shipping.${order.shipping_status}`)
 			},
 			goToOrder(order){
-				this.$router.push({ name: 'user-details', params: { userId: order.user_id } })
+				this.$router.push({ name: 'user-details', params: { userId: order.user_id }, hash: '#orders' })
 			}
 		},
 		mounted() {

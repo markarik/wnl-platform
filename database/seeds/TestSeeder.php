@@ -23,7 +23,6 @@ class TestSeeder extends Seeder
         /** Course structure */
         $this->call(QuizSeeder::class);
         $this->call(CourseSeeder::class);
-        $this->call(EditionSeeder::class);
         $this->call(CoursePlanSeeder::class);
         $this->call(ReactionsSeeder::class);
         $this->call(CategoriesTableSeeder::class);

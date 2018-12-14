@@ -60,6 +60,7 @@ import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vu
 
 export default {
 	name: 'ScreensList',
+	props: ['lessonId'],
 	components: {
 		'wnl-screens-list-item': ScreensListItem
 	},
@@ -70,11 +71,6 @@ export default {
 			loading: false,
 			screens: [],
 		};
-	},
-	computed: {
-		lessonId() {
-			return this.$route.params.lessonId;
-		},
 	},
 	methods: {
 		fetchScreens() {

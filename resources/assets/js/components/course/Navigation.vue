@@ -41,6 +41,7 @@ export default {
 			'getLesson',
 			'getScreens',
 			'isLessonAvailable',
+			'courseId',
 		]),
 		...mapGetters('progress', {
 			getCourseProgress: 'getCourse',
@@ -190,7 +191,7 @@ export default {
 				itemClass: cssClass,
 				routeName: resource('lessons'),
 				routeParams: {
-					courseId: lesson[resource('editions')],
+					courseId: this.courseId,
 					lessonId: lesson.id,
 				},
 				isDisabled: !this.isLessonAvailable(lesson.id),
@@ -201,7 +202,7 @@ export default {
 		},
 		getScreenItem(screen) {
 			const params = {
-				courseId: screen[resource('editions')],
+				courseId: this.courseId,
 				lessonId: screen[resource('lessons')],
 				screenId: screen.id,
 			};
@@ -225,7 +226,7 @@ export default {
 		},
 		getSectionItem(section) {
 			const params = {
-				courseId: section[resource('editions')],
+				courseId: this.courseId,
 				lessonId: section[resource('lessons')],
 				screenId: section[resource('screens')],
 				slide: section.slide,
@@ -250,7 +251,7 @@ export default {
 		},
 		getSubsectionItem(subsection, section) {
 			const params = {
-				courseId: subsection[resource('editions')],
+				courseId: this.courseId,
 				lessonId: subsection[resource('lessons')],
 				screenId: subsection[resource('screens')],
 				slide: subsection.slide,

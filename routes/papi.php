@@ -70,6 +70,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Lessons
 		Route::post("{$r['lessons']}", 'LessonsApiController@post');
 		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
+
+		// Tags
+		Route::post("{$r['tags']}", 'TagsApiController@post');
+		Route::put("{$r['tags']}/{id}", 'TagsApiController@put');
 	});
 
 	// Count

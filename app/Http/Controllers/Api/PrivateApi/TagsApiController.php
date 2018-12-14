@@ -45,4 +45,21 @@ class TagsApiController extends ApiController {
 
 		return $this->respondOk();
 	}
+
+	public function delete($id) {
+		$tag = Tag::find($id);
+
+		if (!$tag) {
+			return $this->respondNotFound();
+		}
+
+		if ($tag->hasRelations() || $tag->isInTaxonomy()) {
+			// TODO
+			return $this->respondNotImplemented();
+		}
+
+		$tag->delete();
+
+		return $this->respondOk();
+	}
 }

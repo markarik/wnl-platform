@@ -69,8 +69,8 @@ import LessonsPlanner from './LessonsPlanner';
 import PlannerGuarantee from './PlanGuarantee.vue';
 import PlannerGuide from './PlannerGuide';
 import DownloadPlan from './DownloadPlan';
-import Dropdown from 'js/components/global/Dropdown'
-import emits_events from 'js/mixins/emits-events'
+import Dropdown from 'js/components/global/Dropdown';
+import emits_events from 'js/mixins/emits-events';
 import context from 'js/consts/events_map/context.json';
 
 export default {

@@ -3,10 +3,10 @@ export async function download(url, fileName) {
 		const response = await axios.request({
 			url: getApiUrl(url),
 			responseType: 'blob',
-		})
+		});
 
-		this.downloadFile(response.data, fileName)
+		this.downloadFile(response.data, fileName);
 	} catch (err) {
-		this.handleDownloadFailure()
+		this.handleDownloadFailure();
 	}
 }

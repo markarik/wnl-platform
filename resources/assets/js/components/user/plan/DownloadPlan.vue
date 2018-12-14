@@ -24,89 +24,89 @@
 </style>
 
 <script>
- 	import { mapGetters } from 'vuex'
-	import moment from 'moment'
-	import { first,last } from 'lodash'
-	import { getApiUrl } from 'js/utils/env'
+import { mapGetters } from 'vuex';
+import moment from 'moment';
+import { first,last } from 'lodash';
+import { getApiUrl } from 'js/utils/env';
 
-	export default {
-		name: 'DownloadPlan',
-		computed: {
-			...mapGetters('course', ['getRequiredLessons']),
-			...mapGetters(['currentUserId']),
-			sortedRequiredUserLessons() {
-				return this.requiredLessons.sort((lessonA, lessonB) => {
-					return lessonA.startDate - lessonB.startDate
-				})
-			},
-			requiredLessons() {
-				return Object.values(this.getRequiredLessons).filter(requiredLesson => {
-					if (requiredLesson.is_required && requiredLesson.isAccessible) {
-						return requiredLesson
-					}
-				})
-			},
-			planStartDate() {
-				if (!first(this.sortedRequiredUserLessons)) return
-
-				return moment(first(this.sortedRequiredUserLessons).startDate * 1000).format('LL')
-			},
-			planEndDate() {
-				if (!last(this.sortedRequiredUserLessons)) return
-
-				return moment(last(this.sortedRequiredUserLessons).startDate * 1000).format('LL')
-			},
+export default {
+	name: 'DownloadPlan',
+	computed: {
+		...mapGetters('course', ['getRequiredLessons']),
+		...mapGetters(['currentUserId']),
+		sortedRequiredUserLessons() {
+			return this.requiredLessons.sort((lessonA, lessonB) => {
+				return lessonA.startDate - lessonB.startDate;
+			});
 		},
-		methods: {
-			async downloadPlan() {
-				try {
-					const response = await axios.request({
-						url: getApiUrl(`user_lesson/${this.currentUserId}/exportPlan`),
-						responseType: 'blob',
-					})
-
-					this.downloadFile(response.data, 'plan_pracy.csv')
-				} catch (err) {
-					this.handleDownloadFailure()
+		requiredLessons() {
+			return Object.values(this.getRequiredLessons).filter(requiredLesson => {
+				if (requiredLesson.is_required && requiredLesson.isAccessible) {
+					return requiredLesson;
 				}
-			},
-			downloadFile(responseData, fileName) {
-				const data = window.URL.createObjectURL(responseData);
-				const link = document.createElement('a')
-				link.style.display = 'none';
-				// For Firefox it is necessary to insert the link into body
-				document.body.appendChild(link);
-				link.href = data
-				link.setAttribute('download', fileName)
-				link.click()
+			});
+		},
+		planStartDate() {
+			if (!first(this.sortedRequiredUserLessons)) return;
 
-				setTimeout(function() {
-					window.URL.revokeObjectURL(link.href)
-					document.removeChild(link);
-				}, 100)
-			},
-			handleDownloadFailure() {
-				if (err.response.status === 404) {
-					return this.addAutoDismissableAlert({
-						text: 'Nie udało się znaleźć Twojego planu pracy. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
-						type: 'error'
-					})
-				}
+			return moment(first(this.sortedRequiredUserLessons).startDate * 1000).format('LL');
+		},
+		planEndDate() {
+			if (!last(this.sortedRequiredUserLessons)) return;
 
-				if (err.response.status === 403) {
-					return this.addAutoDismissableAlert({
-						text: 'Nie masz uprawnień do pobrania planu.',
-						type: 'error'
-					})
-				}
+			return moment(last(this.sortedRequiredUserLessons).startDate * 1000).format('LL');
+		},
+	},
+	methods: {
+		async downloadPlan() {
+			try {
+				const response = await axios.request({
+					url: getApiUrl(`user_lesson/${this.currentUserId}/exportPlan`),
+					responseType: 'blob',
+				});
 
-				this.addAutoDismissableAlert({
-					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+				this.downloadFile(response.data, 'plan_pracy.csv');
+			} catch (err) {
+				this.handleDownloadFailure();
+			}
+		},
+		downloadFile(responseData, fileName) {
+			const data = window.URL.createObjectURL(responseData);
+			const link = document.createElement('a');
+			link.style.display = 'none';
+			// For Firefox it is necessary to insert the link into body
+			document.body.appendChild(link);
+			link.href = data;
+			link.setAttribute('download', fileName);
+			link.click();
+
+			setTimeout(function() {
+				window.URL.revokeObjectURL(link.href);
+				document.removeChild(link);
+			}, 100);
+		},
+		handleDownloadFailure() {
+			if (err.response.status === 404) {
+				return this.addAutoDismissableAlert({
+					text: 'Nie udało się znaleźć Twojego planu pracy. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
 					type: 'error'
-				})
+				});
+			}
 
-				$wnl.logger.capture(err)
-			},
-		}
+			if (err.response.status === 403) {
+				return this.addAutoDismissableAlert({
+					text: 'Nie masz uprawnień do pobrania planu.',
+					type: 'error'
+				});
+			}
+
+			this.addAutoDismissableAlert({
+				text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+				type: 'error'
+			});
+
+			$wnl.logger.capture(err);
+		},
 	}
+};
 </script>

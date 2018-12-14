@@ -38,142 +38,142 @@
 </style>
 
 <script>
-	import { mapGetters, mapActions } from 'vuex'
-	import { isEmpty } from 'lodash'
+import { mapGetters, mapActions } from 'vuex';
+import { isEmpty } from 'lodash';
 
-	import Navbar from 'js/components/global/Navbar.vue'
-	import Alerts from 'js/components/global/GlobalAlerts'
-	import sessionStore from 'js/services/sessionStore';
-	import {startActivityTracking} from 'js/services/activityMonitor';
-	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection'
-	import {getApiUrl} from "js/utils/env";
+import Navbar from 'js/components/global/Navbar.vue';
+import Alerts from 'js/components/global/GlobalAlerts';
+import sessionStore from 'js/services/sessionStore';
+import {startActivityTracking} from 'js/services/activityMonitor';
+import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection';
+import {getApiUrl} from 'js/utils/env';
 
-	export default {
-		name: 'App',
-		components: {
-			'wnl-navbar': Navbar,
-			'wnl-alerts': Alerts,
-		},
-		computed: {
-			...mapGetters([
-				'currentUserId',
-				'currentUserRoles',
-				'isCurrentUserLoading',
-				'overlayTexts',
-				'shouldDisplayOverlay',
-				'alerts',
-				'modalVisible',
-				'thickScrollbar',
-			]),
-			...mapGetters('siteWideMessages', ['siteWideAlerts']),
-			currentOverlayText() {
-				return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default')
-			}
-		},
-		methods: {
-			...mapActions([
-				'resetLayout',
-				'setLayout',
-				'setupCurrentUser',
-				'toggleOverlay',
-				'addAlert'
-			]),
-			...mapActions('siteWideMessages', ['fetchUserSiteWideMessages', 'updateSiteWideMessage']),
-			...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
-			...mapActions('notifications', ['initNotifications']),
-			...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus', 'updateFromEventLog']),
-			...mapActions('tasks', ['initModeratorsFeedListener']),
-			...mapActions('course', { courseSetup: 'setup' }),
-			handleSiteWideMessages() {
-				this.siteWideAlerts.forEach(alert => {
-					this.addAlert({
-						text: this.$t(alert.message),
-						type: 'info',
-						dismissCallback: () => {
-							this.updateSiteWideMessage(alert.id)
-						}
-					})
-				})
-			}
-		},
-		mounted() {
-			this.toggleOverlay({source: 'course', display: true})
-			sessionStore.clearAll()
+export default {
+	name: 'App',
+	components: {
+		'wnl-navbar': Navbar,
+		'wnl-alerts': Alerts,
+	},
+	computed: {
+		...mapGetters([
+			'currentUserId',
+			'currentUserRoles',
+			'isCurrentUserLoading',
+			'overlayTexts',
+			'shouldDisplayOverlay',
+			'alerts',
+			'modalVisible',
+			'thickScrollbar',
+		]),
+		...mapGetters('siteWideMessages', ['siteWideAlerts']),
+		currentOverlayText() {
+			return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default');
+		}
+	},
+	methods: {
+		...mapActions([
+			'resetLayout',
+			'setLayout',
+			'setupCurrentUser',
+			'toggleOverlay',
+			'addAlert'
+		]),
+		...mapActions('siteWideMessages', ['fetchUserSiteWideMessages', 'updateSiteWideMessage']),
+		...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
+		...mapActions('notifications', ['initNotifications']),
+		...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus', 'updateFromEventLog']),
+		...mapActions('tasks', ['initModeratorsFeedListener']),
+		...mapActions('course', { courseSetup: 'setup' }),
+		handleSiteWideMessages() {
+			this.siteWideAlerts.forEach(alert => {
+				this.addAlert({
+					text: this.$t(alert.message),
+					type: 'info',
+					dismissCallback: () => {
+						this.updateSiteWideMessage(alert.id);
+					}
+				});
+			});
+		}
+	},
+	mounted() {
+		this.toggleOverlay({source: 'course', display: true});
+		sessionStore.clearAll();
 
-			return this.setupCurrentUser()
-				.then(() => {
-					this.setConnectionStatus(false)
-					// Setup Notifications
-					this.initNotifications()
-					this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener()
-					this.fetchUserSiteWideMessages().then(() => {
-						this.handleSiteWideMessages()
-					})
+		return this.setupCurrentUser()
+			.then(() => {
+				this.setConnectionStatus(false);
+				// Setup Notifications
+				this.initNotifications();
+				this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener();
+				this.fetchUserSiteWideMessages().then(() => {
+					this.handleSiteWideMessages();
+				});
 
-					// Setup Chat
-					const userChannel = `authenticated-user`
-					this.fetchUserRoomsWithMessages({page: 1})
-						.then((pointer) => this.$socketJoinRoom(userChannel, pointer))
-						.then((data) => {
-							this.updateFromEventLog(data.events)
-							this.setConnectionStatus(true)
-							this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage)
-						})
-
-					// Setup time tracking
-					const activitiesConfig = {
-						sadActivity: {
-							incrementBy: 1000 * 60,
-							inactivityTime: 1000 * 60,
-							handle: this.$trackUserActivity,
-						},
-						activityMonitor: {
-							incrementBy: 1000 * 60 * 10,
-							inactivityTime: 1000 * 60 * 30,
-							handle: userId => axios.put(getApiUrl(`users/${userId}/state/time`)),
-						},
-					};
-					startActivityTracking(this.currentUserId, activitiesConfig);
-
-					this.$router.afterEach((to) => {
-						!to.params.keepsNavOpen && this.resetLayout()
-					})
-
-					// Setup active users
-					window.Echo.join('active-users')
-						.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
-						.joining(user => this.userJoined({user, channel: 'activeUsers'}))
-						.leaving(user => this.userLeft({user, channel: 'activeUsers'}))
-
-					this.setLayout(this.$breakpoints.currentBreakpoint())
-					this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
-						this.setLayout(currentLayout)
+				// Setup Chat
+				const userChannel = 'authenticated-user';
+				this.fetchUserRoomsWithMessages({page: 1})
+					.then((pointer) => this.$socketJoinRoom(userChannel, pointer))
+					.then((data) => {
+						this.updateFromEventLog(data.events);
+						this.setConnectionStatus(true);
+						this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage);
 					});
 
-					return this.courseSetup(1)
-				})
-				.then(() => {
-					this.toggleOverlay({source: 'course', display: false})
-				})
-				.catch(error => {
-					$wnl.logger.error(error)
-					this.toggleOverlay({source: 'course', display: false})
-				})
+				// Setup time tracking
+				const activitiesConfig = {
+					sadActivity: {
+						incrementBy: 1000 * 60,
+						inactivityTime: 1000 * 60,
+						handle: this.$trackUserActivity,
+					},
+					activityMonitor: {
+						incrementBy: 1000 * 60 * 10,
+						inactivityTime: 1000 * 60 * 30,
+						handle: userId => axios.put(getApiUrl(`users/${userId}/state/time`)),
+					},
+				};
+				startActivityTracking(this.currentUserId, activitiesConfig);
+
+				this.$router.afterEach((to) => {
+					!to.params.keepsNavOpen && this.resetLayout();
+				});
+
+				// Setup active users
+				window.Echo.join('active-users')
+					.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
+					.joining(user => this.userJoined({user, channel: 'activeUsers'}))
+					.leaving(user => this.userLeft({user, channel: 'activeUsers'}));
+
+				this.setLayout(this.$breakpoints.currentBreakpoint());
+				this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
+					this.setLayout(currentLayout);
+				});
+
+				return this.courseSetup(1);
+			})
+			.then(() => {
+				this.toggleOverlay({source: 'course', display: false});
+			})
+			.catch(error => {
+				$wnl.logger.error(error);
+				this.toggleOverlay({source: 'course', display: false});
+			});
+	},
+	watch: {
+		'$route' (to, from) {
+			window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
+			this.$trackUrlChange({
+				value: window.location.href
+			});
 		},
-		watch: {
-			'$route' (to, from) {
-				window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
-				this.$trackUrlChange({
-					value: window.location.href
-				})
-			},
-			'thickScrollbar' (newVal) {
-				if (newVal) {
-					document.documentElement.classList.add('thick-scrollbar')
-				} else {
-					document.documentElement.classList.remove('thick-scrollbar')
-				}
+		'thickScrollbar' (newVal) {
+			if (newVal) {
+				document.documentElement.classList.add('thick-scrollbar');
+			} else {
+				document.documentElement.classList.remove('thick-scrollbar');
 			}
-		},
-	}
+		}
+	},
+};
 </script>

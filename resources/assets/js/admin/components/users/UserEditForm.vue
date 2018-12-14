@@ -36,35 +36,35 @@
 </template>
 
 <script>
-	import {getApiUrl} from 'js/utils/env'
-	import {isEqual} from 'lodash';
-	import {Checkbox as WnlFormCheckbox, Form as WnlForm, Text as WnlFormText} from 'js/components/global/form'
+import {getApiUrl} from 'js/utils/env';
+import {isEqual} from 'lodash';
+import {Checkbox as WnlFormCheckbox, Form as WnlForm, Text as WnlFormText} from 'js/components/global/form';
 
 
-	export default {
-		components: {WnlForm, WnlFormText, WnlFormCheckbox},
-		props: {
-			resourceUrl: {
-				type: String,
-				required: true
-			},
-			populate: {
-				type: Boolean,
-				default: false
-			},
-			method: {
-				type: String,
-				default: 'post'
-			}
+export default {
+	components: {WnlForm, WnlFormText, WnlFormCheckbox},
+	props: {
+		resourceUrl: {
+			type: String,
+			required: true
 		},
-		data() {
-			return {
-				availableRoles: [],
-			}
+		populate: {
+			type: Boolean,
+			default: false
 		},
-		async created() {
-			const response = await axios.get(getApiUrl('roles/all'))
-			this.availableRoles = response.data
-		},
-	}
+		method: {
+			type: String,
+			default: 'post'
+		}
+	},
+	data() {
+		return {
+			availableRoles: [],
+		};
+	},
+	async created() {
+		const response = await axios.get(getApiUrl('roles/all'));
+		this.availableRoles = response.data;
+	},
+};
 </script>

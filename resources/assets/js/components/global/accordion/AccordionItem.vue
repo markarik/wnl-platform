@@ -161,103 +161,103 @@
 </style>
 
 <script>
-	import {size} from 'lodash'
+import {size} from 'lodash';
 
-	export default {
-		name: 'AccordionItem',
-		props: {
-			config: {
-				required: true,
-				type: Object,
-			},
-			item: {
-				required: true,
-				type: Object,
-			},
-			level: {
-				default: 0,
-				type: Number,
-			},
-			loading: {
-				default: false,
-				type: Boolean,
-			},
-			path: {
-				required: true,
-				type: String,
-			},
+export default {
+	name: 'AccordionItem',
+	props: {
+		config: {
+			required: true,
+			type: Object,
 		},
-		data() {
-			return {
-				expanded: false,
-				flattened: false,
-				selected: false,
+		item: {
+			required: true,
+			type: Object,
+		},
+		level: {
+			default: 0,
+			type: Number,
+		},
+		loading: {
+			default: false,
+			type: Boolean,
+		},
+		path: {
+			required: true,
+			type: String,
+		},
+	},
+	data() {
+		return {
+			expanded: false,
+			flattened: false,
+			selected: false,
+		};
+	},
+	computed: {
+		content() {
+			if (this.item.hasOwnProperty('name')) return this.item.name;
+
+			const messageKey = this.item.hasOwnProperty('message') ? this.item.message : this.item.value;
+
+			return this.$t(`${this.config.itemsNamesSource}.${messageKey}`);
+		},
+		count() {
+			if (!this.config.showCounts) return false;
+			if (!this.item.hasOwnProperty('count')) return false;
+
+			return this.item.count || 0;
+		},
+		hasChildren() {
+			return !!this.item.items;
+		},
+		isDisabled() {
+			return this.config.disableEmpty && this.count === 0;
+		},
+		isSelectable() {
+			return !!this.item.value;
+		},
+		isSelected() {
+			if (this.config.hasOwnProperty('selectedElements')) {
+				return this.config.selectedElements.indexOf(this.path) > -1;
+			}
+
+			return this.selected;
+		},
+	},
+	methods: {
+		isExpanded(path) {
+			return this.config.expanded.indexOf(path) > -1;
+		},
+		isFlattened(path) {
+			return this.config.flattened.indexOf(path) > -1;
+		},
+		onChildItemToggled(payload) {
+			this.$emit('itemToggled', payload);
+		},
+		onItemClick(event) {
+			if (this.isDisabled || this.loading) return false;
+
+			if (this.isSelectable) {
+				this.toggleSelected();
+			} else {
+				this.toggleExpanded();
 			}
 		},
-		computed: {
-			content() {
-				if (this.item.hasOwnProperty('name')) return this.item.name
-
-				const messageKey = this.item.hasOwnProperty('message') ? this.item.message : this.item.value
-
-				return this.$t(`${this.config.itemsNamesSource}.${messageKey}`)
-			},
-			count() {
-				if (!this.config.showCounts) return false
-				if (!this.item.hasOwnProperty('count')) return false
-
-				return this.item.count || 0
-			},
-			hasChildren() {
-				return !!this.item.items
-			},
-			isDisabled() {
-				return this.config.disableEmpty && this.count === 0
-			},
-			isSelectable() {
-				return !!this.item.value
-			},
-			isSelected() {
-				if (this.config.hasOwnProperty('selectedElements')) {
-					return this.config.selectedElements.indexOf(this.path) > -1
-				}
-
-				return this.selected
-			},
+		toggleExpanded() {
+			this.expanded = !this.expanded;
 		},
-		methods: {
-			isExpanded(path) {
-				return this.config.expanded.indexOf(path) > -1
-			},
-			isFlattened(path) {
-				return this.config.flattened.indexOf(path) > -1
-			},
-			onChildItemToggled(payload) {
-				this.$emit('itemToggled', payload)
-			},
-			onItemClick(event) {
-				if (this.isDisabled || this.loading) return false
-
-				if (this.isSelectable) {
-					this.toggleSelected()
-				} else {
-					this.toggleExpanded()
-				}
-			},
-			toggleExpanded() {
-				this.expanded = !this.expanded
-			},
-			toggleSelected() {
-				this.selected = !this.isSelected
-				this.$emit('itemToggled', {
-					path: this.path,
-					selected: this.selected,
-				})
-			},
+		toggleSelected() {
+			this.selected = !this.isSelected;
+			this.$emit('itemToggled', {
+				path: this.path,
+				selected: this.selected,
+			});
 		},
-		mounted() {
-			this.expanded = this.isExpanded(this.path)
-			this.flattened = this.isFlattened(this.path)
-		},
-	}
+	},
+	mounted() {
+		this.expanded = this.isExpanded(this.path);
+		this.flattened = this.isFlattened(this.path);
+	},
+};
 </script>

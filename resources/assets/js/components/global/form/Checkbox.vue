@@ -6,34 +6,34 @@
 </template>
 
 <script>
-	import { formInput } from 'js/mixins/form-input'
+import { formInput } from 'js/mixins/form-input';
 
-	export default {
-		name: 'CheckboxInput',
-		props: {
-			name: {
-				type: String,
-			},
-			checkboxValue: {
-				required: true
-			},
-			checkboxId: {
-				required: true
-			}
+export default {
+	name: 'CheckboxInput',
+	props: {
+		name: {
+			type: String,
 		},
-		mixins: [formInput],
-		computed: {
-			default() {
-				return ''
+		checkboxValue: {
+			required: true
+		},
+		checkboxId: {
+			required: true
+		}
+	},
+	mixins: [formInput],
+	computed: {
+		default() {
+			return '';
+		},
+		value: {
+			get() {
+				return this.inputValue || [];
 			},
-			value: {
-				get() {
-					return this.inputValue || []
-				},
-				set(value) {
-					this.inputValue = value
-				}
+			set(value) {
+				this.inputValue = value;
 			}
 		}
 	}
+};
 </script>

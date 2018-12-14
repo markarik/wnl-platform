@@ -22,8 +22,8 @@
 </style>
 
 <script>
-	export default {
-		name: 'wnl-form-input',
-		props: ['type', 'name', 'form'],
-	}
+export default {
+	name: 'wnl-form-input',
+	props: ['type', 'name', 'form'],
+};
 </script>

@@ -115,81 +115,81 @@
 </style>
 
 <script>
-	import {nextTick} from 'vue'
-	import {cloneDeep, isEqual, get} from 'lodash'
+import {nextTick} from 'vue';
+import {cloneDeep, isEqual, get} from 'lodash';
 
-	export default {
-		name: 'ActiveFilters',
-		props: {
-			activeFilters: {
-				required: true,
-				type: Array,
-			},
-			filters: {
-				required: true,
-				type: Object,
-			},
-			itemsNamesSource: {
-				required: true,
-				type: String,
-			},
-			loading: {
-				default: false,
-				type: Boolean,
-			},
-			matchedCount: {
-				type: Number,
-			},
-			totalCount: {
-				type: Number,
-			},
+export default {
+	name: 'ActiveFilters',
+	props: {
+		activeFilters: {
+			required: true,
+			type: Array,
 		},
-		data() {
-			return {
-				autorefresh: true,
-				elementHeight: 0,
+		filters: {
+			required: true,
+			type: Object,
+		},
+		itemsNamesSource: {
+			required: true,
+			type: String,
+		},
+		loading: {
+			default: false,
+			type: Boolean,
+		},
+		matchedCount: {
+			type: Number,
+		},
+		totalCount: {
+			type: Number,
+		},
+	},
+	data() {
+		return {
+			autorefresh: true,
+			elementHeight: 0,
+		};
+	},
+	computed: {
+		activeFiltersObjects() {
+			return this.activeFilters.map(filter => ({path: filter, ...this.getFilter(filter)}));
+		},
+	},
+	methods: {
+		filterDisplayName(filter) {
+			if (filter.type === 'search') {
+				return filter.items[0] && filter.items[0].value && `Fraza: ${filter.items[0].value}`;
 			}
-		},
-		computed: {
-			activeFiltersObjects() {
-				return this.activeFilters.map(filter => ({path: filter, ...this.getFilter(filter)}))
-			},
-		},
-		methods: {
-			filterDisplayName(filter) {
-				if (filter.type === 'search') {
-					return filter.items[0] && filter.items[0].value && `Fraza: ${filter.items[0].value}`
-				}
 
-				if (filter.hasOwnProperty('name')) return filter.name
+			if (filter.hasOwnProperty('name')) return filter.name;
 
-				const messageKey = filter.hasOwnProperty('message') ? filter.message : filter.value
+			const messageKey = filter.hasOwnProperty('message') ? filter.message : filter.value;
 
-				return this.$t(`${this.itemsNamesSource}.${messageKey}`)
-			},
-			getFilter(filter) {
-				if (filter.startsWith('search.')) {
-					return this.filters['search']
-				}
-				return get(this.filters, filter)
-			},
-			emitHeight() {
-				this.$emit('elementHeight', this.$el.offsetHeight)
-			},
-			removeFilter(filter) {
-				this.$emit('activeFiltersChanged', {filter, active: false})
-			},
+			return this.$t(`${this.itemsNamesSource}.${messageKey}`);
 		},
-		mounted() {
-			this.emitHeight()
+		getFilter(filter) {
+			if (filter.startsWith('search.')) {
+				return this.filters['search'];
+			}
+			return get(this.filters, filter);
 		},
-		watch: {
-			activeFilters() {
-				nextTick(this.emitHeight)
-			},
-			autorefresh(to) {
-				this.$emit('autorefreshChange', to)
-			},
-		}
+		emitHeight() {
+			this.$emit('elementHeight', this.$el.offsetHeight);
+		},
+		removeFilter(filter) {
+			this.$emit('activeFiltersChanged', {filter, active: false});
+		},
+	},
+	mounted() {
+		this.emitHeight();
+	},
+	watch: {
+		activeFilters() {
+			nextTick(this.emitHeight);
+		},
+		autorefresh(to) {
+			this.$emit('autorefreshChange', to);
+		},
 	}
+};
 </script>

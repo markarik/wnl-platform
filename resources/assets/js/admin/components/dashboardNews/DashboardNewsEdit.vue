@@ -56,56 +56,56 @@
 </style>
 
 <script>
-	import {Form as WnlForm, Text as WnlText, Textarea as WnlTextarea, Datepicker as WnlDatepicker} from 'js/components/global/form';
-	import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
-	import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
+import {Form as WnlForm, Text as WnlText, Textarea as WnlTextarea, Datepicker as WnlDatepicker} from 'js/components/global/form';
+import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
+import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
 
-	export default {
-		name: 'DashboardNewsEdit',
-		mixins: [dashboardNewsMessageArguments],
-		data() {
-			return {
-				datepickerConfig: {
-					altInput: true,
-					enableTime: true,
-					dateFormat: 'U',
-					altFormat: 'Y-m-d H:i',
-					time_24hr: true,
-				},
-				formData: {}
+export default {
+	name: 'DashboardNewsEdit',
+	mixins: [dashboardNewsMessageArguments],
+	data() {
+		return {
+			datepickerConfig: {
+				altInput: true,
+				enableTime: true,
+				dateFormat: 'U',
+				altFormat: 'Y-m-d H:i',
+				time_24hr: true,
+			},
+			formData: {}
+		};
+	},
+	props: ['id'],
+	components: {
+		WnlForm,
+		WnlText,
+		WnlTextarea,
+		WnlDatepicker,
+		WnlDashboardNewsContent
+	},
+	computed: {
+		formResourceRoute() {
+			return this.isEdit ? `site_wide_messages/${this.id}` : 'site_wide_messages';
+		},
+		formMethod() {
+			return this.isEdit ? 'put' : 'post';
+		},
+		isEdit() {
+			return this.id !== 'new';
+		},
+	},
+	methods: {
+		onSubmitSucess(data) {
+			if (!this.isEdit) {
+				this.$router.push({ name: 'dashboard-news-edit', params: { id: data.id } });
 			}
 		},
-		props: ['id'],
-		components: {
-			WnlForm,
-			WnlText,
-			WnlTextarea,
-			WnlDatepicker,
-			WnlDashboardNewsContent
+		onChange({formData}) {
+			this.formData = formData;
 		},
-		computed: {
-			formResourceRoute() {
-				return this.isEdit ? `site_wide_messages/${this.id}` : 'site_wide_messages';
-			},
-			formMethod() {
-				return this.isEdit ? 'put' : 'post';
-			},
-			isEdit() {
-				return this.id !== 'new';
-			},
+		escapeArgumentKey(key) {
+			return `{{${key}}}`;
 		},
-		methods: {
-			onSubmitSucess(data) {
-				if (!this.isEdit) {
-					this.$router.push({ name: 'dashboard-news-edit', params: { id: data.id } })
-				}
-			},
-			onChange({formData}) {
-				this.formData = formData
-			},
-			escapeArgumentKey(key) {
-				return `{{${key}}}`;
-			},
-		},
-	}
+	},
+};
 </script>

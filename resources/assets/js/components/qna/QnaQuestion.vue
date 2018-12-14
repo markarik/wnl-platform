@@ -198,203 +198,203 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import { mapGetters, mapActions } from 'vuex'
+import _ from 'lodash';
+import { mapGetters, mapActions } from 'vuex';
 
-	import UserProfileModal from 'js/components/users/UserProfileModal'
-	import Delete from 'js/components/global/form/Delete'
-	import Resolve from 'js/components/global/form/Resolve'
-	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
-	import QnaAnswer from 'js/components/qna/QnaAnswer'
-	import Vote from 'js/components/global/reactions/Vote'
-	import Bookmark from 'js/components/global/reactions/Bookmark'
-	import highlight from 'js/mixins/highlight'
-	import Watch from 'js/components/global/reactions/Watch'
-	import Modal from 'js/components/global/Modal'
-	import moderatorFeatures from 'js/perimeters/moderator'
-	import { timeFromS } from 'js/utils/time'
+import UserProfileModal from 'js/components/users/UserProfileModal';
+import Delete from 'js/components/global/form/Delete';
+import Resolve from 'js/components/global/form/Resolve';
+import NewAnswerForm from 'js/components/qna/NewAnswerForm';
+import QnaAnswer from 'js/components/qna/QnaAnswer';
+import Vote from 'js/components/global/reactions/Vote';
+import Bookmark from 'js/components/global/reactions/Bookmark';
+import highlight from 'js/mixins/highlight';
+import Watch from 'js/components/global/reactions/Watch';
+import Modal from 'js/components/global/Modal';
+import moderatorFeatures from 'js/perimeters/moderator';
+import { timeFromS } from 'js/utils/time';
 
-	export default {
-		name: 'QnaQuestion',
-		mixins: [ highlight ],
-		perimeters: [moderatorFeatures],
-		components: {
-			'wnl-delete': Delete,
-			'wnl-resolve': Resolve,
-			'wnl-vote': Vote,
-			'wnl-qna-answer': QnaAnswer,
-			'wnl-qna-new-answer-form': NewAnswerForm,
-			'wnl-bookmark': Bookmark,
-			'wnl-watch': Watch,
-			'wnl-modal': Modal,
-			'wnl-user-profile-modal': UserProfileModal,
+export default {
+	name: 'QnaQuestion',
+	mixins: [ highlight ],
+	perimeters: [moderatorFeatures],
+	components: {
+		'wnl-delete': Delete,
+		'wnl-resolve': Resolve,
+		'wnl-vote': Vote,
+		'wnl-qna-answer': QnaAnswer,
+		'wnl-qna-new-answer-form': NewAnswerForm,
+		'wnl-bookmark': Bookmark,
+		'wnl-watch': Watch,
+		'wnl-modal': Modal,
+		'wnl-user-profile-modal': UserProfileModal,
+	},
+	props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
+	data() {
+		return {
+			showAllAnswers: false,
+			loading: false,
+			showAnswerForm: false,
+			reactableResource: 'qna_questions',
+			highlightableResources: ['qna_question', 'reaction'],
+			isVisible: false,
+		};
+	},
+	computed: {
+		...mapGetters('qna', [
+			'profile',
+			'getQuestion',
+			'questionAnswersFromHighestUpvoteCount',
+			'questionTags',
+			'getReaction',
+			'questionAnswers',
+			'answer'
+		]),
+		...mapGetters(['currentUserId', 'isMobile', 'isOverlayVisible']),
+		question() {
+			return this.getQuestion(this.questionId);
 		},
-		props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
-		data() {
-			return {
-				showAllAnswers: false,
-				loading: false,
-				showAnswerForm: false,
-				reactableResource: "qna_questions",
-				highlightableResources: ["qna_question", "reaction"],
-				isVisible: false,
-			}
+		id() {
+			return this.questionId;
 		},
-		computed: {
-			...mapGetters('qna', [
-				'profile',
-				'getQuestion',
-				'questionAnswersFromHighestUpvoteCount',
-				'questionTags',
-				'getReaction',
-				'questionAnswers',
-				'answer'
-			]),
-			...mapGetters(['currentUserId', 'isMobile', 'isOverlayVisible']),
-			question() {
-				return this.getQuestion(this.questionId)
-			},
-			id() {
-				return this.questionId
-			},
-			content() {
-				return this.question.text
-			},
-			author() {
-				if (this.question.hasOwnProperty('profiles')) {
-					return this.profile(this.question.profiles[0])
-				} else {
-					this.loading = true
-					this.dispatchFetchQuestion()
-						.then(() => {
-							return this.profile(this.question.profiles[0])
-						})
-				}
-			},
-			isCurrentUserAuthor() {
-				return this.currentUserId === this.author.user_id
-			},
-			resourceRoute() {
-				return `qna_questions/${this.id}`
-			},
-			deleteTarget() {
-				return 'to pytanie'
-			},
-			time() {
-				return timeFromS(this.question.created_at)
-			},
-			answersFromHighestUpvoteCount() {
-				return this.questionAnswersFromHighestUpvoteCount(this.id)
-			},
-			hasAnswers() {
-				return this.answersFromHighestUpvoteCount.length > 0
-			},
-			latestAnswer() {
-				if (this.config.highlighted[this.id]) {
-					const answerId = this.config.highlighted[this.id]
-					return this.answer(answerId)
-				} else {
-					return _.head(this.answersFromHighestUpvoteCount) || {}
-				}
-			},
-			otherAnswers() {
-				return _.tail(this.answersFromHighestUpvoteCount) || []
-			},
-			allAnswers() {
-				return this.answersFromHighestUpvoteCount
-			},
-			tags() {
-				return this.questionTags(this.questionId).map((tag) => tag.name) || []
-			},
-			bookmarkState() {
-				return this.getReaction(this.reactableResource, this.questionId, "bookmark")
-			},
-			watchState() {
-				return this.getReaction(this.reactableResource, this.questionId, "watch")
-			},
-			voteState() {
-				return this.getReaction(this.reactableResource, this.questionId, "upvote")
-			},
-			isQuestionInUrl() {
-				return !_.get(this.$route, 'query.qna_answer') && _.get(this.$route, 'query.qna_question') == this.questionId
-			},
-			answerInUrl() {
-				return _.get(this.$route, 'query.qna_answer')
-			},
-			isQuestionAnswerInUrl() {
-				if (this.isNotFetchedAnswerInUrl) return true
-
-				return !!this.questionAnswers(this.questionId).find((answer) => answer.id == this.answerInUrl)
-			},
-			isNotFetchedAnswerInUrl() {
-				const questionId = _.get(this.$route, 'query.qna_question')
-
-				if (questionId == this.questionId && this.answerInUrl) return true
-			},
+		content() {
+			return this.question.text;
 		},
-		methods: {
-			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
-			showModal() {
-				this.isVisible = true
-			},
-			closeModal() {
-				this.isVisible = false
-			},
-			dispatchFetchQuestion() {
-				return this.fetchQuestion(this.id)
-					.then(() => {
-						this.loading = false
-					})
-					.catch((error) => {
-						$wnl.logger.error(error)
-						this.loading = false
-					})
-			},
-			getAnswer(id) {
-				return this.answersFromHighestUpvoteCount.filter(answer => answer.id == id)
-			},
-			hasAnswer(id) {
-				return this.getAnswer(id).length > 0
-			},
-			onDeleteSuccess() {
-				this.removeQuestion(this.id)
-			},
-			onSubmitSuccess() {
-				this.showAnswerForm = false
+		author() {
+			if (this.question.hasOwnProperty('profiles')) {
+				return this.profile(this.question.profiles[0]);
+			} else {
+				this.loading = true;
 				this.dispatchFetchQuestion()
-			},
-			refreshQuestionAndShowAnswers() {
-				return this.dispatchFetchQuestion(() => {
-					this.showAllAnswers = true
+					.then(() => {
+						return this.profile(this.question.profiles[0]);
+					});
+			}
+		},
+		isCurrentUserAuthor() {
+			return this.currentUserId === this.author.user_id;
+		},
+		resourceRoute() {
+			return `qna_questions/${this.id}`;
+		},
+		deleteTarget() {
+			return 'to pytanie';
+		},
+		time() {
+			return timeFromS(this.question.created_at);
+		},
+		answersFromHighestUpvoteCount() {
+			return this.questionAnswersFromHighestUpvoteCount(this.id);
+		},
+		hasAnswers() {
+			return this.answersFromHighestUpvoteCount.length > 0;
+		},
+		latestAnswer() {
+			if (this.config.highlighted[this.id]) {
+				const answerId = this.config.highlighted[this.id];
+				return this.answer(answerId);
+			} else {
+				return _.head(this.answersFromHighestUpvoteCount) || {};
+			}
+		},
+		otherAnswers() {
+			return _.tail(this.answersFromHighestUpvoteCount) || [];
+		},
+		allAnswers() {
+			return this.answersFromHighestUpvoteCount;
+		},
+		tags() {
+			return this.questionTags(this.questionId).map((tag) => tag.name) || [];
+		},
+		bookmarkState() {
+			return this.getReaction(this.reactableResource, this.questionId, 'bookmark');
+		},
+		watchState() {
+			return this.getReaction(this.reactableResource, this.questionId, 'watch');
+		},
+		voteState() {
+			return this.getReaction(this.reactableResource, this.questionId, 'upvote');
+		},
+		isQuestionInUrl() {
+			return !_.get(this.$route, 'query.qna_answer') && _.get(this.$route, 'query.qna_question') == this.questionId;
+		},
+		answerInUrl() {
+			return _.get(this.$route, 'query.qna_answer');
+		},
+		isQuestionAnswerInUrl() {
+			if (this.isNotFetchedAnswerInUrl) return true;
+
+			return !!this.questionAnswers(this.questionId).find((answer) => answer.id == this.answerInUrl);
+		},
+		isNotFetchedAnswerInUrl() {
+			const questionId = _.get(this.$route, 'query.qna_question');
+
+			if (questionId == this.questionId && this.answerInUrl) return true;
+		},
+	},
+	methods: {
+		...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
+		showModal() {
+			this.isVisible = true;
+		},
+		closeModal() {
+			this.isVisible = false;
+		},
+		dispatchFetchQuestion() {
+			return this.fetchQuestion(this.id)
+				.then(() => {
+					this.loading = false;
 				})
-			}
+				.catch((error) => {
+					$wnl.logger.error(error);
+					this.loading = false;
+				});
 		},
-		mounted() {
-			if (this.isQuestionAnswerInUrl) {
-				this.showAllAnswers = true
-			}
+		getAnswer(id) {
+			return this.answersFromHighestUpvoteCount.filter(answer => answer.id == id);
+		},
+		hasAnswer(id) {
+			return this.getAnswer(id).length > 0;
+		},
+		onDeleteSuccess() {
+			this.removeQuestion(this.id);
+		},
+		onSubmitSuccess() {
+			this.showAnswerForm = false;
+			this.dispatchFetchQuestion();
+		},
+		refreshQuestionAndShowAnswers() {
+			return this.dispatchFetchQuestion(() => {
+				this.showAllAnswers = true;
+			});
+		}
+	},
+	mounted() {
+		if (this.isQuestionAnswerInUrl) {
+			this.showAllAnswers = true;
+		}
 
+		if (!this.isOverlayVisible && this.isQuestionInUrl) {
+			this.scrollAndHighlight();
+		}
+	},
+	watch: {
+		'$route' (newRoute, oldRoute) {
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
-				this.scrollAndHighlight()
+				this.dispatchFetchQuestion()
+					.then(() => this.scrollAndHighlight());
+			}
+
+			if (this.isQuestionAnswerInUrl) {
+				if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion();
+				this.showAllAnswers = true;
 			}
 		},
-		watch: {
-			'$route' (newRoute, oldRoute) {
-				if (!this.isOverlayVisible && this.isQuestionInUrl) {
-					this.dispatchFetchQuestion()
-						.then(() => this.scrollAndHighlight())
-				}
-
-				if (this.isQuestionAnswerInUrl) {
-					if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion()
-					this.showAllAnswers = true
-				}
-			},
-			'isOverlayVisible' () {
-				if (!this.isOverlayVisible && this.isQuestionInUrl) {
-					this.scrollAndHighlight()
-				}
-			},
+		'isOverlayVisible' () {
+			if (!this.isOverlayVisible && this.isQuestionInUrl) {
+				this.scrollAndHighlight();
+			}
 		},
-	}
+	},
+};
 </script>

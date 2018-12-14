@@ -78,44 +78,44 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import { mapActions, mapGetters } from 'vuex'
+import _ from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
 
-	import QuestionsNotification from 'js/components/notifications/feeds/questions/QuestionsNotification'
-	import { CommentPosted } from 'js/components/notifications/events'
-	import { feed } from 'js/components/notifications/feed'
+import QuestionsNotification from 'js/components/notifications/feeds/questions/QuestionsNotification';
+import { CommentPosted } from 'js/components/notifications/events';
+import { feed } from 'js/components/notifications/feed';
 
-	export default {
-		name: 'QuestionsFeed',
-		mixins: [feed],
-		components: {
-			'wnl-event-comment-posted': CommentPosted,
+export default {
+	name: 'QuestionsFeed',
+	mixins: [feed],
+	components: {
+		'wnl-event-comment-posted': CommentPosted,
+	},
+	data() {
+		return {
+			limit: 100,
+			showRead: false,
+			QuestionsNotification,
+		};
+	},
+	computed: {
+		...mapGetters('notifications', {
+			channel: 'streamChannel',
+		}),
+		...mapGetters('notifications', [
+			'filterQuiz',
+			'getUnread',
+			'getRead',
+			'loading',
+		]),
+		loading() {
+			return this.totalNotifications === 0 && this.fetching;
 		},
-		data() {
-			return {
-				limit: 100,
-				showRead: false,
-				QuestionsNotification,
-			}
-		},
-		computed: {
-			...mapGetters('notifications', {
-				channel: 'streamChannel',
-			}),
-			...mapGetters('notifications', [
-				'filterQuiz',
-				'getUnread',
-				'getRead',
-				'loading',
-			]),
-			loading() {
-				return this.totalNotifications === 0 && this.fetching
-			},
-			filtered() {
-				let filtered = this.filterQuiz(this.channel)
+		filtered() {
+			let filtered = this.filterQuiz(this.channel);
 
-				return filtered
-			},
+			return filtered;
 		},
-	}
+	},
+};
 </script>

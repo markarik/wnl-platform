@@ -22,22 +22,22 @@
 		max-width: 420px
 </style>
 <script>
-	import moment from 'moment';
+import moment from 'moment';
 
-	export default {
-		name: "UserSubscription",
-		props: {
-			user: {
-				type: Object,
-				required: true
-			}
-		},
-		methods: {
-			formatDate(date) {
-				return moment(date * 1000).format('ll')
-			}
+export default {
+	name: 'UserSubscription',
+	props: {
+		user: {
+			type: Object,
+			required: true
+		}
+	},
+	methods: {
+		formatDate(date) {
+			return moment(date * 1000).format('ll');
 		}
 	}
+};
 </script>
 
 <style scoped>

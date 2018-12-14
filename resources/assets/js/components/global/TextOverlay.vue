@@ -31,17 +31,17 @@
 </style>
 
 <script>
-	export default {
-		name: 'TextOverlay',
-		props: {
-			isLoading: {
-				type: Boolean,
-				default: false
-			},
-			text: {
-				type: String,
-				default: 'Uwaga, nadjeżdża wiedza...',
-			}
+export default {
+	name: 'TextOverlay',
+	props: {
+		isLoading: {
+			type: Boolean,
+			default: false
+		},
+		text: {
+			type: String,
+			default: 'Uwaga, nadjeżdża wiedza...',
 		}
 	}
+};
 </script>

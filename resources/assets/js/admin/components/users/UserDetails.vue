@@ -46,116 +46,116 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import axios from 'axios';
-	import {mapActions} from 'vuex'
-	import { getApiUrl } from 'js/utils/env'
-	import { getColourForStr } from "js/utils/colors.js"
-	import moment from 'moment'
-	import UserSummary from './UserSummary'
-	import UserAddress from './UserAddress'
-	import UserCoupons from './UserCoupons'
-	import UserSubscription from './UserSubscription'
-	import UserOrders from './UserOrders'
-	import UserPlan from './UserPlan'
-	import UserBilling from './UserBilling'
+import _ from 'lodash';
+import axios from 'axios';
+import {mapActions} from 'vuex';
+import { getApiUrl } from 'js/utils/env';
+import { getColourForStr } from 'js/utils/colors.js';
+import moment from 'moment';
+import UserSummary from './UserSummary';
+import UserAddress from './UserAddress';
+import UserCoupons from './UserCoupons';
+import UserSubscription from './UserSubscription';
+import UserOrders from './UserOrders';
+import UserPlan from './UserPlan';
+import UserBilling from './UserBilling';
 
-	export default {
-		name: "UserDetails",
-		components: {},
-		data() {
-			return {
-				getColourForStr,
-				isLoading: true,
-				user: {},
-				tabs: {
-					summary: {
-						component: UserSummary,
-						text: 'Podsumowanie'
-					},
-					address: {
-						component: UserAddress,
-						text: 'Dane do wysyłki'
-					},
-					billing: {
-						component: UserBilling,
-						text: 'Dane do faktury'
-					},
-					subscritption: {
-						component: UserSubscription,
-						text: 'Dostęp do kursu'
-					},
-					orders: {
-						component: UserOrders,
-						text: 'Zamówienia'
-					},
-					coupons: {
-						component: UserCoupons,
-						text: 'Kupony'
-					},
-					plan: {
-						component: UserPlan,
-						text: 'Plan lekcji'
-					},
+export default {
+	name: 'UserDetails',
+	components: {},
+	data() {
+		return {
+			getColourForStr,
+			isLoading: true,
+			user: {},
+			tabs: {
+				summary: {
+					component: UserSummary,
+					text: 'Podsumowanie'
 				},
-			}
+				address: {
+					component: UserAddress,
+					text: 'Dane do wysyłki'
+				},
+				billing: {
+					component: UserBilling,
+					text: 'Dane do faktury'
+				},
+				subscritption: {
+					component: UserSubscription,
+					text: 'Dostęp do kursu'
+				},
+				orders: {
+					component: UserOrders,
+					text: 'Zamówienia'
+				},
+				coupons: {
+					component: UserCoupons,
+					text: 'Kupony'
+				},
+				plan: {
+					component: UserPlan,
+					text: 'Plan lekcji'
+				},
+			},
+		};
+	},
+	computed: {
+		activeComponent() {
+			return this.tabs[this.activeTabName].component;
 		},
-		computed: {
-			activeComponent() {
-				return this.tabs[this.activeTabName].component
-			},
-			dateCreated() {
-				return moment(this.user.created_at * 1000).format('ll')
-			},
-			activeTabName() {
-				const hash = this.$route.hash.replace('#', '');
-				const tabNames = Object.keys(this.tabs);
-				return tabNames.includes(hash) ? hash : tabNames[0];
-			}
+		dateCreated() {
+			return moment(this.user.created_at * 1000).format('ll');
 		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			async setup() {
-				const userId = this.$route.params.userId
-				try {
-					const include = [
-						'roles', 'profile', 'subscription', 'orders.invoices', 'billing', 'settings', 'coupons','user_address', 'orders.payments', 'orders.study_buddy'
-					].join(',')
-					const response = await axios.get(getApiUrl(`users/${userId}?include=${include}`))
-					const {included, ...user} = response.data
-					this.user = user
-					this.parseIncluded(included)
-				} catch (error) {
-					this.addAutoDismissableAlert({
-						text: "Oooops, coś poszło nie tak...",
-						type: 'error'
-					})
-					$wnl.logger.capture(error)
-				} finally {
-					this.isLoading = false
-				}
-			},
-			parseIncluded(included){
-				this.user.orders = _.reverse(Object.values(_.get(included, 'orders', {})))
-					.map(order => {
-						return {
-							...order,
-							invoices: (order.invoices || []).map(invoiceId => included.invoices[invoiceId]),
-							studyBuddy: order.study_buddy ? included.study_buddy[order.study_buddy[0]] : null,
-							payments: (order.payments || []).map(paymentId => included.payments[paymentId])
-						}
-					})
-				this.user.roles = (this.user.roles || []).map(roleId => included.roles[roleId])
-				this.user.coupons = (this.user.coupons || []).map(couponId => included.coupons[couponId])
-				this.user.profile = this.user.profile && included.profile[this.user.profile[0]]
-				this.user.user_address = this.user.user_address && included.user_address[this.user.user_address[0]]
-				this.user.billing = this.user.billing && included.billing[this.user.billing[0]]
-				this.user.settings = this.user.settings &&  included.settings[this.user.settings[0]]
-				this.user.subscription = this.user.subscription && included.subscription[this.user.subscription[0]]
-			},
-		},
-		async mounted() {
-			await this.setup()
+		activeTabName() {
+			const hash = this.$route.hash.replace('#', '');
+			const tabNames = Object.keys(this.tabs);
+			return tabNames.includes(hash) ? hash : tabNames[0];
 		}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		async setup() {
+			const userId = this.$route.params.userId;
+			try {
+				const include = [
+					'roles', 'profile', 'subscription', 'orders.invoices', 'billing', 'settings', 'coupons','user_address', 'orders.payments', 'orders.study_buddy'
+				].join(',');
+				const response = await axios.get(getApiUrl(`users/${userId}?include=${include}`));
+				const {included, ...user} = response.data;
+				this.user = user;
+				this.parseIncluded(included);
+			} catch (error) {
+				this.addAutoDismissableAlert({
+					text: 'Oooops, coś poszło nie tak...',
+					type: 'error'
+				});
+				$wnl.logger.capture(error);
+			} finally {
+				this.isLoading = false;
+			}
+		},
+		parseIncluded(included){
+			this.user.orders = _.reverse(Object.values(_.get(included, 'orders', {})))
+				.map(order => {
+					return {
+						...order,
+						invoices: (order.invoices || []).map(invoiceId => included.invoices[invoiceId]),
+						studyBuddy: order.study_buddy ? included.study_buddy[order.study_buddy[0]] : null,
+						payments: (order.payments || []).map(paymentId => included.payments[paymentId])
+					};
+				});
+			this.user.roles = (this.user.roles || []).map(roleId => included.roles[roleId]);
+			this.user.coupons = (this.user.coupons || []).map(couponId => included.coupons[couponId]);
+			this.user.profile = this.user.profile && included.profile[this.user.profile[0]];
+			this.user.user_address = this.user.user_address && included.user_address[this.user.user_address[0]];
+			this.user.billing = this.user.billing && included.billing[this.user.billing[0]];
+			this.user.settings = this.user.settings &&  included.settings[this.user.settings[0]];
+			this.user.subscription = this.user.subscription && included.subscription[this.user.subscription[0]];
+		},
+	},
+	async mounted() {
+		await this.setup();
 	}
+};
 </script>

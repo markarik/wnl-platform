@@ -97,54 +97,54 @@
 </style>
 
 <script>
-	import { shortTimeFromMs } from 'js/utils/time'
-	import { mapGetters } from 'vuex'
-	import {last} from 'lodash'
+import { shortTimeFromMs } from 'js/utils/time';
+import { mapGetters } from 'vuex';
+import {last} from 'lodash';
 
-	export default {
-		name: 'ConversationSnippet',
-		props: {
-			room: {
-				required: false,
-				default: () => ({})
-			},
-			profile: {
-				required: false,
-				type: Object,
-				default: () => ({})
-			},
-			bothNames: {
-				type: Boolean,
-				default: false
-			},
-			isActive: {
-				type: Boolean,
-				default: false
-			}
+export default {
+	name: 'ConversationSnippet',
+	props: {
+		room: {
+			required: false,
+			default: () => ({})
 		},
-		computed: {
-			messages() {
-				return this.room.messages || []
-			},
-			lastMessageContent() {
-				if (!this.messages || !this.messages.length) {
-					return ''
-				}
-
-				return last(this.messages).content
-			},
-			roomId() {
-				if (!this.room) {
-					return 0;
-				}
-
-				return this.room.id
-			}
+		profile: {
+			required: false,
+			type: Object,
+			default: () => ({})
 		},
-		methods: {
-			time(stamp){
-				return shortTimeFromMs(stamp)
+		bothNames: {
+			type: Boolean,
+			default: false
+		},
+		isActive: {
+			type: Boolean,
+			default: false
+		}
+	},
+	computed: {
+		messages() {
+			return this.room.messages || [];
+		},
+		lastMessageContent() {
+			if (!this.messages || !this.messages.length) {
+				return '';
 			}
+
+			return last(this.messages).content;
+		},
+		roomId() {
+			if (!this.room) {
+				return 0;
+			}
+
+			return this.room.id;
+		}
+	},
+	methods: {
+		time(stamp){
+			return shortTimeFromMs(stamp);
 		}
 	}
+};
 </script>

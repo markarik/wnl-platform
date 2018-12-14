@@ -228,157 +228,157 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
-	import {debounce, isEmpty, isNumber, size} from 'lodash'
+import {mapGetters} from 'vuex';
+import {debounce, isEmpty, isNumber, size} from 'lodash';
 
-	import QuizList from 'js/components/quiz/QuizList'
-	import QuizTimer from 'js/components/quiz/QuizTimer'
-	import Pagination from 'js/components/global/Pagination'
-	import emits_events from 'js/mixins/emits-events'
-	import features from 'js/consts/events_map/features.json';
-	import context from 'js/consts/events_map/context.json';
+import QuizList from 'js/components/quiz/QuizList';
+import QuizTimer from 'js/components/quiz/QuizTimer';
+import Pagination from 'js/components/global/Pagination';
+import emits_events from 'js/mixins/emits-events';
+import features from 'js/consts/events_map/features.json';
+import context from 'js/consts/events_map/context.json';
 
-	import {scrollToElement} from 'js/utils/animations'
+import {scrollToElement} from 'js/utils/animations';
 
-	export default {
-		name: 'QuestionsTest',
-		components: {
-			'wnl-quiz-list': QuizList,
-			'wnl-quiz-timer': QuizTimer,
-			'wnl-pagination': Pagination,
+export default {
+	name: 'QuestionsTest',
+	components: {
+		'wnl-quiz-list': QuizList,
+		'wnl-quiz-timer': QuizTimer,
+		'wnl-pagination': Pagination,
+	},
+	mixins: [emits_events],
+	props: [
+		'getReaction',
+		'questions',
+		'onCheckQuiz',
+		'onSelectAnswer',
+		'testProcessing',
+		'testResults',
+		'time',
+	],
+	data() {
+		return {
+			canShowStickyHeader: true,
+			currentPage: 1,
+			currentScroll: 0,
+			filterResults: false,
+			filterUnanswered: false,
+			headerOffset: 0,
+			hideTime: false,
+			perPage: 30,
+			scrollableContainer: {},
+		};
+	},
+	computed: {
+		...mapGetters(['isMobile']),
+		answeredCount() {
+			return this.totalCount - this.unansweredCount;
 		},
-		mixins: [emits_events],
-		props: [
-			'getReaction',
-			'questions',
-			'onCheckQuiz',
-			'onSelectAnswer',
-			'testProcessing',
-			'testResults',
-			'time',
-		],
-		data() {
-			return {
-				canShowStickyHeader: true,
-				currentPage: 1,
-				currentScroll: 0,
-				filterResults: false,
-				filterUnanswered: false,
-				headerOffset: 0,
-				hideTime: false,
-				perPage: 30,
-				scrollableContainer: {},
+		correctCount() {
+			return this.testResults && size(this.testResults.correct);
+		},
+		filteredQuestions() {
+			if (!this.isComplete) {
+				return this.filterUnanswered && this.unansweredCount > 0
+					? this.unansweredQuestions
+					: this.questions;
+			}
+
+			return isEmpty(this.filterResults)
+				? this.questions
+				: this.testResults[this.filterResults];
+		},
+		hasStickyHeader() {
+			return this.canShowStickyHeader &&
+					this.currentScroll > this.headerOffset + 100;
+		},
+		isComplete() {
+			return !isEmpty(this.testResults);
+		},
+		lastPage() {
+			return Math.ceil(size(this.filteredQuestions) / this.perPage);
+		},
+		questionsCurrentPage() {
+			let c = this.currentPage, p = this.perPage;
+			return this.filteredQuestions.slice((c - 1) * p, c * p);
+		},
+		score() {
+			return this.testResults &&
+					Math.floor(this.correctCount * 100 / this.totalCount);
+		},
+		totalCount() {
+			return this.questions.length;
+		},
+		unansweredCount() {
+			return this.unansweredQuestions.length;
+		},
+		unansweredQuestions() {
+			return this.questions.filter(question => !isNumber(question.selectedAnswer));
+		},
+		unansweredToggleCount() {
+			return this.filterUnanswered ? this.totalCount : this.unansweredCount;
+		},
+		unansweredToggleMessage() {
+			return this.filterUnanswered
+				? this.$t('questions.solving.unanswered.all')
+				: this.$t('questions.solving.unanswered.filter');
+		},
+	},
+	methods: {
+		changePage(n) {
+			this.currentPage = n;
+			if (this.currentScroll > 200) {
+				scrollToElement(this.$refs.firstpagination.$el);
 			}
 		},
-		computed: {
-			...mapGetters(['isMobile']),
-			answeredCount() {
-				return this.totalCount - this.unansweredCount
-			},
-			correctCount() {
-				return this.testResults && size(this.testResults.correct)
-			},
-			filteredQuestions() {
-				if (!this.isComplete) {
-					return this.filterUnanswered && this.unansweredCount > 0
-						? this.unansweredQuestions
-						: this.questions
-				}
-
-				return isEmpty(this.filterResults)
-					? this.questions
-					: this.testResults[this.filterResults]
-			},
-			hasStickyHeader() {
-				return this.canShowStickyHeader &&
-					this.currentScroll > this.headerOffset + 100
-			},
-			isComplete() {
-				return !isEmpty(this.testResults)
-			},
-			lastPage() {
-				return Math.ceil(size(this.filteredQuestions) / this.perPage)
-			},
-			questionsCurrentPage() {
-				let c = this.currentPage, p = this.perPage
-				return this.filteredQuestions.slice((c - 1) * p, c * p)
-			},
-			score() {
-				return this.testResults &&
-					Math.floor(this.correctCount * 100 / this.totalCount)
-			},
-			totalCount() {
-				return this.questions.length
-			},
-			unansweredCount() {
-				return this.unansweredQuestions.length
-			},
-			unansweredQuestions() {
-				return this.questions.filter(question => !isNumber(question.selectedAnswer))
-			},
-			unansweredToggleCount() {
-				return this.filterUnanswered ? this.totalCount : this.unansweredCount
-			},
-			unansweredToggleMessage() {
-				return this.filterUnanswered
-					? this.$t('questions.solving.unanswered.all')
-					: this.$t('questions.solving.unanswered.filter')
-			},
-		},
-		methods: {
-			changePage(n) {
-				this.currentPage = n
-				if (this.currentScroll > 200) {
-					scrollToElement(this.$refs.firstpagination.$el)
-				}
-			},
-			checkQuiz() {
-				this.$emit('checkQuiz', {unansweredCount: this.unansweredCount})
-				if (this.unansweredCount > 0) {
-					this.$refs.quizlist.scrollToFirstUnanswered()
-				}
-			},
-			toggleFilter(status) {
-				this.filterResults = this.filterResults === status ? '' : status
-			},
-			onScroll: debounce(function({target: {scrollTop}}) {
-				if (this.isMobile) {
-					this.canShowStickyHeader = scrollTop < this.currentScroll
-				}
-
-				return this.currentScroll = scrollTop
-			}, 50),
-			onTimesUp() {
-				this.$refs.timer.stopTimer()
-				this.checkQuiz()
-			},
-			onUserEvent(payload) {
-				this.emitUserEvent({
-					feature: features.quiz_questions.value,
-					subcontext: context.questions_bank.subcontext.test_yourself.value,
-					...payload,
-				})
+		checkQuiz() {
+			this.$emit('checkQuiz', {unansweredCount: this.unansweredCount});
+			if (this.unansweredCount > 0) {
+				this.$refs.quizlist.scrollToFirstUnanswered();
 			}
 		},
-		mounted() {
-			!this.isComplete && this.$refs.timer.startTimer()
-			this.headerOffset = this.$refs.header.offsetTop
+		toggleFilter(status) {
+			this.filterResults = this.filterResults === status ? '' : status;
+		},
+		onScroll: debounce(function({target: {scrollTop}}) {
+			if (this.isMobile) {
+				this.canShowStickyHeader = scrollTop < this.currentScroll;
+			}
 
-			// TODO: Pass class name as props
-			this.scrollableContainer = document.getElementsByClassName('scrollable-main-container')[0]
-			this.scrollableContainer.addEventListener('scroll', this.onScroll)
-			this.$emit('testStart')
+			return this.currentScroll = scrollTop;
+		}, 50),
+		onTimesUp() {
+			this.$refs.timer.stopTimer();
+			this.checkQuiz();
 		},
-		beforeDestroy() {
-			this.scrollableContainer.removeEventListener('scroll', this.onScroll)
-		},
-		watch: {
-			hasStickyHeader(to, from) {
-				this.hideTime = to
-			},
-			lastPage(to, from) {
-				if (to < this.currentPage) this.currentPage = to
-			},
+		onUserEvent(payload) {
+			this.emitUserEvent({
+				feature: features.quiz_questions.value,
+				subcontext: context.questions_bank.subcontext.test_yourself.value,
+				...payload,
+			});
 		}
+	},
+	mounted() {
+		!this.isComplete && this.$refs.timer.startTimer();
+		this.headerOffset = this.$refs.header.offsetTop;
+
+		// TODO: Pass class name as props
+		this.scrollableContainer = document.getElementsByClassName('scrollable-main-container')[0];
+		this.scrollableContainer.addEventListener('scroll', this.onScroll);
+		this.$emit('testStart');
+	},
+	beforeDestroy() {
+		this.scrollableContainer.removeEventListener('scroll', this.onScroll);
+	},
+	watch: {
+		hasStickyHeader(to, from) {
+			this.hideTime = to;
+		},
+		lastPage(to, from) {
+			if (to < this.currentPage) this.currentPage = to;
+		},
 	}
+};
 </script>

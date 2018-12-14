@@ -4,6 +4,8 @@
 			Lekcje
 		</p>
 		<ul class="menu-list">
+			<li><router-link :to="{ name: 'course-edit', params: {id: 1} }">Edycja kursu</router-link></li>
+			<li><router-link :to="{ name: 'groups' }">Edycja grup lekcji</router-link></li>
 			<li><router-link :to="{ name: 'lessons' }">Edycja lekcji</router-link></li>
 		</ul>
 
@@ -58,7 +60,7 @@
 </style>
 
 <script>
-	export default {
-		name: 'Sidenav'
-	}
+export default {
+	name: 'Sidenav'
+};
 </script>

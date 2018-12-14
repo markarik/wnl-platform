@@ -84,67 +84,67 @@
 </style>
 
 <script>
-	import { formInput } from 'js/mixins/form-input'
-	import SlideLink from 'js/components/global/SlideLink'
-	import _ from 'lodash'
-	import { mapActions } from 'vuex'
+import { formInput } from 'js/mixins/form-input';
+import SlideLink from 'js/components/global/SlideLink';
+import _ from 'lodash';
+import { mapActions } from 'vuex';
 
-	const keys = {
-		enter: 13,
-		esc: 27,
-		arrowUp: 38,
-		arrowDown: 40
-	}
+const keys = {
+	enter: 13,
+	esc: 27,
+	arrowUp: 38,
+	arrowDown: 40
+};
 
-	export default {
-		name: 'SlideIds',
-		components: {
-			'wnl-slide-link': SlideLink
+export default {
+	name: 'SlideIds',
+	components: {
+		'wnl-slide-link': SlideLink
+	},
+	props: ['defaultSlides'],
+	data: function () {
+		return {
+			autocompleteItems: [],
+			slides: [],
+			screenIdInput: '',
+			slideNumberInput: '',
+		};
+	},
+	computed: {
+		default() {
+			return '';
+		}
+	},
+	methods: {
+		...mapActions(['getSlideDataForQuizEditor']),
+		onButtonClicked() {
+			this.getSlideDataForQuizEditor({
+				screenId: this.screenIdInput,
+				slideNumber: this.slideNumberInput
+			}).then(data => {
+				if (this.slides.map(slide => slide.id).indexOf(data.id) === -1) {
+					this.slides.push(data);
+				}
+			});
 		},
-		props: ['defaultSlides'],
-		data: function () {
-			return {
-				autocompleteItems: [],
-				slides: [],
-				screenIdInput: '',
-				slideNumberInput: '',
-			}
-		},
-		computed: {
-			default() {
-				return ''
-			}
-		},
-		methods: {
-			...mapActions(['getSlideDataForQuizEditor']),
-			onButtonClicked() {
-				this.getSlideDataForQuizEditor({
-					screenId: this.screenIdInput,
-					slideNumber: this.slideNumberInput
-				}).then(data => {
-					if (this.slides.map(slide => slide.id).indexOf(data.id) === -1) {
-						this.slides.push(data);
-					}
-				})
-			},
 
-			removeSlide(slide) {
-				this.slides = _.filter(
-					this.slides,
-					foundSlide => slide.id !== foundSlide.id
-				)
-			},
-
-			haveSlidesChanged() {
-				if (this.slides.length !== this.defaultSlides.length) return true
-
-				return !!this.slides.some(slide => !_.find(this.defaultSlides, defSlide => defSlide.id === slide.id))
-			}
+		removeSlide(slide) {
+			this.slides = _.filter(
+				this.slides,
+				foundSlide => slide.id !== foundSlide.id
+			);
 		},
-		watch: {
-			defaultSlides() {
-				this.slides = this.defaultSlides.slice()
-			}
+
+		haveSlidesChanged() {
+			if (this.slides.length !== this.defaultSlides.length) return true;
+
+			return !!this.slides.some(slide => !_.find(this.defaultSlides, defSlide => defSlide.id === slide.id));
+		}
+	},
+	watch: {
+		defaultSlides() {
+			this.slides = this.defaultSlides.slice();
 		}
 	}
+};
 </script>

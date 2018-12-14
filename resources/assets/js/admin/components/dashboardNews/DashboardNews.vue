@@ -37,51 +37,51 @@
 </style>
 
 <script>
-	import { mapActions } from 'vuex';
-	import moment from 'moment'
-	import {getApiUrl} from "js/utils/env";
-	import {ALERT_TYPES} from "js/consts/alert";
+import { mapActions } from 'vuex';
+import moment from 'moment';
+import {getApiUrl} from 'js/utils/env';
+import {ALERT_TYPES} from 'js/consts/alert';
 
-	export default {
-		name: 'DashboardNews',
-		data() {
-			return {
-				dashboardNewsList: []
-			}
-		},
-		computed: {
-			activeItemId() {
-				const activeItem = this.dashboardNewsList
-					.filter(item => (item.start_date === null || moment(item.start_date * 1000).isBefore())
+export default {
+	name: 'DashboardNews',
+	data() {
+		return {
+			dashboardNewsList: []
+		};
+	},
+	computed: {
+		activeItemId() {
+			const activeItem = this.dashboardNewsList
+				.filter(item => (item.start_date === null || moment(item.start_date * 1000).isBefore())
 						&& (item.end_date === null || moment(item.end_date * 1000).isAfter())
-					)
-					.sort((a, b) => a.created_at < b.created_at ? 1 : -1)[0];
+				)
+				.sort((a, b) => a.created_at < b.created_at ? 1 : -1)[0];
 
-				return activeItem && activeItem.id;
+			return activeItem && activeItem.id;
+		}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		formatDate(date) {
+			if (date) {
+				return moment(date * 1000).format('L LT');
 			}
 		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			formatDate(date) {
-				if (date) {
-					return moment(date * 1000).format('L LT')
-				}
-			},
-			goToEdit(id) {
-				this.$router.push({ name: 'dashboard-news-edit', params: { id } })
-			},
+		goToEdit(id) {
+			this.$router.push({ name: 'dashboard-news-edit', params: { id } });
 		},
-		async mounted() {
-			try {
-				const {data} = await axios.get(getApiUrl('site_wide_messages/dashboard_news'));
-				this.dashboardNewsList = Object.values(data);
-			} catch (error) {
-				$wnl.logger.error(error);
-				this.addAutoDismissableAlert({
-					text: 'Coś poszło nie tak :(',
-					type: ALERT_TYPES.ERROR,
-				});
-			}
+	},
+	async mounted() {
+		try {
+			const {data} = await axios.get(getApiUrl('site_wide_messages/dashboard_news'));
+			this.dashboardNewsList = Object.values(data);
+		} catch (error) {
+			$wnl.logger.error(error);
+			this.addAutoDismissableAlert({
+				text: 'Coś poszło nie tak :(',
+				type: ALERT_TYPES.ERROR,
+			});
 		}
 	}
+};
 </script>

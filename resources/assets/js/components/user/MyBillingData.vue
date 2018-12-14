@@ -24,18 +24,18 @@
 </style>
 
 <script>
-	import { Form, Text } from 'js/components/global/form'
+import { Form, Text } from 'js/components/global/form';
 
-	export default {
-		components: {
-			'wnl-form': Form,
-			'wnl-form-text': Text,
-		},
-		props: {
-			resourceRoute: {
-				type: String,
-				default: 'users/current/billing'
-			}
+export default {
+	components: {
+		'wnl-form': Form,
+		'wnl-form-text': Text,
+	},
+	props: {
+		resourceRoute: {
+			type: String,
+			default: 'users/current/billing'
 		}
 	}
+};
 </script>

@@ -34,12 +34,12 @@
 </style>
 
 <script>
-	import moderator from 'js/perimeters/moderator'
+import moderator from 'js/perimeters/moderator';
 
-	export default {
-		props: ['resource'],
-		perimeters: [
-			moderator,
-		]
-	}
+export default {
+	props: ['resource'],
+	perimeters: [
+		moderator,
+	]
+};
 </script>

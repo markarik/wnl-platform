@@ -18,6 +18,24 @@ let routes = [
 		]
 	},
 	{
+		name: 'course-edit',
+		path: '/admin/app/courses/:id',
+		component: require('js/admin/components/courses/CourseEditor'),
+		props: true,
+	},
+	{
+		name: 'groups',
+		path: '/admin/app/groups',
+		component: require('js/admin/components/groups/Groups.vue'),
+		props: true,
+	},
+	{
+		name: 'group-edit',
+		path: '/admin/app/groups/:id',
+		component: require('js/admin/components/groups/GroupEditor'),
+		props: true,
+	},
+	{
 		name: 'slides',
 		path: '/admin/app/slides/edit/:lessonId?/:screenId?',
 		component: require('js/admin/components/slides/EditSlide.vue'),

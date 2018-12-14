@@ -14,7 +14,7 @@ class SectionsTransformer extends ApiTransformer
 
 	public function __construct($parentData = [])
 	{
-		$this->parent = collect($parentData);
+		$this->parent = $parentData;
 	}
 
 	public function transform(Section $section)
@@ -23,8 +23,8 @@ class SectionsTransformer extends ApiTransformer
 			'id'          => $section->id,
 			'name'        => $section->name,
 			'order_number'=> $section->order_number,
-			'lessons'     => $this->parent->get('lessonId') ?? $section->screen->lesson_id,
-			'groups'      => $this->parent->get('groupId') ?? $section->screen->lesson->group->id,
+			'lessons'     => $this->parent['lessonId'] ?? $section->screen->lesson_id,
+			'groups'      => $this->parent['groupId'] ?? $section->screen->lesson->group->id,
 			'screens'     => $section->screen_id,
 			'slide'       => $section->first_slide + 1,
 			'slidesCount' => $section->slides_count,
@@ -36,10 +36,10 @@ class SectionsTransformer extends ApiTransformer
 	public function includeSubsections(Section $section) {
 		$subsections = $section->subsections->sortBy('order_number');
 
-		$meta = collect([
+		$meta = [
 			'sectionId' => $section->id,
-		]);
-		$meta = $meta->merge($this->parent);
+		];
+		$meta = array_merge($meta, $this->parent);
 
 		return $this->collection($subsections, new SubsectionsTransformer($meta), 'subsections');
 	}

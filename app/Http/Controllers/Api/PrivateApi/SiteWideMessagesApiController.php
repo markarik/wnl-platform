@@ -42,6 +42,11 @@ class SiteWideMessagesApiController extends ApiController
 		return $this->transformAndRespond($data);
 	}
 
+	public function getDashboardNews() {
+		$data = SiteWideMessage::where('target', 'dashboard-news')->orderBy('created_at', 'desc')->get();
+		return $this->transformAndRespond($data);
+	}
+
 	public function put(UpdateSiteWideMessage $request)
 	{
 		$siteWideMessage = SiteWideMessage::find($request->route('id'));

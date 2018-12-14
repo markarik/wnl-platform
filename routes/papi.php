@@ -34,6 +34,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
 		Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
 		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
+		Route::post("{$r['flashcards']}/.filter", 'FlashcardsApiController@filter');
+		Route::post("{$r['flashcards-sets']}/.filter", 'FlashcardsSetsApiController@filter');
 
 		//Users admin
 		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
@@ -45,10 +47,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['user-lesson']}/{userId}", 'UserLessonApiController@getForUser');
 
 		//Site wide messages
+		Route::get("{$r['site-wide-messages']}/dashboard_news", 'SiteWideMessagesApiController@getDashboardNews');
 		Route::get("{$r['site-wide-messages']}/{id}", 'SiteWideMessagesApiController@get');
 		Route::put("{$r['site-wide-messages']}/{id}", 'SiteWideMessagesApiController@put');
 		Route::post("{$r['site-wide-messages']}", 'SiteWideMessagesApiController@post');
-		Route::post("{$r['site-wide-messages']}/.filter", 'SiteWideMessagesApiController@filter');
 
 		// Quiz Questions
 		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');

@@ -22,7 +22,7 @@ const getters = {
 		return false;
 	},
 	getLesson: (state) => (courseId, lessonId) => {
-		return _.get(state.courses[courseId], `lessons.${lessonId}`);
+		return _.get(state.courses[courseId], `lessons[${lessonId}]`, {}) || {};
 	},
 	getScreen: (state) => (courseId, lessonId, screenId) => {
 		return _.get(state.courses[courseId], `lessons[${lessonId}].screens[${screenId}]`);
@@ -42,11 +42,9 @@ const getters = {
 
 		return progressStore.getLessonProgress({courseId, lessonId, profileId});
 	},
-	wasLessonStarted: (state) => (courseId, lessonId) => {
-		return state.courses.hasOwnProperty(courseId) &&
-			state.courses[courseId].lessons &&
-			state.courses[courseId].lessons.hasOwnProperty(lessonId) &&
-			state.courses[courseId].lessons[lessonId].hasOwnProperty('status');
+	wasLessonStarted: (state, getters) => (courseId, lessonId) => {
+		const lessonProgress = getters.getLesson(courseId, lessonId);
+		return lessonProgress.hasOwnProperty('status');
 	},
 	isLessonInProgress: (state, getters) => (courseId, lessonId) => {
 		return getters.wasLessonStarted(courseId, lessonId) &&
@@ -175,10 +173,10 @@ const actions = {
 			commit(types.PROGRESS_COMPLETE_LESSON, {payload, updatedLessonState});
 		}
 	},
-	async completeScreen({commit, rootGetters, dispatch}, payload) {
+	async completeScreen({commit, rootGetters, dispatch, getters}, payload) {
 		await dispatch('setupCurrentUser', {}, {root: true});
 
-		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
+		const lessonState = _.cloneDeep(getters.getLesson(payload.courseId, payload.lessonId));
 		const updatedState = progressStore.completeScreen(lessonState, {
 			...payload,
 			profileId: rootGetters.currentUserProfileId,
@@ -186,10 +184,10 @@ const actions = {
 
 		commit(types.PROGRESS_COMPLETE_SCREEN, {updatedState, payload});
 	},
-	async completeSection({commit, rootGetters, dispatch}, payload) {
+	async completeSection({commit, rootGetters, dispatch, getters}, payload) {
 		await dispatch('setupCurrentUser', {}, {root: true});
 
-		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
+		const lessonState = _.cloneDeep(getters.getLesson(payload.courseId, payload.lessonId));
 
 		const updatedState = progressStore.completeSection(lessonState, {
 			...payload,
@@ -198,11 +196,10 @@ const actions = {
 
 		commit(types.PROGRESS_COMPLETE_SECTION, {updatedState, payload});
 	},
-	async completeSubsection({commit, rootGetters, dispatch}, payload) {
+	async completeSubsection({commit, rootGetters, dispatch, getters}, payload) {
 		await dispatch('setupCurrentUser', {}, {root: true});
 
-		const lessonState = state.courses[payload.courseId].lessons[payload.lessonId];
-
+		const lessonState = _.cloneDeep(getters.getLesson(payload.courseId, payload.lessonId));
 		const updatedState = progressStore.completeSubsection(lessonState, {
 			...payload,
 			profileId: rootGetters.currentUserProfileId,

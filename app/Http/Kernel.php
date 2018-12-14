@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckIfAppUnavailableMode;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -70,4 +71,14 @@ class Kernel extends HttpKernel
 		'terms'        => \App\Http\Middleware\TermsOfUse::class,
 		'account-status' => \App\Http\Middleware\AccountStatus::class,
 	];
+
+	public function bootstrap() {
+
+		parent::bootstrap();
+
+		if ($this->app->environment() == 'demo') {
+			$this->pushMiddleware(CheckIfAppUnavailableMode::class);
+		}
+
+	}
 }

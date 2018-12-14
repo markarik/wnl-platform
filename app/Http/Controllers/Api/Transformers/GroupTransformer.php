@@ -11,6 +11,8 @@ class GroupTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['lessons'];
 
+	protected $parent;
+
 	public function __construct($parent = null)
 	{
 		$this->parent = $parent;
@@ -19,9 +21,9 @@ class GroupTransformer extends ApiTransformer
 	public function transform(Group $group)
 	{
 		$data = [
-			'id'            => $group->id,
-			'name'          => $group->name,
-			'courses'      => $group->course_id
+			'id' => $group->id,
+			'name' => $group->name,
+			'courses' => $group->course_id
 		];
 
 		if ($this->parent) {
@@ -34,9 +36,9 @@ class GroupTransformer extends ApiTransformer
 	public function includeLessons(Group $group)
 	{
 		$lessons = $group->lessons->sortBy('order_number');
-		$meta = collect([
-			'groupId'   => $group->id,
-		]);
+		$meta = [
+			'groupId' => $group->id,
+		];
 
 		return $this->collection($lessons, new LessonTransformer($meta), 'lessons');
 	}

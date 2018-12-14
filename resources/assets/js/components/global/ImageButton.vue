@@ -55,28 +55,28 @@
 </style>
 
 <script>
-	export default {
-		props: ['name', 'icon', 'alt', 'modifier', 'size', 'align', 'label', 'disabled', 'title', 'loading'],
-		computed: {
-			iconAlt () {
-				return this.alt || this.icon
-			},
-			iconClass () {
-				let modifier = this.modifier || 'primary'
-				return `is-${modifier}`
-			},
-			iconSizeClass () {
-				let size = this.size || 'medium'
-				return `wnl-image-button-${size}`
-			},
-			isReverse () {
-				return this.align === 'right'
-			}
+export default {
+	props: ['name', 'icon', 'alt', 'modifier', 'size', 'align', 'label', 'disabled', 'title', 'loading'],
+	computed: {
+		iconAlt () {
+			return this.alt || this.icon;
 		},
-		methods: {
-			emitClick() {
-				this.$emit('buttonclicked')
-			}
+		iconClass () {
+			let modifier = this.modifier || 'primary';
+			return `is-${modifier}`;
+		},
+		iconSizeClass () {
+			let size = this.size || 'medium';
+			return `wnl-image-button-${size}`;
+		},
+		isReverse () {
+			return this.align === 'right';
+		}
+	},
+	methods: {
+		emitClick() {
+			this.$emit('buttonclicked');
 		}
 	}
+};
 </script>

@@ -73,16 +73,16 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-import UserProfileModal from 'js/components/users/UserProfileModal'
-import Avatar from 'js/components/global/Avatar'
-import Delete from 'js/components/global/form/Delete'
-import Resolve from 'js/components/global/form/Resolve'
-import { timeFromS } from 'js/utils/time'
-import moderatorFeatures from 'js/perimeters/moderator'
-import Vote from 'js/components/global/reactions/Vote'
-import Modal from 'js/components/global/Modal.vue'
+import UserProfileModal from 'js/components/users/UserProfileModal';
+import Avatar from 'js/components/global/Avatar';
+import Delete from 'js/components/global/form/Delete';
+import Resolve from 'js/components/global/form/Resolve';
+import { timeFromS } from 'js/utils/time';
+import moderatorFeatures from 'js/perimeters/moderator';
+import Vote from 'js/components/global/reactions/Vote';
+import Modal from 'js/components/global/Modal.vue';
 
 export default {
 	name: 'Comment',
@@ -99,40 +99,40 @@ export default {
 	data() {
 		return {
 			isVisible: false
-		}
+		};
 	},
 	computed: {
 		...mapGetters(['currentUserId']),
 		...mapGetters('comments', ['getReaction']),
 		id() {
-			return this.comment.id
+			return this.comment.id;
 		},
 		time() {
-			return timeFromS(this.comment.created_at)
+			return timeFromS(this.comment.created_at);
 		},
 		requestRoute() {
-			return `comments/${this.id}`
+			return `comments/${this.id}`;
 		},
 		target() {
-			return 'ten komentarz'
+			return 'ten komentarz';
 		},
 		isCurrentUserAuthor() {
-			return this.profile.user_id === this.currentUserId
+			return this.profile.user_id === this.currentUserId;
 		},
 		voteState() {
-			return this.getReaction('comments', this.id, "upvote")
+			return this.getReaction('comments', this.id, 'upvote');
 		},
 	},
 	methods: {
 		showModal() {
-			this.isVisible = true
+			this.isVisible = true;
 		},
 		closeModal() {
-			this.isVisible = false
+			this.isVisible = false;
 		},
 		onDeleteSuccess() {
-			this.$emit('removeComment', this.id)
+			this.$emit('removeComment', this.id);
 		}
 	}
-}
+};
 </script>

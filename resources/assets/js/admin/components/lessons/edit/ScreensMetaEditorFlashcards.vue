@@ -74,70 +74,70 @@
 </style>
 
 <script>
-	import { mapState, mapActions } from 'vuex'
-	import draggable from 'vuedraggable';
+import { mapState, mapActions } from 'vuex';
+import draggable from 'vuedraggable';
 
-	import WnlAutocomplete from 'js/components/global/Autocomplete';
-	import WnlFlashcardsSetAutocompleteItem from 'js/admin/components/lessons/edit/FlashcardsSetAutocompleteItem'
+import WnlAutocomplete from 'js/components/global/Autocomplete';
+import WnlFlashcardsSetAutocompleteItem from 'js/admin/components/lessons/edit/FlashcardsSetAutocompleteItem';
 
-	export default {
-		name: 'ScreensMetaEditorFlashcards',
-		props: ['value'],
-		components: {
-			draggable,
-			WnlAutocomplete,
-			WnlFlashcardsSetAutocompleteItem,
-		},
-		data: function() {
-			return {
-				flashcardsSetInput: '',
-			};
-		},
-		computed: {
-			flashcardsSetIds: {
-				get: function () {
-					if (!this.value.resources) {
-						return [];
-					}
-
-					return this.value.resources.map(flashcardsSet => flashcardsSet.id);
-				},
-				set: function (flashcardsSetIds) {
-					this.$emit('input', { resources: flashcardsSetIds.map(id => ({id, name: 'flashcards_sets'})) });
-				}
-			},
-			flashcardsSetsAutocompleteItems: function() {
-				if (this.flashcardsSetInput === '') {
+export default {
+	name: 'ScreensMetaEditorFlashcards',
+	props: ['value'],
+	components: {
+		draggable,
+		WnlAutocomplete,
+		WnlFlashcardsSetAutocompleteItem,
+	},
+	data: function() {
+		return {
+			flashcardsSetInput: '',
+		};
+	},
+	computed: {
+		flashcardsSetIds: {
+			get: function () {
+				if (!this.value.resources) {
 					return [];
 				}
 
-				return this.allFlashcardsSets
-					.filter(flashcardsSet => !this.flashcardsSetIds.includes(flashcardsSet.id) &&
+				return this.value.resources.map(flashcardsSet => flashcardsSet.id);
+			},
+			set: function (flashcardsSetIds) {
+				this.$emit('input', { resources: flashcardsSetIds.map(id => ({id, name: 'flashcards_sets'})) });
+			}
+		},
+		flashcardsSetsAutocompleteItems: function() {
+			if (this.flashcardsSetInput === '') {
+				return [];
+			}
+
+			return this.allFlashcardsSets
+				.filter(flashcardsSet => !this.flashcardsSetIds.includes(flashcardsSet.id) &&
 						(
 							flashcardsSet.id === parseInt(this.flashcardsSetInput, 10) ||
 							flashcardsSet.name.toLowerCase().includes(this.flashcardsSetInput.toLowerCase())
 						)
-					)
-			},
-			...mapState('flashcardsSets', {
-				areFlashcardsSetsReady: 'ready',
-				allFlashcardsSets: 'flashcardsSets'
-			}),
+				);
 		},
-		methods: {
-			...mapActions('flashcardsSets', {
-				flashcardsSetsSetup: 'setup'
-			}),
-			addFlashcardsSet: function(flashcardsSet) {
-				this.flashcardsSetIds = [...this.flashcardsSetIds, flashcardsSet.id];
-				this.flashcardsSetInput = '';
-			},
-			removeFlashcardsSet: function(flashcardsSetId) {
-				this.flashcardsSetIds = this.flashcardsSetIds.filter(id => id !== flashcardsSetId);
-			}
+		...mapState('flashcardsSets', {
+			areFlashcardsSetsReady: 'ready',
+			allFlashcardsSets: 'flashcardsSets'
+		}),
+	},
+	methods: {
+		...mapActions('flashcardsSets', {
+			flashcardsSetsSetup: 'setup'
+		}),
+		addFlashcardsSet: function(flashcardsSet) {
+			this.flashcardsSetIds = [...this.flashcardsSetIds, flashcardsSet.id];
+			this.flashcardsSetInput = '';
 		},
-		mounted() {
-			this.flashcardsSetsSetup();
+		removeFlashcardsSet: function(flashcardsSetId) {
+			this.flashcardsSetIds = this.flashcardsSetIds.filter(id => id !== flashcardsSetId);
 		}
+	},
+	mounted() {
+		this.flashcardsSetsSetup();
 	}
+};
 </script>

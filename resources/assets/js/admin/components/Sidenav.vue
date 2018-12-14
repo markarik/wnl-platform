@@ -56,7 +56,7 @@
 </style>
 
 <script>
-	export default {
-		name: 'Sidenav'
-	}
+export default {
+	name: 'Sidenav'
+};
 </script>

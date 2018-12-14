@@ -5,21 +5,21 @@
 </template>
 
 <script>
-	import UserEditForm from "./UserEditForm"
+import UserEditForm from './UserEditForm';
 
 
-	export default {
-		components: {UserEditForm},
-		props: {
-			user: {
-				type: Object,
-				required: true
-			}
-		},
-		computed: {
-			resourceUrl() {
-				return `users/${this.user.id}?include=roles`
-			}
-		},
-	}
+export default {
+	components: {UserEditForm},
+	props: {
+		user: {
+			type: Object,
+			required: true
+		}
+	},
+	computed: {
+		resourceUrl() {
+			return `users/${this.user.id}?include=roles`;
+		}
+	},
+};
 </script>

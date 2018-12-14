@@ -72,40 +72,40 @@
 					margin: 0
 </style>
 <script>
-	import { mapActions } from 'vuex'
-	import { timeFromMs } from 'js/utils/time'
+import { mapActions } from 'vuex';
+import { timeFromMs } from 'js/utils/time';
 
-	import Modal from 'js/components/global/Modal.vue'
-	import UserProfileModal from 'js/components/users/UserProfileModal'
-	import Avatar from 'js/components/global/Avatar'
+import Modal from 'js/components/global/Modal.vue';
+import UserProfileModal from 'js/components/users/UserProfileModal';
+import Avatar from 'js/components/global/Avatar';
 
-	export default{
-		props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
-		components: {
-			'wnl-avatar': Avatar,
-			'wnl-user-profile-modal': UserProfileModal,
-			'wnl-modal': Modal
+export default{
+	props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
+	components: {
+		'wnl-avatar': Avatar,
+		'wnl-user-profile-modal': UserProfileModal,
+		'wnl-modal': Modal
+	},
+	data() {
+		return {
+			isVisible: false
+		};
+	},
+	computed: {
+		formattedTime () {
+			return timeFromMs(this.time);
 		},
-		data() {
-			return {
-				isVisible: false
-			}
+		nameToDisplay() {
+			return this.author.display_name || this.fullName;
+		}
+	},
+	methods: {
+		showModal() {
+			this.isVisible = true;
 		},
-		computed: {
-			formattedTime () {
-				return timeFromMs(this.time)
-			},
-			nameToDisplay() {
-				return this.author.display_name || this.fullName
-			}
-		},
-		methods: {
-			showModal() {
-				this.isVisible = true
-			},
-			closeModal() {
-				this.isVisible = false
-			}
+		closeModal() {
+			this.isVisible = false;
 		}
 	}
+};
 </script>

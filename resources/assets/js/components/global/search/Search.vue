@@ -146,58 +146,58 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
-	import {scrollToY} from 'js/utils/animations'
+import {mapGetters} from 'vuex';
+import {scrollToY} from 'js/utils/animations';
 
-	import SlidesSearch from './SlidesSearch'
+import SlidesSearch from './SlidesSearch';
 
-	export default {
-		name: 'Search',
-		components: {
-			'wnl-slides-search': SlidesSearch
+export default {
+	name: 'Search',
+	components: {
+		'wnl-slides-search': SlidesSearch
+	},
+	data() {
+		return {
+			active: false,
+			loading: false,
+			phrase: '',
+		};
+	},
+	computed: {
+		...mapGetters(['isTouchScreen']),
+	},
+	methods: {
+		debounceInput: _.debounce(function({target: {value}}) {
+			this.phrase = value;
+		}, 500),
+		hideOverlay() {
+			this.active = false;
+			this.phrase = '';
 		},
-		data() {
-			return {
-				active: false,
-				loading: false,
-				phrase: '',
+		keyDown(e) {
+			// Ctrl + Alt + f
+			if (e.keyCode === 70 && e.ctrlKey && e.altKey) {
+				this.showOverlay();
+			}
+			// Esc
+			if (e.keyCode === 27) {
+				this.hideOverlay();
 			}
 		},
-		computed: {
-			...mapGetters(['isTouchScreen']),
+		onSearchComplete() {
+			this.loading = false;
+			scrollToY(0, 500, this.$refs.overlay);
 		},
-		methods: {
-			debounceInput: _.debounce(function({target: {value}}) {
-				this.phrase = value
-			}, 500),
-			hideOverlay() {
-				this.active = false
-				this.phrase = ''
-			},
-			keyDown(e) {
-				// Ctrl + Alt + f
-				if (e.keyCode === 70 && e.ctrlKey && e.altKey) {
-					this.showOverlay()
-				}
-				// Esc
-				if (e.keyCode === 27) {
-					this.hideOverlay()
-				}
-			},
-			onSearchComplete() {
-				this.loading = false
-				scrollToY(0, 500, this.$refs.overlay)
-			},
-			showOverlay() {
-				this.active = true
-				this.$nextTick(() => this.$refs.input.select())
-			},
+		showOverlay() {
+			this.active = true;
+			this.$nextTick(() => this.$refs.input.select());
 		},
-		mounted() {
-			window.addEventListener('keydown', this.keyDown)
-		},
-		beforeDestroy() {
-			window.removeEventListener('keydown', this.keyDown)
-		}
-	};
+	},
+	mounted() {
+		window.addEventListener('keydown', this.keyDown);
+	},
+	beforeDestroy() {
+		window.removeEventListener('keydown', this.keyDown);
+	}
+};
 </script>

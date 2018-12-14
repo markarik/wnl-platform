@@ -22,13 +22,13 @@
 </style>
 
 <script>
-	export default {
-		name: 'Widget',
-		props: ['screenData'],
-		computed: {
-			content() {
-				return this.screenData.content
-			}
+export default {
+	name: 'Widget',
+	props: ['screenData'],
+	computed: {
+		content() {
+			return this.screenData.content;
 		}
 	}
+};
 </script>

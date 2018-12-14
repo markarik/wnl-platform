@@ -66,7 +66,7 @@
 </style>
 
 <script>
-	export default {
-		name: 'PlanGuarantee'
-	}
+export default {
+	name: 'PlanGuarantee'
+};
 </script>

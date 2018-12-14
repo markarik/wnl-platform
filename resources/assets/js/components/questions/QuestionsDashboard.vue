@@ -321,188 +321,188 @@
 </style>
 
 <script>
-	import {isEmpty} from 'lodash'
-	import {mapActions, mapGetters} from 'vuex'
-	import moment from 'moment';
+import {isEmpty} from 'lodash';
+import {mapActions, mapGetters} from 'vuex';
+import moment from 'moment';
 
-	import QuestionsFeed from 'js/components/notifications/feeds/questions/QuestionsFeed'
-	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
-	import QuestionsPlanProgress from 'js/components/questions/QuestionsPlanProgress'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
-	import {getApiUrl} from 'js/utils/env'
-	import { swalConfig } from 'js/utils/swal'
-	import withChat from 'js/mixins/with-chat'
-	import features from 'js/consts/events_map/features.json';
-	import context from 'js/consts/events_map/context.json';
+import QuestionsFeed from 'js/components/notifications/feeds/questions/QuestionsFeed';
+import QuestionsNavigation from 'js/components/questions/QuestionsNavigation';
+import QuestionsPlanProgress from 'js/components/questions/QuestionsPlanProgress';
+import SidenavSlot from 'js/components/global/SidenavSlot';
+import {getApiUrl} from 'js/utils/env';
+import { swalConfig } from 'js/utils/swal';
+import withChat from 'js/mixins/with-chat';
+import features from 'js/consts/events_map/features.json';
+import context from 'js/consts/events_map/context.json';
 
-	export default {
-		name: 'QuestionsDashboard',
-		components: {
-			'wnl-questions-feed': QuestionsFeed,
-			'wnl-questions-navigation': QuestionsNavigation,
-			'wnl-questions-plan-progress': QuestionsPlanProgress,
-			'wnl-sidenav-slot': SidenavSlot,
+export default {
+	name: 'QuestionsDashboard',
+	components: {
+		'wnl-questions-feed': QuestionsFeed,
+		'wnl-questions-navigation': QuestionsNavigation,
+		'wnl-questions-plan-progress': QuestionsPlanProgress,
+		'wnl-sidenav-slot': SidenavSlot,
+	},
+	mixins: [withChat],
+	props: {
+		id: {
+			default: 0,
+			type: Number|String,
+		}
+	},
+	data() {
+		return {
+			plan: null,
+			planRoute: {},
+			stats: {},
+			expandedExams: [],
+			context: context.questions_bank,
+			feature: features.dashboard
+		};
+	},
+	computed: {
+		...mapGetters([
+			'currentUserId',
+			'isChatMounted',
+			'isChatToggleVisible',
+			'isChatVisible',
+			'isLargeDesktop',
+			'isMobile',
+		]),
+		...mapGetters('questions', ['filters']),
+		hasPlan() {
+			return !isEmpty(this.plan);
 		},
-		mixins: [withChat],
-		props: {
-			id: {
-				default: 0,
-				type: Number|String,
+		hasStats() {
+			return !isEmpty(this.stats);
+		},
+	},
+	methods: {
+		...mapActions(['toggleChat', 'toggleOverlay']),
+		...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
+		onUserEvent(payload) {
+			this.$trackUserEvent({
+				feature: this.feature.value,
+				context: this.context.value,
+				...payload,
+			});
+		},
+		toggleExamExpand(index) {
+			const indexOf = this.expandedExams.indexOf(index);
+			if (indexOf > -1) {
+				this.expandedExams.splice(indexOf, 1);
+			} else {
+				this.expandedExams.push(index);
 			}
 		},
-		data() {
-			return {
-				plan: null,
-				planRoute: {},
-				stats: {},
-				expandedExams: [],
-				context: context.questions_bank,
-				feature: features.dashboard
-			}
+		parseDate(date) {
+			return moment(date.date).format('LL');
 		},
-		computed: {
-			...mapGetters([
-				'currentUserId',
-				'isChatMounted',
-				'isChatToggleVisible',
-				'isChatVisible',
-				'isLargeDesktop',
-				'isMobile',
-			]),
-			...mapGetters('questions', ['filters']),
-			hasPlan() {
-				return !isEmpty(this.plan)
-			},
-			hasStats() {
-				return !isEmpty(this.stats)
-			},
+		setPlanRoute() {
+			this.planRoute = {
+				name: 'questions-list',
+				params: {
+					presetFilters: [
+						'quiz-planned.items[0]',
+						'quiz-resolution.items[0]',
+					],
+				},
+			};
 		},
-		methods: {
-			...mapActions(['toggleChat', 'toggleOverlay']),
-			...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
-			onUserEvent(payload) {
-				this.$trackUserEvent({
-					feature: this.feature.value,
-					context: this.context.value,
-					...payload,
-				})
-			},
-			toggleExamExpand(index) {
-				const indexOf = this.expandedExams.indexOf(index)
-				if (indexOf > -1) {
-					this.expandedExams.splice(indexOf, 1);
-				} else {
-					this.expandedExams.push(index)
-				}
-			},
-			parseDate(date) {
-				return moment(date.date).format('LL')
-			},
-			setPlanRoute() {
-				this.planRoute = {
-					name: 'questions-list',
-					params: {
-						presetFilters: [
-							'quiz-planned.items[0]',
-							'quiz-resolution.items[0]',
-						],
-					},
-				}
-			},
-			getPlan() {
-				return new Promise((resolve, reject) => {
-					return axios.get(getApiUrl(`user_plan/${this.currentUserId}`))
-						.then(({status, data}) => {
-							let plan = data
-							if (status === 204) {
-								plan = {}
-							}
+		getPlan() {
+			return new Promise((resolve, reject) => {
+				return axios.get(getApiUrl(`user_plan/${this.currentUserId}`))
+					.then(({status, data}) => {
+						let plan = data;
+						if (status === 204) {
+							plan = {};
+						}
 
-							this.plan = plan
-							return resolve(plan)
-						})
-						.catch((error) => reject(error))
-				})
-			},
-			getStats() {
-				return new Promise((resolve, reject) => {
-					return axios.get(getApiUrl('quiz_questions/stats'))
-						.then(({data}) => this.stats = data)
-						.catch(e => this.stats = null)
-				})
-			},
-			parseStats(source) {
-				let stats = [{
-					progress: source.resolved,
-					progressNumber: `${source.resolved}/${source.total}`,
-					score: Math.round(source.correct_perc),
-					scoreNumber: `${source.correct}/${source.total}`,
-					scoreTotal: Math.round(source.correct_perc_total),
-					title: 'Całkowity wynik',
-					total: source.total,
-				}]
-
-				source.subjects.forEach((subject) => {
-					stats.push({
-						progress: subject.resolved,
-						progressNumber: `${subject.resolved}/${subject.total}`,
-						score: Math.round(subject.correct_perc),
-						scoreNumber: `${subject.correct}/${subject.total}`,
-						scoreTotal: Math.round(subject.correct_perc_total),
-						title: subject.name,
-						total: subject.total,
+						this.plan = plan;
+						return resolve(plan);
 					})
-				})
+					.catch((error) => reject(error));
+			});
+		},
+		getStats() {
+			return new Promise((resolve, reject) => {
+				return axios.get(getApiUrl('quiz_questions/stats'))
+					.then(({data}) => this.stats = data)
+					.catch(e => this.stats = null);
+			});
+		},
+		parseStats(source) {
+			let stats = [{
+				progress: source.resolved,
+				progressNumber: `${source.resolved}/${source.total}`,
+				score: Math.round(source.correct_perc),
+				scoreNumber: `${source.correct}/${source.total}`,
+				scoreTotal: Math.round(source.correct_perc_total),
+				title: 'Całkowity wynik',
+				total: source.total,
+			}];
 
-				return stats
-			},
-			scoreClass(score) {
-				return score >= 56 ? 'is-success' : 'is-danger'
-			},
-			resetQuestionsProgress() {
-				this.$swal(swalConfig({
-					title: this.$t('questions.dashboard.ui.deleteModal.title'),
-					text: this.$t('questions.dashboard.ui.deleteModal.text'),
-					showCancelButton: true,
-					confirmButtonText: this.$t('ui.confirm.confirm'),
-					cancelButtonText: this.$t('ui.confirm.cancel'),
-					type: 'error',
-					confirmButtonClass: 'button is-danger',
-					reverseButtons: true
-				})).then(() => {
-					this.toggleOverlay({source: 'questionsDashboard', display: true})
-					this.deleteProgress()
+			source.subjects.forEach((subject) => {
+				stats.push({
+					progress: subject.resolved,
+					progressNumber: `${subject.resolved}/${subject.total}`,
+					score: Math.round(subject.correct_perc),
+					scoreNumber: `${subject.correct}/${subject.total}`,
+					scoreTotal: Math.round(subject.correct_perc_total),
+					title: subject.name,
+					total: subject.total,
+				});
+			});
+
+			return stats;
+		},
+		scoreClass(score) {
+			return score >= 56 ? 'is-success' : 'is-danger';
+		},
+		resetQuestionsProgress() {
+			this.$swal(swalConfig({
+				title: this.$t('questions.dashboard.ui.deleteModal.title'),
+				text: this.$t('questions.dashboard.ui.deleteModal.text'),
+				showCancelButton: true,
+				confirmButtonText: this.$t('ui.confirm.confirm'),
+				cancelButtonText: this.$t('ui.confirm.cancel'),
+				type: 'error',
+				confirmButtonClass: 'button is-danger',
+				reverseButtons: true
+			})).then(() => {
+				this.toggleOverlay({source: 'questionsDashboard', display: true});
+				this.deleteProgress()
 					.then(() => {
-						this.getPlan()
-						this.getStats()
-						this.toggleOverlay({source: 'questionsDashboard', display: false})
+						this.getPlan();
+						this.getStats();
+						this.toggleOverlay({source: 'questionsDashboard', display: false});
 
 						isEmpty(this.filters)
 							? this.fetchDynamicFilters().then(this.setPlanRoute)
-							: this.setPlanRoute()
-					})
-				}).catch(e => false)
-			}
+							: this.setPlanRoute();
+					});
+			}).catch(e => false);
+		}
+	},
+	mounted() {
+		this.getPlan();
+		this.getStats();
+		isEmpty(this.filters)
+			? this.fetchDynamicFilters().then(this.setPlanRoute)
+			: this.setPlanRoute();
+		this.$trackUserEvent({
+			context: this.context.value,
+			feature: this.feature.value,
+			action: this.feature.actions.open.value
+		});
+	},
+	watch: {
+		'$route' (to, from) {
+			!this.isChatMounted && this.isChatVisible && this.toggleChat();
 		},
-		mounted() {
-			this.getPlan()
-			this.getStats()
-			isEmpty(this.filters)
-				? this.fetchDynamicFilters().then(this.setPlanRoute)
-				: this.setPlanRoute()
-			this.$trackUserEvent({
-				context: this.context.value,
-				feature: this.feature.value,
-				action: this.feature.actions.open.value
-			})
-		},
-		watch: {
-			'$route' (to, from) {
-				!this.isChatMounted && this.isChatVisible && this.toggleChat()
-			},
-			'$route.query.chatChannel' (newVal) {
-				newVal && !this.isChatVisible && this.toggleChat();
-			}
+		'$route.query.chatChannel' (newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
 		}
 	}
+};
 </script>

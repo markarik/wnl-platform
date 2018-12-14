@@ -23,8 +23,8 @@
 </style>
 
 <script>
-	export default {
-		name: 'wnl-form-checkbox',
-		props: ['type', 'name', 'form'],
-	}
+export default {
+	name: 'wnl-form-checkbox',
+	props: ['type', 'name', 'form'],
+};
 </script>

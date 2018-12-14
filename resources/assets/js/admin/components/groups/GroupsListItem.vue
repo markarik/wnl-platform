@@ -5,18 +5,18 @@
 </template>
 
 <script>
-	export default {
-		name: 'GroupsListItem',
-		props: ['id', 'name'],
-		computed: {
-			to() {
-				return {
-					name: 'group-edit',
-					params: {
-						id: this.id,
-					},
-				}
-			},
+export default {
+	name: 'GroupsListItem',
+	props: ['id', 'name'],
+	computed: {
+		to() {
+			return {
+				name: 'group-edit',
+				params: {
+					id: this.id,
+				},
+			};
 		},
-	}
+	},
+};
 </script>

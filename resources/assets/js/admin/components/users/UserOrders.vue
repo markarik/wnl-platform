@@ -14,21 +14,21 @@
 </style>
 
 <script>
-	import Order from 'js/components/user/Order'
+import Order from 'js/components/user/Order';
 
-	export default {
-		name: "UserOrders",
-		components: { Order },
-		props: {
-			user: {
-				type: Object,
-				required: true
-			},
+export default {
+	name: 'UserOrders',
+	components: { Order },
+	props: {
+		user: {
+			type: Object,
+			required: true
 		},
-		methods: {
-			translateShippingStatus(order) {
-				return this.$t(`orders.tags.shipping.${order.shipping_status}`)
-			}
+	},
+	methods: {
+		translateShippingStatus(order) {
+			return this.$t(`orders.tags.shipping.${order.shipping_status}`);
 		}
 	}
+};
 </script>

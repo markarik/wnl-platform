@@ -26,46 +26,46 @@
 </style>
 
 <script>
-	import WnlPagination from "js/components/global/Pagination";
-	import WnlGroupsListItem from "js/admin/components/groups/GroupsListItem"
-	import {getApiUrl} from 'js/utils/env';
+import WnlPagination from 'js/components/global/Pagination';
+import WnlGroupsListItem from 'js/admin/components/groups/GroupsListItem';
+import {getApiUrl} from 'js/utils/env';
 
-	export default {
-		name: 'Groups',
-		data() {
+export default {
+	name: 'Groups',
+	data() {
+		return {
+			groups: [],
+			lastPage: 1,
+			page: 1,
+		};
+	},
+	components: {
+		WnlPagination,
+		WnlGroupsListItem
+	},
+	computed: {},
+	methods: {
+		getRequestParams() {
 			return {
-				groups: [],
-				lastPage: 1,
-				page: 1,
+				limit: 50,
+				page: this.page,
+				active: [],
+				filters: []
 			};
 		},
-		components: {
-			WnlPagination,
-			WnlGroupsListItem
-		},
-		computed: {},
-		methods: {
-			getRequestParams() {
-				return {
-					limit: 50,
-					page: this.page,
-					active: [],
-					filters: []
-				}
-			},
-			onPageChange(page) {
-				this.page = page;
-				this.fetch();
-			},
-			async fetch() {
-				const response = await axios.post(getApiUrl('groups/.filter'), this.getRequestParams())
-				const {data: {data, ...paginationMeta}} = response;
-				this.groups = data;
-				this.lastPage = paginationMeta.last_page;
-			},
-		},
-		mounted() {
+		onPageChange(page) {
+			this.page = page;
 			this.fetch();
-		}
+		},
+		async fetch() {
+			const response = await axios.post(getApiUrl('groups/.filter'), this.getRequestParams());
+			const {data: {data, ...paginationMeta}} = response;
+			this.groups = data;
+			this.lastPage = paginationMeta.last_page;
+		},
+	},
+	mounted() {
+		this.fetch();
 	}
+};
 </script>

@@ -30,25 +30,25 @@
 </style>
 
 <script>
-	import draggable from 'vuedraggable';
+import draggable from 'vuedraggable';
 
-	import { formInput } from 'js/mixins/form-input'
+import { formInput } from 'js/mixins/form-input';
 
-	export default {
-		name: 'Sortable',
-		components: {
-			draggable,
+export default {
+	name: 'Sortable',
+	components: {
+		draggable,
+	},
+	props: {
+		name: {
+			type: String,
 		},
-		props: {
-			name: {
-				type: String,
-			},
+	},
+	mixins: [formInput],
+	computed: {
+		default() {
+			return [];
 		},
-		mixins: [formInput],
-		computed: {
-			default() {
-				return []
-			},
-		}
 	}
+};
 </script>

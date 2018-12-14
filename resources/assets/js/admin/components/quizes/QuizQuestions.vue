@@ -39,12 +39,12 @@
 </style>
 
 <script>
-	export default {
-		name: 'QuizQuestions',
-		data() {
-			return {
-				questionId: ''
-			}
-		}
+export default {
+	name: 'QuizQuestions',
+	data() {
+		return {
+			questionId: ''
+		};
 	}
+};
 </script>

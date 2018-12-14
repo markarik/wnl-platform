@@ -47,34 +47,34 @@
 </style>
 
 <script>
-	import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Sortable as WnlSortable} from 'js/components/global/form';
+import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Sortable as WnlSortable} from 'js/components/global/form';
 
-	export default {
-		name: 'CourseEditor',
-		props: ['id'],
-		computed: {
-			isEdit() {
-				return this.id !== 'new';
-			},
-			method() {
-				return this.isEdit ? 'put' : 'post'
-			},
-			resourceRoute() {
-				return this.isEdit ? `courses/${this.id}?include=groups` : 'courses?include=groups';
-			},
+export default {
+	name: 'CourseEditor',
+	props: ['id'],
+	computed: {
+		isEdit() {
+			return this.id !== 'new';
 		},
-		components: {
-			WnlFormText,
-			WnlForm,
-			WnlSubmit,
-			WnlSortable,
+		method() {
+			return this.isEdit ? 'put' : 'post';
 		},
-		methods: {
-			onSubmitSuccess(data) {
-				if (!this.isEdit) {
-					this.$router.push({ name: 'course-edit', params: { id: data.id } })
-				}
-			},
-		}
+		resourceRoute() {
+			return this.isEdit ? `courses/${this.id}?include=groups` : 'courses?include=groups';
+		},
+	},
+	components: {
+		WnlFormText,
+		WnlForm,
+		WnlSubmit,
+		WnlSortable,
+	},
+	methods: {
+		onSubmitSuccess(data) {
+			if (!this.isEdit) {
+				this.$router.push({ name: 'course-edit', params: { id: data.id } });
+			}
+		},
 	}
+};
 </script>

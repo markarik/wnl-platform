@@ -18,11 +18,11 @@
 </style>
 
 <script>
-	export default {
-		name: 'EditSlideButton',
-		props: {
-			currentSlideId: Number,
-			screenId: Number,
-		}
+export default {
+	name: 'EditSlideButton',
+	props: {
+		currentSlideId: Number,
+		screenId: Number,
 	}
+};
 </script>

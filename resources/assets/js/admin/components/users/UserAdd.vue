@@ -6,34 +6,34 @@
 </template>
 
 <script>
-	import {mapActions} from 'vuex';
-	import UserEditForm from "./UserEditForm";
+import {mapActions} from 'vuex';
+import UserEditForm from './UserEditForm';
 
 
-	export default {
-		components: {UserEditForm},
-		computed: {
-			resourceUrl() {
-				return 'users'
-			}
+export default {
+	components: {UserEditForm},
+	computed: {
+		resourceUrl() {
+			return 'users';
+		}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		onSuccess() {
+			this.addAutoDismissableAlert({
+				text: 'Użytkownik utworzony!',
+				type: 'success'
+			});
+			this.$router.push({
+				name: 'users'
+			});
 		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			onSuccess() {
-				this.addAutoDismissableAlert({
-					text: 'Użytkownik utworzony!',
-					type: 'success'
-				});
-				this.$router.push({
-					name: 'users'
-				})
-			},
-			onError() {
-				this.addAutoDismissableAlert({
-					text: 'Nie udało się utworzyć użytkownika.:(',
-					type: 'error'
-				});
-			}
-		},
-	}
+		onError() {
+			this.addAutoDismissableAlert({
+				text: 'Nie udało się utworzyć użytkownika.:(',
+				type: 'error'
+			});
+		}
+	},
+};
 </script>

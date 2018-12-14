@@ -28,7 +28,7 @@
 </style>
 
 <script>
-	export default {
-		props: ['icon', 'disabled', 'type'],
-	}
+export default {
+	props: ['icon', 'disabled', 'type'],
+};
 </script>

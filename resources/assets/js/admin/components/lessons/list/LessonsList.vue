@@ -17,28 +17,28 @@
 </style>
 
 <script>
-	import axios from 'axios'
-	import {mapGetters} from 'vuex'
+import axios from 'axios';
+import {mapGetters} from 'vuex';
 
-	import LessonsListItem from 'js/admin/components/lessons/list/LessonsListItem.vue'
+import LessonsListItem from 'js/admin/components/lessons/list/LessonsListItem.vue';
 
-	import { getApiUrl } from 'js/utils/env'
+import { getApiUrl } from 'js/utils/env';
 
-	export default {
-		name: 'LessonsList',
-		components: {
-			'wnl-lesson-list-item': LessonsListItem,
-		},
-		data() {
-			return {
-				lessons: [],
-			};
-		},
-		mounted() {
-			axios.get(getApiUrl('lessons/all'))
-				.then((response) => {
-					this.lessons = response.data
-				})
-		}
+export default {
+	name: 'LessonsList',
+	components: {
+		'wnl-lesson-list-item': LessonsListItem,
+	},
+	data() {
+		return {
+			lessons: [],
+		};
+	},
+	mounted() {
+		axios.get(getApiUrl('lessons/all'))
+			.then((response) => {
+				this.lessons = response.data;
+			});
 	}
+};
 </script>

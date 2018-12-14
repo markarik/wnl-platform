@@ -50,103 +50,103 @@
 </style>
 
 <script>
-	import _ from 'lodash';
-	import { mapActions } from 'vuex';
+import _ from 'lodash';
+import { mapActions } from 'vuex';
 
-	import Form from 'js/classes/forms/Form';
-	import { getApiUrl } from 'js/utils/env';
+import Form from 'js/classes/forms/Form';
+import { getApiUrl } from 'js/utils/env';
 
-	import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue';
-	import Input from 'js/admin/components/forms/Input.vue';
-	import Select from 'js/admin/components/forms/Select.vue';
-	import Checkbox from 'js/admin/components/forms/Checkbox.vue';
-	import {ALERT_TYPES} from 'js/consts/alert';
+import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue';
+import Input from 'js/admin/components/forms/Input.vue';
+import Select from 'js/admin/components/forms/Select.vue';
+import Checkbox from 'js/admin/components/forms/Checkbox.vue';
+import {ALERT_TYPES} from 'js/consts/alert';
 
-	export default {
-		name: 'LessonEditor',
-		props: ['lessonId'],
-		components: {
-			'wnl-screens-editor': ScreensEditor,
-			'wnl-input': Input,
-			'wnl-select': Select,
-			'wnl-form-checkbox': Checkbox,
+export default {
+	name: 'LessonEditor',
+	props: ['lessonId'],
+	components: {
+		'wnl-screens-editor': ScreensEditor,
+		'wnl-input': Input,
+		'wnl-select': Select,
+		'wnl-form-checkbox': Checkbox,
+	},
+	data() {
+		return {
+			form: new Form({
+				group_id: null,
+				name: null,
+				is_required: false,
+			}),
+			groups: [],
+			loading: false,
+		};
+	},
+	computed: {
+		isEdit() {
+			return this.lessonId !== 'new';
 		},
-		data() {
-			return {
-				form: new Form({
-					group_id: null,
-					name: null,
-					is_required: false,
-				}),
-				groups: [],
-				loading: false,
-			};
+		method() {
+			return this.isEdit ? 'put' : 'post';
 		},
-		computed: {
-			isEdit() {
-				return this.lessonId !== 'new';
-			},
-			method() {
-				return this.isEdit ? 'put' : 'post';
-			},
-			resourceUrl() {
-				return this.isEdit ? getApiUrl(`lessons/${this.lessonId}`) : getApiUrl('lessons');
-			},
-			hasChanged() {
-				return !_.isEqual(this.form.originalData, this.form.data());
-			}
+		resourceUrl() {
+			return this.isEdit ? getApiUrl(`lessons/${this.lessonId}`) : getApiUrl('lessons');
 		},
-		methods: {
-			...mapActions([
-				'addAutoDismissableAlert',
-			]),
-			fetchGroups() {
-				return axios.get(getApiUrl('groups/all'))
-					.then((response) => {
-						_.forEach(response.data, (group) => {
-							this.groups.push({
-								text: group.name,
-								value: group.id,
-							});
+		hasChanged() {
+			return !_.isEqual(this.form.originalData, this.form.data());
+		}
+	},
+	methods: {
+		...mapActions([
+			'addAutoDismissableAlert',
+		]),
+		fetchGroups() {
+			return axios.get(getApiUrl('groups/all'))
+				.then((response) => {
+					_.forEach(response.data, (group) => {
+						this.groups.push({
+							text: group.name,
+							value: group.id,
 						});
 					});
-			},
-			lessonFormSubmit() {
-				if (!this.hasChanged) {
-					return false;
-				}
-
-				this.loading = true;
-				this.form[this.method](this.resourceUrl)
-					.then(response => {
-						this.loading = false;
-						this.addAutoDismissableAlert({
-							text: 'Lekcja zapisana!',
-							type: ALERT_TYPES.SUCCESS,
-						});
-						this.form.originalData = this.form.data();
-
-						if (!this.isEdit) {
-							this.$router.push({ name: 'lessons', params: { lessonId: response.id } })
-						}
-					})
-					.catch(exception => {
-						this.loading = false;
-						this.addAutoDismissableAlert({
-							text: 'Nie udało się :(',
-							type: ALERT_TYPES.ERROR,
-						});
-						$wnl.logger.capture(exception);
-					});
-			}
+				});
 		},
-		mounted() {
-			this.fetchGroups()
-				.then(() => {
-					if (this.isEdit) {
-						this.form.populate(this.resourceUrl);
+		lessonFormSubmit() {
+			if (!this.hasChanged) {
+				return false;
+			}
+
+			this.loading = true;
+			this.form[this.method](this.resourceUrl)
+				.then(response => {
+					this.loading = false;
+					this.addAutoDismissableAlert({
+						text: 'Lekcja zapisana!',
+						type: ALERT_TYPES.SUCCESS,
+					});
+					this.form.originalData = this.form.data();
+
+					if (!this.isEdit) {
+						this.$router.push({ name: 'lessons', params: { lessonId: response.id } });
 					}
+				})
+				.catch(exception => {
+					this.loading = false;
+					this.addAutoDismissableAlert({
+						text: 'Nie udało się :(',
+						type: ALERT_TYPES.ERROR,
+					});
+					$wnl.logger.capture(exception);
 				});
 		}
+	},
+	mounted() {
+		this.fetchGroups()
+			.then(() => {
+				if (this.isEdit) {
+					this.form.populate(this.resourceUrl);
+				}
+			});
 	}
+};
 </script>

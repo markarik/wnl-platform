@@ -72,56 +72,56 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import { mapGetters } from 'vuex'
-	import { resource } from 'js/utils/config'
+import _ from 'lodash';
+import { mapGetters } from 'vuex';
+import { resource } from 'js/utils/config';
 
-	export default {
-		name: 'PreviousNext',
-		computed: {
-			...mapGetters('course', [
-				'getScreen',
-				'getAdjacentScreenId',
-			]),
-			lessonId() {
-				return this.$route.params.lessonId
-			},
-			previousScreenId() {
-				return this.getAdjacentScreenId(this.lessonId,
-					this.$route.params.screenId, 'previous')
-			},
-			nextScreenId() {
-				return this.getAdjacentScreenId(this.lessonId,
-					this.$route.params.screenId, 'next')
-			},
-			previousScreenName() {
-				return this.getScreen(this.previousScreenId).name
-			},
-			nextScreenName() {
-				return this.getScreen(this.nextScreenId).name
-			},
-			previousScreenRoute() {
-				return this.getAdjacentScreenRoute(this.previousScreenId)
-			},
-			nextScreenRoute() {
-				return this.getAdjacentScreenRoute(this.nextScreenId)
-			},
+export default {
+	name: 'PreviousNext',
+	computed: {
+		...mapGetters('course', [
+			'getScreen',
+			'getAdjacentScreenId',
+		]),
+		lessonId() {
+			return this.$route.params.lessonId;
 		},
-		methods: {
-			getAdjacentScreenRoute(id) {
-				if (id === undefined) {
-					return undefined
-				} else {
-					return {
-						name: resource('screens'),
-						params: {
-							courseId: this.$route.params.courseId,
-							lessonId: this.lessonId,
-							screenId: id,
-						}
+		previousScreenId() {
+			return this.getAdjacentScreenId(this.lessonId,
+				this.$route.params.screenId, 'previous');
+		},
+		nextScreenId() {
+			return this.getAdjacentScreenId(this.lessonId,
+				this.$route.params.screenId, 'next');
+		},
+		previousScreenName() {
+			return this.getScreen(this.previousScreenId).name;
+		},
+		nextScreenName() {
+			return this.getScreen(this.nextScreenId).name;
+		},
+		previousScreenRoute() {
+			return this.getAdjacentScreenRoute(this.previousScreenId);
+		},
+		nextScreenRoute() {
+			return this.getAdjacentScreenRoute(this.nextScreenId);
+		},
+	},
+	methods: {
+		getAdjacentScreenRoute(id) {
+			if (id === undefined) {
+				return undefined;
+			} else {
+				return {
+					name: resource('screens'),
+					params: {
+						courseId: this.$route.params.courseId,
+						lessonId: this.lessonId,
+						screenId: id,
 					}
-				}
-			},
+				};
+			}
 		},
-	}
+	},
+};
 </script>

@@ -3,13 +3,13 @@
 </template>
 
 <script>
-	import WnlUserAddress from 'js/components/user/UserAddress';
+import WnlUserAddress from 'js/components/user/UserAddress';
 
-	export default {
-		name: "UserAddress",
-		components: {WnlUserAddress},
-		props: ['user']
-	}
+export default {
+	name: 'UserAddress',
+	components: {WnlUserAddress},
+	props: ['user']
+};
 </script>
 
 <style scoped>

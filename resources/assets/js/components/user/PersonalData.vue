@@ -17,18 +17,18 @@
 </style>
 
 <script>
-	import IdentityNumber from 'js/components/user/IdentityNumber'
-	import WnlUserAddress from 'js/components/user/UserAddress'
+import IdentityNumber from 'js/components/user/IdentityNumber';
+import WnlUserAddress from 'js/components/user/UserAddress';
 
-	export default {
-		data() {
-			return {
-				personalDataExplanation: this.$t('user.personalData.header.explanation')
-			}
-		},
-		components: {
-			WnlUserAddress,
-			'wnl-identity-number': IdentityNumber,
-		}
+export default {
+	data() {
+		return {
+			personalDataExplanation: this.$t('user.personalData.header.explanation')
+		};
+	},
+	components: {
+		WnlUserAddress,
+		'wnl-identity-number': IdentityNumber,
 	}
+};
 </script>

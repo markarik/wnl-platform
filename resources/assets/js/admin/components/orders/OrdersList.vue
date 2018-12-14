@@ -53,7 +53,7 @@
 		cursor: pointer
 
 		&.canceled
-			text-decoration: line-through
+			opacity: .2
 
 	.search
 		margin-bottom: $margin-base

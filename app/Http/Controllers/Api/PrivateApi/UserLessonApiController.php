@@ -115,39 +115,32 @@ class UserLessonApiController extends ApiController
 			return $this->respondForbidden();
 		}
 
-		if (empty($userId)) {
+		if (empty($user)) {
 			return $this->respondNotFound();
 		}
 
-		$userLessons = $user->lessonsAvailability;
+		$userLessons = UserLesson::where('user_id', $userId)->get();
 
 		$csvData = [];
 
-		$csvData = $userLessons->map(function($userLesson) use ($user) {
-			return $csvData = [
-				"name" => $userLesson->name,
-				"start_date" => $userLesson->startDate($user)
-			];
-		});
+		$csvData = $userLessons
+			->sortBy('start_date')
+			->map(function($userLesson) use ($user) {
+				return [
+					"name" => $userLesson->lesson->name,
+					"start_date" => $userLesson->start_date->format('m/d/Y')
+				];
+			});
 
-		$sortedCsvData = $csvData->sortBy('start_date');
-		$sortedCsvData->values()->all();
-
-		$sortedCsvData->transform(function($data) {
-			return [
-				'name' => $data['name'],
-				'start_date' => $data['start_date']->format('m/d/Y')
-			];
-		});
-		$sortedCsvData->prepend([
+		$csvData->prepend([
 			'name' => 'Subject',
 			'start_date' => 'Start Date'
 		]);
 
 		return new StreamedResponse(
-			function() use($sortedCsvData) {
+			function() use($csvData) {
 				$buffer = fopen('php://output', 'w');
-				foreach($sortedCsvData as $row) {
+				foreach($csvData as $row) {
 					fputcsv($buffer, $row);
 				}
 				fclose($buffer);

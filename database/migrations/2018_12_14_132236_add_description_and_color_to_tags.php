@@ -12,7 +12,7 @@ class AddDescriptionAndColorToTags extends Migration {
 	 */
 	public function up() {
 		Schema::table('tags', function (Blueprint $table) {
-			$table->string('description', 510)->nullable();
+			$table->string('description', 1000)->nullable();
 			$table->string('color', 6)->nullable();
 		});
 	}
@@ -24,8 +24,8 @@ class AddDescriptionAndColorToTags extends Migration {
 	 */
 	public function down() {
 		Schema::table('tags', function (Blueprint $table) {
-			$table->removeColumn('description');
-			$table->removeColumn('color');
+			$table->dropColumn('description');
+			$table->dropColumn('color');
 		});
 	}
 }

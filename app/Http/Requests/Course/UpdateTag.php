@@ -22,7 +22,7 @@ class UpdateTag extends FormRequest {
 	public function rules() {
 		return [
 			'name' => 'required|string|max:255|unique:tags',
-			'description' => 'string|max:510',
+			'description' => 'string|max:1000',
 			'color' => 'string|max:6'
 		];
 	}

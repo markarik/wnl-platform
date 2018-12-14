@@ -1,7 +1,10 @@
 <template>
 	<div class="lessons-list">
-		<p class="title is-4">Lista lekcji</p>
-		<wnl-lesson-list-item v-for="lesson in allLessons"
+		<p class="title is-4">
+			Lista lekcji
+			<router-link class="button is-success" :to="{name: 'lessons', params: { lessonId: 'new' } }">+ Dodaj lekcję</router-link>
+		</p>
+		<wnl-lesson-list-item v-for="lesson in lessons"
 			:key="lesson.id"
 			:name="lesson.name"
 			:id="lesson.id">
@@ -26,8 +29,10 @@
 		components: {
 			'wnl-lesson-list-item': LessonsListItem,
 		},
-		computed: {
-			...mapGetters('lessons', ['allLessons'])
+		data() {
+			return {
+				lessons: [],
+			};
 		},
 		mounted() {
 			axios.get(getApiUrl('lessons/all'))

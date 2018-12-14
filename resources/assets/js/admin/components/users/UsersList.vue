@@ -1,7 +1,6 @@
 <template>
 	<div class="annotations-users">
-		<slot name="search"></slot>
-		<ul v-if="users.length">
+		<ul>
 			<table class="users-users">
 				<thead>
 				<tr>
@@ -30,10 +29,6 @@
 				</tbody>
 			</table>
 		</ul>
-		<div v-else>
-			<span class="title is-6">Nic tu nie ma...</span>
-		</div>
-		<slot name="pagination"/>
 	</div>
 </template>
 
@@ -70,10 +65,19 @@ export default {
 		};
 	},
 	props: {
-		users: {
-			type: Array,
+		usersResponse: {
+			type: Object|Array,
 			required: true
 		},
+	},
+	computed: {
+		users() {
+			const {included, ...users} = this.usersResponse;
+			return Object.values(users).map(user => ({
+				...user,
+				roles: (user.roles || []).map(roleId => included.roles[roleId])
+			}));
+		}
 	},
 	methods: {
 		getCreatedDate(user) {

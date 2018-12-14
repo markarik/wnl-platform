@@ -13,7 +13,10 @@
 			class="pagination"
 		/>
 
-		<slot name="list" v-if="!isLoading" :list="list" />
+		<template v-if="!isLoading">
+			<slot name="list" v-if="!isEmpty(list)" :list="list" />
+			<div class="title is-6" v-else>Nic tu nie ma...</div>
+		</template>
 		<wnl-text-loader v-else></wnl-text-loader>
 	</div>
 </template>
@@ -30,10 +33,10 @@
 
 <script>
 	import {mapActions} from 'vuex';
+	import {isEmpty} from 'lodash';
 
 	import WnlPagination from 'js/components/global/Pagination';
 	import WnlSearchInput from 'js/components/global/SearchInput';
-
 
 export default {
 	components: {
@@ -58,10 +61,15 @@ export default {
 		resourceUrl: {
 			type: String,
 			required: true,
+		},
+		customRequestParams: {
+			type: Object,
+			default: () => ({}),
 		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+		isEmpty,
 		getRequestParams() {
 			const params = {
 				limit: 50,
@@ -75,7 +83,10 @@ export default {
 				params.filters = [{search: {phrase: this.searchPhrase, fields: this.searchFields}}];
 			}
 
-			return params;
+			return {
+				...params,
+				...this.customRequestParams,
+			};
 		},
 		onPageChange(page) {
 			this.page = page;

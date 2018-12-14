@@ -231,4 +231,20 @@ class Order extends Model
 
 		return $this->paid_amount >= $this->total_with_coupon;
 	}
+
+	/**
+	 * Get the indexable data array for the model.
+	 *
+	 * @return array
+	 */
+	public function toSearchableArray()
+	{
+		$data = [
+			'id' => $this->id,
+			'user_id' => $this->user_id,
+			'product' => $this->product->name,
+		];
+
+		return $data;
+	}
 }

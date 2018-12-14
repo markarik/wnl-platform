@@ -24,7 +24,7 @@
 			</tr>
 			</thead>
 			<tbody>
-			<tr v-for="order in orders" @click="goToOrder(order)" class="row" :key="order.id">
+			<tr v-for="order in orders" @click="goToOrder(order)" :class="['row', {'canceled': order.canceled}]" :key="order.id">
 				<td>{{order.id}}</td>
 				<td>{{order.created_at}}</td>
 				<td>{{order.user_id}}</td>
@@ -51,6 +51,9 @@
 
 	.row
 		cursor: pointer
+
+		&.canceled
+			text-decoration: line-through
 
 	.search
 		margin-bottom: $margin-base
@@ -87,7 +90,7 @@ export default {
 
 			if (this.searchPhrase) {
 				params.active = [`search.${this.searchPhrase}`];
-				params.filters = [{search: {phrase: this.searchPhrase, fields: ['id']}}];
+				params.filters = [{search: {phrase: this.searchPhrase, fields: []}}];
 			}
 
 			return params;

@@ -128,96 +128,96 @@
 </style>
 
 <script>
-	import {join} from 'lodash'
-	import { mapActions, mapGetters } from 'vuex'
+import {join} from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
 
-	import QnaSorting from 'js/components/qna/QnaSorting'
-	import QnaQuestion from 'js/components/qna/QnaQuestion'
-	import NewQuestionForm from 'js/components/qna/NewQuestionForm'
+import QnaSorting from 'js/components/qna/QnaSorting';
+import QnaQuestion from 'js/components/qna/QnaQuestion';
+import NewQuestionForm from 'js/components/qna/NewQuestionForm';
 
-	import * as types from 'js/store/mutations-types'
-	import {invisibleTags} from 'js/utils/config'
+import * as types from 'js/store/mutations-types';
+import {invisibleTags} from 'js/utils/config';
 
-	export default {
-		name: 'Qna',
-		components: {
-			'wnl-qna-question': QnaQuestion,
-			'wnl-new-question': NewQuestionForm,
-			'wnl-qna-sorting': QnaSorting
+export default {
+	name: 'Qna',
+	components: {
+		'wnl-qna-question': QnaQuestion,
+		'wnl-new-question': NewQuestionForm,
+		'wnl-qna-sorting': QnaSorting
+	},
+	props: {
+		hideTitle: {
+			type: Boolean,
+			default: false,
 		},
-		props: {
-			hideTitle: {
-				type: Boolean,
-				default: false,
-			},
-			icon: String,
-			isUserProfileClass: String,
-			tags: Array,
-			numbersDisabled: Boolean,
-			passedQuestions: Array,
-			reactionsDisabled: Boolean,
-			readOnly: Boolean,
-			title: [String, Boolean],
-			showContext: Boolean,
-			sortingEnabled: {
-				type: Boolean,
-				default: true
-			},
-			config: {
-				type: Object,
-				default: () => { return {
-					highlighted: {}
-				}}
-			},
+		icon: String,
+		isUserProfileClass: String,
+		tags: Array,
+		numbersDisabled: Boolean,
+		passedQuestions: Array,
+		reactionsDisabled: Boolean,
+		readOnly: Boolean,
+		title: [String, Boolean],
+		showContext: Boolean,
+		sortingEnabled: {
+			type: Boolean,
+			default: true
 		},
-		data() {
-			return {
-				ready: false,
-				showForm: false,
-				questionsList: [],
-				name: 'watch',
-			}
+		config: {
+			type: Object,
+			default: () => { return {
+				highlighted: {}
+			};}
 		},
-		computed: {
-			...mapGetters('qna', [
-				'loading',
-				'currentSorting',
-				'questions',
-				'getSortedQuestions'
-			]),
-			howManyQuestions() {
-				return Object.keys(this.questionsList).length || 0
-			},
-			tagsFiltered() {
-				if (!this.tags) return [];
-				return this.tags.filter(tag => invisibleTags.indexOf(tag.name) === -1)
-			},
-			displayedTitle() {
-				return this.title || this.$t('qna.title.titleToDisplay')
-			},
+	},
+	data() {
+		return {
+			ready: false,
+			showForm: false,
+			questionsList: [],
+			name: 'watch',
+		};
+	},
+	computed: {
+		...mapGetters('qna', [
+			'loading',
+			'currentSorting',
+			'questions',
+			'getSortedQuestions'
+		]),
+		howManyQuestions() {
+			return Object.keys(this.questionsList).length || 0;
 		},
-		methods: {
-			...mapActions('qna', ['destroyQna']),
+		tagsFiltered() {
+			if (!this.tags) return [];
+			return this.tags.filter(tag => invisibleTags.indexOf(tag.name) === -1);
 		},
-		mounted() {
-			if (!this.sortingEnabled && this.passedQuestions) {
-				this.questionsList = this.passedQuestions
-			} else {
-				this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions)
-			}
+		displayedTitle() {
+			return this.title || this.$t('qna.title.titleToDisplay');
 		},
-		watch: {
-			'currentSorting' (newValue) {
-				this.questionsList = this.getSortedQuestions(newValue, this.questions);
-			},
-			'questions' (newValue) {
-				if (this.sortingEnabled && !this.passedQuestions) {
-					this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
-				}
-			}
-		},
-		beforeDestroy() {
-		   this.destroyQna()
+	},
+	methods: {
+		...mapActions('qna', ['destroyQna']),
+	},
+	mounted() {
+		if (!this.sortingEnabled && this.passedQuestions) {
+			this.questionsList = this.passedQuestions;
+		} else {
+			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
 		}
+	},
+	watch: {
+		'currentSorting' (newValue) {
+			this.questionsList = this.getSortedQuestions(newValue, this.questions);
+		},
+		'questions' (newValue) {
+			if (this.sortingEnabled && !this.passedQuestions) {
+				this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+			}
+		}
+	},
+	beforeDestroy() {
+		   this.destroyQna();
 	}
+};
 </script>

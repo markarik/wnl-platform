@@ -174,6 +174,12 @@ $factory->define(App\Models\Slide::class, function (Faker\Generator $faker) {
 	];
 });
 
+$factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
+	return [
+		'name' => $faker->name
+	];
+});
+
 $factory->define(App\Models\Coupon::class, function (Faker\Generator $faker) {
 	return [
 		'name'         => 'Testowy kupon',
@@ -241,4 +247,16 @@ $factory->define(App\Models\Presentable::class, function (Faker\Generator $faker
 
 $factory->define(App\Models\Slideshow::class, function (Faker\Generator $faker) {
 	return [];
+});
+
+$factory->define(App\Models\Notification::class, function (Faker\Generator $faker) {
+	$notifiable = factory(App\Models\User::class)->create();
+	return [
+		'id' => $faker->uuid,
+		'type' => \App\Notifications\EventNotification::class,
+		'event_id' => $faker->uuid,
+		'notifiable_id' => $notifiable->id,
+		'notifiable_type' => \App\Models\User::class,
+		'data' => []
+	];
 });

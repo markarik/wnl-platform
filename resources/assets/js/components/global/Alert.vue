@@ -36,18 +36,18 @@
 </style>
 
 <script>
-	export default {
-		name: 'Alert',
-		props: ['timestamp', 'alert', 'cssClass'],
-		computed: {
-			fullCssClass() {
-				return `${this.alert.cssClass} ${this.cssClass}`
-			},
+export default {
+	name: 'Alert',
+	props: ['timestamp', 'alert', 'cssClass'],
+	computed: {
+		fullCssClass() {
+			return `${this.alert.cssClass} ${this.cssClass}`;
 		},
-		methods: {
-			onDelete() {
-				this.$emit('delete', this.timestamp)
-			}
+	},
+	methods: {
+		onDelete() {
+			this.$emit('delete', this.timestamp);
 		}
 	}
+};
 </script>

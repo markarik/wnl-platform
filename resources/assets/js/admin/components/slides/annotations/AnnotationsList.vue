@@ -105,64 +105,47 @@
 </style>
 
 <script>
-	export default {
-		name: 'AnnotationsList',
-		data() {
-			return {
-				openAnnotations: []
+import { getColourForStr } from 'js/utils/colors.js';
+
+export default {
+	name: 'AnnotationsList',
+	data() {
+		return {
+			openAnnotations: [],
+			getColourForStr
+		};
+	},
+	props: {
+		list: {
+			type: Array,
+			required: true
+		},
+		modifiedAnnotationId: {
+			type: Number,
+			default: 0
+		}
+	},
+	methods: {
+		isEven(index) {
+			return index % 2 === 0;
+		},
+		toggleAnnotation(annotation) {
+			if (this.openAnnotations.indexOf(annotation.id) === -1) {
+				this.openAnnotations.push(annotation.id);
+			} else {
+				const index = this.openAnnotations.indexOf(annotation.id);
+				if (index > -1) {
+					this.openAnnotations.splice(index, 1);
+				}
 			}
 		},
-		props: {
-			list: {
-				type: Array,
-				required: true
-			},
-			modifiedAnnotationId: {
-				type: Number,
-				default: 0
-			}
+		isOpen(annotation) {
+			return this.openAnnotations.indexOf(annotation.id) > -1;
 		},
-		methods: {
-			getColourForStr(str) {
-				let hash = 0;
-				for (let i = 0; i < str.length; i++) {
-					hash = str.charCodeAt(i) + ((hash << 5) - hash);
-				}
-
-				let hex =
-				((hash >> 24) & 0xff).toString(16) +
-					((hash >> 16) & 0xff).toString(16) +
-					((hash >> 8) & 0xff).toString(16) +
-					(hash & 0xff).toString(16);
-
-				hex += "000000";
-				hex = hex.substring(0, 6)
-				const r = parseInt(hex.substring(0,2), 16);
-				const g = parseInt(hex.substring(2,4), 16);
-				const b = parseInt(hex.substring(4,6), 16);
-
-				return `rgba(${r}, ${g}, ${b}, 0.2)`
-			},
-			isEven(index) {
-				return index % 2 === 0
-			},
-			toggleAnnotation(annotation) {
-				if (this.openAnnotations.indexOf(annotation.id) === -1) {
-					this.openAnnotations.push(annotation.id)
-				} else {
-					const index = this.openAnnotations.indexOf(annotation.id)
-					if (index > -1) {
-						this.openAnnotations.splice(index, 1)
-					}
-				}
-			},
-			isOpen(annotation) {
-				return this.openAnnotations.indexOf(annotation.id) > -1
-			},
-			onAnnotationClick({annotation, event}) {
-				this.$emit('annotationSelect', annotation);
-				event.stopImmediatePropagation();
-			}
+		onAnnotationClick({annotation, event}) {
+			this.$emit('annotationSelect', annotation);
+			event.stopImmediatePropagation();
 		}
 	}
+};
 </script>

@@ -10,6 +10,7 @@
 			@checkQuiz="(payload) => $emit('checkQuiz', payload)"
 			@endQuiz="$emit('endQuiz')"
 			@userEvent="proxyUserEvent"
+			@testStart="onTestStart"
 		/>
 		<div v-else>
 			<p class="test-builder-title">
@@ -125,109 +126,115 @@
 </style>
 
 <script>
-	import {isEmpty} from 'lodash'
-	import {mapGetters} from 'vuex'
+import {isEmpty} from 'lodash';
+import {mapGetters} from 'vuex';
 
-	import QuestionsTest from 'js/components/questions/QuestionsTest'
+import QuestionsTest from 'js/components/questions/QuestionsTest';
 
-	import {timeBaseOnQuestions} from 'js/services/testBuilder'
-	import emits_events from 'js/mixins/emits-events'
+import {timeBaseOnQuestions} from 'js/services/testBuilder';
+import emits_events from 'js/mixins/emits-events';
+import context from 'js/consts/events_map/context.json';
 
-	export default {
-		name: 'QuestionsTestBuilder',
-		components: {
-			'wnl-questions-test': QuestionsTest,
+export default {
+	name: 'QuestionsTestBuilder',
+	components: {
+		'wnl-questions-test': QuestionsTest,
+	},
+	mixins: [emits_events],
+	props: {
+		getReaction: {
+			default: () => {},
+			type: Function,
 		},
-		mixins: [emits_events],
-		props: {
-			getReaction: {
-				default: () => {},
-				type: Function,
-			},
-			questions: {
-				default: () => [],
-				type: Array,
-			},
-			questionsPoolSize: {
-				default: 0,
-				type: Number,
-			},
-			presetOptions: {
-				default: () => {},
-				type: Object,
-			},
-			setSizes: {
-				default: () => [15, 30, 50, 100, 200],
-				type: Array,
-			},
-			testMode: {
-				default: false,
-				type: Boolean,
-			},
-			testProcessing: {
-				default: false,
-				type: Boolean,
-			},
-			testResults: {
-				default: () => {},
-				type: Object,
-			},
+		questions: {
+			default: () => [],
+			type: Array,
 		},
-		data() {
-			return {
-				testQuestionsCount: 0,
-				time: 0,
+		questionsPoolSize: {
+			default: 0,
+			type: Number,
+		},
+		presetOptions: {
+			default: () => {},
+			type: Object,
+		},
+		setSizes: {
+			default: () => [15, 30, 50, 100, 200],
+			type: Array,
+		},
+		testMode: {
+			default: false,
+			type: Boolean,
+		},
+		testProcessing: {
+			default: false,
+			type: Boolean,
+		},
+		testResults: {
+			default: () => {},
+			type: Object,
+		},
+	},
+	data() {
+		return {
+			testQuestionsCount: 0,
+			time: 0,
+		};
+	},
+	computed: {
+		...mapGetters(['isLargeDesktop']),
+		canChangeTime() {
+			return this.presetOptions.hasOwnProperty('canChangeTime')
+				? this.presetOptions.canChangeTime
+				: true;
+		},
+		hasQuestions() {
+			return !isEmpty(this.questions);
+		},
+		sizesToChoose() {
+			if (this.presetOptions.hasOwnProperty('sizesToChoose')) {
+				return this.presetOptions.sizesToChoose;
 			}
-		},
-		computed: {
-			...mapGetters(['isLargeDesktop']),
-			canChangeTime() {
-				return this.presetOptions.hasOwnProperty('canChangeTime')
-					? this.presetOptions.canChangeTime
-					: true
-			},
-			hasQuestions() {
-				return !isEmpty(this.questions)
-			},
-			sizesToChoose() {
-				if (this.presetOptions.hasOwnProperty('sizesToChoose')) {
-					return this.presetOptions.sizesToChoose
-				}
 
-				if (this.questionsPoolSize > Math.max.apply(null, this.setSizes)) {
-					return this.setSizes
-				}
-
-				const sufficientSizes = this.setSizes.filter(n => n < this.questionsPoolSize)
-				sufficientSizes.push(this.questionsPoolSize)
-
-				return sufficientSizes
-			},
-		},
-		methods: {
-			buildTest() {
-				this.$emit('buildTest', {count: this.testQuestionsCount, time: this.time})
-			},
-			selectAnswer(payload) {
-				this.$emit('selectAnswer', payload)
-			},
-		},
-		mounted() {
-			if (this.presetOptions.hasOwnProperty('testQuestionsCount')) {
-				this.testQuestionsCount = this.presetOptions.testQuestionsCount
-			} else {
-				this.testQuestionsCount = this.sizesToChoose[0]
+			if (this.questionsPoolSize > Math.max.apply(null, this.setSizes)) {
+				return this.setSizes;
 			}
+
+			const sufficientSizes = this.setSizes.filter(n => n < this.questionsPoolSize);
+			sufficientSizes.push(this.questionsPoolSize);
+
+			return sufficientSizes;
 		},
-		created() {
-			if (this.presetOptions.hasOwnProperty('time')) {
-				this.time = this.presetOptions.time
-			}
+	},
+	methods: {
+		buildTest() {
+			this.$emit('buildTest', {count: this.testQuestionsCount, time: this.time});
 		},
-		watch: {
-			testQuestionsCount() {
-				this.time = timeBaseOnQuestions(this.testQuestionsCount)
-			},
+		selectAnswer(payload) {
+			this.$emit('selectAnswer', payload);
+		},
+		onTestStart() {
+			this.emitUserEvent({
+				action: context.questions_bank.subcontext.test_yourself.actions.new_test.value
+			});
 		}
+	},
+	mounted() {
+		if (this.presetOptions.hasOwnProperty('testQuestionsCount')) {
+			this.testQuestionsCount = this.presetOptions.testQuestionsCount;
+		} else {
+			this.testQuestionsCount = this.sizesToChoose[0];
+		}
+	},
+	created() {
+		if (this.presetOptions.hasOwnProperty('time')) {
+			this.time = this.presetOptions.time;
+		}
+	},
+	watch: {
+		testQuestionsCount() {
+			this.time = timeBaseOnQuestions(this.testQuestionsCount);
+		},
 	}
+};
 </script>

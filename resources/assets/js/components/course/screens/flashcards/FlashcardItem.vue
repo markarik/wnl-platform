@@ -198,97 +198,111 @@
 </style>
 
 <script>
-	import {mapActions, mapMutations} from 'vuex';
-	import {nextTick} from 'vue'
-	import {get} from 'lodash';
-	import * as mutationsTypes from "js/store/mutations-types";
-	import {Quill as WnlQuill, Form as WnlForm, Submit as WnlSubmit} from 'js/components/global/form/index';
-	import WnlTextButton from 'js/components/global/TextButton';
-	import {ANSWERS_MAP} from 'js/consts/flashcard';
-	import { fontColors } from 'js/utils/colors'
+import {mapActions, mapMutations} from 'vuex';
+import {nextTick} from 'vue';
+import {get} from 'lodash';
+import * as mutationsTypes from 'js/store/mutations-types';
+import {Quill as WnlQuill, Form as WnlForm, Submit as WnlSubmit} from 'js/components/global/form/index';
+import WnlTextButton from 'js/components/global/TextButton';
+import {ANSWERS_MAP} from 'js/consts/flashcard';
+import { fontColors } from 'js/utils/colors';
+import features from 'js/consts/events_map/features.json';
+import emits_events from 'js/mixins/emits-events';
 
-	export default {
-		props: {
-			context: {
-				type: Object,
-				required: true
-			},
-			flashcard: {
-				type: Object,
-				required: true,
-			},
-			index: {
-				type: Number,
-				required: true,
-			},
+export default {
+	mixins: [emits_events],
+	props: {
+		context: {
+			type: Object,
+			required: true
 		},
-		components: {
-			WnlQuill,
-			WnlForm,
-			WnlTextButton,
-			WnlSubmit,
+		flashcard: {
+			type: Object,
+			required: true,
 		},
-		data() {
-			return {
-				ANSWERS_MAP,
-				note: this.flashcard.note && this.flashcard.note.note || '',
-				fontColors,
-				isNoteEditorOpen: false,
-				isLoading: false,
+		index: {
+			type: Number,
+			required: true,
+		},
+	},
+	components: {
+		WnlQuill,
+		WnlForm,
+		WnlTextButton,
+		WnlSubmit,
+	},
+	data() {
+		return {
+			ANSWERS_MAP,
+			note: this.flashcard.note && this.flashcard.note.note || '',
+			fontColors,
+			isNoteEditorOpen: false,
+			isLoading: false,
+		};
+	},
+	computed: {
+		noteFormMethod() {
+			return this.flashcard.note ? 'put' : 'post';
+		},
+		noteFormResourceRoute() {
+			let resourceUrl = `user_flashcard_notes/${this.flashcard.id}`;
+
+			if (this.flashcard.note) {
+				resourceUrl += `/${this.flashcard.note.id}`;
 			}
+
+			return resourceUrl;
+		}
+	},
+	methods: {
+		...mapActions('flashcards', ['postAnswer']),
+		...mapMutations('flashcards', {
+			'updateFlashcard': mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD
+		}),
+		onRetakeFlashcard(flashcard) {
+			this.updateFlashcard({
+				...flashcard,
+				answer: 'unsolved'
+			});
+
+			this.note = this.flashcard.note && this.flashcard.note.note || '';
 		},
-		computed: {
-			noteFormMethod() {
-				return this.flashcard.note ? 'put' : 'post'
-			},
-			noteFormResourceRoute() {
-				let resourceUrl = `user_flashcard_notes/${this.flashcard.id}`;
-
-				if (this.flashcard.note) {
-					resourceUrl += `/${this.flashcard.note.id}`;
-				}
-
-				return resourceUrl;
+		async submitAnswer(flashcard, answer) {
+			if (this.isLoading) {
+				return;
 			}
-		},
-		methods: {
-			...mapActions('flashcards', ['postAnswer']),
-			...mapMutations('flashcards', {
-				'updateFlashcard': mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD
-			}),
-			onRetakeFlashcard(flashcard) {
-				this.updateFlashcard({
-					...flashcard,
-					answer: 'unsolved'
-				});
 
-				this.note = this.flashcard.note && this.flashcard.note.note || '';
-			},
-			async submitAnswer(flashcard, answer) {
-				if (this.isLoading) {
-					return;
-				}
-
-				this.isLoading = true;
-				await this.postAnswer({
-					flashcard,
-					answer,
-					context_type: this.context.type,
-					context_id: this.context.id
-				});
-				this.isLoading = false;
-				this.isNoteEditorOpen = ['hard', 'do_not_know'].includes(answer);
-			},
-			onSubmitSuccess(updatedNote) {
-				this.updateFlashcard({
-					...this.flashcard,
-					note: updatedNote
-				});
-				this.isNoteEditorOpen = false;
-			},
-			toggleNoteEditor() {
-				this.isNoteEditorOpen = !this.isNoteEditorOpen;
-			}
+			this.isLoading = true;
+			await this.postAnswer({
+				flashcard,
+				answer,
+				context_type: this.context.type,
+				context_id: this.context.id
+			});
+			this.isLoading = false;
+			this.isNoteEditorOpen = ['hard', 'do_not_know'].includes(answer);
+			this.emitUserEvent({
+				feature_component: features.flashcards.feature_components.single.value,
+				action: features.flashcards.feature_components.single.actions.select_answer.value,
+				target: this.flashcard.id,
+				value: Object.keys(ANSWERS_MAP).indexOf(answer)
+			});
 		},
-	}
+		onSubmitSuccess(updatedNote) {
+			this.updateFlashcard({
+				...this.flashcard,
+				note: updatedNote
+			});
+			this.isNoteEditorOpen = false;
+			this.emitUserEvent({
+				feature_component: features.flashcards.feature_components.single.value,
+				action: features.flashcards.feature_components.single.actions.add_note.value,
+				target: this.flashcard.id,
+			});
+		},
+		toggleNoteEditor() {
+			this.isNoteEditorOpen = !this.isNoteEditorOpen;
+		}
+	},
+};
 </script>

@@ -8,4 +8,4 @@ export const qna = {
 		hottest: 'Popularne',
 		my: 'Moje',
 	},
-}
+};

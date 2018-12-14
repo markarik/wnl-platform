@@ -1,33 +1,33 @@
-import { expect } from 'chai'
+import { expect } from 'chai';
 
 export const testAction = (action, payload, ctx = {}, expectedMutations, done) => {
-	let count = 0
+	let count = 0;
 
 	// mock commit
 	const commit = (type, payload) => {
-		const mutation = expectedMutations[count]
+		const mutation = expectedMutations[count];
 
 		try {
-			expect(mutation.type).to.equal(type)
+			expect(mutation.type).to.equal(type);
 			if (payload) {
-				expect(mutation.payload).to.deep.equal(payload)
+				expect(mutation.payload).to.deep.equal(payload);
 			}
 		} catch (error) {
-			done(error)
+			done(error);
 		}
 
-		count++
+		count++;
 		if (count >= expectedMutations.length) {
-			done()
+			done();
 		}
-	}
+	};
 
 	// call the action with mocked store and arguments
-	action({ commit, ...ctx }, payload)
+	action({ commit, ...ctx }, payload);
 
 	// check if no mutations should have been dispatched
 	if (expectedMutations.length === 0) {
-		expect(count).to.equal(0)
-		done()
+		expect(count).to.equal(0);
+		done();
 	}
-}
+};

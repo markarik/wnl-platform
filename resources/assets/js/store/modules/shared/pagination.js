@@ -1,5 +1,5 @@
-import * as types from '../../mutations-types'
-import {set} from 'vue'
+import * as types from '../../mutations-types';
+import {set} from 'vue';
 
 const pagination = {
 	state () {
@@ -9,7 +9,7 @@ const pagination = {
 			hasMore: false,
 			total: 0,
 			perPage: 0
-		}
+		};
 	},
 
 	getters: {
@@ -24,7 +24,7 @@ const pagination = {
 				lastPage: last_page,
 				perPage: per_page,
 				total
-			})
+			});
 		},
 		changePaginationPage({commit}, page) {
 			commit(types.PAGINATION_SET_CURRENT_PAGE, {page});
@@ -36,11 +36,11 @@ const pagination = {
 			Object.assign(state, payload);
 		},
 		[types.PAGINATION_SET_CURRENT_PAGE](state, {page}) {
-			set(state, 'currentPage', page)
-			set(state, 'hasMore', page === state.lastPage)
+			set(state, 'currentPage', page);
+			set(state, 'hasMore', page === state.lastPage);
 		}
 	}
-}
+};
 
 
 export default pagination;

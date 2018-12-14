@@ -21,31 +21,31 @@
 </style>
 
 <script>
-	import QuizList from 'js/components/quiz/QuizList.vue'
-	import QuizStats from 'js/components/quiz/QuizStats.vue'
-	import emits_events from 'js/mixins/emits-events';
-	import { mapGetters, mapActions } from 'vuex'
+import QuizList from 'js/components/quiz/QuizList.vue';
+import QuizStats from 'js/components/quiz/QuizStats.vue';
+import emits_events from 'js/mixins/emits-events';
+import { mapGetters, mapActions } from 'vuex';
 
-	export default {
-		name: 'QuizSummary',
-		mixins: [emits_events],
-		components: {
-			'wnl-quiz-list': QuizList,
-			'wnl-quiz-stats': QuizStats,
-		},
-		computed: {
-			...mapGetters('quiz', [
-				'isComplete',
-				'getQuestionsWithAnswersAndStats',
-				'getReaction',
-				'isProcessing',
-			]),
-		},
-		methods: {
-			...mapActions('quiz', [
-				'resetState',
-				'checkQuiz'
-			]),
-		},
-	}
+export default {
+	name: 'QuizSummary',
+	mixins: [emits_events],
+	components: {
+		'wnl-quiz-list': QuizList,
+		'wnl-quiz-stats': QuizStats,
+	},
+	computed: {
+		...mapGetters('quiz', [
+			'isComplete',
+			'getQuestionsWithAnswersAndStats',
+			'getReaction',
+			'isProcessing',
+		]),
+	},
+	methods: {
+		...mapActions('quiz', [
+			'resetState',
+			'checkQuiz'
+		]),
+	},
+};
 </script>

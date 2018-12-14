@@ -46,123 +46,123 @@
 </style>
 
 <script>
-	import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters} from 'vuex';
 
-	import MainNav from 'js/components/MainNav'
-	import PrivateChat from 'js/components/chat/PrivateChat'
-	import Sidenav from 'js/components/global/Sidenav'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
-	import ConversationsList from 'js/components/messages/ConversationsList'
-	import FindUsers from 'js/components/messages/FindUsers'
+import MainNav from 'js/components/MainNav';
+import PrivateChat from 'js/components/chat/PrivateChat';
+import Sidenav from 'js/components/global/Sidenav';
+import SidenavSlot from 'js/components/global/SidenavSlot';
+import ConversationsList from 'js/components/messages/ConversationsList';
+import FindUsers from 'js/components/messages/FindUsers';
 
-	export default {
-		name: 'MessagesDashboard',
-		data() {
-			return {
-				currentRoom: {},
-				currentRoomUsers: [],
-				messagesLoaded: true,
-			}
+export default {
+	name: 'MessagesDashboard',
+	data() {
+		return {
+			currentRoom: {},
+			currentRoomUsers: [],
+			messagesLoaded: true,
+		};
+	},
+	components: {
+		'wnl-main-nav': MainNav,
+		'wnl-sidenav': Sidenav,
+		'wnl-sidenav-slot': SidenavSlot,
+		'wnl-private-chat': PrivateChat,
+		'wnl-conversations-list': ConversationsList,
+		'wnl-find-users': FindUsers,
+	},
+	computed: {
+		...mapGetters([
+			'isSidenavVisible',
+			'isSidenavMounted',
+			'isChatMounted',
+			'isChatVisible',
+			'isChatToggleVisible',
+			'currentUserName'
+		]),
+		...mapGetters('chatMessages', ['getRoomById', 'getRoomProfiles', 'ready', 'rooms', 'sortedRooms', 'profiles']),
+		showChatRoom() {
+			return !!this.currentRoom;
 		},
-		components: {
-			'wnl-main-nav': MainNav,
-			'wnl-sidenav': Sidenav,
-			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-private-chat': PrivateChat,
-			'wnl-conversations-list': ConversationsList,
-			'wnl-find-users': FindUsers,
-		},
-		computed: {
-			...mapGetters([
-				'isSidenavVisible',
-				'isSidenavMounted',
-				'isChatMounted',
-				'isChatVisible',
-				'isChatToggleVisible',
-				'currentUserName'
-			]),
-			...mapGetters('chatMessages', ['getRoomById', 'getRoomProfiles', 'ready', 'rooms', 'sortedRooms', 'profiles']),
-			showChatRoom() {
-				return !!this.currentRoom
-			},
-			mostRecentRoomId() {
-				return this.sortedRooms[0]
-			}
-		},
-		methods: {
-			...mapActions(['toggleOverlay']),
-			...mapActions('chatMessages', ['markRoomAsRead', 'fetchRoomMessages']),
-			switchRoom({room, users}){
-				this.currentRoom = room
-				this.currentRoomUsers = users
-				const {messages, ...roomNoMessages} = room
-				room.id && this.$socketMarkRoomAsRead(roomNoMessages)
-					.then(() => this.markRoomAsRead(room.id))
-					.catch(err => $wnl.logger.capture(err))
-
-				const context = {
-					roomId: room.id
-				}
-
-				if (room.pagination && room.pagination.next) {
-					context.messageTime =  room.pagination.next
-					context.afterLimit = 0
-					context.beforeLimit = PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT
-				} else if (room.messages && room.messages.length) {
-					context.messageTime = _.first(room.messages).time
-					context.afterLimit = 0
-					context.beforeLimit = PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT
-				}
-
-				this.messagesLoaded = false
-				this.fetchRoomMessages({
-					room,
-					limit: PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT,
-					context,
-					append: true
-				}).then(() => this.messagesLoaded = true)
-			},
-			openRoomById(roomId) {
-				const room = this.getRoomById(roomId)
-				if (room.id) {
-					this.switchRoom({room, users: this.getRoomProfiles(roomId)})
-					return true
-				} else {
-					const {roomId, ...query} = this.$route.query
-					this.$router.replace({
-						...this.$route,
-						query
-					})
-					return false
-				}
-			},
-			openInitialRoom() {
-				const roomId = this.$route.query.roomId
-				const roomExists = this.openRoomById(roomId)
-
-				if (!roomExists) {
-					this.$router.replace({
-						...this.$route,
-						query: {
-							...this.$route.query,
-							roomId: this.mostRecentRoomId
-						}
-					})
-				}
-			},
-		},
-		watch: {
-			'$route.query.roomId'(roomId) {
-				roomId && this.openRoomById(roomId)
-			},
-			ready(newValue, oldValue) {
-				!oldValue && newValue && this.openInitialRoom()
-				newValue && this.toggleOverlay({source: 'messagesDashboard', display: false})
-			}
-		},
-		mounted() {
-			!this.ready && this.toggleOverlay({source: 'messagesDashboard', display: true})
-			this.ready && this.openInitialRoom()
+		mostRecentRoomId() {
+			return this.sortedRooms[0];
 		}
+	},
+	methods: {
+		...mapActions(['toggleOverlay']),
+		...mapActions('chatMessages', ['markRoomAsRead', 'fetchRoomMessages']),
+		switchRoom({room, users}){
+			this.currentRoom = room;
+			this.currentRoomUsers = users;
+			const {messages, ...roomNoMessages} = room;
+			room.id && this.$socketMarkRoomAsRead(roomNoMessages)
+				.then(() => this.markRoomAsRead(room.id))
+				.catch(err => $wnl.logger.capture(err));
+
+			const context = {
+				roomId: room.id
+			};
+
+			if (room.pagination && room.pagination.next) {
+				context.messageTime =  room.pagination.next;
+				context.afterLimit = 0;
+				context.beforeLimit = PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT;
+			} else if (room.messages && room.messages.length) {
+				context.messageTime = _.first(room.messages).time;
+				context.afterLimit = 0;
+				context.beforeLimit = PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT;
+			}
+
+			this.messagesLoaded = false;
+			this.fetchRoomMessages({
+				room,
+				limit: PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT,
+				context,
+				append: true
+			}).then(() => this.messagesLoaded = true);
+		},
+		openRoomById(roomId) {
+			const room = this.getRoomById(roomId);
+			if (room.id) {
+				this.switchRoom({room, users: this.getRoomProfiles(roomId)});
+				return true;
+			} else {
+				const {roomId, ...query} = this.$route.query;
+				this.$router.replace({
+					...this.$route,
+					query
+				});
+				return false;
+			}
+		},
+		openInitialRoom() {
+			const roomId = this.$route.query.roomId;
+			const roomExists = this.openRoomById(roomId);
+
+			if (!roomExists) {
+				this.$router.replace({
+					...this.$route,
+					query: {
+						...this.$route.query,
+						roomId: this.mostRecentRoomId
+					}
+				});
+			}
+		},
+	},
+	watch: {
+		'$route.query.roomId'(roomId) {
+			roomId && this.openRoomById(roomId);
+		},
+		ready(newValue, oldValue) {
+			!oldValue && newValue && this.openInitialRoom();
+			newValue && this.toggleOverlay({source: 'messagesDashboard', display: false});
+		}
+	},
+	mounted() {
+		!this.ready && this.toggleOverlay({source: 'messagesDashboard', display: true});
+		this.ready && this.openInitialRoom();
 	}
+};
 </script>

@@ -99,46 +99,46 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-	import Dropdown from 'js/components/global/Dropdown'
+import Dropdown from 'js/components/global/Dropdown';
 
-	export default {
-		name: 'UserDropdown',
-		components: {
-			'wnl-dropdown': Dropdown,
-		},
-		data() {
-			return {
-				isActive: false,
-			}
-		},
-		computed: {
-			...mapGetters([
-				'currentUserName',
-				'currentUserFullName',
-				'currentUserEmail',
-				'isTouchScreen',
-			]),
-			items() {
-				return [
-					{
-						'icon': 'fa-user-o',
-						'route': 'myself',
-						'text': this.$t('routes.myself.main'),
-					},
-					{
-						'icon': 'fa-sign-out',
-						'route': 'logout',
-						'text': this.$t('routes.auth.logout'),
-					},
-				]
-			}
-		},
-		methods: {
-			toggle(isActive) {
-				this.isActive = isActive
-			}
-		},
-	}
+export default {
+	name: 'UserDropdown',
+	components: {
+		'wnl-dropdown': Dropdown,
+	},
+	data() {
+		return {
+			isActive: false,
+		};
+	},
+	computed: {
+		...mapGetters([
+			'currentUserName',
+			'currentUserFullName',
+			'currentUserEmail',
+			'isTouchScreen',
+		]),
+		items() {
+			return [
+				{
+					'icon': 'fa-user-o',
+					'route': 'myself',
+					'text': this.$t('routes.myself.main'),
+				},
+				{
+					'icon': 'fa-sign-out',
+					'route': 'logout',
+					'text': this.$t('routes.auth.logout'),
+				},
+			];
+		}
+	},
+	methods: {
+		toggle(isActive) {
+			this.isActive = isActive;
+		}
+	},
+};
 </script>

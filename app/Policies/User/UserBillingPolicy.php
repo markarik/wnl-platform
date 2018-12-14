@@ -10,6 +10,10 @@ class UserBillingPolicy
 {
 	use HandlesAuthorization;
 
+	public function before($user, $ability) {
+		return $user->isAdmin();
+	}
+
 	/**
 	 * Determine whether the user can view the userBilling.
 	 *

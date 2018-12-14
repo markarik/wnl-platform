@@ -39,84 +39,84 @@
 </style>
 
 <script>
-	import TextOverlay from 'js/components/global/TextOverlay.vue'
-	import { mapGetters, mapActions } from 'vuex'
-	import { getApiUrl } from 'js/utils/env'
-	import momentTimezone from 'moment-timezone'
-	import emits_events from 'js/mixins/emits-events'
-	import features from 'js/consts/events_map/features.json';
+import TextOverlay from 'js/components/global/TextOverlay.vue';
+import { mapGetters, mapActions } from 'vuex';
+import { getApiUrl } from 'js/utils/env';
+import momentTimezone from 'moment-timezone';
+import emits_events from 'js/mixins/emits-events';
+import features from 'js/consts/events_map/features.json';
 
-	export default {
-		name: 'OpenAllPlan',
-		components: {
-			'wnl-text-overlay': TextOverlay,
+export default {
+	name: 'OpenAllPlan',
+	components: {
+		'wnl-text-overlay': TextOverlay,
+	},
+	mixins: [emits_events],
+	data() {
+		return {
+			isLoading: false,
+			alertSuccess: {
+				text: this.$i18n.t('lessonsAvailability.alertSuccess'),
+				type: 'success',
+			},
+			alertError: {
+				text: this.$i18n.t('lessonsAvailability.alertError'),
+				type: 'error',
+			},
+		};
+	},
+	computed: {
+		...mapGetters('course', [
+			'getRequiredLessons',
+			'userLessons',
+		]),
+		...mapGetters('progress', ['getCompleteLessons']),
+		...mapGetters(['currentUserId']),
+		availableLength() {
+			return this.userLessons.filter(lesson => lesson.isAvailable && lesson.is_required).length;
 		},
-		mixins: [emits_events],
-		data() {
-			return {
-				isLoading: false,
-				alertSuccess: {
-					text: this.$i18n.t('lessonsAvailability.alertSuccess'),
-					type: 'success',
-				},
-				alertError: {
-					text: this.$i18n.t('lessonsAvailability.alertError'),
-					type: 'error',
-				},
+		requiredLength() {
+			return this.userLessons.filter(lesson => lesson.is_required).length;
+		},
+		inProgressLessonsLength() {
+			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
+				return !this.completedLessons.includes(Number(requiredLesson));
+			}).length;
+		},
+		completedLessonsLength() {
+			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
+				return this.completedLessons.includes(Number(requiredLesson));
+			}).length;
+		},
+		completedLessons() {
+			return this.getCompleteLessons(1).map(lesson => lesson.id);
+		},
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('course', ['setStructure']),
+		async acceptPlan() {
+			this.isLoading = true;
+			try {
+				const response = await axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
+					work_load: 0,
+					timezone: momentTimezone.tz.guess(),
+					preset_active: 'openAll',
+				});
+				await this.setStructure();
+				this.addAutoDismissableAlert(this.alertSuccess);
+				this.isLoading = false;
+				this.emitUserEvent({
+					feature: features.open_all.value,
+					action: features.open_all.actions.save_plan.value
+				});
 			}
-		},
-		computed: {
-			...mapGetters('course', [
-				'getRequiredLessons',
-				'userLessons',
-			]),
-			...mapGetters('progress', ['getCompleteLessons']),
-			...mapGetters(['currentUserId']),
-			availableLength() {
-				return this.userLessons.filter(lesson => lesson.isAvailable && lesson.is_required).length
-			},
-			requiredLength() {
-				return this.userLessons.filter(lesson => lesson.is_required).length
-			},
-			inProgressLessonsLength() {
-				return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
-					return !this.completedLessons.includes(Number(requiredLesson))
-				}).length
-			},
-			completedLessonsLength() {
-				return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
-					return this.completedLessons.includes(Number(requiredLesson))
-				}).length
-			},
-			completedLessons() {
-				return this.getCompleteLessons(1).map(lesson => lesson.id)
-			},
-		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			...mapActions('course', ['setStructure']),
-			async acceptPlan() {
-				this.isLoading = true
-				try {
-					const response = await axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
-						work_load: 0,
-						timezone: momentTimezone.tz.guess(),
-						preset_active: 'openAll',
-					})
-					await this.setStructure()
-					this.addAutoDismissableAlert(this.alertSuccess)
-					this.isLoading = false
-					this.emitUserEvent({
-						feature: features.open_all.value,
-						action: features.open_all.actions.save_plan.value
-					})
-				}
-				catch(error) {
-					this.isLoading = false
-					$wnl.logger.capture(error)
-					this.addAutoDismissableAlert(this.alertError)
-				}
+			catch(error) {
+				this.isLoading = false;
+				$wnl.logger.capture(error);
+				this.addAutoDismissableAlert(this.alertError);
 			}
 		}
 	}
+};
 </script>

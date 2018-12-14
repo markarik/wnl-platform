@@ -42,7 +42,7 @@ class UserAddressPolicy
 	 */
 	public function update(User $user, UserAddress $userAddress)
 	{
-		return $user->id === $userAddress->user_id;
+		return $user->id === $userAddress->user_id || $user->isAdmin();
 	}
 
 	/**

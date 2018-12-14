@@ -1,6 +1,6 @@
-import {set} from 'vue'
-import * as types from '../mutations-types'
-import {getApiUrl} from 'js/utils/env'
+import {set} from 'vue';
+import * as types from '../mutations-types';
+import {getApiUrl} from 'js/utils/env';
 
 // Initial state
 const state = {
@@ -9,35 +9,26 @@ const state = {
 
 // Getters
 const getters = {
-}
+};
 
 // Mutations
 const mutations = {
 	[types.GET_USERS_AUTOCOMPLETE] (state, activeUsers) {
-		set(state, 'lastSearch', activeUsers)
+		set(state, 'lastSearch', activeUsers);
 	},
-}
-
-function getTagSearchConditions(name, tags = []) {
-	const where = [
-		['name', 'like', `%${name}%`]
-	]
-
-	const whereNotIn = ['id',  tags.map(tag => tag.id)]
-
-	return { query: { where, whereNotIn }, limit: [5, 0] }
-}
+};
 
 // Actions
 const actions = {
 	requestUsersAutocomplete({}, data) {
-		let query = Object.values(data).join(' ')
-		return axios.get(getApiUrl(`user_profiles/.search?q=${query}`))
+		let query = Object.values(data).join(' ');
+		return axios.get(getApiUrl(`user_profiles/.search?q=${query}`));
 	},
 	requestTagsAutocomplete({}, { name, tags }) {
-		const conditions = getTagSearchConditions(name, tags)
-
-		return axios.post(getApiUrl('tags/.search'), conditions)
+		return axios.post(getApiUrl('tags/byName'), {
+			name,
+			excludedIds: tags.map(({id}) => id)
+		});
 	}
 };
 
@@ -46,4 +37,4 @@ export default {
 	getters,
 	mutations,
 	actions
-}
+};

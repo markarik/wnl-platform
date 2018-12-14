@@ -46,4 +46,4 @@ export const tasks = {
 			go: 'Jedziesz szwagier',
 		}
 	}
-}
+};

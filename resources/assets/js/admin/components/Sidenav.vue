@@ -4,6 +4,8 @@
 			Lekcje
 		</p>
 		<ul class="menu-list">
+			<li><router-link :to="{ name: 'course-edit', params: {id: 1} }">Edycja kursu</router-link></li>
+			<li><router-link :to="{ name: 'groups' }">Edycja grup lekcji</router-link></li>
 			<li><router-link :to="{ name: 'lessons' }">Edycja lekcji</router-link></li>
 		</ul>
 
@@ -29,13 +31,22 @@
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'quizes' }">Edytuj lub dodaj pytanie</router-link></li>
 		</ul>
-
+		<p class="menu-label">
+			Użytkownicy
+		</p>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'users' }">Lista użytkowników</router-link></li>
+		</ul>
 		<p class="menu-label">
 			Powtórki
 		</p>
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'flashcards-sets' }">Edycja zestawu pytań</router-link></li>
 			<li><router-link :to="{ name: 'flashcards' }">Edycja pytań</router-link></li>
+		</ul>
+		<p class="menu-label">Newsy</p>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'dashboard-news' }">Dashboard newsy</router-link></li>
 		</ul>
 	</aside>
 </template>
@@ -45,7 +56,7 @@
 </style>
 
 <script>
-	export default {
-		name: 'Sidenav'
-	}
+export default {
+	name: 'Sidenav'
+};
 </script>

@@ -28,48 +28,48 @@
 
 </style>
 <script>
-	import _ from 'lodash'
-	import {mapGetters} from 'vuex'
-	import {getInitials} from 'js/utils/strings'
+import _ from 'lodash';
+import {mapGetters} from 'vuex';
+import {getInitials} from 'js/utils/strings';
 
-	export default {
-		name: 'Avatar',
-		props: ['fullName', 'size', 'url'],
-		computed: {
-			...mapGetters([
-				'currentUserFullName',
-				'currentUserAvatar',
-			]),
-			isCurrentUser() {
-				return _.isEmpty(this.fullName)
-			},
-			isCustom() {
-				return this.isCurrentUser ? this.currentUserAvatar !== null : !_.isEmpty(this.url)
-			},
-			usernameToUse() {
-				return this.isCurrentUser ? this.currentUserFullName : this.fullName
-			},
-			urlToUse() {
-				return this.isCurrentUser ? this.currentUserAvatar : this.url
-			},
-			sizeClass() {
-				// large = 50x50px, medium = 30x30px, small = 20x20px
-				let size = this.size || 'medium'
-				return `wnl-avatar-${size}`
-			},
-			initials() {
-				return getInitials(this.usernameToUse)
-			},
-			colorClass() {
-				if (!this.isCustom) {
-					let colorPosition = (this.initials.charCodeAt(0) - 65) % 15 + 1
-					return `wnl-avatar-color-${colorPosition}`
-				}
-				return ''
-			},
-			imageClass() {
-				return this.isCustom ? 'with-image' : 'without-image'
-			},
+export default {
+	name: 'Avatar',
+	props: ['fullName', 'size', 'url'],
+	computed: {
+		...mapGetters([
+			'currentUserFullName',
+			'currentUserAvatar',
+		]),
+		isCurrentUser() {
+			return _.isEmpty(this.fullName);
 		},
-	}
+		isCustom() {
+			return this.isCurrentUser ? this.currentUserAvatar !== null : !_.isEmpty(this.url);
+		},
+		usernameToUse() {
+			return this.isCurrentUser ? this.currentUserFullName : this.fullName;
+		},
+		urlToUse() {
+			return this.isCurrentUser ? this.currentUserAvatar : this.url;
+		},
+		sizeClass() {
+			// large = 50x50px, medium = 30x30px, small = 20x20px
+			let size = this.size || 'medium';
+			return `wnl-avatar-${size}`;
+		},
+		initials() {
+			return getInitials(this.usernameToUse);
+		},
+		colorClass() {
+			if (!this.isCustom) {
+				let colorPosition = (this.initials.charCodeAt(0) - 65) % 15 + 1;
+				return `wnl-avatar-color-${colorPosition}`;
+			}
+			return '';
+		},
+		imageClass() {
+			return this.isCustom ? 'with-image' : 'without-image';
+		},
+	},
+};
 </script>

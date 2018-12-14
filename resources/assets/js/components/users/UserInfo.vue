@@ -7,9 +7,9 @@
 
 <script>
 export default {
-    name: 'UserInfo',
-    props: ['label', 'info'],
-}
+	name: 'UserInfo',
+	props: ['label', 'info'],
+};
 </script>
 
 <style lang="sass">

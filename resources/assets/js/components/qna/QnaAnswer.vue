@@ -101,120 +101,120 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import { mapGetters, mapActions } from 'vuex'
+import _ from 'lodash';
+import { mapGetters, mapActions } from 'vuex';
 
-	import UserProfileModal from 'js/components/users/UserProfileModal'
-	import Avatar from 'js/components/global/Avatar'
-	import Delete from 'js/components/global/form/Delete'
-	import Vote from 'js/components/global/reactions/Vote'
-	import highlight from 'js/mixins/highlight'
-	import CommentsList from 'js/components/comments/CommentsList'
-	import moderatorFeatures from 'js/perimeters/moderator'
-	import Modal from 'js/components/global/Modal'
+import UserProfileModal from 'js/components/users/UserProfileModal';
+import Avatar from 'js/components/global/Avatar';
+import Delete from 'js/components/global/form/Delete';
+import Vote from 'js/components/global/reactions/Vote';
+import highlight from 'js/mixins/highlight';
+import CommentsList from 'js/components/comments/CommentsList';
+import moderatorFeatures from 'js/perimeters/moderator';
+import Modal from 'js/components/global/Modal';
 
-	import { timeFromS } from 'js/utils/time'
+import { timeFromS } from 'js/utils/time';
 
-	export default {
-		name: 'QnaAnswer',
-		components: {
-			'wnl-avatar': Avatar,
-			'wnl-delete': Delete,
-			'wnl-vote': Vote,
-			'wnl-comments-list': CommentsList,
-			'wnl-modal': Modal,
-			'wnl-user-profile-modal': UserProfileModal
+export default {
+	name: 'QnaAnswer',
+	components: {
+		'wnl-avatar': Avatar,
+		'wnl-delete': Delete,
+		'wnl-vote': Vote,
+		'wnl-comments-list': CommentsList,
+		'wnl-modal': Modal,
+		'wnl-user-profile-modal': UserProfileModal
+	},
+	perimeters: [moderatorFeatures],
+	mixins: [ highlight ],
+	props: ['answer', 'questionId', 'reactableId', 'readOnly', 'refresh'],
+	data() {
+		return {
+			loading: false,
+			reactableResource: 'qna_answers',
+			highlightableResources: ['qna_answer', 'qna_question', 'reaction'],
+			isVisible: false
+		};
+	},
+	computed: {
+		...mapGetters('qna', [
+			'profile',
+			'getReaction'
+		]),
+		...mapGetters(['currentUserId', 'isOverlayVisible']),
+		id() {
+			return this.answer.id;
 		},
-		perimeters: [moderatorFeatures],
-		mixins: [ highlight ],
-		props: ['answer', 'questionId', 'reactableId', 'readOnly', 'refresh'],
-		data() {
-			return {
-				loading: false,
-				reactableResource: "qna_answers",
-				highlightableResources: ["qna_answer", "qna_question", "reaction"],
-				isVisible: false
-			}
+		resourceRoute() {
+			return `qna_answers/${this.id}`;
 		},
-		computed: {
-			...mapGetters('qna', [
-				'profile',
-				'getReaction'
-			]),
-			...mapGetters(['currentUserId', 'isOverlayVisible']),
-			id() {
-				return this.answer.id
-			},
-			resourceRoute() {
-				return `qna_answers/${this.id}`
-			},
-			content() {
-				return this.answer.text
-			},
-			time() {
-				return timeFromS(this.answer.created_at)
-			},
-			author() {
-				return this.profile(this.answer.profiles[0])
-			},
-			isCurrentUserAuthor() {
-				return this.currentUserId === this.author.user_id
-			},
-			deleteTarget() {
-				return 'tę odpowiedź'
-			},
-			upvoteState() {
-				return this.getReaction(this.reactableResource, this.answer.id, "upvote")
-			},
-			isAnswerInUrl() {
-				return _.get(this.$route.query, 'qna_answer') == this.answer.id
-					&& _.get(this.$route.query, 'qna_question') == this.questionId
-			},
-			isReactionInUrl() {
-				return _.get(this.$route.query, 'qna_answer') == this.answer.id
-					&& _.get(this.$route.query, 'reaction')
-			},
-			shouldHighlight() {
-				return this.isAnswerInUrl || this.isReactionInUrl
-			}
+		content() {
+			return this.answer.text;
 		},
-		methods: {
-			...mapActions('qna', ['removeAnswer']),
-			showModal() {
-				this.isVisible = true
-			},
-			closeModal() {
-				this.isVisible = false
-			},
-			onDeleteSuccess() {
-				this.removeAnswer({
-					questionId: this.questionId,
-					answerId: this.id,
-				})
-			},
-			refreshAnswer() {
-				return this.refresh()
-			}
+		time() {
+			return timeFromS(this.answer.created_at);
 		},
-		mounted() {
+		author() {
+			return this.profile(this.answer.profiles[0]);
+		},
+		isCurrentUserAuthor() {
+			return this.currentUserId === this.author.user_id;
+		},
+		deleteTarget() {
+			return 'tę odpowiedź';
+		},
+		upvoteState() {
+			return this.getReaction(this.reactableResource, this.answer.id, 'upvote');
+		},
+		isAnswerInUrl() {
+			return _.get(this.$route.query, 'qna_answer') == this.answer.id
+					&& _.get(this.$route.query, 'qna_question') == this.questionId;
+		},
+		isReactionInUrl() {
+			return _.get(this.$route.query, 'qna_answer') == this.answer.id
+					&& _.get(this.$route.query, 'reaction');
+		},
+		shouldHighlight() {
+			return this.isAnswerInUrl || this.isReactionInUrl;
+		}
+	},
+	methods: {
+		...mapActions('qna', ['removeAnswer']),
+		showModal() {
+			this.isVisible = true;
+		},
+		closeModal() {
+			this.isVisible = false;
+		},
+		onDeleteSuccess() {
+			this.removeAnswer({
+				questionId: this.questionId,
+				answerId: this.id,
+			});
+		},
+		refreshAnswer() {
+			return this.refresh();
+		}
+	},
+	mounted() {
+		if (this.shouldHighlight) {
+			!this.isOverlayVisible && this.scrollAndHighlight();
+		}
+	},
+	watch: {
+		'$route' (newRoute, oldRoute) {
 			if (this.shouldHighlight) {
-				!this.isOverlayVisible && this.scrollAndHighlight()
+				this.refreshAnswer()
+					.then(() => {
+						!this.isOverlayVisible && this.scrollAndHighlight();
+					});
 			}
 		},
-		watch: {
-			'$route' (newRoute, oldRoute) {
-				if (this.shouldHighlight) {
-					this.refreshAnswer()
-					.then(() => {
-						!this.isOverlayVisible && this.scrollAndHighlight()
-					})
-				}
-			},
-			'isOverlayVisible' () {
-				if (!this.isOverlayVisible && this.shouldHighlight) {
-					this.scrollAndHighlight()
-				}
+		'isOverlayVisible' () {
+			if (!this.isOverlayVisible && this.shouldHighlight) {
+				this.scrollAndHighlight();
 			}
 		}
 	}
+};
 </script>

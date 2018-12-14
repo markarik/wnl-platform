@@ -48,33 +48,6 @@ class CommentsTest extends ApiTestCase
 	}
 
 	/** @test */
-	public function search_comments()
-	{
-		$user = User::find(1);
-		$data = [
-			'query' => [
-				'where' => [
-					['commentable_type', 'quiz_question'],
-					['id', 'in', [1, 2, 3, 6, 10]],
-					['updated_at', '>', '1495033700']
-				],
-			],
-			'order' => [
-				'created_at' => 'desc',
-				'id'         => 'asc',
-			],
-			'limit' => [10, 0],
-		];
-
-		$response = $this
-			->actingAs($user)
-			->json('POST', $this->url('/comments/.search'), $data);
-
-		$response
-			->assertStatus(200);
-	}
-
-	/** @test */
 	public function delete_comment()
 	{
 		Comment::flushEventListeners();

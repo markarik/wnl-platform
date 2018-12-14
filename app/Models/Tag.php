@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class Tag extends Model
 {
+	use Searchable;
+
 	protected $fillable = ['name'];
 
 	protected $touches = ['questions'];

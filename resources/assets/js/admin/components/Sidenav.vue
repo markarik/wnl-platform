@@ -14,14 +14,8 @@
 		</p>
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'slides' }">Edytuj Slajd</router-link></li>
-		</ul>
-		<ul class="menu-list">
 			<li><router-link :to="{ name: 'add-slide' }">Dodaj Slajd</router-link></li>
-		</ul>
-		<ul class="menu-list">
 			<li><router-link :to="{ name: 'charts' }">Diagramy</router-link></li>
-		</ul>
-		<ul class="menu-list">
 			<li><router-link to="/admin/app/annotations">Przypisy</router-link></li>
 		</ul>
 
@@ -51,6 +45,10 @@
 		<p class="menu-label">Zamówienia</p>
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'orders' }">Lista zamówień</router-link></li>
+		</ul>
+		<p class="menu-label">Tagi</p>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'tags' }">Tagi</router-link></li>
 		</ul>
 	</aside>
 </template>

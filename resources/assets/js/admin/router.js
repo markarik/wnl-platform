@@ -126,6 +126,11 @@ let routes = [
 		component: require('js/admin/components/orders/OrdersList'),
 	},
 	{
+		name: 'tags',
+		path: '/admin/app/tags',
+		component: require('js/admin/components/tags/TagsList'),
+	},
+	{
 		name: 'dashboard',
 		path: '/admin/app'
 	},

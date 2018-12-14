@@ -3,12 +3,12 @@
 </template>
 
 <script>
-	import QuizQuestionEditor from 'js/admin/components/quizes/QuizQuestionEditor'
+import QuizQuestionEditor from 'js/admin/components/quizes/QuizQuestionEditor';
 
-	export default {
-		name: 'QuizQuestionEdit',
-		components: {
-			'wnl-quiz-question-editor': QuizQuestionEditor
-		}
+export default {
+	name: 'QuizQuestionEdit',
+	components: {
+		'wnl-quiz-question-editor': QuizQuestionEditor
 	}
+};
 </script>

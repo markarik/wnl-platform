@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\ApiTransformer;
 
 class TagTransformer extends ApiTransformer
 {
-	protected $editionId;
 	protected $parent;
 
 	public function __construct($parent = null)

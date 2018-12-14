@@ -19,26 +19,26 @@
 </style>
 
 <script>
-	import Toggler from 'js/components/global/Toggler'
-	import {formInput} from 'js/mixins/form-input'
+import Toggler from 'js/components/global/Toggler';
+import {formInput} from 'js/mixins/form-input';
 
-	export default {
-		name: 'wnl-form-check',
-		props: ['name', 'placeholder'],
-		mixins: [formInput],
-		components: {
-			'wnl-toggler': Toggler,
-		},
-		computed: {
-			default() {
-				return ''
-			}
-		},
-		methods: {
-			onToggle() {
-				this.inputValue = !this.inputValue;
-				this.$parent.$emit('submitForm')
-			}
-		},
-	}
+export default {
+	name: 'wnl-form-check',
+	props: ['name', 'placeholder'],
+	mixins: [formInput],
+	components: {
+		'wnl-toggler': Toggler,
+	},
+	computed: {
+		default() {
+			return '';
+		}
+	},
+	methods: {
+		onToggle() {
+			this.inputValue = !this.inputValue;
+			this.$parent.$emit('submitForm');
+		}
+	},
+};
 </script>

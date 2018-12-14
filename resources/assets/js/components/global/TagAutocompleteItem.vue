@@ -7,8 +7,8 @@
 </style>
 
 <script>
-	export default {
-		name: 'TagAutocompleteItem',
-		props: ['item']
-	}
+export default {
+	name: 'TagAutocompleteItem',
+	props: ['item']
+};
 </script>

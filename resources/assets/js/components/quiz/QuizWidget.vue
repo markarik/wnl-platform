@@ -66,119 +66,119 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import { mapGetters } from 'vuex'
+import _ from 'lodash';
+import { mapGetters } from 'vuex';
 
-	import QuizQuestion from 'js/components/quiz/QuizQuestion.vue'
-	import { scrollToElement } from 'js/utils/animations'
-	import emits_events from 'js/mixins/emits-events';
-	import feature_components from 'js/consts/events_map/feature_components.json';
+import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
+import { scrollToElement } from 'js/utils/animations';
+import emits_events from 'js/mixins/emits-events';
+import feature_components from 'js/consts/events_map/feature_components.json';
 
-	export default {
-		name: 'QuizWidget',
-		components: {
-			'wnl-quiz-question': QuizQuestion,
+export default {
+	name: 'QuizWidget',
+	components: {
+		'wnl-quiz-question': QuizQuestion,
+	},
+	mixins: [emits_events],
+	props: {
+		isSingle: {
+			default: false,
+			type: Boolean,
 		},
-		mixins: [emits_events],
-		props: {
-			isSingle: {
-				default: false,
-				type: Boolean,
-			},
-			readOnly: {
-				default: false,
-				type: Boolean,
-			},
-			questions: {
-				type: Array,
-				default: [],
-			},
-			getReaction: {
-				default: () => {},
-				type: Function,
-			},
-			module: {
-				type: String,
-				default: 'quiz'
+		readOnly: {
+			default: false,
+			type: Boolean,
+		},
+		questions: {
+			type: Array,
+			default: [],
+		},
+		getReaction: {
+			default: () => {},
+			type: Function,
+		},
+		module: {
+			type: String,
+			default: 'quiz'
+		}
+	},
+	data() {
+		return {
+			hasErrors: false,
+			allowDoubleclick: true
+		};
+	},
+	computed: {
+		...mapGetters(['isMobile']),
+		currentQuestion() {
+			return this.questions[0];
+		},
+		otherQuestions() {
+			return _.tail(this.questions) || [];
+		},
+		lastIndex() {
+			return this.questions.length - 1;
+		},
+		hasAnswer() {
+			return this.currentQuestion.selectedAnswer !== null;
+		},
+		isSubmitDisabled() {
+			return !this.hasAnswer;
+		},
+		displayResults() {
+			return this.currentQuestion.isResolved;
+		},
+		hasOtherQuestions() {
+			return this.otherQuestions.length > 0;
+		}
+	},
+	methods: {
+		verify() {
+			if (this.hasAnswer) {
+				this.$emit('verify', this.currentQuestion.id);
 			}
 		},
-		data() {
-			return {
-				hasErrors: false,
-				allowDoubleclick: true
-			}
+		nextQuestion() {
+			this.$emit('changeQuestion', 1);
+			scrollToElement(this.$el, 75);
 		},
-		computed: {
-			...mapGetters(['isMobile']),
-			currentQuestion() {
-				return this.questions[0]
-			},
-			otherQuestions() {
-				return _.tail(this.questions) || []
-			},
-			lastIndex() {
-				return this.questions.length - 1
-			},
-			hasAnswer() {
-				return this.currentQuestion.selectedAnswer !== null
-			},
-			isSubmitDisabled() {
-				return !this.hasAnswer
-			},
-			displayResults() {
-				return this.currentQuestion.isResolved
-			},
-			hasOtherQuestions() {
-				return this.otherQuestions.length > 0
-			}
+		previousQuestion() {
+			this.$emit('changeQuestion', this.lastIndex);
+			scrollToElement(this.$el, 75);
 		},
-		methods: {
-			verify() {
-				if (this.hasAnswer) {
-					this.$emit('verify', this.currentQuestion.id)
-				}
-			},
-			nextQuestion() {
-				this.$emit('changeQuestion', 1)
-				scrollToElement(this.$el, 75)
-			},
-			previousQuestion() {
-				this.$emit('changeQuestion', this.lastIndex)
-				scrollToElement(this.$el, 75)
-			},
-			selectQuestionFromList(index) {
-				const fullIndex = index + 1
-				this.$emit('changeQuestion', fullIndex)
-				scrollToElement(this.$el, 75)
-			},
-			selectAnswer({answer}) {
-				this.allowDoubleclick = false
-				this.$emit('selectAnswer', {
-					id: this.currentQuestion.id,
-					answer
-				})
-				this.timeout = setTimeout(() => {
-					this.allowDoubleclick = true
-				}, 500)
-			},
-			onAnswerDoubleClick({answer}) {
-				this.allowDoubleclick && this.displayResults && this.nextQuestion()
-			},
-			trackQuizQuestionChanged() {
-				this.currentQuestion.id && this.emitUserEvent({
-					feature_component: feature_components.quiz_question.value,
-					action: feature_components.quiz_question.actions.open.value,
-					target: this.currentQuestion.id
-				})
-			}
+		selectQuestionFromList(index) {
+			const fullIndex = index + 1;
+			this.$emit('changeQuestion', fullIndex);
+			scrollToElement(this.$el, 75);
 		},
-		created() {
-			this.trackQuizQuestionChanged()
+		selectAnswer({answer}) {
+			this.allowDoubleclick = false;
+			this.$emit('selectAnswer', {
+				id: this.currentQuestion.id,
+				answer
+			});
+			this.timeout = setTimeout(() => {
+				this.allowDoubleclick = true;
+			}, 500);
 		},
-		watch: {
-			'currentQuestion.id'() {
-				this.trackQuizQuestionChanged()
-			}
+		onAnswerDoubleClick({answer}) {
+			this.allowDoubleclick && this.displayResults && this.nextQuestion();
+		},
+		trackQuizQuestionChanged() {
+			this.currentQuestion.id && this.emitUserEvent({
+				feature_component: feature_components.quiz_question.value,
+				action: feature_components.quiz_question.actions.open.value,
+				target: this.currentQuestion.id
+			});
+		}
+	},
+	created() {
+		this.trackQuizQuestionChanged();
+	},
+	watch: {
+		'currentQuestion.id'() {
+			this.trackQuizQuestionChanged();
 		}
 	}
+};
 </script>

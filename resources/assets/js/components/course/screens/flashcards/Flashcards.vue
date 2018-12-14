@@ -173,100 +173,100 @@
 </style>
 
 <script>
-	import {mapActions, mapGetters, mapMutations} from 'vuex';
-	import {nextTick} from 'vue'
-	import {get} from 'lodash';
-	import {scrollToElement} from 'js/utils/animations'
-	import * as mutationsTypes from "js/store/mutations-types";
-	import WnlFlashcardItem from 'js/components/course/screens/flashcards/FlashcardItem';
-	import {ANSWERS_MAP} from 'js/consts/flashcard';
-	import features from 'js/consts/events_map/features.json';
-	import emits_events from 'js/mixins/emits-events'
+import {mapActions, mapGetters, mapMutations} from 'vuex';
+import {nextTick} from 'vue';
+import {get} from 'lodash';
+import {scrollToElement} from 'js/utils/animations';
+import * as mutationsTypes from 'js/store/mutations-types';
+import WnlFlashcardItem from 'js/components/course/screens/flashcards/FlashcardItem';
+import {ANSWERS_MAP} from 'js/consts/flashcard';
+import features from 'js/consts/events_map/features.json';
+import emits_events from 'js/mixins/emits-events';
 
-	export default {
-		mixins: [emits_events],
-		props: {
-			screenData: {
-				type: Object,
-				required: true
-			},
-			context: {
-				type: String,
-				required: true
-			}
+export default {
+	mixins: [emits_events],
+	props: {
+		screenData: {
+			type: Object,
+			required: true
 		},
-		components: {
-			WnlFlashcardItem,
-		},
-		data() {
-			return {
-				ANSWERS_MAP,
-				applicableSetsIds: [],
-			}
-		},
-		computed: {
-			...mapGetters('flashcards', ['getSetById']),
-			sets() {
-				return this.applicableSetsIds.map(id => this.getSetById(id))
-			},
-			getUnsolvedForSet() {
-				return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'unsolved').length
-			},
-			getEasyForSet() {
-				return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'easy').length
-			},
-			getHardForSet() {
-				return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'hard').length
-			},
-			getDontKnowForSet() {
-				return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'do_not_know').length
-			}
-		},
-		methods: {
-			...mapActions('flashcards', ['setFlashcardsSet']),
-			...mapMutations('flashcards', {
-				'updateFlashcard': mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD
-			}),
-			scrollToSet(setId) {
-				scrollToElement(document.getElementById(`set-${setId}`));
-			},
-			scrollTop() {
-				scrollToElement(document.getElementById('flashacardsSetHeader'));
-			},
-			onRetakeSet(set) {
-				set.flashcards.forEach(flashcard => this.updateFlashcard({
-					...flashcard,
-					answer: 'unsolved'
-				}))
-			},
-			trackUserEvent(payload) {
-				this.emitUserEvent({
-					feature: features.flashcards.value,
-					...payload
-				})
-			}
-		},
-		async mounted() {
-			const resources = get(this.screenData, 'meta.resources', []);
-
-			await Promise.all(resources.map(({id}) => {
-				return this.setFlashcardsSet({
-					setId: id,
-					include: 'flashcards.user_flashcard_notes',
-					context_type: this.context,
-					context_id: this.screenData.id
-				})
-			}))
-
-			this.applicableSetsIds = resources.map(({id}) => id);
-
-			resources.forEach(({id}) => {
-				this.trackUserEvent({
-					feature_component: features.flashcards.feature_components.set.value,
-					action: features.flashcards.feature_components.set.actions.open.value,
-					target: id
-				})
-			})
+		context: {
+			type: String,
+			required: true
 		}
+	},
+	components: {
+		WnlFlashcardItem,
+	},
+	data() {
+		return {
+			ANSWERS_MAP,
+			applicableSetsIds: [],
+		};
+	},
+	computed: {
+		...mapGetters('flashcards', ['getSetById']),
+		sets() {
+			return this.applicableSetsIds.map(id => this.getSetById(id));
+		},
+		getUnsolvedForSet() {
+			return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'unsolved').length;
+		},
+		getEasyForSet() {
+			return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'easy').length;
+		},
+		getHardForSet() {
+			return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'hard').length;
+		},
+		getDontKnowForSet() {
+			return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'do_not_know').length;
+		}
+	},
+	methods: {
+		...mapActions('flashcards', ['setFlashcardsSet']),
+		...mapMutations('flashcards', {
+			'updateFlashcard': mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD
+		}),
+		scrollToSet(setId) {
+			scrollToElement(document.getElementById(`set-${setId}`));
+		},
+		scrollTop() {
+			scrollToElement(document.getElementById('flashacardsSetHeader'));
+		},
+		onRetakeSet(set) {
+			set.flashcards.forEach(flashcard => this.updateFlashcard({
+				...flashcard,
+				answer: 'unsolved'
+			}));
+		},
+		trackUserEvent(payload) {
+			this.emitUserEvent({
+				feature: features.flashcards.value,
+				...payload
+			});
+		}
+	},
+	async mounted() {
+		const resources = get(this.screenData, 'meta.resources', []);
+
+		await Promise.all(resources.map(({id}) => {
+			return this.setFlashcardsSet({
+				setId: id,
+				include: 'flashcards.user_flashcard_notes',
+				context_type: this.context,
+				context_id: this.screenData.id
+			});
+		}));
+
+		this.applicableSetsIds = resources.map(({id}) => id);
+
+		resources.forEach(({id}) => {
+			this.trackUserEvent({
+				feature_component: features.flashcards.feature_components.set.value,
+				action: features.flashcards.feature_components.set.actions.open.value,
+				target: id
+			});
+		});
 	}
+};
 </script>

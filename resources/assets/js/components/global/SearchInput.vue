@@ -26,7 +26,7 @@
 				<label :for="field.value" class="search-settings__field__label checkbox">{{field.title}}</label>
 			</div>
 		</div>
-		<div v-if="searchPhrase">
+		<div v-if="searchPhrase" class="active-search">
 			<span>Aktualne wyszukiwanie:</span>
 			<span class="tag is-success">
 				{{ searchPhrase }}
@@ -52,11 +52,11 @@
 				border-radius: 50%
 </style>
 <script>
-	import {isEqual} from 'lodash'
+import {isEqual} from 'lodash';
 
-	export default {
-		props: {
-			/**
+export default {
+	props: {
+		/**
 			 * Example:
 			 * availableFields: [
 			 * 	{value: 'id', title: 'ID'},
@@ -64,59 +64,59 @@
 			 * 	...
 			 * ]
 			 */
-			availableFields: {
-				type: Array,
-				default: [],
-			},
+		availableFields: {
+			type: Array,
+			default: () => [],
 		},
-		data() {
-			return {
-				currentPhrase: '',
-				searchPhrase: '',
-				searchFields: [],
-			}
-		},
-		computed: {
-			routerSearchFields() {
-				const fields = this.$route.query.fields;
+	},
+	data() {
+		return {
+			currentPhrase: '',
+			searchPhrase: '',
+			searchFields: [],
+		};
+	},
+	computed: {
+		routerSearchFields() {
+			const fields = this.$route.query.fields;
 
-				if (fields && !Array.isArray(fields)) {
-					return [fields];
-				}
+			if (fields && !Array.isArray(fields)) {
+				return [fields];
+			}
 
-				return fields || [];
-			}
+			return fields || [];
+		}
+	},
+	methods: {
+		onSelectAll() {
+			this.searchFields = [];
 		},
-		methods: {
-			onSelectAll() {
-				this.searchFields = [];
-			},
-			emitSearch() {
-				this.$router.push({ query: {
-					...this.$route.query,
-					q: this.searchPhrase !== '' ? this.searchPhrase : undefined,
-					fields: this.searchFields }
-				});
-				this.$emit('search', {
-					phrase: this.searchPhrase,
-					fields: this.searchFields
-				});
-			},
-			search() {
-				this.searchPhrase = this.currentPhrase;
-				this.emitSearch();
-			},
-			clearSearch() {
-				this.searchPhrase = '';
-				this.emitSearch();
-			}
+		emitSearch() {
+			this.$router.push({ query: {
+				...this.$route.query,
+				q: this.searchPhrase !== '' ? this.searchPhrase : undefined,
+				fields: this.searchFields }
+			});
+			this.$emit('search', {
+				phrase: this.searchPhrase,
+				fields: this.searchFields
+			});
 		},
-		mounted() {
-			if (this.$route.query.q !== this.searchPhrase || !isEqual(this.searchFields, this.routerSearchFields)) {
-				this.searchPhrase = this.$route.query.q;
-				this.searchFields = this.routerSearchFields;
-				this.emitSearch();
-			}
+		search() {
+			this.searchPhrase = this.currentPhrase;
+			this.emitSearch();
+		},
+		clearSearch() {
+			this.searchPhrase = '';
+			this.emitSearch();
+		}
+	},
+	mounted() {
+		if (this.$route.query.q !== this.searchPhrase || !isEqual(this.searchFields, this.routerSearchFields)) {
+			this.searchPhrase = this.$route.query.q;
+			this.searchFields = this.routerSearchFields;
+			this.emitSearch();
 		}
 	}
+};
 </script>

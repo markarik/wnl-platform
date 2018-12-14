@@ -29,26 +29,26 @@
 		max-width: 100%
 </style>
 <script>
-	import moment from 'moment';
+import moment from 'moment';
 
-	export default {
-		name: "UserCoupons",
-		props: {
-			user: {
-				type: Object,
-				required: true
-			}
+export default {
+	name: 'UserCoupons',
+	props: {
+		user: {
+			type: Object,
+			required: true
+		}
+	},
+	methods: {
+		formatDate(date) {
+			return moment(date * 1000).format('ll');
 		},
-		methods: {
-			formatDate(date) {
-				return moment(date * 1000).format('ll')
-			},
-			getCouponValue(coupon) {
-				if (coupon.type === 'percentage') return `${coupon.value}%`
-				return `${coupon.value}zł`
-			}
+		getCouponValue(coupon) {
+			if (coupon.type === 'percentage') return `${coupon.value}%`;
+			return `${coupon.value}zł`;
 		}
 	}
+};
 </script>
 
 <style scoped>

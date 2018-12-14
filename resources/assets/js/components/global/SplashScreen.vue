@@ -62,25 +62,25 @@
 </style>
 
 <script>
-	import moment from 'moment'
-	import { getImageUrl } from 'js/utils/env'
-	import { set } from 'vue'
-	import { mapGetters } from 'vuex'
-	import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant'
+import moment from 'moment';
+import { getImageUrl } from 'js/utils/env';
+import { set } from 'vue';
+import { mapGetters } from 'vuex';
+import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
 
-	require('moment-duration-format')
+require('moment-duration-format');
 
-	export default {
-		name: 'SplashScreen',
-		perimeters: [upcomingEditionParticipant],
-		computed: {
-			...mapGetters(['currentUserSubscriptionDates', 'currentUser']),
-			countdownImageUrl() {
-				return getImageUrl('countdown.png')
-			},
-			startDate() {
-				return moment(new Date(this.currentUserSubscriptionDates.min * 1000)).format('LL')
-			},
+export default {
+	name: 'SplashScreen',
+	perimeters: [upcomingEditionParticipant],
+	computed: {
+		...mapGetters(['currentUserSubscriptionDates', 'currentUser']),
+		countdownImageUrl() {
+			return getImageUrl('countdown.png');
 		},
-	}
+		startDate() {
+			return moment(new Date(this.currentUserSubscriptionDates.min * 1000)).format('LL');
+		},
+	},
+};
 </script>

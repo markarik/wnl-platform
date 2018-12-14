@@ -13,186 +13,186 @@
 </template>
 
 <script>
-	import _ from 'lodash'
+import _ from 'lodash';
 
-	import Submit from 'js/components/global/form/Submit'
-	import { alerts } from 'js/mixins/alerts'
-	import { getApiUrl } from 'js/utils/env'
-	import { mapActions } from 'vuex'
-	import * as types from 'js/store/mutations-types'
+import Submit from 'js/components/global/form/Submit';
+import { alerts } from 'js/mixins/alerts';
+import { getApiUrl } from 'js/utils/env';
+import { mapActions } from 'vuex';
+import * as types from 'js/store/mutations-types';
 
-	export default {
-		name: 'Form',
-		components: {
-			'wnl-submit': Submit,
+export default {
+	name: 'Form',
+	components: {
+		'wnl-submit': Submit,
+	},
+	mixins: [ alerts ],
+	// TODO: Introduce an options prop for better readability
+	props: [
+		'name',
+		'method',
+		'resourceRoute',
+		'attach',
+		'populate',
+		'hideDefaultSubmit',
+		'suppressEnter',
+		'resetAfterSubmit',
+		'loading',
+		'submitError',
+		'value'
+	],
+	computed: {
+		anyErrors() {
+			return this.getter('anyErrors');
 		},
-		mixins: [ alerts ],
-		// TODO: Introduce an options prop for better readability
-		props: [
-			'name',
-			'method',
-			'resourceRoute',
-			'attach',
-			'populate',
-			'hideDefaultSubmit',
-			'suppressEnter',
-			'resetAfterSubmit',
-			'loading',
-			'submitError',
-			'value'
-		],
-		computed: {
-			anyErrors() {
-				return this.getter('anyErrors')
-			},
-			hasChanges() {
-				return this.getter('hasChanges')
-			},
-			formData() {
-				return this.getter('getData')
+		hasChanges() {
+			return this.getter('hasChanges');
+		},
+		formData() {
+			return this.getter('getData');
+		}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		action(action, payload = {}) {
+			return this.$store.dispatch(`form/${action}`, {payload, formName: this.name});
+		},
+		getter(getter) {
+			return this.$store.getters[`form/${getter}`](this.name);
+		},
+		getterFunction(getter, payload = {}) {
+			return this.$store.getters[`form/${getter}`]({payload, formName: this.name});
+		},
+		mutation(mutation, payload = {}) {
+			return this.$store.commit(`form/${mutation}`, {payload, formName: this.name});
+		},
+		keyEvent(event) {
+			if (event.keyCode === 13 && !this.suppressEnter) {
+				this.onSubmitForm();
 			}
-		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			action(action, payload = {}) {
-				return this.$store.dispatch(`form/${action}`, {payload, formName: this.name})
-			},
-			getter(getter) {
-				return this.$store.getters[`form/${getter}`](this.name)
-			},
-			getterFunction(getter, payload = {}) {
-				return this.$store.getters[`form/${getter}`]({payload, formName: this.name})
-			},
-			mutation(mutation, payload = {}) {
-				return this.$store.commit(`form/${mutation}`, {payload, formName: this.name})
-			},
-			keyEvent(event) {
-				if (event.keyCode === 13 && !this.suppressEnter) {
-					this.onSubmitForm()
-				}
-				if (event.keyCode === 37) {
-					event.stopImmediatePropagation();
-					event.stopPropagation();
-				}
-				if (event.keyCode === 39) {
-					event.stopImmediatePropagation();
-					event.stopPropagation();
-				}
+			if (event.keyCode === 37) {
+				event.stopImmediatePropagation();
 				event.stopPropagation();
-			},
-			onSubmitForm() {
-				const hasAttachChanged = this.hasAttachChanged()
+			}
+			if (event.keyCode === 39) {
+				event.stopImmediatePropagation();
+				event.stopPropagation();
+			}
+			event.stopPropagation();
+		},
+		onSubmitForm() {
+			const hasAttachChanged = this.hasAttachChanged();
 
-				if (!this.canSave(this.hasChanges, hasAttachChanged)) {
-					return false
-				}
+			if (!this.canSave(this.hasChanges, hasAttachChanged)) {
+				return false;
+			}
 
-				this.action('submitForm', {
-					method: this.method,
-					attach: this.attach,
-				})
-					.then(
-						response => {
-							this.successFading(`
+			this.action('submitForm', {
+				method: this.method,
+				attach: this.attach,
+			})
+				.then(
+					response => {
+						this.successFading(`
 								<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
 								<span>Zapisano!</span>
-							`)
+							`);
 
-							if (this.resetAfterSubmit) {
-								this.mutation(types.FORM_RESET)
-								this.mutation(types.FORM_UPDATE_ORIGINAL_DATA)
-							}
+						if (this.resetAfterSubmit) {
+							this.mutation(types.FORM_RESET);
+							this.mutation(types.FORM_UPDATE_ORIGINAL_DATA);
+						}
 
-							this.$emit('submitSuccess', response, this.formData)
+						this.$emit('submitSuccess', response, this.formData);
 
-							hasAttachChanged && this.cacheAttach()
-						},
-						reason => {
-							if (this.submitError) {
-								this.$emit('submitError', reason.response)
-							} else {
-								this.handleError(reason)
-							}
-						},
-					)
-					.catch((error) => {
-						$wnl.logger.error(error, error.stack)
-						this.errorFading('Nie udało się.')
-					})
-			},
-			handleError(reason) {
-				if (reason.response.status === 404) {
-					this.addAutoDismissableAlert({
-						type: 'warning',
-						text: this.$t('ui.error.notFound'),
-					});
-				} else {
-					this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?')
-				}
-			},
-			cacheAttach() {
-				this.cachedAttach = _.cloneDeep(this.attach);
-			},
-			hasAttachChanged() {
-				return !_.isEqual(this.attach, this.cachedAttach)
-			},
-			canSave(hasFieldChanges, hasAttachChanges) {
-				return !this.anyErrors && (hasFieldChanges || hasAttachChanges)
-			},
-		},
-		created() {
-			this.mutation(types.FORM_INITIAL_SETUP);
-		},
-		mounted() {
-			let dataModel = {}, defaults = {}
-
-			_.each(this.$children, (child) => {
-				let options = child.$options
-
-				if (!_.isUndefined(options.computed.fillable)) {
-					let name = options.propsData.name,
-						defaultValue = options.computed.default() || ''
-
-					dataModel[name] = defaultValue
-					defaults[name] = defaultValue
-				}
-			})
-
-			this.mutation(types.FORM_SETUP, {
-				data: dataModel,
-				defaults,
-				resourceUrl: getApiUrl(this.resourceRoute),
-			})
-			this.$emit('formIsLoaded')
-
-			if (this.populate) {
-				this.action('populateFormFromApi').then(() => {
-					this.mutation(types.FORM_IS_LOADED)
-				})
-			} else if (this.value) {
-				this.action('populateFormFromValue', this.value)
-				this.mutation(types.FORM_IS_LOADED)
-			} else {
-				this.mutation(types.FORM_IS_LOADED)
-			}
-
-			this.cacheAttach()
-
-			this.$on('submitForm', this.onSubmitForm);
-		},
-		watch: {
-			formData(newVal) {
-				this.$emit('change', {formData: newVal})
-			},
-			resourceRoute(val) {
-				this.mutation(
-					types.FORM_UPDATE_URL,
-					getApiUrl(this.resourceRoute)
+						hasAttachChanged && this.cacheAttach();
+					},
+					reason => {
+						if (this.submitError) {
+							this.$emit('submitError', reason.response);
+						} else {
+							this.handleError(reason);
+						}
+					},
 				)
+				.catch((error) => {
+					$wnl.logger.error(error, error.stack);
+					this.errorFading('Nie udało się.');
+				});
+		},
+		handleError(reason) {
+			if (reason.response.status === 404) {
+				this.addAutoDismissableAlert({
+					type: 'warning',
+					text: this.$t('ui.error.notFound'),
+				});
+			} else {
+				this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?');
 			}
 		},
-		beforeDestroy() {
-			this.mutation(types.FORM_RESET)
+		cacheAttach() {
+			this.cachedAttach = _.cloneDeep(this.attach);
+		},
+		hasAttachChanged() {
+			return !_.isEqual(this.attach, this.cachedAttach);
+		},
+		canSave(hasFieldChanges, hasAttachChanges) {
+			return !this.anyErrors && (hasFieldChanges || hasAttachChanges);
+		},
+	},
+	created() {
+		this.mutation(types.FORM_INITIAL_SETUP);
+	},
+	mounted() {
+		let dataModel = {}, defaults = {};
+
+		_.each(this.$children, (child) => {
+			let options = child.$options;
+
+			if (!_.isUndefined(options.computed.fillable)) {
+				let name = options.propsData.name,
+					defaultValue = options.computed.default() || '';
+
+				dataModel[name] = defaultValue;
+				defaults[name] = defaultValue;
+			}
+		});
+
+		this.mutation(types.FORM_SETUP, {
+			data: dataModel,
+			defaults,
+			resourceUrl: getApiUrl(this.resourceRoute),
+		});
+		this.$emit('formIsLoaded');
+
+		if (this.populate) {
+			this.action('populateFormFromApi').then(() => {
+				this.mutation(types.FORM_IS_LOADED);
+			});
+		} else if (this.value) {
+			this.action('populateFormFromValue', this.value);
+			this.mutation(types.FORM_IS_LOADED);
+		} else {
+			this.mutation(types.FORM_IS_LOADED);
 		}
+
+		this.cacheAttach();
+
+		this.$on('submitForm', this.onSubmitForm);
+	},
+	watch: {
+		formData(newVal) {
+			this.$emit('change', {formData: newVal});
+		},
+		resourceRoute(val) {
+			this.mutation(
+				types.FORM_UPDATE_URL,
+				getApiUrl(this.resourceRoute)
+			);
+		}
+	},
+	beforeDestroy() {
+		this.mutation(types.FORM_RESET);
 	}
+};
 </script>

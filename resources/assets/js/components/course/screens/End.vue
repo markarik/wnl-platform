@@ -3,13 +3,13 @@
 </template>
 
 <script>
-	import Html from './Html'
+import Html from './Html';
 
-	export default {
-		name: 'End',
-		components: {
-			'wnl-html': Html,
-		},
-		props: ['screenData']
-	}
+export default {
+	name: 'End',
+	components: {
+		'wnl-html': Html,
+	},
+	props: ['screenData']
+};
 </script>

@@ -12,7 +12,7 @@ class AnnotationTransformer extends ApiTransformer
 
 	public function __construct($parent = [])
 	{
-		$this->parent = collect($parent);
+		$this->parent = $parent;
 	}
 
 	public function transform(Annotation $annotation)

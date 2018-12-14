@@ -20,7 +20,7 @@
 </style>
 
 <script>
-	export default {
-		name: 'TextLoader',
-	}
+export default {
+	name: 'TextLoader',
+};
 </script>

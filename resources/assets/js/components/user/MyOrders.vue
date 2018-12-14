@@ -41,80 +41,80 @@
 </template>
 
 <script>
-	import axios from 'axios'
-	import _ from 'lodash'
-	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
-	import {mapGetters} from 'vuex'
-	import Order from './Order'
-	import moment from 'moment'
+import axios from 'axios';
+import _ from 'lodash';
+import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env';
+import {mapGetters} from 'vuex';
+import Order from './Order';
+import moment from 'moment';
 
-	export default {
-		name: 'MyOrders',
-		data () {
-			return {
-				loaded: false,
-				orders: []
-			}
+export default {
+	name: 'MyOrders',
+	data () {
+		return {
+			loaded: false,
+			orders: []
+		};
+	},
+	computed: {
+		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
+		paymentUrl() {
+			return getUrl('payment/select-product');
 		},
-		computed: {
-			...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
-			paymentUrl() {
-				return getUrl('payment/select-product')
-			},
-			hasOrders() {
-				return !_.isEmpty(this.orders)
-			},
-			orderSuccess() {
-				return this.$route.query.hasOwnProperty('payment')
-			},
-			userFriendlySubscriptionDate() {
-				return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL')
-			}
+		hasOrders() {
+			return !_.isEmpty(this.orders);
 		},
-		methods: {
-			getOrders() {
-				axios.get(getApiUrl(`orders/all?include=invoices,payments`))
-						.then((response) => {
-							if (_.isEmpty(response.data)) {
-								this.orders = []
-							}
-
-							const {included = {}, ...orders} = response.data
-							const {invoices, payments} = included
-
-							this.orders = _.reverse(Object.values(orders)
-								.filter(this.isConfirmed))
-								.map(order => {
-									return {
-										...order,
-										invoices: (order.invoices || []).map(invoiceId => invoices[invoiceId]),
-										payments: (order.payments || []).map(paymentId => payments[paymentId])
-									}
-								})
-
-							this.loaded = true
-						})
-						.catch(exception => $wnl.logger.capture(exception))
-			},
-			isConfirmed(order) {
-				return !_.isEmpty(order.method)
-			},
+		orderSuccess() {
+			return this.$route.query.hasOwnProperty('payment');
 		},
-		mounted() {
-			this.getOrders();
-		},
-		created() {
-			if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {
-				const {payment, amount, ...query} = this.$route.query;
-				typeof fbq === 'function' && fbq('track', 'Purchase', {value: amount / 100, currency: 'PLN'});
-				this.$router.push({
-					...this.$route,
-					query
-				})
-			}
-		},
-		components: {
-			'wnl-order': Order,
+		userFriendlySubscriptionDate() {
+			return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL');
 		}
+	},
+	methods: {
+		getOrders() {
+			axios.get(getApiUrl('orders/all?include=invoices,payments'))
+				.then((response) => {
+					if (_.isEmpty(response.data)) {
+						this.orders = [];
+					}
+
+					const {included = {}, ...orders} = response.data;
+					const {invoices, payments} = included;
+
+					this.orders = _.reverse(Object.values(orders)
+						.filter(this.isConfirmed))
+						.map(order => {
+							return {
+								...order,
+								invoices: (order.invoices || []).map(invoiceId => invoices[invoiceId]),
+								payments: (order.payments || []).map(paymentId => payments[paymentId])
+							};
+						});
+
+					this.loaded = true;
+				})
+				.catch(exception => $wnl.logger.capture(exception));
+		},
+		isConfirmed(order) {
+			return !_.isEmpty(order.method);
+		},
+	},
+	mounted() {
+		this.getOrders();
+	},
+	created() {
+		if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {
+			const {payment, amount, ...query} = this.$route.query;
+			typeof fbq === 'function' && fbq('track', 'Purchase', {value: amount / 100, currency: 'PLN'});
+			this.$router.push({
+				...this.$route,
+				query
+			});
+		}
+	},
+	components: {
+		'wnl-order': Order,
 	}
+};
 </script>

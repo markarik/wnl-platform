@@ -26,24 +26,24 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-	import { reaction } from 'js/mixins/reaction'
+import { reaction } from 'js/mixins/reaction';
 
-	export default {
-		name: 'Bookmark',
-		mixins: [reaction],
-		data() {
-			return {
-				isLoading: false,
-				name: 'bookmark',
-			}
+export default {
+	name: 'Bookmark',
+	mixins: [reaction],
+	data() {
+		return {
+			isLoading: false,
+			name: 'bookmark',
+		};
+	},
+	computed: {
+		...mapGetters(['isMobile']),
+		hasReactedClass() {
+			return this.hasReacted ? 'fa-star' : 'fa-star-o';
 		},
-		computed: {
-			...mapGetters(['isMobile']),
-			hasReactedClass() {
-				return this.hasReacted ? 'fa-star' : 'fa-star-o'
-			},
-		},
-	}
+	},
+};
 </script>

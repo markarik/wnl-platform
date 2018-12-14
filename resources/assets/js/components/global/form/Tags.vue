@@ -52,128 +52,128 @@
 </style>
 
 <script>
-	import Autocomplete from 'js/components/global/Autocomplete'
-	import WnlTagAutocompleteItem from 'js/components/global/TagAutocompleteItem'
-	import _ from 'lodash'
-	import {mapActions} from 'vuex'
+import Autocomplete from 'js/components/global/Autocomplete';
+import WnlTagAutocompleteItem from 'js/components/global/TagAutocompleteItem';
+import _ from 'lodash';
+import {mapActions} from 'vuex';
 
-	const keys = {
-		enter: 13,
-		esc: 27,
-		arrowUp: 38,
-		arrowDown: 40
-	}
+const keys = {
+	enter: 13,
+	esc: 27,
+	arrowUp: 38,
+	arrowDown: 40
+};
 
-	export default {
-		name: 'Tags',
-		components: {
-			'wnl-autocomplete': Autocomplete,
-			WnlTagAutocompleteItem,
-		},
-		props: {
-			defaultTags: {
-				type: Array,
-				default: () => ([])
+export default {
+	name: 'Tags',
+	components: {
+		'wnl-autocomplete': Autocomplete,
+		WnlTagAutocompleteItem,
+	},
+	props: {
+		defaultTags: {
+			type: Array,
+			default: () => ([])
+		}
+	},
+	data: function () {
+		return {
+			autocompleteItems: [],
+			tags: [],
+			tagInput: '',
+		};
+	},
+	computed: {
+		default() {
+			return '';
+		}
+	},
+	methods: {
+		...mapActions(['requestTagsAutocomplete']),
+		onKeyDown(evt) {
+			const { enter, esc, arrowUp, arrowDown } = keys;
+
+			if (this.autocompleteItems.length === 0) {
+				return;
 			}
-		},
-		data: function () {
-			return {
-				autocompleteItems: [],
-				tags: [],
-				tagInput: '',
+
+			if (evt.keyCode === esc) {
+				this.onEsc(evt);
+				return;
 			}
-		},
-		computed: {
-			default() {
-				return ''
+
+			if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
+				return;
 			}
-		},
-		methods: {
-			...mapActions(['requestTagsAutocomplete']),
-			onKeyDown(evt) {
-				const { enter, esc, arrowUp, arrowDown } = keys
 
-				if (this.autocompleteItems.length === 0) {
-					return
-				}
-
-				if (evt.keyCode === esc) {
-					this.onEsc(evt)
-					return
-				}
-
-				if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-					return
-				}
-
-				if (evt.keyCode === enter && !this.$refs.autocomplete.hasItems) {
-					return
-				}
-
-				this.$refs.autocomplete.onKeyDown(evt)
-				this.killEvent(evt)
-
-				//for some of the old browsers, returning false is the true way to kill propagation
-				return false
-			},
-
-			onEsc(evt) {
-				this.autocompleteItems = []
-			},
-
-			killEvent(evt) {
-				evt.preventDefault()
-				evt.stopPropagation()
-			},
-
-			insertTag(tag) {
-				if (_.map(this.tags, (tag) => tag.id).indexOf(tag.id) === -1) {
-					this.tags.push(tag)
-				}
-
-				this.autocompleteItems = []
-				this.tagInput = ''
-				this.$refs.input.focus()
-				this.$emit('insertTag', tag)
-				this.$emit('tagsChanged', this.tags)
-			},
-
-			removeTag(tag) {
-				this.tags = _.filter(
-					this.tags,
-					foundTag => tag.id !== foundTag.id
-				)
-				this.$emit('tagsChanged', this.tags)
-			},
-
-			onInput(evt) {
-				const name = this.tagInput
-				const data = { name, tags: this.tags }
-
-				if (!name) {
-					this.autocompleteItems = []
-					return
-				}
-
-				this.requestTagsAutocomplete(data).then(
-					data => {
-						this.autocompleteItems = data.data
-					}
-				)
-			},
-			haveTagsChanged() {
-				if (this.tags.length !== this.defaultTags.length) return true
-
-				return !!this.tags.some(tag => !_.find(this.defaultTags, defTag => defTag.id === tag.id))
+			if (evt.keyCode === enter && !this.$refs.autocomplete.hasItems) {
+				return;
 			}
+
+			this.$refs.autocomplete.onKeyDown(evt);
+			this.killEvent(evt);
+
+			//for some of the old browsers, returning false is the true way to kill propagation
+			return false;
 		},
-		created() {
+
+		onEsc(evt) {
+			this.autocompleteItems = [];
+		},
+
+		killEvent(evt) {
+			evt.preventDefault();
+			evt.stopPropagation();
+		},
+
+		insertTag(tag) {
+			if (_.map(this.tags, (tag) => tag.id).indexOf(tag.id) === -1) {
+				this.tags.push(tag);
+			}
+
+			this.autocompleteItems = [];
+			this.tagInput = '';
+			this.$refs.input.focus();
+			this.$emit('insertTag', tag);
+			this.$emit('tagsChanged', this.tags);
+		},
+
+		removeTag(tag) {
+			this.tags = _.filter(
+				this.tags,
+				foundTag => tag.id !== foundTag.id
+			);
+			this.$emit('tagsChanged', this.tags);
+		},
+
+		onInput(evt) {
+			const name = this.tagInput;
+			const data = { name, tags: this.tags };
+
+			if (!name) {
+				this.autocompleteItems = [];
+				return;
+			}
+
+			this.requestTagsAutocomplete(data).then(
+				data => {
+					this.autocompleteItems = data.data;
+				}
+			);
+		},
+		haveTagsChanged() {
+			if (this.tags.length !== this.defaultTags.length) return true;
+
+			return !!this.tags.some(tag => !_.find(this.defaultTags, defTag => defTag.id === tag.id));
+		}
+	},
+	created() {
+		this.tags = this.defaultTags.slice();
+	},
+	watch: {
+		defaultTags() {
 			this.tags = this.defaultTags.slice();
-		},
-		watch: {
-			defaultTags() {
-				this.tags = this.defaultTags.slice()
-			}
 		}
 	}
+};
 </script>

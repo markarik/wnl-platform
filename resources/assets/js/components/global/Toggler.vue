@@ -73,24 +73,24 @@
 </style>
 
 <script>
-	export default {
-		name: 'wnl-toggler',
-		props: [
-			'disabled',
-			'type',
-			'size',
-			'name',
-			'value',
-		],
-		computed: {
-			classObject () {
-				const {type, size} = this
-				return {
-					[`is-${type}`]: type,
-					[`is-${size}`]: size,
-					checked: !!this.value
-				}
-			}
-		},
-	}
+export default {
+	name: 'wnl-toggler',
+	props: [
+		'disabled',
+		'type',
+		'size',
+		'name',
+		'value',
+	],
+	computed: {
+		classObject () {
+			const {type, size} = this;
+			return {
+				[`is-${type}`]: type,
+				[`is-${size}`]: size,
+				checked: !!this.value
+			};
+		}
+	},
+};
 </script>

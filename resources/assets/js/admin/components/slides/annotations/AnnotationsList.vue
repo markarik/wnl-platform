@@ -105,47 +105,47 @@
 </style>
 
 <script>
-	import { getColourForStr } from "js/utils/colors.js"
+import { getColourForStr } from 'js/utils/colors.js';
 
-	export default {
-		name: 'AnnotationsList',
-		data() {
-			return {
-				openAnnotations: [],
-				getColourForStr
-			}
+export default {
+	name: 'AnnotationsList',
+	data() {
+		return {
+			openAnnotations: [],
+			getColourForStr
+		};
+	},
+	props: {
+		list: {
+			type: Array,
+			required: true
 		},
-		props: {
-			list: {
-				type: Array,
-				required: true
-			},
-			modifiedAnnotationId: {
-				type: Number,
-				default: 0
-			}
+		modifiedAnnotationId: {
+			type: Number,
+			default: 0
+		}
+	},
+	methods: {
+		isEven(index) {
+			return index % 2 === 0;
 		},
-		methods: {
-			isEven(index) {
-				return index % 2 === 0
-			},
-			toggleAnnotation(annotation) {
-				if (this.openAnnotations.indexOf(annotation.id) === -1) {
-					this.openAnnotations.push(annotation.id)
-				} else {
-					const index = this.openAnnotations.indexOf(annotation.id)
-					if (index > -1) {
-						this.openAnnotations.splice(index, 1)
-					}
+		toggleAnnotation(annotation) {
+			if (this.openAnnotations.indexOf(annotation.id) === -1) {
+				this.openAnnotations.push(annotation.id);
+			} else {
+				const index = this.openAnnotations.indexOf(annotation.id);
+				if (index > -1) {
+					this.openAnnotations.splice(index, 1);
 				}
-			},
-			isOpen(annotation) {
-				return this.openAnnotations.indexOf(annotation.id) > -1
-			},
-			onAnnotationClick({annotation, event}) {
-				this.$emit('annotationSelect', annotation);
-				event.stopImmediatePropagation();
 			}
+		},
+		isOpen(annotation) {
+			return this.openAnnotations.indexOf(annotation.id) > -1;
+		},
+		onAnnotationClick({annotation, event}) {
+			this.$emit('annotationSelect', annotation);
+			event.stopImmediatePropagation();
 		}
 	}
+};
 </script>

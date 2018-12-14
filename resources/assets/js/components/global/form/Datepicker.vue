@@ -38,65 +38,65 @@
 </style>
 
 <script>
-	import Flatpickr from 'flatpickr'
-	import { formInput } from 'js/mixins/form-input'
-	import {pl} from 'flatpickr/dist/l10n/pl.js'
+import Flatpickr from 'flatpickr';
+import { formInput } from 'js/mixins/form-input';
+import {pl} from 'flatpickr/dist/l10n/pl.js';
 
-	export default {
-		name: 'Datepicker',
-		props: {
-			config: {
-				default: () => ({}),
-				type: Object,
-			},
-			name: {
-				type: String,
-			},
+export default {
+	name: 'Datepicker',
+	props: {
+		config: {
+			default: () => ({}),
+			type: Object,
 		},
-		data() {
-			return {
-				datepicker: null,
-			}
+		name: {
+			type: String,
 		},
-		computed: {
-			placeholder() {
-				return this.$t('ui.placeholders.date')
-			},
+	},
+	data() {
+		return {
+			datepicker: null,
+		};
+	},
+	computed: {
+		placeholder() {
+			return this.$t('ui.placeholders.date');
 		},
-		methods: {
-			redraw(newConfig) {
-				this.datepicker.config = Object.assign(this.datepicker.config, newConfig)
-				this.datepicker.redraw()
-				this.datepicker.jumpToDate()
-			},
-			setDate(newDate, oldDate) {
-				newDate && this.datepicker.setDate(newDate)
-			},
+	},
+	methods: {
+		redraw(newConfig) {
+			this.datepicker.config = Object.assign(this.datepicker.config, newConfig);
+			this.datepicker.redraw();
+			this.datepicker.jumpToDate();
 		},
-		mixins: [formInput],
-		mounted() {
-			if (!this.datepicker) {
-				this.datepicker = new Flatpickr(this.$refs.input, {
-					...this.config,
-					locale: {
-						...pl,
-						firstDayOfWeek: 1
-					}
-				});
-				this.setDate(this.inputValue)
-			}
+		setDate(newDate, oldDate) {
+			newDate && this.datepicker.setDate(newDate);
 		},
-		watch: {
-			config: this.redraw,
-			inputValue: function(val) {
-				this.setDate(val * 1000);
-			}
-		},
-		beforeDestroy () {
-			if (this.datepicker) {
-				this.datepicker.destroy()
-				this.datepicker = null
-			}
-		},
-	}
+	},
+	mixins: [formInput],
+	mounted() {
+		if (!this.datepicker) {
+			this.datepicker = new Flatpickr(this.$refs.input, {
+				...this.config,
+				locale: {
+					...pl,
+					firstDayOfWeek: 1
+				}
+			});
+			this.setDate(this.inputValue);
+		}
+	},
+	watch: {
+		config: this.redraw,
+		inputValue: function(val) {
+			this.setDate(val * 1000);
+		}
+	},
+	beforeDestroy () {
+		if (this.datepicker) {
+			this.datepicker.destroy();
+			this.datepicker = null;
+		}
+	},
+};
 </script>

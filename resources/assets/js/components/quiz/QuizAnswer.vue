@@ -96,44 +96,44 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
-	import { isFinite } from 'lodash'
+import { mapGetters } from 'vuex';
+import { isFinite } from 'lodash';
 
-	import { isDebug } from 'js/utils/env'
+import { isDebug } from 'js/utils/env';
 
-	export default {
-		name: 'QuizAnswer',
-		props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly', 'isSelected', 'answersStats'],
-		computed: {
-			...mapGetters(['isMobile']),
-			/**
+export default {
+	name: 'QuizAnswer',
+	props: ['answer', 'index', 'questionId', 'totalHits', 'readOnly', 'isSelected', 'answersStats'],
+	computed: {
+		...mapGetters(['isMobile']),
+		/**
 			 * @param  {int} answerIndex
 			 * @return {Boolean}
 			 */
-			isCorrect() {
-				return this.answer.is_correct
-			},
-			showCorrect() {
-				return this.isCorrect && this.$parent.displayResults
-			},
-			stats() {
-				if (!this.answer.hasOwnProperty('stats')) return false;
+		isCorrect() {
+			return this.answer.is_correct;
+		},
+		showCorrect() {
+			return this.isCorrect && this.$parent.displayResults;
+		},
+		stats() {
+			if (!this.answer.hasOwnProperty('stats')) return false;
 
-				return this.answer.stats
-			},
-			/**
+			return this.answer.stats;
+		},
+		/**
 			 * Helper property for debug purposes
 			 * @param  {int} answerIndex
 			 * @return {Boolean}
 			 */
-			hintCorrect() {
-				return isDebug() && this.isCorrect
-			},
+		hintCorrect() {
+			return isDebug() && this.isCorrect;
 		},
-		methods: {
-			isNumber(n) {
-				return isFinite(n)
-			}
+	},
+	methods: {
+		isNumber(n) {
+			return isFinite(n);
 		}
 	}
+};
 </script>

@@ -27,23 +27,23 @@
 </style>
 
 <script>
-	import { formInput } from 'js/mixins/form-input'
+import { formInput } from 'js/mixins/form-input';
 
-	export default {
-		name: 'Password',
-		props: {
-			name: {
-				type: String,
-			},
-			placeholder: {
-				type: String
-			}
+export default {
+	name: 'Password',
+	props: {
+		name: {
+			type: String,
 		},
-		mixins: [formInput],
-		computed: {
-			default() {
-				return ''
-			},
+		placeholder: {
+			type: String
 		}
+	},
+	mixins: [formInput],
+	computed: {
+		default() {
+			return '';
+		},
 	}
+};
 </script>

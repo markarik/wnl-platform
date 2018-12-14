@@ -10,16 +10,16 @@
 </style>
 
 <script>
-	import emoji from 'node-emoji'
-	import jEmoji from 'emoji'
+import emoji from 'node-emoji';
+import jEmoji from 'emoji';
 
-	export default {
-		name: 'Emoji',
-		props: ['emojiClass', 'name'],
-		computed: {
-			emoji() {
-				return jEmoji.unifiedToHTML(emoji.get(this.name))
-			}
+export default {
+	name: 'Emoji',
+	props: ['emojiClass', 'name'],
+	computed: {
+		emoji() {
+			return jEmoji.unifiedToHTML(emoji.get(this.name));
 		}
 	}
+};
 </script>

@@ -88,89 +88,89 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import { mapActions, mapGetters } from 'vuex'
+import _ from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
 
-	import StreamNotification from 'js/components/notifications/feeds/stream/StreamNotification'
-	import StreamFiltering from 'js/components/notifications/feeds/stream/StreamFiltering'
-	import { CommentPosted, QnaAnswerPosted, QnaQuestionPosted } from 'js/components/notifications/events'
-	import { feed } from 'js/components/notifications/feed'
-	import { getImageUrl } from 'js/utils/env'
+import StreamNotification from 'js/components/notifications/feeds/stream/StreamNotification';
+import StreamFiltering from 'js/components/notifications/feeds/stream/StreamFiltering';
+import { CommentPosted, QnaAnswerPosted, QnaQuestionPosted } from 'js/components/notifications/events';
+import { feed } from 'js/components/notifications/feed';
+import { getImageUrl } from 'js/utils/env';
 
-	export default {
-		name: 'StreamFeed',
-		mixins: [feed],
-		components: {
-			'wnl-event-comment-posted': CommentPosted,
-			'wnl-event-qna-answer-posted': QnaAnswerPosted,
-			'wnl-event-qna-question-posted': QnaQuestionPosted,
-			'wnl-stream-filtering': StreamFiltering,
+export default {
+	name: 'StreamFeed',
+	mixins: [feed],
+	components: {
+		'wnl-event-comment-posted': CommentPosted,
+		'wnl-event-qna-answer-posted': QnaAnswerPosted,
+		'wnl-event-qna-question-posted': QnaQuestionPosted,
+		'wnl-stream-filtering': StreamFiltering,
+	},
+	data() {
+		return {
+			limit: 100,
+			filtering: 'all',
+			marking: false,
+			showRead: false,
+			StreamNotification,
+		};
+	},
+	computed: {
+		...mapGetters('notifications', {
+			channel: 'streamChannel',
+		}),
+		...mapGetters('notifications', [
+			'filterSlides',
+			'filterQna',
+			'filterQuiz',
+			'getUnread',
+			'getRead',
+			'loading',
+		]),
+		loading() {
+			return this.totalNotifications === 0 && this.fetching;
 		},
-		data() {
+		filtered() {
+			let filtered = this.notifications;
+
+			if (this.filtering !== 'all') {
+				filtered = this[`filter${_.upperFirst(this.filtering)}`](this.channel);
+			}
+
+			filtered = _.filter(filtered, (notification) => this.showRead ? notification.read_at : !notification.read_at);
+
+			return filtered;
+		},
+		unreadCount() {
+			return _.size(this.getUnread(this.channel));
+		},
+		zeroStateImage() {
+			return getImageUrl('notifications-zero.png');
+		},
+		notificationsParams() {
 			return {
-				limit: 100,
-				filtering: 'all',
-				marking: false,
-				showRead: false,
-				StreamNotification,
+				unread: !this.showRead
+			};
+		},
+	},
+	methods: {
+		...mapActions('notifications', ['markAllAsRead']),
+		changeFiltering(filtering) {
+			this.filtering = filtering;
+		},
+		allRead() {
+			this.marking = true;
+
+			this.markAllAsRead(this.channel)
+				.then(() => this.marking = false);
+		},
+		toggleShowRead() {
+			this.showRead = !this.showRead;
+
+			if (this.showRead && !_.size(this.getRead(this.channel))) {
+				this.loadMore();
 			}
-		},
-		computed: {
-			...mapGetters('notifications', {
-				channel: 'streamChannel',
-			}),
-			...mapGetters('notifications', [
-				'filterSlides',
-				'filterQna',
-				'filterQuiz',
-				'getUnread',
-				'getRead',
-				'loading',
-			]),
-			loading() {
-				return this.totalNotifications === 0 && this.fetching
-			},
-			filtered() {
-				let filtered = this.notifications
-
-				if (this.filtering !== 'all') {
-					filtered = this[`filter${_.upperFirst(this.filtering)}`](this.channel)
-				}
-
-				filtered = _.filter(filtered, (notification) => this.showRead ? notification.read_at : !notification.read_at)
-
-				return filtered
-			},
-			unreadCount() {
-				return _.size(this.getUnread(this.channel))
-			},
-			zeroStateImage() {
-				return getImageUrl('notifications-zero.png')
-			},
-			notificationsParams() {
-				return {
-					unread: !this.showRead
-				}
-			},
-		},
-		methods: {
-			...mapActions('notifications', ['markAllAsRead']),
-			changeFiltering(filtering) {
-				this.filtering = filtering
-			},
-			allRead() {
-				this.marking = true
-
-				this.markAllAsRead(this.channel)
-					.then(() => this.marking = false)
-			},
-			toggleShowRead() {
-				this.showRead = !this.showRead
-
-				if (this.showRead && !_.size(this.getRead(this.channel))) {
-					this.loadMore()
-				}
-			}
-		},
-	}
+		}
+	},
+};
 </script>

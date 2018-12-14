@@ -25,8 +25,8 @@
 
 </style>
 <script>
-import Alert from 'js/components/global/GlobalAlert'
-import {mapActions} from 'vuex'
+import Alert from 'js/components/global/GlobalAlert';
+import {mapActions} from 'vuex';
 
 export default {
 	components: {
@@ -47,5 +47,5 @@ export default {
 			this.closeAlert(alert);
 		}
 	},
-}
+};
 </script>

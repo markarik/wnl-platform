@@ -34,8 +34,8 @@
 </style>
 
 <script>
-	export default {
-		name: 'WnlFlashcardsSetListItem',
-		props: ['id', 'content', 'onRemove'],
-	}
+export default {
+	name: 'WnlFlashcardsSetListItem',
+	props: ['id', 'content', 'onRemove'],
+};
 </script>

@@ -31,70 +31,70 @@
 </style>
 
 <script>
-	import Quill from 'quill'
-	import { fontColors } from 'js/utils/colors'
+import Quill from 'quill';
+import { fontColors } from 'js/utils/colors';
 
-	export default {
-		name: 'Quill',
-		props: {
-			options: {
-				type: Object,
-				default() {
-					return {
-						theme: 'snow',
-						modules: {
-							toolbar: [
-								[{ 'header': [false, 1, 2, 3] }],
-								['bold', 'italic', 'underline', 'link'],
-								[{ color: fontColors }],
-								['clean'],
-								[{'align': []}],
-								[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
-								['blockquote', 'image', 'video'],
-							]
-						},
-					}
-				}
-			},
-			autofocus: Boolean,
-			form: Object,
-			name: String,
-			value: String,
-		},
-		data () {
-			return {
-				focused: this.autofocus,
-				quill: null,
-				editor: null,
+export default {
+	name: 'Quill',
+	props: {
+		options: {
+			type: Object,
+			default() {
+				return {
+					theme: 'snow',
+					modules: {
+						toolbar: [
+							[{ 'header': [false, 1, 2, 3] }],
+							['bold', 'italic', 'underline', 'link'],
+							[{ color: fontColors }],
+							['clean'],
+							[{'align': []}],
+							[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+							['blockquote', 'image', 'video'],
+						]
+					},
+				};
 			}
 		},
-		methods: {
-			onTextChange() {
-				this.$emit('input', this.editor.innerHTML)
-			},
-			onUploadSuccess(data) {
-				this.editor.innerHTML = this.editor.innerHTML + `<img src="${data}"/>`
-			}
+		autofocus: Boolean,
+		form: Object,
+		name: String,
+		value: String,
+	},
+	data () {
+		return {
+			focused: this.autofocus,
+			quill: null,
+			editor: null,
+		};
+	},
+	methods: {
+		onTextChange() {
+			this.$emit('input', this.editor.innerHTML);
 		},
-		mounted () {
-			this.quill = new Quill(this.$refs.quill, this.options)
-			this.editor = this.$refs.quill.firstElementChild
-			if (this.value) {
-				this.editor.innerHTML = this.value
-			}
-			this.$nextTick(() => {
-				this.quill.on('text-change', this.onTextChange)
-			})
+		onUploadSuccess(data) {
+			this.editor.innerHTML = this.editor.innerHTML + `<img src="${data}"/>`;
+		}
+	},
+	mounted () {
+		this.quill = new Quill(this.$refs.quill, this.options);
+		this.editor = this.$refs.quill.firstElementChild;
+		if (this.value) {
+			this.editor.innerHTML = this.value;
+		}
+		this.$nextTick(() => {
+			this.quill.on('text-change', this.onTextChange);
+		});
+	},
+	watch: {
+		focused (val) {
+			this.editor[val ? 'focus' : 'blur']();
 		},
-		watch: {
-			focused (val) {
-				this.editor[val ? 'focus' : 'blur']()
-			},
-			value (newValue) {
-				if (newValue !== this.editor.innerHTML) {
-					this.editor.innerHTML = newValue || ''
-				}
+		value (newValue) {
+			if (newValue !== this.editor.innerHTML) {
+				this.editor.innerHTML = newValue || '';
 			}
 		}
 	}
+};
 </script>

@@ -7,7 +7,7 @@ import * as types from 'js/store/mutations-types';
 // Helper functions
 function getCourseApiUrl(courseId) {
 	return getApiUrl(
-		`${resource('courses')}/${courseId}
+		`${resource('courses')}/${courseId}/structure
 		?include=groups.lessons.screens.sections.subsections,
 		groups.lessons.screens.tags
 		&user=current&exclude=screens.content`

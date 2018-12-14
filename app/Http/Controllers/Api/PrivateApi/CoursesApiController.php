@@ -21,7 +21,7 @@ class CoursesApiController extends ApiController
 		$this->resourceName = config('papi.resources.courses');
 	}
 
-	public function get($id)
+	public function getStructure($id)
 	{
 		$user = Auth::user();
 		$key = self::key($user->id);
@@ -30,7 +30,7 @@ class CoursesApiController extends ApiController
 			return $this->respondOk(Cache::tags(self::CACHE_TAG)->get($key));
 		}
 
-		$data = parent::get($id)->getData();
+		$data = $this->get($id)->getData();
 
 		Cache::tags(self::CACHE_TAG)->put($key, $data, self::CACHE_TTL);
 

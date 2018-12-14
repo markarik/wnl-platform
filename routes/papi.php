@@ -27,6 +27,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::group(['middleware' => ['admin']], function () use ($r) {
 		// Courses
 		Route::put("{$r['courses']}/{id}", 'CoursesApiController@put');
+		Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
 
 		// Flashcards admin
 		Route::put("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@put');
@@ -80,7 +81,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::group(['middleware' => ['account-status', 'subscription']], function () use ($r) {
 		// Courses
-		Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
+		Route::get("{$r['courses']}/{id}/structure", 'CoursesApiController@getStructure');
 
 		// Groups
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');

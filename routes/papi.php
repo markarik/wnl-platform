@@ -59,6 +59,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::put("{$r['quiz-questions']}/{id}/restore", 'QuizQuestionsApiController@restore');
 		Route::get("{$r['quiz-questions']}/trashed/{id}", 'QuizQuestionsApiController@getWithTrashed');
 
+		// Orders
+		Route::post("{$r['orders']}/.filter", 'OrdersApiController@filter');
+
 		// Groups
 		Route::post("{$r['groups']}/.filter", 'GroupsApiController@filter');
 		Route::post("{$r['groups']}", 'GroupsApiController@post');

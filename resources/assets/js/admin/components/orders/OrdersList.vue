@@ -57,68 +57,68 @@
 </style>
 
 <script>
-	import WnlPagination from 'js/components/global/Pagination';
-	import WnlSearchInput from 'js/components/global/SearchInput';
-	import {getApiUrl} from 'js/utils/env';
+import WnlPagination from 'js/components/global/Pagination';
+import WnlSearchInput from 'js/components/global/SearchInput';
+import {getApiUrl} from 'js/utils/env';
 
-	export default {
-		name: 'OrdersList',
-		components: {
-			WnlPagination,
-			WnlSearchInput,
-		},
-		data() {
-			return {
-				orders: [],
-				searchPhrase: '',
-				lastPage: 1,
-				page: 1,
-				isLoading: true
+export default {
+	name: 'OrdersList',
+	components: {
+		WnlPagination,
+		WnlSearchInput,
+	},
+	data() {
+		return {
+			orders: [],
+			searchPhrase: '',
+			lastPage: 1,
+			page: 1,
+			isLoading: true
+		};
+	},
+	methods: {
+		getRequestParams() {
+			const params = {
+				limit: 50,
+				page: this.page,
+				active: [],
+				filters: []
 			};
-		},
-		methods: {
-			getRequestParams() {
-				const params = {
-					limit: 50,
-					page: this.page,
-					active: [],
-					filters: []
-				};
 
-				if (this.searchPhrase) {
-					params.active = [`search.${this.searchPhrase}`];
-					params.filters = [{search: {phrase: this.searchPhrase, fields: ['id']}}];
-				}
-
-				return params;
-			},
-			onPageChange(page) {
-				this.page = page;
-				this.fetch();
-			},
-			async onSearch({phrase}) {
-				this.page = 1;
-				this.searchPhrase = phrase;
-
-				await this.fetch()
-			},
-			async fetch() {
-				this.isLoading = true;
-				const response = await axios.post(getApiUrl('orders/.filter'), this.getRequestParams())
-				const {data: {data, ...paginationMeta}} = response;
-				this.orders = data;
-				this.lastPage = paginationMeta.last_page;
-				this.isLoading = false;
-			},
-			translateShippingStatus(order) {
-				return this.$t(`orders.tags.shipping.${order.shipping_status}`)
-			},
-			goToOrder(order){
-				this.$router.push({ name: 'user-details', params: { userId: order.user_id }, hash: '#orders' })
+			if (this.searchPhrase) {
+				params.active = [`search.${this.searchPhrase}`];
+				params.filters = [{search: {phrase: this.searchPhrase, fields: ['id']}}];
 			}
+
+			return params;
 		},
-		mounted() {
+		onPageChange(page) {
+			this.page = page;
 			this.fetch();
+		},
+		async onSearch({phrase}) {
+			this.page = 1;
+			this.searchPhrase = phrase;
+
+			await this.fetch();
+		},
+		async fetch() {
+			this.isLoading = true;
+			const response = await axios.post(getApiUrl('orders/.filter'), this.getRequestParams());
+			const {data: {data, ...paginationMeta}} = response;
+			this.orders = data;
+			this.lastPage = paginationMeta.last_page;
+			this.isLoading = false;
+		},
+		translateShippingStatus(order) {
+			return this.$t(`orders.tags.shipping.${order.shipping_status}`);
+		},
+		goToOrder(order){
+			this.$router.push({ name: 'user-details', params: { userId: order.user_id }, hash: '#orders' });
 		}
+	},
+	mounted() {
+		this.fetch();
 	}
+};
 </script>

@@ -1,5 +1,5 @@
 <?php
-namespace Tests\DataIntegrity;
+namespace Checks\DataIntegrity;
 
 class PresentablesOrderNumberCheck extends DataIntegrityCheck {
 

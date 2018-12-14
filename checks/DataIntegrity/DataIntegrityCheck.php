@@ -1,5 +1,5 @@
 <?php
-namespace Tests\DataIntegrity;
+namespace Checks\DataIntegrity;
 
 use App\Exceptions\DataIntegrityException;
 

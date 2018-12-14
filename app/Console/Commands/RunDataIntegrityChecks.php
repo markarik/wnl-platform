@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use Checks\DataIntegrity\PaymentsCheck;
+use Checks\DataIntegrity\PresentablesOrderNumberCheck;
 use Illuminate\Console\Command;
-use Tests\DataIntegrity\PaymentsCheck;
-use Tests\DataIntegrity\PresentablesOrderNumberCheck;
 
 class RunDataIntegrityChecks extends Command
 {

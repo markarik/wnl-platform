@@ -17,8 +17,8 @@
 
 			<div class="tabs">
 				<ul>
-					<li :class="{ 'is-active': tab.active }" @click="changeTab(name)" v-for="(tab, name) in tabs" :key="name">
-						<a>{{ tab.text }}</a>
+					<li :class="{ 'is-active': name === activeTabName }" v-for="(tab, name) in tabs" :key="name">
+						<router-link :to="{ hash: `#${name}` }">{{ tab.text }}</router-link>
 					</li>
 				</ul>
 			</div>
@@ -71,51 +71,46 @@ export default {
 			tabs: {
 				summary: {
 					component: UserSummary,
-					active: true,
 					text: 'Podsumowanie'
 				},
 				address: {
 					component: UserAddress,
-					active: false,
 					text: 'Dane do wysyłki'
 				},
 				billing: {
 					component: UserBilling,
-					active: false,
 					text: 'Dane do faktury'
 				},
 				subscritption: {
 					component: UserSubscription,
-					active: false,
 					text: 'Dostęp do kursu'
 				},
 				orders: {
 					component: UserOrders,
-					active: false,
 					text: 'Zamówienia'
 				},
 				coupons: {
 					component: UserCoupons,
-					active: false,
 					text: 'Kupony'
 				},
 				plan: {
 					component: UserPlan,
-					active: false,
 					text: 'Plan lekcji'
 				},
 			},
 		};
 	},
 	computed: {
-		activeTab() {
-			return Object.values(this.tabs).find(tab => tab.active);
-		},
 		activeComponent() {
-			return this.activeTab.component;
+			return this.tabs[this.activeTabName].component;
 		},
 		dateCreated() {
 			return moment(this.user.created_at * 1000).format('ll');
+		},
+		activeTabName() {
+			const hash = this.$route.hash.replace('#', '');
+			const tabNames = Object.keys(this.tabs);
+			return tabNames.includes(hash) ? hash : tabNames[0];
 		}
 	},
 	methods: {
@@ -124,7 +119,7 @@ export default {
 			const userId = this.$route.params.userId;
 			try {
 				const include = [
-					'roles', 'profile', 'subscription', 'orders.invoices', 'billing', 'settings', 'coupons','user_address', 'orders.payments'
+					'roles', 'profile', 'subscription', 'orders.invoices', 'billing', 'settings', 'coupons','user_address', 'orders.payments', 'orders.study_buddy'
 				].join(',');
 				const response = await axios.get(getApiUrl(`users/${userId}?include=${include}`));
 				const {included, ...user} = response.data;
@@ -146,6 +141,7 @@ export default {
 					return {
 						...order,
 						invoices: (order.invoices || []).map(invoiceId => included.invoices[invoiceId]),
+						studyBuddy: order.study_buddy ? included.study_buddy[order.study_buddy[0]] : null,
 						payments: (order.payments || []).map(paymentId => included.payments[paymentId])
 					};
 				});
@@ -156,10 +152,6 @@ export default {
 			this.user.billing = this.user.billing && included.billing[this.user.billing[0]];
 			this.user.settings = this.user.settings &&  included.settings[this.user.settings[0]];
 			this.user.subscription = this.user.subscription && included.subscription[this.user.subscription[0]];
-		},
-		changeTab(name) {
-			this.activeTab.active = false;
-			this.tabs[name].active = true;
 		},
 	},
 	async mounted() {

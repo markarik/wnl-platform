@@ -20,9 +20,6 @@
 
 </template>
 
-<style lang="sass">
-</style>
-
 <script>
  	import { mapGetters } from 'vuex'
 	import moment from 'moment'

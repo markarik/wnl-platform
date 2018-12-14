@@ -4,12 +4,12 @@ use App\Jobs\CalculateCoursePlan;
 use App\Http\Controllers\Api\ApiController;
 use Carbon\Carbon;
 use Cache;
+use Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\User\UpdateUserLesson;
 use App\Http\Requests\User\UpdateLessonsPreset;
 use App\Http\Requests\User\UpdateLessonsBatch;
 use App\Models\UserLesson;
-use App\Models\Lesson;
 use App\Models\User;
 use DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -100,37 +100,48 @@ class UserLessonApiController extends ApiController
 		return $this->respondOk();
 	}
 
-	public function exportPlan(Request $request, $userId)
+	public function exportPlan(Request $request)
 	{
-		$userId = User::find($userId)->id;
+		$userId = $request->route('userId');
+		$user = User::fetch($userId);
+
+		if (!Auth::user()->can('view', $user)) {
+			return $this->respondForbidden();
+		}
+
 		if (empty($userId)) {
 			return $this->respondNotFound();
 		}
 
-		$userLessons = UserLesson::where('user_id', $userId)->get();
+		$userLessons = $user->lessonsAvailability;
 
-		$csv_data = [];
+		$csvData = [];
 
-		foreach($userLessons as $userLesson) {
-			$csv_data[] = [
-				"name" => Lesson::where('id', $userLesson['lesson_id'])->pluck('name')[0],
-				"start_date" => Carbon::parse($userLesson->start_date)->format('m/d/Y')
+		$csvData = $userLessons->map(function($userLesson) use ($user) {
+			return $csvData = [
+				"name" => $userLesson->name,
+				"start_date" => $userLesson->startDate($user)
 			];
-		};
-
-		usort($csv_data, function($a, $b) {
-			return strtotime($a["start_date"]) - strtotime($b["start_date"]);
 		});
 
-		array_unshift($csv_data, [
-			"name" => "Subject",
-			"start_date" => "Start date"
+		$sortedCsvData = $csvData->sortBy('start_date');
+		$sortedCsvData->values()->all();
+
+		$sortedCsvData->transform(function($data) {
+			return [
+				'name' => $data['name'],
+				'start_date' => $data['start_date']->format('m/d/Y')
+			];
+		});
+		$sortedCsvData->prepend([
+			'name' => 'Subject',
+			'start_date' => 'Start Date'
 		]);
 
 		return new StreamedResponse(
-			function() use($csv_data) {
+			function() use($sortedCsvData) {
 				$buffer = fopen('php://output', 'w');
-				foreach($csv_data as $row) {
+				foreach($sortedCsvData as $row) {
 					fputcsv($buffer, $row);
 				}
 				fclose($buffer);

@@ -109,565 +109,572 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import axios from 'axios'
-	import Postmate from 'postmate'
-	import screenfull from 'screenfull'
-	import {mapGetters, mapActions, mapMutations} from 'vuex'
-	import {scrollToTop} from 'js/utils/animations'
-	import features from "js/consts/events_map/features.json";
+import _ from 'lodash';
+import axios from 'axios';
+import Postmate from 'postmate';
+import screenfull from 'screenfull';
+import {mapGetters, mapActions, mapMutations} from 'vuex';
+import {scrollToTop} from 'js/utils/animations';
+import features from 'js/consts/events_map/features.json';
 
-	import * as types from 'js/store/mutations-types'
-	import emits_events from 'js/mixins/emits-events';
-	import Annotations from './Annotations'
-	import LinkedQuestions from './LinkedQuestions.vue'
-	import SlideshowNavigation from './SlideshowNavigation'
-	import {isDebug, getApiUrl} from 'js/utils/env'
-	import moderatorFeatures from 'js/perimeters/moderator'
+import * as types from 'js/store/mutations-types';
+import emits_events from 'js/mixins/emits-events';
+import Annotations from './Annotations';
+import LinkedQuestions from './LinkedQuestions.vue';
+import SlideshowNavigation from './SlideshowNavigation';
+import {isDebug, getApiUrl} from 'js/utils/env';
+import moderatorFeatures from 'js/perimeters/moderator';
 
-	export default {
-		name: 'Slideshow',
-		components: {
-			'wnl-annotations': Annotations,
-			'wnl-linked-questions': LinkedQuestions,
-			'wnl-slideshow-navigation': SlideshowNavigation,
-		},
-		perimeters: [moderatorFeatures],
-		mixins: [emits_events],
-		data() {
-			return {
-				bookmarkLoading: false,
-				child: {},
-				currentSlideId: 0,
-				// slides order number is index from 0
-				currentSlideNumber: this.slideOrderNumber + 1 || Math.max(this.$route.params.slide, 1) || 1,
-				isFauxFullscreen: false,
-				isFocused: false,
-				loaded: false,
-				slideChanged: false,
-				slideshowElement: {},
-				modifiedSlides: {},
+export default {
+	name: 'Slideshow',
+	components: {
+		'wnl-annotations': Annotations,
+		'wnl-linked-questions': LinkedQuestions,
+		'wnl-slideshow-navigation': SlideshowNavigation,
+	},
+	perimeters: [moderatorFeatures],
+	mixins: [emits_events],
+	data() {
+		return {
+			bookmarkLoading: false,
+			child: {},
+			currentSlideId: 0,
+			// slides order number is index from 0
+			currentSlideNumber: this.slideOrderNumber + 1 || Math.max(this.$route.params.slide, 1) || 1,
+			isFauxFullscreen: false,
+			isFocused: false,
+			loaded: false,
+			slideChanged: false,
+			slideshowElement: {},
+			modifiedSlides: {},
+		};
+	},
+	props: {
+		screenData: {
+			type: Object,
+			default: () => {
+				return {
+					type: 'slideshow',
+					meta: {
+						resources: [{
+							id: -1
+						}]
+					}
+				};
 			}
 		},
-		props: {
-			screenData: {
-				type: Object,
-				default: () => {
-					return {
-						type: 'slideshow',
-						meta: {
-							resources: [{
-								id: -1
-							}]
-						}
-					}
-				}
-			},
-			preserveRoute: Boolean,
-			slideOrderNumber: Number,
-			htmlContent: String
+		preserveRoute: Boolean,
+		slideOrderNumber: Number,
+		htmlContent: String
+	},
+	computed: {
+		...mapGetters(['getSetting', 'currentUserId']),
+		...mapGetters('slideshow', [
+			'comments',
+			'commentProfile',
+			'isLoading',
+			'isFunctional',
+			'findRegularSlide',
+			'getSlidePositionById',
+			'getSlideIdFromIndex',
+			'getSlideById',
+			'presentableSortedSlidesIds',
+			'isLoadingComments'
+		]),
+		currentSlideIndex() {
+				 return this.currentSlideNumber - 1;
 		},
-		computed: {
-			...mapGetters(['getSetting', 'currentUserId']),
-			...mapGetters('slideshow', [
-				'comments',
-				'commentProfile',
-				'isLoading',
-				'isFunctional',
-				'findRegularSlide',
-				'getSlidePositionById',
-				'getSlideIdFromIndex',
-				'getSlideById',
-				'presentableSortedSlidesIds',
-				'isLoadingComments'
-			]),
-			currentSlideIndex() {
-				 return this.currentSlideNumber - 1
-			},
-			container() {
-				return this.$el.getElementsByClassName('wnl-slideshow-content')[0]
-			},
-			screenId() {
-				return this.$route.params.screenId
-			},
-			presentableId() {
-				return this.screenData.meta && this.screenData.meta.resources[0].id
-			},
-			presentableType() {
-				return this.screenData.type
-			},
-			slideshowUrl() {
-				return getApiUrl(`slideshow_builder/${this.presentableType === 'category' ? 'category/' : ''}${this.presentableId}`)
-			},
-			iframe() {
-				if (this.loaded) {
-					return this.$el.getElementsByTagName('iframe')[0]
-				}
-			},
+		container() {
+			return this.$el.getElementsByClassName('wnl-slideshow-content')[0];
 		},
-		methods: {
-			...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupSlideComments']),
-			...mapActions(['toggleOverlay', 'showNotification']),
-			...mapMutations('slideshow', {
-				loadingComments: types.SLIDESHOW_LOADING_COMMENTS
-			}),
-			toggleBookmarkedState(slideIndex) {
-				this.bookmarkLoading = true
+		screenId() {
+			return this.$route.params.screenId;
+		},
+		presentableId() {
+			return this.screenData.meta && this.screenData.meta.resources[0].id;
+		},
+		presentableType() {
+			return this.screenData.type;
+		},
+		slideshowUrl() {
+			return getApiUrl(`slideshow_builder/${this.presentableType === 'category' ? 'category/' : ''}${this.presentableId}`);
+		},
+		iframe() {
+			if (this.loaded) {
+				return this.$el.getElementsByTagName('iframe')[0];
+			}
+		},
+	},
+	methods: {
+		...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupSlideComments']),
+		...mapActions(['toggleOverlay', 'showNotification']),
+		...mapMutations('slideshow', {
+			loadingComments: types.SLIDESHOW_LOADING_COMMENTS
+		}),
+		toggleBookmarkedState(slideIndex) {
+			this.bookmarkLoading = true;
 
-				const slideId = this.getSlideIdFromIndex(slideIndex)
-				const slide = this.getSlideById(slideId)
-				const currentBookmarkState = slide.bookmark.hasReacted
+			const slideId = this.getSlideIdFromIndex(slideIndex);
+			const slide = this.getSlideById(slideId);
+			const currentBookmarkState = slide.bookmark.hasReacted;
 
-				return this.$store.dispatch(`slideshow/setReaction`, {
-					hasReacted: currentBookmarkState,
-					reactableResource: 'slides',
-					reactableId: slideId,
-					reaction: 'bookmark',
-					count: slide.bookmark.count,
-				}).then(() => {
-					this.child.call('setBookmarkState', slide.bookmark.hasReacted)
-					this.$emit('slideBookmarked', {slideId, hasReacted: slide.bookmark.hasReacted})
-				}).then(() => {
-					this.bookmarkLoading = false
-				}).catch(() => {
-					this.bookmarkLoading = false
-				})
-			},
-			toggleFullscreen() {
-				if (screenfull.enabled) {
-					screenfull.toggle(this.slideshowElement)
-				} else {
-					this.isFauxFullscreen = !this.isFauxFullscreen
-					this.child.call('toggleFullscreen', this.isFauxFullscreen)
-				}
-				this.focusSlideshow()
-			},
-			slideNumberFromIndex(index) {
-				return index + 1
-			},
-			goToSlide(slideIndex) {
-				if(slideIndex && slideIndex > -1) {
-					this.slideChanged = true
+			return this.$store.dispatch('slideshow/setReaction', {
+				hasReacted: currentBookmarkState,
+				reactableResource: 'slides',
+				reactableId: slideId,
+				reaction: 'bookmark',
+				count: slide.bookmark.count,
+			}).then(() => {
+				this.child.call('setBookmarkState', slide.bookmark.hasReacted);
+				this.$emit('slideBookmarked', {slideId, hasReacted: slide.bookmark.hasReacted});
+			}).then(() => {
+				this.bookmarkLoading = false;
+			}).catch(() => {
+				this.bookmarkLoading = false;
+			});
+		},
+		toggleFullscreen() {
+			if (screenfull.enabled) {
+				screenfull.toggle(this.slideshowElement);
+			} else {
+				this.isFauxFullscreen = !this.isFauxFullscreen;
+				this.child.call('toggleFullscreen', this.isFauxFullscreen);
+			}
+			// there is negation before screenfull.isFullscreen because it's returning the opposite value...
+			const fullscreenValue = screenfull.enabled ? !screenfull.isFullscreen : this.isFauxFullscreen;
+			this.emitUserEvent({
+				action: features.slideshow.feature_components.slide.actions.toggle_fullscreen.value,
+				feature: features.slideshow.value,
+				feature_component: features.slideshow.feature_components.slide.value,
+				target: this.currentSlideId,
+				value: Number(fullscreenValue)
+			});
+			this.focusSlideshow();
+		},
+		slideNumberFromIndex(index) {
+			return index + 1;
+		},
+		goToSlide(slideIndex) {
+			if(slideIndex && slideIndex > -1) {
+				this.slideChanged = true;
 
-					const newSlideId = this.getSlideIdFromIndex(slideIndex)
-					const slide = this.getSlideById(newSlideId)
-					const orderNumber = this.getSlidePositionById(newSlideId)
+				const newSlideId = this.getSlideIdFromIndex(slideIndex);
+				const slide = this.getSlideById(newSlideId);
+				const orderNumber = this.getSlidePositionById(newSlideId);
 
-					this.child.call('goToSlide', slideIndex)
-					this.child.call('setBookmarkState', slide.bookmark.hasReacted)
-					this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
+				this.child.call('goToSlide', slideIndex);
+				this.child.call('setBookmarkState', slide.bookmark.hasReacted);
+				this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber));
 
-					this.currentSlideId = newSlideId
-					this.currentSlideNumber = this.slideNumberFromIndex(slideIndex)
+				this.currentSlideId = newSlideId;
+				this.currentSlideNumber = this.slideNumberFromIndex(slideIndex);
 
-					this.focusSlideshow()
-				}
-			},
-			changeBackground(background = 'image') {
-				this.child.call('changeBackground', background)
-				this.focusSlideshow()
-			},
-			focusSlideshow() {
-				if (typeof this.child !== 'undefined' &&
+				this.focusSlideshow();
+			}
+		},
+		changeBackground(background = 'image') {
+			this.child.call('changeBackground', background);
+			this.focusSlideshow();
+		},
+		focusSlideshow() {
+			if (typeof this.child !== 'undefined' &&
 					this.child.hasOwnProperty('frame') &&
 					typeof this.child.frame !== 'undefined'
-				) {
-					this.child.frame.click()
-					this.child.frame.focus()
-				}
-				this.isFocused = true
-			},
-			checkFocus() {
-				this.isFocused = this.iframe === document.activeElement
-			},
-			initSlideshow(slideshowUrl = this.slideshowUrl) {
-				this.toggleOverlay({source: 'slideshow', display: true})
+			) {
+				this.child.frame.click();
+				this.child.frame.focus();
+			}
+			this.isFocused = true;
+		},
+		checkFocus() {
+			this.isFocused = this.iframe === document.activeElement;
+		},
+		initSlideshow(slideshowUrl = this.slideshowUrl) {
+			this.toggleOverlay({source: 'slideshow', display: true});
 
-				this.setSortedSlidesIds(this.presentableSortedSlidesIds)
+			this.setSortedSlidesIds(this.presentableSortedSlidesIds);
 
-				const postmateOptions = {
-					container: this.container,
-					url: slideshowUrl,
-				}
+			const postmateOptions = {
+				container: this.container,
+				url: slideshowUrl,
+			};
 
-				return this.postmateHandshake(postmateOptions)
-					.then(child => {
-						if (this.$route.query.slide) {
-							const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
-							if (newSlideIndex > -1) {
-								this.goToSlide(newSlideIndex);
-								this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
-							} else {
-								this.goToSlide(this.currentSlideIndex)
-							}
+			return this.postmateHandshake(postmateOptions)
+				.then(child => {
+					if (this.$route.query.slide) {
+						const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide));
+						if (newSlideIndex > -1) {
+							this.goToSlide(newSlideIndex);
+							this.$router.push(this.buildRouteFromSlideParam(newSlideIndex));
 						} else {
-							this.goToSlide(this.currentSlideIndex)
+							this.goToSlide(this.currentSlideIndex);
 						}
-						this.focusSlideshow()
-						this.loaded = true
-						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
-						this.debouncedTrackEvent({
-							target: this.currentSlideId
-						})
-						this.toggleOverlay({source: 'slideshow', display: false})
-					})
-					.catch(error => {
-						this.toggleOverlay({source: 'slideshow', display: false})
-						$wnl.logger.capture(error)
-					})
-			},
+					} else {
+						this.goToSlide(this.currentSlideIndex);
+					}
+					this.focusSlideshow();
+					this.loaded = true;
+					this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex);
+					this.debouncedTrackEvent({
+						target: this.currentSlideId
+					});
+					this.toggleOverlay({source: 'slideshow', display: false});
+				})
+				.catch(error => {
+					this.toggleOverlay({source: 'slideshow', display: false});
+					$wnl.logger.capture(error);
+				});
+		},
 
-			setSlideshowHtmlContent(htmlContent) {
-				this.toggleOverlay({source: 'slideshow', display: true})
+		setSlideshowHtmlContent(htmlContent) {
+			this.toggleOverlay({source: 'slideshow', display: true});
 
-				const postmateOptions = {
-					container: this.container,
-					targetOrigin: window.location.href,
-					srcdoc: htmlContent
-				}
+			const postmateOptions = {
+				container: this.container,
+				targetOrigin: window.location.href,
+				srcdoc: htmlContent
+			};
 
-				return this.postmateHandshake(postmateOptions)
-					.then(() => {
-						this.goToSlide(this.currentSlideIndex)
+			return this.postmateHandshake(postmateOptions)
+				.then(() => {
+					this.goToSlide(this.currentSlideIndex);
 
-						this.slideChanged = false
-						this.loaded = true
-						this.toggleOverlay({source: 'slideshow', display: false})
-						this.child.call('refreshChart', this.currentSlideIndex)
-						this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex)
-						this.debouncedTrackEvent({
-							target: this.currentSlideId
-						})
-					})
-					.catch(error => {
-						this.toggleOverlay({source: 'slideshow', display: false})
-						$wnl.logger.capture(error)
-					})
+					this.slideChanged = false;
+					this.loaded = true;
+					this.toggleOverlay({source: 'slideshow', display: false});
+					this.child.call('refreshChart', this.currentSlideIndex);
+					this.currentSlideId = this.getSlideIdFromIndex(this.currentSlideIndex);
+					this.debouncedTrackEvent({
+						target: this.currentSlideId
+					});
+				})
+				.catch(error => {
+					this.toggleOverlay({source: 'slideshow', display: false});
+					$wnl.logger.capture(error);
+				});
 
-			},
+		},
 
-			postmateHandshake(options) {
-				return new Promise((resolve, reject) => {
-					new Postmate(options)
+		postmateHandshake(options) {
+			return new Promise((resolve, reject) => {
+				new Postmate(options)
 					.then(child => {
-							this.child = child
-							this.slideshowElement = this.container.getElementsByTagName('iframe')[0]
-							this.setEventListeners()
-							child.frame.setAttribute('mozallowfullscreen', '');
-							child.frame.setAttribute('allowfullscreen', '');
+						this.child = child;
+						this.slideshowElement = this.container.getElementsByTagName('iframe')[0];
+						this.setEventListeners();
+						child.frame.setAttribute('mozallowfullscreen', '');
+						child.frame.setAttribute('allowfullscreen', '');
 
-							child.call('setDebug', isDebug())
+						child.call('setDebug', isDebug());
 
-							return resolve()
+						return resolve();
 					})
-					.catch(reject)
-				})
-			},
-			updateRoute(slideNumber) {
-				!this.preserveRoute && this.$router.replace({
-					name: 'screens',
-					params: { slide: slideNumber }
-				})
-			},
-			navigateToSlide(slideNumber) {
-				this.preserveRoute ? this.goToSlide(slideNumber - 1) : this.updateRoute(slideNumber)
-			},
-			messageEventListener(event) {
-				if (typeof event.data === 'string' && event.data.indexOf('reveal') > -1) {
-					try {
-						let data = JSON.parse(event.data)
-						if (data.namespace === 'reveal' &&
+					.catch(reject);
+			});
+		},
+		updateRoute(slideNumber) {
+			!this.preserveRoute && this.$router.replace({
+				name: 'screens',
+				params: { slide: slideNumber }
+			});
+		},
+		navigateToSlide(slideNumber) {
+			this.preserveRoute ? this.goToSlide(slideNumber - 1) : this.updateRoute(slideNumber);
+		},
+		messageEventListener(event) {
+			if (typeof event.data === 'string' && event.data.indexOf('reveal') > -1) {
+				try {
+					let data = JSON.parse(event.data);
+					if (data.namespace === 'reveal' &&
 							data.eventName === 'slidechanged' &&
 							this.slideChanged === false
-						) {
-							const currentSlideNumber = this.slideNumberFromIndex(data.state.indexh)
-							const slideId = this.getSlideIdFromIndex(data.state.indexh)
-							const slide = this.getSlideById(slideId)
-							const orderNumber = this.getSlidePositionById(slideId)
+					) {
+						const currentSlideNumber = this.slideNumberFromIndex(data.state.indexh);
+						const slideId = this.getSlideIdFromIndex(data.state.indexh);
+						const slide = this.getSlideById(slideId);
+						const orderNumber = this.getSlidePositionById(slideId);
 
 
-							this.currentSlideNumber = currentSlideNumber
-							this.currentSlideId = slideId
-							this.updateRoute(currentSlideNumber)
-							this.focusSlideshow()
+						this.currentSlideNumber = currentSlideNumber;
+						this.currentSlideId = slideId;
+						this.updateRoute(currentSlideNumber);
+						this.focusSlideshow();
 
-							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
-							this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber))
+						this.child.call('setBookmarkState', slide.bookmark.hasReacted);
+						this.child.call('setSlideOrderNumber', this.slideNumberFromIndex(orderNumber));
 
-							this.debouncedTrackEvent({
-								target: slideId
-							});
-						}
+						this.debouncedTrackEvent({
+							target: slideId
+						});
+					}
 
-						this.slideChanged = false
-					} catch (error) { $wnl.logger.error(error) }
-				} else if (typeof event.data === 'object' &&
+					this.slideChanged = false;
+				} catch (error) { $wnl.logger.error(error); }
+			} else if (typeof event.data === 'object' &&
 					event.data.hasOwnProperty('value')
-				) {
-					if (event.data.value.name === 'toggle-fullscreen') {
-						this.toggleFullscreen()
-					} else if (event.data.value.name === 'loaded') {
-						this.toggleOverlay({source: 'slideshow', display: false})
-					} else if (event.data.value.name === 'bookmark') {
-						const {index} = event.data.value.data
+			) {
+				if (event.data.value.name === 'toggle-fullscreen') {
+					this.toggleFullscreen();
+				} else if (event.data.value.name === 'loaded') {
+					this.toggleOverlay({source: 'slideshow', display: false});
+				} else if (event.data.value.name === 'bookmark') {
+					const {index} = event.data.value.data;
 
-						!this.bookmarkLoading && this.toggleBookmarkedState(index)
-					} else if (event.data.value.name === 'error') {
-						this.toggleOverlay({source: 'slideshow', display: false})
-					} else if (event.data.value.name === 'refresh-slideshow') {
-						if (this.presentableType === 'category') {
-							this.$emit('refreshSlideshow')
-							screenfull.exit(this.slideshowElement)
-						} else {
-							this.onRefreshSlideshow()
-						}
-						this.modifiedSlides = {}
-					} else if (event.data.value.name === 'navigate') {
-						window.open(event.data.value.data)
+					!this.bookmarkLoading && this.toggleBookmarkedState(index);
+				} else if (event.data.value.name === 'error') {
+					this.toggleOverlay({source: 'slideshow', display: false});
+				} else if (event.data.value.name === 'refresh-slideshow') {
+					if (this.presentableType === 'category') {
+						this.$emit('refreshSlideshow');
+						screenfull.exit(this.slideshowElement);
+					} else {
+						this.onRefreshSlideshow();
 					}
+					this.modifiedSlides = {};
+				} else if (event.data.value.name === 'navigate') {
+					window.open(event.data.value.data);
 				}
-			},
-			fullscreenChangeHandler(event) {
-				this.child.call('toggleFullscreen', screenfull.isFullscreen)
-			},
-			debouncedMessageListener: _.debounce(function(event) {this.messageEventListener(event)}, {
-				trailing: true,
-			}),
-			debouncedTrackEvent: _.debounce(function(payload) {
-				this.emitUserEvent({
-					action: features.slideshow.feature_components.slide.actions.open.value,
-					feature: features.slideshow.value,
-					feature_component: features.slideshow.feature_components.slide.value,
-					...payload
-				})
-			}),
-			setEventListeners() {
-				addEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
-				addEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
-				addEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
-
-				addEventListener('message', this.debouncedMessageListener)
-				addEventListener('blur', this.checkFocus)
-				addEventListener('focus', this.checkFocus)
-				addEventListener('focusout', this.checkFocus)
-			},
-			removeEventListeners() {
-				removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
-				removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
-				removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
-
-				removeEventListener('blur', this.checkFocus)
-				removeEventListener('focus', this.checkFocus)
-				removeEventListener('focusout', this.checkFocus)
-				removeEventListener('message', this.debouncedMessageListener)
-
-			},
-			destroySlideshow() {
-				this.toggleOverlay({source: 'slideshow', display: false})
-				if (typeof this.child.destroy === 'function') {
-					this.child.destroy()
-				}
-
-				this.removeEventListeners()
-				this.resetModule()
-				this.loaded = false
-			},
-			onAnnotationsUpdated(comments) {
-				if (typeof this.child !== 'undefined' && typeof this.child.call === 'function') {
-					const annotations = _.cloneDeep(comments)
-
-					if (annotations.length > 0) {
-						annotations.forEach((annotation) => {
-							annotation.profiles = annotation.profiles.map((id) => {
-								return this.commentProfile(id)
-							})
-						})
-					}
-
-					this.child.call('updateAnnotations', annotations)
-				}
-			},
-			onCommentsHidden() {
-				this.focusSlideshow()
-				scrollToTop()
-			},
-			buildRouteFromSlideParam(index) {
-				return {
-					...this.$route,
-					params: {
-						...this.$route.params,
-						slide: this.slideNumberFromIndex(index)
-					},
-					query: {
-						...this.$route.query
-					}
-				}
-			},
-			setupCollection() {
-				return this.setSlideshowHtmlContent(this.htmlContent).catch((error) => {
-						this.toggleOverlay({source: 'slideshow', display: false})
-						$wnl.logger.capture(error)
-					})
-			},
-			onRefreshSlideshow() {
-				this.toggleOverlay({source: 'slideshow', display: true})
-				this.removeEventListeners()
-
-				Promise.all([
-					axios.get(this.slideshowUrl),
-					this.setup({id: this.presentableId})
-				]).then(([{data}]) => {
-					if (typeof this.child.destroy === 'function') {
-						this.child.destroy()
-					}
-					this.setSortedSlidesIds(this.presentableSortedSlidesIds)
-					this.setSlideshowHtmlContent(data)
-						.then(() => {
-							const slide = this.getSlideById(this.currentSlideId)
-							this.child.call('setBookmarkState', slide.bookmark.hasReacted)
-						})
-				})
-			},
-			changeSlideWatcher(currentSlideId, previousSlideId) {
-				this.setupSlideComments({id: currentSlideId})
-
-				Echo.channel(`commentable-slide-${currentSlideId}`)
-					.listen('.App.Events.Live.LiveContentUpdated', async ({data: {event, subject}}) => {
-						switch (event) {
-							case 'comment-posted':
-								await this.setupSlideComments({id: currentSlideId, query: {
-										where: [['id', subject.id]]
-									}})
-								break
-						}
-					});
-
-				Echo.leave(`commentable-slide-${previousSlideId}`)
-			},
-			debouncedChangeSlideWatcher: _.debounce(function(...args) {
-				this.changeSlideWatcher(...args)
-				}, 300, {leading: false, trailing: true})
+			}
 		},
-		mounted() {
-			Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)
-				.listen('.App.Events.Live.LiveContentUpdated', ({data: {event, subject, context}}) => {
+		fullscreenChangeHandler(event) {
+			this.child.call('toggleFullscreen', screenfull.isFullscreen);
+		},
+		debouncedMessageListener: _.debounce(function(event) {this.messageEventListener(event);}, {
+			trailing: true,
+		}),
+		debouncedTrackEvent: _.debounce(function(payload) {
+			this.emitUserEvent({
+				action: features.slideshow.feature_components.slide.actions.open.value,
+				feature: features.slideshow.value,
+				feature_component: features.slideshow.feature_components.slide.value,
+				...payload
+			});
+		}),
+		setEventListeners() {
+			addEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
+			addEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
+			addEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
+
+			addEventListener('message', this.debouncedMessageListener);
+			addEventListener('blur', this.checkFocus);
+			addEventListener('focus', this.checkFocus);
+			addEventListener('focusout', this.checkFocus);
+		},
+		removeEventListeners() {
+			removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
+			removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
+			removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
+
+			removeEventListener('blur', this.checkFocus);
+			removeEventListener('focus', this.checkFocus);
+			removeEventListener('focusout', this.checkFocus);
+			removeEventListener('message', this.debouncedMessageListener);
+
+		},
+		destroySlideshow() {
+			this.toggleOverlay({source: 'slideshow', display: false});
+			if (typeof this.child.destroy === 'function') {
+				this.child.destroy();
+			}
+
+			this.removeEventListeners();
+			this.resetModule();
+			this.loaded = false;
+		},
+		onAnnotationsUpdated(comments) {
+			if (typeof this.child !== 'undefined' && typeof this.child.call === 'function') {
+				const annotations = _.cloneDeep(comments);
+
+				if (annotations.length > 0) {
+					annotations.forEach((annotation) => {
+						annotation.profiles = annotation.profiles.map((id) => {
+							return this.commentProfile(id);
+						});
+					});
+				}
+
+				this.child.call('updateAnnotations', annotations);
+			}
+		},
+		onCommentsHidden() {
+			this.focusSlideshow();
+			scrollToTop();
+		},
+		buildRouteFromSlideParam(index) {
+			return {
+				...this.$route,
+				params: {
+					...this.$route.params,
+					slide: this.slideNumberFromIndex(index)
+				},
+				query: {
+					...this.$route.query
+				}
+			};
+		},
+		setupCollection() {
+			return this.setSlideshowHtmlContent(this.htmlContent).catch((error) => {
+				this.toggleOverlay({source: 'slideshow', display: false});
+				$wnl.logger.capture(error);
+			});
+		},
+		onRefreshSlideshow() {
+			this.toggleOverlay({source: 'slideshow', display: true});
+			this.removeEventListeners();
+
+			Promise.all([
+				axios.get(this.slideshowUrl),
+				this.setup({id: this.presentableId})
+			]).then(([{data}]) => {
+				if (typeof this.child.destroy === 'function') {
+					this.child.destroy();
+				}
+				this.setSortedSlidesIds(this.presentableSortedSlidesIds);
+				this.setSlideshowHtmlContent(data)
+					.then(() => {
+						const slide = this.getSlideById(this.currentSlideId);
+						this.child.call('setBookmarkState', slide.bookmark.hasReacted);
+					});
+			});
+		},
+		changeSlideWatcher(currentSlideId, previousSlideId) {
+			this.setupSlideComments({id: currentSlideId});
+
+			Echo.channel(`commentable-slide-${currentSlideId}`)
+				.listen('.App.Events.Live.LiveContentUpdated', async ({data: {event, subject}}) => {
 					switch (event) {
-						case 'slide-added':
-							// TODO consider passing order_number in given presentable from event
-							this.modifiedSlides[subject.id] = {order_number: context.params.slide - 1, action: 'add'}
-							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
-							break
-						case 'slide-updated':
-							this.modifiedSlides[subject.id] = {...this.getSlideById(subject.id), action: 'edit'}
-							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
-							break
-						case 'slide-detached':
-							this.modifiedSlides[subject.id] = {...this.getSlideById(subject.id), action: 'delete'}
-							this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides))
-							break
+					case 'comment-posted':
+						await this.setupSlideComments({commentable_id: currentSlideId, comment_id: subject.id});
+						break;
 					}
 				});
 
-			Postmate.debug = isDebug()
-			this.toggleOverlay({source: 'slideshow', display: true})
-			if (this.htmlContent) {
-				// logic related with category / collection
-				this.setupCollection()
-			} else {
-				// logic related with lesson
-				this.setup({id: this.presentableId})
-					.then(() => {
-						return this.initSlideshow()
-					}).catch(error => {
-						this.toggleOverlay({source: 'slideshow', display: false})
-						$wnl.logger.capture(error)
-					})
+			Echo.leave(`commentable-slide-${previousSlideId}`);
+		},
+		debouncedChangeSlideWatcher: _.debounce(function(...args) {
+			this.changeSlideWatcher(...args);
+		}, 300, {leading: false, trailing: true})
+	},
+	mounted() {
+		Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)
+			.listen('.App.Events.Live.LiveContentUpdated', ({data: {event, subject, context}}) => {
+				switch (event) {
+				case 'slide-added':
+					// TODO consider passing order_number in given presentable from event
+					this.modifiedSlides[subject.id] = {order_number: context.params.slide - 1, action: 'add'};
+					this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides));
+					break;
+				case 'slide-updated':
+					this.modifiedSlides[subject.id] = {...this.getSlideById(subject.id), action: 'edit'};
+					this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides));
+					break;
+				case 'slide-detached':
+					this.modifiedSlides[subject.id] = {...this.getSlideById(subject.id), action: 'delete'};
+					this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides));
+					break;
+				}
+			});
+
+		Postmate.debug = isDebug();
+		this.toggleOverlay({source: 'slideshow', display: true});
+		if (this.htmlContent) {
+			// logic related with category / collection
+			this.setupCollection();
+		} else {
+			// logic related with lesson
+			this.setup({id: this.presentableId})
+				.then(() => {
+					return this.initSlideshow();
+				}).catch(error => {
+					this.toggleOverlay({source: 'slideshow', display: false});
+					$wnl.logger.capture(error);
+				});
+		}
+	},
+	beforeDestroy() {
+		this.destroySlideshow();
+	},
+	watch: {
+		'$route' (to, from) {
+			if (to.params.screenId != from.params.screenId) {
+				return this.destroySlideshow();
+			}
+
+			if (to.params.categoryName != from.params.categoryName) {
+				return this.destroySlideshow();
+			}
+
+			if (to.query.slide && to.query.slide !== this.currentSlideId) {
+				const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide));
+				if (newSlideIndex > -1) {
+					this.goToSlide(newSlideIndex);
+					this.$router.push(this.buildRouteFromSlideParam(newSlideIndex));
+				}
+			}
+
+			if (to.query.slide === this.currentSlideId) {
+				const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide));
+				if (newSlideIndex > -1) {
+					this.$router.push(this.buildRouteFromSlideParam(newSlideIndex));
+				}
+			}
+
+			let fromSlide = from.params.slide || 0,
+				toSlide = to.params.slide;
+
+			if (this.loaded && !_.isUndefined(toSlide)) {
+				if (this.getSetting('skip_functional_slides') && !!this.isFunctional(toSlide)) {
+					let direction = toSlide > fromSlide ? 'next' : 'previous',
+						skipTo = this.findRegularSlide(toSlide, direction);
+					this.goToSlide(skipTo - 1);
+				} else if (toSlide !== this.currentSlideNumber) {
+					this.goToSlide(toSlide - 1);
+				}
 			}
 		},
-		beforeDestroy() {
-			this.destroySlideshow()
+		'htmlContent'(newContent) {
+			if (typeof this.child.destroy === 'function') {
+				this.child.destroy();
+			}
+
+			this.removeEventListeners();
+			this.setSlideshowHtmlContent(newContent);
+			this.modifiedSlides = {};
 		},
-		watch: {
-			'$route' (to, from) {
-				if (to.params.screenId != from.params.screenId) {
-					return this.destroySlideshow()
-				}
+		'screenData' (newValue, oldValue) {
+			if (newValue.type === 'slideshow' && newValue.id !== oldValue.id) {
+				this.toggleOverlay({source: 'slideshow', display: true});
 
-				if (to.params.categoryName != from.params.categoryName) {
-					return this.destroySlideshow()
-				}
-
-				if (to.query.slide && to.query.slide !== this.currentSlideId) {
-					const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
-					if (newSlideIndex > -1) {
-						this.goToSlide(newSlideIndex);
-						this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
-					}
-				}
-
-				if (to.query.slide === this.currentSlideId) {
-					const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide))
-					if (newSlideIndex > -1) {
-						this.$router.push(this.buildRouteFromSlideParam(newSlideIndex))
-					}
-				}
-
-				let fromSlide = from.params.slide || 0,
-					toSlide = to.params.slide
-
-				if (this.loaded && !_.isUndefined(toSlide)) {
-					if (this.getSetting('skip_functional_slides') && !!this.isFunctional(toSlide)) {
-						let direction = toSlide > fromSlide ? 'next' : 'previous',
-							skipTo = this.findRegularSlide(toSlide, direction)
-						this.goToSlide(skipTo - 1)
-					} else if (toSlide !== this.currentSlideNumber) {
-						this.goToSlide(toSlide - 1)
-					}
-				}
-			},
-			'htmlContent'(newContent) {
-				if (typeof this.child.destroy === 'function') {
-					this.child.destroy()
-				}
-
-				this.removeEventListeners()
-				this.setSlideshowHtmlContent(newContent)
-				this.modifiedSlides = {}
-			},
-			'screenData' (newValue, oldValue) {
-				if (newValue.type === 'slideshow' && newValue.id !== oldValue.id) {
-					this.toggleOverlay({source: 'slideshow', display: true})
-
-					this.setup({id: this.presentableId})
+				this.setup({id: this.presentableId})
 					.then(() => {
 						this.initSlideshow()
 							.then(() => {
-								this.goToSlide(Math.max(this.$route.params.slide - 1, 0))
+								this.goToSlide(Math.max(this.$route.params.slide - 1, 0));
 							}).catch(error => {
-								this.toggleOverlay({source: 'slideshow', display: false})
-								$wnl.logger.capture(error)
-							})
+								this.toggleOverlay({source: 'slideshow', display: false});
+								$wnl.logger.capture(error);
+							});
 					}).catch(error => {
-						this.toggleOverlay({source: 'slideshow', display: false})
-						$wnl.logger.capture(error)
-					})
-				}
-			},
-			'slideOrderNumber' (slideOrderNumber) {
-				typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber)
-			},
-			isLoadingComments(isLoadingComments) {
-				if (!isLoadingComments) {
-					this.onAnnotationsUpdated(this.comments({
-						resource: 'slides',
-						id: this.getSlideIdFromIndex(this.currentSlideIndex),
-					}))
-				}
-			},
-			currentSlideId(...args) {
-				this.loadingComments(true);
-				this.debouncedChangeSlideWatcher(...args)
-			},
-		}
+						this.toggleOverlay({source: 'slideshow', display: false});
+						$wnl.logger.capture(error);
+					});
+			}
+		},
+		'slideOrderNumber' (slideOrderNumber) {
+			typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber);
+		},
+		isLoadingComments(isLoadingComments) {
+			if (!isLoadingComments) {
+				this.onAnnotationsUpdated(this.comments({
+					resource: 'slides',
+					id: this.getSlideIdFromIndex(this.currentSlideIndex),
+				}));
+			}
+		},
+		currentSlideId(...args) {
+			this.loadingComments(true);
+			this.debouncedChangeSlideWatcher(...args);
+		},
 	}
+};
 </script>

@@ -28,4 +28,4 @@ export const quiz = {
 			title: 'Spróbuj jeszcze raz!'
 		}
 	}
-}
+};

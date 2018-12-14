@@ -17,7 +17,7 @@ class SlidesImport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'slides:import {dir?} {--id=}*';
+	protected $signature = 'slides:import {dir?} {--id=}* {--enableSlidesMatching}';
 
 	/**
 	 * The console command description.
@@ -52,6 +52,7 @@ class SlidesImport extends Command
 		}
 
 		$screenId = $this->option('id');
+		$enableSlidesMatching = $this->option('enableSlidesMatching');
 
 		$files = Storage::disk('s3')->files($path);
 		$this->info('Importing slideshows...');
@@ -64,7 +65,7 @@ class SlidesImport extends Command
 			$bar->advance();
 			\Log::debug($file . ' processed');
 		}
-		if (!$files) $this->importFile($path, $screenId);
+		if (!$files) $this->importFile($path, $screenId, $enableSlidesMatching);
 		print PHP_EOL;
 
 		Artisan::queue('tags:fromCategories');
@@ -79,9 +80,9 @@ class SlidesImport extends Command
 	 *
 	 * @param $file
 	 */
-	public function importFile($file, $screenId = null)
+	public function importFile($file, $screenId = null, $enableSlidesMatching = false)
 	{
 		$contents = Storage::disk('s3')->get($file);
-		$this->parser->parse($contents, $screenId);
+		$this->parser->parse($contents, $screenId, $enableSlidesMatching);
 	}
 }

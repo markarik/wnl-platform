@@ -5,4 +5,4 @@ export const nav = {
 	sideNav: {
 		questions: 'Pytania'
 	}
-}
+};

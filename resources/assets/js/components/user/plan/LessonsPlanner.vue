@@ -62,91 +62,91 @@
 </style>
 
 <script>
-	import OpenAllPlan from './OpenAllPlan'
-	import AutomaticPlan from './AutomaticPlan'
-	import DefaultPlan from './DefaultPlan'
-	import ManualPlan from './ManualPlan'
-	import { first,last } from 'lodash'
-	import { mapGetters } from 'vuex'
-	import moment from 'moment'
-	import emits_events from 'js/mixins/emits-events'
+import OpenAllPlan from './OpenAllPlan';
+import AutomaticPlan from './AutomaticPlan';
+import DefaultPlan from './DefaultPlan';
+import ManualPlan from './ManualPlan';
+import { first,last } from 'lodash';
+import { mapGetters } from 'vuex';
+import moment from 'moment';
+import emits_events from 'js/mixins/emits-events';
 
-	export default {
-		name: 'LessonsPlanner',
-		mixins: [emits_events],
-		data() {
-			return {
-				views: [
-					{
-						title: 'Ustaw plan ręcznie',
-						component: ManualPlan,
-						isActive: true
-					},
-					{
-						title: 'Przywróć domyślny plan',
-						component: DefaultPlan,
-					},
-					{
-						title: 'Wygeneruj plan automatycznie',
-						component: AutomaticPlan,
-					},
-					{
-						title: 'Otwórz wszystkie lekcje',
-						component: OpenAllPlan,
-					}
-				],
-			}
+export default {
+	name: 'LessonsPlanner',
+	mixins: [emits_events],
+	data() {
+		return {
+			views: [
+				{
+					title: 'Ustaw plan ręcznie',
+					component: ManualPlan,
+					isActive: true
+				},
+				{
+					title: 'Przywróć domyślny plan',
+					component: DefaultPlan,
+				},
+				{
+					title: 'Wygeneruj plan automatycznie',
+					component: AutomaticPlan,
+				},
+				{
+					title: 'Otwórz wszystkie lekcje',
+					component: OpenAllPlan,
+				}
+			],
+		};
+	},
+	computed: {
+		...mapGetters('course', ['userLessons', 'getRequiredLessons']),
+		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
+		sortedRequiredUserLessons() {
+			return this.requiredLessons.sort((lessonA, lessonB) => {
+				return lessonA.startDate - lessonB.startDate;
+			});
 		},
-		computed: {
-			...mapGetters('course', ['userLessons', 'getRequiredLessons']),
-			...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
-			sortedRequiredUserLessons() {
-				return this.requiredLessons.sort((lessonA, lessonB) => {
-					return lessonA.startDate - lessonB.startDate
-				})
-			},
-			requiredLessons() {
-				return Object.values(this.getRequiredLessons).filter(requiredLesson => {
-					if (requiredLesson.is_required && requiredLesson.isAccessible) {
-						return requiredLesson
-					}
-				})
-			},
-			planStartDate() {
-				if (!first(this.sortedRequiredUserLessons)) return
-
-				return moment(first(this.sortedRequiredUserLessons).startDate * 1000).format('LL')
-			},
-			planEndDate() {
-				if (!last(this.sortedRequiredUserLessons)) return
-
-				return moment(last(this.sortedRequiredUserLessons).startDate * 1000).format('LL')
-			},
-			activeView() {
-				return this.views.find(view => view.isActive) || {}
-			},
-			activeViewComponent() {
-				return this.activeView.component
-			},
-			userFriendlySubscriptionDate() {
-				return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL')
-			}
+		requiredLessons() {
+			return Object.values(this.getRequiredLessons).filter(requiredLesson => {
+				if (requiredLesson.is_required && requiredLesson.isAccessible) {
+					return requiredLesson;
+				}
+			});
 		},
-		methods: {
-			toggleView(selectedView) {
-				this.views = this.views.map(view => {
-					if (selectedView.title === view.title) {
-						return {
-							...view,
-							isActive: true
-						}
-					}
+		planStartDate() {
+			if (!first(this.sortedRequiredUserLessons)) return;
+
+			return moment(first(this.sortedRequiredUserLessons).startDate * 1000).format('LL');
+		},
+		planEndDate() {
+			if (!last(this.sortedRequiredUserLessons)) return;
+
+			return moment(last(this.sortedRequiredUserLessons).startDate * 1000).format('LL');
+		},
+		activeView() {
+			return this.views.find(view => view.isActive) || {};
+		},
+		activeViewComponent() {
+			return this.activeView.component;
+		},
+		userFriendlySubscriptionDate() {
+			return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL');
+		}
+	},
+	methods: {
+		toggleView(selectedView) {
+			this.views = this.views.map(view => {
+				if (selectedView.title === view.title) {
 					return {
 						...view,
-						isActive: false
-					}
-				})
-			},
-		}
+						isActive: true
+					};
+				}
+				return {
+					...view,
+					isActive: false
+				};
+			});
+		},
 	}
+};
 </script>

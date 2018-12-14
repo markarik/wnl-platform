@@ -63,73 +63,73 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex';
+import {mapGetters} from 'vuex';
 
-	import LessonsPlanner from './LessonsPlanner';
-	import PlannerGuarantee from './PlanGuarantee.vue';
-	import PlannerGuide from './PlannerGuide';
-	import DownloadPlan from './DownloadPlan';
-	import Dropdown from 'js/components/global/Dropdown'
-	import emits_events from 'js/mixins/emits-events'
-	import context from 'js/consts/events_map/context.json';
+import LessonsPlanner from './LessonsPlanner';
+import PlannerGuarantee from './PlanGuarantee.vue';
+import PlannerGuide from './PlannerGuide';
+import DownloadPlan from './DownloadPlan';
+import Dropdown from 'js/components/global/Dropdown'
+import emits_events from 'js/mixins/emits-events'
+import context from 'js/consts/events_map/context.json';
 
-	export default {
-		name: 'PlanView',
-		components: { 'wnl-dropdown': Dropdown },
-		mixins: [emits_events],
-		data() {
-			return {
-				tabs: [
-					{
-						title: 'Twój plan pracy',
-						component: LessonsPlanner,
-						isActive: true
-					},
-					{
-						title: 'Jak zmienić plan?',
-						component: PlannerGuide,
-					},
-					{
-						title: 'Gwarancja satysfakcji',
-						component: PlannerGuarantee,
-					},
-					{
-						title: 'Pobierz plan pracy',
-						component: DownloadPlan,
-					}
-				]
-			}
+export default {
+	name: 'PlanView',
+	components: { 'wnl-dropdown': Dropdown },
+	mixins: [emits_events],
+	data() {
+		return {
+			tabs: [
+				{
+					title: 'Twój plan pracy',
+					component: LessonsPlanner,
+					isActive: true
+				},
+				{
+					title: 'Jak zmienić plan?',
+					component: PlannerGuide,
+				},
+				{
+					title: 'Gwarancja satysfakcji',
+					component: PlannerGuarantee,
+				},
+				{
+					title: 'Pobierz plan pracy',
+					component: DownloadPlan,
+				},
+			]
+		};
+	},
+	computed: {
+		...mapGetters(['isMobile']),
+		activeTab() {
+			return this.tabs.find(tab => tab.isActive) || {};
 		},
-		computed: {
-			...mapGetters(['isMobile']),
-			activeTab() {
-				return this.tabs.find(tab => tab.isActive) || {}
-			},
-			activeView() {
-				return this.activeTab.component
-			}
-		},
-		methods: {
-			onTabSelect(selectedTab) {
-				this.tabs = this.tabs.map(tab => {
-					if (selectedTab.title === tab.title) {
-						return {
-							...tab,
-							isActive: true
-						}
-					}
+		activeView() {
+			return this.activeTab.component;
+		}
+	},
+	methods: {
+		onTabSelect(selectedTab) {
+			this.tabs = this.tabs.map(tab => {
+				if (selectedTab.title === tab.title) {
 					return {
 						...tab,
-						isActive: false
-					}
-				});
-			},
-			onUserEvent(payload) {
-				this.emitUserEvent({
-					subcontext: context.account.subcontext.course_plan.value,
-					...payload
-				})
-			}
+						isActive: true
+					};
+				}
+				return {
+					...tab,
+					isActive: false
+				};
+			});
+		},
+		onUserEvent(payload) {
+			this.emitUserEvent({
+				subcontext: context.account.subcontext.course_plan.value,
+				...payload
+			});
 		}
 	}
+};
 </script>

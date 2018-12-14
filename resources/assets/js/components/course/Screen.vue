@@ -20,130 +20,130 @@
 </style>
 
 <script>
-	import End from 'js/components/course/screens/End'
-	import Html from 'js/components/course/screens/Html'
-	import MockExam from 'js/components/course/screens/MockExam'
-	import Flashcards from 'js/components/course/screens/flashcards/Flashcards'
-	import Qna from 'js/components/qna/Qna'
-	import Quiz from 'js/components/quiz/Quiz'
-	import Slideshow from 'js/components/course/screens/slideshow/Slideshow'
-	import Widget from 'js/components/course/screens/Widget'
-	import emits_events from 'js/mixins/emits-events';
-	import {mapGetters, mapActions} from 'vuex';
-	import features from "js/consts/events_map/features.json";
+import End from 'js/components/course/screens/End';
+import Html from 'js/components/course/screens/Html';
+import MockExam from 'js/components/course/screens/MockExam';
+import Flashcards from 'js/components/course/screens/flashcards/Flashcards';
+import Qna from 'js/components/qna/Qna';
+import Quiz from 'js/components/quiz/Quiz';
+import Slideshow from 'js/components/course/screens/slideshow/Slideshow';
+import Widget from 'js/components/course/screens/Widget';
+import emits_events from 'js/mixins/emits-events';
+import {mapGetters, mapActions} from 'vuex';
+import features from 'js/consts/events_map/features.json';
 
-	const TYPES_MAP = {
-		end: {
-			component: 'wnl-end',
-			feature_component: features.screen.feature_components.bonuses.value
-		},
-		html: {
-			component: 'wnl-html',
-			feature_component: features.screen.feature_components.html.value
-		},
-		slideshow: {
-			component: 'wnl-slideshow',
-			feature_component: features.screen.feature_components.slideshow.value
-		},
-		quiz: {
-			component: 'wnl-quiz',
-			feature_component: features.screen.feature_components.quiz_set.value
-		},
-		widget: {
-			component: 'wnl-widget',
-			feature_component: features.screen.feature_components.widget.value
-		},
-		mockexam: {
-			component: 'wnl-mock-exam',
-			feature_component: features.screen.feature_components.mockexam.value
-		},
-		flashcards: {
-			component: 'wnl-flashcards',
-			feature_component: features.screen.feature_components.flashcards.value
-		},
-	}
+const TYPES_MAP = {
+	end: {
+		component: 'wnl-end',
+		feature_component: features.screen.feature_components.bonuses.value
+	},
+	html: {
+		component: 'wnl-html',
+		feature_component: features.screen.feature_components.html.value
+	},
+	slideshow: {
+		component: 'wnl-slideshow',
+		feature_component: features.screen.feature_components.slideshow.value
+	},
+	quiz: {
+		component: 'wnl-quiz',
+		feature_component: features.screen.feature_components.quiz_set.value
+	},
+	widget: {
+		component: 'wnl-widget',
+		feature_component: features.screen.feature_components.widget.value
+	},
+	mockexam: {
+		component: 'wnl-mock-exam',
+		feature_component: features.screen.feature_components.mockexam.value
+	},
+	flashcards: {
+		component: 'wnl-flashcards',
+		feature_component: features.screen.feature_components.flashcards.value
+	},
+};
 
-	export default {
-		name: 'Screen',
-		components: {
-			'wnl-end': End,
-			'wnl-html': Html,
-			'wnl-mock-exam': MockExam,
-			'wnl-qna': Qna,
-			'wnl-quiz': Quiz,
-			'wnl-slideshow': Slideshow,
-			'wnl-widget': Widget,
-			'wnl-flashcards': Flashcards
+export default {
+	name: 'Screen',
+	components: {
+		'wnl-end': End,
+		'wnl-html': Html,
+		'wnl-mock-exam': MockExam,
+		'wnl-qna': Qna,
+		'wnl-quiz': Quiz,
+		'wnl-slideshow': Slideshow,
+		'wnl-widget': Widget,
+		'wnl-flashcards': Flashcards
+	},
+	mixins: [emits_events],
+	props: ['screenId'],
+	data() {
+		return {
+			model: 'App\\Models\\Screen'
+		};
+	},
+	computed: {
+		...mapGetters('course', [
+			'getScreen',
+		]),
+		screenData() {
+			return this.getScreen(this.screenId);
 		},
-		mixins: [emits_events],
-		props: ['screenId'],
-		data() {
-			return {
-				model: 'App\\Models\\Screen'
-			}
+		name() {
+			return this.screenData.name;
 		},
-		computed: {
-			...mapGetters('course', [
-				'getScreen',
-			]),
-			screenData() {
-				return this.getScreen(this.screenId)
-			},
-			name() {
-				return this.screenData.name
-			},
-			type() {
-				return this.screenData.type
-			},
-			tags() {
-				return this.screenData.tags
-			},
-			component() {
-				return TYPES_MAP[this.type].component
-			},
-			showQna() {
-				return this.tags.length > 0
-			},
-			eventFeatureComponent() {
-				return TYPES_MAP[this.type].feature_component
-			}
+		type() {
+			return this.screenData.type;
 		},
-		methods: {
-			...mapActions('qna', ['fetchQuestionsByTags']),
-			...mapActions('course', ['fetchScreenContent']),
-			...mapActions(['toggleOverlay']),
+		tags() {
+			return this.screenData.tags;
+		},
+		component() {
+			return TYPES_MAP[this.type].component;
+		},
+		showQna() {
+			return this.tags.length > 0;
+		},
+		eventFeatureComponent() {
+			return TYPES_MAP[this.type].feature_component;
+		}
+	},
+	methods: {
+		...mapActions('qna', ['fetchQuestionsByTags']),
+		...mapActions('course', ['fetchScreenContent']),
+		...mapActions(['toggleOverlay']),
 
-			fetchContent() {
-				if (this.screenData.hasOwnProperty('content')) return
+		fetchContent() {
+			if (this.screenData.hasOwnProperty('content')) return;
 
-				this.toggleOverlay({source: 'screens', display: true})
-				this.fetchScreenContent(this.screenId)
-					.then(() => this.toggleOverlay({source: 'screens', display: false}))
-					.catch((error) => {
-						this.toggleOverlay({source: 'screens', display: false})
-						$wnl.logger.capture(error)
-					})
-			},
-			trackScreenOpen() {
-				this.emitUserEvent({
-					feature: features.screen.value,
-					feature_component: this.eventFeatureComponent,
-					action: features.screen.actions.open.value,
-					target: this.screenId
-				})
-			}
+			this.toggleOverlay({source: 'screens', display: true});
+			this.fetchScreenContent(this.screenId)
+				.then(() => this.toggleOverlay({source: 'screens', display: false}))
+				.catch((error) => {
+					this.toggleOverlay({source: 'screens', display: false});
+					$wnl.logger.capture(error);
+				});
 		},
-		mounted() {
-			this.fetchContent()
-			this.showQna && this.fetchQuestionsByTags({tags: this.tags})
-			this.trackScreenOpen()
-		},
-		watch: {
-			screenId() {
-				this.fetchContent()
-				this.showQna && this.fetchQuestionsByTags({tags: this.tags})
-				this.trackScreenOpen()
-			}
+		trackScreenOpen() {
+			this.emitUserEvent({
+				feature: features.screen.value,
+				feature_component: this.eventFeatureComponent,
+				action: features.screen.actions.open.value,
+				target: this.screenId
+			});
+		}
+	},
+	mounted() {
+		this.fetchContent();
+		this.showQna && this.fetchQuestionsByTags({tags: this.tags});
+		this.trackScreenOpen();
+	},
+	watch: {
+		screenId() {
+			this.fetchContent();
+			this.showQna && this.fetchQuestionsByTags({tags: this.tags});
+			this.trackScreenOpen();
 		}
 	}
+};
 </script>

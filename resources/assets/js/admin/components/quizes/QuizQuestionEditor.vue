@@ -12,10 +12,32 @@
 			ref="quizQuestionForm"
 		>
 			<header class="question-form-header">
-				<h4 v-if="isEdit">Edycja pytania <strong>{{$route.params.quizId}}</strong></h4>
+				<h4 v-if="isEdit">
+					Edycja pytania
+					<strong>{{$route.params.quizId}}</strong>
+					<strong class="has-text-danger" v-if="questionIsDeleted">Usunięte</strong>
+				</h4>
 				<h4 v-else>Tworzenie nowego pytania</h4>
 				<div class="field save-button-field">
 					<div class="control">
+						<button
+								v-if="isEdit && !questionIsDeleted"
+								class="button is-danger"
+								type="button"
+								@click="onDelete"
+						>
+							<span class="icon"><i class="fa fa-trash"></i></span>
+							<span>Usuń</span>
+						</button>
+						<button
+								v-if="isEdit && questionIsDeleted"
+								class="button is-warning"
+								type="button"
+								@click="onUndelete"
+						>
+							<span class="icon"><i class="fa fa-undo"></i></span>
+							<span>Przywróć</span>
+						</button>
 						<button class="button is-primary" @click.stop.prevent="onFormSave">Zapisz</button>
 					</div>
 				</div>
@@ -147,128 +169,166 @@
 </style>
 
 <script>
-	import { mapActions, mapGetters } from 'vuex';
-	import { Quill, Form, Tags, SlideIds } from 'js/components/global/form'
-	import { nextTick } from 'vue'
-	import _ from 'lodash'
+import { mapActions, mapGetters } from 'vuex';
+import { Quill, Form, Tags, SlideIds } from 'js/components/global/form';
+import { nextTick } from 'vue';
+import _ from 'lodash';
+import {getApiUrl} from 'js/utils/env';
 
-	export default {
-		name: 'QuizesEditor',
-		components: {
-			'wnl-form': Form,
-			'wnl-quill': Quill,
-			'wnl-tags': Tags,
-			'wnl-slide-ids': SlideIds
-		},
-		data: function () {
-			return {
-				questionQuillContent: '',
-				explanationQuillContent: '',
-				attach: null
-			}
-		},
-		props: ['isEdit'],
-		computed: {
-			...mapGetters([
-				'questionText',
-				'questionExplanation',
-				'questionAnswers',
-				'questionSlides',
-				'questionAnswersMap',
-				'questionId',
-				'questionTags',
-				'preserveOrder'
-			]),
-			formResourceRoute() {
-				if (!this.isEdit) {
-					return 'quiz_questions?include=quiz_answers'
-				} else {
-					return `quiz_questions/${this.$route.params.quizId}?include=quiz_answers`
-				}
-			},
-			formMethod() {
-				return this.isEdit ? 'put' : 'post'
-			}
-		},
-		methods: {
-			...mapActions([
-				'getQuizQuestion',
-				'setupFreshQuestion'
-			]),
-			onQuestionInput() {
-				this.questionQuillContent = this.$refs.questionEditor.editor.innerHTML
-			},
-			onExplanationInput() {
-				this.explanationQuillContent = this.$refs.explanationEditor.editor.innerHTML
-			},
-			onRightAnswerChange(evt) {
-				const previouslyChecked = this.$el.querySelectorAll('.answer-correct')
-
-				Array.prototype.forEach.call(previouslyChecked, checkbox => {
-					if (checkbox !== evt.target) {
-						checkbox.checked = false
-					}
-				});
-			},
-			onFormSave() {
-				// This way we can attach answers and tags
-				this.attach = this.getAttachedData()
-				this.$nextTick(() => this.$refs.quizQuestionForm.onSubmitForm());
-			},
-			getAttachedData() {
-				const attachedData = {};
-				const answerFields = this.$el.querySelectorAll('.answer-field')
-				const answerFieldsArray = Array.prototype.slice.call(answerFields)
-
-				const answersData = answerFieldsArray
-					.map(field => ({
-						id: field.dataset.id,
-						text: field.querySelector('.answer-text').value,
-						is_correct: field.querySelector('.answer-correct').checked,
-					}))
-
-				attachedData.answers = answersData;
-
-				if (this.$refs.tags.haveTagsChanged()) {
-					attachedData.tags = this.$refs.tags.tags
-				}
-
-				if (this.$refs.slides.haveSlidesChanged()) {
-					attachedData.slides = _.map(this.$refs.slides.slides, slide => slide.id)
-				}
-
-				attachedData['preserve_order'] = this.$el.querySelector('.preserve-order').checked
-
-				return attachedData
-			},
-			onSubmitSuccess(data) {
-				if (this.isEdit) {
-					this.getQuizQuestion(this.$route.params.quizId)
-				} else {
-					//Timeout for the user to see the success banner
-					setTimeout(() => {
-						this.$router.push({name: 'quiz-editor', params: { quizId: data.id }})
-					}, 2000)
-				}
-			}
-		},
-		watch: {
-			questionText(val) {
-				if (val) this.$refs.questionEditor.editor.innerHTML = val
-			},
-			questionExplanation(val) {
-				if (val) this.$refs.explanationEditor.editor.innerHTML = val
-			},
-			'$route.params.quizId'(quizId) {
-				this.getQuizQuestion(this.$route.params.quizId)
-			}
-		},
-		created() {
-			if (this.isEdit) {
-				this.getQuizQuestion(this.$route.params.quizId)
+export default {
+	name: 'QuizesEditor',
+	components: {
+		'wnl-form': Form,
+		'wnl-quill': Quill,
+		'wnl-tags': Tags,
+		'wnl-slide-ids': SlideIds
+	},
+	data: function () {
+		return {
+			questionQuillContent: '',
+			explanationQuillContent: '',
+			attach: null
+		};
+	},
+	props: ['isEdit'],
+	computed: {
+		...mapGetters([
+			'questionText',
+			'questionExplanation',
+			'questionAnswers',
+			'questionSlides',
+			'questionAnswersMap',
+			'questionId',
+			'questionIsDeleted',
+			'questionTags',
+			'preserveOrder'
+		]),
+		formResourceRoute() {
+			if (!this.isEdit) {
+				return 'quiz_questions?include=quiz_answers';
 			} else {
-				this.setupFreshQuestion()
+				return `quiz_questions/${this.$route.params.quizId}?include=quiz_answers`;
 			}
 		},
-	}
+		formMethod() {
+			return this.isEdit ? 'put' : 'post';
+		}
+	},
+	methods: {
+		...mapActions([
+			'getQuizQuestion',
+			'deleteQuizQuestion',
+			'undeleteQuizQuestion',
+			'setupFreshQuestion',
+			'addAutoDismissableAlert',
+		]),
+		onQuestionInput() {
+			this.questionQuillContent = this.$refs.questionEditor.editor.innerHTML;
+		},
+		onExplanationInput() {
+			this.explanationQuillContent = this.$refs.explanationEditor.editor.innerHTML;
+		},
+		onRightAnswerChange(evt) {
+			const previouslyChecked = this.$el.querySelectorAll('.answer-correct');
+
+			Array.prototype.forEach.call(previouslyChecked, checkbox => {
+				if (checkbox !== evt.target) {
+					checkbox.checked = false;
+				}
+			});
+		},
+		onFormSave() {
+			// This way we can attach answers and tags
+			this.attach = this.getAttachedData();
+			this.$nextTick(() => this.$refs.quizQuestionForm.onSubmitForm());
+		},
+		getAttachedData() {
+			const attachedData = {};
+			const answerFields = this.$el.querySelectorAll('.answer-field');
+			const answerFieldsArray = Array.prototype.slice.call(answerFields);
+
+			const answersData = answerFieldsArray
+				.map(field => ({
+					id: field.dataset.id,
+					text: field.querySelector('.answer-text').value,
+					is_correct: field.querySelector('.answer-correct').checked,
+				}));
+
+			attachedData.answers = answersData;
+
+			if (this.$refs.tags.haveTagsChanged()) {
+				attachedData.tags = this.$refs.tags.tags;
+			}
+
+			if (this.$refs.slides.haveSlidesChanged()) {
+				attachedData.slides = _.map(this.$refs.slides.slides, slide => slide.id);
+			}
+
+			attachedData['preserve_order'] = this.$el.querySelector('.preserve-order').checked;
+
+			return attachedData;
+		},
+		onSubmitSuccess(data) {
+			if (this.isEdit) {
+				this.getQuizQuestion(this.$route.params.quizId);
+			} else {
+				//Timeout for the user to see the success banner
+				setTimeout(() => {
+					this.$router.push({name: 'quiz-editor', params: { quizId: data.id }});
+				}, 2000);
+			}
+		},
+		async onDelete() {
+			try {
+				await this.deleteQuizQuestion(this.questionId);
+				this.addAutoDismissableAlert({
+					text: 'Poszło!',
+					type: 'success',
+				});
+			} catch (error) {
+				$wnl.logger.capture(error);
+				this.addAutoDismissableAlert({
+					text: 'Niestety coś poszło nie tak :( Daj znać Wujowi',
+					type: 'error',
+				});
+			}
+		},
+		async onUndelete() {
+			try {
+				await this.undeleteQuizQuestion(this.questionId);
+				this.addAutoDismissableAlert({
+					text: 'Poszło!',
+					type: 'success',
+				});
+			} catch (error) {
+				$wnl.logger.capture(error);
+				this.addAutoDismissableAlert({
+					text: 'Niestety coś poszło nie tak :( Daj znać Wujowi',
+					type: 'error',
+				});
+			}
+
+
+		}
+
+	},
+	watch: {
+		questionText(val) {
+			if (val) this.$refs.questionEditor.editor.innerHTML = val;
+		},
+		questionExplanation(val) {
+			if (val) this.$refs.explanationEditor.editor.innerHTML = val;
+		},
+		'$route.params.quizId'(quizId) {
+			this.getQuizQuestion(this.$route.params.quizId);
+		}
+	},
+	created() {
+		if (this.isEdit) {
+			this.getQuizQuestion(this.$route.params.quizId);
+		} else {
+			this.setupFreshQuestion();
+		}
+	},
+};
 </script>

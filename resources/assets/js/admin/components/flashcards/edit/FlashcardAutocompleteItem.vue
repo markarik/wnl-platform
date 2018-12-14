@@ -11,8 +11,8 @@
 </style>
 
 <script>
-	export default {
-		name: 'WnlFlashcardAutocompleteItem',
-		props: ['item'],
-	}
+export default {
+	name: 'WnlFlashcardAutocompleteItem',
+	props: ['item'],
+};
 </script>

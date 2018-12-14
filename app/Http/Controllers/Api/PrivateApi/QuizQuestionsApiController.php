@@ -36,6 +36,40 @@ class QuizQuestionsApiController extends ApiController
 		$this->resourceName = config('papi.resources.quiz-questions');
 	}
 
+	public function getWithTrashed($id) {
+		$quizQuestion = QuizQuestion::withTrashed()->find($id);
+		if (!$quizQuestion) {
+			return $this->respondNotFound();
+		}
+
+		return $this->transformAndRespond($quizQuestion);
+	}
+
+	public function getByTagName(Request $request) {
+
+		$request->validate([
+			'ids' => 'array'
+		]);
+
+		$ids = $request->get('ids');
+		$page = $request->get('page');
+
+		$tagName = $request->get('tag_name');
+		$tag = Tag::where('name', $tagName)->first();
+
+		if (empty($tag)) {
+			return $this->respondNotFound();
+		}
+
+		$questions = QuizQuestion::select()
+			->whereHas('tags', function ($query) use ($tag) {
+				$query->where('name', $tag->name);
+			})
+			->whereIn('id', $ids);
+
+		return $this->respondOk($this->paginatedResponse($questions, 30, $page));
+	}
+
 	public function post(UpdateQuizQuestion $request)
 	{
 		$question = QuizQuestion::create([
@@ -112,6 +146,28 @@ class QuizQuestionsApiController extends ApiController
 		event(new QuizQuestionEdited($question, $user));
 
 		return $this->respondOk();
+	}
+
+	public function delete($id) {
+		$quizQuestion = QuizQuestion::find($id);
+
+		if (!$quizQuestion) {
+			return $this->respondNotFound();
+		}
+
+		$quizQuestion->delete();
+		return $this->respondOk();
+	}
+
+	public function restore($id) {
+		$quizQuestion = QuizQuestion::withTrashed()->find($id);
+
+		if (!$quizQuestion) {
+			return $this->respondNotFound();
+		}
+
+		$quizQuestion->restore();
+		return $this->transformAndRespond($quizQuestion);
 	}
 
 	public function stats(Request $request)

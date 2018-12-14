@@ -1,4 +1,4 @@
-import * as types from 'js/store/mutations-types'
+import * as types from 'js/store/mutations-types';
 import { get } from 'lodash';
 
 export default (Vue, {store, router}) => {
@@ -25,14 +25,14 @@ export default (Vue, {store, router}) => {
 
 				if (isSuspended) {
 					router.push('/');
-					return store.commit(types.USERS_SET_ACCOUNT_SUSPENDED, true)
+					return store.commit(types.USERS_SET_ACCOUNT_SUSPENDED, true);
 				}
 			}
 			if (error.response.status === 401) {
 				window.location.replace('/login');
 			}
 
-			return Promise.reject(error)
+			return Promise.reject(error);
 		}
 	);
-}
+};

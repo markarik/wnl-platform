@@ -111,4 +111,72 @@ class QnaQuestionsApiController extends ApiController
 
 		return $this->respondOk($data);
 	}
+
+	public function getByIds(Request $request) {
+		$request->validate([
+			'ids' => 'array',
+		]);
+
+		$ids = $request->get('ids');
+
+		$qnaQuestions = QnaQuestion::whereIn('id', $ids)
+			->get();
+
+		return $this->transformAndRespond($qnaQuestions);
+	}
+
+	public function getByTags(Request $request) {
+		$qnaQuestionsQuery = QnaQuestion::select();
+
+		$request->validate([
+			'tags_name' => 'array',
+			'tags_ids' => 'array',
+			'ids' => 'array',
+		]);
+
+		if ($request->has('tags_names')) {
+			$tagsNames = $request->get('tags_names');
+			$qnaQuestionsQuery->whereHas('tags', function ($query) use ($tagsNames) {
+				$query->whereIn('tags.name', $tagsNames);
+			});
+		}
+
+		if ($request->has('tags_ids')) {
+			$tagsIds = $request->get('tags_ids');
+			$qnaQuestionsQuery->whereHas('tags', function ($query) use ($tagsIds) {
+				$query->whereIn('tags.id', $tagsIds);
+			});
+		}
+
+		if ($request->has('ids')) {
+			$ids = $request->get('ids');
+			$qnaQuestionsQuery->whereIn('id', $ids);
+		}
+
+		$qnaQuestions = $qnaQuestionsQuery->get();
+
+		return $this->transformAndRespond($qnaQuestions);
+	}
+
+	public function getLatest() {
+		$workshopsTag = Tag::where('name', 'Warsztaty')->first();
+
+		$qnaQuestions = QnaQuestion::whereDoesntHave('tags', function($query) use ($workshopsTag) {
+			$query->where('tags.id', $workshopsTag->id);
+		})->limit(10)->get();
+
+		return $this->transformAndRespond($qnaQuestions);
+	}
+
+	public function query(Request $request) {
+		$qnaQuestionQuery = QnaQuestion::select();
+
+		if ($request->has('user_id')) {
+			$qnaQuestionQuery->where('user_id', $request->get('user_id'));
+		}
+
+		$qnaQuestions = $qnaQuestionQuery->orderBy('id', 'asc')->get();
+
+		return $this->transformAndRespond($qnaQuestions);
+	}
 }

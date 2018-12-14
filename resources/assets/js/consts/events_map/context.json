@@ -11,6 +11,41 @@
   "help": {
     "value": "help"
   },
+  "dashboard": {
+    "value": "dashboard",
+    "features": {
+      "next_lesson": {
+        "value": "next_lesson",
+        "actions": {
+          "click_link": {
+            "value": "click_link"
+          }
+        }
+      },
+      "news_feed": {
+        "value": "news_feed",
+        "actions": {
+          "click_link": {
+            "value": "click_link"
+          }
+        }
+      },
+      "news_message": {
+        "value": "news_message",
+        "actions": {
+          "click_link": {
+            "value": "click_link"
+          },
+          "open": {
+            "value": "open"
+          },
+          "close": {
+            "value": "close"
+          }
+        }
+      }
+    }
+  },
   "questions_bank": {
     "value": "questions_bank",
     "subcontext": {
@@ -18,7 +53,15 @@
         "value": "current"
       },
       "test_yourself": {
-        "value": "test_yourself"
+        "value": "test_yourself",
+        "actions": {
+          "new_test": {
+            "value": "new_test"
+          },
+          "finish_test": {
+            "value": "finish_test"
+          }
+        }
       }
     }
   },
@@ -27,6 +70,12 @@
     "subcontext": {
       "course_plan": {
         "value": "course_plan"
+      },
+      "stats": {
+        "value": "stats"
+      },
+      "progress_eraser": {
+        "value": "progress_eraser"
       }
     }
   }

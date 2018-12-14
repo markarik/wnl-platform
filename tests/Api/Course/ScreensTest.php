@@ -2,7 +2,6 @@
 
 namespace Tests\Api\Course;
 
-use App\Models\Edition;
 use App\Models\Screen;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

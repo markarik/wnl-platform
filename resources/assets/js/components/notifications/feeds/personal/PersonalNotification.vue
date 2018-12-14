@@ -32,7 +32,7 @@
 		<div class="delete-message" v-if="deleted" v-t="'notifications.messages.deleted'"/>
 		<div class="delete-message" v-if="resolved" v-t="'notifications.messages.resolved'"/>
 		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="message.actors"/>
+			<wnl-user-profile-modal :author="userForModal"/>
 		</wnl-modal>
 	</div>
 </template>
@@ -116,83 +116,83 @@
 </style>
 
 <script>
-	import { truncate } from 'lodash'
-	import { mapGetters } from 'vuex'
+import { truncate } from 'lodash';
+import { mapGetters } from 'vuex';
 
-	import Avatar from 'js/components/global/Avatar'
-	import UserProfileModal from 'js/components/users/UserProfileModal'
-	import Modal from 'js/components/global/Modal'
-	import { notification } from 'js/components/notifications/notification'
-	import { sanitizeName } from 'js/store/modules/users'
+import Avatar from 'js/components/global/Avatar';
+import UserProfileModal from 'js/components/users/UserProfileModal';
+import Modal from 'js/components/global/Modal';
+import { notification } from 'js/components/notifications/notification';
+import { sanitizeName } from 'js/store/modules/users';
 
-	export default {
-		name: 'PersonalNotification',
-		mixins: [notification],
-		components: {
-			'wnl-avatar': Avatar,
-			'wnl-modal': Modal,
-			'wnl-user-profile-modal': UserProfileModal
+export default {
+	name: 'PersonalNotification',
+	mixins: [notification],
+	components: {
+		'wnl-avatar': Avatar,
+		'wnl-modal': Modal,
+		'wnl-user-profile-modal': UserProfileModal
+	},
+	data() {
+		return {
+			isVisible: false
+		};
+	},
+	props: {
+		icon: {
+			required: true,
+			type: String
 		},
-		data() {
+	},
+	computed: {
+		...mapGetters(['currentUserId']),
+		userForModal() {
 			return {
-				isVisible: false
+				...this.message.actors,
+				user_id: this.message.actors.id
+			};
+		},
+		displayName() {
+			return sanitizeName(this.message.actors.display_name);
+		},
+		action() {
+			return this.$t(`notifications.events.${_.camelCase(this.message.event)}`);
+		},
+		object() {
+			const objects = this.message.objects;
+			if (!objects) return false;
+
+			return this.$tc(
+				`notifications.objects.${_.camelCase(objects.type)}`,
+				this.currentUserId === objects.author ? 2 : 1
+			);
+		},
+	},
+	methods: {
+		showModal() {
+			this.isVisible = true;
+		},
+		closeModal() {
+			this.isVisible = false;
+		},
+		dispatchGoToContext() {
+			this.goToContext();
+			this.loading = false;
+		},
+		markAsReadAndGo() {
+			if(!this.hasContext) return false;
+
+			this.loading = true;
+
+			if (!this.isRead) {
+				this.markAsRead({notification: this.message, channel: this.channel})
+					.then(() => {
+						this.dispatchGoToContext();
+					});
+			} else {
+				this.dispatchGoToContext();
 			}
 		},
-		props: {
-			icon: {
-				required: true,
-				type: String
-			},
-		},
-		computed: {
-			...mapGetters(['currentUserId']),
-			displayName() {
-				return sanitizeName(this.message.actors.display_name)
-			},
-			action() {
-				return this.$t(`notifications.events.${_.camelCase(this.message.event)}`)
-			},
-			object() {
-				const objects = this.message.objects
-				if (!objects) return false;
-
-				return this.$tc(
-					`notifications.objects.${_.camelCase(objects.type)}`,
-					this.currentUserId === objects.author ? 2 : 1
-				)
-			},
-		},
-		methods: {
-			showModal() {
-				this.isVisible = true
-			},
-			closeModal() {
-				this.isVisible = false
-			},
-			dispatchGoToContext() {
-				this.goToContext()
-				this.loading = false
-			},
-			markAsReadAndGo() {
-				if(!this.hasContext) return false;
-
-				this.loading = true
-
-				if (!this.isRead) {
-					this.markAsRead({notification: this.message, channel: this.channel})
-						.then(() => {
-							this.dispatchGoToContext()
-						})
-				} else {
-					this.dispatchGoToContext()
-				}
-			},
-			addUserIdKey() {
-				this.message.actors.user_id = this.message.actors.id
-			}
-		},
-		created() {
-			this.addUserIdKey()
-		}
-	}
+	},
+};
 </script>

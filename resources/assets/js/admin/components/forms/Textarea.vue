@@ -22,8 +22,8 @@
 </style>
 
 <script>
-	export default {
-		name: 'wnl-form-textarea',
-		props: ['name', 'form'],
-	}
+export default {
+	name: 'wnl-form-textarea',
+	props: ['name', 'form'],
+};
 </script>

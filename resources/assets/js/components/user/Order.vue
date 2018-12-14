@@ -21,6 +21,7 @@
 					<div class="tags">
 						<span :class="{'is-success': order.paid, 'tag': true }">{{ paymentStatus }}</span>
 						<span class="tag">Metoda płatności: {{ paymentMethod }}</span>
+						<slot name="order-tags"></slot>
 					</div>
 				</div>
 				<div class="level-right"></div>
@@ -355,293 +356,293 @@
 </style>
 
 <script>
-	import moment from 'moment'
-	import axios from 'axios'
-	import {mapActions, mapGetters, mapMutations} from 'vuex'
-	import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env'
-	import {gaEvent} from 'js/utils/tracking'
-	import {Form, Text, Submit} from 'js/components/global/form'
-	import P24Form from 'js/components/user/P24Form'
-	import { swalConfig } from 'js/utils/swal'
-	import {nextTick} from 'vue'
-	import * as types from 'js/store/mutations-types'
+import moment from 'moment';
+import axios from 'axios';
+import {mapActions, mapGetters, mapMutations} from 'vuex';
+import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env';
+import {gaEvent} from 'js/utils/tracking';
+import {Form, Text, Submit} from 'js/components/global/form';
+import P24Form from 'js/components/user/P24Form';
+import { swalConfig } from 'js/utils/swal';
+import {nextTick} from 'vue';
+import * as types from 'js/store/mutations-types';
 
-	export default {
-		name: 'Order',
-		props: ['orderInstance', 'loaderVisible'],
-		components: {
-			'wnl-form': Form,
-			'wnl-form-text': Text,
-			'wnl-submit': Submit,
-			'wnl-p24-form': P24Form
-		},
-		data() {
-			return {
-				activeTab: 'payments',
-				code: '',
-				couponInputVisible: false,
-				order: this.orderInstance,
-				paymentData: {},
-				paymentMethods: {
-					'free': 'Darmowe uczestnictwo',
-					'transfer': 'Tradycyjny przelew',
-					'online': 'Przelewy24 - Pełna kwota',
-					'instalments': 'Przelewy24 - Raty',
+export default {
+	name: 'Order',
+	props: ['orderInstance', 'loaderVisible'],
+	components: {
+		'wnl-form': Form,
+		'wnl-form-text': Text,
+		'wnl-submit': Submit,
+		'wnl-p24-form': P24Form
+	},
+	data() {
+		return {
+			activeTab: 'payments',
+			code: '',
+			couponInputVisible: false,
+			order: this.orderInstance,
+			paymentData: {},
+			paymentMethods: {
+				'free': 'Darmowe uczestnictwo',
+				'transfer': 'Tradycyjny przelew',
+				'online': 'Przelewy24 - Pełna kwota',
+				'instalments': 'Przelewy24 - Raty',
+			},
+			paymentLoading: false,
+			orderTabs: {
+				'payments': {
+					icon: 'money',
+					text: 'Płatności',
 				},
-				paymentLoading: false,
-				orderTabs: {
-					'payments': {
-						icon: 'money',
-						text: 'Płatności',
-					},
-					'invoices': {
-						icon: 'file-o',
-						text: 'Faktury'
-					},
-					'coupons': {
-						icon: 'gift',
-						text: 'Zniżki',
-					},
+				'invoices': {
+					icon: 'file-o',
+					text: 'Faktury'
 				},
-				userData: {},
+				'coupons': {
+					icon: 'gift',
+					text: 'Zniżki',
+				},
+			},
+			userData: {},
+		};
+	},
+	computed: {
+		...mapGetters(['isAdmin', 'currentUser']),
+		couponsDisabled() {
+			if (this.order.product.signups_end) {
+				return new Date(this.order.product.signups_end * 1000) < new Date();
 			}
+			return true;
 		},
-		computed: {
-			...mapGetters(['isAdmin', 'currentUser']),
-			couponsDisabled() {
-				if (this.order.product.signups_end) {
-					return new Date(this.order.product.signups_end * 1000) < new Date();
-				}
-				return true;
-			},
-			canRetryPayment() {
-				if (!_.get(this.order, 'payments.length', 0)) {
-					return !this.order.paid;
-				}
-				return !this.order.payments.find(payment => payment.status === 'success')
-			},
-			coupon() {
-				return this.order.coupon
-			},
-			logoUrl() {
-				// TODO: Mar 28, 2017 - Make it dynamic when more courses are added
-				return getImageUrl('wnl-logo-square@2x.png')
-			},
-			isFullyPaid() {
-				return this.order.paid_amount >= this.order.total
-			},
-			isPending() {
-				// show loader only if there is an online payment waiting for confirmation
-				const payments = _.get(this.order, 'payments', [])
+		canRetryPayment() {
+			if (!_.get(this.order, 'payments.length', 0)) {
+				return !this.order.paid;
+			}
+			return !this.order.payments.find(payment => payment.status === 'success');
+		},
+		coupon() {
+			return this.order.coupon;
+		},
+		logoUrl() {
+			// TODO: Mar 28, 2017 - Make it dynamic when more courses are added
+			return getImageUrl('wnl-logo-square@2x.png');
+		},
+		isFullyPaid() {
+			return this.order.paid_amount >= this.order.total;
+		},
+		isPending() {
+			// show loader only if there is an online payment waiting for confirmation
+			const payments = _.get(this.order, 'payments', []);
 
-				if (this.order.canceled) return false;
-				if (payments.find(payment => payment.status === 'success')) return false;
+			if (this.order.canceled) return false;
+			if (payments.find(payment => payment.status === 'success')) return false;
 
-				if (payments.find(payment => payment.status === 'in-progress')) return true;
+			if (payments.find(payment => payment.status === 'in-progress')) return true;
 
-				return false;
-			},
-			iconClass() {
-				if (this.isPending) {
-					// Loader
-					return 'fa-circle-o-notch fa-spin'
-				} else if (this.order.paid) {
-					return 'fa-check-circle-o'
-				}
+			return false;
+		},
+		iconClass() {
+			if (this.isPending) {
+				// Loader
+				return 'fa-circle-o-notch fa-spin';
+			} else if (this.order.paid) {
+				return 'fa-check-circle-o';
+			}
 
-				return 'fa-info-circle'
-			},
-			transferDetails() {
-				return !this.isFullyPaid && this.order.method === 'transfer'
-			},
-			paymentDeadline() {
-				return moment(this.order.created_at, 'DD-MM-YYYY').add(7, 'd').format('DD-MM-YYYY')
-			},
-			paymentStatus() {
-				if (this.order.paid && !this.isPending || this.order.total === 0) {
-					if (this.order.total === this.order.paid_amount) {
-						return `Wpłacono ${this.order.paid_amount}zł / ${this.order.total}zł`
-					} else if (this.order.paid_amount > this.order.total) {
-						return `Wpłacono ${this.order.paid_amount}zł, do zwrotu ${this.order.paid_amount - this.order.total}zł`
-					} else {
-						return `Wpłacono ${this.order.paid_amount}zł`
-					}
-				} else if (this.order.canceled) {
-					return 'Anulowano'
+			return 'fa-info-circle';
+		},
+		transferDetails() {
+			return !this.isFullyPaid && this.order.method === 'transfer';
+		},
+		paymentDeadline() {
+			return moment(this.order.created_at, 'DD-MM-YYYY').add(7, 'd').format('DD-MM-YYYY');
+		},
+		paymentStatus() {
+			if (this.order.paid && !this.isPending || this.order.total === 0) {
+				if (this.order.total === this.order.paid_amount) {
+					return `Wpłacono ${this.order.paid_amount}zł / ${this.order.total}zł`;
+				} else if (this.order.paid_amount > this.order.total) {
+					return `Wpłacono ${this.order.paid_amount}zł, do zwrotu ${this.order.paid_amount - this.order.total}zł`;
 				} else {
-					return `Termin płatności: ${this.paymentDeadline}`
+					return `Wpłacono ${this.order.paid_amount}zł`;
 				}
-			},
-			paymentStatusClass() {
-				if (this.order.cancelled) {
-					return 'text-warning'
-				} else if (!this.isPending && this.order.paid && this.order.total <= this.order.paid_amount) {
-					return 'text-success'
-				}
-
-				return 'text-info'
-			},
-			paymentMethod() {
-				return this.paymentMethods[this.order.method]
-			},
-			canChangePaymentMethod() {
-				return !this.order.paid && !this.order.canceled && this.order.total > 0;
-			},
-			paymentMethodChangeUrl() {
-				return getUrl('payment/confirm-order')
-			},
-			orderNumber() {
-				return `Zamówienie numer ${this.order.id}`
-			},
-			studyBuddy() {
-				return this.order.hasOwnProperty('studyBuddy') && this.order.studyBuddy.status !== 'expired'
-			},
-			couponUrl() {
-				return `orders/${this.order.id}/coupon`;
-			},
-			amountToBePaidNext() {
-				if (this.order.method === 'instalments') {
-					return this.order.instalments.nextPayment.amount
-				}
-
-				return this.order.total
+			} else if (this.order.canceled) {
+				return 'Anulowano';
+			} else {
+				return `Termin płatności: ${this.paymentDeadline}`;
 			}
 		},
-		methods: {
-			...mapMutations({
-					'setSubscription': types.USERS_SET_SUBSCRIPTION
-			}),
-			...mapActions(['addAutoDismissableAlert']),
+		paymentStatusClass() {
+			if (this.order.cancelled) {
+				return 'text-warning';
+			} else if (!this.isPending && this.order.paid && this.order.total <= this.order.paid_amount) {
+				return 'text-success';
+			}
 
-			async downloadInvoice(invoice) {
-				try {
-					const response = await axios.request({
-						url: getApiUrl(`invoices/${invoice.id}`),
-						responseType: 'blob',
-					})
+			return 'text-info';
+		},
+		paymentMethod() {
+			return this.paymentMethods[this.order.method];
+		},
+		canChangePaymentMethod() {
+			return !this.order.paid && !this.order.canceled && this.order.total > 0;
+		},
+		paymentMethodChangeUrl() {
+			return getUrl('payment/confirm-order');
+		},
+		orderNumber() {
+			return `Zamówienie numer ${this.order.id}`;
+		},
+		studyBuddy() {
+			return this.order.hasOwnProperty('studyBuddy') && this.order.studyBuddy.status !== 'expired';
+		},
+		couponUrl() {
+			return `orders/${this.order.id}/coupon`;
+		},
+		amountToBePaidNext() {
+			if (this.order.method === 'instalments') {
+				return this.order.instalments.nextPayment.amount;
+			}
 
-					const data = window.URL.createObjectURL(response.data);
-					const link = document.createElement('a')
-					link.style.display = 'none';
-					// For Firefox it is necessary to insert the link into body
-					document.body.appendChild(link);
-					link.href = data
-					link.setAttribute('download', `${invoice.id}.pdf`)
-					link.click()
+			return this.order.total;
+		}
+	},
+	methods: {
+		...mapMutations({
+			'setSubscription': types.USERS_SET_SUBSCRIPTION
+		}),
+		...mapActions(['addAutoDismissableAlert']),
 
-					setTimeout(function() {
-						// For Firefox it is necessary to delay revoking the ObjectURL
-						window.URL.revokeObjectURL(link.href)
-						document.removeChild(link);
-					}, 100)
-				} catch(err) {
-					if (err.response.status === 404) {
-						return this.addAutoDismissableAlert({
-							text: 'Nie udało się znaleźć faktury. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
-							type: 'error'
-						})
-					}
+		async downloadInvoice(invoice) {
+			try {
+				const response = await axios.request({
+					url: getApiUrl(`invoices/${invoice.id}`),
+					responseType: 'blob',
+				});
 
-					if (err.response.status === 403) {
-						return this.addAutoDismissableAlert({
-							text: 'Nie masz uprawnień do pobrania tej faktury.',
-							type: 'error'
-						})
-					}
+				const data = window.URL.createObjectURL(response.data);
+				const link = document.createElement('a');
+				link.style.display = 'none';
+				// For Firefox it is necessary to insert the link into body
+				document.body.appendChild(link);
+				link.href = data;
+				link.setAttribute('download', `${invoice.id}.pdf`);
+				link.click();
 
-					this.addAutoDismissableAlert({
-						text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+				setTimeout(function() {
+					// For Firefox it is necessary to delay revoking the ObjectURL
+					window.URL.revokeObjectURL(link.href);
+					document.removeChild(link);
+				}, 100);
+			} catch(err) {
+				if (err.response.status === 404) {
+					return this.addAutoDismissableAlert({
+						text: 'Nie udało się znaleźć faktury. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
 						type: 'error'
-					})
-
-					$wnl.logger.capture(err)
+					});
 				}
-			},
-			checkStatus() {
-				axios.get(getApiUrl(`orders/${this.order.id}?include=payments`))
-						.then((response) => {
-							const {included = {}, ...order} = response.data
-							const {payments = {}} = included;
-							if (order.paid) {
-								this.order.paid        = true
-								this.order.paid_amount = order.paid_amount
-								this.order.payments = (order.payments || []).map(paymentId => payments[paymentId])
 
-								axios.get(getApiUrl('user_subscription/current'))
-									.then(response => {
-											this.setSubscription(response.data)
-									});
-							} else {
-								setTimeout(this.checkStatus, 10000)
-							}
-						})
-						.catch(exception => $wnl.logger.capture(exception))
-			},
-			couponSubmitSuccess() {
-				axios.get(getApiUrl(`orders/${this.order.id}`))
-						.then(response => {
-							this.order = {
-								...this.order,
-								...response.data
-							}
-							this.toggleCouponInput()
-						})
-						.catch(exception => $wnl.logger.capture(exception))
-			},
-			voucherUrl(code){
-				return code ? getUrl(`payment/voucher?code=${code}`) : getUrl('payment/voucher')
-			},
-			instalmentDate(date) {
-				return moment(date.date).format('LL')
-			},
-			getCouponValue(coupon) {
-				return coupon.type === 'amount' ? `${coupon.value}zł` : `${coupon.value}%`
-			},
-			toggleCouponInput(){
-				this.couponInputVisible = !this.couponInputVisible
-			},
-			cancelOrder(){
-				this.$swal(swalConfig({
-					title: this.$t('orders.cancel.title'),
-					text: this.$t('orders.cancel.text', {id: this.order.id}),
-					showCancelButton: true,
-					confirmButtonText: this.$t('ui.confirm.confirm'),
-					cancelButtonText: this.$t('ui.confirm.cancel'),
-					type: 'error',
-					confirmButtonClass: 'button is-danger',
-					reverseButtons: true
-				}))
+				if (err.response.status === 403) {
+					return this.addAutoDismissableAlert({
+						text: 'Nie masz uprawnień do pobrania tej faktury.',
+						type: 'error'
+					});
+				}
+
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+					type: 'error'
+				});
+
+				$wnl.logger.capture(err);
+			}
+		},
+		checkStatus() {
+			axios.get(getApiUrl(`orders/${this.order.id}?include=payments`))
+				.then((response) => {
+					const {included = {}, ...order} = response.data;
+					const {payments = {}} = included;
+					if (order.paid) {
+						this.order.paid        = true;
+						this.order.paid_amount = order.paid_amount;
+						this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
+
+						axios.get(getApiUrl('user_subscription/current'))
+							.then(response => {
+								this.setSubscription(response.data);
+							});
+					} else {
+						setTimeout(this.checkStatus, 10000);
+					}
+				})
+				.catch(exception => $wnl.logger.capture(exception));
+		},
+		couponSubmitSuccess() {
+			axios.get(getApiUrl(`orders/${this.order.id}`))
+				.then(response => {
+					this.order = {
+						...this.order,
+						...response.data
+					};
+					this.toggleCouponInput();
+				})
+				.catch(exception => $wnl.logger.capture(exception));
+		},
+		voucherUrl(code){
+			return code ? getUrl(`payment/voucher?code=${code}`) : getUrl('payment/voucher');
+		},
+		instalmentDate(date) {
+			return moment(date.date).format('LL');
+		},
+		getCouponValue(coupon) {
+			return coupon.type === 'amount' ? `${coupon.value}zł` : `${coupon.value}%`;
+		},
+		toggleCouponInput(){
+			this.couponInputVisible = !this.couponInputVisible;
+		},
+		cancelOrder(){
+			this.$swal(swalConfig({
+				title: this.$t('orders.cancel.title'),
+				text: this.$t('orders.cancel.text', {id: this.order.id}),
+				showCancelButton: true,
+				confirmButtonText: this.$t('ui.confirm.confirm'),
+				cancelButtonText: this.$t('ui.confirm.cancel'),
+				type: 'error',
+				confirmButtonClass: 'button is-danger',
+				reverseButtons: true
+			}))
 				.then(() => axios.get(getApiUrl(`orders/${this.order.id}/.cancel`)))
 				.then(response => this.order = response.data)
 				.catch(error => {
 					if (error !== 'cancel') {
-						$wnl.logger.capture(error)
+						$wnl.logger.capture(error);
 					}
-				})
-			},
-			async pay() {
-				this.paymentLoading = true
-
-				const [{data: paymentData}, {data: userData}] = await Promise.all([
-					axios.post(getApiUrl('payments'), {
-					    order_id: this.order.id,
-						amount: this.amountToBePaidNext
-					}),
-					axios.get(getApiUrl('users/current/address'))
-				]);
-				this.paymentData = paymentData;
-				this.userData = userData;
-
-				nextTick(() => {
-					this.$refs.p24Form.$el.submit();
-				})
-			}
+				});
 		},
-		mounted() {
-			if (this.isPending) this.checkStatus()
-			if (this.$route.query.hasOwnProperty('payment')) {
-				gaEvent('Payment', this.order.method)
-			}
+		async pay() {
+			this.paymentLoading = true;
+
+			const [{data: paymentData}, {data: userData}] = await Promise.all([
+				axios.post(getApiUrl('payments'), {
+					    order_id: this.order.id,
+					amount: this.amountToBePaidNext
+				}),
+				axios.get(getApiUrl('users/current/address'))
+			]);
+			this.paymentData = paymentData;
+			this.userData = userData;
+
+			nextTick(() => {
+				this.$refs.p24Form.$el.submit();
+			});
+		}
+	},
+	mounted() {
+		if (this.isPending) this.checkStatus();
+		if (this.$route.query.hasOwnProperty('payment')) {
+			gaEvent('Payment', this.order.method);
 		}
 	}
+};
 </script>

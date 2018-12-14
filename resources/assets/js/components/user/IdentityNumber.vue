@@ -118,212 +118,212 @@
 </style>
 
 <script>
-	import { mapGetters, mapActions } from 'vuex'
-	import { getApiUrl } from 'js/utils/env'
-	import { get, isEmpty } from 'lodash'
+import { mapGetters, mapActions } from 'vuex';
+import { getApiUrl } from 'js/utils/env';
+import { get, isEmpty } from 'lodash';
 
-	export default {
-		name: 'IdentityNumber',
-		components: {
-			'wnl-form-text': Text,
+export default {
+	name: 'IdentityNumber',
+	components: {
+		'wnl-form-text': Text,
+	},
+	data() {
+		return {
+			identity: {
+				personalIdentityNumber: '',
+				identityType: 'personal_identity_number'
+			},
+			controlNumbers: {
+				passport: 2
+			},
+			otherIdentity: false,
+			errors: [
+				{
+					errorCode: 'incorrectIdStructure',
+					active: false
+				},
+				{
+					errorCode: 'incorrectIdNumber',
+					active: false
+				},
+				{
+					errorCode: 'incorrectNumberLength',
+					active: false
+				},
+				{
+					errorCode: 'incorrectNumberSeries',
+					active: false
+				},
+				{
+					errorCode: 'incorrectSerialNumber',
+					active: false
+				},
+				{
+					errorCode: 'incorrectNumber',
+					active: false
+				}
+			],
+			alertSuccess: {
+				text: 'Udało się! :)',
+				type: 'success',
+			},
+			alertError: {
+				text: 'Ups, coś poszło nie tak :(',
+				type: 'error',
+			},
+			isLoaded: false,
+			identityTypes: {
+				personalId: 'personal_identity_number',
+				passport: 'passport_number'
+			}
+		};
+	},
+	computed: {
+		...mapGetters(['currentUserIdentity', 'currentUserId']),
+		idNumberAvailable() {
+			return Boolean (
+				this.currentUserIdentity.personalIdentityNumber ||
+					this.currentUserIdentity.passportNumber
+			);
 		},
-		data() {
-			return {
-				identity: {
-					personalIdentityNumber: '',
-					identityType: 'personal_identity_number'
-				},
-				controlNumbers: {
-					passport: 2
-				},
-				otherIdentity: false,
-				errors: [
-					{
-						errorCode: 'incorrectIdStructure',
-						active: false
-					},
-					{
-						errorCode: 'incorrectIdNumber',
-						active: false
-					},
-					{
-						errorCode: 'incorrectNumberLength',
-						active: false
-					},
-					{
-						errorCode: 'incorrectNumberSeries',
-						active: false
-					},
-					{
-						errorCode: 'incorrectSerialNumber',
-						active: false
-					},
-					{
-						errorCode: 'incorrectNumber',
-						active: false
+		idNumber() {
+			return (
+				this.currentUserIdentity.personalIdentityNumber ||
+					this.currentUserIdentity.passportNumber
+			);
+		},
+		hasNoChanges() {
+			return this.identity.personalIdentityNumber === '';
+		},
+		activeErrors() {
+			return this.errors.filter((error) => {
+				return error.active;
+			});
+		}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert', 'setUserIdentity', 'fetchUserPersonalData']),
+		async onSubmit(event) {
+			event.preventDefault();
+			if (this.validateIdNumber()) {
+				let query = {};
+				query[this.identity.identityType] = this.identity.personalIdentityNumber;
+				this.disableErrors();
+				try {
+					await axios.post(getApiUrl(`users/${this.currentUserId}/personal_data`), query);
+					this.addAutoDismissableAlert(this.alertSuccess);
+					this.setUserIdentity(this.identity);
+				}
+				catch (error) {
+					this.errors = _.get(error, 'response.data.errors.personal_identity_number');
+					if (isEmpty(this.errors)) {
+						$wnl.logger.capture(error);
+						this.addAutoDismissableAlert(this.alertError);
 					}
-				],
-				alertSuccess: {
-					text: 'Udało się! :)',
-					type: 'success',
-				},
-				alertError: {
-					text: 'Ups, coś poszło nie tak :(',
-					type: 'error',
-				},
-				isLoaded: false,
-				identityTypes: {
-					personalId: 'personal_identity_number',
-					passport: 'passport_number'
 				}
 			}
 		},
-		computed: {
-			...mapGetters(['currentUserIdentity', 'currentUserId']),
-			idNumberAvailable() {
-				return Boolean (
-					this.currentUserIdentity.personalIdentityNumber ||
-					this.currentUserIdentity.passportNumber
-				)
-			},
-			idNumber() {
-				return (
-					this.currentUserIdentity.personalIdentityNumber ||
-					this.currentUserIdentity.passportNumber
-				)
-			},
-			hasNoChanges() {
-				return this.identity.personalIdentityNumber === ''
-			},
-			activeErrors() {
-				return this.errors.filter((error) => {
-					return error.active
-				})
+		validateIdNumber() {
+			const idNumber = this.identity.personalIdentityNumber;
+			const idType = this.identity.identityType;
+
+			if (idType === this.identityTypes.personalId) {
+				return this.validatePersonalIdNumber(idNumber);
+			} else {
+				if (
+					idType === this.identityTypes.passport
+				) {
+					return this.validatePassportNumber(idNumber);
+				}
 			}
 		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert', 'setUserIdentity', 'fetchUserPersonalData']),
-			async onSubmit(event) {
-				event.preventDefault()
-				if (this.validateIdNumber()) {
-					let query = {}
-					query[this.identity.identityType] = this.identity.personalIdentityNumber
-					this.disableErrors()
-					try {
-						await axios.post(getApiUrl(`users/${this.currentUserId}/personal_data`), query)
-						this.addAutoDismissableAlert(this.alertSuccess)
-						this.setUserIdentity(this.identity)
-					}
-					catch (error) {
-						this.errors = _.get(error, 'response.data.errors.personal_identity_number')
-						if (isEmpty(this.errors)) {
-							$wnl.logger.capture(error)
-							this.addAutoDismissableAlert(this.alertError)
-						}
-					}
-				}
-			},
-			validateIdNumber() {
-				const idNumber = this.identity.personalIdentityNumber
-				const idType = this.identity.identityType
-
-				if (idType === this.identityTypes.personalId) {
-					return this.validatePersonalIdNumber(idNumber)
-				} else {
-					if (
-						idType === this.identityTypes.passport
-					) {
-						return this.validatePassportNumber(idNumber)
-					}
-				}
-			},
-			disableErrors() {
-				this.errors.forEach((error) => {
-					error.active = false
-				})
-			},
-			setErrorStatus(error) {
-				this.errors.find((e) => {
-					return e.errorCode === error
-				}).active = true
-			},
-			validatePersonalIdNumber(idNumber) {
-				const reg = /^[0-9]{11}$/
-				if (reg.test(idNumber) === false) {
-					this.setErrorStatus('incorrectIdStructure')
-					return false
-				} else {
-					const weight = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3, 1]
-					let sum = 0
-
-					for (let i = 0; i < weight.length; i++) {
-						sum += (Number(idNumber[i]) * weight[i])
-					}
-
-					if (sum % 10 !== 0) {
-						this.setErrorStatus('incorrectIdNumber')
-						return false
-					}
-				}
-				return true
-			},
-			validatePassportNumber(passportNumber) {
-				let controlNumber = this.controlNumbers.passport
-
-				if (passportNumber.length !== 9) {
-					this.setErrorStatus('incorrectNumberLength')
-					return false
-				}
-
-				passportNumber = passportNumber.toUpperCase()
-
-				for (let i = 0; i < controlNumber; i++) {
-					if (
-						this.getLetterValue(passportNumber[i]) < 10
-						|| passportNumber[i] === 'O'
-						|| passportNumber === 'Q'
-					) {
-						this.setErrorStatus('incorrectNumberSeries')
-						return false
-					}
-				}
-
-				for (let i = controlNumber; i < passportNumber.length; i++) {
-					if (
-						this.getLetterValue(passportNumber[i]) < 0
-						|| this.getLetterValue(passportNumber[i]) > 9
-					) {
-						this.setErrorStatus('incorrectSerialNumber')
-						return false
-					}
-				}
-
-				const weight = [7, 3, 1, 7, 3, 1, 7, 3, 1]
-				weight.splice(controlNumber, 0, 0)
-				weight.pop()
-
-				let sum = 0
+		disableErrors() {
+			this.errors.forEach((error) => {
+				error.active = false;
+			});
+		},
+		setErrorStatus(error) {
+			this.errors.find((e) => {
+				return e.errorCode === error;
+			}).active = true;
+		},
+		validatePersonalIdNumber(idNumber) {
+			const reg = /^[0-9]{11}$/;
+			if (reg.test(idNumber) === false) {
+				this.setErrorStatus('incorrectIdStructure');
+				return false;
+			} else {
+				const weight = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3, 1];
+				let sum = 0;
 
 				for (let i = 0; i < weight.length; i++) {
-					sum += weight[i] * this.getLetterValue(passportNumber[i])
+					sum += (Number(idNumber[i]) * weight[i]);
 				}
 
-				sum %= 10
-
-				if (sum !== this.getLetterValue(passportNumber[controlNumber])) {
-					this.setErrorStatus('incorrectNumber')
-					return false
+				if (sum % 10 !== 0) {
+					this.setErrorStatus('incorrectIdNumber');
+					return false;
 				}
-				return true
-			},
-			getLetterValue(letter) {
-				const letterValues = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-				return letterValues.indexOf(letter)
-			},
+			}
+			return true;
 		},
-		async mounted() {
-			await this.fetchUserPersonalData();
-			this.isLoaded = true;
-		}
+		validatePassportNumber(passportNumber) {
+			let controlNumber = this.controlNumbers.passport;
+
+			if (passportNumber.length !== 9) {
+				this.setErrorStatus('incorrectNumberLength');
+				return false;
+			}
+
+			passportNumber = passportNumber.toUpperCase();
+
+			for (let i = 0; i < controlNumber; i++) {
+				if (
+					this.getLetterValue(passportNumber[i]) < 10
+						|| passportNumber[i] === 'O'
+						|| passportNumber === 'Q'
+				) {
+					this.setErrorStatus('incorrectNumberSeries');
+					return false;
+				}
+			}
+
+			for (let i = controlNumber; i < passportNumber.length; i++) {
+				if (
+					this.getLetterValue(passportNumber[i]) < 0
+						|| this.getLetterValue(passportNumber[i]) > 9
+				) {
+					this.setErrorStatus('incorrectSerialNumber');
+					return false;
+				}
+			}
+
+			const weight = [7, 3, 1, 7, 3, 1, 7, 3, 1];
+			weight.splice(controlNumber, 0, 0);
+			weight.pop();
+
+			let sum = 0;
+
+			for (let i = 0; i < weight.length; i++) {
+				sum += weight[i] * this.getLetterValue(passportNumber[i]);
+			}
+
+			sum %= 10;
+
+			if (sum !== this.getLetterValue(passportNumber[controlNumber])) {
+				this.setErrorStatus('incorrectNumber');
+				return false;
+			}
+			return true;
+		},
+		getLetterValue(letter) {
+			const letterValues = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			return letterValues.indexOf(letter);
+		},
+	},
+	async mounted() {
+		await this.fetchUserPersonalData();
+		this.isLoaded = true;
 	}
+};
 </script>

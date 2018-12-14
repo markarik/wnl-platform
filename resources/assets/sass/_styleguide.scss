@@ -360,7 +360,12 @@ ol {
 
 .comment-text.content,
 .qna-question-content.content,
-.qna-answer-content, {
+.qna-answer-content,
+.flashcards-list__item__note-content {
+	p {
+		word-break: break-word;
+	}
+
 	p,
 	p:not(:last-child) {
 		margin-bottom: 0;

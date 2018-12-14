@@ -27,23 +27,23 @@
 </style>
 
 <script>
-	export default {
-		name: 'UserAutocompleteItem',
-		props: ['item'],
-		computed: {
-			checkForDisplayName() {
-				return this.item.full_name === this.item.display_name
-			},
-			nameToDisplay() {
-				if (this.checkForDisplayName) {
-					return this.item.full_name
-				} else {
-					return {
-						fullName: this.item.full_name,
-						displayName: this.item.display_name
-					}
-				}
+export default {
+	name: 'UserAutocompleteItem',
+	props: ['item'],
+	computed: {
+		checkForDisplayName() {
+			return this.item.full_name === this.item.display_name;
+		},
+		nameToDisplay() {
+			if (this.checkForDisplayName) {
+				return this.item.full_name;
+			} else {
+				return {
+					fullName: this.item.full_name,
+					displayName: this.item.display_name
+				};
 			}
 		}
 	}
+};
 </script>

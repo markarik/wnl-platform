@@ -1,79 +1,99 @@
 <template>
-	<div class="notification content" v-if="showNews">
-		<button class="delete" @click="seenCurrentNews"></button>
-
-		<p class="has-text-centered"><strong>OGŁOSZENIE</strong></p>
-
-		<p class="strong">Cześć {{currentUserName}}! 👋</p>
-
-		<p>Pierwsze tygodnie kursu już za nami! 🎉</p>
-
-		<p>Usłyszeliśmy od Was wiele dobrych słów na temat kursu, oraz wiele fantastycznych, krytycznych uwag. Wszystkie bardzo pomagają nam każdego dnia poprawiać jakość kursu i podnosić jego wartość dla Was. 🙂</p>
-
-		<p>Jednak im więcej będziemy mieli wskazówek, tym większa szansa, że kurs będzie ewoluował w dobrym kierunku. Dlatego prosimy Cię bardzo o odpowiedzenie na kilka krótkich pytań, które pozwolą nam trafniej ocenić, jak możemy odpowiedzieć na Wasze potrzeby. 😉</p>
-
-		<p class="has-text-centered margin bottom">
-			<a class="button is-primary" href="https://goo.gl/forms/4O1gKQzK3dt7Yym22">
-				Wypełnij ankietę
-			</a>
-		</p>
-
-		<p>Życzymy powodzenia i owocnej pracy z kursem!</p>
-
-		<p style="font-style: italic;">Ekipa Więcej niż LEK</p>
-	</div>
+	<wnl-dashboard-news-content
+			v-if="showNews"
+			:message="dashboardNews.message"
+			:messageArguments="messageArguments"
+			:slug="dashboardNews.slug"
+			@onClose="closed"
+			@onContentClick="contentClicked"
+	/>
 </template>
 
 <script>
-	import store from 'js/services/messagesStore'
-	import { mapGetters } from 'vuex'
-	import { getUrl } from 'js/utils/env'
+import {mapGetters} from 'vuex';
+import store from 'js/services/messagesStore';
+import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
+import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
+import context from 'js/consts/events_map/context.json';
 
-	const CURRENT_NEWS = '4th-edition-1st-survey'
-	const DISPLAY_FROM = '' // new Date() or empty string
-	const DISPLAY_UNTIL = '' // new Date() or empty string
-	const REQUIRED_ROLE = ''
+export default {
+	name: 'DashboardNews',
+	mixins: [dashboardNewsMessageArguments],
+	data() {
+		return {
+			featureContext: context.dashboard.features.news_message,
+			showNews: false
+		};
+	},
+	components: {
+		WnlDashboardNewsContent
+	},
+	computed: {
+		...mapGetters('siteWideMessages', ['dashboardNews']),
+		hasSeenNews() {
+			return !!store.get(this.newsStoreKey);
+		},
+		newsStoreKey() {
+			return `seen-dashboard-news-${this.dashboardNews.id}`;
+		},
+	},
+	methods: {
+		closed() {
+			this.track(this.featureContext.actions.close.value);
+			this.showNews = false;
+			store.set(this.newsStoreKey, true);
+		},
+		contentClicked({target}) {
+			const href = target.getAttribute('href');
 
-	export default {
-		name: 'DashboardNews',
-		data() {
-			return {
-				showNews: false
+			if (target && href) {
+				this.track(this.featureContext.actions.click_link.value);
+
+				if (/^https?:\/\//.test(href)) {
+					// External links always open in a new tab
+					event.preventDefault();
+					window.open(target.href);
+				} else {
+					// Internal links
+					const { altKey, ctrlKey, metaKey, shiftKey, button, defaultPrevented } = event;
+
+					// don't handle with control keys
+					if (metaKey || altKey || ctrlKey || shiftKey) return;
+					// don't handle when preventDefault called
+					if (defaultPrevented) return;
+					// don't handle right clicks
+					if (button !== undefined && button !== 0) return;
+					// don't handle if `target="_blank"`
+					if (target && target.getAttribute) {
+						const linkTarget = target.getAttribute('target');
+						if (/\b_blank\b/i.test(linkTarget)) return;
+					}
+					// don't handle same page links/anchors
+					const url = new URL(target.href);
+					const to = url.pathname;
+
+					if (window.location.pathname !== to) {
+						event.preventDefault();
+						this.$router.push(to);
+					}
+				}
 			}
 		},
-		computed: {
-			...mapGetters(['currentUserName', 'hasRole']),
-			hasNews() {
-				return CURRENT_NEWS !== ''
-			},
-			hasRequiredRole() {
-				return REQUIRED_ROLE === '' || this.hasRole(REQUIRED_ROLE)
-			},
-			hasSeenNews() {
-				return !!store.get(this.newsStoreKey)
-			},
-			isNewsTimely() {
-				const now = new Date()
-				return (!(DISPLAY_FROM instanceof Date) || DISPLAY_FROM < now) &&
-				(!(DISPLAY_UNTIL instanceof Date) || DISPLAY_UNTIL > now)
-			},
-			newsStoreKey() {
-				return `seen-dashboard-news-${CURRENT_NEWS}`
-			},
-			planLink() {
-				return getUrl('app/myself/availabilities')
-			}
+		track(action) {
+			this.$trackUserEvent({
+				feature: this.featureContext.value,
+				action,
+				target: this.dashboardNews.id,
+				context: context.dashboard.value,
+			});
 		},
-		methods: {
-			seenCurrentNews() {
-				this.showNews = false
-				store.set(this.newsStoreKey, true)
-			},
+	},
+	mounted() {
+		this.showNews = this.dashboardNews && !this.hasSeenNews;
 
-		},
-		mounted() {
-			this.showNews = (this.hasNews && !this.hasSeenNews &&
-				this.hasRequiredRole && this.isNewsTimely)
-		},
-	}
+		if (this.showNews) {
+			this.track(this.featureContext.actions.open.value);
+		}
+	},
+};
 </script>

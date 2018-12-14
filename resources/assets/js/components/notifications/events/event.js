@@ -1,17 +1,17 @@
-import queryString from 'query-string'
-import appendQuery from 'append-query'
+import queryString from 'query-string';
+import appendQuery from 'append-query';
 
 export const getContextRoute = (routeContext, fallback) => {
-	let context = fallback
+	let context = fallback;
 
 	try {
-		context = routeContext()
+		context = routeContext();
 	} catch (e) {
-		$wnl.logger.error(e)
+		$wnl.logger.error(e);
 	}
 
-	return context
-}
+	return context;
+};
 
 export const baseProps = {
 	message: {
@@ -22,7 +22,7 @@ export const baseProps = {
 		required: true,
 		type: Object
 	}
-}
+};
 
 export const mapMessageToRoute = (message, query) => {
 
@@ -50,7 +50,7 @@ export const mapMessageToRoute = (message, query) => {
 				notification: message.id,
 				noScroll: true
 			}
-		}
+		};
 	}
 
 	if (!message.context.name) {
@@ -72,5 +72,5 @@ export const mapMessageToRoute = (message, query) => {
 			notification: message.id,
 			noScroll: true
 		},
-	}
-}
+	};
+};

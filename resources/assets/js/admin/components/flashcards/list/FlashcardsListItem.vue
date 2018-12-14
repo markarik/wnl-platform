@@ -5,18 +5,18 @@
 </template>
 
 <script>
-	export default {
-		name: 'FlashcardsListItem',
-		props: ['id', 'content'],
-		computed: {
-			to() {
-				return {
-					name: 'flashcards-edit',
-					params: {
-						flashcardId: this.id,
-					},
-				}
-			},
+export default {
+	name: 'FlashcardsListItem',
+	props: ['id', 'content'],
+	computed: {
+		to() {
+			return {
+				name: 'flashcards-edit',
+				params: {
+					flashcardId: this.id,
+				},
+			};
 		},
-	}
+	},
+};
 </script>

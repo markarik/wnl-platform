@@ -49,7 +49,7 @@ trait PaginatesResponses
 	protected function paginatedResponse($model, $limit = null, $page = 1)
 	{
 		$paginator = $model->paginate($limit, ['*'], 'page', $page);
-		$limit = $limit || $this->defaultLimit;
+		$limit = $limit ?? $this->defaultLimit;
 
 		if ($paginator->lastPage() < $page) {
 			$paginator = $model->paginate($limit, ['*'], 'page', $paginator->lastPage());
@@ -68,8 +68,6 @@ trait PaginatesResponses
 	}
 
 	protected function cachedPaginatedResponse($cacheTags, $cacheKeyPrefix, $model, $limit, $page = 1) {
-		$collection = $model->get();
-
 		if (Cache::tags($cacheTags)->has($this->cacheKey($cacheKeyPrefix, $page))) {
 			$results = Cache::tags($cacheTags)->get($this->cacheKey($cacheKeyPrefix, $page));
 
@@ -80,7 +78,6 @@ trait PaginatesResponses
 
 				return $results;
 			}
-
 		}
 
 		Cache::tags($cacheTags)->flush();
@@ -97,6 +94,7 @@ trait PaginatesResponses
 			'cache_hash'   => $cacheKeyPrefix
 		];
 
+		$collection = $model->get();
 		$chunks = $collection->chunk($limit);
 		$page = 1;
 

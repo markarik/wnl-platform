@@ -52,34 +52,34 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex';
 
-	import EditSlideButton from 'js/admin/components/slides/EditSlideButton'
-	import CommentsList from 'js/components/comments/CommentsList'
+import EditSlideButton from 'js/admin/components/slides/EditSlideButton';
+import CommentsList from 'js/components/comments/CommentsList';
 
-	export default {
-		name: 'Annotations',
-		components: {
-			'wnl-comments-list': CommentsList,
-			'wnl-edit-slide-button': EditSlideButton,
-		},
-		props: {
-			slideshowId: Number,
-			screenId: Number,
-			currentSlideId: Number,
-			isLoadingComments: Boolean,
-		},
-		computed: {
-			...mapGetters(['isMobile', 'isAdmin']),
-			...mapGetters('slideshow', ['getSlidePositionById']),
-			currentSlideOrderNumber() {
-				return this.getSlidePositionById(this.currentSlideId) + 1
-			}
-		},
-		methods: {
-			onCommentsUpdated(comments) {
-				this.$emit('annotationsUpdated', comments)
-			},
+export default {
+	name: 'Annotations',
+	components: {
+		'wnl-comments-list': CommentsList,
+		'wnl-edit-slide-button': EditSlideButton,
+	},
+	props: {
+		slideshowId: Number,
+		screenId: Number,
+		currentSlideId: Number,
+		isLoadingComments: Boolean,
+	},
+	computed: {
+		...mapGetters(['isMobile', 'isAdmin']),
+		...mapGetters('slideshow', ['getSlidePositionById']),
+		currentSlideOrderNumber() {
+			return this.getSlidePositionById(this.currentSlideId) + 1;
 		}
+	},
+	methods: {
+		onCommentsUpdated(comments) {
+			this.$emit('annotationsUpdated', comments);
+		},
 	}
+};
 </script>

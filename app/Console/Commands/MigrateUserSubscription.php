@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Api\PrivateApi\EditionsApiController;
+use App\Http\Controllers\Api\PrivateApi\CoursesApiController;
 use App\Models\User;
 use App\Models\UserSubscription;
 use Carbon\Carbon;
@@ -70,7 +70,7 @@ class MigrateUserSubscription extends Command
 				);
 			}
 
-			\Cache::forget(EditionsApiController::key($user->id));
+			CoursesApiController::clearUserCache($user->id);
 		}
 	}
 }

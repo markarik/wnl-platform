@@ -115,48 +115,48 @@
 </style>
 
 <script>
-	export default {
-		name: 'SidenavItem',
-		props: ['item', 'onClick', 'hasSubitems', 'isOpen'],
-		computed: {
-			isLink() {
-				return typeof this.to === 'object' && this.to.hasOwnProperty('name')
-			},
-			hasProgress() {
-				return this.hasClass('with-progress')
-			},
-			isTodo() {
-				return this.hasClass('todo')
-			},
-			isInProgress() {
-				return this.hasClass('in-progress')
-			},
-			isComplete() {
-				return this.hasClass('complete')
-			},
-			replace() {
-				return this.item.method === 'replace'
-			},
-			hasIcon() {
-				return this.hasClass('has-icon')
-			},
-			hasMeta() {
-				return typeof this.meta !== 'undefined' && this.meta.length > 0
-			},
-			itemClass() {
-				return this.item.itemClass
-			},
-			meta() {
-				return this.item.meta
-			},
-			to() {
-				return this.item.to
-			}
+export default {
+	name: 'SidenavItem',
+	props: ['item', 'onClick', 'hasSubitems', 'isOpen'],
+	computed: {
+		isLink() {
+			return typeof this.to === 'object' && this.to.hasOwnProperty('name');
 		},
-		methods: {
-			hasClass(className) {
-				return !!this.itemClass && this.itemClass.indexOf(className) > -1
-			}
+		hasProgress() {
+			return this.hasClass('with-progress');
 		},
-	}
+		isTodo() {
+			return this.hasClass('todo');
+		},
+		isInProgress() {
+			return this.hasClass('in-progress');
+		},
+		isComplete() {
+			return this.hasClass('complete');
+		},
+		replace() {
+			return this.item.method === 'replace';
+		},
+		hasIcon() {
+			return this.hasClass('has-icon');
+		},
+		hasMeta() {
+			return typeof this.meta !== 'undefined' && this.meta.length > 0;
+		},
+		itemClass() {
+			return this.item.itemClass;
+		},
+		meta() {
+			return this.item.meta;
+		},
+		to() {
+			return this.item.to;
+		}
+	},
+	methods: {
+		hasClass(className) {
+			return !!this.itemClass && this.itemClass.indexOf(className) > -1;
+		}
+	},
+};
 </script>

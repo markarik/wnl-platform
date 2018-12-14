@@ -33,56 +33,56 @@
 </style>
 
 <script>
-	import {size} from 'lodash'
-	import {mapGetters} from 'vuex'
+import {size} from 'lodash';
+import {mapGetters} from 'vuex';
 
-	import SlideSearchResult from 'js/components/global/search/SlideSearchResult'
-	import {getApiUrl} from 'js/utils/env'
+import SlideSearchResult from 'js/components/global/search/SlideSearchResult';
+import {getApiUrl} from 'js/utils/env';
 
-	export default {
-		name: 'SlidesSearch',
-		components: {
-			'wnl-slide-thumbnail': SlideSearchResult,
+export default {
+	name: 'SlidesSearch',
+	components: {
+		'wnl-slide-thumbnail': SlideSearchResult,
+	},
+	props: {
+		phrase: {
+			required: true,
+			type: String,
+		}
+	},
+	data() {
+		return {
+			hasSearched: false,
+			hits: [],
+		};
+	},
+	computed: {
+		...mapGetters(['isMobile']),
+		hasHits() {
+			return size(this.hits) > 0;
 		},
-		props: {
-			phrase: {
-				required: true,
-				type: String,
-			}
-		},
-		data() {
-			return {
-				hasSearched: false,
-				hits: [],
-			}
-		},
-		computed: {
-			...mapGetters(['isMobile']),
-			hasHits() {
-				return size(this.hits) > 0
-			},
-		},
-		methods: {
-			search() {
-				if (!this.phrase) return
+	},
+	methods: {
+		search() {
+			if (!this.phrase) return;
 
-				this.$emit('searchStarted')
+			this.$emit('searchStarted');
 
-				axios.get(getApiUrl(`slides/.search?q=${this.phrase}`))
-					.then(response => {
-						this.hits = response.data.hits.hits
-						this.hasSearched = true
-						this.$emit('searchComplete')
-					})
-			},
-			emitResultClicked() {
-				this.$emit('resultClicked')
-			}
+			axios.get(getApiUrl(`slides/.search?q=${this.phrase}`))
+				.then(response => {
+					this.hits = response.data.hits.hits;
+					this.hasSearched = true;
+					this.$emit('searchComplete');
+				});
 		},
-		watch: {
-			'phrase'() {
-				this.search()
-			}
+		emitResultClicked() {
+			this.$emit('resultClicked');
+		}
+	},
+	watch: {
+		'phrase'() {
+			this.search();
 		}
 	}
+};
 </script>

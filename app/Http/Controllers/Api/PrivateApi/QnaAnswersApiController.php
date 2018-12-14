@@ -55,4 +55,16 @@ class QnaAnswersApiController extends ApiController
 
 		return $this->respondOk();
 	}
+
+	public function query(Request $request) {
+		$qnaAnswerQuery = QnaAnswer::select();
+
+		if ($request->has('user_id')) {
+			$qnaAnswerQuery->where('user_id', $request->get('user_id'));
+		}
+
+		$qnaAnswers = $qnaAnswerQuery->orderBy('id', 'asc')->get();
+
+		return $this->transformAndRespond($qnaAnswers);
+	}
 }

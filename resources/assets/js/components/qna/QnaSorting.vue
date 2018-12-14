@@ -42,44 +42,44 @@
 </style>
 
 <script>
-	import {mapGetters, mapActions} from 'vuex'
+import {mapGetters, mapActions} from 'vuex';
 
-	const sortingOptions = [
-		{
-			slug: 'latest',
-			icon: 'fa-clock-o',
-		},
-		{
-			slug: 'no-answer',
-			icon: 'fa-question-circle-o',
-		},
-		{
-			slug: 'hottest',
-			icon: 'fa-thumbs-o-up',
-		},
-		{
-			slug: 'my',
-			icon: 'fa-user-o',
-		},
-	]
+const sortingOptions = [
+	{
+		slug: 'latest',
+		icon: 'fa-clock-o',
+	},
+	{
+		slug: 'no-answer',
+		icon: 'fa-question-circle-o',
+	},
+	{
+		slug: 'hottest',
+		icon: 'fa-thumbs-o-up',
+	},
+	{
+		slug: 'my',
+		icon: 'fa-user-o',
+	},
+];
 
-	export default {
-		name: 'QnaSorting',
-		computed: {
-			...mapGetters(['isMobile']),
-			...mapGetters('qna', ['currentSorting']),
-			sortingOptions() {
-				return sortingOptions
-			},
+export default {
+	name: 'QnaSorting',
+	computed: {
+		...mapGetters(['isMobile']),
+		...mapGetters('qna', ['currentSorting']),
+		sortingOptions() {
+			return sortingOptions;
 		},
-		methods: {
-			...mapActions('qna', ['changeSorting']),
-			changeSortingWithSelect(event) {
-				this.changeSorting(event.target.value)
-			},
-			isTabActive(slug) {
-				return this.currentSorting === slug
-			},
-		}
+	},
+	methods: {
+		...mapActions('qna', ['changeSorting']),
+		changeSortingWithSelect(event) {
+			this.changeSorting(event.target.value);
+		},
+		isTabActive(slug) {
+			return this.currentSorting === slug;
+		},
 	}
+};
 </script>

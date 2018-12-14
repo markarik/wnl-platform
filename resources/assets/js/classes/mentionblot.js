@@ -1,22 +1,22 @@
-import Quill from 'quill'
+import Quill from 'quill';
 
-const EmbedBlot = Quill.import('blots/embed')
+const EmbedBlot = Quill.import('blots/embed');
 
 class MentionBlot extends EmbedBlot {
 
 	static create(data) {
-		const node = super.create(data.name)
-		node.innerHTML = `<span contenteditable="false">${data.name}</span>`
-		node.setAttribute('spellcheck', "false")
-		node.setAttribute('autocomplete', "off")
-		node.setAttribute('autocorrect', "off")
-		node.setAttribute('autocapitalize', "off")
+		const node = super.create(data.name);
+		node.innerHTML = `<span contenteditable="false">${data.name}</span>`;
+		node.setAttribute('spellcheck', 'false');
+		node.setAttribute('autocomplete', 'off');
+		node.setAttribute('autocorrect', 'off');
+		node.setAttribute('autocapitalize', 'off');
 
 		// we can add more user fields info here
-		node.setAttribute('data-name', data.name)
-		node.setAttribute('data-id', data.id)
+		node.setAttribute('data-name', data.name);
+		node.setAttribute('data-id', data.id);
 
-		return node
+		return node;
 	}
 
 	static value(domNode) {
@@ -55,10 +55,10 @@ class MentionBlot extends EmbedBlot {
 		mutations
 			.filter(mutation => mutation.type == 'characterData')
 			.forEach(m => {
-			const oldText = m.oldValue;
-			const newText = m.target.data;
-			this.changeText(oldText, newText);
-		});
+				const oldText = m.oldValue;
+				const newText = m.target.data;
+				this.changeText(oldText, newText);
+			});
 
 		super.update(mutations.filter(mutation => mutation.type != 'characterData'));
 	}

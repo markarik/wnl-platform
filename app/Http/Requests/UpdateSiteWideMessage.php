@@ -14,12 +14,8 @@ class UpdateSiteWideMessage extends FormRequest
 	 */
 	public function authorize()
 	{
-		$user = \Auth::user();
-		$siteWideMessage = SiteWideMessage::find($this->route('messageId'));
-
-		return $siteWideMessage->user_id === $user->id;
+		return true;
 	}
-
 	/**
 	 * Get the validation rules that apply to the request.
 	 *
@@ -28,7 +24,28 @@ class UpdateSiteWideMessage extends FormRequest
 	public function rules()
 	{
 		return [
-			'read_at' => 'date|nullable',
+			'slug' => 'string|nullable',
+			'message' => 'string|nullable',
+			'start_date' => 'integer|nullable',
+			'end_date' => 'integer|nullable',
 		];
+	}
+
+	protected function getValidatorInstance()
+	{
+		// Convert empty string into nulls to correctly save in the DB
+		$data = $this->all();
+		if ($data['start_date'] === '') {
+			$data['start_date'] = null;
+		}
+		if ($data['end_date'] === '') {
+			$data['end_date'] = null;
+		}
+
+		$this->getInputSource()->replace($data);
+
+		/*modify data before send to validator*/
+
+		return parent::getValidatorInstance();
 	}
 }

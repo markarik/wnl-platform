@@ -78,25 +78,4 @@ class ReactionsTest extends ApiTestCase
 		$response
 			->assertStatus(200);
 	}
-
-	/** @test */
-	public function search_reactions()
-	{
-		$user = User::find(2);
-		$data = [
-			'query' => [
-				'where' => [
-					['reactable_type', 'App\\Models\\Slide'],
-				],
-				'whereIn' => ['reactable_id', [1, 2, 3, 6, 10]]
-			],
-		];
-
-		$response = $this
-			->actingAs($user)
-			->json('POST', $this->url('/reactables/.search'), $data);
-
-		$response
-			->assertStatus(200);
-	}
 }

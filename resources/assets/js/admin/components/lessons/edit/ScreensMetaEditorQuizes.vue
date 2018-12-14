@@ -15,57 +15,57 @@
 </style>
 
 <script>
-	import { forEach } from 'lodash';
+import { forEach } from 'lodash';
 
-	import WnlSelect from "js/admin/components/forms/Select";
-	import {getApiUrl} from 'js/utils/env';
+import WnlSelect from 'js/admin/components/forms/Select';
+import {getApiUrl} from 'js/utils/env';
 
-	export default {
-		name: 'ScreensMetaEditorQuizes',
-		props: ['value'],
-		components: {
-			WnlSelect
+export default {
+	name: 'ScreensMetaEditorQuizes',
+	props: ['value'],
+	components: {
+		WnlSelect
+	},
+	data: function() {
+		return {
+			quiz_sets: [],
+		};
+	},
+	computed: {
+		selectedQuiz: {
+			get: function () {
+				return this.value;
+			},
+			set: function (value) {
+				this.$emit('input', value);
+			}
 		},
-		data: function() {
+	},
+	methods: {
+		formScreenMeta(resource, id) {
 			return {
-				quiz_sets: [],
+				resources: [
+					{
+						id: id,
+						name: resource
+					}
+				]
 			};
 		},
-		computed: {
-			selectedQuiz: {
-				get: function () {
-					return this.value
-				},
-				set: function (value) {
-					this.$emit('input', value);
-				}
-			},
+		fetchQuizSets() {
+			return axios.get(getApiUrl('quiz_sets/all'))
+				.then((response) => {
+					forEach(response.data, (quiz) => {
+						this.quiz_sets.push({
+							text: quiz.name,
+							value: this.formScreenMeta('quiz_sets', quiz.id),
+						});
+					});
+				});
 		},
-		methods: {
-			formScreenMeta(resource, id) {
-				return {
-					resources: [
-						{
-							id: id,
-							name: resource
-						}
-					]
-				};
-			},
-			fetchQuizSets() {
-				return axios.get(getApiUrl('quiz_sets/all'))
-					.then((response) => {
-						forEach(response.data, (quiz) => {
-							this.quiz_sets.push({
-								text: quiz.name,
-								value: this.formScreenMeta('quiz_sets', quiz.id),
-							})
-						})
-					})
-			},
-		},
-		mounted() {
-			this.fetchQuizSets();
-		},
-	}
+	},
+	mounted() {
+		this.fetchQuizSets();
+	},
+};
 </script>

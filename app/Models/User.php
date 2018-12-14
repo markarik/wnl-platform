@@ -4,17 +4,22 @@ namespace App\Models;
 
 use App\Traits\CourseProgressStats;
 use Carbon\Carbon;
+use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class User extends Authenticatable
 {
-	use Notifiable, CourseProgressStats;
+	use Notifiable, CourseProgressStats, Searchable;
 
 	const SUBSCRIPTION_DATES_CACHE_KEY = '%s-%s-subscription-dates';
 	const CACHE_VER = '2';
+	const SUBSCRIPTION_STATUS_INACTIVE = 'inactive';
+	const SUBSCRIPTION_STATUS_AWAITING = 'awaiting';
+	const SUBSCRIPTION_STATUS_ACTIVE = 'active';
 
 	protected $casts = [
 		'invoice'            => 'boolean',
@@ -158,27 +163,27 @@ class User extends Authenticatable
 
 	public function getAddressAttribute($value)
 	{
-		return $this->userAddress->street;
+		return $this->userAddress->street ?? '';
 	}
 
 	public function getPhoneAttribute($value)
 	{
-		return $this->userAddress->phone;
+		return $this->userAddress->phone ?? '';
 	}
 
 	public function getRecipientAttribute()
 	{
-		return $this->userAddress->recipient;
+		return $this->userAddress->recipient ?? '';
 	}
 
 	public function getZipAttribute()
 	{
-		return $this->userAddress->zip;
+		return $this->userAddress->zip ?? '';
 	}
 
 	public function getCityAttribute()
 	{
-		return $this->userAddress->city;
+		return $this->userAddress->city ?? '';
 	}
 
 	/**
@@ -248,16 +253,18 @@ class User extends Authenticatable
 
 	protected function getSubscriptionStatus($dates)
 	{
+		if ($this->isAdmin() || $this->isModerator()) return self::SUBSCRIPTION_STATUS_ACTIVE;
+
 		list ($min, $max) = $dates;
 
 		if (!$min || !$max) {
-			return 'inactive';
+			return self::SUBSCRIPTION_STATUS_INACTIVE;
 		}
 
-		if ($this->isAdmin() || $this->isModerator() || ($min->isPast() && $max->isFuture())) return 'active';
-		if ($min->isFuture() && $max->isFuture()) return 'awaiting';
+		if ($min->isPast() && $max->isFuture()) return self::SUBSCRIPTION_STATUS_ACTIVE;
+		if ($min->isFuture() && $max->isFuture()) return self::SUBSCRIPTION_STATUS_AWAITING;
 
-		return 'inactive';
+		return self::SUBSCRIPTION_STATUS_INACTIVE;
 	}
 
 	protected function getSubscriptionDates()
@@ -357,8 +364,51 @@ class User extends Authenticatable
 		$this->save();
 	}
 
+	public function forget()
+	{
+		$now = Carbon::now();
+		$this->profile()->update([
+			'first_name' => 'account',
+			'last_name' => 'deleted',
+			'public_email' => null,
+			'public_phone' => null,
+			'username' => null,
+			'avatar' => 'avatars/account-deleted.png',
+			'city' => null,
+			'university' => null,
+			'specialization' => null,
+			'help' => null,
+			'interests' => null,
+			'about' => null,
+			'learning_location' => null,
+			'display_name' => null,
+			'deleted_at' => $now
+		]);
+
+		$this->update([
+			'consent_newsletter' => null,
+			'email' => 'KontoUsunięte'.Uuid::uuid4()->toString().'@bethink.pl'
+		]);
+
+		$this->deleted_at = $now;
+		$this->save();
+
+		if ($this->profile) {
+			$this->profile->unsearchable();
+		}
+	}
+
 	public static function getSubscriptionKey($id)
 	{
 		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
+	}
+
+	public function toSearchableArray() {
+		return [
+			'id' => $this->id,
+			'email' => $this->email,
+			'full_name' => $this->full_name,
+			'profile' => $this->profile,
+		];
 	}
 }

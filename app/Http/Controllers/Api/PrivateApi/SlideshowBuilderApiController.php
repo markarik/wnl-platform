@@ -1,7 +1,6 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Concerns\TranslatesApiQueries;
 use App\Models\Category;
 use App\Models\Screen;
 use App\Models\Slide;
@@ -11,8 +10,6 @@ use Illuminate\Support\Facades\Cache;
 
 class SlideshowBuilderApiController extends ApiController
 {
-	use TranslatesApiQueries;
-
 	const CACHE_VERSION = '1';
 	const CACHE_KEY_PATTERN = 'slideshow_builder-%s-%s';
 	const SLIDESHOW_SUBKEY = 'slideshow:%s';
@@ -181,21 +178,6 @@ class SlideshowBuilderApiController extends ApiController
 		$viewData = $this->getViewData($slides, $background);
 		Cache::tags("slideshow_builder-category-{$categoryId}")->put($key, $viewData, self::CACHE_TTL);
 
-		return $this->respond($viewData);
-	}
-
-	// Method preserved for backward compatibility. To be removed in next release.
-	public function query(Request $request)
-	{
-		$builder = $this->applyFilters(new Slide, $request);
-		$slides = $builder->get();
-		if (!$slides->first()) {
-			return $this->respondNotFound();
-		}
-		$firstSlide = Slide::find($slides->first()->slide_id);
-		$background = $firstSlide->slideshow->first()->background_url;
-
-		$viewData = $this->getViewData($slides, $background);
 		return $this->respond($viewData);
 	}
 

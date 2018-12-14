@@ -23,6 +23,12 @@ class UserLessonApiController extends ApiController
 		$this->resourceName = config('papi.resources.user-lesson');
 	}
 
+	public function getForUser(Request $request, $userId) {
+		$result = UserLesson::where(['user_id' => $userId])->get();
+
+		return $this->transformAndRespond($result);
+	}
+
 	public function put(UpdateUserLesson $request)
 	{
 		$userId = $request->userId;
@@ -42,7 +48,7 @@ class UserLessonApiController extends ApiController
 			'start_date' => Carbon::parse($request->input('date')),
 		]);
 
-		\Cache::forget(EditionsApiController::key($userId));
+		CoursesApiController::clearUserCache($userId);
 
 		return $this->respondOk();
 	}
@@ -64,7 +70,7 @@ class UserLessonApiController extends ApiController
 
 		$plan = dispatch_now(new CalculateCoursePlan($user, $options));
 
-		\Cache::forget(EditionsApiController::key($user->id));
+		CoursesApiController::clearUserCache($user->id);
 		$lessons = $user->lessonsAvailability()->get();
 		$controller = new LessonsApiController($request);
 
@@ -95,7 +101,7 @@ class UserLessonApiController extends ApiController
 			);
 		}
 
-		\Cache::forget(EditionsApiController::key($userId));
+		CoursesApiController::clearUserCache($userId);
 
 		return $this->respondOk();
 	}

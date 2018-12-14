@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-Vue.use(Router)
+Vue.use(Router);
 
 let routes = [
 	{
@@ -16,6 +16,24 @@ let routes = [
 				component: require('js/admin/components/lessons/edit/ScreensEditor.vue')
 			},
 		]
+	},
+	{
+		name: 'course-edit',
+		path: '/admin/app/courses/:id',
+		component: require('js/admin/components/courses/CourseEditor'),
+		props: true,
+	},
+	{
+		name: 'groups',
+		path: '/admin/app/groups',
+		component: require('js/admin/components/groups/Groups.vue'),
+		props: true,
+	},
+	{
+		name: 'group-edit',
+		path: '/admin/app/groups/:id',
+		component: require('js/admin/components/groups/GroupEditor'),
+		props: true,
 	},
 	{
 		name: 'slides',
@@ -77,6 +95,32 @@ let routes = [
 		props: true,
 	},
 	{
+		name: 'users',
+		path: '/admin/app/users',
+		component: require('js/admin/components/users/Users.vue'),
+	},
+	{
+		name: 'users-add',
+		path: '/admin/app/users/add',
+		component: require('js/admin/components/users/UserAdd.vue'),
+	},
+	{
+		name: 'user-details',
+		path: '/admin/app/users/:userId',
+		component: require('js/admin/components/users/UserDetails.vue'),
+	},
+	{
+		name: 'dashboard-news',
+		path: '/admin/app/dashboard-news',
+		component: require('js/admin/components/dashboardNews/DashboardNews.vue'),
+	},
+	{
+		name: 'dashboard-news-edit',
+		path: '/admin/app/dashboard-news/:id',
+		component: require('js/admin/components/dashboardNews/DashboardNewsEdit.vue'),
+		props: true,
+	},
+	{
 		name: 'dashboard',
 		path: '/admin/app'
 	},
@@ -84,16 +128,16 @@ let routes = [
 		name: 'logout',
 		path: '/logout',
 		beforeEnter: () => {
-			document.getElementById('logout-form').submit()
+			document.getElementById('logout-form').submit();
 		}
 	},
-]
+];
 
 export default new Router({
 	mode: 'history',
 	linkActiveClass: 'is-active',
 	scrollBehavior: () => {
-		return {x: 0, y: 0}
+		return {x: 0, y: 0};
 	},
 	routes
-})
+});

@@ -13,6 +13,7 @@ before_install:
   - bash .travis.install-mysql-5.7.sh
   - mysql -e 'CREATE DATABASE test_db;'
   - curl -sSfL -o ~/.phpenv/versions/7.2.7/bin/phpunit https://phar.phpunit.de/phpunit-6.0.phar
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install 8
 
 install:
   - composer install --no-interaction
@@ -27,6 +28,7 @@ before_script:
 script:
   - phpunit --filter=Api
   - yarn run test
+  - yarn run lint
 
 after_failure:
   - cat storage/logs/laravel.log | grep testing.ERROR

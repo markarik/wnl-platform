@@ -1,8 +1,8 @@
-import engine from 'store/src/store-engine'
-import cookieStorage from 'store/storages/cookieStorage'
+import engine from 'store/src/store-engine';
+import localStorage from 'store/storages/localStorage';
 
 const store = engine.createStore([
-	cookieStorage,
+	localStorage,
 ]);
 
-export default store
+export default store;

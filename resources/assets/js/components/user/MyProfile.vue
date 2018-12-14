@@ -89,59 +89,59 @@
 </style>
 
 <script>
-	import { mapActions, mapGetters } from 'vuex'
-	import moment from 'moment'
+import { mapActions, mapGetters } from 'vuex';
+import moment from 'moment';
 
-	import Upload from 'js/components/global/Upload'
-	import { Form, Text } from 'js/components/global/form'
-	import { isProduction } from 'js/utils/env'
+import Upload from 'js/components/global/Upload';
+import { Form, Text } from 'js/components/global/form';
+import { isProduction } from 'js/utils/env';
 
-	export default {
-		name: 'MyProfile',
-		components: {
-			'wnl-form': Form,
-			'wnl-form-text': Text,
-			'wnl-upload': Upload,
+export default {
+	name: 'MyProfile',
+	components: {
+		'wnl-form': Form,
+		'wnl-form-text': Text,
+		'wnl-upload': Upload,
+	},
+	data() {
+		return {
+			loading: false,
+			formLoaded: false,
+		};
+	},
+	computed: {
+		...mapGetters(['isMobileProfile', 'currentUserId']),
+		isProduction() {
+			return isProduction();
 		},
-		data() {
-			return {
-				loading: false,
-				formLoaded: false,
-			}
+		buttonNameToDisplay() {
+			return this.formLoaded && this.getter('hasChanges') ? this.$t('user.myProfile.previewYourProfileButtonDisabled') : this.$t('user.myProfile.previewYourProfileButtonEnabled');
 		},
-		computed: {
-			...mapGetters(['isMobileProfile', 'currentUserId']),
-			isProduction() {
-				return isProduction()
-			},
-			buttonNameToDisplay() {
-				return this.formLoaded && this.getter('hasChanges') ? this.$t('user.myProfile.previewYourProfileButtonDisabled') : this.$t('user.myProfile.previewYourProfileButtonEnabled')
-			},
-			hasChanges() {
-				return this.formLoaded && this.getter('hasChanges')
-			},
-			handleLink() {
-				return this.hasChanges ? '' : 'click'
-			},
+		hasChanges() {
+			return this.formLoaded && this.getter('hasChanges');
 		},
-		methods: {
-			...mapActions(['updateCurrentUser']),
-			onFormLoaded() {
-				this.formLoaded = true
-			},
-			getter(getter) {
-				return this.$store.getters[`MyProfile/${getter}`]
-			},
-			onUploadError() {
-				this.loading = false
-			},
-			onUploadStarted() {
-				this.loading = true
-			},
-			onUploadSuccess(userData) {
-				this.updateCurrentUser(userData)
-				this.loading = false
-			},
+		handleLink() {
+			return this.hasChanges ? '' : 'click';
 		},
-	}
+	},
+	methods: {
+		...mapActions(['updateCurrentUser']),
+		onFormLoaded() {
+			this.formLoaded = true;
+		},
+		getter(getter) {
+			return this.$store.getters[`MyProfile/${getter}`];
+		},
+		onUploadError() {
+			this.loading = false;
+		},
+		onUploadStarted() {
+			this.loading = true;
+		},
+		onUploadSuccess(userData) {
+			this.updateCurrentUser(userData);
+			this.loading = false;
+		},
+	},
+};
 </script>

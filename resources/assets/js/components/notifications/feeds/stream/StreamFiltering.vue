@@ -62,63 +62,63 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex';
 
-	const filteringOptions = [
-		{
-			slug: 'all',
-			icon: 'fa-globe',
-			text: 'Wszystkie',
-		},
-		{
-			slug: 'slides',
-			icon: 'fa-window-maximize',
-			text: 'Slajdy',
-		},
-		{
-			slug: 'quiz',
-			icon: 'fa-check-circle-o',
-			text: 'Pytania kontrolne',
-		},
-		{
-			slug: 'qna',
-			icon: 'fa-question-circle-o',
-			text: 'Pytania i odpowiedzi',
-		},
-	]
+const filteringOptions = [
+	{
+		slug: 'all',
+		icon: 'fa-globe',
+		text: 'Wszystkie',
+	},
+	{
+		slug: 'slides',
+		icon: 'fa-window-maximize',
+		text: 'Slajdy',
+	},
+	{
+		slug: 'quiz',
+		icon: 'fa-check-circle-o',
+		text: 'Pytania kontrolne',
+	},
+	{
+		slug: 'qna',
+		icon: 'fa-question-circle-o',
+		text: 'Pytania i odpowiedzi',
+	},
+];
 
-	export default {
-		name: 'StreamFiltering',
-		props: {
-			showRead: {
-				type: Boolean,
-			}
+export default {
+	name: 'StreamFiltering',
+	props: {
+		showRead: {
+			type: Boolean,
+		}
+	},
+	data() {
+		return {
+			activeTab: 'all',
+		};
+	},
+	computed: {
+		...mapGetters(['isMobile']),
+		filteringOptions() {
+			return filteringOptions;
 		},
-		data() {
-			return {
-				activeTab: 'all',
-			}
+		buttonMessage() {
+			return this.showRead ? this.$t('notifications.stream.showUnread') : this.$t('notifications.stream.showRead');
 		},
-		computed: {
-			...mapGetters(['isMobile']),
-			filteringOptions() {
-				return filteringOptions
-			},
-			buttonMessage() {
-				return this.showRead ? this.$t('notifications.stream.showUnread') : this.$t('notifications.stream.showRead')
-			},
+	},
+	methods: {
+		changeFiltering(tab) {
+			this.activeTab = tab;
+			this.$emit('changeFiltering', tab);
 		},
-		methods: {
-			changeFiltering(tab) {
-				this.activeTab = tab
-				this.$emit('changeFiltering', tab)
-			},
-			changeFilteringWithSelect(event) {
-				this.changeFiltering(event.target.value)
-			},
-			isTabActive(tab) {
-				return this.activeTab === tab
-			},
+		changeFilteringWithSelect(event) {
+			this.changeFiltering(event.target.value);
 		},
-	}
+		isTabActive(tab) {
+			return this.activeTab === tab;
+		},
+	},
+};
 </script>

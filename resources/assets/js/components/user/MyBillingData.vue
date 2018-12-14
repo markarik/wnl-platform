@@ -8,13 +8,13 @@
 			</div>
 		</div>
 
-		<wnl-form class="margin vertical" name="MyBillingData" method="put" resourceRoute="users/current/billing" populate="true">
-			<wnl-form-text name="company_name">Nazwa firmy</wnl-form-text>
-			<wnl-form-text name="vat_id">NIP</wnl-form-text>
-			<wnl-form-text name="address">Adres</wnl-form-text>
-			<wnl-form-text name="zip">Kod pocztowy</wnl-form-text>
-			<wnl-form-text name="city">Miasto</wnl-form-text>
-			<wnl-form-text name="country">Kraj</wnl-form-text>
+		<wnl-form class="margin vertical" name="MyBillingData" method="put" :resourceRoute="resourceRoute" populate="true">
+			<wnl-form-text name="company_name">{{ $t('user.address.companyName') }}</wnl-form-text>
+			<wnl-form-text name="vat_id">{{ $t('user.address.vatId') }}</wnl-form-text>
+			<wnl-form-text name="address">{{ $t('user.address.street') }}</wnl-form-text>
+			<wnl-form-text name="zip">{{ $t('user.address.zip') }}</wnl-form-text>
+			<wnl-form-text name="city">{{ $t('user.address.city') }}</wnl-form-text>
+			<wnl-form-text name="country">{{ $t('user.address.country') }}</wnl-form-text>
 		</wnl-form>
 	</div>
 </template>
@@ -24,12 +24,18 @@
 </style>
 
 <script>
-	import { Form, Text } from 'js/components/global/form'
+import { Form, Text } from 'js/components/global/form';
 
-	export default {
-		components: {
-			'wnl-form': Form,
-			'wnl-form-text': Text,
-		},
+export default {
+	components: {
+		'wnl-form': Form,
+		'wnl-form-text': Text,
+	},
+	props: {
+		resourceRoute: {
+			type: String,
+			default: 'users/current/billing'
+		}
 	}
+};
 </script>

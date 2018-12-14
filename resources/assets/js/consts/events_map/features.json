@@ -7,6 +7,9 @@
         "actions": {
           "open": {
             "value": "open"
+          },
+          "toggle_fullscreen": {
+            "value": "toggle_fullscreen"
           }
         }
       }
@@ -30,6 +33,11 @@
   },
   "quiz_questions": {
     "value": "quiz_questions",
+    "actions": {
+      "open": {
+        "value": "open"
+      }
+    },
     "feature_components": {
       "quiz_question": {
         "value": "quiz_question",
@@ -72,11 +80,38 @@
       }
     }
   },
+  "flashcards": {
+    "value": "flashcards",
+    "feature_components": {
+      "set": {
+        "value": "set",
+        "actions": {
+          "open": {
+            "value": "open"
+          }
+        }
+      },
+      "single": {
+        "value": "single",
+        "actions": {
+          "select_answer": {
+            "value": "select_answer"
+          },
+          "add_note": {
+            "value": "add_note"
+          }
+        }
+      }
+    }
+  },
   "quiz_set": {
     "value": "quiz_set",
     "actions": {
       "open": {
         "value": "open"
+      },
+      "check_answers": {
+        "value": "check_answers"
       }
     }
   },
@@ -153,6 +188,20 @@
     "actions": {
       "save_plan": {
         "value": "save_plan"
+      }
+    }
+  },
+  "progress": {
+    "value": "progress",
+    "actions": {
+      "erase_progress": {
+        "value": "erase_progress"
+      },
+      "erase_quiz": {
+        "value": "erase_quiz"
+      },
+      "erase_collections": {
+        "value": "erase_collections"
       }
     }
   }

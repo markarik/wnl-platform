@@ -37,16 +37,16 @@
 </style>
 
 <script>
-	export default {
-		name: 'Progress',
-		props: ['value', 'max', 'hasNumbers', 'modifyingClass'],
-		computed: {
-			maxValue() {
-				return this.max || 100
-			},
-			percentageValue() {
-				return `${Math.round(this.value/this.max)}%`
-			},
+export default {
+	name: 'Progress',
+	props: ['value', 'max', 'hasNumbers', 'modifyingClass'],
+	computed: {
+		maxValue() {
+			return this.max || 100;
 		},
-	}
+		percentageValue() {
+			return `${Math.round(this.value/this.max)}%`;
+		},
+	},
+};
 </script>

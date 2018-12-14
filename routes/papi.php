@@ -24,14 +24,53 @@ if (!function_exists('api_action')) {
 Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], function () {
 	$r = config('papi.resources');
 
-	// Search (using search engine)
-	api_action('get', 'search');
+	Route::group(['middleware' => ['admin']], function () use ($r) {
+		// Courses
+		Route::put("{$r['courses']}/{id}", 'CoursesApiController@put');
+		Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
+
+		// Flashcards admin
+		Route::put("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@put');
+		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
+		Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
+		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
+		Route::post("{$r['flashcards']}/.filter", 'FlashcardsApiController@filter');
+		Route::post("{$r['flashcards-sets']}/.filter", 'FlashcardsSetsApiController@filter');
+
+		//Users admin
+		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
+		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
+		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
+		Route::post("{$r['users']}", 'UsersApiController@post');
+
+		//Users Plans
+		Route::get("{$r['user-lesson']}/{userId}", 'UserLessonApiController@getForUser');
+
+		//Site wide messages
+		Route::get("{$r['site-wide-messages']}/dashboard_news", 'SiteWideMessagesApiController@getDashboardNews');
+		Route::get("{$r['site-wide-messages']}/{id}", 'SiteWideMessagesApiController@get');
+		Route::put("{$r['site-wide-messages']}/{id}", 'SiteWideMessagesApiController@put');
+		Route::post("{$r['site-wide-messages']}", 'SiteWideMessagesApiController@post');
+
+		// Quiz Questions
+		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
+		Route::put("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@put');
+		Route::delete("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@delete');
+		Route::put("{$r['quiz-questions']}/{id}/restore", 'QuizQuestionsApiController@restore');
+		Route::get("{$r['quiz-questions']}/trashed/{id}", 'QuizQuestionsApiController@getWithTrashed');
+
+		// Groups
+		Route::post("{$r['groups']}/.filter", 'GroupsApiController@filter');
+		Route::post("{$r['groups']}", 'GroupsApiController@post');
+		Route::put("{$r['groups']}/{id}", 'GroupsApiController@put');
+
+		// Lessons
+		Route::post("{$r['lessons']}", 'LessonsApiController@post');
+		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
+	});
 
 	// Count
 	api_action('get', 'count');
-
-	// Faceted search / filtering
-	api_action('post', 'filter');
 
 	// Saved active filters
 	api_action('post', 'activeFilters');
@@ -39,22 +78,19 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	// Faceted search available filters
 	api_action('post', 'filterList');
 
-	// Query (using main database)
-	api_action('post', 'query');
-
 	// Fetch additional routing data basing on various input
 	api_action('post', 'context');
 
 	Route::group(['middleware' => ['account-status', 'subscription']], function () use ($r) {
 		// Courses
-		Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
+		Route::get("{$r['courses']}/{id}/structure", 'CoursesApiController@getStructure');
 
 		// Groups
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
 
 		// Lessons
+		Route::get("{$r['lessons']}/{id}/screens", 'LessonsApiController@getScreens');
 		Route::get("{$r['lessons']}/{id}", 'LessonsApiController@get');
-		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
 
 		// Screens
 		Route::post("{$r['screens']}", 'ScreensApiController@post');
@@ -62,21 +98,22 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::put("{$r['screens']}/{id}", 'ScreensApiController@put');
 		Route::patch("{$r['screens']}/{id}", 'ScreensApiController@patch');
 		Route::delete("{$r['screens']}/{id}", 'ScreensApiController@delete');
-		Route::post("{$r['screens']}/.search", 'ScreensApiController@query');
-
-		// Editions
-		Route::get("{$r['editions']}/{id}", 'EditionsApiController@get');
 
 		// Slides
+		Route::get("{$r['slides']}/.search", 'SlidesApiController@search');
 		Route::get('slides/.updateCharts/{slideId}', 'SlidesApiController@updateCharts');
 		Route::get("{$r['slides']}/{id}", 'SlidesApiController@get');
 		Route::put("{$r['slides']}/{id}", 'SlidesApiController@put');
 		Route::post("{$r['slides']}/{id}/.detach", 'SlidesApiController@detach');
 		Route::post("{$r['slides']}", 'SlidesApiController@post');
-		Route::post("{$r['slides']}/.search", 'SlidesApiController@query');
+		Route::post(
+			"{$r['slides']}/category/{tagName}",
+			'SlidesApiController@getFromCategoryByTagName'
+		);
 
 		// Presentables
-		Route::post("{$r['presentables']}/.search", 'PresentablesApiController@query');
+		Route::post("{$r['presentables']}/slides", 'PresentablesApiController@getSlides');
+		Route::post("{$r['presentables']}/slides/byOrderNumber", 'PresentablesApiController@getSlideByOrderNumber');
 		Route::get("{$r['presentables']}/{id}", 'PresentablesApiController@get');
 
 		// Slideshows
@@ -84,17 +121,20 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// Q&A Questions
 		Route::post($r['qna-questions'], 'QnaQuestionsApiController@post');
+		Route::get("{$r['qna-questions']}/latest", 'QnaQuestionsApiController@getLatest');
+		Route::post("{$r['qna-questions']}/byIds", 'QnaQuestionsApiController@getByIds');
+		Route::post("{$r['qna-questions']}/byTags", 'QnaQuestionsApiController@getByTags');
+		Route::get("{$r['qna-questions']}/query", 'QnaQuestionsApiController@query');
 		Route::get("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@get');
 		Route::put("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@put');
 		Route::delete("{$r['qna-questions']}/{id}", 'QnaQuestionsApiController@delete');
-		Route::post("{$r['qna-questions']}/.search", 'QnaQuestionsApiController@query');
 
 		// Q&A Answers
 		Route::post($r['qna-answers'], 'QnaAnswersApiController@post');
+		Route::get("{$r['qna-answers']}/query", 'QnaAnswersApiController@query');
 		Route::get("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@get');
 		Route::put("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@put');
 		Route::delete("{$r['qna-answers']}/{id}", 'QnaAnswersApiController@delete');
-		Route::post("{$r['qna-answers']}/.search", 'QnaAnswersApiController@query');
 
 		// Quiz Sets
 		Route::get("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@get');
@@ -103,11 +143,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// Comments
 		Route::post($r['comments'], 'CommentsApiController@post');
+		Route::get("{$r['comments']}/query", 'CommentsApiController@query');
 		Route::get("{$r['comments']}/{id}", 'CommentsApiController@get');
 		Route::put("{$r['comments']}/{id}", 'CommentsApiController@put');
 		Route::delete("{$r['comments']}/{id}", 'CommentsApiController@delete');
-		Route::post("{$r['comments']}/.search", 'CommentsApiController@query');
-		Route::post("{$r['comments']}/.count", 'CommentsApiController@query');
 
 		// Chat Messages
 		Route::post(
@@ -138,8 +177,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['slideshow-builder']}/{slideshowId}", 'SlideshowBuilderApiController@get');
 		Route::get("{$r['slideshow-builder']}", 'SlideshowBuilderApiController@getEmpty');
 
-		// Route preserved for backward compatibility. To be removed in next release.
-		Route::post("{$r['slideshow-builder']}/.query", 'SlideshowBuilderApiController@query');
 
 		// Quiz Stats
 		Route::get("{$r['quiz-sets']}/{id}/stats", 'QuizStatsApiController@get');
@@ -148,10 +185,13 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::get("{$r['quiz-questions']}/stats", 'QuizQuestionsApiController@stats');
 
 		// Quiz Questions
+		Route::post("{$r['quiz-questions']}/.filter", 'QuizQuestionsApiController@filter');
 		Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
-		Route::post("{$r['quiz-questions']}/.search", 'QuizQuestionsApiController@query');
-		Route::post("{$r['quiz-questions']}", 'QuizQuestionsApiController@post');
-		Route::put("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@put');
+		Route::post("{$r['quiz-questions']}/byTagName", 'QuizQuestionsApiController@getByTagName');
+
+		// Flashcards
+		Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');
+		Route::get("{$r['flashcards']}/{id}", 'FlashcardsApiController@get');
 
 		// Flashcard results
 		Route::post("{$r['user-flashcards-results']}/{userId}/{flashcardId}", 'UserFlashcardsResultsApiController@post');
@@ -161,6 +201,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['user-flashcard-notes']}/{flashcardId}", 'UserFlashcardNotesApiController@post');
 		Route::put("{$r['user-flashcard-notes']}/{flashcardId}/{userFlashcardNoteId}", 'UserFlashcardNotesApiController@put');
 	});
+
+	Route::get("{$r['roles']}/{id}", 'RolesApiController@get');
 
 	// Certificates
 	Route::get("{$r['certificates']}", 'CertificatesApiController@getAvailableCertificates');
@@ -173,12 +215,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
 	Route::get("{$r['user-lesson']}/{userId}/exportPlan", 'UserLessonApiController@exportPlan');
 
-	// Users
-	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
-	Route::put("{$r['users']}/{id}", 'UsersApiController@put');
-
 	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
+
+	Route::get("{$r['profiles']}/.search", "UserProfilesApiController@search");
 
 	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'UserAvatarApiController@post');
 
@@ -191,7 +231,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::get("{$r['users']}/{id}/{$r['user-settings']}", 'UserSettingsApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-settings']}", 'UserSettingsApiController@put');
 
-	Route::patch("{$r['user-forget']}/{userId}", 'UserForgetAccountApiController@patch');
+	Route::patch("{$r['users']}/{userId}/forget", 'UsersApiController@forget');
 
 	Route::get("{$r['users']}/{userId}/{$r['user-personal-data']}", 'UserPersonalDataApiController@get');
 	Route::post("{$r['users']}/{userId}/{$r['user-personal-data']}", 'UserPersonalDataApiController@post');
@@ -199,7 +239,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['users']}/{id}/{$r['user-password']}", 'UserPasswordApiController@put');
 
 	Route::get("{$r['users']}/{id}/{$r['user-notifications']}", 'UserNotificationApiController@get');
-	Route::post("{$r['users']}/{id}/{$r['user-notifications']}/.search", 'UserNotificationApiController@query');
+	Route::post("{$r['users']}/{id}/{$r['user-notifications']}/query", 'UserNotificationApiController@queryForUser');
 	Route::patch("{$r['users']}/{id}/{$r['user-notifications']}/{notificationId}", 'UserNotificationApiController@patch');
 	Route::patch("{$r['users']}/{id}/{$r['user-notifications']}", 'UserNotificationApiController@patchMany');
 
@@ -220,7 +260,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/stats", 'UserStateApiController@getStats');
 
 	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/{type?}", 'UserReactionsApiController@getReactions');
-	Route::get("{$r['users']}/{user}/{$r['user-reactions']}/byCategory/{type?}", 'UserReactionsApiController@getReactionsByCategory');
+	Route::get(
+		"{$r['users']}/{user}/{$r['user-reactions']}/byCategory/{type?}",
+		'UserReactionsApiController@getReactionsByCategory'
+	);
 
 	Route::delete("{$r['users']}/{userId}/{$r['user-collections']}", 'UserCollectionsApiController@delete');
 
@@ -237,7 +280,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');
-	Route::post("{$r['tags']}/.search", 'TagsApiController@query');
+	Route::post("{$r['tags']}/byName", 'TagsApiController@byName');
 
 	// User Quiz Results
 	Route::get("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@get');
@@ -247,6 +290,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::delete("{$r['user-quiz-results']}/{userId}", 'UserQuizResultsApiController@delete');
 
 	// Annotations
+	Route::post("{$r['annotations']}/.filter", 'AnnotationsApiController@filter');
 	Route::get("{$r['annotations']}/{id}", 'AnnotationsApiController@get');
 	Route::post("{$r['annotations']}", 'AnnotationsApiController@post');
 	Route::put("{$r['annotations']}/{id}", 'AnnotationsApiController@put');
@@ -257,7 +301,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::delete("{$r['reactions']}", 'ReactionsApiController@destroy');
 
 	// Reactables
-	Route::post("{$r['reactables']}/.search", 'ReactablesApiController@query');
+	Route::post("{$r['reactables']}/{userId}/savedSlides", 'ReactablesApiController@getSavedSlidesForUser');
 
 	// Public image upload
 	Route::post("upload", 'UploadApiController@post');
@@ -273,23 +317,13 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::post("{$r['user-plan']}/{userId}", 'UserPlanApiController@post');
 
 	Route::get("{$r['users']}/{userId}/{$r['site-wide-messages']}", 'SiteWideMessagesApiController@getForUser');
-	Route::put("{$r['site-wide-messages']}/{messageId}", 'SiteWideMessagesApiController@put');
+	Route::put("{$r['site-wide-messages']}/{messageId}/read", 'SiteWideMessagesApiController@read');
 
 	// Tasks
+	Route::post("{$r['tasks']}/.filter", 'TasksApiController@filter');
 	Route::get("{$r['tasks']}/{id}", 'TasksApiController@get');
 	Route::patch("{$r['tasks']}/{id}", 'TasksApiController@patch');
 
 	// Pages
 	Route::get("{$r['pages']}/{slug}", 'PagesApiController@get');
-
-
-	Route::group(['middleware' => ['admin']], function () use ($r) {
-		// Flashcards admin
-		Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');
-		Route::put("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@put');
-		Route::post("{$r['flashcards-sets']}", 'FlashcardsSetsApiController@post');
-		Route::get("{$r['flashcards']}/{id}", 'FlashcardsApiController@get');
-		Route::put("{$r['flashcards']}/{id}", 'FlashcardsApiController@put');
-		Route::post("{$r['flashcards']}", 'FlashcardsApiController@post');
-	});
 });

@@ -60,17 +60,17 @@ const keys = {
 	esc: 27,
 	arrowUp: 38,
 	arrowDown: 40,
-}
+};
 
-import Autocomplete from 'js/components/global/Autocomplete'
-import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem'
+import Autocomplete from 'js/components/global/Autocomplete';
+import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
 
 export default {
 	data() {
 		return {
 			focused: false,
 			textInputValue: ''
-		}
+		};
 	},
 	props: {
 		usersList: {
@@ -96,62 +96,62 @@ export default {
 	},
 	computed: {
 		valueComputed() {
-			return this.focused ? this.textInputValue : this.initialValue
+			return this.focused ? this.textInputValue : this.initialValue;
 		},
 		usersListFiltered() {
 			return this.usersList.filter(moderator => {
-				const name = moderator.display_name ? moderator.display_name : moderator.full_name
-				return name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1
-			})
+				const name = moderator.display_name ? moderator.display_name : moderator.full_name;
+				return name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1;
+			});
 		},
 	},
 	methods: {
 		onKeyDown(evt) {
-			const { enter, arrowUp, arrowDown, esc } = keys
+			const { enter, arrowUp, arrowDown, esc } = keys;
 
 			if (this.usersList.length === 0) {
-				this.$emit('close')
-				return
+				this.$emit('close');
+				return;
 			}
 
 			if (evt.keyCode === esc) {
-				this.onClose()
-				return
+				this.onClose();
+				return;
 			}
 			if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-				this.onOpen()
-				return
+				this.onOpen();
+				return;
 			}
 
-			this.$refs.autocomplete.onKeyDown(evt)
-			this.killEvent(evt)
+			this.$refs.autocomplete.onKeyDown(evt);
+			this.killEvent(evt);
 
 			//for some of the old browsers, returning false is the true way to kill propagation
-			return false
+			return false;
 		},
 		killEvent(evt) {
-			evt.preventDefault()
-			evt.stopPropagation()
+			evt.preventDefault();
+			evt.stopPropagation();
 		},
 		onClose() {
-			this.textInputValue = ''
-			this.$emit('close')
+			this.textInputValue = '';
+			this.$emit('close');
 		},
 		onOpen() {
-			this.$emit('show')
+			this.$emit('show');
 		},
 		onInput(event) {
-			this.textInputValue = event.target.value
+			this.textInputValue = event.target.value;
 		},
 		onItemChosenProxy(...args) {
-			this.textInputValue = ''
-			this.onItemChosen(...args)
+			this.textInputValue = '';
+			this.onItemChosen(...args);
 		}
 	},
 	watch: {
 		show(newValue) {
-			this.focused = newValue
+			this.focused = newValue;
 		}
 	}
-}
+};
 </script>

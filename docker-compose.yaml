@@ -33,21 +33,26 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ${LOCAL_CODE_PATH}:/code
+      - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
+    working_dir: ${CONTAINER_CODE_PATH}/wnl-platform
 
   laravel-worker:
     container_name: laravel-worker
     image: bethink/php:7.2.7-fpm-alpine3.7
     volumes:
-      - ${LOCAL_CODE_PATH}:/code
-    command: /code/bethink/wnl-platform/artisan queue:work --queue=default --tries=3 --daemon
+      - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
+    command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:work --queue=default --tries=3 --daemon
+    depends_on:
+      - redis
 
   laravel-queue-worker:
-      container_name: laravel-queue-worker
-      image: bethink/php:7.2.7-fpm-alpine3.7
-      volumes:
-        - ${LOCAL_CODE_PATH}:/code
-      command: /code/bethink/wnl-platform/artisan queue:work --queue=notifications --tries=3 --daemon
+    container_name: laravel-queue-worker
+    image: bethink/php:7.2.7-fpm-alpine3.7
+    volumes:
+      - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
+    command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:work --queue=notifications --tries=3 --daemon
+    depends_on:
+      - redis
 
   composer:
     container_name: composer
@@ -56,7 +61,7 @@ services:
     command: php -a
     tty: true
     volumes:
-      - ${LOCAL_CODE_PATH}:/code
+      - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
 
   echo:
     container_name: echo
@@ -64,7 +69,7 @@ services:
     ports:
       - "8755:8755"
     volumes:
-      - ${LOCAL_CODE_PATH}/bethink/wnl-platform/laravel-echo-server.json:/src/laravel-echo-server.json
+      - ${LOCAL_CODE_PATH}/wnl-platform/laravel-echo-server.json:/src/laravel-echo-server.json:ro
 
   nginx:
     container_name: nginx
@@ -73,23 +78,28 @@ services:
       - "80:80"
     volumes:
       - ${LOCAL_DEV_PATH}/nginx/:/etc/nginx/conf.d:ro
-      - ${LOCAL_CODE_PATH}:/code
+      - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
 
   chat:
     container_name: chat
     image: node:8.11.1-alpine
     volumes:
-      - ${LOCAL_CODE_PATH}:/code
-    command: node /code/bethink/wnl-chat/server.js
+      - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
+    command: node ${CONTAINER_CODE_PATH}/wnl-chat/server.js
     ports:
       - "9663:9663"
+    depends_on:
+      - rabbit
+      - redis
+    working_dir: ${CONTAINER_CODE_PATH}/wnl-chat
 
   sad:
       container_name: sad
       image: node:8.11.1-alpine
       volumes:
-        - ${LOCAL_CODE_PATH}:/code
-      command: node /code/bethink/sad-server/server.js
+        - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
+      command: node ${CONTAINER_CODE_PATH}/sad-server/server.js
+      working_dir: ${CONTAINER_CODE_PATH}/sad-server
       ports:
         - "1199:1199"
 

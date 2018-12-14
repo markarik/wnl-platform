@@ -103,9 +103,9 @@
 </style>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'vuex';
 
-import MessageLink from 'js/components/global/MessageLink'
+import MessageLink from 'js/components/global/MessageLink';
 
 export default {
 	name: 'UserProfileModal',
@@ -116,12 +116,12 @@ export default {
 	data() {
 		return {
 			userId: this.author.user_id
-		}
+		};
 	},
 	computed: {
 		checkForNameDisplay() {
-			return this.author.full_name === this.author.display_name
+			return this.author.full_name === this.author.display_name;
 		}
 	}
-}
+};
 </script>

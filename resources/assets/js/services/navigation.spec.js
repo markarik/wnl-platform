@@ -31,7 +31,7 @@ describe('navigation service', () => {
 				completed: false,
 				active: false,
 			});
-		})
-	})
+		});
+	});
 });
 

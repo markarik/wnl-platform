@@ -35,21 +35,21 @@
 </style>
 
 <script>
-	import { debounce } from 'lodash'
+import { debounce } from 'lodash';
 
-	export default {
-		name: 'SlideshowNavigation',
-		data() {
-			return {
-				slideNumber: 1
+export default {
+	name: 'SlideshowNavigation',
+	data() {
+		return {
+			slideNumber: 1
+		};
+	},
+	methods: {
+		onChange: debounce(function () {
+			if (parseInt(this.slideNumber) > 0) {
+				this.$emit('navigateToSlide', this.slideNumber);
 			}
-		},
-		methods: {
-			onChange: debounce(function () {
-				if (parseInt(this.slideNumber) > 0) {
-					this.$emit('navigateToSlide', this.slideNumber)
-				}
-			}, 500),
-		}
+		}, 500),
 	}
+};
 </script>

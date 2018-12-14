@@ -178,45 +178,45 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex';
 
-	export default {
-		name: 'Dropdown',
-		props: {
-			options: {
-				default() {
-					return {
-						isWide: false
-					}
-				},
-				type: Object,
+export default {
+	name: 'Dropdown',
+	props: {
+		options: {
+			default() {
+				return {
+					isWide: false
+				};
+			},
+			type: Object,
+		}
+	},
+	data() {
+		return {
+			isActive: false,
+		};
+	},
+	computed: {
+		...mapGetters(['isMobile'])
+	},
+	methods: {
+		clickHandler({target}) {
+			if (this.isActive && !this.$el.contains(target)) {
+				this.isActive = false;
+				this.$emit('toggled', false);
 			}
 		},
-		data() {
-			return {
-				isActive: false,
-			}
+		toggleActive() {
+			this.isActive = !this.isActive;
+			this.$emit('toggled', this.isActive);
 		},
-		computed: {
-			...mapGetters(['isMobile'])
-		},
-		methods: {
-			clickHandler({target}) {
-				if (this.isActive && !this.$el.contains(target)) {
-					this.isActive = false
-					this.$emit('toggled', false)
-				}
-			},
-			toggleActive() {
-				this.isActive = !this.isActive
-				this.$emit('toggled', this.isActive)
-			},
-		},
-		beforeDestroy() {
-			document.removeEventListener('click', this.clickHandler)
-		},
-		mounted() {
-			document.addEventListener('click', this.clickHandler)
-		},
-	}
+	},
+	beforeDestroy() {
+		document.removeEventListener('click', this.clickHandler);
+	},
+	mounted() {
+		document.addEventListener('click', this.clickHandler);
+	},
+};
 </script>

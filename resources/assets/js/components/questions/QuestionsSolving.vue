@@ -111,7 +111,7 @@
 			</div>
 
 			<!-- Test -->
-			<div v-if="activeView === 'test'">
+			<div v-if="activeView === 'test_yourself'">
 				<wnl-questions-test-builder
 					:getReaction="getReaction"
 					:questions="testQuestions"
@@ -207,179 +207,182 @@
 </style>
 
 <script>
-	import {isEmpty, isNumber} from 'lodash'
+import {isEmpty, isNumber} from 'lodash';
 
-	import ActiveQuestion from 'js/components/questions/ActiveQuestion'
-	import QuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder'
-	import QuizQuestion from 'js/components/quiz/QuizQuestion'
-	import Pagination from 'js/components/global/Pagination'
-	import { scrollToElement } from 'js/utils/animations'
-	import emits_events from 'js/mixins/emits-events'
+import ActiveQuestion from 'js/components/questions/ActiveQuestion';
+import QuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder';
+import QuizQuestion from 'js/components/quiz/QuizQuestion';
+import Pagination from 'js/components/global/Pagination';
+import { scrollToElement } from 'js/utils/animations';
+import emits_events from 'js/mixins/emits-events';
 
-	const views = [
-		{
-			name: 'current',
-			icon: 'fa-check'
-		},
-		{
-			name: 'list',
-			icon: 'fa-list'
-		},
-		{
-			name: 'test',
-			icon: 'fa-clock-o'
-		},
-	]
+const views = [
+	{
+		name: 'current',
+		icon: 'fa-check'
+	},
+	{
+		name: 'list',
+		icon: 'fa-list'
+	},
+	{
+		name: 'test_yourself',
+		icon: 'fa-clock-o'
+	},
+];
 
-	const limit = 30
+const limit = 30;
 
-	export default {
-		name: 'QuestionsSolving',
-		components: {
-			'wnl-active-question': ActiveQuestion,
-			'wnl-questions-test-builder': QuestionsTestBuilder,
-			'wnl-quiz-question': QuizQuestion,
-			'wnl-pagination': Pagination,
+export default {
+	name: 'QuestionsSolving',
+	components: {
+		'wnl-active-question': ActiveQuestion,
+		'wnl-questions-test-builder': QuestionsTestBuilder,
+		'wnl-quiz-question': QuizQuestion,
+		'wnl-pagination': Pagination,
+	},
+	mixins: [emits_events],
+	props: {
+		activeFilters: {
+			default: () => [],
+			type: Array,
 		},
-		mixins: [emits_events],
-		props: {
-			activeFilters: {
-				default: () => [],
-				type: Array,
-			},
-			currentQuestion: {
-				default: () => {},
-				type: Object,
-			},
-			getReaction: {
-				default: () => {},
-				type: Function,
-			},
-			isMobile: {
-				default: false,
-				type: Boolean,
-			},
-			loading: {
-				default: false,
-				type: Boolean,
-			},
-			meta: {
-				default: () => {},
-				type: Object,
-			},
-			module: {
-				default: 'questions',
-				type: String,
-			},
-			questions: {
-				default: () => [],
-				type: Array,
-			},
-			questionsCurrentPage: {
-				default: () => [],
-				type: Array,
-			},
-			questionsListCount: {
-				default: 0,
-				type: Number,
-			},
-			presetOptions: {
-				default: () => {},
-				type: Object,
-			},
-			testMode: {
-				default: false,
-				type: Boolean,
-			},
-			testQuestions: {
-				default: () => [],
-				type: Array,
-			},
-			testProcessing: {
-				default: false,
-				type: Boolean,
-			},
-			testResults: {
-				default: () => {},
-				type: Object,
-			},
+		currentQuestion: {
+			default: () => {},
+			type: Object,
 		},
-		data() {
-			return {
-				activeView: 'current',
-				showListResults: false,
-			}
+		getReaction: {
+			default: () => {},
+			type: Function,
 		},
-		computed: {
-			activeFiltersForDisplay() {
-				const filters = isEmpty(this.activeFilters)
-					? this.$t('questions.filters.allQuestions')
-					: this.activeFilters.join(', ')
-				return this.$t('questions.filters.activeFiltersReview', {filters})
-			},
-			count() {
-				return this.questions.length
-			},
-			currentQuestionNumber() {
-				return (this.currentQuestion.page - 1) * this.meta.perPage + this.currentQuestion.index + 1
-			},
-			hasCurrentQuestion() {
-				return !isEmpty(this.currentQuestion) && !!this.currentQuestion.id
-			},
-			toggleAnswersMessage() {
-				const msg = this.showListResults ? 'hide' : 'show'
-				return this.$t(`questions.solving.${msg}Answers`)
-			},
-			views() {
-				return views
-			},
+		isMobile: {
+			default: false,
+			type: Boolean,
 		},
-		methods: {
-			buildTest(payload) {
-				this.$emit('buildTest', payload)
-			},
-			changeQuestion(direction) {
-				this.$emit('changeQuestion', direction)
-			},
-			checkQuestions() {
-				this.$emit('checkQuestions')
-			},
-			changePage(page) {
-				this.$emit('changePage', page)
-			},
-			changeViewWithSelect(event) {
-				this.activeView = event.target.value
-			},
-			questionNumber(index) {
-				return isNumber(index)
-					? (this.meta.currentPage - 1) * limit + index + 1
-					: ''
-			},
-			selectAnswer(payload, position) {
-				this.$emit('selectAnswer', {...payload, ...position})
-			},
-			setQuestion(index) {
-				this.$emit('setQuestion', {page: this.meta.currentPage, index})
-				this.activeView = 'current'
-			},
-			onVerify(payload) {
-				this.$emit('verify', payload)
-			},
+		loading: {
+			default: false,
+			type: Boolean,
 		},
-		mounted() {
-			if (this.presetOptions.hasOwnProperty('activeView')) {
-				this.activeView = this.presetOptions.activeView
-			}
+		meta: {
+			default: () => {},
+			type: Object,
 		},
-		watch: {
-			activeFilters() {
-				this.showListResults = false
-			},
-			activeView() {
-				if (!this.$refs.view) return false
-
-				scrollToElement(this.$refs.view, 200)
-			},
+		module: {
+			default: 'questions',
+			type: String,
+		},
+		questions: {
+			default: () => [],
+			type: Array,
+		},
+		questionsCurrentPage: {
+			default: () => [],
+			type: Array,
+		},
+		questionsListCount: {
+			default: 0,
+			type: Number,
+		},
+		presetOptions: {
+			default: () => {},
+			type: Object,
+		},
+		testMode: {
+			default: false,
+			type: Boolean,
+		},
+		testQuestions: {
+			default: () => [],
+			type: Array,
+		},
+		testProcessing: {
+			default: false,
+			type: Boolean,
+		},
+		testResults: {
+			default: () => {},
+			type: Object,
+		},
+	},
+	data() {
+		return {
+			activeView: 'current',
+			showListResults: false,
+		};
+	},
+	computed: {
+		activeFiltersForDisplay() {
+			const filters = isEmpty(this.activeFilters)
+				? this.$t('questions.filters.allQuestions')
+				: this.activeFilters.join(', ');
+			return this.$t('questions.filters.activeFiltersReview', {filters});
+		},
+		count() {
+			return this.questions.length;
+		},
+		currentQuestionNumber() {
+			return (this.currentQuestion.page - 1) * this.meta.perPage + this.currentQuestion.index + 1;
+		},
+		hasCurrentQuestion() {
+			return !isEmpty(this.currentQuestion) && !!this.currentQuestion.id;
+		},
+		toggleAnswersMessage() {
+			const msg = this.showListResults ? 'hide' : 'show';
+			return this.$t(`questions.solving.${msg}Answers`);
+		},
+		views() {
+			return views;
+		},
+	},
+	methods: {
+		buildTest(payload) {
+			this.$emit('buildTest', payload);
+		},
+		changeQuestion(direction) {
+			this.$emit('changeQuestion', direction);
+		},
+		checkQuestions() {
+			this.$emit('checkQuestions');
+		},
+		changePage(page) {
+			this.$emit('changePage', page);
+		},
+		changeViewWithSelect(event) {
+			this.activeView = event.target.value;
+		},
+		questionNumber(index) {
+			return isNumber(index)
+				? (this.meta.currentPage - 1) * limit + index + 1
+				: '';
+		},
+		selectAnswer(payload, position) {
+			this.$emit('selectAnswer', {...payload, ...position});
+		},
+		setQuestion(index) {
+			this.$emit('setQuestion', {page: this.meta.currentPage, index});
+			this.activeView = 'current';
+		},
+		onVerify(payload) {
+			this.$emit('verify', payload);
+		},
+	},
+	mounted() {
+		if (this.presetOptions.hasOwnProperty('activeView')) {
+			this.activeView = this.presetOptions.activeView;
 		}
+		this.$emit('activeViewChange', this.activeView);
+	},
+	watch: {
+		activeFilters() {
+			this.showListResults = false;
+		},
+		activeView() {
+			if (!this.$refs.view) return false;
+
+			scrollToElement(this.$refs.view, 200);
+
+			this.$emit('activeViewChange', this.activeView);
+		},
 	}
+};
 </script>

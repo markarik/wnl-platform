@@ -24,8 +24,10 @@ class QuizQuestionObserver
 
 	public function deleted(QuizQuestion $quizQuestion)
 	{
-		$quizQuestion->unsearchable();
-		$this->dispatch(new DetachReactions($quizQuestion));
-		$this->dispatch(new DeleteModels($quizQuestion->answers));
+		if ($quizQuestion->isForceDeleting()) {
+			$quizQuestion->unsearchable();
+			$this->dispatch(new DetachReactions($quizQuestion));
+			$this->dispatch(new DeleteModels($quizQuestion->answers));
+		}
 	}
 }

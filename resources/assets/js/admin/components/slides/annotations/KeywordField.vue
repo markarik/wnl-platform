@@ -18,30 +18,30 @@
 </style>
 
 <script>
-	export default {
-		props: {
-			show: {
-				default: false
-			},
-			content: {
-				type: String|Number,
-				default: ''
-			}
+export default {
+	props: {
+		show: {
+			default: false
 		},
-		data() {
-			return {
-				copied: false,
-			}
-		},
-		methods: {
-			copyTag() {
-				this.$refs.annotationTag.select();
-				document.execCommand("copy");
-				this.copied = true;
-				window.setTimeout(() => {
-					this.copied = false;
-				}, 5000)
-			},
+		content: {
+			type: String|Number,
+			default: ''
 		}
+	},
+	data() {
+		return {
+			copied: false,
+		};
+	},
+	methods: {
+		copyTag() {
+			this.$refs.annotationTag.select();
+			document.execCommand('copy');
+			this.copied = true;
+			window.setTimeout(() => {
+				this.copied = false;
+			}, 5000);
+		},
 	}
+};
 </script>

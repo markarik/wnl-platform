@@ -49,41 +49,41 @@
 </style>
 
 <script>
-	import { mapActions } from 'vuex'
+import { mapActions } from 'vuex';
 
-	import { Form, Quill, Submit } from 'js/components/global/form'
-	import { fontColors } from 'js/utils/colors'
+import { Form, Quill, Submit } from 'js/components/global/form';
+import { fontColors } from 'js/utils/colors';
 
-	export default {
-		name: 'NewQuestionForm',
-		components: {
-			'wnl-form': Form,
-			'wnl-quill': Quill,
-			'wnl-submit': Submit,
-		},
-		props: ['tags'],
-		computed: {
-			attachedData() {
-				return {
-					tags: this.tags.map((tag) => tag.id),
-					context: {
-						name: this.$route.name,
-						params: this.$route.params
-					}
+export default {
+	name: 'NewQuestionForm',
+	components: {
+		'wnl-form': Form,
+		'wnl-quill': Quill,
+		'wnl-submit': Submit,
+	},
+	props: ['tags'],
+	computed: {
+		attachedData() {
+			return {
+				tags: this.tags.map((tag) => tag.id),
+				context: {
+					name: this.$route.name,
+					params: this.$route.params
 				}
-			},
+			};
 		},
-		methods: {
-			...mapActions('qna', ['fetchQuestionsByTags']),
-			onSubmitSuccess() {
-				this.$emit('submitSuccess')
-				this.fetchQuestionsByTags({tags: this.tags, sorting: 'latest'})
-			},
+	},
+	methods: {
+		...mapActions('qna', ['fetchQuestionsByTags']),
+		onSubmitSuccess() {
+			this.$emit('submitSuccess');
+			this.fetchQuestionsByTags({tags: this.tags, sorting: 'latest'});
 		},
-		watch: {
-			'tags' (newValue) {
-				this.fetchQuestionsByTags({tags: newValue})
-			}
+	},
+	watch: {
+		'tags' (newValue) {
+			this.fetchQuestionsByTags({tags: newValue});
 		}
 	}
+};
 </script>

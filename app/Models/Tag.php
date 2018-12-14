@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Tag extends Model {
+	// TODO make sure this list is complete
+	const PROTECTED_TAGGABLE_TYPES = [
+		'App\\Models\\Lesson',
+		'App\\Models\\Page',
+	];
+
 	protected $fillable = ['name', 'description', 'color'];
 
 	protected $touches = ['questions'];
@@ -19,27 +25,37 @@ class Tag extends Model {
 	}
 
 	public function hasRelations() {
-		$relationsCount = DB::table('taggables')
+		$count = DB::table('taggables')
 			->select(DB::raw('count(1) as count'))
-			->join('tags', 'tags.id', '=', 'taggables.tag_id')
-			->groupBy('tags.id')
 			->where('tag_id', $this->id)
+			->groupBy('tag_id')
 			->count();
 
-		return $relationsCount > 0;
+		return $count > 0;
 	}
 
 	public function isInTaxonomy() {
-		$tagsTaxonomyCount = DB::table('tags_taxonomy')
+		$count = DB::table('tags_taxonomy')
 			->select(DB::raw('count(1) as count'))
-			->join('tags', function ($join) {
-				$join->on('tags.id', '=', 'tags_taxonomy.tag_id');
-				$join->orOn('tags.id', '=', 'tags_taxonomy.parent_tag_id');
-			})
-			->groupBy('tags.id')
 			->where('tag_id', $this->id)
+			->groupBy('tag_id')
 			->count();
 
-		return $tagsTaxonomyCount > 0;
+		return $count > 0;
+	}
+
+	/**
+	 * Our structure depends on some tags and we shouldn't delete them
+	 * TODO refactor the structure and remove this method
+	 */
+	public function isProtected() {
+		$count = DB::table('taggables')
+			->select(DB::raw('count(1) as count'))
+			->where('tag_id', $this->id)
+			->whereIn('taggable_type', static::PROTECTED_TAGGABLE_TYPES)
+			->groupBy('tag_id')
+			->count();
+
+		return $count > 0;
 	}
 }

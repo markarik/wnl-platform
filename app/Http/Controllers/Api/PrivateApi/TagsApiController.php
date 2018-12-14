@@ -53,6 +53,10 @@ class TagsApiController extends ApiController {
 			return $this->respondNotFound();
 		}
 
+		if ($tag->isProtected()) {
+			return $this->respondUnprocessableEntity(['message' => 'This tag is protected, you can\' delete it']);
+		}
+
 		if ($tag->hasRelations() || $tag->isInTaxonomy()) {
 			// TODO
 			return $this->respondNotImplemented();

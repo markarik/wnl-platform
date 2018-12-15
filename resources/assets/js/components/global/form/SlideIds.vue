@@ -84,23 +84,11 @@
 </style>
 
 <script>
-import { formInput } from 'js/mixins/form-input';
-import SlideLink from 'js/components/global/SlideLink';
 import _ from 'lodash';
 import { mapActions } from 'vuex';
 
-const keys = {
-	enter: 13,
-	esc: 27,
-	arrowUp: 38,
-	arrowDown: 40
-};
-
 export default {
 	name: 'SlideIds',
-	components: {
-		'wnl-slide-link': SlideLink
-	},
 	props: ['defaultSlides'],
 	data: function () {
 		return {

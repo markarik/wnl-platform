@@ -109,7 +109,6 @@
 import Form from 'js/classes/forms/Form';
 import {getApiUrl} from 'js/utils/env';
 import Code from 'js/admin/components/forms/Code';
-import Input from 'js/admin/components/forms/Input.vue';
 import SlidePreview from 'js/components/global/SlidePreview';
 import Checkbox from 'js/admin/components/forms/Checkbox';
 import {alerts} from 'js/mixins/alerts';
@@ -123,7 +122,6 @@ export default {
 	name: 'SlideEditor',
 	components: {
 		'wnl-form-code': Code,
-		'wnl-form-input': Input,
 		'wnl-form-checkbox': Checkbox,
 		'wnl-slide-preview': SlidePreview,
 	},

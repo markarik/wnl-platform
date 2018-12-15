@@ -40,13 +40,9 @@
 <script>
 import { swalConfig } from 'js/utils/swal';
 import { mapActions } from 'vuex';
-import Password from 'js/components/global/form/Password';
 
 export default {
 	name: 'DeleteAccount',
-	components: {
-		'wnl-form-password': Password,
-	},
 	data() {
 		return {
 			inputValue: '',

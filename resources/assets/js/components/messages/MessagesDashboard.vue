@@ -50,10 +50,8 @@ import {mapActions, mapGetters} from 'vuex';
 
 import MainNav from 'js/components/MainNav';
 import PrivateChat from 'js/components/chat/PrivateChat';
-import Sidenav from 'js/components/global/Sidenav';
 import SidenavSlot from 'js/components/global/SidenavSlot';
 import ConversationsList from 'js/components/messages/ConversationsList';
-import FindUsers from 'js/components/messages/FindUsers';
 
 export default {
 	name: 'MessagesDashboard',
@@ -66,11 +64,9 @@ export default {
 	},
 	components: {
 		'wnl-main-nav': MainNav,
-		'wnl-sidenav': Sidenav,
 		'wnl-sidenav-slot': SidenavSlot,
 		'wnl-private-chat': PrivateChat,
 		'wnl-conversations-list': ConversationsList,
-		'wnl-find-users': FindUsers,
 	},
 	computed: {
 		...mapGetters([

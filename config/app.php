@@ -171,6 +171,7 @@ return [
 		Kris\LaravelFormBuilder\FormBuilderServiceProvider::class,
 		Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
 		Barryvdh\DomPDF\ServiceProvider::class,
+		Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 		Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
 		Intervention\Image\ImageServiceProvider::class,
 		Laravel\Scout\ScoutServiceProvider::class,

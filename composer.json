@@ -18,9 +18,9 @@
 	"laravel/scout": "^3.0",
 	"bethink/elastic-scout": "3.*",
 	"doctrine/dbal": "2.5.13",
-    "graham-campbell/throttle": "^6.0",
+	"graham-campbell/throttle": "^6.0",
 	"nao-pon/flysystem-google-drive": "~1.1",
-    "bschmitt/laravel-amqp": "^1.2"
+	"bschmitt/laravel-amqp": "^1.2"
   },
   "require-dev": {
 	"laravel/dusk": "^2.0",
@@ -32,7 +32,7 @@
 	"symfony/dom-crawler": "3.1.*",
 	"barryvdh/laravel-debugbar": "^2.3",
 	"filp/whoops": "~2.0",
-    "barryvdh/laravel-ide-helper": "dev-master#99226c92b72b02bf60d9b339fdf9f446d5d9921d"
+	"barryvdh/laravel-ide-helper": "dev-master#99226c92b72b02bf60d9b339fdf9f446d5d9921d"
   },
   "autoload": {
 	"classmap": [

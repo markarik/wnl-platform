@@ -68,6 +68,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::put("{$r['groups']}/{id}", 'GroupsApiController@put');
 
 		// Lessons
+		Route::post("{$r['lessons']}/.filter", 'LessonsApiController@filter');
 		Route::post("{$r['lessons']}", 'LessonsApiController@post');
 		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
 

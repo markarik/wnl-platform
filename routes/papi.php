@@ -195,7 +195,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Quiz Questions
 		Route::post("{$r['quiz-questions']}/.filter", 'QuizQuestionsApiController@filter');
 		Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
-		Route::post("{$r['quiz-questions']}/byTagName", 'QuizQuestionsApiController@getByTagName');
+		Route::post("{$r['quiz-questions']}/query", 'QuizQuestionsApiController@query');
 
 		// Flashcards
 		Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');

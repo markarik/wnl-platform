@@ -30,7 +30,6 @@ import Password from 'js/components/global/form/Password';
 export default {
 	components: {
 		'wnl-form': Form,
-		'wnl-form-text': Text,
 		'wnl-form-password': Password,
 	},
 	methods: {

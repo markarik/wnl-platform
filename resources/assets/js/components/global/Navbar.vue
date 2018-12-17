@@ -143,7 +143,6 @@
 <script>
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 
-import Breadcrumbs from 'js/components/global/Breadcrumbs';
 import Search from 'js/components/global/search/Search';
 import UserDropdown from 'js/components/user/UserDropdown.vue';
 import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed';
@@ -155,7 +154,6 @@ export default {
 	name: 'Navbar',
 	perimeters: [currentEditionParticipant],
 	components: {
-		'wnl-breadcrumbs': Breadcrumbs,
 		'wnl-user-dropdown': UserDropdown,
 		'wnl-personal-feed': PersonalFeed,
 		'wnl-search': Search,

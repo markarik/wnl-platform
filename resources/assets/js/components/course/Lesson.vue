@@ -57,12 +57,10 @@
 
 <script>
 import _ from 'lodash';
-import Breadcrumbs from 'js/components/global/Breadcrumbs';
 import PreviousNext from 'js/components/course/PreviousNext';
 import {mapGetters, mapActions} from 'vuex';
 import {resource} from 'js/utils/config';
 import {breadcrumb} from 'js/mixins/breadcrumb';
-import Qna from 'js/components/qna/Qna.vue';
 import context from 'js/consts/events_map/context.json';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 
@@ -70,7 +68,6 @@ export default {
 	name: 'Lesson',
 	components: {
 		'wnl-previous-next': PreviousNext,
-		'wnl-breadcrumbs': Breadcrumbs,
 	},
 	mixins: [breadcrumb],
 	props: ['courseId', 'lessonId', 'presenceChannel', 'screenId', 'slide'],

@@ -157,7 +157,6 @@ import MainNav from 'js/components/MainNav';
 import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed';
 import ModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutocomplete';
 import PublicChat from 'js/components/chat/PublicChat';
-import Sidenav from 'js/components/global/Sidenav';
 import SidenavSlot from 'js/components/global/SidenavSlot';
 import Accordion from 'js/components/global/accordion/Accordion';
 import withChat from 'js/mixins/with-chat';
@@ -185,7 +184,6 @@ export default {
 		'wnl-moderators-feed': ModeratorsFeed,
 		'wnl-moderators-autocomplete': ModeratorsAutocomplete,
 		'wnl-public-chat': PublicChat,
-		'wnl-sidenav': Sidenav,
 		'wnl-sidenav-slot': SidenavSlot,
 		'wnl-accordion': Accordion,
 		'wnl-alert': Alert

@@ -20,7 +20,7 @@
 		</div>
 		<div v-else-if="roomsToShow.length" class="conversation-list scrollable-container">
 			<wnl-message-link
-				v-for="(room, index) in roomsToShow"
+				v-for="(room) in roomsToShow"
 				:key="room.id"
 				:userId="getOtherUser(room).user_id"
 				:roomId="room.id"
@@ -106,7 +106,6 @@
 </style>
 
 <script>
-import axios from 'axios';
 import ConversationsSearch from 'js/components/messages/ConversationsSearch';
 import MessageLink from 'js/components/global/MessageLink';
 import ConversationSnippet from 'js/components/messages/ConversationSnippet';

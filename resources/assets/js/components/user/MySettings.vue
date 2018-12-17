@@ -28,15 +28,12 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 
-import { Form, Check, Text } from 'js/components/global/form';
-import Toggler from 'js/components/global/Toggler';
+import { Form, Check } from 'js/components/global/form';
 
 export default {
 	components: {
 		'wnl-form': Form,
 		'wnl-form-check': Check,
-		'wnl-toggler': Toggler,
-		'wnl-form-text': Text,
 	},
 	computed: {
 		...mapGetters(['getAllSettings']),

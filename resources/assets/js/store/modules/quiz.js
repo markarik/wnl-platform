@@ -35,7 +35,7 @@ function fetchQuizSetStats(id) {
 }
 
 function _fetchQuestionsCollectionByTagName(tagName, ids, page = 1) {
-	return axios.post(getApiUrl('quiz_questions/byTagName'), {
+	return axios.post(getApiUrl('quiz_questions/query'), {
 		tag_name: tagName,
 		ids,
 		include: DEFAULT_INCLUDE,

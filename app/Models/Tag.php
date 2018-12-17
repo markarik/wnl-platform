@@ -25,23 +25,16 @@ class Tag extends Model {
 	}
 
 	public function hasRelations() {
-		$count = DB::table('taggables')
-			->select(DB::raw('count(1) as count'))
-			->where('tag_id', $this->id)
-			->groupBy('tag_id')
-			->count();
-
-		return $count > 0;
+		return DB::table('taggables')
+			->select('tag_id')
+			->where('tag_id', $this->id);
 	}
 
 	public function isInTaxonomy() {
-		$count = DB::table('tags_taxonomy')
-			->select(DB::raw('count(1) as count'))
+		return DB::table('tags_taxonomy')
+			->select('tag_id')
 			->where('tag_id', $this->id)
-			->groupBy('tag_id')
-			->count();
-
-		return $count > 0;
+			->exists();
 	}
 
 	/**
@@ -49,13 +42,18 @@ class Tag extends Model {
 	 * TODO refactor the structure and remove this method
 	 */
 	public function isProtected() {
-		$count = DB::table('taggables')
-			->select(DB::raw('count(1) as count'))
+		$isProtectedTaggable = DB::table('taggables')
+			->select('tag_id')
 			->where('tag_id', $this->id)
 			->whereIn('taggable_type', static::PROTECTED_TAGGABLE_TYPES)
-			->groupBy('tag_id')
-			->count();
+			->exists();
 
-		return $count > 0;
+		// @see Commands/SlidesFromCategory
+		$isCategoryTag = DB::table('categories')
+			->select('id')
+			->where('name', $this->name)
+			->exists();
+
+		return $isProtectedTaggable || $isCategoryTag;
 	}
 }

@@ -81,7 +81,7 @@ class CommentsApiController extends ApiController
 		}
 
 		if ($request->has('id')) {
-			$commentsQuery->where('id', $request->get('comment_id'));
+			$commentsQuery->where('id', $request->get('id'));
 		}
 
 		if ($request->has('user_id')) {

@@ -15,6 +15,7 @@ use Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -236,6 +237,22 @@ class ApiController extends Controller
 		}
 
 		return $model::with($relationships);
+	}
+
+	protected function loadWithCounts($model) {
+		if (empty($this->include)) {
+			return $model;
+		}
+
+		$withCountIncludes = array_filter(explode(',', $this->include), function($include) {
+			return Str::endsWith($include, '_count');
+		});
+
+		$model->withCount(array_map(function($include) {
+			return str_replace('_count', '', $include);
+		}, $withCountIncludes));
+
+		return $model;
 	}
 
 	protected function modelHasMethod(string $model, string $method)

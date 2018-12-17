@@ -22,4 +22,9 @@ class Tag extends Model
 	{
 		return $this->morphedByMany('App\Models\Lesson', 'taggable');
 	}
+
+	public function taggables()
+	{
+		return $this->hasMany('App\Models\Taggable');
+	}
 }

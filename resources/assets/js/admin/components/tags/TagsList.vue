@@ -3,14 +3,15 @@
 		<wnl-sortable-table
 			:resourceUrl="getApiUrl('tags/.filter')"
 			:columns="columns"
+			:requestParams="{include: 'taggables_count'}"
 		>
 			<h3 slot="header" class="title">Lista Tagów</h3>
 
 			<tbody slot-scope="slotProps" slot="tbody">
-			<tr v-for="tag in slotProps.list" :key="tag.id" class="row" @click="goToTag(tag)">
+			<tr v-for="tag in parseIncludes(slotProps.list)" :key="tag.id" class="row" @click="goToTag(tag)">
 				<td>{{tag.id}}</td>
 				<td>{{tag.name}}</td>
-				<td></td>
+				<td>{{tag.taggables_count}}</td>
 			</tr>
 			</tbody>
 		</wnl-sortable-table>
@@ -47,7 +48,7 @@ export default {
 					label: 'Nazwa',
 				},
 				{
-					name: 'todo',
+					name: 'taggables_count',
 					label: 'Ilość powiązań',
 				},
 			]
@@ -58,6 +59,14 @@ export default {
 		goToTag(tag) {
 			this.$router.push({ });
 		},
+		parseIncludes(data) {
+			const {included, ...list} = data;
+
+			return Object.values(list).map(item => {
+				item.taggables_count = included.taggables_count[item.id].taggables_count;
+				return item;
+			});
+		}
 	},
 };
 </script>

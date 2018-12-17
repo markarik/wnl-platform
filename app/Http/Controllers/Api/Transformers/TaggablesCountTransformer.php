@@ -8,12 +8,9 @@ use App\Models\Tag;
 use App\Http\Controllers\Api\ApiTransformer;
 
 
-class TagTransformer extends ApiTransformer
+class TaggablesCountTransformer extends ApiTransformer
 {
 	protected $parent;
-	protected $availableIncludes = [
-		'taggables_count'
-	];
 
 	public function __construct($parent = null)
 	{
@@ -23,8 +20,8 @@ class TagTransformer extends ApiTransformer
 	public function transform(Tag $tag)
 	{
 		$data = [
-			'id'   => $tag->id,
-			'name' => $tag->name,
+			'taggables_count'   => $tag->taggables_count,
+			'id' => $tag->id,
 		];
 
 		if ($this->parent) {
@@ -32,10 +29,5 @@ class TagTransformer extends ApiTransformer
 		}
 
 		return $data;
-	}
-
-	public function includeTaggablesCount(Tag $tag)
-	{
-		return $this->item($tag, new TaggablesCountTransformer(['tags' => $tag->id]), 'taggables_count');
 	}
 }

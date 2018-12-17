@@ -137,7 +137,6 @@
 </style>
 
 <script>
-import Breadcrumbs from 'js/components/global/Breadcrumbs';
 import SidenavGroup from 'js/components/global/SidenavGroup';
 import SidenavItem from 'js/components/global/SidenavItem';
 import { mapGetters } from 'vuex';
@@ -145,7 +144,6 @@ import { mapGetters } from 'vuex';
 export default {
 	props: ['breadcrumbs', 'items', 'itemsHeading', 'options'],
 	components: {
-		'wnl-breadcrumbs': Breadcrumbs,
 		'wnl-sidenav-group': SidenavGroup,
 		'wnl-sidenav-item': SidenavItem,
 	},

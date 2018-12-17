@@ -71,7 +71,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['lessons']}", 'LessonsApiController@post');
 		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
 
-		// Orders
+		// Tags
 		Route::post("{$r['tags']}/.filter", 'TagsApiController@filter');
 	});
 

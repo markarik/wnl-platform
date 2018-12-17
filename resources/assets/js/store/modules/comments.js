@@ -22,7 +22,7 @@ function _fetchComments({...commentsQuery}) {
 	};
 
 	if (commentsQuery.hasOwnProperty('comment_id')) {
-		requestParams.comment_id = commentsQuery.comment_id;
+		requestParams.id = commentsQuery.comment_id;
 	}
 	return axios.get(getApiUrl('comments/query'), {params: requestParams})
 		.then((data) => {

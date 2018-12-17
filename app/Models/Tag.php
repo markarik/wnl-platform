@@ -38,12 +38,6 @@ class Tag extends Model {
 			->exists();
 	}
 
-	/**
-	 * SlidesFromCategory command uses hardcoded tag names
-	 * @see SlidesFromCategory
-	 *
-	 * @return bool
-	 */
 	public function isCategoryTag() {
 		return DB::table('categories')
 			->select('id')
@@ -59,7 +53,12 @@ class Tag extends Model {
 			->exists();
 	}
 
-	public function isProtected() {
-		return $this->isInTaxonomy() || $this->isCategoryTag() || $this->isProtectedTaggable();
+	public function isRenameAllowed() {
+		// SlidesFromCategory command uses hardcoded tag names
+		return !$this->isCategoryTag();
+	}
+
+	public function isDeleteAllowed() {
+		return !$this->isInTaxonomy() && !$this->isCategoryTag() && !$this->isProtectedTaggable();
 	}
 }

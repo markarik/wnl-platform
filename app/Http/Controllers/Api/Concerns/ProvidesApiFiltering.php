@@ -40,7 +40,7 @@ trait ProvidesApiFiltering
 		list ($filters, $paths) = $this->getFilters($request);
 		$model = $this->addFilters($filters, $model);
 
-		$model = $this->loadWithCounts($model);
+		$model = $this->loadCountIncludes($model);
 
 		if (!empty($randomize)) {
 			$response = $this->randomizedResponse($model, $this->limit);

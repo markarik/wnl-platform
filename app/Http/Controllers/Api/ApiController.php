@@ -32,6 +32,8 @@ class ApiController extends Controller
 	protected $request;
 	public $resourceName;
 
+	const WITH_COUNT_INCLUDE_SUFFIX = '_count';
+
 	public function __construct(Request $request)
 	{
 		$this->request = $request;
@@ -239,17 +241,17 @@ class ApiController extends Controller
 		return $model::with($relationships);
 	}
 
-	protected function loadWithCounts($model) {
+	protected function loadCountIncludes($model) {
 		if (empty($this->include)) {
 			return $model;
 		}
 
 		$withCountIncludes = array_filter(explode(',', $this->include), function($include) {
-			return Str::endsWith($include, '_count');
+			return Str::endsWith($include, self::WITH_COUNT_INCLUDE_SUFFIX);
 		});
 
 		$model->withCount(array_map(function($include) {
-			return str_replace('_count', '', $include);
+			return str_replace(self::WITH_COUNT_INCLUDE_SUFFIX, '', $include);
 		}, $withCountIncludes));
 
 		return $model;

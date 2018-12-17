@@ -13,7 +13,7 @@
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
 				<router-view
-						:arguments="{currentUserName}"
+						:arguments="templateArguments"
 						:slug="$route.name"
 						:qna="true"
 						@userEvent="onUserEvent"
@@ -94,6 +94,13 @@ export default {
 			'currentUserName'
 		]),
 		...mapGetters('course', ['ready']),
+		templateArguments() {
+			return {
+				currentUserName: {
+					value: this.currentUserName
+				}
+			}
+		},
 		sidenavItems() {
 			return [
 				{

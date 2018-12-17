@@ -99,7 +99,7 @@ export default {
 				currentUserName: {
 					value: this.currentUserName
 				}
-			}
+			};
 		},
 		sidenavItems() {
 			return [

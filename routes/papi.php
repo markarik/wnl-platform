@@ -75,6 +75,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['tags']}", 'TagsApiController@post');
 		Route::put("{$r['tags']}/{id}", 'TagsApiController@put');
 		Route::delete("{$r['tags']}/{id}", 'TagsApiController@delete');
+
+		// Taggables
+		Route::post("{$r['taggables']}/batch_move/{source}/{target}", 'TaggablesApiController@batchMove');
 	});
 
 	// Count

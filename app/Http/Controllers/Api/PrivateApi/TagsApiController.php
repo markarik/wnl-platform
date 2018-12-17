@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Course\UpdateTag;
 use App\Models\Tag;
+use App\Models\Taggable;
 use Illuminate\Http\Request;
 
 class TagsApiController extends ApiController {
@@ -52,6 +53,11 @@ class TagsApiController extends ApiController {
 		return $this->respondOk();
 	}
 
+	/**
+	 * @param $id
+	 * @return \Illuminate\Http\JsonResponse
+	 * @throws \Throwable
+	 */
 	public function delete($id) {
 		$tag = Tag::find($id);
 
@@ -67,7 +73,7 @@ class TagsApiController extends ApiController {
 
 		if ($tag->isProtectedTaggable()) {
 			return $this->respondUnprocessableEntity([
-				'message' => 'Na podstawie tego taga tworzymy strukturę. Nie możesz go usunąć.'
+				'message' => 'Ten tag jest użyty do oznaczenia zawartości. Nie możesz go usunąć.'
 			]);
 		}
 
@@ -77,7 +83,16 @@ class TagsApiController extends ApiController {
 			]);
 		}
 
-		$tag->delete();
+		$taggables = Taggable::where('tag_id', $tag->id)
+			->get();
+
+		\DB::transaction(function () use ($tag, $taggables) {
+			foreach ($taggables as $taggable) {
+				$taggable->delete();
+			}
+
+			$tag->delete();
+		});
 
 		return $this->respondOk();
 	}

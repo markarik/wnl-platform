@@ -2,22 +2,23 @@
 	<div>
 		<article class="message is-info">
 			<div class="message-header">
-				<p>Pobierz swój plan pracy i połącz go z Kalendarzem Goolge</p>
+				<p>Pobierz swój plan pracy i połącz go z Kalendarzem Google</p>
 			</div>
 			<div class="message-body plan-details">
-				<span></span>
-				<span class="plan-details__header">Twój obecny plan pracy zakłada naukę od <strong>{{planStartDate}}</strong> do <strong>{{planEndDate}}</strong>.</span>
-				<span class="plan-details__explainer">Po pobraniu planu - możesz zaimportować go do <a href="https://calendar.google.com" target="_blank">Kalendarza Google</a>:</span>
+				<span>Wiemy, że dobra organizacja pracy jest dla Ciebie priorytetem. Dlatego stworzyliśmy możliwość połączenia indywidualnego planu pracy z Twoim kalendarzem Google. Aby to zrobić postępuj zgodnie z podanymi instrukcjami. 🙂</span>
+				<span>Twój obecny plan pracy zakłada naukę od <strong>{{planStartDate}}</strong> do <strong>{{planEndDate}}</strong>.</span>
 				<div class="paln-details__list">
 					<ol>
+						<li>Kliknij na "POBIERZ PLAN PRACY", aby wyeksportowanć plik z nazwami lekcji i przypisanymi do nich datami. Plik powinien nazywać się "plan_pracy.csv".</li>
 						<li>Otwórz <a href="https://calendar.google.com" target="_blank">Kalendarz Google</a> na komputerze. Uwaga: import możesz wykonać tylko na komputerze, nie jest to możliwe na telefonie ani na tablecie.</li>
 						<li>W prawym górnym rogu kliknij <span class="icon is-small"><i class="fa fa-cog"></i></span> a następnie Ustawienia.</li>
 						<li>Kliknij <strong>Importuj/eksportuj</strong>.</li>
-						<li>Kliknij <strong>Wybierz plik z komputera</strong> i wybierz wyeksportowany wcześniej plik. Nazwa pliku powinna mieć na końcu „csv”.</li>
+						<li>Kliknij <strong>Wybierz plik z komputera</strong> i wybierz wcześniej pobrany wcześniej plik.</li>
 						<li>Wybierz kalendarz, do którego chcesz dodać zaimportowane wydarzenia. Domyślnie wydarzenia są importowane do kalendarza głównego.</li>
 						<li>Kliknij <strong>Importuj</strong>.</li>
 					</ol>
 				</div>
+				<span>I gotowe! Twój plan pracy jest połączony z Twoim kalendarzem 😎</span>
 			</div>
 		</article>
 		<div class="download-plan">
@@ -28,7 +29,6 @@
 			</a>
 		</div>
 	</div>
-
 </template>
 
 <style lang="sass" scoped>
@@ -37,21 +37,17 @@
 .plan-details
 	display: flex
 	flex-direction: column
-	.plan-details__header
-		margin-bottom: $margin-small
 	.paln-details__list
-		padding: $margin-base
-		li
-			margin: $margin-tiny
+		margin: $margin-base
 
 </style>
 
 <script>
- 	import { mapGetters } from 'vuex'
+ 	import { mapActions, mapGetters } from 'vuex';
 	import moment from 'moment'
 	import { first,last } from 'lodash'
 	import { getApiUrl } from 'js/utils/env'
-	import { download } from 'js/utils/download'
+	import { downloadFile } from 'js/utils/download'
 
 	export default {
 		name: 'DownloadPlan',
@@ -82,8 +78,40 @@
 			},
 		},
 		methods: {
-			downloadPlan() {
-				download(`user_lesson/${this.currentUserId}/exportPlan`, 'plan_pracy.csv')
+			...mapActions(['addAutoDismissableAlert']),
+			async downloadPlan() {
+				try {
+					const response = await axios.request({
+						url: getApiUrl(`user_lesson/${this.currentUserId}/exportPlan`),
+						responseType: 'blob',
+					})
+
+					downloadFile(response.data, 'plan_pracy.csv')
+				} catch (err) {
+					this.handleDownloadFailure(err)
+				}
+			},
+			handleDownloadFailure(err) {
+				if (err.response.status === 404) {
+					return this.addAutoDismissableAlert({
+						text: 'Nie udało się znaleźć Twojego planu pracy. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
+						type: 'error'
+					})
+				}
+
+				if (err.response.status === 403) {
+					return this.addAutoDismissableAlert({
+						text: 'Nie masz uprawnień do pobrania planu.',
+						type: 'error'
+					})
+				}
+
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+					type: 'error'
+				})
+
+				$wnl.logger.capture(err)
 			},
 		}
 	}

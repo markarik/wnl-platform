@@ -43,7 +43,7 @@ import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 import axios from 'axios';
 import { getApiUrl } from 'js/utils/env';
-import { download } from 'js/utils/download'
+import { downloadFile } from 'js/utils/download'
 
 export default {
 	name: 'UserCertificates',
@@ -61,11 +61,51 @@ export default {
 		formatDate(date) {
 			return moment(date).format('DD/MM/YY');
 		},
-		downloadParticipationCertificate(orderId) {
-			download(`certificates/participation/${orderId}`, `participation_${orderId}.jpg`)
+		async downloadParticipationCertificate() {
+			try {
+				const response = await axios.request({
+					url: getApiUrl(`certificates/participation/${orderId}`),
+					responseType: 'blob',
+				})
+
+				downloadFile(response.data, `participation_${orderId}.jpg`)
+			} catch (err) {
+				this.handleDownloadFailure(err)
+			}
 		},
-		downloadFinalCertificate(orderId) {
-			download(`certificates/final/${orderId}`, `final_${orderId}.jpg`)
+		async downloadParticipationCertificate() {
+			try {
+				const response = await axios.request({
+					url: getApiUrl(`certificates/final/${orderId}`),
+					responseType: 'blob',
+				})
+
+				downloadFile(response.data, `final_${orderId}.jpg`)
+			} catch (err) {
+				this.handleDownloadFailure(err)
+			}
+		},
+		handleDownloadFailure(err) {
+			if (err.response.status === 404) {
+				return this.addAutoDismissableAlert({
+					text: 'Nie udało się znaleźć certyfikatu. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
+					type: 'error'
+				})
+			}
+
+			if (err.response.status === 403) {
+				return this.addAutoDismissableAlert({
+					text: 'Nie masz uprawnień do pobrania certyfikatu.',
+					type: 'error'
+				})
+			}
+
+			this.addAutoDismissableAlert({
+				text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+				type: 'error'
+			})
+
+			$wnl.logger.capture(err)
 		},
 	},
 	async mounted() {

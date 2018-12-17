@@ -51,8 +51,11 @@ class QuizQuestionsApiController extends ApiController
 		]);
 		$ids = $request->get('ids');
 
-		$questions = QuizQuestion::select()
-			->whereIn('id', $ids);
+		$questions = QuizQuestion::select();
+
+		if ($request->has('ids')) {
+			$questions->whereIn('id', $ids);
+		}
 
 		if ($request->has('tag_name')) {
 			$tagName = $request->get('tag_name');

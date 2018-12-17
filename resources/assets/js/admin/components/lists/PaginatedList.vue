@@ -119,6 +119,12 @@ export default {
 	},
 	mounted() {
 		this.fetch();
+	},
+	watch: {
+		customRequestParams() {
+			this.page = 1;
+			this.fetch();
+		}
 	}
 };
 </script>

@@ -1,29 +1,63 @@
 <template>
 	<div class="orders-list">
-		<wnl-paginated-list
+		<wnl-sortable-table
 			:resourceUrl="getApiUrl('tags/.filter')"
+			:columns="columns"
 		>
-			<h3 slot="header">Lista Tagów</h3>
-			<ul slot-scope="slotProps" slot="list">
-				<li v-for="tag in slotProps.list" :key="tag.id" class="margin bottom">
-					<router-link :to="{}">{{tag.id}}. {{tag.name}}</router-link>
-				</li>
-			</ul>
-		</wnl-paginated-list>
+			<h3 slot="header" class="title">Lista Tagów</h3>
 
+			<tbody slot-scope="slotProps" slot="tbody">
+			<tr v-for="tag in slotProps.list" :key="tag.id" class="row" @click="goToTag(tag)">
+				<td>{{tag.id}}</td>
+				<td>{{tag.name}}</td>
+				<td></td>
+			</tr>
+			</tbody>
+		</wnl-sortable-table>
 	</div>
 </template>
 
+<style lang="sass">
+	.row
+		cursor: pointer
+</style>
+
 <script>
-import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
+import WnlSortableTable from 'js/admin/components/lists/SortableTable';
 import {getApiUrl} from 'js/utils/env';
 
 export default {
 	components: {
-		WnlPaginatedList,
+		WnlSortableTable,
+	},
+	data() {
+		return {
+			requestParams: {
+				order: {
+					name: 'asc',
+				}
+			},
+			columns: [
+				{
+					name: 'id',
+					label: 'Id',
+				},
+				{
+					name: 'name',
+					label: 'Nazwa',
+				},
+				{
+					name: 'todo',
+					label: 'Ilość powiązań',
+				},
+			]
+		}
 	},
 	methods: {
 		getApiUrl,
+		goToTag(tag) {
+			this.$router.push({ });
+		},
 	},
 };
 </script>

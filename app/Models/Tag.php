@@ -27,7 +27,8 @@ class Tag extends Model {
 	public function hasRelations() {
 		return DB::table('taggables')
 			->select('tag_id')
-			->where('tag_id', $this->id);
+			->where('tag_id', $this->id)
+			->exists();
 	}
 
 	public function isInTaxonomy() {
@@ -38,22 +39,27 @@ class Tag extends Model {
 	}
 
 	/**
-	 * Our structure depends on some tags and we shouldn't delete them
-	 * TODO refactor the structure and remove this method
+	 * SlidesFromCategory command uses hardcoded tag names
+	 * @see SlidesFromCategory
+	 *
+	 * @return bool
 	 */
-	public function isProtected() {
-		$isProtectedTaggable = DB::table('taggables')
+	public function isCategoryTag() {
+		return DB::table('categories')
+			->select('id')
+			->where('name', $this->name)
+			->exists();
+	}
+
+	public function isProtectedTaggable() {
+		return DB::table('taggables')
 			->select('tag_id')
 			->where('tag_id', $this->id)
 			->whereIn('taggable_type', static::PROTECTED_TAGGABLE_TYPES)
 			->exists();
+	}
 
-		// @see Commands/SlidesFromCategory
-		$isCategoryTag = DB::table('categories')
-			->select('id')
-			->where('name', $this->name)
-			->exists();
-
-		return $isProtectedTaggable || $isCategoryTag;
+	public function isProtected() {
+		return $this->isInTaxonomy() || $this->isCategoryTag() || $this->isProtectedTaggable();
 	}
 }

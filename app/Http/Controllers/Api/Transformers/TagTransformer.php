@@ -17,7 +17,9 @@ class TagTransformer extends ApiTransformer {
 			'id' => $tag->id,
 			'name' => $tag->name,
 			'description' => $tag->description,
-			'color' => $tag->color
+			'color' => $tag->color,
+			'has_relations' => $tag->hasRelations(),
+			'is_protected' => $tag->isProtected()
 		];
 
 		if ($this->parent) {

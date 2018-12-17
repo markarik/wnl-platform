@@ -41,6 +41,12 @@ class TagsApiController extends ApiController {
 			return $this->respondNotFound();
 		}
 
+		if ($request->get('name') !== $tag->name && $tag->isCategoryTag()) {
+			return $this->respondUnprocessableEntity([
+				'message' => 'Na podstawie nazwy tego taga tworzymy slajdy dla kategorii. Nie możesz zmienić mu nazwy.'
+			]);
+		}
+
 		$tag->update($request->all());
 
 		return $this->respondOk();
@@ -53,13 +59,22 @@ class TagsApiController extends ApiController {
 			return $this->respondNotFound();
 		}
 
-		if ($tag->isProtected()) {
-			return $this->respondUnprocessableEntity(['message' => 'This tag is protected, you can\' delete it']);
+		if ($tag->isCategoryTag()) {
+			return $this->respondUnprocessableEntity([
+				'message' => 'Na podstawie tego taga tworzymy slajdy dla kategorii. Nie możesz go usunąć.'
+			]);
 		}
 
-		if ($tag->hasRelations() || $tag->isInTaxonomy()) {
-			// TODO
-			return $this->respondNotImplemented();
+		if ($tag->isProtectedTaggable()) {
+			return $this->respondUnprocessableEntity([
+				'message' => 'Na podstawie tego taga tworzymy strukturę. Nie możesz go usunąć.'
+			]);
+		}
+
+		if ($tag->isInTaxonomy()) {
+			return $this->respondUnprocessableEntity([
+				'message' => 'Ten tag jest częścią taksonomii. Nie możesz go usunąć.'
+			]);
 		}
 
 		$tag->delete();

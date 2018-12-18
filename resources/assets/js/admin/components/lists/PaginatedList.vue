@@ -45,7 +45,7 @@ import {isEmpty} from 'lodash';
 
 import WnlPagination from 'js/components/global/Pagination';
 import WnlSearchInput from 'js/components/global/SearchInput';
-import {getApiUrl} from '../../../utils/env';
+import {getApiUrl} from 'js/utils/env';
 
 export default {
 	components: {

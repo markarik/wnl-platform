@@ -104,15 +104,6 @@ export default {
 		return {
 			openAnnotations: [],
 			getColourForStr,
-			requestParams: {
-				include: 'keywords,tags'
-			},
-			searchAvailableFields: [
-				{value: 'id', title: 'ID'},
-				{value: 'title', title: 'Tytuł'},
-				{value: 'description', title: 'Treść'},
-				{value: 'tags.name', title: 'Nazwa Taga'},
-			]
 		};
 	},
 	props: {

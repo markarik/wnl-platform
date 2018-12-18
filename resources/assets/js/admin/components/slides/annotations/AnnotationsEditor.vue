@@ -190,7 +190,6 @@
 import {mapActions} from 'vuex';
 import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
-import Code from 'js/admin/components/forms/Code';
 import Form from 'js/classes/forms/Form';
 import { Tags } from 'js/components/global/form/index';
 import KeywordField from './KeywordField';
@@ -201,7 +200,6 @@ import Modal from 'js/components/global/Modal';
 export default {
 	name: 'AnnotationsEditor',
 	components: {
-		'wnl-form-code': Code,
 		'wnl-tags': Tags,
 		'wnl-keyword-field': KeywordField,
 		'quill': Quill,

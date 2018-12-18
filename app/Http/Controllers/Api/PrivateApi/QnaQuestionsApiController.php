@@ -142,10 +142,12 @@ class QnaQuestionsApiController extends ApiController
 		}
 
 		if ($request->has('tags_ids')) {
-			$tagsIds = $request->get('tags_ids');
-			$qnaQuestionsQuery->whereHas('tags', function ($query) use ($tagsIds) {
-				$query->whereIn('tags.id', $tagsIds);
-			});
+			foreach ($request->get('tags_ids') as $tagId) {
+				$qnaQuestionsQuery->whereHas('tags', function ($query) use ($tagId) {
+						$query->where('tags.id', $tagId);
+					}
+				);
+			}
 		}
 
 		if ($request->has('ids')) {

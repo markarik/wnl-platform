@@ -47,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
 		}
 		if ($this->app->environment('dev', 'local')) {
 			$this->app->register(TinkerServiceProvider::class);
+			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 		}
 		if (env('DEBUG_BAR') === true) {
 			$this->app->register(DebugBarServiceProvider::class);

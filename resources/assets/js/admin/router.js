@@ -121,6 +121,11 @@ let routes = [
 		props: true,
 	},
 	{
+		name: 'orders',
+		path: '/admin/app/orders',
+		component: require('js/admin/components/orders/OrdersList'),
+	},
+	{
 		name: 'dashboard',
 		path: '/admin/app'
 	},

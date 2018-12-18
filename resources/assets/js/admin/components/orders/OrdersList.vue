@@ -1,9 +1,8 @@
 <template>
-	<div class="flashcards-list">
-		<h3 class="title">Lista pytań</h3>
-		<router-link :to="{ name: 'flashcards-edit', params: { flashcardId: 'new' } }" class="button is-success margin bottom">+ Nowe pytanie</router-link>
+	<div class="orders-list">
+		<h3 class="title">Lista zamówień</h3>
 
-		<wnl-search-input @search="onSearch" class="search"/>
+		<wnl-search-input @search="onSearch" class="search" />
 		<wnl-pagination
 			v-if="lastPage > 1"
 			:currentPage="page"
@@ -12,43 +11,68 @@
 			class="pagination"
 		/>
 
-		<div v-if="!isLoading">
-			<wnl-flashcard-list-item v-for="flashcard in flashcards"
-															 :key="flashcard.id"
-															 :content="flashcard.content"
-															 :id="flashcard.id"
-			/>
-		</div>
+		<table class="table" v-if="!isLoading">
+			<thead>
+			<tr>
+				<th>ID</th>
+				<th>Data</th>
+				<th>Id użytkownika</th>
+				<th>Produkt</th>
+				<th>Status wysyłki</th>
+				<th>Wpłata</th>
+				<th>Kupon</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr v-for="order in orders" @click="goToOrder(order)" :class="['row', {'canceled': order.canceled}]" :key="order.id">
+				<td>{{order.id}}</td>
+				<td>{{order.created_at}}</td>
+				<td>{{order.user_id}}</td>
+				<td>{{order.product.name}}</td>
+				<td>{{translateShippingStatus(order)}}</td>
+				<td>
+					<span class="icon has-text-success" v-if="order.paid"><i class="fa fa-check"></i></span>
+					{{order.paid_amount}} / {{order.total}}PLN
+				</td>
+				<td><span class="icon has-text-success" v-if="order.coupon" :title="order.coupon.name"><i class="fa fa-check"></i></span></td>
+			</tr>
+			</tbody>
+		</table>
 		<wnl-text-loader v-else></wnl-text-loader>
+
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
-	.search
-		margin-bottom: $margin-base
-
 	.pagination /deep/ .pagination-list
 		justify-content: center
 		margin-bottom: $margin-medium
+
+	.row
+		cursor: pointer
+
+		&.canceled
+			opacity: .2
+
+	.search
+		margin-bottom: $margin-base
 </style>
 
 <script>
 import WnlPagination from 'js/components/global/Pagination';
-import FlashcardsListItem from 'js/admin/components/flashcards/list/FlashcardsListItem';
 import WnlSearchInput from 'js/components/global/SearchInput';
 import {getApiUrl} from 'js/utils/env';
 
 export default {
-	name: 'FlashcardsList',
+	name: 'OrdersList',
 	components: {
-		'wnl-flashcard-list-item': FlashcardsListItem,
 		WnlPagination,
 		WnlSearchInput,
 	},
 	data() {
 		return {
-			flashcards: [],
+			orders: [],
 			searchPhrase: '',
 			lastPage: 1,
 			page: 1,
@@ -83,13 +107,18 @@ export default {
 		},
 		async fetch() {
 			this.isLoading = true;
-			const response = await axios.post(getApiUrl('flashcards/.filter'), this.getRequestParams());
+			const response = await axios.post(getApiUrl('orders/.filter'), this.getRequestParams());
 			const {data: {data, ...paginationMeta}} = response;
-			this.flashcards = data;
+			this.orders = data;
 			this.lastPage = paginationMeta.last_page;
-
 			this.isLoading = false;
 		},
+		translateShippingStatus(order) {
+			return this.$t(`orders.tags.shipping.${order.shipping_status}`);
+		},
+		goToOrder(order){
+			this.$router.push({ name: 'user-details', params: { userId: order.user_id }, hash: '#orders' });
+		}
 	},
 	mounted() {
 		this.fetch();

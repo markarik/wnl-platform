@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class Order extends Model
 {
+	use Searchable;
+
 	protected $casts = [
 		'paid'        => 'boolean',
 		'canceled'    => 'boolean',
@@ -227,5 +230,21 @@ class Order extends Model
 		}
 
 		return $this->paid_amount >= $this->total_with_coupon;
+	}
+
+	/**
+	 * Get the indexable data array for the model.
+	 *
+	 * @return array
+	 */
+	public function toSearchableArray()
+	{
+		$data = [
+			'id' => $this->id,
+			'user_id' => $this->user_id,
+			'product' => $this->product->name,
+		];
+
+		return $data;
 	}
 }

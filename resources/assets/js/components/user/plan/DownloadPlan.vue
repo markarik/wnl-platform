@@ -18,7 +18,8 @@
 						<li>Kliknij <strong>Importuj</strong>.</li>
 					</ol>
 				</div>
-				<span>I gotowe! Twój plan pracy jest połączony z Twoim kalendarzem 😎</span>
+				<span>I gotowe! Twój plan pracy został zaimportowany do Twojego kalendarza 😎</span>
+				<span>Pamiętaj, jeśli zmienisz daty lekcji - nie pojawią się one automatycznie w kalendarzu - należy ponownie go zaimportować.</span>
 			</div>
 		</article>
 		<div class="download-plan">
@@ -92,20 +93,6 @@
 				}
 			},
 			handleDownloadFailure(err) {
-				if (err.response.status === 404) {
-					return this.addAutoDismissableAlert({
-						text: 'Nie udało się znaleźć Twojego planu pracy. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
-						type: 'error'
-					})
-				}
-
-				if (err.response.status === 403) {
-					return this.addAutoDismissableAlert({
-						text: 'Nie masz uprawnień do pobrania planu.',
-						type: 'error'
-					})
-				}
-
 				this.addAutoDismissableAlert({
 					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
 					type: 'error'

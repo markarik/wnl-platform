@@ -61,7 +61,7 @@ export default {
 		formatDate(date) {
 			return moment(date).format('DD/MM/YY');
 		},
-		async downloadParticipationCertificate() {
+		async downloadParticipationCertificate(orderId) {
 			try {
 				const response = await axios.request({
 					url: getApiUrl(`certificates/participation/${orderId}`),
@@ -73,7 +73,7 @@ export default {
 				this.handleDownloadFailure(err)
 			}
 		},
-		async downloadParticipationCertificate() {
+		async downloadParticipationCertificate(orderId) {
 			try {
 				const response = await axios.request({
 					url: getApiUrl(`certificates/final/${orderId}`),
@@ -86,20 +86,6 @@ export default {
 			}
 		},
 		handleDownloadFailure(err) {
-			if (err.response.status === 404) {
-				return this.addAutoDismissableAlert({
-					text: 'Nie udało się znaleźć certyfikatu. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
-					type: 'error'
-				})
-			}
-
-			if (err.response.status === 403) {
-				return this.addAutoDismissableAlert({
-					text: 'Nie masz uprawnień do pobrania certyfikatu.',
-					type: 'error'
-				})
-			}
-
 			this.addAutoDismissableAlert({
 				text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
 				type: 'error'

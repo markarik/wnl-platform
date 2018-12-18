@@ -111,12 +111,12 @@ class UserLessonApiController extends ApiController
 		$userId = $request->route('userId');
 		$user = User::fetch($userId);
 
-		if (!Auth::user()->can('view', $user)) {
-			return $this->respondForbidden();
-		}
-
 		if (empty($user)) {
 			return $this->respondNotFound();
+		}
+
+		if (!Auth::user()->can('view', $user)) {
+			return $this->respondForbidden();
 		}
 
 		$userLessons = UserLesson::where('user_id', $userId)->get();

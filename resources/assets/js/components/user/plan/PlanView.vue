@@ -68,6 +68,7 @@ import {mapGetters} from 'vuex';
 import LessonsPlanner from './LessonsPlanner';
 import PlannerGuarantee from './PlanGuarantee.vue';
 import PlannerGuide from './PlannerGuide';
+import DownloadPlan from './DownloadPlan';
 import Dropdown from 'js/components/global/Dropdown';
 import emits_events from 'js/mixins/emits-events';
 import context from 'js/consts/events_map/context.json';
@@ -91,6 +92,10 @@ export default {
 				{
 					title: 'Gwarancja satysfakcji',
 					component: PlannerGuarantee,
+				},
+				{
+					title: 'Pobierz plan pracy',
+					component: DownloadPlan,
 				},
 			]
 		};

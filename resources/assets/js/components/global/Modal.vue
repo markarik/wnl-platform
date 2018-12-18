@@ -37,10 +37,5 @@ export default {
 			default: false
 		}
 	},
-	methods: {
-		emitCloseModal() {
-			this.$emit('closeModal');
-		}
-	}
 };
 </script>

@@ -21,6 +21,7 @@
 
 <script>
 import _ from 'lodash';
+import {VIEWS} from '../../../consts/questionsSolving';
 
 export default {
 	name: 'MockExam',
@@ -43,7 +44,7 @@ export default {
 				name: 'questions-list',
 				params: {
 					presetOptions: {
-						activeView: 'test',
+						activeView: VIEWS.TEST_YOURSELF,
 						canChangeTime: false,
 						loadingText: 'mockExam',
 						sizesToChoose: [200],

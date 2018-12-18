@@ -40,7 +40,7 @@
 			<div class="active-filters">
 				{{activeFiltersForDisplay}}
 			</div>
-			<a v-if="activeView === 'list'"
+			<a v-if="activeView === VIEWS.LIST"
 				class="button is-small is-outlined is-primary"
 				@click="showListResults = !showListResults"
 			>
@@ -50,7 +50,7 @@
 
 		<div v-if="hasCurrentQuestion" ref="view">
 			<!-- Current Question -->
-			<div v-if="activeView === 'current'">
+			<div v-if="activeView === VIEWS.CURRENT_QUESTION">
 				<wnl-active-question
 					:module="module"
 					:getReaction="getReaction"
@@ -65,7 +65,7 @@
 			</div>
 
 			<!-- List -->
-			<div v-if="activeView === 'list'" class="questions-list">
+			<div v-if="activeView === VIEWS.LIST" class="questions-list">
 				<div class="pagination-container">
 					<wnl-pagination v-if="meta.lastPage && meta.lastPage > 1"
 						:currentPage="meta.currentPage"
@@ -111,7 +111,7 @@
 			</div>
 
 			<!-- Test -->
-			<div v-if="activeView === 'test_yourself'">
+			<div v-if="activeView === VIEWS.TEST_YOURSELF">
 				<wnl-questions-test-builder
 					:getReaction="getReaction"
 					:questions="testQuestions"
@@ -215,18 +215,19 @@ import QuizQuestion from 'js/components/quiz/QuizQuestion';
 import Pagination from 'js/components/global/Pagination';
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
+import {VIEWS} from '../../consts/questionsSolving';
 
 const views = [
 	{
-		name: 'current',
+		name: VIEWS.CURRENT_QUESTION,
 		icon: 'fa-check'
 	},
 	{
-		name: 'list',
+		name: VIEWS.LIST,
 		icon: 'fa-list'
 	},
 	{
-		name: 'test_yourself',
+		name: VIEWS.TEST_YOURSELF,
 		icon: 'fa-clock-o'
 	},
 ];
@@ -306,8 +307,9 @@ export default {
 	},
 	data() {
 		return {
-			activeView: 'current',
+			activeView: VIEWS.CURRENT_QUESTION,
 			showListResults: false,
+			VIEWS,
 		};
 	},
 	computed: {
@@ -360,7 +362,7 @@ export default {
 		},
 		setQuestion(index) {
 			this.$emit('setQuestion', {page: this.meta.currentPage, index});
-			this.activeView = 'current';
+			this.activeView = VIEWS.CURRENT_QUESTION;
 		},
 		onVerify(payload) {
 			this.$emit('verify', payload);

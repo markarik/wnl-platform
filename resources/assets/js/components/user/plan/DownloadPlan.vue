@@ -101,5 +101,5 @@ export default {
 			$wnl.logger.capture(err);
 		},
 	}
-}
+};
 </script>

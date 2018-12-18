@@ -3,18 +3,27 @@
 		:method="method"
 		:resource-route="resourceRoute"
 		:populate="isEdit"
-		name="TagEditor"
-		@submitSuccess="onSubmitSuccess"
 		:hideDefaultSubmit="true"
+		@change="onChange"
+		@submitSuccess="onSubmitSuccess"
+		name="TagEditor"
 		class="editor"
 	>
 		<div class="header">
 			<h2 class="title is-2">Edycja tagu <span v-if="isEdit">(Id: {{id}})</span></h2>
-			<wnl-submit class="submit"/>
+			<div class="field is-grouped">
+				<wnl-tag-delete
+					:id="id"
+					:isDeleteAllowed="formData.is_delete_allowed"
+					:hasTaggable="formData.has_taggable"
+				>Usuń</wnl-tag-delete>
+				<wnl-submit class="submit"/>
+				</div>
 		</div>
 		<wnl-form-text
 			name="name"
 			class="margin top bottom"
+			:disabled="!formData.is_rename_allowed"
 		>Nazwa</wnl-form-text>
 		<wnl-form-text
 			name="color"
@@ -52,10 +61,15 @@
 
 <script>
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
-
+import WnlTagDelete from 'js/admin/components/tags/TagDelete.vue';
 
 export default {
 	props: ['id'],
+	data: () => {
+		return {
+			formData: {}
+		};
+	},
 	computed: {
 		isEdit() {
 			return this.id !== 'new';
@@ -71,9 +85,13 @@ export default {
 		WnlFormText,
 		WnlForm,
 		WnlSubmit,
+		WnlTagDelete,
 		WnlTextarea,
 	},
 	methods: {
+		onChange({formData}) {
+			this.formData = formData;
+		},
 		onSubmitSuccess(data) {
 			if (!this.isEdit) {
 				this.$router.push({ name: 'tag-edit', params: { id: data.id } });

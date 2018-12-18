@@ -22,8 +22,8 @@ class UpdateTag extends FormRequest {
 	public function rules() {
 		return [
 			'name' => 'required|string|max:255|unique:tags,name,' . $this->id,
-			'description' => 'string|max:1000',
-			'color' => 'string|max:6'
+			'description' => 'string|max:1000|nullable',
+			'color' => 'string|max:6|nullable'
 		];
 	}
 }

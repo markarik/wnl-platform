@@ -32,14 +32,14 @@ class Tag extends Model {
 			->exists();
 	}
 
-	public function isTaggable() {
+	public function hasTaggable() {
 		return DB::table('taggables')
 			->select('tag_id')
 			->where('tag_id', $this->id)
 			->exists();
 	}
 
-	public function isProtectedTaggable() {
+	public function hasProtectedTaggable() {
 		return DB::table('taggables')
 			->select('tag_id')
 			->where('tag_id', $this->id)
@@ -53,6 +53,6 @@ class Tag extends Model {
 	}
 
 	public function isDeleteAllowed() {
-		return !$this->isInTaxonomy() && !$this->isCategoryTag() && !$this->isProtectedTaggable();
+		return !$this->isInTaxonomy() && !$this->isCategoryTag() && !$this->hasProtectedTaggable();
 	}
 }

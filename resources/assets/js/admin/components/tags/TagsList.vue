@@ -5,7 +5,10 @@
 			:columns="columns"
 			:customRequestParams="{include: 'taggables_count'}"
 		>
-			<h3 slot="header" class="title">Lista Tagów</h3>
+			<h3 slot="header" class="title">
+				Lista Tagów
+				<router-link class="button is-success" :to="{name: 'tag-edit', params: { id: 'new' } }">+ Dodaj tag</router-link>
+			</h3>
 
 			<tbody slot-scope="slotProps" slot="tbody">
 			<tr v-for="tag in parseIncludes(slotProps.list)" :key="tag.id" class="row" @click="goToTag(tag)">

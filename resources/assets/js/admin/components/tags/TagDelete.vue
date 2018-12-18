@@ -1,10 +1,12 @@
 <template>
-	<button
-		class="button is-danger margin right"
-		type="button"
-		@click="onClick"
-		:disabled="!isDeleteAllowed"
-	>Usuń</button>
+	<div>
+		<button
+			class="button is-danger margin right"
+			type="button"
+			@click="onClick"
+			:disabled="!isDeleteAllowed"
+		>Usuń</button>
+	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -35,8 +37,7 @@ export default {
 						type: 'success',
 					});
 
-					// TODO uncomment when code from PLAT-826 is available
-					// this.$router.push({ name: 'tags' });
+					this.$emit('tagDeleted');
 				});
 		}
 	}

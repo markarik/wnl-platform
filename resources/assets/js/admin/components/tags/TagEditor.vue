@@ -16,6 +16,7 @@
 					:id="id"
 					:isDeleteAllowed="formData.is_delete_allowed"
 					:hasTaggable="formData.has_taggable"
+					@tagDeleted="onTagDeleted"
 				>Usuń</wnl-tag-delete>
 				<wnl-submit class="submit"/>
 				</div>
@@ -101,6 +102,12 @@ export default {
 			if (!this.isEdit) {
 				this.$router.push({ name: 'tag-edit', params: { id: data.id } });
 			}
+
+			this.formData = data;
+		},
+		onTagDeleted() {
+			// TODO uncomment when code from PLAT-826 is available
+			// this.$router.push({ name: 'tags' });
 		},
 	}
 };

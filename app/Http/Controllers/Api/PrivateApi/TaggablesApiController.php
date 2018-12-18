@@ -11,14 +11,14 @@ class TaggablesApiController extends ApiController {
 		$this->resourceName = config('papi.resources.taggables');
 	}
 
-	public function batchMove(Request $request) {
-		$sourceTag = Tag::find($request->get('source'));
+	public function batchMove($source, $target) {
+		$sourceTag = Tag::find($source);
 
 		if (!$sourceTag) {
 			return $this->respondNotFound('Source tag does not exist');
 		}
 
-		$targetTag = Tag::find($request->get('target'));
+		$targetTag = Tag::find($target);
 
 		if (!$targetTag) {
 			return $this->respondNotFound('Target tag does not exist');

@@ -10,4 +10,6 @@ class Taggable extends Model {
 		'App\\Models\\Lesson',
 		'App\\Models\\Page',
 	];
+
+	public $timestamps = false;
 }

@@ -79,7 +79,7 @@ export default {
 			return this.isEdit ? 'put' : 'post';
 		},
 		resourceRoute() {
-			return this.isEdit ? `tags/${this.id}` : 'tags';
+			return this.isEdit ? `tags/${this.id}?include=taggables_count` : 'tags';
 		},
 	},
 	components: {
@@ -92,10 +92,11 @@ export default {
 	methods: {
 		onChange({formData}) {
 			this.formData = {
-				taggables_count: false,
 				is_delete_allowed: false,
 				is_rename_allowed: true,
-				...formData
+				...formData,
+				taggables_count: formData.included && formData.included.taggables_count &&
+					formData.included.taggables_count[formData.id] && formData.included.taggables_count[formData.id].taggables_count,
 			};
 		},
 		onSubmitSuccess(data) {
@@ -106,8 +107,7 @@ export default {
 			this.formData = data;
 		},
 		onTagDeleted() {
-			// TODO uncomment when code from PLAT-826 is available
-			// this.$router.push({ name: 'tags' });
+			this.$router.push({ name: 'tags' });
 		},
 	}
 };

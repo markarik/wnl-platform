@@ -87,16 +87,7 @@ class TagsApiController extends ApiController {
 			]);
 		}
 
-		$taggables = Taggable::where('tag_id', $tag->id)
-			->get();
-
-		\DB::transaction(function () use ($tag, $taggables) {
-			foreach ($taggables as $taggable) {
-				$taggable->delete();
-			}
-
-			$tag->delete();
-		});
+		$tag->delete();
 
 		return $this->respondOk();
 	}

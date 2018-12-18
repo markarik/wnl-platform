@@ -18,6 +18,18 @@ class Tag extends Model {
 		return $this->morphedByMany('App\Models\Lesson', 'taggable');
 	}
 
+	public function taggables()
+	{
+		return $this->hasMany('App\Models\Taggable');
+	}
+
+	public function delete() {
+		\DB::transaction(function () {
+			$this->taggables()->delete();
+			$this->delete();
+		});
+	}
+
 	public function taggablesCount() {
 		return DB::table('taggables')
 			->select('tag_id')

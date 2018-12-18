@@ -6,49 +6,65 @@
 			@click="onClick"
 			:disabled="!isDeleteAllowed"
 		>Usuń</button>
-		<wnl-modal :isModalVisible="isModalVisible" @closeModal="onCloseModal" v-if="isModalVisible">
-			<p>
+		<wnl-modal
+			:isModalVisible="isTaggablesMoverVisible"
+			@closeModal="onCloseModal"
+			v-if="isTaggablesMoverVisible"
+		>
+			<p class="field">
 				Dla tego taga istnieje {{taggablesCount}} powiązań.
-				Chcesz usunąć wszystkie powiązania, czy przypisać je do innego taga?
+				Chcesz przypisać powiązania do innego taga, czy je usunąć?
 			</p>
-			<button
-				@click="deleteTag"
-			>Usuń taga i wszystkie powiązania</button>
-
+			<wnl-taggables-mover
+				:beforeSubmit="confirmDelete"
+				:sourceTagId="id"
+				@taggablesMoved="onTaggablesMoved"
+			>Przenieś powiązania i usuń taga</wnl-taggables-mover>
+			<div class="field">
+				<button
+					class="button is-danger"
+					@click="deleteTagAfterConfirm"
+				>Usuń powiązania i taga</button>
+			</div>
 		</wnl-modal>
 	</div>
 </template>
-
-<style lang="sass" rel="stylesheet/sass" scoped>
-	@import 'resources/assets/sass/variables'
-</style>
 
 <script>
 import axios from 'axios';
 import {mapActions} from 'vuex';
 import {getApiUrl} from 'js/utils/env';
 import Modal from 'js/components/global/Modal';
+import WnlTaggablesMover from 'js/admin/components/tags/TaggablesMover';
 
 export default {
 	name: 'TagDelete',
 	components: {
 		'wnl-modal': Modal,
+		'wnl-taggables-mover': WnlTaggablesMover,
 	},
-	props: ['id', 'isDeleteAllowed', 'taggablesCount'],
+	props: {
+		id: {},
+		isDeleteAllowed: Boolean,
+		taggablesCount: Number
+	},
 	data: () => {
 		return {
-			isModalVisible: false,
+			isTaggablesMoverVisible: false,
 		};
 	},
 	computed: {},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		deleteTag() {
-			if (!confirm('Czy na pewno chcesz usunąć tego taga? Ta operacja jest nieodwracalna.')) {
-				return;
-			}
+		confirmDelete() {
+			return new Promise(function (resolve, reject) {
+				let confirmed = window.confirm('Czy na pewno chcesz usunąć tego taga? Ta operacja jest nieodwracalna.');
 
-			axios.delete(getApiUrl(`tags/${this.id}`))
+				return confirmed ? resolve() : reject();
+			});
+		},
+		deleteTag() {
+			return axios.delete(getApiUrl(`tags/${this.id}`))
 				.then(() => {
 					this.addAutoDismissableAlert({
 						text: 'Tag został usunięty',
@@ -64,18 +80,34 @@ export default {
 					});
 				});
 		},
-		showTaggablesMoveModal() {
-			this.isModalVisible = true;
+		async deleteTagAfterConfirm() {
+			try {
+				await this.confirmDelete();
+			} catch (e) {}
+
+			this.deleteTag();
 		},
-		onClick() {
+		showTaggablesMover() {
+			this.isTaggablesMoverVisible = true;
+		},
+		async onClick() {
 			if (this.taggablesCount > 0) {
-				this.showTaggablesMoveModal();
+				this.showTaggablesMover();
 			} else {
+				try {
+					await this.confirmDelete();
+				} catch (e) {
+					return;
+				}
+
 				this.deleteTag();
 			}
 		},
 		onCloseModal() {
-			this.isModalVisible = false;
+			this.isTaggablesMoverVisible = false;
+		},
+		onTaggablesMoved() {
+			this.deleteTag();
 		}
 	}
 };

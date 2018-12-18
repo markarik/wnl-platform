@@ -62,7 +62,7 @@
 
 <script>
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
-import WnlTagDelete from 'js/admin/components/tags/TagDelete.vue';
+import WnlTagDelete from 'js/admin/components/tags/TagDelete';
 
 export default {
 	props: ['id'],

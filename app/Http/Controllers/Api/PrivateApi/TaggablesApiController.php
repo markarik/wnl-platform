@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Course\MoveTaggable;
 use App\Models\Tag;
 use App\Models\Taggable;
 use Illuminate\Http\Request;
@@ -11,18 +12,14 @@ class TaggablesApiController extends ApiController {
 		$this->resourceName = config('papi.resources.taggables');
 	}
 
-	public function batchMove($source, $target) {
-		$sourceTag = Tag::find($source);
+	public function batchMove(MoveTaggable $request, $sourceTagId) {
+		$sourceTag = Tag::find($sourceTagId);
 
 		if (!$sourceTag) {
 			return $this->respondNotFound('Source tag does not exist');
 		}
 
-		$targetTag = Tag::find($target);
-
-		if (!$targetTag) {
-			return $this->respondNotFound('Target tag does not exist');
-		}
+		$targetTag = Tag::find($request->get('target_tag_id'));
 
 		$taggablesMoved = Taggable::where('tag_id', $sourceTag->id)
 			// TODO Is this necessary? If so, replace this comment with the reason for it

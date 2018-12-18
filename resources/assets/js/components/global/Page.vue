@@ -30,7 +30,7 @@ export default {
 			type: String,
 		},
 		arguments: {
-			default: () => {},
+			default: () => ({}),
 			type: Object,
 		},
 		qna: {

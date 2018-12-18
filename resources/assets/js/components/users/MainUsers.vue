@@ -53,17 +53,14 @@ import { mapActions, mapGetters } from 'vuex';
 
 import UserAbout from 'js/components/users/UserAbout';
 import MainNav from 'js/components/MainNav';
-import Sidenav from 'js/components/global/Sidenav';
 import SidenavSlot from 'js/components/global/SidenavSlot';
-import { isProduction, getApiUrl } from 'js/utils/env';
-import QuestionsFilters from 'js/components/questions/QuestionsFilters';
+import { isProduction } from 'js/utils/env';
 
 export default {
 	name: 'MainUsers',
 	components: {
 		'wnl-user-about': UserAbout,
 		'wnl-main-nav': MainNav,
-		'wnl-sidenav': Sidenav,
 		'wnl-sidenav-slot': SidenavSlot
 	},
 	props: ['view'],

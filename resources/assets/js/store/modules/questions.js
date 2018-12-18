@@ -323,7 +323,7 @@ const actions = {
 		{filters, page, saveFilters, useSavedFilters}
 	) {
 		const parsedFilters = parseFilters(filters, state.filters, rootGetters.currentUserId);
-		
+
 		return _fetchQuestions({
 			active: filters,
 			filters: parsedFilters,
@@ -369,14 +369,8 @@ const actions = {
 			});
 	},
 	fetchQuestionsReactions({commit}, questionsIds) {
-		return _fetchQuestions({
-			filters: [
-				{
-					query: {
-						whereIn: ['id', questionsIds || []],
-					}
-				}
-			],
+		return axios.post(getApiUrl('quiz_questions/query'), {
+			ids: questionsIds,
 			include: 'reactions'
 		}).then(({data}) => commit(types.QUESTIONS_UPDATE, data));
 	},

@@ -64,18 +64,14 @@
 </style>
 
 <script>
-import axios from 'axios';
-import store from 'store';
 import { mapGetters, mapActions } from 'vuex';
 import ActiveUsers from 'js/components/course/dashboard/ActiveUsers';
-import Breadcrumbs from 'js/components/global/Breadcrumbs';
 import PublicChat from 'js/components/chat/PublicChat.vue';
 import Navigation from 'js/components/course/Navigation';
 import SidenavSlot from 'js/components/global/SidenavSlot';
 import MainNav from 'js/components/MainNav';
 import SplashScreen from 'js/components/global/SplashScreen.vue';
 import { breadcrumb } from 'js/mixins/breadcrumb';
-import { getApiUrl } from 'js/utils/env';
 import withChat from 'js/mixins/with-chat';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 
@@ -86,7 +82,6 @@ export default {
 		'wnl-active-users': ActiveUsers,
 		'wnl-course-navigation': Navigation,
 		'wnl-public-chat': PublicChat,
-		'wnl-breadcrumbs': Breadcrumbs,
 		'wnl-sidenav-slot': SidenavSlot,
 		'wnl-main-nav': MainNav,
 		'wnl-splash-screen': SplashScreen,

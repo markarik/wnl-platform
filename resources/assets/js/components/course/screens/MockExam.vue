@@ -21,7 +21,7 @@
 
 <script>
 import _ from 'lodash';
-import {VIEWS} from '../../../consts/questionsSolving';
+import {VIEWS} from 'js/consts/questionsSolving';
 
 export default {
 	name: 'MockExam',

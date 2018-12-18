@@ -215,7 +215,7 @@ import QuizQuestion from 'js/components/quiz/QuizQuestion';
 import Pagination from 'js/components/global/Pagination';
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
-import {VIEWS} from '../../consts/questionsSolving';
+import {VIEWS} from 'js/consts/questionsSolving';
 
 const views = [
 	{

@@ -27,18 +27,18 @@
 </template>
 
 <script>
-	import WnlFlashcardsListItem from 'js/admin/components/flashcards/list/FlashcardsListItem';
-	import {getApiUrl} from 'js/utils/env';
-	import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
+import WnlFlashcardsListItem from 'js/admin/components/flashcards/list/FlashcardsListItem';
+import {getApiUrl} from 'js/utils/env';
+import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
-	export default {
-		name: 'FlashcardsList',
-		components: {
-			WnlFlashcardsListItem,
-			WnlPaginatedList
-		},
-		methods: {
-			getApiUrl
-		}
+export default {
+	name: 'FlashcardsList',
+	components: {
+		WnlFlashcardsListItem,
+		WnlPaginatedList
+	},
+	methods: {
+		getApiUrl
+	}
 };
 </script>

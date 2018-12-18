@@ -13,20 +13,20 @@
 </style>
 
 <script>
-	export default {
-		props: {
-			label: {
-				type: String,
-				required: true,
-			},
-			isActive: {
-				type: Boolean,
-				default: false
-			},
-			sortDirection: {
-				type: String,
-				default: 'asc',
-			},
+export default {
+	props: {
+		label: {
+			type: String,
+			required: true,
 		},
-	};
+		isActive: {
+			type: Boolean,
+			default: false
+		},
+		sortDirection: {
+			type: String,
+			default: 'asc',
+		},
+	},
+};
 </script>

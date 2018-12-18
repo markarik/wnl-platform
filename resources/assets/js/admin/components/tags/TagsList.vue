@@ -47,7 +47,7 @@ export default {
 					label: 'Ilość powiązań',
 				},
 			]
-		}
+		};
 	},
 	methods: {
 		getApiUrl,

@@ -106,7 +106,7 @@
 
 <script>
 import { getColourForStr } from 'js/utils/colors.js';
-import { getApiUrl } from "js/utils/env";
+import { getApiUrl } from 'js/utils/env';
 import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
 export default {

@@ -31,57 +31,57 @@
 </style>
 
 <script>
-	import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
-	import WnlSortableTableColumnHeader from 'js/admin/components/lists/components/SortableTableColumnHeader';
+import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
+import WnlSortableTableColumnHeader from 'js/admin/components/lists/components/SortableTableColumnHeader';
 
-	export default {
-		components: {
-			WnlPaginatedList,
-			WnlSortableTableColumnHeader
+export default {
+	components: {
+		WnlPaginatedList,
+		WnlSortableTableColumnHeader
+	},
+	data() {
+		return {
+			activeSortColumnName: this.columns[0].name,
+			sortDirection: 'asc',
+		};
+	},
+	props: {
+		columns: {
+			type: Array,
+			required: true,
 		},
-		data() {
+		resourceUrl: {
+			type: String,
+			required: true,
+		},
+		searchAvailableFields: {
+			type: Array,
+			default: () => [],
+		},
+		customRequestParams: {
+			type: Object,
+			default: () => ({})
+		}
+	},
+	computed: {
+		requestParams() {
 			return {
-				activeSortColumnName: this.columns[0].name,
-				sortDirection: 'asc',
+				order: {
+					[this.activeSortColumnName]: this.sortDirection,
+				},
+				...this.customRequestParams,
+			};
+		}
+	},
+	methods: {
+		changeOrder(name) {
+			if (this.activeSortColumnName === name) {
+				this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+			} else {
+				this.sortDirection = 'asc';
+				this.activeSortColumnName = name;
 			}
 		},
-		props: {
-			columns: {
-				type: Array,
-				required: true,
-			},
-			resourceUrl: {
-				type: String,
-				required: true,
-			},
-			searchAvailableFields: {
-				type: Array,
-				default: () => [],
-			},
-			customRequestParams: {
-				type: Object,
-				default: () => ({})
-			}
-		},
-		computed: {
-			requestParams() {
-				return {
-					order: {
-						[this.activeSortColumnName]: this.sortDirection,
-					},
-					...this.customRequestParams,
-				};
-			}
-		},
-		methods: {
-			changeOrder(name) {
-				if (this.activeSortColumnName === name) {
-					this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-				} else {
-					this.sortDirection = 'asc';
-					this.activeSortColumnName = name;
-				}
-			},
-		},
-	};
+	},
+};
 </script>

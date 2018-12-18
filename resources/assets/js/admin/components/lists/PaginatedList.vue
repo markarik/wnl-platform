@@ -40,11 +40,11 @@
 </style>
 
 <script>
-	import {mapActions} from 'vuex';
-	import {isEmpty} from 'lodash';
+import {mapActions} from 'vuex';
+import {isEmpty} from 'lodash';
 
-	import WnlPagination from 'js/components/global/Pagination';
-	import WnlSearchInput from 'js/components/global/SearchInput';
+import WnlPagination from 'js/components/global/Pagination';
+import WnlSearchInput from 'js/components/global/SearchInput';
 
 export default {
 	components: {

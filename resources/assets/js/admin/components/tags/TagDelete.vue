@@ -7,7 +7,14 @@
 			:disabled="!isDeleteAllowed"
 		>Usuń</button>
 		<wnl-modal :isModalVisible="isModalVisible" @closeModal="onCloseModal" v-if="isModalVisible">
-			Jest {{taggablesCount}} taggables!
+			<p>
+				Dla tego taga istnieje {{taggablesCount}} powiązań.
+				Chcesz usunąć wszystkie powiązania, czy przypisać je do innego taga?
+			</p>
+			<button
+				@click="deleteTag"
+			>Usuń taga i wszystkie powiązania</button>
+
 		</wnl-modal>
 	</div>
 </template>
@@ -36,14 +43,12 @@ export default {
 	computed: {},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		delete: function () {
+		deleteTag() {
+			if (!confirm('Czy na pewno chcesz usunąć tego taga? Ta operacja jest nieodwracalna.')) {
+				return;
+			}
+
 			axios.delete(getApiUrl(`tags/${this.id}`))
-				.catch(({response: {data: {message = 'Usuwanie taga nie powiodło się.'}}}) => {
-					this.addAutoDismissableAlert({
-						text: message,
-						type: 'error',
-					});
-				})
 				.then(() => {
 					this.addAutoDismissableAlert({
 						text: 'Tag został usunięty',
@@ -51,6 +56,12 @@ export default {
 					});
 
 					this.$emit('tagDeleted');
+				})
+				.catch(({response: {data: {message = 'Usuwanie taga nie powiodło się.'}}}) => {
+					this.addAutoDismissableAlert({
+						text: message,
+						type: 'error',
+					});
 				});
 		},
 		showTaggablesMoveModal() {
@@ -60,7 +71,7 @@ export default {
 			if (this.taggablesCount > 0) {
 				this.showTaggablesMoveModal();
 			} else {
-				this.delete();
+				this.deleteTag();
 			}
 		},
 		onCloseModal() {

@@ -1,15 +1,18 @@
 <template>
 	<div class="annotations-list">
-		<slot name="search"></slot>
-		<slot name="pagination"/>
-		<ul v-if="list.length">
-			<li
-				v-for="(annotation, index) in list"
-				:key="annotation.id"
-				class="annotation-item"
-				:class="{'annotation-item--is-even': isEven(index)}"
-				@click="toggleAnnotation(annotation)"
-			>
+		<wnl-paginated-list
+			:resource-name="'annotations/.filter'"
+			:custom-request-params="requestParams"
+			:search-available-fields="searchAvailableFields"
+		>
+			<ul slot="list" slot-scope="slotParams">
+				<li
+					v-for="(annotation, index) in serializeResponse(slotParams.list)"
+					:key="annotation.id"
+					class="annotation-item"
+					:class="{'annotation-item--is-even': isEven(index)}"
+					@click="toggleAnnotation(annotation)"
+				>
 					<div class="annotation-item__header">
 						<span class="annotation-item__header__item">
 							{{annotation.id}}
@@ -45,12 +48,9 @@
 						v-if="isOpen(annotation)"
 						v-html="annotation.description">
 					</div>
-			</li>
-		</ul>
-		<div v-else>
-			<span class="title is-6">Nic tu nie ma...</span>
-		</div>
-		<slot name="pagination-bottom"/>
+				</li>
+			</ul>
+		</wnl-paginated-list>
 	</div>
 </template>
 
@@ -106,20 +106,26 @@
 
 <script>
 import { getColourForStr } from 'js/utils/colors.js';
+import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
 export default {
-	name: 'AnnotationsList',
+	components: {WnlPaginatedList},
 	data() {
 		return {
 			openAnnotations: [],
-			getColourForStr
+			getColourForStr,
+			requestParams: {
+				include: 'keywords,tags'
+			},
+			searchAvailableFields: [
+				{value: 'id', title: 'ID'},
+				{value: 'title', title: 'Tytuł'},
+				{value: 'description', title: 'Treść'},
+				{value: 'tags.name', title: 'Nazwa Taga'},
+			]
 		};
 	},
 	props: {
-		list: {
-			type: Array,
-			required: true
-		},
 		modifiedAnnotationId: {
 			type: Number,
 			default: 0
@@ -145,6 +151,21 @@ export default {
 		onAnnotationClick({annotation, event}) {
 			this.$emit('annotationSelect', annotation);
 			event.stopImmediatePropagation();
+		},
+		serializeResponse(response) {
+			const {included, ...annotations} = response;
+			const {tags, keywords} = included;
+
+			return Object.values(annotations).map(annotation => {
+				return {
+					...annotation,
+					tags: (annotation.tags || []).map(tagId => ({
+						id: tags[tagId].id,
+						name: tags[tagId].name,
+					})),
+					keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(',')
+				};
+			});
 		}
 	}
 };

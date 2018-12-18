@@ -34,13 +34,6 @@ class Tag extends Model
 		});
 	}
 
-	public function taggablesCount() {
-		return DB::table('taggables')
-			->select('tag_id')
-			->where('tag_id', $this->id)
-			->count();
-	}
-
 	public function isInTaxonomy() {
 		return DB::table('tags_taxonomy')
 			->select('tag_id')
@@ -56,9 +49,7 @@ class Tag extends Model
 	}
 
 	public function hasProtectedTaggable() {
-		return DB::table('taggables')
-			->select('tag_id')
-			->where('tag_id', $this->id)
+		return $this->taggables()
 			->whereIn('taggable_type', Taggable::PROTECTED_TAGGABLE_TYPES)
 			->exists();
 	}

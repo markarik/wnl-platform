@@ -15,7 +15,7 @@
 				<wnl-tag-delete
 					:id="id"
 					:isDeleteAllowed="formData.is_delete_allowed"
-					:hasTaggable="formData.has_taggable"
+					:taggablesCount="formData.taggables_count"
 					@tagDeleted="onTagDeleted"
 				>Usuń</wnl-tag-delete>
 				<wnl-submit class="submit"/>
@@ -92,7 +92,7 @@ export default {
 	methods: {
 		onChange({formData}) {
 			this.formData = {
-				has_taggable: false,
+				taggables_count: false,
 				is_delete_allowed: false,
 				is_rename_allowed: true,
 				...formData

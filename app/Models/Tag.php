@@ -18,6 +18,13 @@ class Tag extends Model {
 		return $this->morphedByMany('App\Models\Lesson', 'taggable');
 	}
 
+	public function taggablesCount() {
+		return DB::table('taggables')
+			->select('tag_id')
+			->where('tag_id', $this->id)
+			->count();
+	}
+
 	public function isInTaxonomy() {
 		return DB::table('tags_taxonomy')
 			->select('tag_id')
@@ -29,13 +36,6 @@ class Tag extends Model {
 		return DB::table('categories')
 			->select('id')
 			->where('name', $this->name)
-			->exists();
-	}
-
-	public function hasTaggable() {
-		return DB::table('taggables')
-			->select('tag_id')
-			->where('tag_id', $this->id)
 			->exists();
 	}
 

@@ -6,6 +6,9 @@
 			@click="onClick"
 			:disabled="!isDeleteAllowed"
 		>Usuń</button>
+		<wnl-modal :isModalVisible="isModalVisible" @closeModal="onCloseModal" v-if="isModalVisible">
+			Jest {{taggablesCount}} taggables!
+		</wnl-modal>
 	</div>
 </template>
 
@@ -17,13 +20,23 @@
 import axios from 'axios';
 import {mapActions} from 'vuex';
 import {getApiUrl} from 'js/utils/env';
+import Modal from 'js/components/global/Modal';
 
 export default {
-	props: ['id', 'isDeleteAllowed'],
+	name: 'TagDelete',
+	components: {
+		'wnl-modal': Modal,
+	},
+	props: ['id', 'isDeleteAllowed', 'taggablesCount'],
+	data: () => {
+		return {
+			isModalVisible: false,
+		};
+	},
 	computed: {},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		onClick() {
+		delete: function () {
 			axios.delete(getApiUrl(`tags/${this.id}`))
 				.catch(({response: {data: {message = 'Usuwanie taga nie powiodło się.'}}}) => {
 					this.addAutoDismissableAlert({
@@ -39,6 +52,19 @@ export default {
 
 					this.$emit('tagDeleted');
 				});
+		},
+		showTaggablesMoveModal() {
+			this.isModalVisible = true;
+		},
+		onClick() {
+			if (this.taggablesCount > 0) {
+				this.showTaggablesMoveModal();
+			} else {
+				this.delete();
+			}
+		},
+		onCloseModal() {
+			this.isModalVisible = false;
 		}
 	}
 };

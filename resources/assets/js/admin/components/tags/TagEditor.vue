@@ -90,7 +90,12 @@ export default {
 	},
 	methods: {
 		onChange({formData}) {
-			this.formData = formData;
+			this.formData = {
+				has_taggable: false,
+				is_delete_allowed: false,
+				is_rename_allowed: true,
+				...formData
+			};
 		},
 		onSubmitSuccess(data) {
 			if (!this.isEdit) {

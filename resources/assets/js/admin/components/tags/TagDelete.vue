@@ -23,17 +23,20 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		onClick() {
 			axios.delete(getApiUrl(`tags/${this.id}`))
-				.then(() => {
-					this.addAutoDismissableAlert({
-						text: 'Tag został usunięty',
-						type: 'success',
-					});
-				})
 				.catch(({response: {data: {message = 'Usuwanie taga nie powiodło się.'}}}) => {
 					this.addAutoDismissableAlert({
 						text: message,
 						type: 'error',
 					});
+				})
+				.then(() => {
+					this.addAutoDismissableAlert({
+						text: 'Tag został usunięty',
+						type: 'success',
+					});
+
+					// TODO uncomment when code from PLAT-826 is available
+					// this.$router.push({ name: 'tags' });
 				});
 		}
 	}

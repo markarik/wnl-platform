@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<wnl-paginated-list
-			:resourceUrl="getApiUrl('users/.filter')"
+			:resourceName="'users/.filter'"
 			:searchAvailableFields="searchAvailableFields"
 			:customRequestParams="requestParams"
 		>
@@ -20,7 +20,6 @@
 </style>
 
 <script>
-import {getApiUrl} from 'js/utils/env';
 import WnlUsersList from './UsersList';
 import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
@@ -35,9 +34,6 @@ export default {
 				{value: 'full_name', title: 'Imię i nazwisko'},
 			]
 		};
-	},
-	methods: {
-		getApiUrl,
 	},
 };
 </script>

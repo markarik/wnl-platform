@@ -1,6 +1,6 @@
 <template>
 		<wnl-paginated-list
-			:resourceUrl="resourceUrl"
+			:resourceName="resourceName"
 			:customRequestParams="requestParams"
 		>
 			<template slot="header">
@@ -50,7 +50,7 @@ export default {
 			type: Array,
 			required: true,
 		},
-		resourceUrl: {
+		resourceName: {
 			type: String,
 			required: true,
 		},

@@ -1,7 +1,7 @@
 <template>
 	<div class="groups">
 		<wnl-paginated-list
-				:resource-url="getApiUrl('groups/.filter')"
+				:resource-name="'groups/.filter'"
 		>
 			<h3 class="title is-3" slot="header">
 				Edycja grup
@@ -17,7 +17,6 @@
 <script>
 import WnlGroupsListItem from 'js/admin/components/groups/GroupsListItem';
 import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
-import {getApiUrl} from 'js/utils/env';
 
 export default {
 	name: 'Groups',
@@ -32,8 +31,5 @@ export default {
 		WnlGroupsListItem,
 		WnlPaginatedList
 	},
-	methods: {
-		getApiUrl
-	}
 };
 </script>

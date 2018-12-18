@@ -1,7 +1,7 @@
 <template>
 	<div class="flashcards-list">
 		<wnl-paginated-list
-			:resource-url="getApiUrl('flashcards/.filter')"
+			:resource-name="'flashcards/.filter'"
 		>
 			<template slot="header">
 				<h3 class="title">Lista pytań otwartych</h3>
@@ -28,7 +28,6 @@
 
 <script>
 import WnlFlashcardsListItem from 'js/admin/components/flashcards/list/FlashcardsListItem';
-import {getApiUrl} from 'js/utils/env';
 import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
 export default {
@@ -37,8 +36,5 @@ export default {
 		WnlFlashcardsListItem,
 		WnlPaginatedList
 	},
-	methods: {
-		getApiUrl
-	}
 };
 </script>

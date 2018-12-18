@@ -1,7 +1,7 @@
 <template>
 	<div class="orders-list">
 		<wnl-paginated-list
-			:resourceUrl="getApiUrl('orders/.filter')"
+			:resourceName="'orders/.filter'"
 		>
 			<h3 slot="header">Lista zamówień</h3>
 			<table class="table" slot-scope="slotProps" slot="list">
@@ -46,7 +46,6 @@
 
 <script>
 import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
-import {getApiUrl} from 'js/utils/env';
 
 export default {
 	name: 'OrdersList',
@@ -54,7 +53,6 @@ export default {
 		WnlPaginatedList,
 	},
 	methods: {
-		getApiUrl,
 		translateShippingStatus(order) {
 			return this.$t(`orders.tags.shipping.${order.shipping_status}`);
 		},

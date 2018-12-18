@@ -20,7 +20,7 @@ class TaggablesCountTransformer extends ApiTransformer
 	public function transform(Tag $tag)
 	{
 		$data = [
-			'taggables_count'   => $tag->taggables_count,
+			'taggables_count' => $tag->taggables_count,
 			'id' => $tag->id,
 		];
 

@@ -1,7 +1,7 @@
 <template>
 	<div class="lessons-list">
 		<wnl-paginated-list
-			:resource-url="getApiUrl('lessons/.filter')"
+			:resource-name="'lessons/.filter'"
 		>
 			<p class="title is-4" slot="header">
 				Lista lekcji
@@ -22,16 +22,11 @@
 import WnlLessonListItem from 'js/admin/components/lessons/list/LessonsListItem.vue';
 import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
-import { getApiUrl } from 'js/utils/env';
-
 export default {
 	name: 'LessonsList',
 	components: {
 		WnlLessonListItem,
 		WnlPaginatedList
 	},
-	methods: {
-		getApiUrl
-	}
 };
 </script>

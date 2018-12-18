@@ -45,6 +45,7 @@ import {isEmpty} from 'lodash';
 
 import WnlPagination from 'js/components/global/Pagination';
 import WnlSearchInput from 'js/components/global/SearchInput';
+import {getApiUrl} from '../../../utils/env';
 
 export default {
 	components: {
@@ -66,7 +67,7 @@ export default {
 			type: Array,
 			default: () => [],
 		},
-		resourceUrl: {
+		resourceName: {
 			type: String,
 			required: true,
 		},
@@ -110,7 +111,7 @@ export default {
 		async fetch() {
 			try {
 				this.isLoading = true;
-				const response = await axios.post(this.resourceUrl, this.getRequestParams());
+				const response = await axios.post(getApiUrl(this.resourceName), this.getRequestParams());
 				const {data: {data, ...paginationMeta}} = response;
 				this.list = data;
 				this.lastPage = paginationMeta.last_page;

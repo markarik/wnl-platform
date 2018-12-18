@@ -1,7 +1,7 @@
 <template>
 	<div class="annotations-list">
 		<wnl-paginated-list
-			:resource-url="getApiUrl('annotations/.filter')"
+			:resource-name="'annotations/.filter'"
 			:custom-request-params="requestParams"
 			:search-available-fields="searchAvailableFields"
 		>
@@ -106,7 +106,6 @@
 
 <script>
 import { getColourForStr } from 'js/utils/colors.js';
-import { getApiUrl } from 'js/utils/env';
 import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
 export default {
@@ -133,7 +132,6 @@ export default {
 		}
 	},
 	methods: {
-		getApiUrl,
 		isEven(index) {
 			return index % 2 === 0;
 		},

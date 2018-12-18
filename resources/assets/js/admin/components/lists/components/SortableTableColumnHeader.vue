@@ -1,5 +1,5 @@
 <template>
-	<th @click="$emit('click')" class="columnName">
+	<th @click="$emit('click')" class="column-name">
 		{{label}}
 		<span class="icon is-small" v-if="isActive">
 			<i :class="['fa', sortDirection === 'asc' ? 'fa-chevron-up': 'fa-chevron-down']"></i>
@@ -8,7 +8,7 @@
 </template>
 
 <style lang="sass">
-	.columnName
+	.column-name
 		cursor: pointer
 </style>
 

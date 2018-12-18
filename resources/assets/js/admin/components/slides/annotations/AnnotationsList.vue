@@ -120,14 +120,6 @@ export default {
 			type: Number,
 			default: 0
 		},
-		dirty: {
-			type: Boolean,
-			default: false
-		},
-		fetch: {
-			type: Function,
-			required: true
-		},
 		list: {
 			type: Object,
 			required: true
@@ -170,11 +162,5 @@ export default {
 			});
 		}
 	},
-	watch: {
-		async dirty() {
-			await this.fetch();
-			this.$emit('updated');
-		}
-	}
 };
 </script>

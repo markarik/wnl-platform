@@ -16,15 +16,14 @@
 			:resource-name="'annotations/.filter'"
 			:custom-request-params="requestParams"
 			:search-available-fields="searchAvailableFields"
+			:dirty="dirty"
+			@updated="dirty = false"
 		>
 			<wnl-annotations-list
 				slot="list"
 				slot-scope="slotParams"
-				:dirty="dirty"
 				:modified-annotation-id="modifiedAnnotationId"
-				:fetch="slotParams.fetch"
 				:list="slotParams.list"
-				@updated="dirty = false"
 				@annotationSelect="onAnnotationSelect"
 			/>
 		</wnl-paginated-list>

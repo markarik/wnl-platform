@@ -13,11 +13,11 @@
 			class="pagination"
 		/>
 
-		<template v-show="!isLoading">
-			<slot name="list" v-if="!isEmpty(list)" :list="list" :fetch="fetch"/>
+		<template v-if="!isLoading">
+			<slot name="list" v-if="!isEmpty(list)" :list="list"/>
 			<div class="title is-6" v-else>Nic tu nie ma...</div>
 		</template>
-		<wnl-text-loader v-show="isLoading"></wnl-text-loader>
+		<wnl-text-loader v-else></wnl-text-loader>
 
 		<wnl-pagination
 			v-if="lastPage > 1"
@@ -74,6 +74,10 @@ export default {
 		customRequestParams: {
 			type: Object,
 			default: () => ({}),
+		},
+		dirty: {
+			type: Boolean,
+			default: false
 		}
 	},
 	methods: {
@@ -133,6 +137,13 @@ export default {
 		customRequestParams() {
 			this.page = 1;
 			this.fetch();
+		},
+		async dirty() {
+			if (this.dirty) {
+				this.fetch();
+			}
+
+			this.$emit('updated');
 		}
 	}
 };

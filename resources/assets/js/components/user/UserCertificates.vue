@@ -43,7 +43,7 @@ import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 import axios from 'axios';
 import { getApiUrl } from 'js/utils/env';
-import { downloadFile } from 'js/utils/download'
+import { downloadFile } from 'js/utils/download';
 
 export default {
 	name: 'UserCertificates',
@@ -66,32 +66,32 @@ export default {
 				const response = await axios.request({
 					url: getApiUrl(`certificates/participation/${orderId}`),
 					responseType: 'blob',
-				})
+				});
 
-				downloadFile(response.data, `participation_${orderId}.jpg`)
+				downloadFile(response.data, `participation_${orderId}.jpg`);
 			} catch (err) {
-				this.handleDownloadFailure(err)
+				this.handleDownloadFailure(err);
 			}
 		},
-		async downloadParticipationCertificate(orderId) {
+		async downloadFinalCertificate(orderId) {
 			try {
 				const response = await axios.request({
 					url: getApiUrl(`certificates/final/${orderId}`),
 					responseType: 'blob',
-				})
+				});
 
-				downloadFile(response.data, `final_${orderId}.jpg`)
+				downloadFile(response.data, `final_${orderId}.jpg`);
 			} catch (err) {
-				this.handleDownloadFailure(err)
+				this.handleDownloadFailure(err);
 			}
 		},
 		handleDownloadFailure(err) {
 			this.addAutoDismissableAlert({
 				text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
 				type: 'error'
-			})
+			});
 
-			$wnl.logger.capture(err)
+			$wnl.logger.capture(err);
 		},
 	},
 	async mounted() {

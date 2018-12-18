@@ -44,62 +44,62 @@
 </style>
 
 <script>
- 	import { mapActions, mapGetters } from 'vuex';
-	import moment from 'moment'
-	import { first,last } from 'lodash'
-	import { getApiUrl } from 'js/utils/env'
-	import { downloadFile } from 'js/utils/download'
+import { mapActions, mapGetters } from 'vuex';
+import moment from 'moment';
+import { first,last } from 'lodash';
+import { getApiUrl } from 'js/utils/env';
+import { downloadFile } from 'js/utils/download';
 
-	export default {
-		name: 'DownloadPlan',
-		computed: {
-			...mapGetters('course', ['getRequiredLessons']),
-			...mapGetters(['currentUserId']),
-			sortedRequiredUserLessons() {
-				return this.requiredLessons.sort((lessonA, lessonB) => {
-					return lessonA.startDate - lessonB.startDate
-				})
-			},
-			requiredLessons() {
-				return Object.values(this.getRequiredLessons).filter(requiredLesson => {
-					if (requiredLesson.is_required && requiredLesson.isAccessible) {
-						return requiredLesson
-					}
-				})
-			},
-			planStartDate() {
-				if (!first(this.sortedRequiredUserLessons)) return
-
-				return moment(first(this.sortedRequiredUserLessons).startDate * 1000).format('LL')
-			},
-			planEndDate() {
-				if (!last(this.sortedRequiredUserLessons)) return
-
-				return moment(last(this.sortedRequiredUserLessons).startDate * 1000).format('LL')
-			},
+export default {
+	name: 'DownloadPlan',
+	computed: {
+		...mapGetters('course', ['getRequiredLessons']),
+		...mapGetters(['currentUserId']),
+		sortedRequiredUserLessons() {
+			return this.requiredLessons.sort((lessonA, lessonB) => {
+				return lessonA.startDate - lessonB.startDate;
+			});
 		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			async downloadPlan() {
-				try {
-					const response = await axios.request({
-						url: getApiUrl(`user_lesson/${this.currentUserId}/exportPlan`),
-						responseType: 'blob',
-					})
-
-					downloadFile(response.data, 'plan_pracy.csv')
-				} catch (err) {
-					this.handleDownloadFailure(err)
+		requiredLessons() {
+			return Object.values(this.getRequiredLessons).filter(requiredLesson => {
+				if (requiredLesson.is_required && requiredLesson.isAccessible) {
+					return requiredLesson;
 				}
-			},
-			handleDownloadFailure(err) {
-				this.addAutoDismissableAlert({
-					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
-					type: 'error'
-				})
+			});
+		},
+		planStartDate() {
+			if (!first(this.sortedRequiredUserLessons)) return;
 
-				$wnl.logger.capture(err)
-			},
-		}
+			return moment(first(this.sortedRequiredUserLessons).startDate * 1000).format('LL');
+		},
+		planEndDate() {
+			if (!last(this.sortedRequiredUserLessons)) return;
+
+			return moment(last(this.sortedRequiredUserLessons).startDate * 1000).format('LL');
+		},
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		async downloadPlan() {
+			try {
+				const response = await axios.request({
+					url: getApiUrl(`user_lesson/${this.currentUserId}/exportPlan`),
+					responseType: 'blob',
+				});
+
+				downloadFile(response.data, 'plan_pracy.csv');
+			} catch (err) {
+				this.handleDownloadFailure(err);
+			}
+		},
+		handleDownloadFailure(err) {
+			this.addAutoDismissableAlert({
+				text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+				type: 'error'
+			});
+
+			$wnl.logger.capture(err);
+		},
 	}
+}
 </script>

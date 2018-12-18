@@ -39,7 +39,8 @@ export default {
 		'resetAfterSubmit',
 		'loading',
 		'submitError',
-		'value'
+		'value',
+		'beforeSubmit',
 	],
 	computed: {
 		anyErrors() {
@@ -80,11 +81,20 @@ export default {
 			}
 			event.stopPropagation();
 		},
-		onSubmitForm() {
+		async onSubmitForm() {
 			const hasAttachChanged = this.hasAttachChanged();
 
 			if (!this.canSave(this.hasChanges, hasAttachChanged)) {
 				return false;
+			}
+
+			if (this.beforeSubmit instanceof Function) {
+				try {
+					await this.beforeSubmit();
+				} catch (error) {
+					$wnl.logger.info('Form submit was cancelled', error);
+					return;
+				}
 			}
 
 			this.action('submitForm', {

@@ -1,7 +1,7 @@
 <template>
 		<wnl-paginated-list
 			:resourceUrl="resourceUrl"
-			:customRequestParams="customRequestParams"
+			:customRequestParams="requestParams"
 		>
 			<template slot="header">
 				<slot name="header"></slot>
@@ -58,18 +58,18 @@
 				type: Array,
 				default: () => [],
 			},
-			requestParams: {
+			customRequestParams: {
 				type: Object,
 				default: () => ({})
 			}
 		},
 		computed: {
-			customRequestParams() {
+			requestParams() {
 				return {
 					order: {
 						[this.activeSortColumnName]: this.sortDirection,
 					},
-					...this.requestParams,
+					...this.customRequestParams,
 				};
 			}
 		},

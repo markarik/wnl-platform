@@ -3,7 +3,7 @@
 		<wnl-sortable-table
 			:resourceUrl="getApiUrl('tags/.filter')"
 			:columns="columns"
-			:requestParams="{include: 'taggables_count'}"
+			:customRequestParams="{include: 'taggables_count'}"
 		>
 			<h3 slot="header" class="title">Lista Tagów</h3>
 

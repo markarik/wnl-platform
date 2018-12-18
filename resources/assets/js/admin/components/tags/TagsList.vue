@@ -50,7 +50,7 @@ export default {
 	},
 	methods: {
 		goToTag(tag) {
-			this.$router.push({ });
+			this.$router.push({ name: 'tag-edit', params: { id: tag.id } });
 		},
 		parseIncludes(data) {
 			const {included = {}, ...list} = data;

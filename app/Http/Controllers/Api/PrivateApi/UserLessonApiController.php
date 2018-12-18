@@ -108,7 +108,6 @@ class UserLessonApiController extends ApiController
 
 	public function exportPlan(Request $request)
 	{
-		return $this->respondNotFound();
 		$userId = $request->route('userId');
 		$user = User::fetch($userId);
 

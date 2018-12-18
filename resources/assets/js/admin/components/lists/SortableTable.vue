@@ -1,13 +1,5 @@
 <template>
-		<wnl-paginated-list
-			:resourceName="resourceName"
-			:customRequestParams="requestParams"
-		>
-			<template slot="header">
-				<slot name="header"></slot>
-			</template>
-
-			<table class="table" slot-scope="slotProps" slot="list">
+			<table class="table">
 				<thead>
 				<tr>
 					<wnl-sortable-table-column-header
@@ -20,9 +12,8 @@
 					/>
 				</tr>
 				</thead>
-				<slot name="tbody" :list="slotProps.list" />
+				<slot name="tbody" :list="list" />
 			</table>
-		</wnl-paginated-list>
 </template>
 
 <style lang="sass">
@@ -31,56 +22,36 @@
 </style>
 
 <script>
-import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 import WnlSortableTableColumnHeader from 'js/admin/components/lists/components/SortableTableColumnHeader';
 
 export default {
 	components: {
-		WnlPaginatedList,
 		WnlSortableTableColumnHeader
-	},
-	data() {
-		return {
-			activeSortColumnName: this.columns[0].name,
-			sortDirection: 'asc',
-		};
 	},
 	props: {
 		columns: {
 			type: Array,
 			required: true,
 		},
-		resourceName: {
+		activeSortColumnName: {
 			type: String,
 			required: true,
 		},
-		searchAvailableFields: {
-			type: Array,
-			default: () => [],
+		list: {
+			type: Array|Object,
+			required: true,
 		},
-		customRequestParams: {
-			type: Object,
-			default: () => ({})
-		}
-	},
-	computed: {
-		requestParams() {
-			return {
-				order: {
-					[this.activeSortColumnName]: this.sortDirection,
-				},
-				...this.customRequestParams,
-			};
+		sortDirection: {
+			type: String,
+			default: 'asc',
 		}
 	},
 	methods: {
 		changeOrder(name) {
-			if (this.activeSortColumnName === name) {
-				this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-			} else {
-				this.sortDirection = 'asc';
-				this.activeSortColumnName = name;
-			}
+			this.$emit('changeOrder', {
+				sortDirection: this.activeSortColumnName === name && this.sortDirection === 'asc' ? 'desc' : 'asc',
+				activeSortColumnName: name
+			});
 		},
 	},
 };

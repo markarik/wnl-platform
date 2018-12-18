@@ -1,7 +1,7 @@
 <template>
 	<div class="orders-list">
-		<wnl-sortable-table
-			:resourceUrl="getApiUrl('tags/.filter')"
+		<wnl-api-sortable-table
+			:resourceName="'tags/.filter'"
 			:columns="columns"
 			:customRequestParams="{include: 'taggables_count'}"
 		>
@@ -14,7 +14,7 @@
 				<td>{{tag.taggables_count}}</td>
 			</tr>
 			</tbody>
-		</wnl-sortable-table>
+		</wnl-api-sortable-table>
 	</div>
 </template>
 
@@ -24,12 +24,11 @@
 </style>
 
 <script>
-import WnlSortableTable from 'js/admin/components/lists/SortableTable';
-import {getApiUrl} from 'js/utils/env';
+import WnlApiSortableTable from 'js/admin/components/lists/ApiSortableTable';
 
 export default {
 	components: {
-		WnlSortableTable,
+		WnlApiSortableTable,
 	},
 	data() {
 		return {
@@ -50,7 +49,6 @@ export default {
 		};
 	},
 	methods: {
-		getApiUrl,
 		goToTag(tag) {
 			this.$router.push({ });
 		},

@@ -33,11 +33,6 @@ export default {
 	},
 	data() {
 		return {
-			requestParams: {
-				order: {
-					name: 'asc',
-				}
-			},
 			columns: [
 				{
 					name: 'id',

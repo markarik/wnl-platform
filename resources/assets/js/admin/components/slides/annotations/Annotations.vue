@@ -66,11 +66,11 @@
 </style>
 
 <script>
-	import {mapActions} from 'vuex';
-	import WnlAnnotationsList from './AnnotationsList';
-	import WnlAnnotationsEditor from './AnnotationsEditor';
+import {mapActions} from 'vuex';
+import WnlAnnotationsList from './AnnotationsList';
+import WnlAnnotationsEditor from './AnnotationsEditor';
 
-	export default {
+export default {
 	components: {WnlAnnotationsList, WnlAnnotationsEditor},
 	data() {
 		return {

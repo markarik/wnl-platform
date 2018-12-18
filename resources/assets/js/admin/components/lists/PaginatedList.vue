@@ -18,6 +18,14 @@
 			<div class="title is-6" v-else>Nic tu nie ma...</div>
 		</template>
 		<wnl-text-loader v-else></wnl-text-loader>
+
+		<wnl-pagination
+			v-if="lastPage > 1"
+			:currentPage="page"
+			:lastPage="lastPage"
+			@changePage="onPageChange"
+			class="pagination"
+		/>
 	</div>
 </template>
 

@@ -448,70 +448,72 @@ class Parser
 
 	public function handleImages($html)
 	{
-		$match = $this->match(self::IMAGE_PATTERN, $html);
+		$matches = $this->match(self::IMAGE_PATTERN, $html);
 
-		if ($match === false) {
+		if ($matches === false) {
 			return $html;
 		}
 
-		$imgTag = $match[0][0];
-		$imageUrl = $match[0][1];
+		foreach ($matches as $match) {
+			$imgTag = $match[0];
+			$imageUrl = $match[1];
 
-		if (stripos($imgTag, 'data-') === false) {
-			// Check if img tag contains data attributes - if not we don't need to migrate it
-			return $html;
+			if (stripos($imgTag, 'data-') === false) {
+				// Check if img tag contains data attributes - if not we don't need to migrate it
+				continue;
+			}
+
+			try {
+				$image = Image::make(Url::encodeFullUrl($imageUrl));
+			}
+			catch (\Exception $e) {
+				\Log::error("Fetching image from {$imageUrl} failed with message: {$e->getMessage()}.");
+				continue;
+			}
+
+			$mime = $image->mime;
+			$supported = ['image/jpeg', 'image/gif', 'image/png'];
+			if (!in_array($mime, $supported)) {
+				\Log::error("Unsupported image type: {$mime}");
+
+				continue;
+			}
+
+			$template = self::IMAGE_TEMPLATE;
+
+			if ($mime === 'image/gif') {
+				$data = @file_get_contents($imageUrl);
+				$ext = 'gif';
+				$template = self::GIF_TEMPLATE;
+			} else if ($mime === 'image/png') {
+				$data = $image->resize(1920, 1080, function ($constraint) {
+					$constraint->aspectRatio();
+					$constraint->upsize();
+				})->stream('png');
+				$ext = 'png';
+			}
+			else {
+				$background = $image->resize(1920, 1080, function ($constraint) {
+					$constraint->aspectRatio();
+					$constraint->upsize();
+				});
+				$canvas = Image::canvas($image->width(), $image->height(), '#fff');
+				$data = $canvas->insert($background)->stream('jpg', 80);
+				$ext = 'jpg';
+			}
+
+			if (!$data) {
+				\Log::error("Fetching image from {$imageUrl} failed.");
+
+				continue;
+			}
+
+			$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
+			Storage::put('public/' . $path, $data->__toString(), 'public');
+
+			$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
+			$html = str_replace($imgTag, $viewerHtml, $html);
 		}
-
-		try {
-			$image = Image::make(Url::encodeFullUrl($imageUrl));
-		}
-		catch (\Exception $e) {
-			\Log::error("Fetching image from {$imageUrl} failed with message: {$e->getMessage()}.");
-			return $html;
-		}
-
-		$mime = $image->mime;
-		$supported = ['image/jpeg', 'image/gif', 'image/png'];
-		if (!in_array($mime, $supported)) {
-			\Log::error("Unsupported image type: {$mime}");
-
-			return $html;
-		}
-
-		$template = self::IMAGE_TEMPLATE;
-
-		if ($mime === 'image/gif') {
-			$data = @file_get_contents($imageUrl);
-			$ext = 'gif';
-			$template = self::GIF_TEMPLATE;
-		} else if ($mime === 'image/png') {
-			$data = $image->resize(1920, 1080, function ($constraint) {
-				$constraint->aspectRatio();
-				$constraint->upsize();
-			})->stream('png');
-			$ext = 'png';
-		}
-		else {
-			$background = $image->resize(1920, 1080, function ($constraint) {
-				$constraint->aspectRatio();
-				$constraint->upsize();
-			});
-			$canvas = Image::canvas($image->width(), $image->height(), '#fff');
-			$data = $canvas->insert($background)->stream('jpg', 80);
-			$ext = 'jpg';
-		}
-
-		if (!$data) {
-			\Log::error("Fetching image from {$imageUrl} failed.");
-
-			return $html;
-		}
-
-		$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
-		Storage::put('public/' . $path, $data->__toString(), 'public');
-
-		$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
-		$html = str_replace($imgTag, $viewerHtml, $html);
 
 		return $html;
 	}

@@ -51,34 +51,34 @@
 </style>
 
 <script>
-	import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
+import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
 
 
-	export default {
-		props: ['id'],
-		computed: {
-			isEdit() {
-				return this.id !== 'new';
-			},
-			method() {
-				return this.isEdit ? 'put' : 'post';
-			},
-			resourceRoute() {
-				return this.isEdit ? `tags/${this.id}` : 'tags';
-			},
+export default {
+	props: ['id'],
+	computed: {
+		isEdit() {
+			return this.id !== 'new';
 		},
-		components: {
-			WnlFormText,
-			WnlForm,
-			WnlSubmit,
-			WnlTextarea,
+		method() {
+			return this.isEdit ? 'put' : 'post';
 		},
-		methods: {
-			onSubmitSuccess(data) {
-				if (!this.isEdit) {
-					this.$router.push({ name: 'tag-edit', params: { id: data.id } });
-				}
-			},
-		}
-	};
+		resourceRoute() {
+			return this.isEdit ? `tags/${this.id}` : 'tags';
+		},
+	},
+	components: {
+		WnlFormText,
+		WnlForm,
+		WnlSubmit,
+		WnlTextarea,
+	},
+	methods: {
+		onSubmitSuccess(data) {
+			if (!this.isEdit) {
+				this.$router.push({ name: 'tag-edit', params: { id: data.id } });
+			}
+		},
+	}
+};
 </script>

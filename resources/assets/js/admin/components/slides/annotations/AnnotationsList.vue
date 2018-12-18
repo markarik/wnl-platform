@@ -1,57 +1,49 @@
 <template>
-	<div class="annotations-list">
-		<wnl-paginated-list
-			:resource-name="'annotations/.filter'"
-			:custom-request-params="requestParams"
-			:search-available-fields="searchAvailableFields"
+	<ul>
+		<li
+			v-for="(annotation, index) in serializeResponse(list)"
+			:key="annotation.id"
+			class="annotation-item"
+			:class="{'annotation-item--is-even': isEven(index)}"
+			@click="toggleAnnotation(annotation)"
 		>
-			<ul slot="list" slot-scope="slotParams">
-				<li
-					v-for="(annotation, index) in serializeResponse(slotParams.list)"
-					:key="annotation.id"
-					class="annotation-item"
-					:class="{'annotation-item--is-even': isEven(index)}"
-					@click="toggleAnnotation(annotation)"
+			<div class="annotation-item__header">
+				<span class="annotation-item__header__item">
+					{{annotation.id}}
+				</span>
+				<span class="annotation-item__header__item annotation-item__header__item--grow">
+					{{annotation.title}}
+				</span>
+				<div class="annotation-item__header__tags annotation-item__header__item">
+					<span
+						class="tag"
+						v-for="tag in annotation.tags"
+						:style="{backgroundColor: getColourForStr(tag.name)}">
+						{{tag.name}}
+					</span>
+				</div>
+				<span class="annotation-item__header__item  annotation-item__header__item--small" v-if="modifiedAnnotationId === annotation.id">
+					...niezapisany
+				</span>
+				<span
+					class="icon is-small annotation-item__header__item annotation-item__header__item--edit"
+					@click="(event) => onAnnotationClick({annotation, event})"
 				>
-					<div class="annotation-item__header">
-						<span class="annotation-item__header__item">
-							{{annotation.id}}
-						</span>
-						<span class="annotation-item__header__item annotation-item__header__item--grow">
-							{{annotation.title}}
-						</span>
-						<div class="annotation-item__header__tags annotation-item__header__item">
-							<span
-								class="tag"
-								v-for="tag in annotation.tags"
-								:style="{backgroundColor: getColourForStr(tag.name)}">
-								{{tag.name}}
-							</span>
-						</div>
-						<span class="annotation-item__header__item  annotation-item__header__item--small" v-if="modifiedAnnotationId === annotation.id">
-							...niezapisany
-						</span>
-						<span
-							class="icon is-small annotation-item__header__item annotation-item__header__item--edit"
-							@click="(event) => onAnnotationClick({annotation, event})"
-						>
-							<i class="fa fa-pencil"></i>
-						</span>
-						<span class="icon is-small  annotation-item__header__item annotation-item__header__item--chevron">
-							<i class="toggle fa fa-angle-down"
-								 :class="{'fa-rotate-180': isOpen(annotation)}">
-							</i>
-						</span>
-					</div>
-					<div
-						class="annotation-item__description"
-						v-if="isOpen(annotation)"
-						v-html="annotation.description">
-					</div>
-				</li>
-			</ul>
-		</wnl-paginated-list>
-	</div>
+					<i class="fa fa-pencil"></i>
+				</span>
+				<span class="icon is-small  annotation-item__header__item annotation-item__header__item--chevron">
+					<i class="toggle fa fa-angle-down"
+						 :class="{'fa-rotate-180': isOpen(annotation)}">
+					</i>
+				</span>
+			</div>
+			<div
+				class="annotation-item__description"
+				v-if="isOpen(annotation)"
+				v-html="annotation.description">
+			</div>
+		</li>
+	</ul>
 </template>
 
 <style lang="sass" scoped>
@@ -106,10 +98,8 @@
 
 <script>
 import { getColourForStr } from 'js/utils/colors.js';
-import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
 export default {
-	components: {WnlPaginatedList},
 	data() {
 		return {
 			openAnnotations: [],
@@ -129,6 +119,18 @@ export default {
 		modifiedAnnotationId: {
 			type: Number,
 			default: 0
+		},
+		dirty: {
+			type: Boolean,
+			default: false
+		},
+		fetch: {
+			type: Function,
+			required: true
+		},
+		list: {
+			type: Object,
+			required: true
 		}
 	},
 	methods: {
@@ -166,6 +168,12 @@ export default {
 					keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(',')
 				};
 			});
+		}
+	},
+	watch: {
+		async dirty() {
+			await this.fetch();
+			this.$emit('updated');
 		}
 	}
 };

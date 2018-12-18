@@ -11,18 +11,30 @@
 				</ul>
 			</div>
 		</div>
-		<wnl-annotations-list
+		<wnl-paginated-list
 			v-show="activeView === 'list'"
-			:modified-annotation-id="modifiedAnnotationId"
-			@annotationSelect="onAnnotationSelect"
-		/>
+			:resource-name="'annotations/.filter'"
+			:custom-request-params="requestParams"
+			:search-available-fields="searchAvailableFields"
+		>
+			<wnl-annotations-list
+				slot="list"
+				slot-scope="slotParams"
+				:dirty="dirty"
+				:modified-annotation-id="modifiedAnnotationId"
+				:fetch="slotParams.fetch"
+				:list="slotParams.list"
+				@updated="dirty = false"
+				@annotationSelect="onAnnotationSelect"
+			/>
+		</wnl-paginated-list>
 		<wnl-annotations-editor
 			v-show="activeView === 'editor'"
 			:annotation="activeAnnotation"
 			@annotationSelect="onAnnotationSelect"
-			@addSuccess="onAddSuccess"
-			@editSuccess="onEditSuccess"
-			@deleteSuccess="onDeleteSuccess"
+			@addSuccess="dirty = true"
+			@editSuccess="dirty = true"
+			@deleteSuccess="dirty = true"
 			@hasChanges="onEditorChange"
 		/>
 	</div>
@@ -69,11 +81,21 @@
 import {mapActions} from 'vuex';
 import WnlAnnotationsList from './AnnotationsList';
 import WnlAnnotationsEditor from './AnnotationsEditor';
+import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
 export default {
-	components: {WnlAnnotationsList, WnlAnnotationsEditor},
+	components: {WnlAnnotationsList, WnlAnnotationsEditor, WnlPaginatedList},
 	data() {
 		return {
+			requestParams: {
+				include: 'keywords,tags'
+			},
+			searchAvailableFields: [
+				{value: 'id', title: 'ID'},
+				{value: 'title', title: 'Tytuł'},
+				{value: 'description', title: 'Treść'},
+				{value: 'tags.name', title: 'Nazwa Taga'},
+			],
 			tabs: {
 				list: {
 					view: 'list',
@@ -98,7 +120,8 @@ export default {
 			views: ['list', 'editor'],
 			activeAnnotation: {},
 			modifiedAnnotationId: 0,
-			activeView: 'list'
+			activeView: 'list',
+			dirty: false
 		};
 	},
 	methods: {
@@ -128,34 +151,6 @@ export default {
 			if (annotation.id !== this.modifiedAnnotationId) {
 				this.modifiedAnnotationId = 0;
 			}
-		},
-		onAddSuccess(annotation) {
-			this.activeAnnotation = {
-				...annotation,
-				keywords: (annotation.keywords || []).join(',')
-			};
-			this.annotations.splice(0,0, this.activeAnnotation);
-		},
-		onEditSuccess(annotation) {
-			this.activeAnnotation = {
-				...annotation,
-				keywords: (annotation.keywords || []).join(',')
-			};
-
-			this.annotations = this.annotations.map(item => {
-				if (item.id === annotation.id) {
-					return {
-						...this.activeAnnotation
-					};
-				}
-				return item;
-			});
-		},
-		onDeleteSuccess({id}) {
-			this.activeAnnotation = {};
-
-			const annotationIndex = this.annotations.findIndex(annotation => annotation.id === id);
-			this.annotations.splice(annotationIndex, 1);
 		},
 	},
 	beforeRouteLeave(to, from, next) {

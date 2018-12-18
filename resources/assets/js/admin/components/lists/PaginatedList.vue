@@ -13,11 +13,11 @@
 			class="pagination"
 		/>
 
-		<template v-if="!isLoading">
-			<slot name="list" v-if="!isEmpty(list)" :list="list" />
+		<template v-show="!isLoading">
+			<slot name="list" v-if="!isEmpty(list)" :list="list" :fetch="fetch"/>
 			<div class="title is-6" v-else>Nic tu nie ma...</div>
 		</template>
-		<wnl-text-loader v-else></wnl-text-loader>
+		<wnl-text-loader v-show="isLoading"></wnl-text-loader>
 
 		<wnl-pagination
 			v-if="lastPage > 1"

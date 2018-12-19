@@ -33,16 +33,16 @@
 
 <script>
 import axios from 'axios';
+import {get} from 'lodash';
 import {mapActions} from 'vuex';
 import {getApiUrl} from 'js/utils/env';
-import Modal from 'js/components/global/Modal';
+import WnlModal from 'js/components/global/Modal';
 import WnlTaggablesMover from 'js/admin/components/tags/TaggablesMover';
 
 export default {
-	name: 'TagDelete',
 	components: {
-		'wnl-modal': Modal,
-		'wnl-taggables-mover': WnlTaggablesMover,
+		WnlModal,
+		WnlTaggablesMover,
 	},
 	props: {
 		id: {
@@ -58,12 +58,11 @@ export default {
 			default: 0,
 		}
 	},
-	data: () => {
+	data() {
 		return {
 			isTaggablesMoverVisible: false,
 		};
 	},
-	computed: {},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		confirmDelete() {
@@ -78,9 +77,9 @@ export default {
 				});
 
 				this.$emit('tagDeleted');
-			} catch ({response: {data: {message}}}) {
+			} catch ({response}) {
 				this.addAutoDismissableAlert({
-					text: message || 'Usuwanie taga nie powiodło się.',
+					text: get(response, 'data.message') || 'Usuwanie taga nie powiodło się.',
 					type: 'error',
 				});
 			}
@@ -96,10 +95,8 @@ export default {
 		async onClick() {
 			if (this.taggablesCount > 0) {
 				this.showTaggablesMover();
-			} else {
-				if (this.confirmDelete()) {
-					this.deleteTag();
-				}
+			} else if (this.confirmDelete()) {
+				this.deleteTag();
 			}
 		},
 		onCloseModal() {

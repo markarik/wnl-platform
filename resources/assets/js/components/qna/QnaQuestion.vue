@@ -85,7 +85,13 @@
 					@submitSuccess="onSubmitSuccess">
 				</wnl-qna-new-answer-form>
 			</transition>
-			<wnl-qna-answer v-if="hasAnswers && !showAllAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly" :refresh="refreshQuestionAndShowAnswers"></wnl-qna-answer>
+			<wnl-qna-answer
+				v-if="hasAnswers && !showAllAnswers"
+				:answer="latestAnswer"
+				:questionId="questionId"
+				:readOnly="readOnly"
+				:refresh="refreshQuestionAndShowAnswers"
+			></wnl-qna-answer>
 			<wnl-qna-answer v-else-if="showAllAnswers"
 				v-for="answer in allAnswers"
 				:answer="answer"
@@ -215,7 +221,6 @@ import moderatorFeatures from 'js/perimeters/moderator';
 import { timeFromS } from 'js/utils/time';
 
 export default {
-	name: 'QnaQuestion',
 	mixins: [ highlight ],
 	perimeters: [moderatorFeatures],
 	components: {

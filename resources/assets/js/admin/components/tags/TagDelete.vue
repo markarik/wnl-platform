@@ -57,35 +57,28 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		confirmDelete() {
-			return new Promise(function (resolve, reject) {
-				let confirmed = window.confirm('Czy na pewno chcesz usunąć tego taga? Ta operacja jest nieodwracalna.');
-
-				return confirmed ? resolve() : reject();
-			});
+				return window.confirm('Czy na pewno chcesz usunąć tego taga? Ta operacja jest nieodwracalna.');
 		},
-		deleteTag() {
-			return axios.delete(getApiUrl(`tags/${this.id}`))
-				.then(() => {
-					this.addAutoDismissableAlert({
-						text: 'Tag został usunięty',
-						type: 'success',
-					});
-
-					this.$emit('tagDeleted');
-				})
-				.catch(({response: {data: {message = 'Usuwanie taga nie powiodło się.'}}}) => {
-					this.addAutoDismissableAlert({
-						text: message,
-						type: 'error',
-					});
+		async deleteTag() {
+			try {
+				await axios.delete(getApiUrl(`tags/${this.id}`));
+				this.addAutoDismissableAlert({
+					text: 'Tag został usunięty',
+					type: 'success',
 				});
+
+				this.$emit('tagDeleted');
+			} catch ({response: {data: {message}}}) {
+				this.addAutoDismissableAlert({
+					text: message || 'Usuwanie taga nie powiodło się.',
+					type: 'error',
+				});
+			}
 		},
 		async deleteTagAfterConfirm() {
-			try {
-				await this.confirmDelete();
-			} catch (e) {}
-
-			this.deleteTag();
+			if (this.confirmDelete()) {
+				this.deleteTag();
+			}
 		},
 		showTaggablesMover() {
 			this.isTaggablesMoverVisible = true;
@@ -94,13 +87,9 @@ export default {
 			if (this.taggablesCount > 0) {
 				this.showTaggablesMover();
 			} else {
-				try {
-					await this.confirmDelete();
-				} catch (e) {
-					return;
+				if (this.confirmDelete()) {
+					this.deleteTag();
 				}
-
-				this.deleteTag();
 			}
 		},
 		onCloseModal() {

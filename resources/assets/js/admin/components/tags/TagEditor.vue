@@ -67,7 +67,12 @@ import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as W
 import WnlTagDelete from 'js/admin/components/tags/TagDelete';
 
 export default {
-	props: ['id'],
+	props: {
+		id: {
+			type: String|Number,
+			required: true,
+		},
+	},
 	data: () => {
 		return {
 			formData: {}

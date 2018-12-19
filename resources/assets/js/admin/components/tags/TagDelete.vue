@@ -5,6 +5,7 @@
 			type="button"
 			@click="onClick"
 			:disabled="!isDeleteAllowed"
+			:title="!isDeleteAllowed && 'Nie można usunąć tego tagu ponieważ należy do taksonomii lub jest kategorią lub taguje lekcję albo stronę'"
 		>Usuń</button>
 		<wnl-modal
 			:isModalVisible="isTaggablesMoverVisible"
@@ -44,9 +45,18 @@ export default {
 		'wnl-taggables-mover': WnlTaggablesMover,
 	},
 	props: {
-		id: {},
-		isDeleteAllowed: Boolean,
-		taggablesCount: Number
+		id: {
+			type: String|Number,
+			required: true,
+		},
+		isDeleteAllowed: {
+			type: Boolean,
+			default: false,
+		},
+		taggablesCount: {
+			type: Number,
+			default: 0,
+		}
 	},
 	data: () => {
 		return {

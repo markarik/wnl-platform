@@ -24,9 +24,13 @@ export default {
 	name: 'TaggablesMover',
 	props: {
 		beforeSubmit: {
+			type: Function,
 			default: null,
 		},
-		sourceTagId: {},
+		sourceTagId: {
+			type: Number|String,
+			required: true,
+		},
 	},
 	components: {
 		WnlFormText,

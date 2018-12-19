@@ -54,7 +54,7 @@ class TagsApiController extends ApiController {
 
 		$tag->update($request->all());
 
-		return $this->respondOk();
+		return $this->transformAndRespond($tag);
 	}
 
 	/**

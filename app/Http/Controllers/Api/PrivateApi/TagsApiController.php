@@ -65,6 +65,9 @@ class TagsApiController extends ApiController {
 	public function delete($id) {
 		$tag = Tag::find($id);
 
+		// TODO
+		return $this->respondNotImplemented();
+
 		if (!$tag) {
 			return $this->respondNotFound();
 		}

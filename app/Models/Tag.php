@@ -54,11 +54,15 @@ class Tag extends Model
 	}
 
 	public function isRenameAllowed() {
+		// TODO
+		return false;
 		// SlidesFromCategory command uses hardcoded tag names
-		return !$this->isCategoryTag();
+		 return !$this->isCategoryTag();
 	}
 
 	public function isDeleteAllowed() {
-		return !$this->isInTaxonomy() && !$this->isCategoryTag() && !$this->hasProtectedTaggable();
+		// TODO
+		return false;
+		 return !$this->isInTaxonomy() && !$this->isCategoryTag() && !$this->hasProtectedTaggable();
 	}
 }

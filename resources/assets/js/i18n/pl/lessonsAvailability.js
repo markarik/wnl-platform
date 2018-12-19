@@ -23,6 +23,7 @@ export const lessonsAvailability = {
 		twoDaysPerLesson: 'Jedna lekcja na dwa dni',
 		threeDaysPerLesson: 'Jedna lekcja na trzy dni',
 		acceptPlan: 'Akceptuję plan!',
+		downloadPlan: 'Pobierz plan pracy',
 	},
 	openAllLessons: {
 		annotation: 'Wybierając tę opcję, ustawisz wszystkim lekcjom dzisiejszą datę, jako datę otwarcia. Może być to przydatna opcja, gdy kurs masz już za sobą i chcesz popracować tylko z wybranymi zagadnieniami.',

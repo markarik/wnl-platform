@@ -42,7 +42,8 @@
 import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
+import { downloadFile } from 'js/utils/download';
 
 export default {
 	name: 'UserCertificates',
@@ -67,9 +68,9 @@ export default {
 					responseType: 'blob',
 				});
 
-				this.downloadFile(response.data, `participation_${orderId}.jpg`);
+				downloadFile(response.data, `participation_${orderId}.jpg`);
 			} catch (err) {
-				this.handleDownloadFailure();
+				this.handleDownloadFailure(err);
 			}
 		},
 		async downloadFinalCertificate(orderId) {
@@ -79,26 +80,12 @@ export default {
 					responseType: 'blob',
 				});
 
-				this.downloadFile(response.data, `final_${orderId}.jpg`);
+				downloadFile(response.data, `final_${orderId}.jpg`);
 			} catch (err) {
-				this.handleDownloadFailure();
+				this.handleDownloadFailure(err);
 			}
 		},
-		handleDownloadFailure() {
-			if (err.response.status === 404) {
-				return this.addAutoDismissableAlert({
-					text: 'Nie udało się znaleźć certyfikatu. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
-					type: 'error'
-				});
-			}
-
-			if (err.response.status === 403) {
-				return this.addAutoDismissableAlert({
-					text: 'Nie masz uprawnień do pobrania certyfikatu.',
-					type: 'error'
-				});
-			}
-
+		handleDownloadFailure(err) {
 			this.addAutoDismissableAlert({
 				text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
 				type: 'error'
@@ -106,21 +93,6 @@ export default {
 
 			$wnl.logger.capture(err);
 		},
-		downloadFile(responseData, fileName) {
-			const data = window.URL.createObjectURL(responseData);
-			const link = document.createElement('a');
-			link.style.display = 'none';
-			// For Firefox it is necessary to insert the link into body
-			document.body.appendChild(link);
-			link.href = data;
-			link.setAttribute('download', fileName);
-			link.click();
-
-			setTimeout(function() {
-				window.URL.revokeObjectURL(link.href);
-				document.removeChild(link);
-			}, 100);
-		}
 	},
 	async mounted() {
 		const {data} = await axios.get(getApiUrl('certificates'));

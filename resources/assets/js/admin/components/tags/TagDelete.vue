@@ -57,7 +57,7 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		confirmDelete() {
-				return window.confirm('Czy na pewno chcesz usunąć tego taga? Ta operacja jest nieodwracalna.');
+			return window.confirm('Czy na pewno chcesz usunąć tego taga? Ta operacja jest nieodwracalna.');
 		},
 		async deleteTag() {
 			try {

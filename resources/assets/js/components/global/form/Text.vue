@@ -9,7 +9,7 @@
 				:class="{'is-danger': hasErrors}"
 				:name="name"
 				:placeholder="placeholder || $slots.default[0].text || ''"
-				:disabled="disabled || false"
+				:disabled="disabled"
 				@input="onInput"
 				v-model="inputValue">
 		</div>
@@ -39,7 +39,8 @@ export default {
 			type: String
 		},
 		disabled: {
-			type: Boolean
+			type: Boolean,
+			default: false
 		}
 	},
 	mixins: [formInput],

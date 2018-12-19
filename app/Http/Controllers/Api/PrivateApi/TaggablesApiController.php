@@ -25,7 +25,9 @@ class TaggablesApiController extends ApiController {
 
 		// TODO Is this necessary? If so, replace this comment with the reason for it
 		if ($protectedTaggablesCount > 0) {
-			return $this->respondUnprocessableEntity();
+			return $this->respondUnprocessableEntity([
+				'message' => 'Some of the taggables are protected'
+			]);
 		}
 
 		$targetTag = Tag::find($request->get('target_tag_id'));

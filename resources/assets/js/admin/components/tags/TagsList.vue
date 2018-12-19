@@ -24,6 +24,8 @@
 </style>
 
 <script>
+import { get } from 'lodash';
+
 import WnlApiSortableTable from 'js/admin/components/lists/ApiSortableTable';
 
 export default {
@@ -56,7 +58,7 @@ export default {
 			const {included = {}, ...list} = data;
 
 			return Object.values(list).map(item => {
-				item.taggables_count = included.taggables_count && included.taggables_count[item.id] && included.taggables_count[item.id].taggables_count;
+				item.taggables_count = get(included, `taggables_count.${item.id}.taggables_count`);
 				return item;
 			});
 		}

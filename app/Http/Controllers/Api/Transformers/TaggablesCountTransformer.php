@@ -1,12 +1,8 @@
 <?php
 
-
 namespace App\Http\Controllers\Api\Transformers;
 
-
-use App\Models\Tag;
 use App\Http\Controllers\Api\ApiTransformer;
-
 
 class TaggablesCountTransformer extends ApiTransformer
 {
@@ -17,11 +13,11 @@ class TaggablesCountTransformer extends ApiTransformer
 		$this->parent = $parent;
 	}
 
-	public function transform(Tag $tag)
+	public function transform($item)
 	{
 		$data = [
-			'taggables_count' => $tag->taggables_count,
-			'id' => $tag->id,
+			'taggables_count' => $item->taggables_count,
+			'id' => $item->id,
 		];
 
 		if ($this->parent) {

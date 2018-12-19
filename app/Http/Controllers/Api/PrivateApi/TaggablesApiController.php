@@ -19,11 +19,18 @@ class TaggablesApiController extends ApiController {
 			return $this->respondNotFound('Source tag does not exist');
 		}
 
+		$protectedTaggablesCount = $sourceTag->taggables()
+			->whereIn('taggable_type', Taggable::PROTECTED_TAGGABLE_TYPES)
+			->count();
+
+		// TODO Is this necessary? If so, replace this comment with the reason for it
+		if ($protectedTaggablesCount > 0) {
+			return $this->respondUnprocessableEntity();
+		}
+
 		$targetTag = Tag::find($request->get('target_tag_id'));
 
 		$taggablesMoved = Taggable::where('tag_id', $sourceTag->id)
-			// TODO Is this necessary? If so, replace this comment with the reason for it
-			->whereNotIn('taggable_type', Taggable::PROTECTED_TAGGABLE_TYPES)
 			// Warning: mass update doesn't fire model events
 			// At this point, there are no events for the Taggable model
 			->update(['tag_id' => $targetTag->id]);

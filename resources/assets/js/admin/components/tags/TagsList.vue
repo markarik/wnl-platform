@@ -1,6 +1,6 @@
 <template>
 	<div class="orders-list">
-		<wnl-api-sortable-table
+		<wnl-paginated-sortable-table
 			:resourceName="'tags/.filter'"
 			:columns="columns"
 			:customRequestParams="{include: 'taggables_count'}"
@@ -14,7 +14,7 @@
 				<td>{{tag.taggables_count}}</td>
 			</tr>
 			</tbody>
-		</wnl-api-sortable-table>
+		</wnl-paginated-sortable-table>
 	</div>
 </template>
 
@@ -26,11 +26,11 @@
 <script>
 import { get } from 'lodash';
 
-import WnlApiSortableTable from 'js/admin/components/lists/ApiSortableTable';
+import WnlPaginatedSortableTable from 'js/admin/components/lists/PaginatedSortableTable';
 
 export default {
 	components: {
-		WnlApiSortableTable,
+		WnlPaginatedSortableTable,
 	},
 	data() {
 		return {

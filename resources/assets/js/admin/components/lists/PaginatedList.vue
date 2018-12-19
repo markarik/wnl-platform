@@ -131,7 +131,7 @@ export default {
 			} catch (error) {
 				if (!axios.isCancel(error)) {
 					this.addAutoDismissableAlert({
-						text: 'Ops, nie udało się pobrać listy. Odśwież stronę i spróbuj jeszcze raz',
+ 						text: 'Ups, nie udało się pobrać listy. Odśwież stronę, żeby spróbować ponownie.',
 						type: 'error'
 					});
 					$wnl.logger.capture(error);

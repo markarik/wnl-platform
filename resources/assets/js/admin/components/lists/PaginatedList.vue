@@ -33,7 +33,7 @@
 	@import 'resources/assets/sass/variables'
 	.pagination /deep/ .pagination-list
 		justify-content: center
-		margin-bottom: $margin-medium
+		margin: $margin-base 0
 
 	.search
 		margin-bottom: $margin-base
@@ -106,7 +106,6 @@ export default {
 			this.fetch();
 		},
 		async onSearch({phrase, fields}) {
-			this.page = 1;
 			this.searchPhrase = phrase;
 			this.searchFields = fields;
 
@@ -115,16 +114,28 @@ export default {
 		async fetch() {
 			try {
 				this.isLoading = true;
-				const response = await axios.post(getApiUrl(this.resourceName), this.getRequestParams());
+				if (this.requestCancelTokenSource) {
+					// cancel previous request
+					this.requestCancelTokenSource.cancel();
+				}
+				this.requestCancelTokenSource = axios.CancelToken.source();
+
+				const response = await axios.post(
+					getApiUrl(this.resourceName),
+					this.getRequestParams(),
+					{ cancelToken: this.requestCancelTokenSource.token }
+				);
 				const {data: {data, ...paginationMeta}} = response;
 				this.list = data;
 				this.lastPage = paginationMeta.last_page;
 			} catch (error) {
-				this.addAutoDismissableAlert({
-					text: 'Ops, nie udało się pobrać listy. Odśwież stronę i spróbuj jeszcze raz',
-					type: 'error'
-				});
-				$wnl.logger.capture(error);
+				if (!axios.isCancel(error)) {
+					this.addAutoDismissableAlert({
+						text: 'Ops, nie udało się pobrać listy. Odśwież stronę i spróbuj jeszcze raz',
+						type: 'error'
+					});
+					$wnl.logger.capture(error);
+				}
 			} finally {
 				this.isLoading = false;
 			}
@@ -135,7 +146,6 @@ export default {
 	},
 	watch: {
 		customRequestParams() {
-			this.page = 1;
 			this.fetch();
 		},
 		async dirty() {

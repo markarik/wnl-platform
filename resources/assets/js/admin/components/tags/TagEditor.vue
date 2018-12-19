@@ -61,6 +61,8 @@
 </style>
 
 <script>
+import { get } from 'lodash';
+
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
 import WnlTagDelete from 'js/admin/components/tags/TagDelete';
 
@@ -79,7 +81,7 @@ export default {
 			return this.isEdit ? 'put' : 'post';
 		},
 		resourceRoute() {
-			return this.isEdit ? `tags/${this.id}?include=taggables_count` : 'tags';
+			return this.isEdit ? `tags/${this.id}?include=taggables_count,meta` : 'tags';
 		},
 	},
 	components: {
@@ -92,11 +94,10 @@ export default {
 	methods: {
 		onChange({formData}) {
 			this.formData = {
-				is_delete_allowed: false,
-				is_rename_allowed: true,
 				...formData,
-				taggables_count: formData.included && formData.included.taggables_count &&
-					formData.included.taggables_count[formData.id] && formData.included.taggables_count[formData.id].taggables_count,
+				taggables_count: get(formData, `included.taggables_count.${formData.id}.taggables_count`),
+				is_delete_allowed: get(formData, `included.meta.${formData.id}.is_delete_allowed`, false),
+				is_rename_allowed: get(formData, `included.meta.${formData.id}.is_rename_allowed`, true),
 			};
 		},
 		onSubmitSuccess(data) {

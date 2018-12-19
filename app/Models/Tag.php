@@ -42,10 +42,7 @@ class Tag extends Model
 	}
 
 	public function isCategoryTag() {
-		return DB::table('categories')
-			->select('id')
-			->where('name', $this->name)
-			->exists();
+		return Category::where('name', $this->name)->exists();
 	}
 
 	public function hasProtectedTaggable() {

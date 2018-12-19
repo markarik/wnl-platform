@@ -27,6 +27,11 @@ class Tag extends Model
 		return $this->hasMany('App\Models\Taggable');
 	}
 
+	public function taxonomies()
+	{
+		return $this->belongsToMany('App\Models\Taxonomy', 'tags_taxonomy');
+	}
+
 	public function delete() {
 		\DB::transaction(function () {
 			$this->taggables()->delete();
@@ -35,10 +40,7 @@ class Tag extends Model
 	}
 
 	public function isInTaxonomy() {
-		return DB::table('tags_taxonomy')
-			->select('tag_id')
-			->where('tag_id', $this->id)
-			->exists();
+		return $this->taxonomies()->exists();
 	}
 
 	public function isCategoryTag() {

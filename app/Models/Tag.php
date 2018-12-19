@@ -30,7 +30,7 @@ class Tag extends Model
 	public function delete() {
 		\DB::transaction(function () {
 			$this->taggables()->delete();
-			$this->delete();
+			parent::delete();
 		});
 	}
 

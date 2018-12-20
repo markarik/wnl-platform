@@ -37,6 +37,7 @@
 			>Opis</wnl-textarea>
 		</wnl-form>
 		<wnl-paginated-sortable-table
+			:isSearchEnabled="false"
 			:resourceName="'taggables/.filter'"
 			:columns="columns"
 			:customRequestParams="{filters: [{taggable: {tag_id: id}}]}"

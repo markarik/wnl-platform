@@ -45,9 +45,9 @@
 			<div slot="header">
 				<h3 class="title is-3">List elementów powiązanych</h3>
 				<div class="filters">
-					<div class="field" v-for="filter in taggableTypeFilters" :key="filter.name">
-						<input type="checkbox" :id="`filter${filter.name}`" :value="filter.name" v-model="selectedFilters" class="is-checkradio">
-						<label :for="`filter${filter.name}`" class="checkbox">{{filter.label}}</label>
+					<div class="field" v-for="(filter, model) in taggableTypeFilters" :key="model">
+						<input type="checkbox" :id="`filter${model}`" :value="model" v-model="selectedFilters" class="is-checkradio">
+						<label :for="`filter${model}`" class="checkbox">{{filter.label}}</label>
 					</div>
 				</div>
 			</div>
@@ -56,7 +56,11 @@
 				<td>{{taggable.taggable_id}}</td>
 				<td>{{taggable.taggable_type}}</td>
 				<td>
-					<a :href="getTaggableLink(taggable)" target="_blank" v-if="getTaggableLink(taggable)">
+					<a
+						:href="getTaggableLink(taggable)"
+						v-if="getTaggableLink(taggable)"
+						target="_blank"
+					>
 						Przejdź do elementu
 					</a>
 					<span class="table-cell--no-link" v-else>nie umiemy zrobić linka dla tego zasobu</span>
@@ -132,36 +136,38 @@ export default {
 					sortable: false
 				},
 			],
-			taggableTypeFilters: [
-				{
-					name: 'App\\Models\\Lesson',
+			taggableTypeFilters: {
+				['App\\Models\\Lesson']: {
 					label: 'Lekcje',
+					getLink: (id) => `/app/courses/1/lessons/${id}`
 				},
-				{
-					name: 'App\\Models\\Page',
+				['App\\Models\\Page']: {
 					label: 'Strony',
+					getLink: () => ''
 				},
-				{
+				['App\\Models\\Screen']: {
 					name: 'App\\Models\\Screen',
 					label: 'Screeny',
+					getLink: () => ''
 				},
-				{
-					name: 'App\\Models\\Slide',
+				['App\\Models\\Slide']: {
 					label: 'Slajdy',
+					getLink: (id) => `/admin/app/slides/edit?slideId=${id}`
 				},
-				{
+				['App\\Models\\QnaQuestion']: {
 					name: 'App\\Models\\QnaQuestion',
 					label: 'QnaQuestion',
+					getLink: () => ''
 				},
-				{
-					name: 'App\\Models\\QuizQuestion',
+				['App\\Models\\QuizQuestion']: {
 					label: 'QuizQuestion',
+					getLink: (id) => `/app/questions/single/${id}`
 				},
-				{
-					name: 'App\\Models\\Annotation',
+				['App\\Models\\Annotation']: {
 					label: 'Anotacje',
+					getLink: (id) => `/admin/app/annotations?q=${id}&fields=id`
 				},
-			],
+			},
 			selectedFilters: []
 		};
 	},
@@ -218,18 +224,10 @@ export default {
 				is_rename_allowed: get(formData, `included.meta.${formData.id}.is_rename_allowed`, true),
 			};
 		},
-		getTaggableLink({taggable_type, taggable_id}) {
-			switch (taggable_type) {
-			case 'App\\Models\\QuizQuestion':
-				return `/app/questions/single/${taggable_id}`;
-			case 'App\\Models\\Lesson':
-				return `/app/courses/1/lessons/${taggable_id}`;
-			case 'App\\Models\\Annotation':
-				return `/admin/app/annotations?q=${taggable_id}&fields=id`;
-			case 'App\\Models\\Slide':
-				return `/admin/app/slides/edit?slideId=${taggable_id}`;
-			}
-			return '';
+		getTaggableLink(taggable) {
+			if (!this.taggableTypeFilters) return;
+
+			return this.taggableTypeFilters[taggable.taggable_type].getLink(taggable.taggable_id);
 		}
 	}
 };

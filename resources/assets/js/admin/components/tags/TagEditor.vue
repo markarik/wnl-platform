@@ -224,10 +224,10 @@ export default {
 				is_rename_allowed: get(formData, `included.meta.${formData.id}.is_rename_allowed`, true),
 			};
 		},
-		getTaggableLink(taggable) {
-			if (!this.taggableTypeFilters) return;
+		getTaggableLink({taggable_type, taggable_id}) {
+			if (!this.taggableTypeFilters[taggable_type]) return;
 
-			return this.taggableTypeFilters[taggable.taggable_type].getLink(taggable.taggable_id);
+			return this.taggableTypeFilters[taggable_type].getLink(taggable_id);
 		}
 	}
 };

@@ -4,7 +4,12 @@
 			<h3 class="title">Lista</h3>
 		</slot>
 
-		<wnl-search-input @search="onSearch" class="search" :availableFields="searchAvailableFields" />
+		<wnl-search-input
+			class="search"
+			v-if="isSearchEnabled"
+			@search="onSearch"
+			:availableFields="searchAvailableFields"
+		/>
 		<wnl-pagination
 			v-if="lastPage > 1"
 			:currentPage="page"
@@ -78,6 +83,10 @@ export default {
 		dirty: {
 			type: Boolean,
 			default: false
+		},
+		isSearchEnabled: {
+			type: Boolean,
+			default: true,
 		}
 	},
 	methods: {

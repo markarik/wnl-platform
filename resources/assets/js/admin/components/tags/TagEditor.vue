@@ -98,23 +98,26 @@ export default {
 	},
 	methods: {
 		onChange({formData}) {
-			this.formData = {
-				...formData,
-				taggables_count: get(formData, `included.taggables_count.${formData.id}.taggables_count`),
-				is_delete_allowed: get(formData, `included.meta.${formData.id}.is_delete_allowed`, false),
-				is_rename_allowed: get(formData, `included.meta.${formData.id}.is_rename_allowed`, true),
-			};
+			this.formData = this.normalizeFormData(formData);
 		},
 		onSubmitSuccess(data) {
 			if (!this.isEdit) {
 				this.$router.push({ name: 'tag-edit', params: { id: data.id } });
 			}
 
-			this.formData = data;
+			this.formData = this.normalizeFormData(data);
 		},
 		onTagDeleted() {
 			this.$router.push({ name: 'tags' });
 		},
+		normalizeFormData(formData) {
+			return {
+				...formData,
+				taggables_count: get(formData, `included.taggables_count.${formData.id}.taggables_count`),
+				is_delete_allowed: get(formData, `included.meta.${formData.id}.is_delete_allowed`, false),
+				is_rename_allowed: get(formData, `included.meta.${formData.id}.is_rename_allowed`, true),
+			};
+		}
 	}
 };
 </script>

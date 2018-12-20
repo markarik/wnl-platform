@@ -293,7 +293,7 @@ section.voucher {
 	}
 
 	input {
-		@include simple-input
+		@include simple-input;
 
 		font-size: $font-size-plus-2;
 		font-weight: $font-weight-bold;

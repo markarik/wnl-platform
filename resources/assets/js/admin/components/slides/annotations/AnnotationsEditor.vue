@@ -126,7 +126,7 @@
 				</div>
 			</template>
 		</form>
-		<wnl-modal :isModalVisible="isVisible" @closeModal="isVisible = false" v-if="isVisible">
+		<wnl-modal @closeModal="isVisible = false" v-if="isVisible">
 			<wnl-preview-modal :content="annotation.description"/>
 		</wnl-modal>
 	</div>

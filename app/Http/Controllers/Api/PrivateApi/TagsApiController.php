@@ -44,12 +44,8 @@ class TagsApiController extends ApiController {
 
 		if ($request->get('name') !== $tag->name && $tag->isCategoryTag()) {
 			return $this->respondUnprocessableEntity([
-				'errors' => [
-					'name' => [
-						'Na podstawie nazwy tego taga tworzymy slajdy dla kategorii. Nie możesz zmienić mu nazwy.'
-					]
-				]
-			]);
+				'message' => __('tags.errors.category-name-edit')]
+			);
 		}
 
 		$tag->update($request->all());
@@ -74,19 +70,19 @@ class TagsApiController extends ApiController {
 
 		if ($tag->isCategoryTag()) {
 			return $this->respondUnprocessableEntity([
-				'message' => 'Na podstawie tego taga tworzymy slajdy dla kategorii. Nie możesz go usunąć.'
+				'message' => __('tags.errors.category-name-delete')
 			]);
 		}
 
 		if ($tag->hasProtectedTaggable()) {
 			return $this->respondUnprocessableEntity([
-				'message' => 'Ten tag jest użyty przy ustalaniu struktury. Nie możesz go usunąć.'
+				'message' => __('tags.errors.in-taxonomy')
 			]);
 		}
 
 		if ($tag->isInTaxonomy()) {
 			return $this->respondUnprocessableEntity([
-				'message' => 'Ten tag jest częścią taksonomii. Nie możesz go usunąć.'
+				'message' => __('in-course-structure')
 			]);
 		}
 

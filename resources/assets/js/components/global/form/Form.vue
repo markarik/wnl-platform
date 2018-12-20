@@ -159,7 +159,7 @@ export default {
 		_.each(this.$children, (child) => {
 			let options = child.$options;
 
-			if (!_.isUndefined(options.computed.fillable)) {
+			if (!_.isUndefined(_.get(options, 'computed.fillable'))) {
 				let name = options.propsData.name,
 					defaultValue = options.computed.default() || '';
 

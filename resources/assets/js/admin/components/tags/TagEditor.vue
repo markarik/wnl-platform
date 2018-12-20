@@ -40,9 +40,18 @@
 			:isSearchEnabled="false"
 			:resourceName="'taggables/.filter'"
 			:columns="columns"
-			:customRequestParams="{filters: [{taggable: {tag_id: id}}]}"
+			:customRequestParams="requestParams"
 		>
-			<h3 slot="header">List elementów powiązanych</h3>
+			<div slot="header">
+				<h3 class="title is-3">List elementów powiązanych</h3>
+				<div>
+					<h4 class="title is-4">Filtry</h4>
+					<div class="field" v-for="filter in taggableTypeFilters" :key="filter.name">
+						<input type="checkbox" :id="`filter${filter.name}`" :value="filter.name" v-model="selectedFilters" class="is-checkradio">
+						<label :for="`filter${filter.name}`" class="checkbox">{{filter.label}}</label>
+					</div>
+				</div>
+			</div>
 			<tbody slot-scope="slotProps" slot="tbody">
 			<tr v-for="taggable in slotProps.list" :key="taggable.id">
 				<td>{{taggable.taggable_id}}</td>
@@ -118,7 +127,38 @@ export default {
 					name: 'link',
 					sortable: false
 				},
-			]
+			],
+			taggableTypeFilters: [
+				{
+					name: 'App\\Models\\Lesson',
+					label: 'Lekcje',
+				},
+				{
+					name: 'App\\Models\\Page',
+					label: 'Strony',
+				},
+				{
+					name: 'App\\Models\\Screen',
+					label: 'Screeny',
+				},
+				{
+					name: 'App\\Models\\Slide',
+					label: 'Slajdy',
+				},
+				{
+					name: 'App\\Models\\QnaQuestion',
+					label: 'QnaQuestion',
+				},
+				{
+					name: 'App\\Models\\QuizQuestion',
+					label: 'QuizQuestion',
+				},
+				{
+					name: 'App\\Models\\Annotation',
+					label: 'Anotacje',
+				},
+			],
+			selectedFilters: []
 		};
 	},
 	computed: {
@@ -130,6 +170,18 @@ export default {
 		},
 		resourceRoute() {
 			return this.isEdit ? `tags/${this.id}?include=taggables_count,meta` : 'tags';
+		},
+		requestParams() {
+			return {
+				filters: [
+					{
+						taggable: {
+							tag_id: this.id,
+							taggable_types: this.selectedFilters,
+						},
+					},
+				],
+			};
 		},
 	},
 	components: {

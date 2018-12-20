@@ -82,7 +82,7 @@ class TagsApiController extends ApiController {
 
 		if ($tag->isInTaxonomy()) {
 			return $this->respondUnprocessableEntity([
-				'message' => __('in-course-structure')
+				'message' => __('tags.errors.in-course-structure')
 			]);
 		}
 

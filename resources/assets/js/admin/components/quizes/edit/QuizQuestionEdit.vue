@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import QuizQuestionEditor from 'js/admin/components/quizes/QuizQuestionEditor';
+import QuizQuestionEditor from 'js/admin/components/quizes/edit/QuizQuestionEditor';
 
 export default {
 	name: 'QuizQuestionEdit',

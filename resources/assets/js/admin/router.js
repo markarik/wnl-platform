@@ -58,19 +58,17 @@ let routes = [
 	{
 		name: 'quizes',
 		path: '/admin/app/quizes',
-		component: require('js/admin/components/quizes/QuizQuestions.vue'),
-		children: [
-			{
-				name: 'quiz-editor',
-				path: 'edit/:quizId',
-				component: require('js/admin/components/quizes/QuizQuestionEdit.vue')
-			},
-			{
-				name: 'quiz-creator',
-				path: 'new',
-				component: require('js/admin/components/quizes/QuizQuestionCreate.vue')
-			}
-		],
+		component: require('js/admin/components/quizes/list/QuizQuestionsList.vue'),
+	},
+	{
+		name: 'quiz-editor',
+		path: '/admin/app/quizes/edit/:quizId',
+		component: require('js/admin/components/quizes/edit/QuizQuestionEdit.vue')
+	},
+	{
+		name: 'quiz-creator',
+		path: '/admin/app/quizes/new',
+		component: require('js/admin/components/quizes/edit/QuizQuestionCreate.vue')
 	},
 	{
 		name: 'flashcards-sets',

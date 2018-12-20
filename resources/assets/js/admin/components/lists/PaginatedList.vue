@@ -14,7 +14,7 @@
 		/>
 
 		<template v-if="!isLoading">
-			<slot name="list" v-if="!isEmpty(list)" :list="list" />
+			<slot name="list" v-if="!isEmpty(list)" :list="list"/>
 			<div class="title is-6" v-else>Nic tu nie ma...</div>
 		</template>
 		<wnl-text-loader v-else></wnl-text-loader>
@@ -33,7 +33,7 @@
 	@import 'resources/assets/sass/variables'
 	.pagination /deep/ .pagination-list
 		justify-content: center
-		margin-bottom: $margin-medium
+		margin: $margin-base 0
 
 	.search
 		margin-bottom: $margin-base
@@ -45,7 +45,7 @@ import {isEmpty} from 'lodash';
 
 import WnlPagination from 'js/components/global/Pagination';
 import WnlSearchInput from 'js/components/global/SearchInput';
-import {getApiUrl} from '../../../utils/env';
+import {getApiUrl} from 'js/utils/env';
 
 export default {
 	components: {
@@ -74,6 +74,10 @@ export default {
 		customRequestParams: {
 			type: Object,
 			default: () => ({}),
+		},
+		dirty: {
+			type: Boolean,
+			default: false
 		}
 	},
 	methods: {
@@ -102,7 +106,6 @@ export default {
 			this.fetch();
 		},
 		async onSearch({phrase, fields}) {
-			this.page = 1;
 			this.searchPhrase = phrase;
 			this.searchFields = fields;
 
@@ -111,16 +114,28 @@ export default {
 		async fetch() {
 			try {
 				this.isLoading = true;
-				const response = await axios.post(getApiUrl(this.resourceName), this.getRequestParams());
+				if (this.requestCancelTokenSource) {
+					// cancel previous request
+					this.requestCancelTokenSource.cancel();
+				}
+				this.requestCancelTokenSource = axios.CancelToken.source();
+
+				const response = await axios.post(
+					getApiUrl(this.resourceName),
+					this.getRequestParams(),
+					{ cancelToken: this.requestCancelTokenSource.token }
+				);
 				const {data: {data, ...paginationMeta}} = response;
 				this.list = data;
 				this.lastPage = paginationMeta.last_page;
 			} catch (error) {
-				this.addAutoDismissableAlert({
-					text: 'Ops, nie udało się pobrać listy. Odśwież stronę i spróbuj jeszcze raz',
-					type: 'error'
-				});
-				$wnl.logger.capture(error);
+				if (!axios.isCancel(error)) {
+					this.addAutoDismissableAlert({
+ 						text: 'Ups, nie udało się pobrać listy. Odśwież stronę, żeby spróbować ponownie.',
+						type: 'error'
+					});
+					$wnl.logger.capture(error);
+				}
 			} finally {
 				this.isLoading = false;
 			}
@@ -131,8 +146,14 @@ export default {
 	},
 	watch: {
 		customRequestParams() {
-			this.page = 1;
 			this.fetch();
+		},
+		async dirty() {
+			if (this.dirty) {
+				await this.fetch();
+			}
+
+			this.$emit('updated');
 		}
 	}
 };

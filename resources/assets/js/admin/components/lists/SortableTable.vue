@@ -46,13 +46,45 @@ export default {
 			default: 'asc',
 		}
 	},
-	methods: {
-		changeOrder(name) {
-			this.$emit('changeOrder', {
-				sortDirection: this.activeSortColumnName === name && this.sortDirection === 'asc' ? 'desc' : 'asc',
-				activeSortColumnName: name
-			});
+	computed: {
+		routerSortDirection() {
+			return this.$route.query.sortDirection || 'asc';
+		},
+		routerSort() {
+			return this.$route.query.sort;
 		},
 	},
+	methods: {
+		changeOrder(name) {
+			const sortDirection = this.activeSortColumnName === name && this.sortDirection === 'asc' ? 'desc' : 'asc';
+
+			this.$emit('changeOrder', {
+				sortDirection,
+				activeSortColumnName: name,
+			});
+
+			this.$router.push({ query: { ...this.$route.query, sortDirection, sort: name }});
+		},
+	},
+	mounted() {
+		if (this.routerSort && (this.routerSortDirection !== this.sortDirection || this.routerSort !== this.activeSortColumnName)) {
+			this.$emit('changeOrder', {
+				sortDirection: this.routerSortDirection,
+				activeSortColumnName: this.routerSort,
+			});
+		}
+	},
+	watch: {
+		sortDirection(newVal) {
+			if (this.routerSortDirection !== newVal) {
+				this.$router.push({ query: { ...this.$route.query, sortDirection: newVal }});
+			}
+		},
+		activeSortColumnName(newVal) {
+			if (this.routerSort !== newVal) {
+				this.$router.push({ query: { ...this.$route.query, sort: newVal }});
+			}
+		}
+	}
 };
 </script>

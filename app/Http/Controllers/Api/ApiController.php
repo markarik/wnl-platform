@@ -252,7 +252,7 @@ class ApiController extends Controller
 		});
 
 		$model->withCount(array_map(function($include) {
-			return str_replace(self::WITH_COUNT_INCLUDE_SUFFIX, '', $include);
+			return Str::replaceLast(self::WITH_COUNT_INCLUDE_SUFFIX, '', $include);
 		}, $withCountIncludes));
 
 		return $model;

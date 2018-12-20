@@ -1,6 +1,6 @@
 <template>
 	<div class="orders-list">
-		<wnl-api-sortable-table
+		<wnl-paginated-sortable-table
 			:resourceName="'tags/.filter'"
 			:columns="columns"
 			:customRequestParams="{include: 'taggables_count'}"
@@ -17,7 +17,7 @@
 				<td>{{tag.taggables_count}}</td>
 			</tr>
 			</tbody>
-		</wnl-api-sortable-table>
+		</wnl-paginated-sortable-table>
 	</div>
 </template>
 
@@ -27,11 +27,13 @@
 </style>
 
 <script>
-import WnlApiSortableTable from 'js/admin/components/lists/ApiSortableTable';
+import { get } from 'lodash';
+
+import WnlPaginatedSortableTable from 'js/admin/components/lists/PaginatedSortableTable';
 
 export default {
 	components: {
-		WnlApiSortableTable,
+		WnlPaginatedSortableTable,
 	},
 	data() {
 		return {
@@ -59,7 +61,7 @@ export default {
 			const {included = {}, ...list} = data;
 
 			return Object.values(list).map(item => {
-				item.taggables_count = included.taggables_count && included.taggables_count[item.id] && included.taggables_count[item.id].taggables_count;
+				item.taggables_count = get(included, `taggables_count.${item.id}.taggables_count`);
 				return item;
 			});
 		}

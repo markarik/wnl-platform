@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers\Api\Filters;
 
+use Illuminate\Database\Query\Builder;
+
 class TaggableFilter extends ApiFilter
 {
 	protected $expected = ['tag_id'];

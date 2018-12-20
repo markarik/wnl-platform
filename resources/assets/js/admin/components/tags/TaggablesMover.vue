@@ -25,7 +25,7 @@ export default {
 	props: {
 		beforeSubmit: {
 			type: Function,
-			default: null,
+			default: () => undefined,
 		},
 		sourceTagId: {
 			type: Number|String,

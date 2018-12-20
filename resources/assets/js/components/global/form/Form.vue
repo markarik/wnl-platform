@@ -27,21 +27,48 @@ export default {
 		'wnl-submit': Submit,
 	},
 	mixins: [ alerts ],
-	// TODO: Introduce an options prop for better readability
-	props: [
-		'name',
-		'method',
-		'resourceRoute',
-		'attach',
-		'populate',
-		'hideDefaultSubmit',
-		'suppressEnter',
-		'resetAfterSubmit',
-		'loading',
-		'submitError',
-		'value',
-		'beforeSubmit',
-	],
+	props: {
+		name: {
+			type: String,
+			required: true,
+		},
+		method: {
+			type: String,
+			required: true,
+		},
+		resourceRoute: {
+			type: String,
+			required: true,
+		},
+		attach: {
+			type: Object,
+			default: () => ({}),
+		},
+		populate: {
+			// TODO make type consistent
+			default: false,
+		},
+		hideDefaultSubmit: {
+			// TODO make type consistent
+			default: false,
+		},
+		suppressEnter: {
+			// TODO make type consistent
+			default: false,
+		},
+		resetAfterSubmit: {
+			// TODO make type consistent
+			default: false,
+		},
+		submitError: {
+			type: Boolean,
+			default: false,
+		},
+		beforeSubmit: {
+			type: Function,
+			default: () => undefined,
+		},
+	},
 	computed: {
 		anyErrors() {
 			return this.getter('anyErrors');
@@ -88,13 +115,11 @@ export default {
 				return false;
 			}
 
-			if (this.beforeSubmit instanceof Function) {
-				try {
-					await this.beforeSubmit();
-				} catch (error) {
-					$wnl.logger.info('Form submit was cancelled', error);
-					return;
-				}
+			try {
+				await this.beforeSubmit();
+			} catch (error) {
+				$wnl.logger.info('Form submit was cancelled', error);
+				return;
 			}
 
 			this.action('submitForm', {

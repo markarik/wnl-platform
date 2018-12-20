@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-modal">
-		<div class="modal" :class="{ 'is-active': isModalVisible }">
+		<div class="modal is-active">
 			<div class="modal-background" @click.stop="$emit('closeModal')"></div>
 			<div class="modal-content">
 				<div class="box">
@@ -31,16 +31,5 @@
 <script>
 export default {
 	name: 'Modal',
-	props: {
-		isModalVisible: {
-			type: Boolean,
-			default: false
-		}
-	},
-	methods: {
-		emitCloseModal() {
-			this.$emit('closeModal');
-		}
-	}
 };
 </script>

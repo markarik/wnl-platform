@@ -17,7 +17,7 @@
 				</ul>
 			</div>
 		</div>
-		<wnl-modal :isModalVisible="modalVisible" @closeModal="toggleModal(false)" v-if="modalVisible">
+		<wnl-modal @closeModal="toggleModal(false)" v-if="modalVisible">
 			<wnl-user-profile-modal :author="modalUser"/>
 		</wnl-modal>
 	</div>

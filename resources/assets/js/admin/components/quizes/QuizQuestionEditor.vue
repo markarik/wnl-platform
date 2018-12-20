@@ -187,7 +187,7 @@ export default {
 		return {
 			questionQuillContent: '',
 			explanationQuillContent: '',
-			attach: null
+			attach: {}
 		};
 	},
 	props: ['isEdit'],

@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<wnl-alert class="wnl-global-notification"
+	<div class="wnl-alerts">
+		<wnl-alert class="wnl-alert"
 			v-for="alert in alerts"
 			:key="alert.id"
 			:type="alert.type"
@@ -13,12 +13,13 @@
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
-	.wnl-global-notification
+	.wnl-alerts
 		position: absolute
 		width: 100vw
 		z-index: $z-index-alerts
 		text-align: center
 
+	.wnl-alert
 		/deep/ .notification
 			strong
 				color: inherit

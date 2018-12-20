@@ -44,8 +44,7 @@
 		>
 			<div slot="header">
 				<h3 class="title is-3">List elementów powiązanych</h3>
-				<div>
-					<h4 class="title is-4">Filtry</h4>
+				<div class="filters">
 					<div class="field" v-for="filter in taggableTypeFilters" :key="filter.name">
 						<input type="checkbox" :id="`filter${filter.name}`" :value="filter.name" v-model="selectedFilters" class="is-checkradio">
 						<label :for="`filter${filter.name}`" class="checkbox">{{filter.label}}</label>
@@ -94,6 +93,11 @@
 		color: $color-gray-dimmed
 		font-style: italic
 		font-size: 12px
+
+	.filters
+		display: flex
+		flex-wrap: wrap
+		margin-bottom: $margin-base
 </style>
 
 <script>

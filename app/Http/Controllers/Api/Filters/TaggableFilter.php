@@ -11,6 +11,10 @@ class TaggableFilter extends ApiFilter
 
 	protected function collection($builder)
 	{
+		if (!empty($this->params['taggable_types'])) {
+			$builder = $builder->whereIn('taggable_type', $this->params['taggable_types']);
+		}
+
 		return $builder->where('tag_id', $this->params['tag_id']);
 	}
 }

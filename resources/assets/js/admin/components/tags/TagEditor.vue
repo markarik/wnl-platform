@@ -39,7 +39,7 @@
 		<wnl-paginated-sortable-table
 			:resourceName="'taggables/.filter'"
 			:columns="columns"
-			:customRequestParams="{filters: [{taggable: {'tag_id': id}}]}"
+			:customRequestParams="{filters: [{taggable: {tag_id: id}}]}"
 		>
 			<h3 slot="header">List elementów powiązanych</h3>
 			<tbody slot-scope="slotProps" slot="tbody">

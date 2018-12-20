@@ -137,33 +137,33 @@ export default {
 				},
 			],
 			taggableTypeFilters: {
-				['App\\Models\\Lesson']: {
+				'App\\Models\\Lesson': {
 					label: 'Lekcje',
 					getLink: (id) => `/app/courses/1/lessons/${id}`
 				},
-				['App\\Models\\Page']: {
+				'App\\Models\\Page': {
 					label: 'Strony',
-					getLink: () => ''
+					getLink: () => undefined
 				},
-				['App\\Models\\Screen']: {
+				'App\\Models\\Screen': {
 					name: 'App\\Models\\Screen',
 					label: 'Screeny',
-					getLink: () => ''
+					getLink: () => undefined
 				},
-				['App\\Models\\Slide']: {
+				'App\\Models\\Slide': {
 					label: 'Slajdy',
 					getLink: (id) => `/admin/app/slides/edit?slideId=${id}`
 				},
-				['App\\Models\\QnaQuestion']: {
+				'App\\Models\\QnaQuestion': {
 					name: 'App\\Models\\QnaQuestion',
 					label: 'QnaQuestion',
-					getLink: () => ''
+					getLink: () => undefined
 				},
-				['App\\Models\\QuizQuestion']: {
+				'App\\Models\\QuizQuestion': {
 					label: 'QuizQuestion',
 					getLink: (id) => `/app/questions/single/${id}`
 				},
-				['App\\Models\\Annotation']: {
+				'App\\Models\\Annotation': {
 					label: 'Anotacje',
 					getLink: (id) => `/admin/app/annotations?q=${id}&fields=id`
 				},

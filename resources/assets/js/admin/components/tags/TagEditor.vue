@@ -47,6 +47,12 @@
 			<tr v-for="taggable in slotProps.list" :key="taggable.id">
 				<td>{{taggable.taggable_id}}</td>
 				<td>{{taggable.taggable_type}}</td>
+				<td>
+					<a :href="getTaggableLink(taggable)" target="_blank" v-if="getTaggableLink(taggable)">
+						Przejdź do elementu
+					</a>
+					<span class="table-cell--no-link" v-else>nie umiemy zrobić linka dla tego zasobu</span>
+				</td>
 			</tr>
 			</tbody>
 		</wnl-paginated-sortable-table>
@@ -74,6 +80,11 @@
 
 		.submit
 			width: auto
+
+	.table-cell--no-link
+		color: $color-gray-dimmed
+		font-style: italic
+		font-size: 12px
 </style>
 
 <script>
@@ -101,6 +112,11 @@ export default {
 				{
 					name: 'taggable_type',
 					label: 'Typ elementu',
+				},
+				{
+					label: 'Link',
+					name: 'link',
+					sortable: false
 				},
 			]
 		};
@@ -143,6 +159,19 @@ export default {
 		onTagDeleted() {
 			this.$router.push({ name: 'tags' });
 		},
+		getTaggableLink({taggable_type, taggable_id}) {
+			switch (taggable_type) {
+			case 'App\\Models\\QuizQuestion':
+				return `/app/questions/single/${taggable_id}`;
+			case 'App\\Models\\Lesson':
+				return `/app/courses/1/lessons/${taggable_id}`;
+			case 'App\\Models\\Annotation':
+				return `/admin/app/annotations?q=${taggable_id}&fields=id`;
+			case 'App\\Models\\Slide':
+				return `/admin/app/slides/edit?slideId=${taggable_id}`;
+			}
+			return '';
+		}
 	}
 };
 </script>

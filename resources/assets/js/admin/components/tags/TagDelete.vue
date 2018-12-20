@@ -8,7 +8,6 @@
 			:title="!isDeleteAllowed && 'Nie można usunąć tego tagu ponieważ należy do taksonomii lub jest kategorią lub taguje lekcję albo stronę'"
 		>Usuń</button>
 		<wnl-modal
-			:isModalVisible="isTaggablesMoverVisible"
 			@closeModal="onCloseModal"
 			v-if="isTaggablesMoverVisible"
 		>

@@ -80,6 +80,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// Taggables
 		Route::post("{$r['taggables']}/batch_move/{source_tag_id}", 'TaggablesApiController@batchMove');
+		Route::post("{$r['taggables']}/.filter", 'TaggablesApiController@filter');
 	});
 
 	// Count

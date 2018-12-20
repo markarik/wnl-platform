@@ -1,40 +1,55 @@
 <template>
-	<wnl-form
-		:method="method"
-		:resource-route="resourceRoute"
-		:populate="isEdit"
-		:hideDefaultSubmit="true"
-		@change="onChange"
-		@submitSuccess="onSubmitSuccess"
-		name="TagEditor"
-		class="editor"
-	>
-		<div class="header">
-			<h2 class="title is-2">Edycja tagu <span v-if="isEdit">(Id: {{id}})</span></h2>
-			<div class="field is-grouped">
-				<wnl-tag-delete
-					:id="id"
-					:isDeleteAllowed="formData.is_delete_allowed"
-					:taggablesCount="formData.taggables_count"
-					@tagDeleted="onTagDeleted"
-				>Usuń</wnl-tag-delete>
-				<wnl-submit class="submit"/>
-				</div>
-		</div>
-		<wnl-form-text
-			name="name"
-			class="margin top bottom"
-			:disabled="!formData.is_rename_allowed"
-		>Nazwa</wnl-form-text>
-		<wnl-form-text
-			name="color"
-			class="margin top bottom"
-		>Kolor (RRGGBB)</wnl-form-text>
-		<wnl-textarea
-			name="description"
-			class="margin top bottom"
-		>Opis</wnl-textarea>
-	</wnl-form>
+	<div>
+		<wnl-form
+			:method="method"
+			:resource-route="resourceRoute"
+			:populate="isEdit"
+			:hideDefaultSubmit="true"
+			@change="onChange"
+			@submitSuccess="onSubmitSuccess"
+			name="TagEditor"
+			class="editor"
+		>
+			<div class="header">
+				<h2 class="title is-2">Edycja tagu <span v-if="isEdit">(Id: {{id}})</span></h2>
+				<div class="field is-grouped">
+					<wnl-tag-delete
+						:id="id"
+						:isDeleteAllowed="formData.is_delete_allowed"
+						:taggablesCount="formData.taggables_count"
+						@tagDeleted="onTagDeleted"
+					>Usuń</wnl-tag-delete>
+					<wnl-submit class="submit"/>
+					</div>
+			</div>
+			<wnl-form-text
+				name="name"
+				class="margin top bottom"
+				:disabled="!formData.is_rename_allowed"
+			>Nazwa</wnl-form-text>
+			<wnl-form-text
+				name="color"
+				class="margin top bottom"
+			>Kolor (RRGGBB)</wnl-form-text>
+			<wnl-textarea
+				name="description"
+				class="margin top bottom"
+			>Opis</wnl-textarea>
+		</wnl-form>
+		<wnl-paginated-sortable-table
+			:resourceName="'taggables/.filter'"
+			:columns="columns"
+			:customRequestParams="{filters: [{taggable: {'tag_id': id}}]}"
+		>
+			<h3 slot="header">List elementów powiązanych</h3>
+			<tbody slot-scope="slotProps" slot="tbody">
+			<tr v-for="taggable in slotProps.list" :key="taggable.id">
+				<td>{{taggable.taggable_id}}</td>
+				<td>{{taggable.taggable_type}}</td>
+			</tr>
+			</tbody>
+		</wnl-paginated-sortable-table>
+	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -65,6 +80,7 @@ import { get } from 'lodash';
 
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
 import WnlTagDelete from 'js/admin/components/tags/TagDelete';
+import WnlPaginatedSortableTable from 'js/admin/components/lists/PaginatedSortableTable';
 
 export default {
 	props: {
@@ -75,7 +91,17 @@ export default {
 	},
 	data() {
 		return {
-			formData: {}
+			formData: {},
+			columns: [
+				{
+					name: 'taggable_id',
+					label: 'Id',
+				},
+				{
+					name: 'taggable_type',
+					label: 'Typ elementu',
+				},
+			]
 		};
 	},
 	computed: {
@@ -95,6 +121,7 @@ export default {
 		WnlSubmit,
 		WnlTagDelete,
 		WnlTextarea,
+		WnlPaginatedSortableTable,
 	},
 	methods: {
 		onChange({formData}) {

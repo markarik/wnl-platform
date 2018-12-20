@@ -128,6 +128,7 @@ export default {
 				const {data: {data, ...paginationMeta}} = response;
 				this.list = data;
 				this.lastPage = paginationMeta.last_page;
+				this.isLoading = false;
 			} catch (error) {
 				if (!axios.isCancel(error)) {
 					this.addAutoDismissableAlert({
@@ -135,9 +136,8 @@ export default {
 						type: 'error'
 					});
 					$wnl.logger.capture(error);
+					this.isLoading = false;
 				}
-			} finally {
-				this.isLoading = false;
 			}
 		},
 	},

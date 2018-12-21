@@ -20,7 +20,7 @@ export default (Vue, {store, router}) => {
 	window.axios.interceptors.response.use(
 		(response) => Promise.resolve(response),
 		(error) => {
-			if (error.response.status === 403) {
+			if (error.response && error.response.status === 403) {
 				const isSuspended = !!get(error, 'response.data.account_suspended');
 
 				if (isSuspended) {
@@ -28,7 +28,7 @@ export default (Vue, {store, router}) => {
 					return store.commit(types.USERS_SET_ACCOUNT_SUSPENDED, true);
 				}
 			}
-			if (error.response.status === 401) {
+			if (error.response && error.response.status === 401) {
 				window.location.replace('/login');
 			}
 

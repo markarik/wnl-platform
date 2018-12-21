@@ -114,7 +114,9 @@ export default {
 		}
 	},
 	mounted() {
-		if (this.$route.query.q !== this.searchPhrase || !isEqual(this.searchFields, this.routerSearchFields)) {
+		const query = this.$route.query.q || '';
+
+		if (query !== this.searchPhrase || !isEqual(this.searchFields, this.routerSearchFields)) {
 			this.searchPhrase = this.$route.query.q;
 			this.searchFields = this.routerSearchFields;
 			this.emitSearch();

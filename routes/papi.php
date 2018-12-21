@@ -68,8 +68,19 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::put("{$r['groups']}/{id}", 'GroupsApiController@put');
 
 		// Lessons
+		Route::post("{$r['lessons']}/.filter", 'LessonsApiController@filter');
 		Route::post("{$r['lessons']}", 'LessonsApiController@post');
 		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
+
+		// Tags
+		Route::post("{$r['tags']}", 'TagsApiController@post');
+		Route::put("{$r['tags']}/{id}", 'TagsApiController@put');
+		Route::delete("{$r['tags']}/{id}", 'TagsApiController@delete');
+		Route::post("{$r['tags']}/.filter", 'TagsApiController@filter');
+
+		// Taggables
+		Route::post("{$r['taggables']}/batch_move/{source_tag_id}", 'TaggablesApiController@batchMove');
+		Route::post("{$r['taggables']}/.filter", 'TaggablesApiController@filter');
 	});
 
 	// Count

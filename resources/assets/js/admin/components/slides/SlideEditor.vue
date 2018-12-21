@@ -1,11 +1,11 @@
 <template>
 	<div class="slides-editor">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
-		   :alert="alert"
-		   cssClass="fixed"
-		   :key="timestamp"
-		   :timestamp="timestamp"
-		   @delete="onDelete"
+			:alert="alert"
+			cssClass="fixed"
+			:key="timestamp"
+			:timestamp="timestamp"
+			@delete="onDelete"
 		/>
 		<p class="title is-3">{{title}}</p>
 
@@ -17,7 +17,7 @@
 		</div>
 
 		<form class="" action="" method="POST" @submit.prevent="onSubmit"
-			  @keydown="form.errors.clear($event.target.name)">
+				@keydown="form.errors.clear($event.target.name)">
 
 			<template v-if="form.quiz_questions && form.quiz_questions.length">
 				<span class="subtitle is-5">Pytania powiązane ze slajdem #{{slideId}}:</span>
@@ -49,43 +49,43 @@
 						<div>Na pewno?</div>
 						<a class="button" @click="confirmDetach=false">Nie</a>
 						<a class="button is-danger"
-						   @click="detachSlide">
+							 @click="detachSlide">
 							Tak
 						</a>
 					</div>
 					<div class="level-item" v-else="">
 						<a class="button is-danger"
-						   :class="{'is-loading': detachingSlide}"
-						   :disabled="!this.slideId && !this.screenId"
-						   @click="confirmDetach=true">Usuń slajd z
+							 :class="{'is-loading': detachingSlide}"
+							 :disabled="!this.slideId && !this.screenId"
+							 @click="confirmDetach=true">Usuń slajd z
 							prezentacji</a>
 					</div>
 				</div>
 				<div class="level-right">
 					<div class="level-item">
 						<a class="button is-primary"
-						   :class="{'is-loading': updatingChart}"
-						   v-if="chartReady" @click="updateChart">
+							 :class="{'is-loading': updatingChart}"
+							 v-if="chartReady" @click="updateChart">
 							Aktualizuj diagram</a>
 					</div>
 					<slot name="action"/>
 					<div class="level-item">
 						<a class="button"
-						   :disabled="!this.slideId && !this.screenId"
-						   @click="preview">Podgląd</a>
+							 :disabled="!this.slideId && !this.screenId"
+							 @click="preview">Podgląd</a>
 					</div>
 					<div class="level-item">
 						<a class="button is-primary"
-						   :class="{'is-loading': loading}"
-						   :disabled="form.errors.any() || !form.content"
-						   @click="onSubmit">Zapisz slajd</a>
+							 :class="{'is-loading': loading}"
+							 :disabled="form.errors.any() || !form.content"
+							 @click="onSubmit">Zapisz slajd</a>
 					</div>
 				</div>
 			</div>
 		</form>
 		<wnl-slide-preview :showModal="showPreviewModal"
-						   :content="previewModalContent"
-						   @closeModal="showPreviewModal=false"/>
+							 :content="previewModalContent"
+							 @closeModal="showPreviewModal=false"/>
 	</div>
 </template>
 
@@ -106,6 +106,7 @@
 </style>
 
 <script>
+import {mapActions} from 'vuex';
 import Form from 'js/classes/forms/Form';
 import {getApiUrl} from 'js/utils/env';
 import Code from 'js/admin/components/forms/Code';
@@ -189,6 +190,7 @@ export default {
 		}
 	},
 	methods: {
+		...mapActions(['addAutoDismissableAlert']),
 		reset() {
 			this.submissionFailed = false;
 		},
@@ -290,7 +292,14 @@ export default {
 	},
 	watch: {
 		resourceUrl(newValue, oldValue) {
-			newValue !== '' && this.form.populate(`${this.resourceUrl}?include=quiz_questions`, this.excluded);
+			newValue !== '' && this.form.populate(`${this.resourceUrl}?include=quiz_questions`, this.excluded)
+				.catch(error => {
+					const statusCode = _.get(error, 'response.status');
+					statusCode === 404 && this.addAutoDismissableAlert({
+						type: 'error',
+						text: 'Slajd o tym ID nie istnieje'
+					});
+				});
 		},
 		content(newValue, oldValue) {
 			this.removeCourseTags();

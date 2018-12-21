@@ -1868,6 +1868,25 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Taggable
+ *
+ * @property int $id
+ * @property int $tag_id
+ * @property int $taggable_id
+ * @property string $taggable_type
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereTagId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereTaggableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taggable whereTaggableType($value)
+ */
+	class Taggable extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Subsection
  *
  * @property int $id

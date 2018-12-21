@@ -2,6 +2,7 @@
 		<wnl-paginated-list
 			:resourceName="resourceName"
 			:customRequestParams="requestParams"
+			:isSearchEnabled="isSearchEnabled"
 		>
 			<template slot="header">
 				<slot name="header"></slot>
@@ -55,6 +56,10 @@ export default {
 		customRequestParams: {
 			type: Object,
 			default: () => ({})
+		},
+		isSearchEnabled: {
+			type: Boolean,
+			default: true,
 		}
 	},
 	computed: {

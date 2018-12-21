@@ -2,7 +2,7 @@ const path    = require('path');
 const webpack = require('webpack');
 const Mix     = require('laravel-mix').config;
 const plugins = require('laravel-mix').plugins;
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 
 /*

@@ -5,7 +5,7 @@
 					<wnl-sortable-table-column-header
 						v-for="column in columns"
 						:key="column.name"
-						@click="changeOrder(column.name)"
+						@click="changeOrder(column)"
 						:label="column.label"
 						:is-active="column.name === activeSortColumnName"
 						:sort-direction="sortDirection"
@@ -55,7 +55,8 @@ export default {
 		},
 	},
 	methods: {
-		changeOrder(name) {
+		changeOrder({name, sortable = true}) {
+			if (!sortable) return;
 			const sortDirection = this.activeSortColumnName === name && this.sortDirection === 'asc' ? 'desc' : 'asc';
 
 			this.$emit('changeOrder', {

@@ -217,7 +217,7 @@ export default {
 		}
 	},
 	beforeDestroy() {
-		   this.destroyQna();
+		this.destroyQna();
 	}
 };
 </script>

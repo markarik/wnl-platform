@@ -204,11 +204,7 @@ const getters = {
 		return tags.map((id) => state.tags[id]);
 	},
 	questionAnswersFromHighestUpvoteCount: (state, getters) => (id) => {
-		return _.reverse(
-			_.sortBy(
-				getters.questionAnswers(id), (answer) => answer.upvote.count
-			)
-		);
+		return getters.questionAnswers(id).sort((answerA, answerB) => answerB.upvote.count - answerA.upvote.count);
 	},
 };
 
@@ -233,7 +229,6 @@ const mutations = {
 			let question = data[key];
 			set(state.qna_questions, question.id, question);
 		});
-		// set(state, 'questionsIds', questionsIds)
 	},
 	[types.QNA_UPDATE_QUESTION] (state, payload) {
 		let id = payload.questionId,

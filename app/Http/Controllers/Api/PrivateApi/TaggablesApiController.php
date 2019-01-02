@@ -25,10 +25,10 @@ class TaggablesApiController extends ApiController {
 			->whereIn('taggable_type', Taggable::PROTECTED_TAGGABLE_TYPES)
 			->count();
 
-		// TODO Is this necessary? If so, replace this comment with the reason for it
+		// We don't want a situation where a taggables move causes QnA questions to be merged between lessons
 		if ($protectedTaggablesCount > 0) {
 			return $this->respondUnprocessableEntity([
-				'message' => 'Some of the taggables are protected'
+				'message' => __('tags.errors.move-protected-taggables')
 			]);
 		}
 

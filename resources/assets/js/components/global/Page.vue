@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="content">
 		<div class="page content" v-html="content"></div>
 		<wnl-qna :tags="tags" :reactionsDisabled="true" v-if="qna"></wnl-qna>

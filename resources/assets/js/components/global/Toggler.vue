@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="switch" :class="classObject">
 		<input type="checkbox" :name="name" :disabled="disabled" :value="value" @input="$emit('toggle')">
 	</div>

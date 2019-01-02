@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="scrollable-container" @scroll="pullConversations" >
 		<div class="rooms-header" v-if="withSearch">
 			<header>{{$t('messages.dashboard.privateMessages')}}</header>

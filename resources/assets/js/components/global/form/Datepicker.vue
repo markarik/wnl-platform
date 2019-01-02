@@ -87,7 +87,8 @@ export default {
 		}
 	},
 	watch: {
-		config: this.redraw,
+		// TODO
+		// config: this.redraw,
 		inputValue: function(val) {
 			this.setDate(val * 1000);
 		}

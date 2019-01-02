@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<svg><use :xlink:href="href"/></svg>
 </template>
 

@@ -3,6 +3,7 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
+// TODO fix require in the entire repo
 let routes = [
 	{
 		name: 'lessons',

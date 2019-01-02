@@ -1,4 +1,5 @@
 let mix = require('laravel-mix');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 /*
  |--------------------------------------------------------------------------
@@ -43,46 +44,46 @@ if (process.env.SYNC === 'on') {
 mix.options({ extractVueStyles: true });
 
 mix.webpackConfig({
-	module: {
-		rules: [
-			{
-				test: /\.vue$/,
-				loader: 'vue-loader'
-			},
-
-			{
-				test: /\.css$/,
-				loaders: ['style-loader', 'css-loader']
-			},
-
-			{
-				test: /\.s[ac]ss$/,
-				include: /node_modules/,
-				loaders: ['style-loader', 'css-loader', 'sass-loader']
-			},
-
-			{
-				test: /\.html$/,
-				loaders: ['html-loader']
-			},
-
-			{
-				test: /\.(png|jpe?g|gif)$/,
-				loader: 'file-loader',
-				options: {
-					name: 'images/[name].[ext]?[hash]',
-				}
-			},
-
-			{
-				test: /\.(woff2?|ttf|eot|svg|otf)$/,
-				loader: 'file-loader',
-				options: {
-					name: 'fonts/[name].[ext]?[hash]',
-				}
-			},
-		],
-	},
+	// module: {
+	// 	rules: [
+	// 		{
+	// 			test: /\.vue$/,
+	// 			loader: 'vue-loader'
+	// 		},
+	//
+	// 		{
+	// 			test: /\.css$/,
+	// 			loaders: ['style-loader', 'css-loader']
+	// 		},
+	//
+	// 		{
+	// 			test: /\.s[ac]ss$/,
+	// 			include: /node_modules/,
+	// 			loaders: ['style-loader', 'css-loader', 'sass-loader']
+	// 		},
+	//
+	// 		{
+	// 			test: /\.html$/,
+	// 			loaders: ['html-loader']
+	// 		},
+	//
+	// 		{
+	// 			test: /\.(png|jpe?g|gif)$/,
+	// 			loader: 'file-loader',
+	// 			options: {
+	// 				name: 'images/[name].[ext]?[hash]',
+	// 			}
+	// 		},
+	//
+	// 		{
+	// 			test: /\.(woff2?|ttf|eot|svg|otf)$/,
+	// 			loader: 'file-loader',
+	// 			options: {
+	// 				name: 'fonts/[name].[ext]?[hash]',
+	// 			}
+	// 		},
+	// 	],
+	// },
 	resolve: {
 		extensions: ['*', '.js', '.jsx', '.vue'],
 

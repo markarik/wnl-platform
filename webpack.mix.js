@@ -1,5 +1,4 @@
-let mix = require('laravel-mix');
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -31,7 +30,7 @@ mix/*.sass('resources/assets/sass/app.scss', 'public/css/app.css', sassOptions)
 	.js('resources/assets/js/guest.js', 'public/js/guest.js')
 	.js('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
 	.js('resources/assets/js/notSupportedBrowserModal.js', 'public/js/notSupportedBrowserModal.js')
-	.js('resources/vendor/imageviewer/imageviewer.js', 'public/js/imageviewer.js')
+	.js('resources/vendor/imageviewer/imageviewer.js', 'public/js/imageviewer.js');
 
 if (mix.config.inProduction) {
 	mix.version();
@@ -40,8 +39,6 @@ if (mix.config.inProduction) {
 if (process.env.SYNC === 'on') {
 	mix.browserSync('platforma.wnl');
 }
-
-mix.options({ extractVueStyles: true });
 
 mix.webpackConfig({
 	// module: {

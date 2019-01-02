@@ -43,7 +43,7 @@
 			:customRequestParams="requestParams"
 		>
 			<div slot="header">
-				<h3 class="title is-3">List elementów powiązanych</h3>
+				<h3 class="title is-3">Lista elementów powiązanych</h3>
 				<div class="filters">
 					<div class="field" v-for="(filter, model) in taggableTypeFilters" :key="model">
 						<input type="checkbox" :id="`filter${model}`" :value="model" v-model="selectedFilters" class="is-checkradio">

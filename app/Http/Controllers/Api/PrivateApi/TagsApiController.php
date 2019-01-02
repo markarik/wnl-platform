@@ -82,6 +82,14 @@ class TagsApiController extends ApiController {
 			]);
 		}
 
+		// Last defense
+		if (!$tag->isDeleteAllowed()) {
+			return $this->respondUnprocessableEntity([
+				'message' => __('tags.errors.delete-disallowed')
+			]);
+		}
+
+
 		$tag->delete();
 
 		return $this->respondOk();

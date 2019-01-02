@@ -4,7 +4,9 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Course\MoveTaggable;
 use App\Models\Tag;
 use App\Models\Taggable;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TaggablesApiController extends ApiController {
 	public function __construct(Request $request) {
@@ -32,13 +34,29 @@ class TaggablesApiController extends ApiController {
 
 		$targetTag = Tag::find($request->get('target_tag_id'));
 
-		$taggablesMoved = Taggable::where('tag_id', $sourceTag->id)
-			// Warning: mass update doesn't fire model events
-			// At this point, there are no events for the Taggable model
-			->update(['tag_id' => $targetTag->id]);
+		$transactionResult = DB::transaction(function () use ($targetTag, $sourceTag) {
+			$taggablesDeleted = Taggable::where('tag_id', $sourceTag->id)
+				->whereExists(function ($query) use ($targetTag) {
+					/** @var $query Builder */
+					$query->select(DB::raw(1))
+						// If you're doing a DELETE on a table, you can't reference that table in a subquery
+						// Force MySQL to use a temporary table
+						// https://stackoverflow.com/a/14302701
+						->from(DB::raw('(select tag_id from taggables) as t2'))
+						->where('t2.tag_id', '=', $targetTag->id);
+				})->delete();
 
-		return $this->respondOk([
-			'taggables_moved' => $taggablesMoved
-		]);
+			$taggablesMoved = Taggable::where('tag_id', $sourceTag->id)
+				// Warning: mass update doesn't fire model events
+				// At this point, there are no events for the Taggable model
+				->update(['tag_id' => $targetTag->id]);
+
+			return [
+				'taggables_deleted' => $taggablesDeleted,
+				'taggables_moved' => $taggablesMoved
+			];
+		});
+
+		return $this->respondOk($transactionResult);
 	}
 }

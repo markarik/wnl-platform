@@ -3,7 +3,6 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Course\UpdateTag;
 use App\Models\Tag;
-use App\Models\Taggable;
 use Illuminate\Http\Request;
 
 class TagsApiController extends ApiController {
@@ -60,9 +59,6 @@ class TagsApiController extends ApiController {
 	 */
 	public function delete($id) {
 		$tag = Tag::find($id);
-
-		// TODO
-		return $this->respondNotImplemented();
 
 		if (!$tag) {
 			return $this->respondNotFound();

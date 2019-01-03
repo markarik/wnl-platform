@@ -32,6 +32,7 @@ trait ProvidesApiFiltering
 		$this->limit = $request->limit ?? $this->defaultLimit;
 		$this->page = $request->page ?? 1;
 		$randomize = $request->randomize;
+		$cachedPagination = $request->cachedPagination;
 
 		if ($request->saveFilters) {
 			$this->saveActiveFilters($request);
@@ -42,17 +43,18 @@ trait ProvidesApiFiltering
 
 		$model = $this->loadCountIncludes($model);
 
-		if (!empty($randomize)) {
+		if ($randomize) {
 			$response = $this->randomizedResponse($model, $this->limit);
-		} else {
-			if (!$request->has('active') || empty($filters)) {
-				$response = $this->paginatedResponse($model, $this->limit, $this->page);
-			} else {
-				$cacheTags = $this->getFiltersCacheTags($this->resourceName, $userFiltersPersistanceToken);
-				$hashedFilters = $this->hashedFilters($filters);
+		} elseif ($cachedPagination) {
+			// Cached pagination is meant to be used within quiz questions bank only, as it was
+			// developed to address a specific issue while working with solved/unsolved filter.
+			// To be refactored, see https://bethink.atlassian.net/browse/PLAT-868
+			$cacheTags = $this->getFiltersCacheTags($this->resourceName, $userFiltersPersistanceToken);
+			$hashedFilters = $this->hashedFilters($filters);
 
-				$response = $this->cachedPaginatedResponse($cacheTags, $hashedFilters, $model, $this->limit, $this->page);
-			}
+			$response = $this->cachedPaginatedResponse($cacheTags, $hashedFilters, $model, $this->limit, $this->page);
+		} else {
+			$response = $this->paginatedResponse($model, $this->limit, $this->page);
 		}
 
 		$response = array_merge($response, ['active' => $paths]);

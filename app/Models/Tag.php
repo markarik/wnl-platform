@@ -9,6 +9,8 @@ class Tag extends Model
 {
 	use Searchable;
 
+	const PRESENTATION_TAG_NAME = 'Prezentacja';
+
 	protected $fillable = ['name', 'description', 'color'];
 
 	protected $touches = ['questions'];
@@ -62,7 +64,7 @@ class Tag extends Model
 	{
 		// `Prezentacja` tag doesn't have a protected taggable but needs to be protected anyway
 		// It is used to display QnA below presentation but not intro, quiz questions etc.
-		return $this->name !== 'Prezentacja' &&
+		return $this->name !== self::PRESENTATION_TAG_NAME &&
 			// SlidesFromCategory command uses hardcoded tag names
 			!$this->isCategoryTag();
 	}
@@ -71,7 +73,7 @@ class Tag extends Model
 	{
 		// `Prezentacja` tag doesn't have a protected taggable but needs to be protected anyway
 		// It is used to display QnA below presentation but not intro, quiz questions etc.
-		return $this->name !== 'Prezentacja' &&
+		return $this->name !== self::PRESENTATION_TAG_NAME &&
 			!$this->isInTaxonomy() &&
 			!$this->isCategoryTag() &&
 			!$this->hasProtectedTaggable();

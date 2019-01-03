@@ -121,8 +121,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['slides']}/{id}/.detach", 'SlidesApiController@detach');
 		Route::post("{$r['slides']}", 'SlidesApiController@post');
 		Route::post(
-			"{$r['slides']}/category/{tagName}",
-			'SlidesApiController@getFromCategoryByTagName'
+			"{$r['slides']}/category",
+			'SlidesApiController@getFromCategory'
 		);
 
 		// Presentables

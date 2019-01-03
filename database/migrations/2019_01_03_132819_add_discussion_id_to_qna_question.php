@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDiscussableFlagToPages extends Migration
+class AddDiscussionIdToQnaQuestion extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,8 +13,8 @@ class AddDiscussableFlagToPages extends Migration
 	 */
 	public function up()
 	{
-		Schema::table('pages', function (Blueprint $table) {
-			$table->discussable();
+		Schema::table('qna_questions', function (Blueprint $table) {
+			$table->integer('discussion_id')->nullable();
 		});
 	}
 
@@ -25,8 +25,8 @@ class AddDiscussableFlagToPages extends Migration
 	 */
 	public function down()
 	{
-		Schema::table('pages', function (Blueprint $table) {
-			$table->dropDiscussable();
+		Schema::table('qna_questions', function (Blueprint $table) {
+			$table->dropColumn('discussion_id');
 		});
 	}
 }

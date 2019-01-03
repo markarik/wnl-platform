@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDiscussableFlagToPages extends Migration
+class CreateDiscussionsTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,8 +13,9 @@ class AddDiscussableFlagToPages extends Migration
 	 */
 	public function up()
 	{
-		Schema::table('pages', function (Blueprint $table) {
-			$table->discussable();
+		Schema::create('discussions', function (Blueprint $table) {
+			$table->increments('id');
+			$table->timestamps();
 		});
 	}
 
@@ -25,8 +26,6 @@ class AddDiscussableFlagToPages extends Migration
 	 */
 	public function down()
 	{
-		Schema::table('pages', function (Blueprint $table) {
-			$table->dropDiscussable();
-		});
+		Schema::dropIfExists('discussions');
 	}
 }

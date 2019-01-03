@@ -44,9 +44,12 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		onSubmitSuccess({taggables_moved: taggablesMoved}) {
+		onSubmitSuccess({
+			taggables_deleted: taggablesDeleted,
+			taggables_moved: taggablesMoved
+		}) {
 			this.addAutoDismissableAlert({
-				text: `${taggablesMoved} powiązań zostało przeniesionych do wybranego taga.`,
+				text: `${taggablesMoved} powiązań zostało przeniesionych do wybranego taga. ${taggablesDeleted} zduplikowanych powiązań zostało usuniętych.`,
 				type: 'success',
 			});
 

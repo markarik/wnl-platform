@@ -66,7 +66,7 @@ export default {
 		},
 		beforeSubmit: {
 			type: Function,
-			default: () => undefined,
+			default: () => true,
 		},
 	},
 	computed: {
@@ -115,10 +115,8 @@ export default {
 				return false;
 			}
 
-			try {
-				await this.beforeSubmit();
-			} catch (error) {
-				$wnl.logger.info('Form submit was cancelled', error);
+			if (await !this.beforeSubmit()) {
+				$wnl.logger.info('Form submit was cancelled');
 				return;
 			}
 

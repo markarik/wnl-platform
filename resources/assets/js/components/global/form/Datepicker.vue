@@ -88,7 +88,7 @@ export default {
 	},
 	watch: {
 		config(newConfig) {
-			this.redraw(newConfig)
+			this.redraw(newConfig);
 		},
 		inputValue(val) {
 			this.setDate(val * 1000);

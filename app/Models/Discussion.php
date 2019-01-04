@@ -12,11 +12,11 @@ class Discussion extends Model
 		return $this->hasMany('\App\Models\QnaQuestion', 'discussion_id');
 	}
 
-	public function screens() {
-		return $this->morphedByMany('App\Models\Screen', 'discussable');
+	public function screen() {
+		return $this->hasOne('\App\Models\Screen', 'discussion_id');
 	}
 
-	public function pages() {
-		return $this->morphedByMany('App\Models\Page', 'discussable');
+	public function page() {
+		return $this->hasOne('\App\Models\Page', 'discussion_id');
 	}
 }

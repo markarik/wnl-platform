@@ -22,7 +22,8 @@ class MigrateQna extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'PLAT-865 - for each QnA tags combination create a dedicated discussion and attach QnA to it';
+	protected $description = "PLAT-865 - for each QnA tags combination create a dedicated discussion and attach QnA to it.
+	Created discussions are attached to matching screen or page.";
 
 	/**
 	 * Execute the console command.
@@ -96,7 +97,8 @@ class MigrateQna extends Command
 			]);
 			$discussion->questions()->saveMany($matchingQnaQuestions);
 
-			$matchingDiscussable->discussions()->attach($discussion);
+			$matchingDiscussable->discussion()->associate($discussion);
+			$matchingDiscussable->save();
 		}
 
 		$bar->finish();

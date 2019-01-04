@@ -13,8 +13,8 @@ class Page extends Model
 		return $this->morphToMany('App\Models\Tag', 'taggable');
 	}
 
-	public function discussions()
+	public function discussion()
 	{
-		return $this->morphToMany('App\Models\Discussion', 'discussable');
+		return $this->belongsTo('\App\Models\Discussion');
 	}
 }

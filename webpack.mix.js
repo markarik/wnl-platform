@@ -15,8 +15,7 @@ const sassOptions = {
 	implementation: require('node-sass')
 };
 
-mix.sass('resources/assets/sass/app.scss', 'public/css/app.css', sassOptions)
-	.sass('resources/assets/sass/slideshow.sass', 'public/css/slideshow.css', sassOptions);
+mix.sass('resources/assets/sass/app.scss', 'public/css/app.css', sassOptions);
 
 mix.copy('resources/vendor/reveal/reveal-theme.css', 'public/css/reveal.css')
 	.copy('resources/vendor/emoji/emoji.css', 'public/css/emoji.css')

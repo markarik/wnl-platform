@@ -1,10 +1,12 @@
 import $ from 'jquery';
-import { template } from 'lodash';
 import Postmate from 'postmate';
 import Reveal from 'vendor/reveal/reveal';
 import { imageviewer } from 'vendor/imageviewer/imageviewer';
 
 import { timeFromS } from 'js/utils/time';
+
+// It's not used directly but it's needed to import the styles
+import style from '../sass/slideshow.sass';
 
 imageviewer($, window, document);
 

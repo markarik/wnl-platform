@@ -91,13 +91,6 @@ class MigrateQna extends Command
 				$name = "{$matchingDiscussable->lesson->name} - {$matchingDiscussable->name}";
 			}
 
-			$pagesQuery = Page::select();
-			foreach ($tags as $tagId) {
-				$pagesQuery->whereHas('tags', function ($query) use ($tagId) {
-					$query->where('tags.id', $tagId);
-				});
-			}
-
 			$discussion = Discussion::create([
 				'name' => $name
 			]);

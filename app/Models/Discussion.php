@@ -19,9 +19,4 @@ class Discussion extends Model
 	public function pages() {
 		return $this->morphedByMany('App\Models\Page', 'discussable');
 	}
-
-	public function discussables()
-	{
-		return $this->hasMany('App\Models\Discussable');
-	}
 }

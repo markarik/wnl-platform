@@ -44,6 +44,10 @@ export default {
 			type: Object,
 			default: () => ({}),
 		},
+		value: {
+			type: Object,
+			default: () => ({}),
+		},
 		populate: {
 			// TODO make type consistent
 			default: false,

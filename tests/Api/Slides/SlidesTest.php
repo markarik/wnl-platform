@@ -47,8 +47,9 @@ class SlidesTest extends ApiTestCase
 			->actingAs($user)
 			->json(
 				'POST',
-				$this->url("/slides/category/{$desiredTag->name}"),
+				$this->url("/slides/category"),
 				[
+					'tagName' => $desiredTag->name,
 					'slideIds' => $allSlides->pluck('id')
 				]
 			);

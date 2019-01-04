@@ -23,6 +23,10 @@ import WnlAxios from 'js/plugins/axios';
 import EventsTracker from 'js/plugins/events-tracker';
 import $ from 'jquery';
 
+import 'sass/app.scss';
+import 'vendor/emoji/emoji.scss';
+import 'vendor/imageviewer/imageviewer.scss';
+
 window.$ = window.jQuery = $;
 
 // Sync vue-router and vuex

@@ -11,16 +11,6 @@ const mix = require('laravel-mix');
  |
  */
 
-const sassOptions = {
-	implementation: require('node-sass')
-};
-
-mix.sass('resources/assets/sass/app.scss', 'public/css/app.css', sassOptions);
-
-mix.copy('resources/vendor/reveal/reveal-theme.css', 'public/css/reveal.css')
-	.copy('resources/vendor/emoji/emoji.css', 'public/css/emoji.css')
-	.copy('resources/vendor/imageviewer/imageviewer.css', 'public/css/imageviewer.css');
-
 mix.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/admin/admin.js', 'public/js/admin.js')
 	.js('resources/assets/js/payment.js', 'public/js/payment.js')
@@ -84,6 +74,7 @@ mix.webpackConfig({
 		alias: {
 			'vue$': 'vue/dist/vue.common.js',
 			'js': path.resolve(__dirname, 'resources/assets/js'),
+			'sass': path.resolve(__dirname, 'resources/assets/sass'),
 			'vendor': path.resolve(__dirname, 'resources/vendor')
 		},
 	},

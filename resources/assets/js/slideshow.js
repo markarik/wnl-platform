@@ -5,8 +5,9 @@ import { imageviewer } from 'vendor/imageviewer/imageviewer';
 
 import { timeFromS } from 'js/utils/time';
 
-// It's not used directly but it's needed to import the styles
-import style from '../sass/slideshow.sass';
+import 'sass/slideshow.sass';
+import 'vendor/reveal/reveal-theme.scss';
+import 'vendor/imageviewer/imageviewer.scss';
 
 imageviewer($, window, document);
 

@@ -18,11 +18,6 @@
 
 	<link rel="icon" href="{{ url('favicon.png') }}">
 
-	<!-- Styles -->
-	<link href="{{ mix('css/app.css') }}" rel="stylesheet">
-	<link href="{{ mix('css/emoji.css') }}" rel="stylesheet">
-	<link href="{{ mix('css/imageviewer.css') }}" rel="stylesheet">
-
 	<!-- Scripts -->
 	<script>
 		window.Laravel = <?php echo json_encode([

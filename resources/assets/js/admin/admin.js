@@ -1,3 +1,6 @@
+import 'sass/app.scss';
+import 'vendor/emoji/emoji.scss';
+
 import Vue from 'vue';
 
 // Sync vue-router and vuex
@@ -5,9 +8,6 @@ import {sync} from 'vuex-router-sync';
 import store from 'js/admin/store/store';
 import router from 'js/admin/router';
 import WnlAxios from 'js/plugins/axios';
-
-import 'sass/app.scss';
-import 'vendor/emoji/emoji.scss';
 
 sync(store, router);
 

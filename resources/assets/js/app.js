@@ -1,3 +1,7 @@
+import 'sass/app.scss';
+import 'vendor/emoji/emoji.scss';
+import 'vendor/imageviewer/imageviewer.scss';
+
 import Vue from 'vue';
 import {sync} from 'vuex-router-sync';
 import store from 'js/store/store';
@@ -22,10 +26,6 @@ import ChatConnection from 'js/plugins/chat-connection';
 import WnlAxios from 'js/plugins/axios';
 import EventsTracker from 'js/plugins/events-tracker';
 import $ from 'jquery';
-
-import 'sass/app.scss';
-import 'vendor/emoji/emoji.scss';
-import 'vendor/imageviewer/imageviewer.scss';
 
 window.$ = window.jQuery = $;
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Transformers;
 
-use App\Models\Tag;
 use App\Http\Controllers\Api\ApiTransformer;
 use App\Models\Taxonomy;
 

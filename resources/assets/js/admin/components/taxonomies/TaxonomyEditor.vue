@@ -52,8 +52,6 @@
 import { get } from 'lodash';
 
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
-import WnlTagDelete from 'js/admin/components/tags/TagDelete';
-import WnlPaginatedSortableTable from 'js/admin/components/lists/PaginatedSortableTable';
 
 export default {
 	props: {

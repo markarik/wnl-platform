@@ -1,4 +1,16 @@
 {
+  "plugins": [
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-transform-runtime"
+  ],
+  "presets": [
+    ["@babel/preset-env", {
+      "targets": {
+        "browsers": ["iOS >= 10"]
+      },
+      "modules": false
+    }]
+  ],
   "ignore": [
     "resources/vendor/**/*.js"
   ]

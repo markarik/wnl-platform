@@ -81,6 +81,13 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Taggables
 		Route::post("{$r['taggables']}/batch_move/{source_tag_id}", 'TaggablesApiController@batchMove');
 		Route::post("{$r['taggables']}/.filter", 'TaggablesApiController@filter');
+
+		// Taxonomies
+		Route::post("{$r['taxonomies']}", 'TaxonomiesApiController@post');
+		Route::put("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@put');
+		// TODO implement me when have tags + taxonomies relation ready
+//		Route::delete("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@delete');
+		Route::post("{$r['taxonomies']}/.filter", 'TaxonomiesApiController@filter');
 	});
 
 	// Count

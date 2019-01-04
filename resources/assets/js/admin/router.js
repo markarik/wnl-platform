@@ -137,6 +137,11 @@ let routes = [
 		props: true,
 	},
 	{
+		name: 'taxonomies',
+		path: '/admin/app/taxonomies',
+		component: require('js/admin/components/taxonomies/TaxonomiesList'),
+	},
+	{
 		name: 'dashboard',
 		path: '/admin/app'
 	},

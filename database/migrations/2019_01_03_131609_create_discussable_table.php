@@ -13,8 +13,9 @@ class CreateDiscussableTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('discussable', function (Blueprint $table) {
+		Schema::create('discussables', function (Blueprint $table) {
 			$table->increments('id');
+			$table->integer('discussion_id');
 			$table->morphs('discussable');
 			$table->timestamps();
 		});
@@ -27,6 +28,6 @@ class CreateDiscussableTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('discussable');
+		Schema::dropIfExists('discussables');
 	}
 }

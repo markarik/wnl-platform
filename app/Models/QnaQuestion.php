@@ -19,6 +19,10 @@ class QnaQuestion extends Model
 
 	protected $dates = ['deleted_at'];
 
+	public function discussion() {
+		return $this->belongsTo('App\Models\Discussion');
+	}
+
 	public function answers()
 	{
 		return $this->hasMany('App\Models\QnaAnswer', 'question_id');

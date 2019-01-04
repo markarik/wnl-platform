@@ -33,6 +33,7 @@ trait ProvidesApiFiltering
 		$this->page = $request->page ?? 1;
 		$randomize = $request->randomize;
 		$cachedPagination = $request->cachedPagination;
+		$active = $request->active;
 
 		if ($request->saveFilters) {
 			$this->saveActiveFilters($request);
@@ -45,7 +46,7 @@ trait ProvidesApiFiltering
 
 		if ($randomize) {
 			$response = $this->randomizedResponse($model, $this->limit);
-		} elseif ($cachedPagination) {
+		} elseif ($cachedPagination && ($active || $filters)) {
 			// Cached pagination is meant to be used within quiz questions bank only, as it was
 			// developed to address a specific issue while working with solved/unsolved filter.
 			// To be refactored, see https://bethink.atlassian.net/browse/PLAT-868

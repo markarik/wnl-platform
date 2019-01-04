@@ -1,12 +1,12 @@
-const webpackConfig = require('../build/webpack.test.conf');
+const webpackConfig = require('../../../../node_modules/laravel-mix/setup/webpack.config.js');
+delete webpackConfig.entry;
 
 module.exports = (config) => {
 	config.set({
-		browsers: ['PhantomJS'],
-		frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim'],
+		browsers: ['ChromeHeadless'],
+		frameworks: ['mocha', 'sinon-chai'],
 		reporters: ['spec'],
 		files: [
-			'../../../../node_modules/babel-polyfill/dist/polyfill.js',
 			'./helpers.js',
 			'./index.js'
 		],

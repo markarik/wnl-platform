@@ -5,8 +5,7 @@
 		>
 			<h3 slot="header" class="title">
 				Lista Taxonomii
-				TODO
-				<router-link class="button is-success" :to="{name: 'tag-edit', params: { id: 'new' } }">+ Dodaj taksonomię</router-link>
+				<router-link class="button is-success" :to="{name: 'taxonomy-edit', params: { id: 'new' } }">+ Dodaj taksonomię</router-link>
 			</h3>
 
 			<table class="table" slot-scope="slotProps" slot="list">
@@ -41,8 +40,7 @@ export default {
 	},
 	methods: {
 		goToTaxonomy(taxonomy) {
-			// TODO
-			this.$router.push({ name: 'tag-edit', params: { id: taxonomy.id } });
+			this.$router.push({ name: 'taxonomy-edit', params: { id: taxonomy.id } });
 		},
 	},
 };

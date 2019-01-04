@@ -13,6 +13,7 @@ class TaxonomyTransformer extends ApiTransformer {
 		$data = [
 			'id' => $taxonomy->id,
 			'name' => $taxonomy->name,
+			'description' => $taxonomy->description,
 		];
 
 		return $data;

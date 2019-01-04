@@ -98,6 +98,7 @@ class MigrateQna extends Command
 			$discussion->questions()->saveMany($matchingQnaQuestions);
 
 			$matchingDiscussable->discussion()->associate($discussion);
+			$matchingDiscussable->is_discussable = true;
 			$matchingDiscussable->save();
 		}
 

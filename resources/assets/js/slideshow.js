@@ -5,6 +5,10 @@ import { imageviewer } from 'vendor/imageviewer/imageviewer';
 
 import { timeFromS } from 'js/utils/time';
 
+import 'sass/slideshow.sass';
+import 'vendor/reveal/reveal-theme.scss';
+import 'vendor/imageviewer/imageviewer.scss';
+
 imageviewer($, window, document);
 
 const container = document.getElementsByClassName('reveal')[0];

@@ -149,7 +149,8 @@ class QuizQuestionsFilteringTest extends ApiTestCase
 						'list' =>  ['incorrect']
 					]
 				]],
-				'active' => ['active-filter']
+				'active' => ['active-filter'],
+				'cachedPagination' => true,
 			]);
 
 		$response

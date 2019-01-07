@@ -33,6 +33,6 @@
 		{{ csrf_field() }}
 	</form>
 	@include('not-supported-browser-modal')
-	@include ('footer')
+	@include('footer')
 </body>
 </html>

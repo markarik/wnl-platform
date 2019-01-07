@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="content">
 		<div class="page content" v-html="content"></div>
-		<wnl-qna :tags="tags" :reactionsDisabled="true" v-if="qna"></wnl-qna>
+		<wnl-qna :tags="tags" :reactionsDisabled="true" v-if="qna" :discussion-id="discussion_id"></wnl-qna>
 	</div>
 </template>
 
@@ -46,6 +46,7 @@ export default {
 			created_at: null,
 			updated_at: null,
 			tags: null,
+			discussion_id: 0
 		};
 	},
 	methods: {
@@ -91,7 +92,7 @@ export default {
 			this.content = injectArguments(newValue, this.arguments);
 		},
 		discussion_id() {
-			this.fetchQuestionsForDiscussion(this.discussion_id);
+			this.discussion_id && this.fetchQuestionsForDiscussion(this.discussion_id);
 		},
 		slug() {this.fetch();}
 	}

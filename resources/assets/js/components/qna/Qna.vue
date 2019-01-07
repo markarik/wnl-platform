@@ -37,7 +37,7 @@
 			</div>
 			<transition name="fade">
 				<div class="qna-new-question" v-if="showForm">
-					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"/>
+					<wnl-new-question :tags="tags" @submitSuccess="showForm = false" :discussionId="discussionId"/>
 				</div>
 			</transition>
 			<wnl-qna-sorting v-if="sortingEnabled"/>
@@ -128,14 +128,11 @@
 </style>
 
 <script>
-import {join} from 'lodash';
-import { mapActions, mapGetters } from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 import QnaSorting from 'js/components/qna/QnaSorting';
 import QnaQuestion from 'js/components/qna/QnaQuestion';
 import NewQuestionForm from 'js/components/qna/NewQuestionForm';
-
-import * as types from 'js/store/mutations-types';
 import {invisibleTags} from 'js/utils/config';
 
 export default {
@@ -165,10 +162,12 @@ export default {
 		},
 		config: {
 			type: Object,
-			default: () => { return {
-				highlighted: {}
-			};}
+			default: () => ({highlighted: {}})
 		},
+		discussionId: {
+			type: Number,
+			required: true
+		}
 	},
 	data() {
 		return {

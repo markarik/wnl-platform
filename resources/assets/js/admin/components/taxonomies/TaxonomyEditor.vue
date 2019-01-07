@@ -26,6 +26,7 @@
 		<ul class="content">
 			<wnl-taxonomy-term-item v-for="term in terms"
 				:term="term"
+				:included="included"
 				:key="term.id"
 			/>
 		</ul>
@@ -72,6 +73,7 @@ export default {
 	data() {
 		return {
 			terms: [],
+			included: {},
 		};
 	},
 	computed: {
@@ -102,9 +104,10 @@ export default {
 	async mounted() {
 		if (this.id) {
 			// TODO error handling
-			const {data} = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${this.id}?include=tags,taxonomies`));
-			const {included, ...terms} = data
+			const {data} = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${this.id}?include=tags,taxonomies,taxonomy_terms`));
+			const {included, ...terms} = data;
 			this.terms = terms;
+			this.included = included;
 		}
 	},
 };

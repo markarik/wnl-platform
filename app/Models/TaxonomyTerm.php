@@ -15,7 +15,7 @@ class TaxonomyTerm extends Model
 {
 	use NodeTrait;
 
-	protected $fillable = ['description'];
+	protected $fillable = ['description', 'tag_id', 'taxonomy_id'];
 
 	public function taxonomy() {
 		return $this->belongsTo('App\Models\Taxonomy');

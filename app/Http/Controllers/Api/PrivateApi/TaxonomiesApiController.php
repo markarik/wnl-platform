@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Course\UpdateTaxonomy;
 use App\Models\Taxonomy;
+use App\Models\TaxonomyTerm;
 use Illuminate\Http\Request;
 
 class TaxonomiesApiController extends ApiController {

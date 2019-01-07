@@ -1,140 +1,164 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
+import Lessons from 'js/admin/components/lessons/Lessons';
+import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor';
+import CourseEditor from 'js/admin/components/courses/CourseEditor';
+import Groups from 'js/admin/components/groups/Groups';
+import GroupEditor from 'js/admin/components/groups/GroupEditor';
+import EditSlide from 'js/admin/components/slides/EditSlide';
+import AddSlide from 'js/admin/components/slides/AddSlide';
+import Charts from 'js/admin/components/slides/Charts';
+import Annotations from 'js/admin/components/slides/annotations/Annotations';
+import QuizQuestions from 'js/admin/components/quizes/QuizQuestions';
+import QuizQuestionEdit from 'js/admin/components/quizes/QuizQuestionEdit';
+import QuizQuestionCreate from 'js/admin/components/quizes/QuizQuestionCreate';
+import FlashcardsSetsList from 'js/admin/components/flashcards/list/FlashcardsSetsList';
+import FlashcardsSetEditor from 'js/admin/components/flashcards/edit/FlashcardsSetEditor';
+import FlashcardsList from 'js/admin/components/flashcards/list/FlashcardsList';
+import FlashcardEditor from 'js/admin/components/flashcards/edit/FlashcardEditor';
+import Users from 'js/admin/components/users/Users';
+import UserAdd from 'js/admin/components/users/UserAdd';
+import UserDetails from 'js/admin/components/users/UserDetails';
+import DashboardNews from 'js/admin/components/dashboardNews/DashboardNews';
+import DashboardNewsEdit from 'js/admin/components/dashboardNews/DashboardNewsEdit';
+import OrdersList from 'js/admin/components/orders/OrdersList';
+import TagsList from 'js/admin/components/tags/TagsList';
+import TagEditor from 'js/admin/components/tags/TagEditor';
+
 Vue.use(Router);
 
-// TODO fix require in the entire repo
 let routes = [
 	{
 		name: 'lessons',
 		path: '/admin/app/lessons/:lessonId?',
-		component: require('js/admin/components/lessons/Lessons.vue').default,
+		component: Lessons,
 		props: true,
 		children: [
 			{
 				name: 'screen-edit',
 				path: 'screens/:screenId?',
-				component: require('js/admin/components/lessons/edit/ScreensEditor.vue')
+				component: ScreensEditor
 			},
 		]
 	},
 	{
 		name: 'course-edit',
 		path: '/admin/app/courses/:id',
-		component: require('js/admin/components/courses/CourseEditor').default,
+		component: CourseEditor,
 		props: true,
 	},
 	{
 		name: 'groups',
 		path: '/admin/app/groups',
-		component: require('js/admin/components/groups/Groups.vue').default,
+		component: Groups,
 		props: true,
 	},
 	{
 		name: 'group-edit',
 		path: '/admin/app/groups/:id',
-		component: require('js/admin/components/groups/GroupEditor').default,
+		component: GroupEditor,
 		props: true,
 	},
 	{
 		name: 'slides',
 		path: '/admin/app/slides/edit/:lessonId?/:screenId?',
-		component: require('js/admin/components/slides/EditSlide.vue').default,
+		component: EditSlide,
 	},
 	{
 		name: 'add-slide',
 		path: '/admin/app/slides/add/:lessonId?/:screenId?',
-		component: require('js/admin/components/slides/AddSlide.vue').default,
+		component: AddSlide,
 	},
 	{
 		name: 'charts',
 		path: '/admin/app/charts',
-		component: require('js/admin/components/slides/Charts.vue').default,
+		component: Charts,
 	},
 	{
 		name: 'annotations',
 		path: '/admin/app/annotations',
-		component: require('js/admin/components/slides/annotations/Annotations.vue').default,
+		component: Annotations,
 	},
 	{
 		name: 'quizes',
 		path: '/admin/app/quizes',
-		component: require('js/admin/components/quizes/QuizQuestions.vue').default,
+		component: QuizQuestions,
 		children: [
 			{
 				name: 'quiz-editor',
 				path: 'edit/:quizId',
-				component: require('js/admin/components/quizes/QuizQuestionEdit.vue')
+				component: QuizQuestionEdit
 			},
 			{
 				name: 'quiz-creator',
 				path: 'new',
-				component: require('js/admin/components/quizes/QuizQuestionCreate.vue')
+				component: QuizQuestionCreate
 			}
 		],
 	},
 	{
 		name: 'flashcards-sets',
 		path: '/admin/app/flashcards-sets',
-		component: require('js/admin/components/flashcards/list/FlashcardsSetsList.vue').default,
+		component: FlashcardsSetsList,
 	},
 	{
 		name: 'flashcards-sets-edit',
 		path: '/admin/app/flashcards-sets/:flashcardsSetId',
-		component: require('js/admin/components/flashcards/edit/FlashcardsSetEditor').default,
+		component: FlashcardsSetEditor,
 		props: true,
 	},
 	{
 		name: 'flashcards',
 		path: '/admin/app/flashcards',
-		component: require('js/admin/components/flashcards/list/FlashcardsList').default,
+		component: FlashcardsList,
 	},
 	{
 		name: 'flashcards-edit',
 		path: '/admin/app/flashcards/:flashcardId',
-		component: require('js/admin/components/flashcards/edit/FlashcardEditor').default,
+		component: FlashcardEditor,
 		props: true,
 	},
 	{
 		name: 'users',
 		path: '/admin/app/users',
-		component: require('js/admin/components/users/Users.vue').default,
+		component: Users,
 	},
 	{
 		name: 'users-add',
 		path: '/admin/app/users/add',
-		component: require('js/admin/components/users/UserAdd.vue').default,
+		component: UserAdd,
 	},
 	{
 		name: 'user-details',
 		path: '/admin/app/users/:userId',
-		component: require('js/admin/components/users/UserDetails.vue').default,
+		component: UserDetails,
 	},
 	{
 		name: 'dashboard-news',
 		path: '/admin/app/dashboard-news',
-		component: require('js/admin/components/dashboardNews/DashboardNews.vue').default,
+		component: DashboardNews,
 	},
 	{
 		name: 'dashboard-news-edit',
 		path: '/admin/app/dashboard-news/:id',
-		component: require('js/admin/components/dashboardNews/DashboardNewsEdit.vue').default,
+		component: DashboardNewsEdit,
 		props: true,
 	},
 	{
 		name: 'orders',
 		path: '/admin/app/orders',
-		component: require('js/admin/components/orders/OrdersList').default,
+		component: OrdersList,
 	},
 	{
 		name: 'tags',
 		path: '/admin/app/tags',
-		component: require('js/admin/components/tags/TagsList').default,
+		component: TagsList,
 	},
 	{
 		name: 'tag-edit',
 		path: '/admin/app/tags/:id',
-		component: require('js/admin/components/tags/TagEditor').default,
+		component: TagEditor,
 		props: true,
 	},
 	{

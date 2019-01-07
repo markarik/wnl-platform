@@ -56,4 +56,4 @@ const admin = new Vue({
 	...Admin
 }).$mount('#admin');
 
-require('js/echo');
+import('js/echo');

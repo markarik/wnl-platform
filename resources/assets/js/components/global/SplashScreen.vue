@@ -68,7 +68,7 @@ import { set } from 'vue';
 import { mapGetters } from 'vuex';
 import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
 
-require('moment-duration-format');
+import('moment-duration-format');
 
 export default {
 	name: 'SplashScreen',

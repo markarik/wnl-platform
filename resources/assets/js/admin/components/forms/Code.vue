@@ -30,19 +30,19 @@ export default {
 		};
 	},
 	methods: {
-		setMode () {
+		async setMode() {
 			let modeObj = modelist.modesByName[this.mode];
 
 			if (modeObj) {
-				require('brace/mode/html');
+				await import('brace/mode/html');
 				editor.getSession().setMode(modeObj.mode);
 			}
 		},
-		setTheme () {
+		async setTheme() {
 			let themeObj = themelist.themesByName[this.theme];
 
 			if (themeObj) {
-				require('brace/theme/' + themeObj.name);
+				await import('brace/theme/' + themeObj.name);
 				editor.setTheme(themeObj.theme);
 			}
 		},

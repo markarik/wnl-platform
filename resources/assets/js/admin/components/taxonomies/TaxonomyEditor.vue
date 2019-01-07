@@ -22,6 +22,13 @@
 				class="margin top bottom"
 			>Opis</wnl-textarea>
 		</wnl-form>
+		<h3 class="title is-3">Pojęcia</h3>
+		<ul class="content">
+			<wnl-taxonomy-term-item v-for="term in terms"
+				:term="term"
+				:key="term.id"
+			/>
+		</ul>
 	</div>
 </template>
 
@@ -52,6 +59,8 @@
 import { get } from 'lodash';
 
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
+import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
+import {getApiUrl} from '../../../utils/env';
 
 export default {
 	props: {
@@ -59,6 +68,11 @@ export default {
 			type: String|Number,
 			required: true,
 		},
+	},
+	data() {
+		return {
+			terms: [],
+		};
 	},
 	computed: {
 		isEdit() {
@@ -76,6 +90,7 @@ export default {
 		WnlForm,
 		WnlSubmit,
 		WnlTextarea,
+		WnlTaxonomyTermItem
 	},
 	methods: {
 		onSubmitSuccess(data) {
@@ -83,6 +98,14 @@ export default {
 				this.$router.push({ name: 'taxonomy-edit', params: { id: data.id } });
 			}
 		},
-	}
+	},
+	async mounted() {
+		if (this.id) {
+			// TODO error handling
+			const {data} = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${this.id}?include=tags,taxonomies`));
+			const {included, ...terms} = data
+			this.terms = terms;
+		}
+	},
 };
 </script>

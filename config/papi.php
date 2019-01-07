@@ -23,6 +23,7 @@ return [
 		'orders'             => 'orders',
 		'tags'               => 'tags',
 		'taxonomies'         => 'taxonomies',
+		'taxonomy-terms'     => 'taxonomy_terms',
 		'taggables'          => 'taggables',
 		'qna-questions'      => 'qna_questions',
 		'qna-answers'        => 'qna_answers',

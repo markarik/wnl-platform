@@ -5,6 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 
+/**
+ * Class TaxonomyTerm
+ * @package App\Models
+ *
+ * NodeTrait Docs: https://github.com/lazychaser/laravel-nestedset
+ */
 class TaxonomyTerm extends Model
 {
 	use NodeTrait;

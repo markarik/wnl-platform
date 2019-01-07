@@ -103,4 +103,4 @@ $.ajaxSetup({
 
 // this has to be at the very bottom to make sure axios is already loaded
 // axios is loaded by the WnlAxios plugin
-import('./echo');
+require('./echo');

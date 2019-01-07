@@ -5,7 +5,7 @@
 			type="button"
 			@click="onClick"
 			:disabled="!isDeleteAllowed"
-			:title="!isDeleteAllowed && 'Nie można usunąć tego tagu ponieważ należy do taksonomii lub jest kategorią lub taguje lekcję albo stronę'"
+			:title="!isDeleteAllowed && 'Nie można usunąć tego tagu ponieważ należy do taksonomii lub jest kategorią'"
 		>Usuń</button>
 		<wnl-modal
 			@closeModal="onCloseModal"

@@ -8,7 +8,13 @@
 			:key="screenData.id"
 			@userEvent="proxyUserEvent"
 		/>
-		<wnl-qna :sortingEnabled="true" v-if="showQna" :tags="tags" class="wnl-screen-qna"></wnl-qna>
+		<wnl-qna
+			:sortingEnabled="true"
+			v-if="showQna"
+			:tags="tags"
+			class="wnl-screen-qna"
+			:discussion-id="screenData.discussion_id"
+		></wnl-qna>
 	</div>
 </template>
 
@@ -29,9 +35,8 @@ import Quiz from 'js/components/quiz/Quiz';
 import Slideshow from 'js/components/course/screens/slideshow/Slideshow';
 import Widget from 'js/components/course/screens/Widget';
 import emits_events from 'js/mixins/emits-events';
-import {mapGetters, mapActions} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 import features from 'js/consts/events_map/features.json';
-import {getApiUrl} from 'js/utils/env';
 
 const TYPES_MAP = {
 	end: {

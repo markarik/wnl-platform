@@ -336,18 +336,12 @@ export default {
 		ifAnyAnswers() {
 			return this.howManyAnswers !== 0;
 		},
-		isQuestionsPanelVisible() {
-			return this.isPanelActive('questions');
-		},
-		isAnswersPanelVisible() {
-			return this.isPanelActive('answers');
-		},
 		sortedQuestionsForAnswers() {
 			const questionsIds = this.sortedAnswers.map((answer) => answer.qna_questions);
 
 			const sortedQuestionsForAnswers = [];
 
-			questionsIds.forEach((id, index) => {
+			questionsIds.forEach((id) => {
 				const value = Object.values(this.allQuestionsForAnswers).find((question) => {
 					return question.id === id;
 				});

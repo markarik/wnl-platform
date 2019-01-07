@@ -11,7 +11,7 @@ class QnaQuestion extends Model
 {
 	use Cached, Searchable, SoftDeletes;
 
-	protected $fillable = ['text', 'user_id', 'meta'];
+	protected $fillable = ['text', 'user_id', 'meta', 'discussion_id'];
 
 	protected $casts = [
 		'meta' => 'array',

@@ -12,7 +12,7 @@ class PageTransformer extends ApiTransformer
 {
 	protected $parent;
 
-	protected $availableIncludes = ['discussion'];
+	protected $availableIncludes = [];
 
 	public function __construct($parent = null)
 	{

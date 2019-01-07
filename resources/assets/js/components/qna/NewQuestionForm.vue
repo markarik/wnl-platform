@@ -62,7 +62,10 @@ export default {
 		'wnl-submit': Submit,
 	},
 	props: {
-		tags: Array,
+		tags: {
+			type: Array,
+			default: []
+		},
 		discussionId: {
 			type: Number,
 			required: true

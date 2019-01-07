@@ -89,9 +89,11 @@ class Parser
 	/**
 	 * @param $fileContents - string/html
 	 *
-	 * @throws ParseErrorException
+	 * @param null $screenId
+	 * @param null $discussionId
+	 * @param bool $enableSlidesMatching
 	 */
-	public function parse($fileContents, $screenId = null, $enableSlidesMatching = false)
+	public function parse($fileContents, $screenId = null, $discussionId = null, $enableSlidesMatching = false)
 	{
 		// TODO: Unspaghettize this code
 		$iteration = 0;
@@ -185,6 +187,11 @@ class Parser
 
 					if ($screenId) {
 						$screenData['id'] = intval($screenId);
+					}
+
+					if ($discussionId) {
+						$screenData['discussion_id'] = $discussionId;
+						$screenData['is_discussable'] = true;
 					}
 
 					$this->courseModels['screen'] = $lesson->screens()->create($screenData);

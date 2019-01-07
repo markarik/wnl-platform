@@ -31,6 +31,7 @@ import Widget from 'js/components/course/screens/Widget';
 import emits_events from 'js/mixins/emits-events';
 import {mapGetters, mapActions} from 'vuex';
 import features from 'js/consts/events_map/features.json';
+import {getApiUrl} from 'js/utils/env';
 
 const TYPES_MAP = {
 	end: {
@@ -102,14 +103,14 @@ export default {
 			return TYPES_MAP[this.type].component;
 		},
 		showQna() {
-			return this.tags.length > 0;
+			return this.screenData.is_discussable;
 		},
 		eventFeatureComponent() {
 			return TYPES_MAP[this.type].feature_component;
 		}
 	},
 	methods: {
-		...mapActions('qna', ['fetchQuestionsByTags']),
+		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 		...mapActions('course', ['fetchScreenContent']),
 		...mapActions(['toggleOverlay']),
 
@@ -135,13 +136,13 @@ export default {
 	},
 	mounted() {
 		this.fetchContent();
-		this.showQna && this.fetchQuestionsByTags({tags: this.tags});
+		this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
 		this.trackScreenOpen();
 	},
 	watch: {
 		screenId() {
 			this.fetchContent();
-			this.showQna && this.fetchQuestionsByTags({tags: this.tags});
+			this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
 			this.trackScreenOpen();
 		}
 	}

@@ -51,6 +51,7 @@ return [
 		'flashcards-sets'    => 'flashcards_sets',
 		'site-wide-messages' => 'site_wide_messages',
 		'user-flashcards-results' => 'user_flashcards_results',
+		'discussions'        => 'discussions',
 		'user-flashcard-notes' => 'user_flashcard_notes',
 		'roles' => 'roles',
 	],

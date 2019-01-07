@@ -7,6 +7,7 @@ import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store
 import {commentsGetters, commentsMutations, commentsActions, commentsState} from 'js/store/modules/comments';
 
 const include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles';
+const discussionsInclude = 'qna_questions,qna_questions.profiles,qna_questions.reactions,qna_questions.qna_answers.profiles,qna_questions.qna_answers.comments,qna_questions.qna_answers.comments.profiles';
 
 function _resolveQuestion(questionId, status = true) {
 	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
@@ -45,6 +46,14 @@ function _getQuestionsByTagName(tagName, ids) {
 		tags_names: [tagName],
 		ids,
 		include
+	});
+}
+
+function _getQuestionsForDiscussion(discussionId) {
+	return axios.get(getApiUrl(`discussions/${discussionId}`), {
+		params: {
+			include: discussionsInclude
+		}
 	});
 }
 
@@ -358,6 +367,28 @@ const actions = {
 					reject();
 				});
 		});
+	},
+
+	async fetchQuestionsForDiscussion({commit, dispatch}, discussionId) {
+		commit(types.IS_LOADING, true);
+
+		try {
+			const {data} = await _getQuestionsForDiscussion(discussionId);
+			commit(types.QNA_DESTROY);
+
+
+			if (!_.isUndefined(data.included)) {
+				const {qna_questions, ...included} = data.included;
+				commit(types.UPDATE_INCLUDED, included);
+				commit(types.QNA_SET_QUESTIONS, qna_questions);
+
+				included.comments && dispatch('comments/setComments', included.comments, {root:true});
+			}
+
+			commit(types.IS_LOADING, false);
+		} catch (e) {
+			_handleGetQuestionsError(commit, e);
+		}
 	},
 
 	fetchQuestionsByTagName({commit, dispatch}, {tagName, ids}) {

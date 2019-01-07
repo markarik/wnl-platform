@@ -81,7 +81,7 @@ export default {
 				subcontext: this.slug
 			});
 		},
-		...mapActions('qna', ['fetchQuestionsByTags']),
+		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 	},
 	mounted() {
 		this.fetch();
@@ -90,8 +90,8 @@ export default {
 		content(newValue) {
 			this.content = injectArguments(newValue, this.arguments);
 		},
-		tags(newValue) {
-			this.fetchQuestionsByTags({tags: newValue});
+		discussion_id() {
+			this.fetchQuestionsForDiscussion(this.discussion_id);
 		},
 		slug() {this.fetch();}
 	}

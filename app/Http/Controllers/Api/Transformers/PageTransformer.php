@@ -12,7 +12,7 @@ class PageTransformer extends ApiTransformer
 {
 	protected $parent;
 
-	protected $availableIncludes = [];
+	protected $availableIncludes = ['discussion'];
 
 	public function __construct($parent = null)
 	{
@@ -27,6 +27,7 @@ class PageTransformer extends ApiTransformer
 			'name'       => $page->name,
 			'created_at' => $page->created_at->timestamp ?? null,
 			'updated_at' => $page->updated_at->timestamp ?? null,
+			'discussion_id' => $page->discussion_id
 		];
 
 		if ($this->parent) {

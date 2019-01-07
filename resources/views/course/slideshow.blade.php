@@ -4,6 +4,9 @@
 	<title>Slideshow</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="{{ mix('/css/reveal.css') }}" rel="stylesheet">
+	<link href="{{ mix('/css/slideshow.css') }}" rel="stylesheet">
+	<link href="{{ mix('/css/imageviewer.css') }}" rel="stylesheet">
 
 	<style type="text/css">
 		.reveal.image-custom-background {

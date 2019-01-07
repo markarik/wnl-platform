@@ -11,6 +11,16 @@ const mix = require('laravel-mix');
  |
  */
 
+const sassOptions = {
+	implementation: require('node-sass')
+};
+
+mix.sass('resources/assets/sass/app.scss', 'public/css/app.css', sassOptions)
+	.sass('resources/assets/sass/slideshow.sass', 'public/css/slideshow.css', sassOptions)
+	.sass('resources/vendor/reveal/reveal-theme.scss', 'public/css/reveal.css', sassOptions)
+	.sass('resources/vendor/emoji/emoji.scss', 'public/css/emoji.css', sassOptions)
+	.sass('resources/vendor/imageviewer/imageviewer.scss', 'public/css/imageviewer.css', sassOptions);
+
 mix.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/admin/admin.js', 'public/js/admin.js')
 	.js('resources/assets/js/payment.js', 'public/js/payment.js')
@@ -77,7 +87,7 @@ mix.webpackConfig({
 			'sass': path.resolve(__dirname, 'resources/assets/sass'),
 			'vendor': path.resolve(__dirname, 'resources/vendor')
 		},
-	},
+	}
 });
 
 // Full API

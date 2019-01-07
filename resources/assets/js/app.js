@@ -1,7 +1,3 @@
-import 'sass/app.scss';
-import 'vendor/emoji/emoji.scss';
-import 'vendor/imageviewer/imageviewer.scss';
-
 import Vue from 'vue';
 import {sync} from 'vuex-router-sync';
 import store from 'js/store/store';

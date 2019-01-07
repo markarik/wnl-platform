@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Course\MoveTaggable;
 use App\Models\Tag;
 use App\Models\Taggable;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -21,16 +20,6 @@ class TaggablesApiController extends ApiController {
 			return $this->respondNotFound('Source tag does not exist');
 		}
 
-		$protectedTaggablesCount = $sourceTag->taggables()
-			->whereIn('taggable_type', Taggable::PROTECTED_TAGGABLE_TYPES)
-			->count();
-
-		// We don't want a situation where a taggables move causes QnA questions to be merged between lessons
-		if ($protectedTaggablesCount > 0) {
-			return $this->respondUnprocessableEntity([
-				'message' => __('tags.errors.move-protected-taggables')
-			]);
-		}
 
 		$targetTag = Tag::find($request->get('target_tag_id'));
 

@@ -42,8 +42,15 @@
 		|| (Session::has('product') && Session::get('product')->signups_end->isPast() && Session::get('product')->signups_close->isFuture())
 	)
 		<section class="notification is-danger has-text-centered">
-			Pamiętaj! W tym momencie otwarta jest dodatkowa pula zapisów, dla której nie możemy już niestety zagwarantować terminowego dostarczenia Albumu Map Myśli. :(<br>
-			Zrobimy jednak co w naszej mocy, żeby trafił do Ciebie jak najszybciej! :)
+			<p class="strong">Uwaga!</p>
+
+			<p class="strong">W tym momencie można zapisać się tylko na 4. edycję kursu, w ramach której dostęp do platformy kończy się 30 kwietnia 2019r.!</p>
+
+			<p class="strong">Jednocześnie jest naszym zdaniem zbyt późno, aby efektywnie przygotować się do LEK-u w lutym.</p>
+
+			<p>Doradzamy zapisanie się, jeżeli planujesz naukę do LEK-u we wrześniu 2019r. i przedłużenie dostępu zapisując się w kwietniu na 5. edycję za 50% ceny.</p>
+
+			<p>Cieszymy się, że chcesz do nas dołączyć, ale zależy nam na tym, aby była to w pełni świadoma decyzja. 🙂</p>
 		</section>
 	@endif
 

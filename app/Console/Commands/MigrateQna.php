@@ -32,7 +32,7 @@ class MigrateQna extends Command
 	 */
 	public function handle()
 	{
-		$screens = Screen::where('type', 'slideshow')
+		$screens = Screen::has('tags')
 			->get();
 
 		$pages = Page::all();

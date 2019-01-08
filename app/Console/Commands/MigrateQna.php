@@ -32,76 +32,54 @@ class MigrateQna extends Command
 	 */
 	public function handle()
 	{
-		$qnaQuestions = QnaQuestion::get();
+		$screens = Screen::where('type', 'slideshow')
+			->get();
 
-		$bar = $this->output->createProgressBar($qnaQuestions->count());
+		$pages = Page::all();
+
+		$bar = $this->output->createProgressBar($screens->count() + $pages->count());
 		$bar->start();
 
-		foreach ($qnaQuestions as $qnaQuestion) {
+		foreach ($screens as $screen) {
+			$name = "{$screen->lesson->name} - {$screen->name}";
+
+			$this->attachDiscussion($screen, $name);
+
 			$bar->advance();
-			$qnaQuestion = QnaQuestion::find($qnaQuestion->id);
+		}
 
-			if (!empty($qnaQuestion->discussion_id)) {
-				// if question is already attached to discussion, skip it
-				continue;
-			}
+		foreach ($pages as $page) {
+			$name = $page->slug;
 
-			$tags = $qnaQuestion->tags->pluck('id');
-			if ($tags->count() === 0) {
-				$this->output->warning("Qna Question without tags: {$qnaQuestion->id}");
-				continue;
-			}
+			$this->attachDiscussion($page, $name);
 
-			$qnaQuestionsQuery = QnaQuestion::select();
+			$bar->advance();
 
-			foreach ($tags as $tagId) {
-				$qnaQuestionsQuery->whereHas('tags', function ($query) use ($tagId) {
-					$query->where('tags.id', $tagId);
-				});
-			}
-
-			$matchingQnaQuestions = $qnaQuestionsQuery->get();
-
-			$screensQuery = Screen::select();
-			foreach ($tags as $tagId) {
-				$screensQuery->whereHas('tags', function ($query) use ($tagId) {
-					$query->where('tags.id', $tagId);
-				});
-			}
-			$name = '';
-			$matchingDiscussable = $screensQuery->first();
-
-			if (empty($matchingDiscussable)) {
-				// qna questions doesn't have matching screen - check page
-				$pagesQuery = Page::select();
-				foreach ($tags as $tagId) {
-					$pagesQuery->whereHas('tags', function ($query) use ($tagId) {
-						$query->where('tags.id', $tagId);
-					});
-				}
-
-				$matchingDiscussable = $pagesQuery->first();
-
-				if (empty($matchingDiscussable)) {
-					continue;
-				} else {
-					$name = "{$matchingDiscussable->slug}";
-				}
-			} else {
-				// qna questions have matching screen
-				$name = "{$matchingDiscussable->lesson->name} - {$matchingDiscussable->name}";
-			}
-
-			$discussion = Discussion::create([
-				'name' => $name
-			]);
-			$discussion->questions()->saveMany($matchingQnaQuestions);
-
-			$matchingDiscussable->discussion()->associate($discussion);
-			$matchingDiscussable->is_discussable = true;
-			$matchingDiscussable->save();
 		}
 
 		$bar->finish();
+	}
+
+	private function attachDiscussion($discussable, $discussionName) {
+		$tags = $discussable->tags->pluck('id');
+
+		$qnaQuestionsQuery = QnaQuestion::select();
+
+		foreach ($tags as $tagId) {
+			$qnaQuestionsQuery->whereHas('tags', function ($query) use ($tagId) {
+				$query->where('tags.id', $tagId);
+			});
+		}
+
+		$matchingQnaQuestions = $qnaQuestionsQuery->get();
+
+		$discussion = Discussion::create([
+			'name' => $discussionName
+		]);
+		$discussion->questions()->saveMany($matchingQnaQuestions);
+
+		$discussable->discussion()->associate($discussion);
+		$discussable->is_discussable = true;
+		$discussable->save();
 	}
 }

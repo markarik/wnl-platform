@@ -165,7 +165,7 @@ class QnaQuestionsApiController extends ApiController
 
 		$qnaQuestions = QnaQuestion::whereDoesntHave('tags', function($query) use ($workshopsTag) {
 			$query->where('tags.id', $workshopsTag->id);
-		})->limit(10)->get();
+		})->limit(10)->orderBy('created_at', 'desc')->get();
 
 		return $this->transformAndRespond($qnaQuestions);
 	}

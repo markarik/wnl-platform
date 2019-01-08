@@ -22,6 +22,7 @@ return [
 		'user-collections'   => 'user_collections',
 		'orders'             => 'orders',
 		'tags'               => 'tags',
+		'taxonomies'         => 'taxonomies',
 		'taggables'          => 'taggables',
 		'qna-questions'      => 'qna_questions',
 		'qna-answers'        => 'qna_answers',

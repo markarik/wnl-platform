@@ -44,6 +44,10 @@ export default {
 			type: Object,
 			default: () => ({}),
 		},
+		value: {
+			type: Object,
+			default: () => ({}),
+		},
 		populate: {
 			// TODO make type consistent
 			default: false,
@@ -66,7 +70,7 @@ export default {
 		},
 		beforeSubmit: {
 			type: Function,
-			default: () => undefined,
+			default: () => true,
 		},
 	},
 	computed: {
@@ -115,10 +119,8 @@ export default {
 				return false;
 			}
 
-			try {
-				await this.beforeSubmit();
-			} catch (error) {
-				$wnl.logger.info('Form submit was cancelled', error);
+			if (await !this.beforeSubmit()) {
+				$wnl.logger.info('Form submit was cancelled');
 				return;
 			}
 

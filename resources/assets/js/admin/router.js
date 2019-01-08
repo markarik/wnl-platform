@@ -162,6 +162,17 @@ let routes = [
 		props: true,
 	},
 	{
+		name: 'taxonomies',
+		path: '/admin/app/taxonomies',
+		component: require('js/admin/components/taxonomies/TaxonomiesList'),
+	},
+	{
+		name: 'taxonomy-edit',
+		path: '/admin/app/taxonomies/:id',
+		component: require('js/admin/components/taxonomies/TaxonomyEditor'),
+		props: true,
+	},
+	{
 		name: 'dashboard',
 		path: '/admin/app'
 	},

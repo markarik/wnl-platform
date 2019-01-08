@@ -4,7 +4,8 @@ const sassOptions = {
 	implementation: require('node-sass')
 };
 
-mix.sass('resources/assets/sass/app.scss', 'public/css/app.css', sassOptions);
+mix.sass('resources/assets/sass/app.scss', 'public/css/app.css', sassOptions)
+	.sass('resources/vendor/emoji/emoji.scss', 'public/css/emoji.css', sassOptions);
 
 mix.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/admin/admin.js', 'public/js/admin.js')
@@ -13,6 +14,14 @@ mix.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/slideshow.js', 'public/js/slideshow.js')
 	.js('resources/assets/js/notSupportedBrowserModal.js', 'public/js/notSupportedBrowserModal.js')
 	.js('resources/vendor/imageviewer/imageviewer.js', 'public/js/imageviewer.js');
+
+mix.options({
+	hmrStyleLoaderOptions: {
+		insertAt: {
+			before: 'style'
+		}
+	}
+});
 
 if (mix.config.inProduction) {
 	mix.version();

@@ -23,7 +23,7 @@
     "he": "^1.1.1",
     "jquery": "^3.2.1",
     "laravel-echo": "^1.3.0",
-    "laravel-mix": "^4.0.12",
+    "laravel-mix": "github:bethinkpl/laravel-mix#47a32e3b270c5b38394398693a3dbabc174323ef",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "moment-duration-format": "^1.3.0",

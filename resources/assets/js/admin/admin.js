@@ -1,6 +1,3 @@
-import 'sass/app.scss';
-import 'vendor/emoji/emoji.scss';
-
 import Vue from 'vue';
 
 // Sync vue-router and vuex

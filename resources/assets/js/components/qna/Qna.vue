@@ -37,7 +37,7 @@
 			</div>
 			<transition name="fade">
 				<div class="qna-new-question" v-if="showForm">
-					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"/>
+					<wnl-new-question :tags="tags" @submitSuccess="showForm = false" :discussionId="discussionId"/>
 				</div>
 			</transition>
 			<wnl-qna-sorting v-if="sortingEnabled"/>
@@ -169,6 +169,10 @@ export default {
 				highlighted: {}
 			};}
 		},
+		discussionId: {
+			type: Number,
+			default: 0
+		}
 	},
 	data() {
 		return {

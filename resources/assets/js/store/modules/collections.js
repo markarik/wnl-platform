@@ -109,7 +109,8 @@ const actions = {
 	},
 	fetchSlidesByTagName({commit}, {tagName, ids}) {
 		commit(types.SLIDES_LOADING, true);
-		return axios.post(getApiUrl(`slides/category/${tagName}`), {
+		return axios.post(getApiUrl('slides/category'), {
+			tagName,
 			slideIds: ids
 		}).then(({data}) => {
 			commit(types.COLLECTIONS_SET_SLIDES, data);

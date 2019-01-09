@@ -1,7 +1,11 @@
 <template lang="html">
 	<div class="content">
 		<div class="page content" v-html="content"></div>
-		<wnl-qna :tags="tags" :reactionsDisabled="true" v-if="qna" :discussion-id="discussion_id"></wnl-qna>
+		<wnl-qna
+			:tags="tags"
+			:reactionsDisabled="true"
+			:discussionId="discussion_id"
+			v-if="qna"/>
 	</div>
 </template>
 

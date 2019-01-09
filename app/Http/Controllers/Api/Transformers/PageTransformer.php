@@ -27,7 +27,8 @@ class PageTransformer extends ApiTransformer
 			'name'       => $page->name,
 			'created_at' => $page->created_at->timestamp ?? null,
 			'updated_at' => $page->updated_at->timestamp ?? null,
-			'discussion_id' => $page->discussion_id
+			'discussion_id' => $page->discussion_id,
+			'is_discussable' => $page->is_discussable
 		];
 
 		if ($this->parent) {

@@ -62,9 +62,9 @@ export default {
 		'wnl-submit': Submit,
 	},
 	props: {
-		tags: {
+		contextTags: {
 			type: Array,
-			default: []
+			default: () => []
 		},
 		discussionId: {
 			type: Number,
@@ -74,7 +74,7 @@ export default {
 	computed: {
 		attachedData() {
 			return {
-				tags: this.tags.map((tag) => tag.id),
+				tags: this.contextTags.map((tag) => tag.id),
 				context: {
 					name: this.$route.name,
 					params: this.$route.params

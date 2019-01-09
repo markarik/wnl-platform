@@ -8,12 +8,6 @@ use App\Models\Discussion;
 class DiscussionTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['qna_questions'];
-	protected $parent;
-
-	public function __construct($parent = [])
-	{
-		$this->parent = $parent;
-	}
 
 	public function transform(Discussion $discussion)
 	{
@@ -29,6 +23,10 @@ class DiscussionTransformer extends ApiTransformer
 	{
 		$qnaQuestions = $discussion->questions;
 
-		return $this->collection($qnaQuestions, new QnaQuestionTransformer(['discussions' => $discussion->id]), 'qna_questions');
+		return $this->collection(
+			$qnaQuestions,
+			new QnaQuestionTransformer(['discussions' => $discussion->id]),
+			'qna_questions'
+		);
 	}
 }

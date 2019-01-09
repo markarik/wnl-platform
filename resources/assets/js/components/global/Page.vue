@@ -2,7 +2,7 @@
 	<div class="content">
 		<div class="page content" v-html="content"></div>
 		<wnl-qna
-			:tags="tags"
+			:context-tags="tags"
 			:reactionsDisabled="true"
 			:discussionId="discussion_id"
 			v-if="qna"/>

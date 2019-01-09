@@ -61,7 +61,16 @@ export default {
 		'wnl-quill': Quill,
 		'wnl-submit': Submit,
 	},
-	props: ['tags'],
+	props: {
+		tags: {
+			type: Array,
+			default: []
+		},
+		discussionId: {
+			type: Number,
+			default: 0
+		}
+	},
 	computed: {
 		attachedData() {
 			return {
@@ -69,7 +78,8 @@ export default {
 				context: {
 					name: this.$route.name,
 					params: this.$route.params
-				}
+				},
+				discussionId: this.discussionId
 			};
 		},
 	},

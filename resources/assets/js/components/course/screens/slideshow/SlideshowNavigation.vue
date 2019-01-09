@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="nav-container">
 		<label class="label" for="wnl-slideshow-navigation-">
 			Idź do slajdu

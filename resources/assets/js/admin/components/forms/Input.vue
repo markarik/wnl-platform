@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="control">
 		<label :for="name" class="label" v-if="this.$slots.default">
 			<slot></slot>

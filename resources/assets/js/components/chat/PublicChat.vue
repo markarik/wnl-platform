@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="wnl-public-chat">
 		<div class="chat-title">
 			{{title || chatTitle}}

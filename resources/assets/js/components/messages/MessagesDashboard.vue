@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
 			:isVisible="isSidenavVisible"

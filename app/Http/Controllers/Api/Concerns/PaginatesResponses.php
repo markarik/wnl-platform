@@ -81,10 +81,10 @@ trait PaginatesResponses
 		}
 
 		Cache::tags($cacheTags)->flush();
-		$paginator = $model->paginate($limit, ['*'], 'page', $page);
+		$paginator = (clone $model)->paginate($limit, ['*'], 'page', $page);
 
 		if ($paginator->lastPage() < $page) {
-			$paginator = $model->paginate($limit, ['*'], 'page', $paginator->lastPage());
+			$paginator = (clone $model)->paginate($limit, ['*'], 'page', $paginator->lastPage());
 		}
 
 		$meta = [

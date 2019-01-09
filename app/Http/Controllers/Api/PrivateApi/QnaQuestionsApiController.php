@@ -26,12 +26,14 @@ class QnaQuestionsApiController extends ApiController
 		$tags = $request->get('tags');
 		$text = $request->get('text');
 		$context = $request->get('context');
+		$discussionId = $request->get('discussionId');
 		$user = Auth::user();
 
 		$question = QnaQuestion::create([
 			'text'    => $text,
 			'user_id' => $user->id,
 			'meta'    => ['context' => $context],
+			'discussion_id' => $discussionId
 		]);
 
 		foreach ($tags as $tag) {
@@ -165,7 +167,7 @@ class QnaQuestionsApiController extends ApiController
 
 		$qnaQuestions = QnaQuestion::whereDoesntHave('tags', function($query) use ($workshopsTag) {
 			$query->where('tags.id', $workshopsTag->id);
-		})->limit(10)->get();
+		})->limit(10)->orderBy('created_at', 'desc')->get();
 
 		return $this->transformAndRespond($qnaQuestions);
 	}

@@ -23,7 +23,7 @@ mix.options({
 	}
 });
 
-if (mix.config.inProduction) {
+if (mix.inProduction()) {
 	mix.version();
 }
 

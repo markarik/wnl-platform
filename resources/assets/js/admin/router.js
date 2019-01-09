@@ -25,6 +25,8 @@ import DashboardNewsEdit from 'js/admin/components/dashboardNews/DashboardNewsEd
 import OrdersList from 'js/admin/components/orders/OrdersList';
 import TagsList from 'js/admin/components/tags/TagsList';
 import TagEditor from 'js/admin/components/tags/TagEditor';
+import TaxonomiesList from 'js/admin/components/taxonomies/TaxonomiesList';
+import TaxonomyEditor from 'js/admin/components/taxonomies/TaxonomyEditor';
 
 Vue.use(Router);
 
@@ -164,12 +166,12 @@ let routes = [
 	{
 		name: 'taxonomies',
 		path: '/admin/app/taxonomies',
-		component: require('js/admin/components/taxonomies/TaxonomiesList'),
+		component: TaxonomiesList,
 	},
 	{
 		name: 'taxonomy-edit',
 		path: '/admin/app/taxonomies/:id',
-		component: require('js/admin/components/taxonomies/TaxonomyEditor'),
+		component: TaxonomyEditor,
 		props: true,
 	},
 	{

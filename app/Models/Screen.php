@@ -30,6 +30,11 @@ class Screen extends Model
 		return $this->morphToMany('App\Models\Tag', 'taggable');
 	}
 
+	public function discussion()
+	{
+		return $this->belongsTo('\App\Models\Discussion');
+	}
+
 	public function getSlideshowAttribute()
 	{
 		if (!empty($this->meta)) {

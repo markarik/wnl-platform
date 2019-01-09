@@ -1,4 +1,5 @@
-<div id="notSupportedBrowserModal" class="not-supported-browser-modal modal">
+<style>.is-hidden { display: none !important; }</style>
+<div id="notSupportedBrowserModal" class="not-supported-browser-modal modal is-hidden">
 	<div id="notSupportedBrowserModalBackground" class="modal-background"></div>
 	<div class="modal-content">
 		<div class="box">

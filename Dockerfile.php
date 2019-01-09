@@ -18,7 +18,7 @@ WORKDIR /src
 
 COPY --from=php-build /src/. .
 RUN yarn run setup \
-  && node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js \
+  && node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js \
   && rm -rf node_modules && rm -rf resources/assets && rm -f storage/logs/*.log && rm -rf storage/app/public
 
 #

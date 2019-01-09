@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div :class="{'active-in-route': isActive, 'conversation-snippet': true}">
 		<figure class="media-left">
 			<wnl-avatar

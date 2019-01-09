@@ -9,6 +9,7 @@ class Taggable extends Model {
 	const PROTECTED_TAGGABLE_TYPES = [
 		'App\\Models\\Lesson',
 		'App\\Models\\Page',
+		'App\\Models\\Screen'
 	];
 
 	public $timestamps = false;

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="wnl-search" @click="showOverlay">
 		<span class="icon">
 			<i class="fa fa-search"></i>

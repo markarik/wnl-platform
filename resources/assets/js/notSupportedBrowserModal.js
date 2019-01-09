@@ -23,6 +23,7 @@
 			background = document.getElementById('notSupportedBrowserModalBackground'),
 			closeButton = document.getElementById('notSupportedBrowserModalClose');
 
+		modal.classList.remove('is-hidden');
 		modal.classList.add('is-active');
 		closeButton.addEventListener('click', function() {
 			modal.classList.remove('is-active');

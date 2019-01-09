@@ -21,7 +21,6 @@
 	<!-- Styles -->
 	<link href="{{ mix('css/app.css') }}" rel="stylesheet">
 	<link href="{{ mix('css/emoji.css') }}" rel="stylesheet">
-	<link href="{{ mix('css/imageviewer.css') }}" rel="stylesheet">
 
 	<!-- Scripts -->
 	<script>
@@ -38,6 +37,6 @@
 		{{ csrf_field() }}
 	</form>
 	@include('not-supported-browser-modal')
-	@include ('footer')
+	@include('footer')
 </body>
 </html>

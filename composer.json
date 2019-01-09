@@ -4,8 +4,8 @@
   "license": "GPL-3.0",
   "type": "project",
   "require": {
-	"php": ">=7.0.0",
-	"laravel/framework": "5.5.*",
+	"php": ">=7.2.0",
+	"laravel/framework": "5.7.*",
 	"kris/laravel-form-builder": "^1.10",
 	"laracasts/utilities": "~2.0",
 	"league/fractal": "^0.15.0",
@@ -15,22 +15,22 @@
 	"predis/predis": "^1.1",
 	"league/flysystem-aws-s3-v3": "^1.0",
 	"intervention/image": "^2.3",
-	"laravel/scout": "^3.0",
+	"laravel/scout": "^4.0",
 	"bethink/elastic-scout": "3.*",
 	"doctrine/dbal": "2.5.13",
-	"graham-campbell/throttle": "^6.0",
+	"graham-campbell/throttle": "^7.0",
 	"nao-pon/flysystem-google-drive": "~1.1",
 	"bschmitt/laravel-amqp": "^1.2"
   },
   "require-dev": {
-	"laravel/dusk": "^2.0",
+	"laravel/dusk": "^3.0",
 	"laravel/tinker": "^1.0",
 	"fzaninotto/faker": "~1.4",
 	"mockery/mockery": "0.9.*",
-	"phpunit/phpunit": "~6.0",
+	"phpunit/phpunit": "^7.0",
 	"symfony/css-selector": "3.1.*",
 	"symfony/dom-crawler": "3.1.*",
-	"barryvdh/laravel-debugbar": "^2.3",
+	"barryvdh/laravel-debugbar": "^3.2",
 	"filp/whoops": "~2.0",
 	"barryvdh/laravel-ide-helper": "dev-master#99226c92b72b02bf60d9b339fdf9f446d5d9921d"
   },
@@ -58,12 +58,10 @@
 	  "php artisan key:generate"
 	],
 	"post-install-cmd": [
-	  "Illuminate\\Foundation\\ComposerScripts::postInstall",
-	  "php artisan optimize"
+	  "Illuminate\\Foundation\\ComposerScripts::postInstall"
 	],
 	"post-update-cmd": [
-	  "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-	  "php artisan optimize"
+	  "Illuminate\\Foundation\\ComposerScripts::postUpdate"
 	]
   },
   "config": {

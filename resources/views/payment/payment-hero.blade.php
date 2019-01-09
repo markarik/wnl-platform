@@ -48,7 +48,7 @@
 
 			<p class="strong">Jednocześnie jest naszym zdaniem zbyt późno, aby efektywnie przygotować się do LEK-u w lutym.</p>
 
-			<p>Doradzamy zapisanie się, jeżeli planujesz naukę do LEK-u we wrześniu 2019r. i przedłużenie dostępu zapisując się w kwietniu na 5. edycję za 50% ceny.</p>
+			<p>Jeżeli jednak planujesz naukę do LEK-u we wrześniu 2019r., możesz zapisać się i zacząć już teraz, a w kwietniu przedłużysz dostęp wykupując 5. edycję za 50% ceny.</p>
 
 			<p>Cieszymy się, że chcesz do nas dołączyć, ale zależy nam na tym, aby była to w pełni świadoma decyzja. 🙂</p>
 		</section>

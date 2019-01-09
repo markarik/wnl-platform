@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="wnl-private-chat">
 		<div class="chat-title">
 			<wnl-avatar

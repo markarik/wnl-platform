@@ -1,3 +1,5 @@
+import 'vendor/imageviewer/imageviewer.scss';
+
 import Vue from 'vue';
 import {sync} from 'vuex-router-sync';
 import store from 'js/store/store';
@@ -21,6 +23,9 @@ import App from 'js/components/App.vue';
 import ChatConnection from 'js/plugins/chat-connection';
 import WnlAxios from 'js/plugins/axios';
 import EventsTracker from 'js/plugins/events-tracker';
+import $ from 'jquery';
+
+window.$ = window.jQuery = $;
 
 // Sync vue-router and vuex
 sync(store, router);

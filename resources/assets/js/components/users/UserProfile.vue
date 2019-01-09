@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 		<div class="wnl-user-profile" :class="{mobile: isMobileProfile}">
 			<div class="text-loader" v-if="isLoading">
 				<wnl-text-loader>

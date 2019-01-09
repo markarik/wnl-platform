@@ -1,4 +1,5 @@
-window.$ = window.jQuery = require('jquery');
+import $ from 'jquery';
+window.$ = window.jQuery = $;
 
 $(window).on('unload', function(){});
 

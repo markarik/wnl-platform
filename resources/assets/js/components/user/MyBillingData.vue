@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="scrollable-main-container">
 		<div class="level wnl-screen-title">
 			<div class="level-left">

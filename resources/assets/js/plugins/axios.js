@@ -1,5 +1,6 @@
-import * as types from 'js/store/mutations-types';
+import axios from 'axios';
 import { get } from 'lodash';
+import * as types from 'js/store/mutations-types';
 
 export default (Vue, {store, router}) => {
 	/**
@@ -8,7 +9,7 @@ export default (Vue, {store, router}) => {
 	 * included with Laravel will automatically verify the header's value.
 	 */
 
-	window.axios = require('axios');
+	window.axios = axios;
 
 	window.axios.defaults.headers.common = {
 		'X-CSRF-TOKEN': window.Laravel.csrfToken,

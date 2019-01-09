@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<wnl-user-billing-data :resource-route="resourceRoute"/>
 </template>
 

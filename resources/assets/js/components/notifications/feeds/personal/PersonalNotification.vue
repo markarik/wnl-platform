@@ -106,7 +106,6 @@
 			.link-symbol
 				display: flex
 				flex: 0
-				width:
 
 				.icon
 					color: $color-inactive-gray

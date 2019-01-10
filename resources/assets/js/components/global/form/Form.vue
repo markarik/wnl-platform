@@ -45,7 +45,7 @@ export default {
 			default: () => ({}),
 		},
 		value: {
-			type: Object|String,
+			type: [Object, String],
 			default: () => ({}),
 		},
 		populate: {

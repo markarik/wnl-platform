@@ -42,7 +42,7 @@ Taksonomia kliniczna,,,,,,
 			$contents = Storage::get($file);
 
 			$csv = array_map('str_getcsv', explode("\n",$contents));
-			// CSV headers
+			// CSV headers => ignore
 			array_shift($csv);
 
 
@@ -72,6 +72,7 @@ Taksonomia kliniczna,,,,,,
 				$tagName = current($filtered);
 
 				if (empty($tagName)) {
+					// Empty row => ignore
 					$bar->advance();
 					continue;
 				}

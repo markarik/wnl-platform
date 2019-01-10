@@ -32,7 +32,7 @@ export default {
 	},
 	computed: {
 		childTerms() {
-			return this.terms.filter(term => term.parent_id === this.term.id)
+			return this.terms.filter(term => term.parent_id === this.term.id);
 		}
 	},
 	// Name is required to allow recursive rendering

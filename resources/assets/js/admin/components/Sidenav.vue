@@ -28,7 +28,7 @@
 			Pytania
 		</p>
 		<ul class="menu-list">
-			<li><router-link :to="{ name: 'quizes' }">Edytuj zestaw pytań</router-link></li>
+			<li><router-link :to="{ name: 'quizes' }">Edytuj pytania zamknięte</router-link></li>
 		</ul>
 		<p class="menu-label">
 			Użytkownicy

@@ -1,25 +1,10 @@
 <template>
-	<div class="margin bottom item">
+	<div class="margin bottom">
 		<router-link :to="to" class="link">
-			<span class="id">{{id}}. </span>
-			<span class="text" v-html="text" />
+			<span class="id">{{id}}. {{stripHtml(text)}}</span>
 		</router-link>
 	</div>
 </template>
-
-<style lang="sass" rel="stylesheet/sass" scoped>
-@import 'resources/assets/sass/variables'
-
-.link
-	display: flex
-	justify-content: space-between
-	.id
-		flex: 0 1 auto
-		margin-right: $margin-small
-	.text
-		flex: 1 0 auto
-
-</style>
 
 <script>
 export default {
@@ -35,5 +20,12 @@ export default {
 			};
 		},
 	},
+	methods: {
+		stripHtml(text) {
+			var tmp = document.createElement("div");
+			tmp.innerHTML = text;
+			return tmp.innerText || tmp.innerHTML || "";
+		}
+	}
 };
 </script>

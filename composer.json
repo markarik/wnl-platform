@@ -23,7 +23,7 @@
 	"bschmitt/laravel-amqp": "^1.2"
   },
   "require-dev": {
-	"laravel/dusk": "^3.0",
+	"laravel/dusk": "^4.0",
 	"laravel/tinker": "^1.0",
 	"fzaninotto/faker": "~1.4",
 	"mockery/mockery": "0.9.*",

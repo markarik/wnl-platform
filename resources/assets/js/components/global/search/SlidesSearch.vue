@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div>
 		<div v-if="hasHits" class="wnl-slides-search" :class="{'is-mobile': isMobile}">
 			<wnl-slide-thumbnail

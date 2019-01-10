@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="dropdown-container">
 	 	<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
 			<div slot="activator" class="notifications-toggle"

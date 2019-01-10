@@ -8,7 +8,13 @@
 			:key="screenData.id"
 			@userEvent="proxyUserEvent"
 		/>
-		<wnl-qna :sortingEnabled="true" v-if="showQna" :tags="tags" class="wnl-screen-qna"></wnl-qna>
+		<wnl-qna
+			:sortingEnabled="true"
+			v-if="showQna"
+			:tags="tags"
+			:discussionId="screenData.discussion_id"
+			class="wnl-screen-qna"
+		></wnl-qna>
 	</div>
 </template>
 

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="scrollable-main-container">
 		<div class="message is-primary">
 			<div class="message-header">

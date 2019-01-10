@@ -39,24 +39,24 @@
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
-	.annotations__pagination
+	/deep/ .annotations__pagination
 		margin-top: $margin-base
 
 		.pagination-list
 			justify-content: center
 
-	.header
+	/deep/ .header
 		background: white
 		position: sticky
 		top: -30px
 		z-index: 100
 		padding-bottom: $margin-small
 
-	.tabs
+	/deep/ .tabs
 		margin-bottom: 0
 		.highlighted
 			width: 100%
@@ -67,7 +67,8 @@
 				display: inline-block
 			&.is-active a
 				color: #fff
-	.search
+
+	/deep/ .search
 		position: sticky
 		top: 13px
 		background: white

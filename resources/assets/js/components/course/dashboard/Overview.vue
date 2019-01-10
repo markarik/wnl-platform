@@ -52,7 +52,13 @@
 			</a>
 		</div>
 		<wnl-stream-feed v-show="overviewView === 'stream'"/>
-		<wnl-qna :sortingEnabled="true" :numbersDisabled="true" v-show="overviewView === 'qna'" :hideTitle="true" class="wnl-overview-qna"/>
+		<wnl-qna
+			:sortingEnabled="true"
+			:numbersDisabled="true"
+			v-show="overviewView === 'qna'"
+			:hideTitle="true"
+			class="wnl-overview-qna"
+		/>
 	</div>
 </template>
 

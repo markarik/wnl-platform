@@ -129,6 +129,9 @@ $factory->define(App\Models\QnaQuestion::class, function (Faker\Generator $faker
 	return [
 		'text'    => $faker->text,
 		'user_id' => 1,
+		'discussion_id' => function () {
+			return factory(App\Models\Discussion::class)->create()->id;
+		},
 	];
 });
 
@@ -258,5 +261,11 @@ $factory->define(App\Models\Notification::class, function (Faker\Generator $fake
 		'notifiable_id' => $notifiable->id,
 		'notifiable_type' => \App\Models\User::class,
 		'data' => []
+	];
+});
+
+$factory->define(App\Models\Discussion::class, function (Faker\Generator $faker) {
+	return [
+		'name'    => $faker->text,
 	];
 });

@@ -30,6 +30,9 @@ class CreateDiscussionsRelatedTables extends Migration
 			$table->string('name');
 			$table->timestamps();
 		});
+
+		// No need for special rollback handler as it only adds data to the new columns and the new table
+		Artisan::call('data-migration:attach-qna-to-discussion');
 	}
 
 	/**

@@ -25,7 +25,7 @@
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.wnl-private-chat

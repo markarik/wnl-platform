@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="field wnl-form-checkbox">
 
 		<input type="checkbox"

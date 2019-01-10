@@ -54,6 +54,7 @@ class AppServiceProvider extends ServiceProvider
 		}
 		if($this->app->runningInConsole()) {
 			$this->app->register(AmqpServiceProvider::class);
+			$this->app->register(DiscussableServiceProvider::class);
 		}
 	}
 

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="wnl-questions-search">
 		<div class="search-input">
 			<div class="control" :class="{'is-loading': loading}">

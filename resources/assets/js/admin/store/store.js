@@ -15,6 +15,7 @@ import autocomplete from 'js/store/modules/autocomplete';
 import alerts from 'js/store/modules/alerts';
 import flashcards from 'js/admin/store/modules/flashcards';
 import form from 'js/store/modules/form';
+import flashcardsSets from './modules/flashcardsSets';
 
 Vue.use(Vuex);
 
@@ -33,6 +34,7 @@ export default new Vuex.Store({
 		autocomplete,
 		alerts,
 		flashcards,
+		flashcardsSets,
 		form,
 	},
 	strict: debug

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<button class="wnl-text-button"
 			:disabled="disabled"
 			:type="type"

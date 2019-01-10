@@ -114,6 +114,7 @@
 import _ from 'lodash';
 import {imageviewer} from 'vendor/imageviewer/imageviewer';
 import { nextTick } from 'vue';
+import $ from 'jquery';
 
 imageviewer($, window, document);
 function showImage(src) {

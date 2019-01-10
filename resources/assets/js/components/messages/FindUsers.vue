@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="wnl-find-users">
 		<div class="wnl-find-users-input control" :class="{'is-loading': loading}">
 			<input

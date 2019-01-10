@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="wnl-private-chat">
 		<div class="chat-title">
 			<wnl-avatar
@@ -25,7 +25,7 @@
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.wnl-private-chat

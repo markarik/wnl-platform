@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class Taxonomy extends Model
 {
-	protected $fillable = ['name'];
+	use Searchable;
+
+	protected $fillable = ['name', 'description'];
 
 	public function tagsTaxonomy() {
 		return $this->hasMany('App\Models\TagsTaxonomy');

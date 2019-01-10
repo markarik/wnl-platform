@@ -1,7 +1,11 @@
-<template lang="html">
+<template>
 	<div class="content">
 		<div class="page content" v-html="content"></div>
-		<wnl-qna :tags="tags" :reactionsDisabled="true" v-if="qna"></wnl-qna>
+		<wnl-qna
+			:tags="tags"
+			:reactionsDisabled="true"
+			:discussionId="discussion_id"
+			v-if="qna"/>
 	</div>
 </template>
 
@@ -46,6 +50,7 @@ export default {
 			created_at: null,
 			updated_at: null,
 			tags: null,
+			discussion_id: 0
 		};
 	},
 	methods: {

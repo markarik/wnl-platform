@@ -19,9 +19,10 @@
 			<li><router-link :to="{ name: 'annotations' }">Przypisy</router-link></li>
 		</ul>
 
-		<p class="menu-label">Tagi</p>
+		<p class="menu-label">Tagi i Taksonomie</p>
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'tags' }">Edycja tagów</router-link></li>
+			<li><router-link :to="{ name: 'taxonomies' }">Edycja taksonomii</router-link></li>
 		</ul>
 
 		<p class="menu-label">

@@ -8,7 +8,6 @@ use App\Models\TaxonomyTerm;
 class TaxonomyTermTransformer extends ApiTransformer {
 	protected $parent;
 	protected $availableIncludes = ['tags', 'taxonomies'];
-	protected $defaultIncludes = ['taxonomy_terms'];
 
 	public function __construct($parent = null) {
 		$this->parent = $parent;
@@ -18,6 +17,7 @@ class TaxonomyTermTransformer extends ApiTransformer {
 		$data = [
 			'id' => $taxonomyTerm->id,
 			'description' => $taxonomyTerm->description,
+			'parent_id' => $taxonomyTerm->parent_id,
 		];
 
 		if ($this->parent) {
@@ -35,12 +35,5 @@ class TaxonomyTermTransformer extends ApiTransformer {
 	public function includeTaxonomies(TaxonomyTerm $taxonomyTerm)
 	{
 		return $this->item($taxonomyTerm->taxonomy, new TaxonomyTransformer(['taxonomy_terms' => $taxonomyTerm->id]), 'taxonomies');
-	}
-
-	public function includeTaxonomyTerms(TaxonomyTerm $taxonomyTerm)
-	{
-		$transformer = new TaxonomyTermTransformer(['taxonomy_terms' => $taxonomyTerm->id]);
-		$transformer->setDefaultIncludes(['tags']);
-		return $this->collection($taxonomyTerm->children, $transformer, 'taxonomy_terms');
 	}
 }

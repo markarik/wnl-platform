@@ -13,6 +13,6 @@ class TaxonomyTermsApiController extends ApiController {
 	}
 
 	public function getByTaxonomy($taxonomyId) {
-		return $this->transformAndRespond(TaxonomyTerm::where('taxonomy_id', $taxonomyId)->get()->toTree());
+		return $this->transformAndRespond(TaxonomyTerm::where('taxonomy_id', $taxonomyId)->get()->toFlatTree());
 	}
 }

@@ -1,12 +1,13 @@
 <template>
 	<li>
 		{{ term.id }}. {{included.tags[term.tags[0]].name}}
-		<ul v-if="term.taxonomy_terms">
+		<ul v-if="childTerms.length">
 			<wnl-taxonomy-term-item
-				v-for="termId in term.taxonomy_terms"
-				:key="termId"
-				:term="included.taxonomy_terms[termId]"
+				v-for="childTerm in childTerms"
+				:key="childTerm.id"
+				:term="childTerm"
 				:included="included"
+				:terms="terms"
 			>
 			</wnl-taxonomy-term-item>
 		</ul>
@@ -23,6 +24,15 @@ export default {
 		included: {
 			type: Object,
 			required: true,
+		},
+		terms: {
+			type: Array,
+			required: true,
+		}
+	},
+	computed: {
+		childTerms() {
+			return this.terms.filter(term => term.parent_id === this.term.id)
 		}
 	},
 	// Name is required to allow recursive rendering

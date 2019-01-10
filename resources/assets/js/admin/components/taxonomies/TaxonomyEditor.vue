@@ -24,9 +24,11 @@
 		</wnl-form>
 		<h3 class="title is-3">Pojęcia</h3>
 		<ul class="content">
-			<wnl-taxonomy-term-item v-for="term in terms"
+			<wnl-taxonomy-term-item
+				v-for="term in rootTerms"
 				:term="term"
 				:included="included"
+				:terms="terms"
 				:key="term.id"
 			/>
 		</ul>
@@ -57,11 +59,11 @@
 </style>
 
 <script>
-import { get } from 'lodash';
+import {mapActions} from 'vuex';
 
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
-import {getApiUrl} from '../../../utils/env';
+import {getApiUrl} from 'js/utils/env';
 
 export default {
 	props: {
@@ -86,6 +88,9 @@ export default {
 		resourceRoute() {
 			return this.isEdit ? `taxonomies/${this.id}` : 'taxonomies';
 		},
+		rootTerms() {
+			return this.terms.filter(term => term.parent_id === null);
+		}
 	},
 	components: {
 		WnlFormText,
@@ -95,6 +100,7 @@ export default {
 		WnlTaxonomyTermItem
 	},
 	methods: {
+		...mapActions(['addAutoDismissableAlert']),
 		onSubmitSuccess(data) {
 			if (!this.isEdit) {
 				this.$router.push({ name: 'taxonomy-edit', params: { id: data.id } });
@@ -103,11 +109,17 @@ export default {
 	},
 	async mounted() {
 		if (this.id) {
-			// TODO error handling
-			const {data} = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${this.id}?include=tags,taxonomies,taxonomy_terms`));
-			const {included, ...terms} = data;
-			this.terms = terms;
-			this.included = included;
+			try {
+				const {data: {included, ...terms}} = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${this.id}?include=tags,taxonomies`));
+				this.terms = Object.values(terms);
+				this.included = included;
+			} catch (error) {
+				this.addAutoDismissableAlert({
+					text: 'Coś poszło nie tak przy pobieraniu struktury Taksonomii',
+					type: 'error'
+				});
+			}
+
 		}
 	},
 };

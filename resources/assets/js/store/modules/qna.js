@@ -112,12 +112,12 @@ function sortByNoAnswer(questionsList) {
 }
 
 
-function getUsersQuestions(questionsList, userId) {
+function getUsersQuestions(questionsList, userProfileId) {
 	return _.reverse(
 		_.sortBy(
 			_.values(
 				_.filter(questionsList, (question) => {
-					return question.profiles[0] == userId;
+					return question.profiles[0] === userProfileId;
 				})
 			),
 			(question) => question.upvote.created_at
@@ -144,7 +144,7 @@ const getters = {
 		case 'no-answer':
 			return sortByNoAnswer(list);
 		case 'my':
-			return getUsersQuestions(list, rootGetters.currentUserId);
+			return getUsersQuestions(list, rootGetters.currentUserProfileId);
 		default:
 			return sortByVotes(list);
 		}

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53cea0e8ac345d6bf4ad243ab068ec2c",
+    "content-hash": "2ef0d9395e0cceb6989bc45ae12aaea1",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.84.0",
+            "version": "3.85.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "2c1800a5260ef4399b366857b3792a307f4881a9"
+                "reference": "993caf51c56384fcbddd97ed1361fcd89628c693"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2c1800a5260ef4399b366857b3792a307f4881a9",
-                "reference": "2c1800a5260ef4399b366857b3792a307f4881a9",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/993caf51c56384fcbddd97ed1361fcd89628c693",
+                "reference": "993caf51c56384fcbddd97ed1361fcd89628c693",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-01-09T22:26:16+00:00"
+            "time": "2019-01-10T19:42:24+00:00"
         },
         {
             "name": "barryvdh/laravel-dompdf",
@@ -5105,16 +5105,16 @@
         },
         {
             "name": "barryvdh/laravel-ide-helper",
-            "version": "dev-master",
+            "version": "v2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "5439781e7cee37f0ea18ad659da903024c9cade7"
+                "reference": "3d7f1240896a075aa23b13f82dfcbe165dadeef2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/5439781e7cee37f0ea18ad659da903024c9cade7",
-                "reference": "5439781e7cee37f0ea18ad659da903024c9cade7",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/3d7f1240896a075aa23b13f82dfcbe165dadeef2",
+                "reference": "3d7f1240896a075aa23b13f82dfcbe165dadeef2",
                 "shasum": ""
             },
             "require": {
@@ -5140,7 +5140,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6-dev"
+                    "dev-master": "2.5-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -5175,7 +5175,7 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2018-12-19T12:13:32+00:00"
+            "time": "2018-12-19T12:12:05+00:00"
         },
         {
             "name": "barryvdh/reflection-docblock",
@@ -5988,16 +5988,16 @@
         },
         {
             "name": "laravel/dusk",
-            "version": "v4.0.4",
+            "version": "v4.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/dusk.git",
-                "reference": "3b2df334d92b6215400ddd183253eb4bcc07debb"
+                "reference": "c30c8a01d35661e253a7d3ea7ae6a79faf3f8d92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/dusk/zipball/3b2df334d92b6215400ddd183253eb4bcc07debb",
-                "reference": "3b2df334d92b6215400ddd183253eb4bcc07debb",
+                "url": "https://api.github.com/repos/laravel/dusk/zipball/c30c8a01d35661e253a7d3ea7ae6a79faf3f8d92",
+                "reference": "c30c8a01d35661e253a7d3ea7ae6a79faf3f8d92",
                 "shasum": ""
             },
             "require": {
@@ -6045,7 +6045,7 @@
                 "testing",
                 "webdriver"
             ],
-            "time": "2018-12-19T13:55:39+00:00"
+            "time": "2019-01-10T14:22:35+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -7918,9 +7918,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "barryvdh/laravel-ide-helper": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

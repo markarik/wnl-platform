@@ -110,7 +110,8 @@ export default {
 	async mounted() {
 		if (this.id) {
 			try {
-				const {data: {included, ...terms}} = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${this.id}?include=tags,taxonomies`));
+				const response = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${this.id}?include=tags,taxonomies`));
+				const {data: {included, ...terms}} = response;
 				this.terms = Object.values(terms);
 				this.included = included;
 			} catch (error) {

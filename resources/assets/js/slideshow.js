@@ -5,8 +5,8 @@ import { imageviewer } from 'vendor/imageviewer/imageviewer';
 
 import { timeFromS } from 'js/utils/time';
 
-import 'sass/slideshow.sass';
 import 'vendor/reveal/reveal-theme.scss';
+import 'sass/slideshow.sass';
 import 'vendor/imageviewer/imageviewer.scss';
 
 imageviewer($, window, document);

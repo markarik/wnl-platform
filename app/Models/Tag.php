@@ -9,8 +9,6 @@ class Tag extends Model
 {
 	use Searchable;
 
-	const PRESENTATION_TAG_NAME = 'Prezentacja';
-
 	protected $fillable = ['name', 'description', 'color'];
 
 	protected $touches = ['questions'];
@@ -53,29 +51,14 @@ class Tag extends Model
 		return Category::where('name', $this->name)->exists();
 	}
 
-	public function hasProtectedTaggable()
-	{
-		return $this->taggables()
-			->whereIn('taggable_type', Taggable::PROTECTED_TAGGABLE_TYPES)
-			->exists();
-	}
-
 	public function isRenameAllowed()
 	{
-		// `Prezentacja` tag doesn't have a protected taggable but needs to be protected anyway
-		// It is used to display QnA below presentation but not intro, quiz questions etc.
-		return $this->name !== self::PRESENTATION_TAG_NAME &&
-			// SlidesFromCategory command uses hardcoded tag names
-			!$this->isCategoryTag();
+		// SlidesFromCategory command uses hardcoded tag names
+		return !$this->isCategoryTag();
 	}
 
 	public function isDeleteAllowed()
 	{
-		// `Prezentacja` tag doesn't have a protected taggable but needs to be protected anyway
-		// It is used to display QnA below presentation but not intro, quiz questions etc.
-		return $this->name !== self::PRESENTATION_TAG_NAME &&
-			!$this->isInTaxonomy() &&
-			!$this->isCategoryTag() &&
-			!$this->hasProtectedTaggable();
+		return !$this->isInTaxonomy() && !$this->isCategoryTag();
 	}
 }

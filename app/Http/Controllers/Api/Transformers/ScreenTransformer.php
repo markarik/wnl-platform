@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Http\Controllers\Api\ApiController;
-use DB;
-use App\Models\Screen;
 use App\Http\Controllers\Api\ApiTransformer;
+use App\Models\Screen;
 
 class ScreenTransformer extends ApiTransformer
 {

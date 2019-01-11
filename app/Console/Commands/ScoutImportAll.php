@@ -45,8 +45,8 @@ class ScoutImportAll extends Command
 		);
 
 		// Call scout:import on every searchable class
-		array_walk($searchableClassNames, function ($searchablClassName) {
-			$this->call('scout:import', ['model' => $searchablClassName]);
+		array_walk($searchableClassNames, function ($searchableClassName) {
+			$this->call('scout:import', ['model' => $searchableClassName]);
 		});
 	}
 }

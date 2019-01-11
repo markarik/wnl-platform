@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.7.20 on 2019-01-09 10:32:08.
+ * Generated for Laravel 5.7.20 on 2019-01-11 15:09:14.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -9537,26 +9537,6 @@ namespace Illuminate\Support\Facades {
         {
             return \Illuminate\Http\Request::hasValidSignature($absolute);
         }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function validate($rules, $params = null)
-        {
-            return \Illuminate\Http\Request::validate($rules, $params);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function hasValidSignature($absolute = true)
-        {
-            return \Illuminate\Http\Request::hasValidSignature($absolute);
-        }
          
     }
 
@@ -15740,16 +15720,6 @@ namespace Collective\Html {
         public static function componentCall($method, $parameters)
         {
             return \Collective\Html\FormBuilder::componentCall($method, $parameters);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function customLabel($name, $value, $options = array())
-        {
-            return \Collective\Html\FormBuilder::customLabel($name, $value, $options);
         }
         
         /**

@@ -22,9 +22,9 @@ export default {
 	},
 	methods: {
 		stripHtml(text) {
-			var tmp = document.createElement("div");
+			var tmp = document.createElement('div');
 			tmp.innerHTML = text;
-			return tmp.innerText || tmp.innerHTML || "";
+			return tmp.innerText || tmp.innerHTML || '';
 		}
 	}
 };

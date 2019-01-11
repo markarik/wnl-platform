@@ -7,6 +7,5 @@ return [
 		'in-taxonomy' => 'Ten tag jest częścią taksonomii. Nie możesz go usunąć.',
 		'in-course-structure' => 'Ten tag jest użyty przy ustalaniu struktury kursu. Nie możesz go usunąć.',
 		'delete-disallowed' => 'Nie możesz usunąć tego taga.',
-		'move-protected-taggables' => 'Próbujesz zmienić powiązania, które są potrzebne do prawidłowego działania systemu. Nie możesz tego zrobić.'
 	],
 ];

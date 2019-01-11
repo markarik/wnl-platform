@@ -348,4 +348,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Pages
 	Route::get("{$r['pages']}/{slug}", 'PagesApiController@get');
+
+	// Discussions
+	Route::get("{$r['discussions']}/{id}", 'DiscussionsApiController@get');
 });

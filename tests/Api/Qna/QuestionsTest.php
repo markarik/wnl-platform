@@ -2,6 +2,7 @@
 
 namespace Tests\Api\Qna;
 
+use App\Models\Discussion;
 use App\Models\Lesson;
 use App\Models\Page;
 use App\Models\QnaQuestion;
@@ -21,11 +22,13 @@ class QuestionsTest extends ApiTestCase
 	{
 		$user = User::find(1);
 		$tags = collect(factory(Tag::class, 3)->create())->pluck('id');
+		$discussionId = factory(Discussion::class)->create()->id;
 
 		$data = [
 			'text'    => 'Meine Damen und Herren, hertzlich willkommen und nicht verstehen!',
 			'tags'    => $tags,
 			'context' => ['foo' => 'bar'],
+			'discussion_id' => $discussionId
 		];
 
 		$response = $this

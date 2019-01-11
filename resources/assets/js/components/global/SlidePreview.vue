@@ -100,7 +100,7 @@ export default {
 			default: false
 		},
 		slidesCount: {
-			type: Number | String,
+			type: [Number, String],
 		}
 	},
 	computed: {

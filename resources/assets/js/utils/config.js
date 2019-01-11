@@ -6,10 +6,6 @@ export function resource(key) {
 	return configValue('papi').resources[key];
 }
 
-export const invisibleTags = [
-	'Prezentacja',
-];
-
 export const modelToResourceMap = {
 	'App\\Models\\QnaQuestion': 'qna_questions',
 	'App\\Models\\QuizQuestion': 'quiz_questions',

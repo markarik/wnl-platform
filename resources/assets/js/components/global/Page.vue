@@ -2,7 +2,7 @@
 	<div class="content">
 		<div class="page content" v-html="content"></div>
 		<wnl-qna
-			:tags="tags"
+			:context-tags="tags"
 			:reactionsDisabled="true"
 			:discussionId="discussion_id"
 			v-if="qna"/>
@@ -86,7 +86,7 @@ export default {
 				subcontext: this.slug
 			});
 		},
-		...mapActions('qna', ['fetchQuestionsByTags']),
+		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 	},
 	mounted() {
 		this.fetch();
@@ -95,8 +95,8 @@ export default {
 		content(newValue) {
 			this.content = injectArguments(newValue, this.arguments);
 		},
-		tags(newValue) {
-			this.fetchQuestionsByTags({tags: newValue});
+		discussion_id() {
+			this.discussion_id && this.fetchQuestionsForDiscussion(this.discussion_id);
 		},
 		slug() {this.fetch();}
 	}

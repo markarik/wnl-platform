@@ -62,37 +62,37 @@ export default {
 		'wnl-submit': Submit,
 	},
 	props: {
-		tags: {
+		contextTags: {
 			type: Array,
-			default: []
+			default: () => []
 		},
 		discussionId: {
 			type: Number,
-			default: 0
+			required: true
 		}
 	},
 	computed: {
 		attachedData() {
 			return {
-				tags: this.tags.map((tag) => tag.id),
+				tags: this.contextTags.map((tag) => tag.id),
 				context: {
 					name: this.$route.name,
 					params: this.$route.params
 				},
-				discussionId: this.discussionId
+				discussion_id: this.discussionId
 			};
 		},
 	},
 	methods: {
-		...mapActions('qna', ['fetchQuestionsByTags']),
+		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 		onSubmitSuccess() {
 			this.$emit('submitSuccess');
-			this.fetchQuestionsByTags({tags: this.tags, sorting: 'latest'});
+			this.fetchQuestionsForDiscussion(this.discussionId);
 		},
 	},
 	watch: {
-		'tags' (newValue) {
-			this.fetchQuestionsByTags({tags: newValue});
+		discussionId() {
+			this.fetchQuestionsForDiscussion(this.discussionId);
 		}
 	}
 };

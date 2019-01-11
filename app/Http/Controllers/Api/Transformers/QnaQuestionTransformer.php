@@ -22,10 +22,11 @@ class QnaQuestionTransformer extends ApiTransformer
 			'text'       => $question->text,
 			'created_at' => $question->created_at->timestamp,
 			'updated_at' => $question->updated_at->timestamp,
+			'discussions' => $question->discussion_id
 		];
 
 		if ($this->parent) {
-			$data['lessons'] = $this->parent;
+			$data = array_merge($data, $this->parent);
 		}
 
 		if (!empty($question->meta)) {
@@ -43,7 +44,7 @@ class QnaQuestionTransformer extends ApiTransformer
 	{
 		$answers = $question->answers;
 
-		return $this->collection($answers, new QnaAnswerTransformer, 'qna_answers');
+		return $this->collection($answers, new QnaAnswerTransformer(['qna_questions' => $question->id]), 'qna_answers');
 	}
 
 	public function includeTags(QnaQuestion $question)

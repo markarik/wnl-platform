@@ -36,8 +36,8 @@ services:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
     working_dir: ${CONTAINER_CODE_PATH}/wnl-platform
 
-  laravel-worker:
-    container_name: laravel-worker
+  default-queue-worker:
+    container_name: default-queue-worker
     image: bethink/php:7.2.7-fpm-alpine3.7
     volumes:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
@@ -45,8 +45,8 @@ services:
     depends_on:
       - redis
 
-  laravel-queue-worker:
-    container_name: laravel-queue-worker
+  notifications-queue-worker:
+    container_name: notifications-queue-worker
     image: bethink/php:7.2.7-fpm-alpine3.7
     volumes:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}

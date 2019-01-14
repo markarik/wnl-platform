@@ -22,15 +22,7 @@
 				class="margin top bottom"
 			>Opis</wnl-textarea>
 		</wnl-form>
-		<h3 class="title is-3">Pojęcia</h3>
-		<ul class="content" v-if="!isLoadingTerms">
-			<wnl-taxonomy-term-item
-				v-for="term in rootTerms"
-				:term="term"
-				:key="term.id"
-			/>
-		</ul>
-		<wnl-text-loader v-else />
+		<wnl-taxonomy-terms-editor :taxonomyId="id" v-if="isEdit" />
 	</div>
 </template>
 
@@ -61,7 +53,7 @@
 import {mapActions, mapState} from 'vuex';
 
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
-import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
+import WnlTaxonomyTermsEditor from 'js/admin/components/taxonomies/TaxonomyTermsEditor';
 
 export default {
 	props: {
@@ -69,11 +61,6 @@ export default {
 			type: String|Number,
 			required: true,
 		},
-	},
-	data() {
-		return {
-			included: {},
-		};
 	},
 	computed: {
 		isEdit() {
@@ -98,29 +85,14 @@ export default {
 		WnlForm,
 		WnlSubmit,
 		WnlTextarea,
-		WnlTaxonomyTermItem
+		WnlTaxonomyTermsEditor,
 	},
 	methods: {
-		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy']),
 		onSubmitSuccess(data) {
 			if (!this.isEdit) {
 				this.$router.push({ name: 'taxonomy-edit', params: { id: data.id } });
 			}
 		},
-	},
-	async mounted() {
-		if (this.id) {
-			try {
-				this.fetchTermsByTaxonomy(this.id);
-			} catch (error) {
-				this.addAutoDismissableAlert({
-					text: 'Coś poszło nie tak przy pobieraniu struktury Taksonomii',
-					type: 'error'
-				});
-			}
-
-		}
 	},
 };
 </script>

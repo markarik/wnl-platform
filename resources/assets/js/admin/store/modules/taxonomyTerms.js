@@ -31,9 +31,9 @@ const actions = {
 		commit(types.SETUP_TERMS, []);
 		commit(types.SET_TAXONOMY_TERMS_LOADING, true);
 		const response = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${taxonomyId}?include=tags`));
-		const {data: {included: {tags}, ...terms}} = response;
+		const {data: {included, ...terms}} = response;
 		commit(types.SETUP_TERMS, Object.values(terms).map(term => {
-			term.tag = tags[term.tags[0]];
+			term.tag = included.tags[term.tags[0]];
 			return term;
 		}));
 		commit(types.SET_TAXONOMY_TERMS_LOADING, false);

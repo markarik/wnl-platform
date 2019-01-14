@@ -1,0 +1,91 @@
+<template>
+	<div class="terms-editor">
+		<div class="terms-editor__panel is-left">
+			<div class="terms-editor__panel__header">
+				<h4 class="title is-5">Hierarchia pojęć</h4>
+				<span class="control has-icons-right">
+					<input class="input" type="search" placeholder="Filtruj po naziwe..." />
+					<span class="icon is-small is-right">
+						<i class="fa fa-filter"></i>
+					</span>
+				</span>
+			</div>
+			<ul v-if="!isLoadingTerms">
+				<wnl-taxonomy-term-item
+					v-for="term in rootTerms"
+					:term="term"
+					:key="term.id"
+				/>
+			</ul>
+			<wnl-text-loader v-else />
+		</div>
+		<div class="terms-editor__panel is-right">
+			prawy panel
+		</div>
+	</div>
+</template>
+
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.terms-editor
+		border-top: 2px solid $color-lightest-gray
+		display: flex
+		padding-top: 20px
+
+		&__panel
+			flex: 50%
+
+			&.is-left
+				border-right: 2px solid $color-lightest-gray
+				padding-right: 20px
+
+			&.is-right
+				padding-left: 20px
+
+			&__header
+				display: flex
+				justify-content: space-between
+</style>
+
+<script>
+import {mapActions, mapState} from 'vuex';
+
+import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
+import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
+
+export default {
+	props: {
+		taxonomyId: {
+			type: String|Number,
+			required: true,
+		},
+	},
+	computed: {
+		rootTerms() {
+			return this.terms.filter(term => term.parent_id === null);
+		},
+		...mapState('taxonomyTerms', {
+			isLoadingTerms: 'isLoading',
+			terms: 'terms'
+		}),
+	},
+	components: {
+		WnlTaxonomyTermItem
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy']),
+	},
+	async mounted() {
+		try {
+			this.fetchTermsByTaxonomy(this.taxonomyId);
+		} catch (error) {
+			this.addAutoDismissableAlert({
+				text: 'Coś poszło nie tak przy pobieraniu struktury Taksonomii',
+				type: 'error'
+			});
+		}
+	},
+};
+</script>

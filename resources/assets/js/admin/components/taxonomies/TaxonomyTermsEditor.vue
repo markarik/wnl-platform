@@ -2,7 +2,7 @@
 	<div class="terms-editor">
 		<div class="terms-editor__panel is-left">
 			<div class="terms-editor__panel__header">
-				<h4 class="title is-5">Hierarchia pojęć</h4>
+				<h4 class="title is-5"><strong>Hierarchia pojęć</strong></h4>
 				<span class="control has-icons-right">
 					<input class="input" type="search" placeholder="Filtruj po naziwe..." />
 					<span class="icon is-small is-right">
@@ -20,7 +20,7 @@
 			<wnl-text-loader v-else />
 		</div>
 		<div class="terms-editor__panel is-right">
-			prawy panel
+			<wnl-taxonomy-term-editor-right />
 		</div>
 	</div>
 </template>
@@ -51,8 +51,8 @@
 <script>
 import {mapActions, mapState} from 'vuex';
 
-import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
+import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
 
 export default {
 	props: {
@@ -71,7 +71,8 @@ export default {
 		}),
 	},
 	components: {
-		WnlTaxonomyTermItem
+		WnlTaxonomyTermItem,
+		WnlTaxonomyTermEditorRight
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

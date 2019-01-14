@@ -15,7 +15,8 @@ import autocomplete from 'js/store/modules/autocomplete';
 import alerts from 'js/store/modules/alerts';
 import flashcards from 'js/admin/store/modules/flashcards';
 import form from 'js/store/modules/form';
-import flashcardsSets from './modules/flashcardsSets';
+import flashcardsSets from 'js/admin/store/modules/flashcardsSets';
+import taxonomyTerms from 'js/admin/store/modules/taxonomyTerms';
 
 Vue.use(Vuex);
 
@@ -36,6 +37,7 @@ export default new Vuex.Store({
 		flashcards,
 		flashcardsSets,
 		form,
+		taxonomyTerms,
 	},
 	strict: debug
 });

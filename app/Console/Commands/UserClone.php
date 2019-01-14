@@ -93,25 +93,15 @@ class UserClone extends Command
 
 	private function copyRedisData($redis, $targetUser, $sourceUser, $courseId)
 	{
-		$redis->multi();
-
-		try {
-			$courseProgress = $redis->get(UserStateApiController::getCourseRedisKey($sourceUser->id, $courseId));
-			$redis->set(UserStateApiController::getCourseRedisKey($targetUser->id, $courseId), $courseProgress);
-			$lessonKeys = $redis->keys(UserStateApiController::getLessonRedisKey($sourceUser->id, $courseId, '*'));
-			foreach ($lessonKeys as $key) {
-				$lessonProgress = $redis->get($key);
-				$lessonProgressObj = json_decode($lessonProgress);
-				$lessonId = $lessonProgressObj->route->params->lessonId;
-				$redis->set(UserStateApiController::getLessonRedisKey($sourceUser->id, $courseId, $lessonId), $lessonProgress);
-			}
-		} catch (\Exception $e) {
-			$redis->discard();
-			$this->error($e->getMessage());
-			die;
+		$courseProgress = $redis->get(UserStateApiController::getCourseRedisKey($sourceUser->profile->id, $courseId));
+		$redis->set(UserStateApiController::getCourseRedisKey($targetUser->profile->id, $courseId), $courseProgress);
+		$lessonKeys = $redis->keys(UserStateApiController::getLessonRedisKey($sourceUser->profile->id, $courseId, '*'));
+		foreach ($lessonKeys as $key) {
+			$lessonProgress = $redis->get($key);
+			$lessonProgressObj = json_decode($lessonProgress);
+			$lessonId = $lessonProgressObj->route->params->lessonId;
+			$redis->set(UserStateApiController::getLessonRedisKey($targetUser->profile->id, $courseId, $lessonId), $lessonProgress);
 		}
-
-		$redis->exec();
 	}
 
 	private function copyTable($table, $sourceUser, $targetUser)

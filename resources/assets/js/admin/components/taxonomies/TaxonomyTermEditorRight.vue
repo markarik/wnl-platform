@@ -31,13 +31,14 @@
 		<div>
 			<h5 class="title is-5 is-uppercase"><strong>Nadrzędne pojęcie</strong></h5>
 			<span class="info">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
-			<input class="input" />
+			<input class="input" v-model="parent_id"/>
 			<h5 class="title is-5 is-uppercase"><strong>Tag źródłowy</strong></h5>
 			<span class="info">Wybierz tag, na podstawie którego chcesz utworzyć pojęcie, lub utwórz nowy.</span>
-			<input class="input" />
+			<input class="input" v-model="tag_id" />
 			<h5 class="title is-5 is-uppercase"><strong>Notatka</strong></h5>
 			<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
-			<textarea class="textarea" />
+			<textarea class="textarea" v-model="description" />
+			<button class="button" @click="onSave">Zapisz</button>
 		</div>
 	</div>
 </template>
@@ -51,8 +52,31 @@
 
 
 <script>
+import {mapActions} from 'vuex';
+
 export default {
 	props: {
 	},
+	data() {
+		return {
+			tag_id: '',
+			taxonomy_id: 1,
+			description: '',
+			parent_id: null,
+		};
+	},
+	methods: {
+		...mapActions('taxonomyTerms', {
+			'createTerm': 'create',
+		}),
+		onSave() {
+			this.createTerm({
+				parent_id: this.parent_id,
+				tag_id: this.tag_id,
+				taxonomy_id: this.taxonomy_id,
+				description: this.description,
+			});
+		}
+	}
 };
 </script>

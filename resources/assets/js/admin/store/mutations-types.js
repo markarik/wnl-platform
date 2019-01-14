@@ -22,3 +22,4 @@ export const SETUP_FLASHCARDS_SETS = 'SETUP_FLASHCARDS_SETS';
 // Taxonomy Terms
 export const SET_TAXONOMY_TERMS_LOADING = 'SET_TAXONOMY_TERMS_LOADING';
 export const SETUP_TERMS = 'SETUP_TERMS';
+export const ADD_TERM = 'ADD_TERM';

@@ -48,7 +48,7 @@ class UserCreate extends Command
             'phone' => $this->ask('Phone number', 000),
         ];
 
-        $pass = str_random(8);
+        $pass = $this->ask('Password', str_random(8));
 
         $user = User::create(
             [

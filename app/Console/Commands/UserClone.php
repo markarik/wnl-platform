@@ -1,0 +1,158 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Http\Controllers\Api\PrivateApi\UserStateApiController;
+use App\Models\Role;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Redis;
+
+class UserClone extends Command
+{
+	/**
+	 * The name and signature of the console command.
+	 *
+	 * @var string
+	 */
+	protected $signature = 'user:clone {sourceUserId} {--course=1} {--table=}';
+
+	/**
+	 * The console command description.
+	 *
+	 * @var string
+	 */
+	protected $description = 'Copy user data to another user';
+
+	/**
+	 *  Default tables to be cloned.
+	 *
+	 * @var array
+	 */
+	private static $TABLES = [
+		'exams_results',
+//		'notifications',
+		'reactables',
+		'role_user',
+		'user_quiz_results',
+		'user_settings',
+		'users_plan_progress',
+		'users_plans',
+		'user_course_progress',
+		'user_lesson',
+		'user_subscription',
+	];
+
+	/**
+	 * Execute the console command.
+	 *
+	 * @return mixed
+	 */
+	public function handle()
+	{
+		list ($targetUser, $sourceUser, $courseId) = $this->collectInput();
+		$redis = Redis::connection();
+
+		$this->copyRedisData($redis, $targetUser, $sourceUser, $courseId);
+
+		foreach (self::$TABLES as $table) {
+			$this->copyTable($table, $sourceUser, $targetUser);
+		}
+
+		$targetUser->subscription()->update(['access_end' => Carbon::now()->addYears(15)]);
+
+		return;
+	}
+
+	private function collectInput()
+	{
+		$courseId = $this->option('course');
+		$sourceUserId = $this->argument('sourceUserId');
+		$sourceUser = User::find($sourceUserId);
+
+		if (!$sourceUser) {
+			$this->error('Source user not found.');
+			die;
+		}
+
+		if ($this->confirm('Create new user?')) {
+			$targetUser = $this->createUser();
+		} else {
+			$targetUserId = $this->ask('Target user ID');
+			$targetUser = User::find($targetUserId);
+		}
+
+		if (!$targetUser) {
+			$this->error('Target user not found.');
+			die;
+		}
+
+		return [$targetUser, $sourceUser, $courseId];
+	}
+
+	private function copyRedisData($redis, $targetUser, $sourceUser, $courseId)
+	{
+		$redis->multi();
+
+		try {
+			$courseProgress = $redis->get(UserStateApiController::getCourseRedisKey($sourceUser->id, $courseId));
+			$redis->set(UserStateApiController::getCourseRedisKey($targetUser->id, $courseId), $courseProgress);
+			$lessonKeys = $redis->keys(UserStateApiController::getLessonRedisKey($sourceUser->id, $courseId, '*'));
+			foreach ($lessonKeys as $key) {
+				$lessonProgress = $redis->get($key);
+				$lessonProgressObj = json_decode($lessonProgress);
+				$lessonId = $lessonProgressObj->route->params->lessonId;
+				$redis->set(UserStateApiController::getLessonRedisKey($sourceUser->id, $courseId, $lessonId), $lessonProgress);
+			}
+		} catch (\Exception $e) {
+			$redis->discard();
+			$this->error($e->getMessage());
+			die;
+		}
+
+		$redis->exec();
+	}
+
+	private function copyTable($table, $sourceUser, $targetUser)
+	{
+		\DB::beginTransaction();
+
+		try {
+			$results = \DB::table($table)->where('user_id', $sourceUser->id)->get();
+			$insert = $results->map(function ($row) use ($targetUser) {
+				$row->user_id = $targetUser->id;
+				unset($row->id);
+				return (array)$row;
+			})->toArray();
+
+			foreach ($insert as $item) {
+				try {
+					\DB::table($table)->insert($item);
+				} catch (\Illuminate\Database\QueryException $e) {
+					if ($e->errorInfo[1] === 1062) {
+						// Means entry is duplicated.
+					} else {
+						throw $e;
+					}
+				}
+			}
+		} catch (\Exception $e) {
+			$this->error($e->getMessage());
+			die;
+		}
+
+		\DB::commit();
+	}
+
+	private function createUser()
+	{
+		$pass = $this->ask('Password', str_random(8));
+		$user = factory(User::class)->create(['password' => bcrypt($pass)]);
+		$this->info("Login: {$user->email}\n" . "Password: {$pass}\n\n");
+		$role = Role::byName('test');
+		$user->roles()->attach($role);
+
+		return $user;
+	}
+}

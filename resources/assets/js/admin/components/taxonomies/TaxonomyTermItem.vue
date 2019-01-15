@@ -6,6 +6,9 @@
 				<span>{{term.tag.name}}</span>
 			</div>
 			<div class="media-right central">
+				<span class="icon-small taxonomy-term-item__action" @click="showChildren = !showChildren">
+					<i :title="chevronTitle" :class="chevronClass"></i>
+				</span>
 				<span class="icon-small taxonomy-term-item__action">
 					<i title="Edytuj" class="fa fa-pencil"></i>
 				</span>
@@ -14,7 +17,7 @@
 				</span>
 			</div>
 		</div>
-		<ul v-if="childTerms.length" class="taxonomy-term-item__list">
+		<ul v-if="showChildren && childTerms.length" class="taxonomy-term-item__list">
 			<wnl-taxonomy-term-item
 				v-for="childTerm in childTerms"
 				:key="childTerm.id"
@@ -50,7 +53,26 @@ export default {
 			required: true,
 		},
 	},
+	data() {
+		return {
+			showChildren: false,
+		};
+	},
 	computed: {
+		chevronClass() {
+			const classes = ['fa'];
+
+			if (this.showChildren) {
+				classes.push('fa-chevron-up');
+			} else {
+				classes.push('fa-chevron-down');
+			}
+
+			return classes.join(' ');
+		},
+		chevronTitle() {
+			return this.showChildren ? 'Zwiń' : 'Rozwiń';
+		},
 		childTerms() {
 			return this.terms.filter(term => term.parent_id === this.term.id);
 		},

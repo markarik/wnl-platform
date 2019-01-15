@@ -21,14 +21,16 @@
 				</span>
 			</div>
 		</div>
-		<ul v-if="showChildren && childTerms.length" class="taxonomy-term-item__list">
-			<wnl-taxonomy-term-item
-				v-for="childTerm in childTerms"
-				:key="childTerm.id"
-				:term="childTerm"
-			>
-			</wnl-taxonomy-term-item>
-		</ul>
+		<transition name="fade">
+			<ul v-if="showChildren && childTerms.length" class="taxonomy-term-item__list">
+				<wnl-taxonomy-term-item
+					v-for="childTerm in childTerms"
+					:key="childTerm.id"
+					:term="childTerm"
+				>
+				</wnl-taxonomy-term-item>
+			</ul>
+		</transition>
 	</li>
 </template>
 
@@ -44,6 +46,16 @@
 			margin-left: $margin-big
 		&__action
 			padding: $margin-small-minus
+
+	.fa-chevron-down
+		transition: all .1s linear
+
+	.fade-enter-active
+		transition: opacity .3s
+
+	.fade-enter,
+	.fade-leave-to
+		opacity: 0
 </style>
 
 
@@ -64,12 +76,10 @@ export default {
 	},
 	computed: {
 		chevronClass() {
-			const classes = ['fa'];
+			const classes = ['fa', 'fa-chevron-down'];
 
 			if (this.showChildren) {
-				classes.push('fa-chevron-up');
-			} else {
-				classes.push('fa-chevron-down');
+				classes.push('fa-rotate-180');
 			}
 
 			return classes.join(' ');

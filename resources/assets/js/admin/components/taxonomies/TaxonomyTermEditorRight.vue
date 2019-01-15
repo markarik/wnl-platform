@@ -29,48 +29,52 @@
 			</ul>
 		</nav>
 		<div>
-			<h5 class="title is-5 is-uppercase"><strong>Nadrzędne pojęcie</strong></h5>
+			<h5 class="title is-5 is-uppercase is-marginless"><strong>Nadrzędne pojęcie</strong></h5>
 			<span class="info small">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
-			<div v-if="parent">
-				<span v-for="ancestor in parent.ancestors">{{ancestor.tag.name}} > </span>
-				{{parent.tag.name}}
-				<button @click="parent=null">X</button>
-			</div>
-			<div class="control" v-else>
-				<input class="input margin bottom" v-model="parentSearch" placeholder="Wpisz nazwę nadrzędnego pojęcia" />
-				<wnl-autocomplete
-					:items="autocompleteTerms"
-					:onItemChosen="onSelectParent"
-				>
-					<template slot-scope="slotProps">
-						<div>
-							<span v-for="ancestor in slotProps.item.ancestors">{{ancestor.tag.name}} > </span>
-							{{slotProps.item.tag.name}}
-						</div>
-					</template>
-				</wnl-autocomplete>
+			<div class="margin bottom">
+				<div v-if="parent">
+					<span v-for="ancestor in parent.ancestors">{{ancestor.tag.name}} > </span>
+					{{parent.tag.name}}
+					<button @click="parent=null">X</button>
+				</div>
+				<div class="control" v-else>
+					<input class="input" v-model="parentSearch" placeholder="Wpisz nazwę nadrzędnego pojęcia" />
+					<wnl-autocomplete
+						:items="autocompleteTerms"
+						:onItemChosen="onSelectParent"
+					>
+						<template slot-scope="slotProps">
+							<div>
+								<span v-for="ancestor in slotProps.item.ancestors">{{ancestor.tag.name}} > </span>
+								{{slotProps.item.tag.name}}
+							</div>
+						</template>
+					</wnl-autocomplete>
+				</div>
 			</div>
 
-			<h5 class="title is-5 is-uppercase"><strong>Tag źródłowy</strong></h5>
+			<h5 class="title is-5 is-uppercase is-marginless"><strong>Tag źródłowy</strong></h5>
 			<span class="info">Wybierz tag, na podstawie którego chcesz utworzyć pojęcie, lub utwórz nowy.</span>
-			<div v-if="tag">
-				{{tag.name}}
-				<button @click="tag=null">X</button>
+			<div class="margin bottom">
+				<div v-if="tag">
+					{{tag.name}}
+					<button @click="tag=null">X</button>
+				</div>
+				<div class="control" v-else>
+					<input class="input" v-model="tagSearch" placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć" />
+					<wnl-autocomplete
+						:items="autocompleteTags"
+						:onItemChosen="onSelectTag"
+					>
+						<template slot-scope="slotProps">
+							<div>
+								{{slotProps.item.name}}
+							</div>
+						</template>
+					</wnl-autocomplete>
+				</div>
 			</div>
-			<div class="control" v-else>
-				<input class="input margin bottom" v-model="tagSearch" placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć" />
-				<wnl-autocomplete
-					:items="autocompleteTags"
-					:onItemChosen="onSelectTag"
-				>
-					<template slot-scope="slotProps">
-						<div>
-							{{slotProps.item.name}}
-						</div>
-					</template>
-				</wnl-autocomplete>
-			</div>
-			<h5 class="title is-5 is-uppercase"><strong>Notatka</strong></h5>
+			<h5 class="title is-5 is-uppercase is-marginless"><strong>Notatka</strong></h5>
 			<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
 			<textarea class="textarea margin bottom" v-model="description" placeholder="Wpisz tekst" />
 			<button class="button" @click="onSave">Zapisz</button>

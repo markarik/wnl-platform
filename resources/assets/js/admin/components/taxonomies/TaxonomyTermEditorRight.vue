@@ -31,13 +31,48 @@
 		<div>
 			<h5 class="title is-5 is-uppercase"><strong>Nadrzędne pojęcie</strong></h5>
 			<span class="info small">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
-			<input class="input margin bottom" v-model="parent_id"/>
+			<div v-if="parent">
+				<span v-for="ancestor in parent.ancestors">{{ancestor.tag.name}} > </span>
+				{{parent.tag.name}}
+				<button @click="parent=null">X</button>
+			</div>
+			<div class="control" v-else>
+				<input class="input margin bottom" v-model="parentSearch" placeholder="Wpisz nazwę nadrzędnego pojęcia" />
+				<wnl-autocomplete
+					:items="autocompleteTerms"
+					:onItemChosen="onSelectParent"
+				>
+					<template slot-scope="slotProps">
+						<div>
+							<span v-for="ancestor in slotProps.item.ancestors">{{ancestor.tag.name}} > </span>
+							{{slotProps.item.tag.name}}
+						</div>
+					</template>
+				</wnl-autocomplete>
+			</div>
+
 			<h5 class="title is-5 is-uppercase"><strong>Tag źródłowy</strong></h5>
 			<span class="info">Wybierz tag, na podstawie którego chcesz utworzyć pojęcie, lub utwórz nowy.</span>
-			<input class="input margin bottom" v-model="tag_id" />
+			<div v-if="tag">
+				{{tag.name}}
+				<button @click="tag=null">X</button>
+			</div>
+			<div class="control" v-else>
+				<input class="input margin bottom" v-model="tagSearch" placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć" />
+				<wnl-autocomplete
+					:items="autocompleteTags"
+					:onItemChosen="onSelectTag"
+				>
+					<template slot-scope="slotProps">
+						<div>
+							{{slotProps.item.name}}
+						</div>
+					</template>
+				</wnl-autocomplete>
+			</div>
 			<h5 class="title is-5 is-uppercase"><strong>Notatka</strong></h5>
 			<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
-			<textarea class="textarea margin bottom" v-model="description" />
+			<textarea class="textarea margin bottom" v-model="description" placeholder="Wpisz tekst" />
 			<button class="button" @click="onSave">Zapisz</button>
 		</div>
 	</div>
@@ -51,33 +86,72 @@
 
 </style>
 
-
 <script>
-import {mapActions} from 'vuex';
+import {mapActions, mapState} from 'vuex';
+
+import WnlAutocomplete from 'js/components/global/Autocomplete';
 
 export default {
 	props: {
 	},
 	data() {
 		return {
-			tag_id: '',
+			tag: null,
 			taxonomy_id: 1,
 			description: '',
-			parent_id: null,
+			parent: null,
+			parentSearch: '',
+			tagSearch: '',
 		};
+	},
+	computed: {
+		...mapState('taxonomyTerms', ['terms']),
+		...mapState('tags', ['tags']),
+		autocompleteTerms() {
+			if (!this.parentSearch) {
+				return [];
+			}
+			return this.terms.filter(term => term.tag.name.toLocaleLowerCase().includes(this.parentSearch.toLocaleLowerCase())).slice(0, 10);
+		},
+		autocompleteTags() {
+			if (!this.tagSearch) {
+				return [];
+			}
+			return this.tags.filter(tag => tag.name.toLocaleLowerCase().includes(this.tagSearch.toLocaleLowerCase())).slice(0, 10);
+		}
+	},
+	components: {
+		WnlAutocomplete
 	},
 	methods: {
 		...mapActions('taxonomyTerms', {
 			'createTerm': 'create',
 		}),
-		onSave() {
-			this.createTerm({
-				parent_id: this.parent_id,
-				tag_id: this.tag_id,
+		...mapActions('tags', {
+			fetchAllTags: 'fetchAll'
+		}),
+		async onSave() {
+			await this.createTerm({
+				parent_id: this.parent ? this.parent.id : null,
+				tag_id: this.tag.id,
 				taxonomy_id: this.taxonomy_id,
 				description: this.description,
 			});
+
+			this.tag = null;
+			this.parent = null;
+		},
+		onSelectParent(term) {
+			this.parent = term;
+			this.parentSearch = ''
+		},
+		onSelectTag(tag) {
+			this.tag = tag;
+			this.tagSearch = ''
 		}
+	},
+	mounted() {
+		this.fetchAllTags();
 	}
 };
 </script>

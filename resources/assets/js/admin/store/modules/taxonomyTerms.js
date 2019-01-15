@@ -49,14 +49,27 @@ const includeTag = (term, tags) => {
 	return term;
 };
 
+const includeAncestors = (term, terms) => {
+	term.ancestors = [];
+
+	let current = term;
+	while (current.parent_id) {
+		current = terms.find(currentTerm => currentTerm.id === current.parent_id);
+		term.ancestors.unshift(current);
+	}
+
+	return term;
+};
+
 // Actions
 const actions = {
 	async fetchTermsByTaxonomy({commit}, taxonomyId) {
 		commit(types.SETUP_TERMS, []);
 		commit(types.SET_TAXONOMY_TERMS_LOADING, true);
 		const response = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${taxonomyId}?include=tags`));
-		const {data: {included, ...terms}} = response;
-		commit(types.SETUP_TERMS, Object.values(terms).map(term => includeTag(term, included.tags)));
+		const {data: {included, ...termsObj}} = response;
+		const terms = Object.values(termsObj);
+		commit(types.SETUP_TERMS, terms.map(term => includeAncestors(includeTag(term, included.tags), terms)));
 		commit(types.SET_TAXONOMY_TERMS_LOADING, false);
 	},
 

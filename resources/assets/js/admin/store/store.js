@@ -17,6 +17,7 @@ import flashcards from 'js/admin/store/modules/flashcards';
 import form from 'js/store/modules/form';
 import flashcardsSets from 'js/admin/store/modules/flashcardsSets';
 import taxonomyTerms from 'js/admin/store/modules/taxonomyTerms';
+import tags from 'js/admin/store/modules/tags';
 
 Vue.use(Vuex);
 
@@ -38,6 +39,7 @@ export default new Vuex.Store({
 		flashcardsSets,
 		form,
 		taxonomyTerms,
+		tags
 	},
 	strict: debug
 });

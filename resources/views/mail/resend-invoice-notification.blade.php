@@ -1,7 +1,7 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Cześć {{ $order->user->first_name or '{first_name}' }}!</h3>
+	<h3>Cześć {{ $order->user->first_name ?? '{first_name}' }}!</h3>
 
 	<p>Niedawno wysłaliśmy Ci fakturę, na której, jak później zauważyliśmy, nie wszystkie informacje były poprawnie zwizualizowane.
 		W związku z tym przesyłamy teraz w załączniku poprawiony dokument.</p>

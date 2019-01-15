@@ -1,9 +1,9 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Cześć {{ $order->user->first_name or '{first_name}' }}!</h3>
+	<h3>Cześć {{ $order->user->first_name ?? '{first_name}' }}!</h3>
 
-	<p>Musieliśmy chwilowo wstrzymać Twój dostęp do platformy, ponieważ nie otrzymaliśmy {{ $instalment->order_number or '{order_number}' }}. raty za <strong>{{$order->product->name or '{product_name}'}}</strong>. 😔</p>
+	<p>Musieliśmy chwilowo wstrzymać Twój dostęp do platformy, ponieważ nie otrzymaliśmy {{ $instalment->order_number ?? '{order_number}' }}. raty za <strong>{{$order->product->name ?? '{product_name}'}}</strong>. 😔</p>
 
 	<p>Ratę możesz opłacić w zakładce <a href="{{url('app/myself/orders')}}" target="_blank">KONTO > Twoje zamówienia</a>.</p>
 

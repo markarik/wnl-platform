@@ -21,7 +21,7 @@ class UpdateTaxonomyTerm extends FormRequest {
 	 */
 	public function rules() {
 		return [
-			'parent_id' => 'numeric|exists:taxonomy_terms,id',
+			'parent_id' => 'nullable|numeric|exists:taxonomy_terms,id',
 			'tag_id' => 'required|numeric|exists:tags,id',
 			'taxonomy_id' => 'required|numeric|exists:taxonomies,id',
 			'description' => 'string|max:1000|nullable',

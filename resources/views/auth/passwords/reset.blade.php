@@ -19,7 +19,7 @@
 
 				<p class="control">
 					<label for="email" class="label">Twój adres e-mail</label>
-					<input id="email" type="email" class="input" name="email" value="{{ $email or old('email') }}" required autofocus class="{{ $errors->has('password_confirmation') ? ' is-danger' : '' }}">
+					<input id="email" type="email" class="input" name="email" value="{{ $email ?? old('email') }}" required autofocus class="{{ $errors->has('password_confirmation') ? ' is-danger' : '' }}">
 
 					@if ($errors->has('email'))
 						<span class="help is-danger">

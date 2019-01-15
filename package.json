@@ -50,6 +50,7 @@
     "vuex-router-sync": "^4.2.0"
   },
   "devDependencies": {
+    "@babel/polyfill": "^7.2.5",
     "avoriaz": "^6.0.0",
     "chai": "^3.5.0",
     "cross-env": "^3.2.4",

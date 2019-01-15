@@ -1,7 +1,7 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Cześć {{ $user->first_name or '{first_name}' }}!</h3>
+	<h3>Cześć {{ $user->first_name ?? '{first_name}' }}!</h3>
 
 	<p>Chcieliśmy pogratulować Ci długiej i systematycznej pracy do LEK-u! Jesteśmy pod wielkim wrażeniem motywacji, którą udało Ci się utrzymać!</p>
 

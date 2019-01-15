@@ -46,7 +46,7 @@ function getSlideId(slideshowId, slideNumber) {
 }
 
 function getSlideData(slideId) {
-	return axios.get(getApiUrl()`slides/${slideId}?include=context`);
+	return axios.get(getApiUrl(`slides/${slideId}?include=context`));
 }
 
 function getEmptyAnswers(stateAnswers) {

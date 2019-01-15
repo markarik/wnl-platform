@@ -1,9 +1,9 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Witaj ponownie {{ $order->user->first_name or '{first_name}' }}!</h3>
+	<h3>Witaj ponownie {{ $order->user->first_name ?? '{first_name}' }}!</h3>
 
-	<p>Piszemy do Ciebie, żeby potwierdzić zamówienie numer {{ $order->id or '{order_no}' }} złożone na kurs <strong>{{$order->product->name or '{product_name}'}}</strong>.</p>
+	<p>Piszemy do Ciebie, żeby potwierdzić zamówienie numer {{ $order->id ?? '{order_no}' }} złożone na kurs <strong>{{$order->product->name ?? '{product_name}'}}</strong>.</p>
 
 	<p><strong>Status swojego zamówienia możesz śledzić na stronie <a href="{{url('app/myself/orders')}}">KONTO > Twoje zamówienia</a>.</strong> Tam znajdziesz też wszystkie szczegóły dotyczące płatności.</p>
 
@@ -14,7 +14,7 @@
 		<table style="font-size: 0.9em; line-height: 2em;">
 			<tr>
 				<td style="text-align: right; padding-right: 15px;">Tytuł przelewu:</td>
-				<td><strong>Zamówienie numer {{ $order->id or '{order_no}' }}</strong></td>
+				<td><strong>Zamówienie numer {{ $order->id ?? '{order_no}' }}</strong></td>
 			</tr>
 			<tr>
 				<td style="text-align: right; padding-right: 15px;">Numer konta:</td>
@@ -30,7 +30,7 @@
 			</tr>
 			<tr>
 				<td style="text-align: right; padding-right: 15px;">Kwota:</td>
-				<td>{{ $order->total_with_coupon or '{price}' }}zł</td>
+				<td>{{ $order->total_with_coupon ?? '{price}' }}zł</td>
 			</tr>
 		</table>
 

@@ -2,6 +2,7 @@ import $ from 'jquery';
 import Postmate from 'postmate';
 import Reveal from 'vendor/reveal/reveal';
 import { imageviewer } from 'vendor/imageviewer/imageviewer';
+import '@babel/polyfill';
 
 import { timeFromS } from 'js/utils/time';
 

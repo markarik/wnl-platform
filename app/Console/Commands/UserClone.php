@@ -38,7 +38,6 @@ class UserClone extends Command
 		'user_settings',
 		'users_plan_progress',
 		'users_plans',
-		'user_course_progress',
 		'user_lesson',
 		'user_subscription',
 	];
@@ -54,17 +53,17 @@ class UserClone extends Command
 		$redis = Redis::connection();
 
 		if ($table = $this->option('table')){
-			$this->copyTable($table, $sourceUser, $targetUser);
+			$this->copyTable($table, $sourceUser->id, $targetUser->id);
 			die;
 		}
 
 		$this->copyRedisData($redis, $targetUser, $sourceUser, $courseId);
 
 		foreach (self::$TABLES as $table) {
-			$this->copyTable($table, $sourceUser, $targetUser);
+			$this->copyTable($table, $sourceUser->id, $targetUser->id);
 		}
 
-		$targetUser->subscription()->update(['access_end' => Carbon::now()->addYears(15)]);
+		$this->copyTable('user_course_progress', $sourceUser->profile->id, $targetUser->profile->id);
 
 		return;
 	}
@@ -108,14 +107,14 @@ class UserClone extends Command
 		}
 	}
 
-	private function copyTable($table, $sourceUser, $targetUser)
+	private function copyTable($table, $sourceUserId, $targetUserId)
 	{
 		\DB::beginTransaction();
 
 		try {
-			$results = \DB::table($table)->where('user_id', $sourceUser->id)->get();
-			$insert = $results->map(function ($row) use ($targetUser) {
-				$row->user_id = $targetUser->id;
+			$results = \DB::table($table)->where('user_id', $sourceUserId)->get();
+			$insert = $results->map(function ($row) use ($targetUserId) {
+				$row->user_id = $targetUserId;
 				unset($row->id);
 				return (array)$row;
 			})->toArray();

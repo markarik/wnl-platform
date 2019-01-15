@@ -32,7 +32,6 @@ class UserClone extends Command
 	 */
 	private static $TABLES = [
 		'exams_results',
-//		'notifications',
 		'reactables',
 		'role_user',
 		'user_quiz_results',
@@ -53,6 +52,11 @@ class UserClone extends Command
 	{
 		list ($targetUser, $sourceUser, $courseId) = $this->collectInput();
 		$redis = Redis::connection();
+
+		if ($table = $this->option('table')){
+			$this->copyTable($table, $sourceUser, $targetUser);
+			die;
+		}
 
 		$this->copyRedisData($redis, $targetUser, $sourceUser, $courseId);
 

@@ -30,14 +30,14 @@
 		</nav>
 		<div>
 			<h5 class="title is-5 is-uppercase"><strong>Nadrzędne pojęcie</strong></h5>
-			<span class="info">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
-			<input class="input" v-model="parent_id"/>
+			<span class="info small">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
+			<input class="input margin bottom" v-model="parent_id"/>
 			<h5 class="title is-5 is-uppercase"><strong>Tag źródłowy</strong></h5>
 			<span class="info">Wybierz tag, na podstawie którego chcesz utworzyć pojęcie, lub utwórz nowy.</span>
-			<input class="input" v-model="tag_id" />
+			<input class="input margin bottom" v-model="tag_id" />
 			<h5 class="title is-5 is-uppercase"><strong>Notatka</strong></h5>
 			<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
-			<textarea class="textarea" v-model="description" />
+			<textarea class="textarea margin bottom" v-model="description" />
 			<button class="button" @click="onSave">Zapisz</button>
 		</div>
 	</div>
@@ -48,6 +48,7 @@
 
 	.info
 		color: #aaa
+
 </style>
 
 

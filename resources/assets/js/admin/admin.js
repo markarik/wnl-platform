@@ -5,6 +5,7 @@ import {sync} from 'vuex-router-sync';
 import store from 'js/admin/store/store';
 import router from 'js/admin/router';
 import WnlAxios from 'js/plugins/axios';
+import '@babel/polyfill';
 
 sync(store, router);
 

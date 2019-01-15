@@ -44,7 +44,7 @@
 
 
 <script>
-import {mapState} from 'vuex';
+import {mapGetters} from 'vuex';
 
 export default {
 	props: {
@@ -74,9 +74,9 @@ export default {
 			return this.showChildren ? 'Zwiń' : 'Rozwiń';
 		},
 		childTerms() {
-			return this.terms.filter(term => term.parent_id === this.term.id);
+			return this.filteredTerms.filter(term => term.parent_id === this.term.id);
 		},
-		...mapState('taxonomyTerms', ['terms']),
+		...mapGetters('taxonomyTerms', ['filteredTerms']),
 	},
 	// Name is required to allow recursive rendering
 	name: 'wnl-taxonomy-term-item',

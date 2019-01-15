@@ -13,6 +13,19 @@ const namespaced = true;
 const state = {
 	isLoading: false,
 	terms: [],
+	filter: '',
+};
+
+// Getters
+const getters = {
+	filteredTerms: state => {
+		if (state.filter === '') {
+			return state.terms;
+		} else {
+			// TODO make filtering smart to include parents even when they don't match pattern
+			return state.terms.filter(term => term.tag.name.toLocaleLowerCase().includes(state.filter.toLocaleLowerCase()));
+		}
+	},
 };
 
 // Mutations
@@ -25,6 +38,9 @@ const mutations = {
 	},
 	[types.ADD_TERM] (state, payload) {
 		state.terms.push(payload);
+	},
+	[types.SET_TAXONOMY_TERMS_FILTER] (state, payload) {
+		set(state, 'filter', payload);
 	},
 };
 
@@ -48,6 +64,10 @@ const actions = {
 		const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 		const {data: {included, ...term}} = response;
 		commit(types.ADD_TERM, includeTag(term, included.tags));
+	},
+
+	setFilter({commit}, filter) {
+		commit(types.SET_TAXONOMY_TERMS_FILTER, filter);
 	}
 };
 
@@ -55,5 +75,6 @@ export default {
 	namespaced,
 	state,
 	mutations,
+	getters,
 	actions
 };

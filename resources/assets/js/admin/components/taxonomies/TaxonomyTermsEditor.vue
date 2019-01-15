@@ -4,7 +4,7 @@
 			<div class="terms-editor__panel__header">
 				<h4 class="title is-5"><strong>Hierarchia pojęć</strong></h4>
 				<span class="control has-icons-right">
-					<input class="input" type="search" placeholder="Filtruj po naziwe..." />
+					<input class="input" type="search" placeholder="Filtruj po naziwe..." @input="onFilterChange" :value="filter" />
 					<span class="icon is-small is-right">
 						<i class="fa fa-filter"></i>
 					</span>
@@ -49,7 +49,7 @@
 </style>
 
 <script>
-import {mapActions, mapState} from 'vuex';
+import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
@@ -63,12 +63,13 @@ export default {
 	},
 	computed: {
 		rootTerms() {
-			return this.terms.filter(term => term.parent_id === null);
+			return this.filteredTerms.filter(term => term.parent_id === null);
 		},
 		...mapState('taxonomyTerms', {
 			isLoadingTerms: 'isLoading',
-			terms: 'terms'
+			filter: 'filter'
 		}),
+		...mapGetters('taxonomyTerms', ['filteredTerms']),
 	},
 	components: {
 		WnlTaxonomyTermItem,
@@ -76,7 +77,10 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy']),
+		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'setFilter']),
+		onFilterChange({target: {value}}) {
+			this.setFilter(value);
+		},
 	},
 	async mounted() {
 		try {

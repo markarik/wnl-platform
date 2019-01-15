@@ -24,6 +24,7 @@ import ChatConnection from 'js/plugins/chat-connection';
 import WnlAxios from 'js/plugins/axios';
 import EventsTracker from 'js/plugins/events-tracker';
 import $ from 'jquery';
+import '@babel/polyfill';
 
 window.$ = window.jQuery = $;
 

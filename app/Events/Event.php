@@ -27,8 +27,7 @@ abstract class Event
 		$this->id = Uuid::uuid4()->toString();
 
 		if (!Request::header('X-Socket-ID')) {
-			$sentryClient = new \Raven_Client(env('SENTRY_DSN'));
-			$sentryClient->captureException(new \Exception('X-Socket-ID header missing'));
+			\Log::error('X-Socket-ID header missing');
 		}
 	}
 

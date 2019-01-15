@@ -56,6 +56,17 @@ services:
     depends_on:
       - redis
 
+  chat-queue-worker:
+      container_name: chat-queue-worker
+      image: bethink/php:7.2.7-fpm-alpine3.7
+      volumes:
+        - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
+      command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan chat:process-queue
+      depends_on:
+        - redis
+        - rabbit
+      restart: always
+
   composer:
     container_name: composer
     image: bethink/composer:1.6.5

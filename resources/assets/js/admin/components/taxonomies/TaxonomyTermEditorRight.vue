@@ -32,10 +32,12 @@
 			<h5 class="title is-5 is-uppercase is-marginless"><strong>Nadrzędne pojęcie</strong></h5>
 			<span class="info small">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
 			<div class="margin bottom">
-				<div v-if="parent">
-					<span v-for="ancestor in parent.ancestors">{{ancestor.tag.name}} > </span>
-					{{parent.tag.name}}
-					<button @click="parent=null">X</button>
+				<div v-if="parent" class="autocomplete-selected">
+					<span>
+						{{parent.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} >
+						{{parent.tag.name}}
+					</span>
+					<span class="icon is-small clickable" @click="parent=null"><i class="fa fa-close" aria-hidden="true"></i></span>
 				</div>
 				<div class="control" v-else>
 					<input class="input" v-model="parentSearch" placeholder="Wpisz nazwę nadrzędnego pojęcia" />
@@ -45,8 +47,8 @@
 					>
 						<template slot-scope="slotProps">
 							<div>
-								<span v-for="ancestor in slotProps.item.ancestors">{{ancestor.tag.name}} > </span>
-								{{slotProps.item.tag.name}}
+								<div class="autocomplete-parent-term">{{slotProps.item.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}}</div>
+								<div>{{slotProps.item.tag.name}}</div>
 							</div>
 						</template>
 					</wnl-autocomplete>
@@ -56,9 +58,9 @@
 			<h5 class="title is-5 is-uppercase is-marginless"><strong>Tag źródłowy</strong></h5>
 			<span class="info">Wybierz tag, na podstawie którego chcesz utworzyć pojęcie, lub utwórz nowy.</span>
 			<div class="margin bottom">
-				<div v-if="tag">
+				<div v-if="tag" class="autocomplete-selected">
 					{{tag.name}}
-					<button @click="tag=null">X</button>
+					<span class="icon is-small clickable" @click="tag=null"><i class="fa fa-close" aria-hidden="true"></i></span>
 				</div>
 				<div class="control" v-else>
 					<input class="input" v-model="tagSearch" placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć" />
@@ -87,6 +89,13 @@
 
 	.info
 		color: #aaa
+
+	.autocomplete-selected
+		display: flex
+		justify-content: space-between
+
+	.autocomplete-parent-term
+		color: $color-inactive-gray
 
 </style>
 
@@ -122,6 +131,7 @@ export default {
 				return [];
 			}
 			return this.tags.filter(tag => tag.name.toLocaleLowerCase().includes(this.tagSearch.toLocaleLowerCase())).slice(0, 10);
+			// TODO add tag
 		}
 	},
 	components: {

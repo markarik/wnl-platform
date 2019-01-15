@@ -6,7 +6,11 @@
 				<span>{{term.tag.name}}</span>
 			</div>
 			<div class="media-right central">
-				<span class="icon-small taxonomy-term-item__action" @click="showChildren = !showChildren">
+				<span
+					class="icon-small taxonomy-term-item__action"
+					@click="showChildren = !showChildren"
+					v-if="childTerms.length"
+				>
 					<i :title="chevronTitle" :class="chevronClass"></i>
 				</span>
 				<span class="icon-small taxonomy-term-item__action">

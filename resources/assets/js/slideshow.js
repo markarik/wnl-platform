@@ -2,11 +2,12 @@ import $ from 'jquery';
 import Postmate from 'postmate';
 import Reveal from 'vendor/reveal/reveal';
 import { imageviewer } from 'vendor/imageviewer/imageviewer';
+import '@babel/polyfill';
 
 import { timeFromS } from 'js/utils/time';
 
-import 'sass/slideshow.sass';
 import 'vendor/reveal/reveal-theme.scss';
+import 'sass/slideshow.sass';
 import 'vendor/imageviewer/imageviewer.scss';
 
 imageviewer($, window, document);

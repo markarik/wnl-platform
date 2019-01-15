@@ -24,7 +24,7 @@ export default {
 			default: false
 		},
 		content: {
-			type: String|Number,
+			type: [String, Number],
 			default: ''
 		}
 	},

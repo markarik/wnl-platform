@@ -89,6 +89,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// TODO implement me when have tags + taxonomies relation ready
 //		Route::delete("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@delete');
 		Route::post("{$r['taxonomies']}/.filter", 'TaxonomiesApiController@filter');
+
+		// TaxonomyTerms
+		Route::get("{$r['taxonomy-terms']}/byTaxonomy/{taxonomyId}", 'TaxonomyTermsApiController@getByTaxonomy');
 	});
 
 	// Count
@@ -348,4 +351,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Pages
 	Route::get("{$r['pages']}/{slug}", 'PagesApiController@get');
+
+	// Discussions
+	Route::get("{$r['discussions']}/{id}", 'DiscussionsApiController@get');
 });

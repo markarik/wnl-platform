@@ -27,6 +27,7 @@ class PostQuestion extends FormRequest
 			'text'    => 'string|required',
 			'tags'    => 'required',
 			'context' => 'required',
+			'discussion_id' => 'required|numeric|exists:discussions,id'
 		];
 	}
 }

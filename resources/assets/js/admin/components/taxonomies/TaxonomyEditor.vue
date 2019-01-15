@@ -50,8 +50,6 @@
 </style>
 
 <script>
-import {mapActions, mapState} from 'vuex';
-
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
 import WnlTaxonomyTermsEditor from 'js/admin/components/taxonomies/TaxonomyTermsEditor';
 
@@ -72,13 +70,6 @@ export default {
 		resourceRoute() {
 			return this.isEdit ? `taxonomies/${this.id}` : 'taxonomies';
 		},
-		rootTerms() {
-			return this.terms.filter(term => term.parent_id === null);
-		},
-		...mapState('taxonomyTerms', {
-			isLoadingTerms: 'isLoading',
-			terms: 'terms'
-		}),
 	},
 	components: {
 		WnlFormText,

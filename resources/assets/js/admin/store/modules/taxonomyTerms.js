@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { uniq } from 'lodash';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
 import * as types from 'js/admin/store/mutations-types';
@@ -57,6 +58,9 @@ const mutations = {
 	},
 	[types.SELECT_TAXONOMY_TERMS] (state, payload) {
 		set(state, 'selectedTerms', payload);
+	},
+	[types.SET_EXPANDED_TAXONOMY_TERMS] (state, payload) {
+		set(state, 'expandedTerms', payload);
 	},
 	[types.SET_TAXONOMY_TERM_EDITOR_MODE] (state, payload) {
 		set(state, 'editorMode', payload);
@@ -118,6 +122,18 @@ const actions = {
 
 	selectTaxonomyTerms({commit}, selectedTerms) {
 		commit(types.SELECT_TAXONOMY_TERMS, selectedTerms);
+	},
+
+	collapseTaxonomyTerm({commit}, term) {
+		commit(types.SET_EXPANDED_TAXONOMY_TERMS, state.expandedTerms.filter(id => id !== term.id));
+	},
+
+	expandTaxonomyTerm({commit}, term) {
+		commit(types.SET_EXPANDED_TAXONOMY_TERMS, uniq([
+			...state.expandedTerms,
+			...term.ancestors.map(ancestor => ancestor.id),
+			term.id
+		]));
 	},
 };
 

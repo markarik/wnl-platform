@@ -8,7 +8,7 @@
 			<div class="media-right central">
 				<span
 					class="icon-small taxonomy-term-item__action"
-					@click="showChildren = !showChildren"
+					@click="toggle"
 					v-if="childTerms.length"
 				>
 					<i :title="chevronTitle" :class="chevronClass"></i>
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 		<transition name="fade">
-			<ul v-if="showChildren && childTerms.length" class="taxonomy-term-item__list">
+			<ul v-if="isExpanded && childTerms.length" class="taxonomy-term-item__list">
 				<wnl-taxonomy-term-item
 					v-for="childTerm in childTerms"
 					:key="childTerm.id"
@@ -79,25 +79,20 @@ export default {
 			required: true,
 		},
 	},
-	data() {
-		return {
-			showChildren: false,
-		};
-	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['filteredTerms']),
-		...mapState('taxonomyTerms', ['selectedTerms']),
+		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms']),
 		chevronClass() {
 			const classes = ['fa', 'fa-chevron-down'];
 
-			if (this.showChildren) {
+			if (this.isExpanded) {
 				classes.push('fa-rotate-180');
 			}
 
 			return classes.join(' ');
 		},
 		chevronTitle() {
-			return this.showChildren ? 'Zwiń' : 'Rozwiń';
+			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},
 		childTerms() {
 			return this.filteredTerms.filter(term => term.parent_id === this.term.id);
@@ -114,17 +109,27 @@ export default {
 		isSelected() {
 			return this.selectedTerms.indexOf(this.term.id) > -1;
 		},
+		isExpanded() {
+			return this.expandedTerms.indexOf(this.term.id) > -1;
+		},
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['selectTaxonomyTerms', 'setEditorMode']),
+		...mapActions('taxonomyTerms', ['collapseTaxonomyTerm', 'expandTaxonomyTerm', 'selectTaxonomyTerms', 'setEditorMode']),
+		add() {
+			this.setEditorMode(TAXONOMY_EDITOR_MODES.ADD);
+			this.selectTaxonomyTerms([this.term.id]);
+		},
 		edit() {
 			this.setEditorMode(TAXONOMY_EDITOR_MODES.EDIT);
 			this.selectTaxonomyTerms([this.term.id]);
 		},
-		add() {
-			this.setEditorMode(TAXONOMY_EDITOR_MODES.ADD);
-			this.selectTaxonomyTerms([this.term.id]);
-		}
+		toggle() {
+			if (this.isExpanded) {
+				this.collapseTaxonomyTerm(this.term);
+			} else {
+				this.expandTaxonomyTerm(this.term);
+			}
+		},
 	},
 	// Name is required to allow recursive rendering
 	name: 'wnl-taxonomy-term-item',

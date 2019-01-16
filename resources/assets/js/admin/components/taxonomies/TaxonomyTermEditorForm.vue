@@ -74,6 +74,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('taxonomyTerms', ['expandTaxonomyTerm']),
 		async onSubmitClick() {
 			try {
 				await this.onSave({
@@ -83,6 +84,10 @@ export default {
 					description: this.description,
 					taxonomy_id: this.taxonomyId
 				});
+
+				if (this.parent) {
+					this.expandTaxonomyTerm(this.parent);
+				}
 
 				this.addAutoDismissableAlert({
 					text: 'Zapisano!',

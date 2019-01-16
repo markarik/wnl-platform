@@ -44,7 +44,7 @@ export default {
 			fetchAllTags: 'fetchAll'
 		}),
 		async onSave(term) {
-			await this.createTerm(term);
+			return await this.createTerm(term);
 		},
 		initializeParent(selectedTerms) {
 			if (selectedTerms.length) {

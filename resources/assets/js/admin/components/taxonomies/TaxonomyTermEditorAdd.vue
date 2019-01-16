@@ -5,7 +5,7 @@
 		<div class="margin bottom">
 			<div v-if="parent" class="autocomplete-selected">
 					<span>
-						{{parent.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} >
+						<span v-if="parent.ancestors.length">{{parent.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
 						{{parent.tag.name}}
 					</span>
 				<span class="icon is-small clickable" @click="parent=null"><i class="fa fa-close" aria-hidden="true"></i></span>
@@ -76,13 +76,16 @@ import WnlAutocomplete from 'js/components/global/Autocomplete';
 
 export default {
 	props: {
+		taxonomyId: {
+			type: String|Number,
+			required: true,
+		}
 	},
 	data() {
 		return {
 			description: '',
 			tag: null,
 			tagSearch: '',
-			taxonomy_id: 1,
 			parent: null,
 			parentSearch: '',
 		};
@@ -118,7 +121,7 @@ export default {
 			await this.createTerm({
 				parent_id: this.parent ? this.parent.id : null,
 				tag_id: this.tag.id,
-				taxonomy_id: this.taxonomy_id,
+				taxonomy_id: this.taxonomyId,
 				description: this.description,
 			});
 

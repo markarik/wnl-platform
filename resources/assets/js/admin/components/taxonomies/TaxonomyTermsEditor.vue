@@ -20,7 +20,9 @@
 			<wnl-text-loader v-else />
 		</div>
 		<div class="terms-editor__panel is-right">
-			<wnl-taxonomy-term-editor-right />
+			<wnl-taxonomy-term-editor-right
+				:taxonomyId="taxonomyId"
+			/>
 		</div>
 	</div>
 </template>

@@ -76,6 +76,10 @@ import WnlAutocomplete from 'js/components/global/Autocomplete';
 
 export default {
 	props: {
+		taxonomyId: {
+			type: String|Number,
+			required: true,
+		},
 	},
 	data() {
 		return {
@@ -83,7 +87,6 @@ export default {
 			id: null,
 			tag: null,
 			tagSearch: '',
-			taxonomy_id: 4,
 			parent: null,
 			parentSearch: '',
 		};
@@ -122,7 +125,7 @@ export default {
 				parent_id: this.parent ? this.parent.id : null,
 				tag_id: this.tag.id,
 				description: this.description,
-				taxonomy_id: this.taxonomy_id
+				taxonomy_id: this.taxonomyId
 			});
 		},
 		onSelectParent(term) {
@@ -145,8 +148,6 @@ export default {
 			this.id = term.id;
 			this.parent = term.ancestors.slice(-1)[0];
 			this.tag = term.tag;
-			// TODO
-			// this.taxonomy_id = term.taxonomy_id;
 		}
 	}
 };

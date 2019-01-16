@@ -10,8 +10,8 @@
 				</li>
 			</ul>
 		</nav>
-		<wnl-taxonomy-term-editor-add v-if="editorMode === 'add'" />
-		<wnl-taxonomy-term-editor-edit v-if="editorMode === 'edit'" />
+		<wnl-taxonomy-term-editor-add v-if="editorMode === 'add'" :taxonomyId="taxonomyId" />
+		<wnl-taxonomy-term-editor-edit v-if="editorMode === 'edit'" :taxonomyId="taxonomyId" />
 	</div>
 </template>
 
@@ -23,6 +23,10 @@ import WnlTaxonomyTermEditorEdit from 'js/admin/components/taxonomies/TaxonomyTe
 
 export default {
 	props: {
+		taxonomyId: {
+			type: String|Number,
+			required: true,
+		}
 	},
 	data() {
 		return {

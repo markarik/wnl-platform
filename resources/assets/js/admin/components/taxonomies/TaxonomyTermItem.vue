@@ -11,7 +11,7 @@
 					@click="toggle"
 					v-if="childTerms.length"
 				>
-					<i :title="chevronTitle" :class="chevronClass"></i>
+					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]"></i>
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
@@ -82,15 +82,6 @@ export default {
 	computed: {
 		...mapGetters('taxonomyTerms', ['filteredTerms']),
 		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms']),
-		chevronClass() {
-			const classes = ['fa', 'fa-chevron-down'];
-
-			if (this.isExpanded) {
-				classes.push('fa-rotate-180');
-			}
-
-			return classes.join(' ');
-		},
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},

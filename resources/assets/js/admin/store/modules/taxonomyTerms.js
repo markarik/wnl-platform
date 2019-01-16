@@ -42,6 +42,28 @@ const mutations = {
 	[types.SET_TAXONOMY_TERMS_FILTER] (state, payload) {
 		set(state, 'filter', payload);
 	},
+	[types.MOVE_TERM] (state, {term, replaceWith}) {
+		const replaceWithOrderNumber = replaceWith.orderNumber;
+		const termOrderNumber = term.orderNumber;
+
+		set(state, 'terms', state.terms.map(stateTerm => {
+			if (stateTerm.id === term.id) {
+				return {
+					...term,
+					orderNumber: replaceWithOrderNumber
+				};
+			}
+
+			if (stateTerm.id === replaceWith.id) {
+				return {
+					...replaceWith,
+					orderNumber: termOrderNumber
+				};
+			}
+
+			return stateTerm;
+		}));
+	}
 };
 
 const includeTag = (term, tags) => {
@@ -69,7 +91,23 @@ const actions = {
 		const response = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${taxonomyId}?include=tags`));
 		const {data: {included, ...termsObj}} = response;
 		const terms = Object.values(termsObj);
-		commit(types.SETUP_TERMS, terms.map(term => includeAncestors(includeTag(term, included.tags), terms)));
+		const orderNumbers = {};
+		const termsWithOrderNumbers = terms.map(term => {
+			if (typeof orderNumbers[term.parent_id] === 'undefined') {
+				orderNumbers[term.parent_id] = 0;
+			} else {
+				orderNumbers[term.parent_id] = orderNumbers[term.parent_id] + 1;
+			}
+
+			term.orderNumber = orderNumbers[term.parent_id];
+
+			return term;
+		});
+
+		commit(
+			types.SETUP_TERMS,
+			termsWithOrderNumbers.map(term => includeAncestors(includeTag(term, included.tags), termsWithOrderNumbers))
+		);
 		commit(types.SET_TAXONOMY_TERMS_LOADING, false);
 	},
 
@@ -81,6 +119,16 @@ const actions = {
 
 	setFilter({commit}, filter) {
 		commit(types.SET_TAXONOMY_TERMS_FILTER, filter);
+	},
+
+	moveTerm({commit, state}, {term, direction}) {
+		const newIndex = term.orderNumber + direction;
+		const replaceWith = state.terms.find(sibling => sibling.parent_id === term.parent_id && sibling.orderNumber === newIndex);
+
+		commit(types.MOVE_TERM, {
+			term,
+			replaceWith,
+		});
 	}
 };
 

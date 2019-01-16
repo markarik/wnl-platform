@@ -15,6 +15,7 @@
 					v-for="term in rootTerms"
 					:term="term"
 					:key="term.id"
+					@moveTerm="(direction) => onTermMove(term, direction)"
 				/>
 			</ul>
 			<wnl-text-loader v-else />
@@ -63,7 +64,9 @@ export default {
 	},
 	computed: {
 		rootTerms() {
-			return this.filteredTerms.filter(term => term.parent_id === null);
+			return this.filteredTerms
+				.filter(term => term.parent_id === null)
+				.sort((termA, termB) => termA.orderNumber - termB.orderNumber);
 		},
 		...mapState('taxonomyTerms', {
 			isLoadingTerms: 'isLoading',
@@ -77,10 +80,13 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'setFilter']),
+		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'setFilter', 'moveTerm']),
 		onFilterChange({target: {value}}) {
 			this.setFilter(value);
 		},
+		onTermMove(term, direction) {
+			this.moveTerm({term, direction});
+		}
 	},
 	async mounted() {
 		try {

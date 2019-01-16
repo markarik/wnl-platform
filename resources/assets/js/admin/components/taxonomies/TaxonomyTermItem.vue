@@ -4,6 +4,7 @@
 			<div class="media-content">
 				<input class="checkbox" type="checkbox" />
 				<span>{{term.tag.name}}</span>
+				{{term.orderNumber}}
 			</div>
 			<div class="media-right central">
 				<span
@@ -18,6 +19,12 @@
 				</span>
 				<span class="icon-small taxonomy-term-item__action">
 					<i title="Dodaj" class="fa fa-plus"></i>
+				</span>
+				<span class="icon-small taxonomy-term-item__action" @click="move(-1)">
+					<i title="Do góry" class="fa fa-arrow-up"></i>
+				</span>
+				<span class="icon-small taxonomy-term-item__action" @click="move(1)">
+					<i title="Na dół" class="fa fa-arrow-down"></i>
 				</span>
 			</div>
 		</div>
@@ -63,6 +70,8 @@
 import {mapGetters} from 'vuex';
 
 export default {
+	// Name is required to allow recursive rendering
+	name: 'wnl-taxonomy-term-item',
 	props: {
 		term: {
 			type: Object,
@@ -75,6 +84,7 @@ export default {
 		};
 	},
 	computed: {
+		...mapGetters('taxonomyTerms', ['filteredTerms']),
 		chevronClass() {
 			const classes = ['fa', 'fa-chevron-down'];
 
@@ -90,9 +100,11 @@ export default {
 		childTerms() {
 			return this.filteredTerms.filter(term => term.parent_id === this.term.id);
 		},
-		...mapGetters('taxonomyTerms', ['filteredTerms']),
 	},
-	// Name is required to allow recursive rendering
-	name: 'wnl-taxonomy-term-item',
+	methods: {
+		move(direction) {
+			this.$emit('moveTerm', direction);
+		}
+	}
 };
 </script>

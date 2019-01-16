@@ -28,7 +28,9 @@
 		bottom: 44px
 		color: $autocomplete-text-color
 		left: 0
+		max-height: 50vh
 		max-width: 300px
+		overflow-y: auto
 		position: absolute
 		width: 100%
 		z-index: $z-index-autocomplete

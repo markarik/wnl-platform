@@ -112,7 +112,6 @@ export default {
 			if (!this.tagSearch) {
 				return [];
 			}
-			// TODO add scroll to autocomplete
 			const lowerTagSearch = this.tagSearch.toLocaleLowerCase();
 
 			const tags = this.tags.filter(tag => tag.name.toLocaleLowerCase().startsWith(lowerTagSearch));

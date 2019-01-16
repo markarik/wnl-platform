@@ -92,16 +92,16 @@ const actions = {
 		commit(types.SET_TAXONOMY_TERMS_LOADING, false);
 	},
 
-	async create({commit}, taxonomyTerm) {
+	async create({commit, state}, taxonomyTerm) {
 		const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 		const {data: {included, ...term}} = response;
-		commit(types.ADD_TERM, includeTag(term, included.tags));
+		commit(types.ADD_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
 	},
 
-	async update({commit}, taxonomyTerm) {
+	async update({commit, state}, taxonomyTerm) {
 		const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
 		const {data: {included, ...term}} = response;
-		commit(types.UPDATE_TERM, includeTag(term, included.tags));
+		commit(types.UPDATE_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
 	},
 
 	setFilter({commit}, filter) {

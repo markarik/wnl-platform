@@ -46,7 +46,7 @@
 	.taxonomy-term-item
 		&__content
 			align-items: center
-			border-bottom: 2px solid $color-inactive-gray
+			border-bottom: 1px solid $color-inactive-gray
 			padding: $margin-small 0
 		&__list
 			margin-left: $margin-big

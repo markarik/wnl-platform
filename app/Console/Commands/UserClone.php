@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\Api\PrivateApi\UserStateApiController;
+use App\Models\Coupon;
+use App\Models\Product;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
@@ -145,6 +147,19 @@ class UserClone extends Command
 		$this->info("Login: {$user->email}\n" . "Password: {$pass}\n\n");
 		$role = Role::byName('test');
 		$user->roles()->attach($role);
+
+		$coupon = factory(Coupon::class)->create([
+			'value' => 100,
+		]);
+		$order = $user->orders()->create([
+			'product_id' => Product::slug('wnl-onsite')->id,
+			'method' => 'free',
+			'paid_amount' => 0,
+			'paid_at' => Carbon::now(),
+		]);
+		$order->paid = true;
+		$order->coupon_id = $coupon->id;
+		$order->save();
 
 		return $user;
 	}

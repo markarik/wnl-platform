@@ -1,6 +1,6 @@
 <template>
-	<li :class=classNames>
-		<div class="media taxonomy-term-item__content">
+	<li class="taxonomy-term-item">
+		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<div class="media-content">
 				<input class="checkbox" type="checkbox" :checked="isSelected" />
 				<span>{{term.tag.name}}</span>
@@ -53,7 +53,7 @@
 		&__action
 			padding: $margin-small-minus
 
-		&.is-selected
+		.is-selected
 			background: $color-ocean-blue-less-opacity
 
 	.fa-chevron-down
@@ -96,15 +96,6 @@ export default {
 		},
 		childTerms() {
 			return this.filteredTerms.filter(term => term.parent_id === this.term.id);
-		},
-		classNames() {
-			const classNames = ['taxonomy-term-item'];
-
-			if (this.isSelected) {
-				classNames.push('is-selected');
-			}
-
-			return classNames;
 		},
 		isSelected() {
 			return this.selectedTerms.indexOf(this.term.id) > -1;

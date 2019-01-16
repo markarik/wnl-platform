@@ -73,6 +73,7 @@
 
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
+import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 
@@ -100,14 +101,24 @@ export default {
 			if (!this.parentSearch) {
 				return [];
 			}
-			return this.terms.filter(term => term.tag.name.toLocaleLowerCase().includes(this.parentSearch.toLocaleLowerCase())).slice(0, 10);
+			const lowerParentSearch = this.parentSearch.toLocaleLowerCase();
+
+			const terms = this.terms.filter(term => term.tag.name.toLocaleLowerCase().startsWith(lowerParentSearch));
+			terms.push(...this.terms.filter(term => term.tag.name.toLocaleLowerCase().includes(lowerParentSearch)));
+
+			return uniqBy(terms, 'id').slice(0, 10);
 		},
 		autocompleteTags() {
 			if (!this.tagSearch) {
 				return [];
 			}
-			return this.tags.filter(tag => tag.name.toLocaleLowerCase().includes(this.tagSearch.toLocaleLowerCase())).slice(0, 10);
-			// TODO add tag
+			// TODO add scroll to autocomplete
+			const lowerTagSearch = this.tagSearch.toLocaleLowerCase();
+
+			const tags = this.tags.filter(tag => tag.name.toLocaleLowerCase().startsWith(lowerTagSearch));
+			tags.push(...this.tags.filter(tag => tag.name.toLocaleLowerCase().includes(lowerTagSearch)));
+
+			return uniqBy(tags, 'id').slice(0, 10);
 		},
 		submitDisabled() {
 			return this.tag === null;

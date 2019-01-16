@@ -12,6 +12,7 @@ const namespaced = true;
 // Initial state
 const state = {
 	editorMode: TAXONOMY_EDITOR_MODES.ADD,
+	expandedTerms: [],
 	filter: '',
 	isLoading: false,
 	isSaving: false,
@@ -49,12 +50,7 @@ const mutations = {
 		state.terms.push(payload);
 	},
 	[types.UPDATE_TERM] (state, payload) {
-		state.terms = state.terms.map(term => {
-			if (term.id === payload.id) {
-				return Object.assign({}, term, payload);
-			}
-			return term;
-		});
+		set(state.terms, state.terms.findIndex(term => term.id === payload.id), payload);
 	},
 	[types.SET_TAXONOMY_TERMS_FILTER] (state, payload) {
 		set(state, 'filter', payload);

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
 import * as types from 'js/admin/store/mutations-types';
+import {TAXONOMY_EDITOR_MODES} from '../../../consts/taxonomyTerms';
 
 // Helper functions
 
@@ -10,7 +11,7 @@ const namespaced = true;
 
 // Initial state
 const state = {
-	editorMode: 'add',
+	editorMode: TAXONOMY_EDITOR_MODES.ADD,
 	filter: '',
 	isLoading: false,
 	selectedTerms: [],

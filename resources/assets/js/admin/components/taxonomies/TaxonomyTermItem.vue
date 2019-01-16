@@ -15,11 +15,14 @@
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
-					@click="edit()"
+					@click="edit"
 				>
 					<i title="Edytuj" class="fa fa-pencil"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action">
+				<span
+					class="icon-small taxonomy-term-item__action"
+					@click="add"
+				>
 					<i title="Dodaj" class="fa fa-plus"></i>
 				</span>
 			</div>
@@ -64,6 +67,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
+import {TAXONOMY_EDITOR_MODES} from '../../../consts/taxonomyTerms';
 
 export default {
 	props: {
@@ -98,7 +102,11 @@ export default {
 	methods: {
 		...mapActions('taxonomyTerms', ['selectTaxonomyTerms', 'setEditorMode']),
 		edit() {
-			this.setEditorMode('edit');
+			this.setEditorMode(TAXONOMY_EDITOR_MODES.EDIT);
+			this.selectTaxonomyTerms([this.term.id]);
+		},
+		add() {
+			this.setEditorMode(TAXONOMY_EDITOR_MODES.ADD);
 			this.selectTaxonomyTerms([this.term.id]);
 		}
 	},

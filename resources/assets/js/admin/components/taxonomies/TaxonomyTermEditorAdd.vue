@@ -72,7 +72,7 @@
 </style>
 
 <script>
-import {mapActions, mapState} from 'vuex';
+import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 
@@ -93,6 +93,7 @@ export default {
 		};
 	},
 	computed: {
+		...mapGetters('taxonomyTerms', ['termById']),
 		...mapState('taxonomyTerms', ['selectedTerms', 'terms']),
 		...mapState('tags', ['tags']),
 		autocompleteTerms() {
@@ -140,10 +141,21 @@ export default {
 		onSelectTag(tag) {
 			this.tag = tag;
 			this.tagSearch = '';
+		},
+		initializeParent(selectedTerms) {
+			if (selectedTerms.length) {
+				this.parent = this.termById(selectedTerms[0]);
+			}
 		}
 	},
 	mounted() {
 		this.fetchAllTags();
+		this.initializeParent(this.selectedTerms);
+	},
+	watch: {
+		selectedTerms(selectedTerms) {
+			this.initializeParent(selectedTerms);
+		}
 	}
 };
 </script>

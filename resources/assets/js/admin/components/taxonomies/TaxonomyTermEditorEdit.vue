@@ -113,6 +113,7 @@ export default {
 		WnlAutocomplete
 	},
 	methods: {
+		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('taxonomyTerms', {
 			'updateTerm': 'update',
 		}),
@@ -120,13 +121,27 @@ export default {
 			fetchAllTags: 'fetchAll'
 		}),
 		async onSave() {
-			await this.updateTerm({
-				id: this.id,
-				parent_id: this.parent ? this.parent.id : null,
-				tag_id: this.tag.id,
-				description: this.description,
-				taxonomy_id: this.taxonomyId
-			});
+			try {
+				await this.updateTerm({
+					id: this.id,
+					parent_id: this.parent ? this.parent.id : null,
+					tag_id: this.tag.id,
+					description: this.description,
+					taxonomy_id: this.taxonomyId
+				});
+
+				this.addAutoDismissableAlert({
+					text: 'Zapisano!',
+					type: 'success'
+				});
+			} catch (error) {
+				$wnl.logger.capture(error);
+
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+					type: 'error',
+				});
+			}
 		},
 		onSelectParent(term) {
 			this.parent = term;

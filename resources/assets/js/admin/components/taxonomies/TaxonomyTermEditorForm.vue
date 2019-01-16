@@ -31,7 +31,7 @@
 </style>
 
 <script>
-import {mapActions} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 
 import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
 import WnlTagAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTagAutocomplete';
@@ -50,17 +50,9 @@ export default {
 			type: String|Number,
 			required: true,
 		},
-		tags: {
-			type: Array,
-			required: true,
-		},
 		term: {
 			type: Object,
 		},
-		terms: {
-			type: Array,
-			required: true,
-		}
 	},
 	data() {
 		return {
@@ -71,8 +63,9 @@ export default {
 		};
 	},
 	computed: {
+		...mapState('taxonomyTerms', ['terms', 'isSaving']),
 		submitDisabled() {
-			return this.tag === null;
+			return this.tag === null || this.isSaving;
 		},
 	},
 	components: {

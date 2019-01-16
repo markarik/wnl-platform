@@ -2,10 +2,8 @@
 	<wnl-taxonomy-term-editor-form
 		submit-label="Dodaj pojęcie"
 		:on-save="onSave"
-		:tags="tags"
 		:taxonomy-id="taxonomyId"
 		:term="term"
-		:terms="terms"
 	/>
 </template>
 
@@ -33,8 +31,7 @@ export default {
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById']),
-		...mapState('taxonomyTerms', ['selectedTerms', 'terms']),
-		...mapState('tags', ['tags']),
+		...mapState('taxonomyTerms', ['selectedTerms']),
 	},
 	components: {
 		WnlTaxonomyTermEditorForm

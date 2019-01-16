@@ -14,6 +14,7 @@ const state = {
 	editorMode: TAXONOMY_EDITOR_MODES.ADD,
 	filter: '',
 	isLoading: false,
+	isSaving: false,
 	selectedTerms: [],
 	terms: [],
 };
@@ -37,6 +38,9 @@ const getters = {
 const mutations = {
 	[types.SET_TAXONOMY_TERMS_LOADING] (state, payload) {
 		set(state, 'isLoading', payload);
+	},
+	[types.SET_TAXONOMY_TERMS_SAVING] (state, payload) {
+		set(state, 'isSaving', payload);
 	},
 	[types.SETUP_TERMS] (state, payload) {
 		set(state, 'terms', payload);
@@ -93,15 +97,19 @@ const actions = {
 	},
 
 	async create({commit, state}, taxonomyTerm) {
+		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 		const {data: {included, ...term}} = response;
 		commit(types.ADD_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
+		commit(types.SET_TAXONOMY_TERMS_SAVING, false);
 	},
 
 	async update({commit, state}, taxonomyTerm) {
+		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
 		const {data: {included, ...term}} = response;
 		commit(types.UPDATE_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
+		commit(types.SET_TAXONOMY_TERMS_SAVING, false);
 	},
 
 	setFilter({commit}, filter) {

@@ -135,20 +135,23 @@ export default {
 		onSelectTag(tag) {
 			this.tag = tag;
 			this.tagSearch = '';
-		}
-	},
-	mounted() {
-		this.fetchAllTags();
-	},
-	watch: {
-		selectedTerms(selectedTerms) {
+		},
+		onSelectedTermsChange() {
 			// TODO figure out multiple terms selected
-			const term = this.termById(selectedTerms[0]);
+			const term = this.termById(this.selectedTerms[0]);
 			this.description = term.description;
 			this.id = term.id;
 			this.parent = term.ancestors.slice(-1)[0];
 			this.tag = term.tag;
 		}
-	}
+	},
+	watch: {
+		selectedTerms() {
+			this.onSelectedTermsChange();
+		}
+	},
+	mounted() {
+		this.onSelectedTermsChange();
+	},
 };
 </script>

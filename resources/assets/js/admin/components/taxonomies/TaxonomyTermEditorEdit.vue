@@ -6,7 +6,12 @@
 		:taxonomy-id="taxonomyId"
 		:term="term"
 	/>
-	<p v-else>Najpierw wybierz pojęcia</p>
+	<div v-else class="notification is-info">
+		<span class="icon">
+			<i class="fa fa-info-circle"></i>
+		</span>
+		Najpierw wybierz pojęcia
+	</div>
 </template>
 
 <script>

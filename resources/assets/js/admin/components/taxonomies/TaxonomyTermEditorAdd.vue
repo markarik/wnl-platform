@@ -2,51 +2,18 @@
 	<div>
 		<h5 class="title is-5 is-uppercase is-marginless"><strong>Nadrzędne pojęcie</strong></h5>
 		<span class="info small">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
-		<div class="margin bottom">
-			<div v-if="parent" class="autocomplete-selected">
-					<span>
-						<span v-if="parent.ancestors.length">{{parent.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
-						{{parent.tag.name}}
-					</span>
-				<span class="icon is-small clickable" @click="parent=null"><i class="fa fa-close" aria-hidden="true"></i></span>
-			</div>
-			<div class="control" v-else>
-				<input class="input" v-model="parentSearch" placeholder="Wpisz nazwę nadrzędnego pojęcia" />
-				<wnl-autocomplete
-					:items="autocompleteTerms"
-					:onItemChosen="onSelectParent"
-				>
-					<template slot-scope="slotProps">
-						<div>
-							<div class="autocomplete-parent-term">{{slotProps.item.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}}</div>
-							<div>{{slotProps.item.tag.name}}</div>
-						</div>
-					</template>
-				</wnl-autocomplete>
-			</div>
-		</div>
+		<wnl-term-autocomplete
+			@change="onSelectParent"
+			:selected="parent"
+		/>
 
 		<h5 class="title is-5 is-uppercase is-marginless"><strong>Tag źródłowy</strong></h5>
 		<span class="info">Wybierz tag, na podstawie którego chcesz utworzyć pojęcie, lub utwórz nowy.</span>
-		<div class="margin bottom">
-			<div v-if="tag" class="autocomplete-selected">
-				{{tag.name}}
-				<span class="icon is-small clickable" @click="tag=null"><i class="fa fa-close" aria-hidden="true"></i></span>
-			</div>
-			<div class="control" v-else>
-				<input class="input" v-model="tagSearch" placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć" />
-				<wnl-autocomplete
-					:items="autocompleteTags"
-					:onItemChosen="onSelectTag"
-				>
-					<template slot-scope="slotProps">
-						<div>
-							{{slotProps.item.name}}
-						</div>
-					</template>
-				</wnl-autocomplete>
-			</div>
-		</div>
+		<wnl-tag-autocomplete
+			@change="onSelectTag"
+			:selected="tag"
+		/>
+
 		<h5 class="title is-5 is-uppercase is-marginless"><strong>Notatka</strong></h5>
 		<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
 		<textarea class="textarea margin bottom" v-model="description" placeholder="Wpisz tekst" />
@@ -76,6 +43,8 @@ import {mapActions, mapState, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
+import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
+import WnlTagAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTagAutocomplete';
 
 export default {
 	props: {
@@ -88,51 +57,25 @@ export default {
 		return {
 			description: '',
 			tag: null,
-			tagSearch: '',
 			parent: null,
-			parentSearch: '',
 		};
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById']),
-		...mapState('taxonomyTerms', ['selectedTerms', 'terms']),
-		...mapState('tags', ['tags']),
-		autocompleteTerms() {
-			if (!this.parentSearch) {
-				return [];
-			}
-			const lowerParentSearch = this.parentSearch.toLocaleLowerCase();
-
-			const terms = this.terms.filter(term => term.tag.name.toLocaleLowerCase().startsWith(lowerParentSearch));
-			terms.push(...this.terms.filter(term => term.tag.name.toLocaleLowerCase().includes(lowerParentSearch)));
-
-			return uniqBy(terms, 'id').slice(0, 10);
-		},
-		autocompleteTags() {
-			if (!this.tagSearch) {
-				return [];
-			}
-			const lowerTagSearch = this.tagSearch.toLocaleLowerCase();
-
-			const tags = this.tags.filter(tag => tag.name.toLocaleLowerCase().startsWith(lowerTagSearch));
-			tags.push(...this.tags.filter(tag => tag.name.toLocaleLowerCase().includes(lowerTagSearch)));
-
-			return uniqBy(tags, 'id').slice(0, 10);
-		},
+		...mapState('taxonomyTerms', ['selectedTerms']),
 		submitDisabled() {
 			return this.tag === null;
 		}
 	},
 	components: {
-		WnlAutocomplete
+		WnlAutocomplete,
+		WnlTermAutocomplete,
+		WnlTagAutocomplete
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('taxonomyTerms', {
 			'createTerm': 'create',
-		}),
-		...mapActions('tags', {
-			fetchAllTags: 'fetchAll'
 		}),
 		async onSave() {
 			try {
@@ -161,11 +104,9 @@ export default {
 		},
 		onSelectParent(term) {
 			this.parent = term;
-			this.parentSearch = '';
 		},
 		onSelectTag(tag) {
 			this.tag = tag;
-			this.tagSearch = '';
 		},
 		initializeParent(selectedTerms) {
 			if (selectedTerms.length) {
@@ -174,7 +115,6 @@ export default {
 		}
 	},
 	mounted() {
-		this.fetchAllTags();
 		this.initializeParent(this.selectedTerms);
 	},
 	watch: {

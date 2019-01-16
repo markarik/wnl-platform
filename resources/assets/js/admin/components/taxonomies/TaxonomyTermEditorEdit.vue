@@ -1,10 +1,12 @@
 <template>
 	<wnl-taxonomy-term-editor-form
+		v-if="term"
 		submit-label="Zapisz"
 		:on-save="onSave"
 		:taxonomy-id="taxonomyId"
 		:term="term"
 	/>
+	<p v-else>Najpierw wybierz pojęcia</p>
 </template>
 
 <script>
@@ -21,7 +23,7 @@ export default {
 	},
 	data() {
 		return {
-			term: {}
+			term: null,
 		};
 	},
 	computed: {
@@ -39,6 +41,11 @@ export default {
 			return await this.updateTerm(term);
 		},
 		onSelectedTermsChange() {
+			if (this.selectedTerms.length === 0) {
+				this.term = null;
+				return;
+			}
+
 			// TODO figure out multiple terms selected
 			const term = this.termById(this.selectedTerms[0]);
 

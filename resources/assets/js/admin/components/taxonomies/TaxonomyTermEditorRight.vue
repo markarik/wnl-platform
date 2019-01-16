@@ -3,7 +3,7 @@
 		<nav class="tabs is-uppercase small">
 			<ul>
 				<li v-for="mode in modes" :class="mode.key === editorMode ? 'is-active' : ''">
-					<a @click="setEditorMode(mode.key)">
+					<a @click="changeEditorMode(mode.key)">
 						<span class="icon is-small"><i :class="`fa ${mode.icon}`" aria-hidden="true"></i></span>
 						<span>{{mode.label}}</span>
 					</a>
@@ -20,6 +20,7 @@ import {mapActions, mapState} from 'vuex';
 
 import WnlTaxonomyTermEditorAdd from 'js/admin/components/taxonomies/TaxonomyTermEditorAdd';
 import WnlTaxonomyTermEditorEdit from 'js/admin/components/taxonomies/TaxonomyTermEditorEdit';
+import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
 
 export default {
 	props: {
@@ -33,36 +34,43 @@ export default {
 			modes: [
 				{
 					icon: 'fa-plus',
-					key: 'add',
+					key: TAXONOMY_EDITOR_MODES.ADD,
 					label: 'Dodaj',
 				},
 				{
 					icon: 'fa-pencil',
-					key: 'edit',
+					key: TAXONOMY_EDITOR_MODES.EDIT,
 					label: 'Edytuj'
 				},
 				{
 					icon: 'fa-compress',
-					key: 'merge',
+					key: TAXONOMY_EDITOR_MODES.MERGE,
 					label: 'Połącz'
 				},
 				{
 					icon: 'fa-close',
-					key: 'delete',
+					key: TAXONOMY_EDITOR_MODES.DELETE,
 					label: 'Usuń'
 				}
 			],
 		};
 	},
 	computed: {
-		...mapState('taxonomyTerms', ['editorMode']),
+		...mapState('taxonomyTerms', ['editorMode', 'selectedTerms']),
 	},
 	components: {
 		WnlTaxonomyTermEditorAdd,
 		WnlTaxonomyTermEditorEdit,
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['setEditorMode']),
+		...mapActions('taxonomyTerms', ['selectTaxonomyTerms', 'setEditorMode']),
+		changeEditorMode(mode) {
+			if (mode === TAXONOMY_EDITOR_MODES.ADD) {
+				this.selectTaxonomyTerms([]);
+			}
+
+			this.setEditorMode(mode);
+		},
 	},
 };
 </script>

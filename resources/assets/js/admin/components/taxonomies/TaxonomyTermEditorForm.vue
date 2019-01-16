@@ -108,14 +108,20 @@ export default {
 		onSelectTag(tag) {
 			this.tag = tag;
 		},
-	},
-	watch: {
-		term({description, id, tag, parent}) {
+		onTermUpdated({description, id, tag, parent}) {
 			this.description = description;
 			this.id = id;
 			this.tag = tag;
 			this.parent = parent;
 		}
 	},
+	watch: {
+		term(term) {
+			this.onTermUpdated(term);
+		}
+	},
+	mounted() {
+		this.onTermUpdated(this.term);
+	}
 };
 </script>

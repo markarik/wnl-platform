@@ -50,7 +50,9 @@
 		<h5 class="title is-5 is-uppercase is-marginless"><strong>Notatka</strong></h5>
 		<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
 		<textarea class="textarea margin bottom" v-model="description" placeholder="Wpisz tekst" />
-		<button class="button" @click="onSave">Zapisz</button>
+		<div class="has-text-centered">
+			<button class="button" @click="onSave" :disabled="submitDisabled">Dodaj pojęcie</button>
+		</div>
 	</div>
 </template>
 
@@ -105,6 +107,9 @@ export default {
 			}
 			return this.tags.filter(tag => tag.name.toLocaleLowerCase().includes(this.tagSearch.toLocaleLowerCase())).slice(0, 10);
 			// TODO add tag
+		},
+		submitDisabled() {
+			return this.tag === null;
 		}
 	},
 	components: {

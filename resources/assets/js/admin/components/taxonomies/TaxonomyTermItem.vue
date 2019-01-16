@@ -1,8 +1,8 @@
 <template>
-	<li class="taxonomy-term-item">
+	<li :class=classNames>
 		<div class="media taxonomy-term-item__content">
 			<div class="media-content">
-				<input class="checkbox" type="checkbox" />
+				<input class="checkbox" type="checkbox" :checked="isSelected" />
 				<span>{{term.tag.name}}</span>
 			</div>
 			<div class="media-right central">
@@ -53,6 +53,9 @@
 		&__action
 			padding: $margin-small-minus
 
+		&.is-selected
+			background: $color-ocean-blue-less-opacity
+
 	.fa-chevron-down
 		transition: all .1s linear
 
@@ -66,7 +69,7 @@
 
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import {mapActions, mapGetters, mapState} from 'vuex';
 import {TAXONOMY_EDITOR_MODES} from '../../../consts/taxonomyTerms';
 
 export default {
@@ -83,6 +86,7 @@ export default {
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['filteredTerms']),
+		...mapState('taxonomyTerms', ['selectedTerms']),
 		chevronClass() {
 			const classes = ['fa', 'fa-chevron-down'];
 
@@ -97,6 +101,18 @@ export default {
 		},
 		childTerms() {
 			return this.filteredTerms.filter(term => term.parent_id === this.term.id);
+		},
+		classNames() {
+			const classNames = ['taxonomy-term-item'];
+
+			if (this.isSelected) {
+				classNames.push('is-selected');
+			}
+
+			return classNames;
+		},
+		isSelected() {
+			return this.selectedTerms.indexOf(this.term.id) > -1;
 		},
 	},
 	methods: {

@@ -12,7 +12,11 @@ class TaxonomyTermsApiController extends ApiController {
 	}
 
 	public function getByTaxonomy($taxonomyId) {
-		return $this->transformAndRespond(TaxonomyTerm::where('taxonomy_id', $taxonomyId)->get()->toFlatTree());
+		return $this->transformAndRespond(TaxonomyTerm::where('taxonomy_id', $taxonomyId)
+			->defaultOrder()
+			->get()
+			->toFlatTree()
+		);
 	}
 
 	public function post(UpdateTaxonomyTerm $request) {
@@ -37,5 +41,18 @@ class TaxonomyTermsApiController extends ApiController {
 		$taxonomyTerm->update($request->all());
 
 		return $this->transformAndRespond($taxonomyTerm);
+	}
+
+	public function move(Request $request) {
+		$target = TaxonomyTerm::find($request->get('term'));
+		$direction = $request->get('direction');
+
+		if ($direction > 0) {
+			$target->down();
+		} else {
+			$target->up();
+		}
+
+		return $this->respondOk();
 	}
 }

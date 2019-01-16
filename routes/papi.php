@@ -92,6 +92,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// TaxonomyTerms
 		Route::post("{$r['taxonomy-terms']}", 'TaxonomyTermsApiController@post');
+		Route::put("{$r['taxonomy-terms']}/move", 'TaxonomyTermsApiController@move');
 		Route::put("{$r['taxonomy-terms']}/{id}", 'TaxonomyTermsApiController@put');
 		Route::get("{$r['taxonomy-terms']}/byTaxonomy/{taxonomyId}", 'TaxonomyTermsApiController@getByTaxonomy');
 	});

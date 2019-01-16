@@ -121,13 +121,18 @@ const actions = {
 		commit(types.SET_TAXONOMY_TERMS_FILTER, filter);
 	},
 
-	moveTerm({commit, state}, {term, direction}) {
+	async moveTerm({commit, state}, {term, direction}) {
 		const newIndex = term.orderNumber + direction;
 		const replaceWith = state.terms.find(sibling => sibling.parent_id === term.parent_id && sibling.orderNumber === newIndex);
 
 		commit(types.MOVE_TERM, {
 			term,
 			replaceWith,
+		});
+
+		await axios.put(getApiUrl('taxonomy_terms/move'), {
+			term: term.id,
+			direction
 		});
 	}
 };

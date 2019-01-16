@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash';
 import axios from 'axios';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
@@ -11,9 +10,11 @@ const namespaced = true;
 
 // Initial state
 const state = {
-	isLoading: false,
-	terms: [],
+	editorMode: 'add',
 	filter: '',
+	isLoading: false,
+	selectedTerms: [],
+	terms: [],
 };
 
 // Getters
@@ -26,6 +27,9 @@ const getters = {
 			return state.terms.filter(term => term.tag.name.toLocaleLowerCase().includes(state.filter.toLocaleLowerCase()));
 		}
 	},
+	termById: state => id => {
+		return state.terms.filter(term => term.id === id)[0];
+	}
 };
 
 // Mutations
@@ -39,9 +43,23 @@ const mutations = {
 	[types.ADD_TERM] (state, payload) {
 		state.terms.push(payload);
 	},
+	[types.UPDATE_TERM] (state, payload) {
+		state.terms = state.terms.map(term => {
+			if (term.id === payload.id) {
+				return Object.assign({}, term, payload);
+			}
+			return term;
+		});
+	},
 	[types.SET_TAXONOMY_TERMS_FILTER] (state, payload) {
 		set(state, 'filter', payload);
 	},
+	[types.SELECT_TAXONOMY_TERMS] (state, payload) {
+		set(state, 'selectedTerms', payload);
+	},
+	[types.SET_TAXONOMY_TERM_EDITOR_MODE] (state, payload) {
+		set(state, 'editorMode', payload);
+	}
 };
 
 const includeTag = (term, tags) => {
@@ -79,9 +97,23 @@ const actions = {
 		commit(types.ADD_TERM, includeTag(term, included.tags));
 	},
 
+	async update({commit}, taxonomyTerm) {
+		const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
+		const {data: {included, ...term}} = response;
+		commit(types.UPDATE_TERM, includeTag(term, included.tags));
+	},
+
 	setFilter({commit}, filter) {
 		commit(types.SET_TAXONOMY_TERMS_FILTER, filter);
-	}
+	},
+
+	setEditorMode({commit}, editorMode) {
+		commit(types.SET_TAXONOMY_TERM_EDITOR_MODE, editorMode);
+	},
+
+	selectTaxonomyTerms({commit}, selectedTerms) {
+		commit(types.SELECT_TAXONOMY_TERMS, selectedTerms);
+	},
 };
 
 export default {

@@ -28,7 +28,15 @@ class TaxonomyTermsApiController extends ApiController {
 
 	public function put(UpdateTaxonomyTerm $request) {
 		$taxonomyTerm = TaxonomyTerm::find($request->route('id'));
-		// TODO update parent
+		$newParentId = $request->get('parent_id');
+
+		if ($newParentId !== $taxonomyTerm->parent_id) {
+			if ($newParentId === null) {
+				$taxonomyTerm->makeRoot();
+			} else {
+				$taxonomyTerm->appendToNode(TaxonomyTerm::find($newParentId));
+			}
+		}
 
 		if (!$taxonomyTerm) {
 			return $this->respondNotFound();

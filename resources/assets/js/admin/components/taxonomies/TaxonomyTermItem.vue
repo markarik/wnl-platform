@@ -13,7 +13,10 @@
 				>
 					<i :title="chevronTitle" :class="chevronClass"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action">
+				<span
+					class="icon-small taxonomy-term-item__action"
+					@click="edit()"
+				>
 					<i title="Edytuj" class="fa fa-pencil"></i>
 				</span>
 				<span class="icon-small taxonomy-term-item__action">
@@ -60,7 +63,7 @@
 
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 export default {
 	props: {
@@ -75,6 +78,7 @@ export default {
 		};
 	},
 	computed: {
+		...mapGetters('taxonomyTerms', ['filteredTerms']),
 		chevronClass() {
 			const classes = ['fa', 'fa-chevron-down'];
 
@@ -90,7 +94,13 @@ export default {
 		childTerms() {
 			return this.filteredTerms.filter(term => term.parent_id === this.term.id);
 		},
-		...mapGetters('taxonomyTerms', ['filteredTerms']),
+	},
+	methods: {
+		...mapActions('taxonomyTerms', ['selectTaxonomyTerms', 'setEditorMode']),
+		edit() {
+			this.setEditorMode('edit');
+			this.selectTaxonomyTerms([this.term.id]);
+		}
 	},
 	// Name is required to allow recursive rendering
 	name: 'wnl-taxonomy-term-item',

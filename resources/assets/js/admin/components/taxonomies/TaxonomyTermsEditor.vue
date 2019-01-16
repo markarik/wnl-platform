@@ -4,7 +4,7 @@
 			<div class="terms-editor__panel__header">
 				<h4 class="title is-5"><strong>Hierarchia pojęć</strong></h4>
 				<span class="control has-icons-right">
-					<input class="input" type="search" placeholder="Filtruj po naziwe..." @input="onFilterChange" :value="filter" />
+					<input class="input" type="search" placeholder="Filtruj po nazwie..." @input="onFilterChange" :value="filter" />
 					<span class="icon is-small is-right">
 						<i class="fa fa-filter"></i>
 					</span>

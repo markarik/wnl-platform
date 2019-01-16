@@ -23,6 +23,9 @@ const mutations = {
 	[types.SETUP_TAGS] (state, payload) {
 		set(state, 'tags', payload);
 	},
+	[types.ADD_TAG] (state, payload) {
+		state.tags.push(payload);
+	},
 };
 
 // Actions
@@ -34,6 +37,12 @@ const actions = {
 		commit(types.SETUP_TAGS, tags);
 		commit(types.SET_TAGS_LOADING, false);
 	},
+	async create({commit}, name) {
+		const {data: tag} = axios.post(getApiUrl(`tags`), {
+			name
+		});
+		commit(types.ADD_TAG, tag);
+	}
 };
 
 export default {

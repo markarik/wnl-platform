@@ -32,3 +32,4 @@ export const SELECT_TAXONOMY_TERMS = 'SELECT_TAXONOMY_TERMS';
 // Tags
 export const SET_TAGS_LOADING = 'SET_TAGS_LOADING';
 export const SETUP_TAGS = 'SETUP_TAGS';
+export const ADD_TAG = 'ADD_TAG';

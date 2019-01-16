@@ -59,6 +59,7 @@ export default {
 			tags.push(...this.tags.filter(tag => tag.name.toLocaleLowerCase().includes(lowerSearch)));
 
 			return uniqBy(tags, 'id').slice(0, 25);
+			// TODO add tags
 		},
 	},
 	components: {
@@ -66,7 +67,8 @@ export default {
 	},
 	methods: {
 		...mapActions('tags', {
-			fetchAllTags: 'fetchAll'
+			fetchAllTags: 'fetchAll',
+			createTag: 'create',
 		}),
 		onSelect(item) {
 			this.search = '';

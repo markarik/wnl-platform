@@ -20,10 +20,10 @@
 				<span class="icon-small taxonomy-term-item__action">
 					<i title="Dodaj" class="fa fa-plus"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action" @click="move(-1)">
+				<span class="icon-small taxonomy-term-item__action" @click="move(term, -1)">
 					<i title="Do góry" class="fa fa-arrow-up"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action" @click="move(1)">
+				<span class="icon-small taxonomy-term-item__action" @click="move(term, 1)">
 					<i title="Na dół" class="fa fa-arrow-down"></i>
 				</span>
 			</div>
@@ -34,6 +34,7 @@
 					v-for="childTerm in childTerms"
 					:key="childTerm.id"
 					:term="childTerm"
+					@moveTerm="move"
 				>
 				</wnl-taxonomy-term-item>
 			</ul>
@@ -98,12 +99,14 @@ export default {
 			return this.showChildren ? 'Zwiń' : 'Rozwiń';
 		},
 		childTerms() {
-			return this.filteredTerms.filter(term => term.parent_id === this.term.id);
+			return this.filteredTerms
+				.filter(term => term.parent_id === this.term.id)
+				.sort((termA, termB) => termA.orderNumber - termB.orderNumber);
 		},
 	},
 	methods: {
-		move(direction) {
-			this.$emit('moveTerm', direction);
+		move(...args) {
+			this.$emit('moveTerm', ...args);
 		}
 	}
 };

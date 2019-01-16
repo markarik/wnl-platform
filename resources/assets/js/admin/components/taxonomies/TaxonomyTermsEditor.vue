@@ -15,7 +15,7 @@
 					v-for="term in rootTerms"
 					:term="term"
 					:key="term.id"
-					@moveTerm="(direction) => onTermMove(term, direction)"
+					@moveTerm="onTermMove"
 				/>
 			</ul>
 			<wnl-text-loader v-else />

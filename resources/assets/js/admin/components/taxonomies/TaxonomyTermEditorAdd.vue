@@ -40,9 +40,6 @@ export default {
 		...mapActions('taxonomyTerms', {
 			'createTerm': 'create',
 		}),
-		...mapActions('tags', {
-			fetchAllTags: 'fetchAll'
-		}),
 		async onSave(term) {
 			return await this.createTerm(term);
 		},
@@ -53,7 +50,6 @@ export default {
 		},
 	},
 	mounted() {
-		this.fetchAllTags();
 		this.initializeParent(this.selectedTerms);
 	},
 	watch: {

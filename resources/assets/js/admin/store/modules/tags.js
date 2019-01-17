@@ -4,8 +4,6 @@ import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
 import * as types from 'js/admin/store/mutations-types';
 
-// Helper functions
-
 // Namespace
 const namespaced = true;
 

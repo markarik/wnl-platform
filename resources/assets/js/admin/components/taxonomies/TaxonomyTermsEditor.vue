@@ -31,19 +31,19 @@
 	@import 'resources/assets/sass/variables'
 
 	.terms-editor
-		border-top: 2px solid $color-lightest-gray
+		border-top: 1px solid $color-lightest-gray
 		display: flex
-		padding-top: 20px
+		padding-top: $margin-base
 
 		&__panel
 			flex: 50%
 
 			&.is-left
-				border-right: 2px solid $color-lightest-gray
-				padding-right: 20px
+				border-right: 1px solid $color-lightest-gray
+				padding-right: $margin-base
 
 			&.is-right
-				padding-left: 20px
+				padding-left: $margin-base
 
 			&__header
 				display: flex

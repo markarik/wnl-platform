@@ -5,8 +5,6 @@ import { getApiUrl } from 'js/utils/env';
 import * as types from 'js/admin/store/mutations-types';
 import {TAXONOMY_EDITOR_MODES} from '../../../consts/taxonomyTerms';
 
-// Helper functions
-
 // Namespace
 const namespaced = true;
 

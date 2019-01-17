@@ -28,7 +28,7 @@
 			</div>
 		</div>
 		<transition name="fade">
-			<ul v-if="isExpanded && childTerms.length" class="taxonomy-term-item__list">
+			<ul v-if="isExpanded" class="taxonomy-term-item__list">
 				<wnl-taxonomy-term-item
 					v-for="childTerm in childTerms"
 					:key="childTerm.id"
@@ -89,10 +89,10 @@ export default {
 			return this.filteredTerms.filter(term => term.parent_id === this.term.id);
 		},
 		isSelected() {
-			return this.selectedTerms.indexOf(this.term.id) > -1;
+			return this.selectedTerms.includes(this.term.id);
 		},
 		isExpanded() {
-			return this.expandedTerms.indexOf(this.term.id) > -1;
+			return this.expandedTerms.includes(this.term.id)  && this.childTerms.length;
 		},
 	},
 	methods: {

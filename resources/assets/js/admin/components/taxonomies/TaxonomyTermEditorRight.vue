@@ -10,6 +10,7 @@
 				</li>
 			</ul>
 		</nav>
+		<!--TODO Use synamic components https://vuejs.org/v2/guide/components-dynamic-async.html -->
 		<wnl-taxonomy-term-editor-add v-if="editorMode === 'add'" :taxonomyId="taxonomyId" />
 		<wnl-taxonomy-term-editor-edit v-if="editorMode === 'edit'" :taxonomyId="taxonomyId" />
 	</div>

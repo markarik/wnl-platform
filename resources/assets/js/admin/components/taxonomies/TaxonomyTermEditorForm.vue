@@ -52,6 +52,7 @@ export default {
 		},
 		term: {
 			type: Object,
+			default: () => ({}),
 		},
 	},
 	data() {

@@ -34,17 +34,11 @@
 			</div>
 		</div>
 		<transition name="fade">
-			<ul v-if="isExpanded" class="taxonomy-term-item__list">
-				<draggable @end="onTermDrag" :value="childTerms">
-					<wnl-taxonomy-term-item
-						v-for="childTerm in childTerms"
-						:key="childTerm.id"
-						:term="childTerm"
-						@moveTerm="onChildTermMove"
-					>
-					</wnl-taxonomy-term-item>
-				</draggable>
-			</ul>
+			<wnl-taxonomy-terms-list
+				v-if="isExpanded"
+				class="taxonomy-term-item__list"
+				:terms="childTerms"
+			/>
 		</transition>
 	</li>
 </template>
@@ -83,14 +77,10 @@
 <script>
 import {mapActions, mapState} from 'vuex';
 import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
-import draggable from 'vuedraggable';
 
 export default {
 	// Name is required to allow recursive rendering
 	name: 'wnl-taxonomy-term-item',
-	components: {
-		draggable
-	},
 	props: {
 		term: {
 			type: Object,
@@ -104,8 +94,7 @@ export default {
 		},
 		childTerms() {
 			return this.terms
-				.filter(term => term.parent_id === this.term.id)
-				.sort((termA, termB) => termA.orderNumber - termB.orderNumber);
+				.filter(term => term.parent_id === this.term.id);
 		},
 		isSelected() {
 			return this.selectedTerms.includes(this.term.id);
@@ -136,20 +125,12 @@ export default {
 				this.expandTerm(this.term.id);
 			}
 		},
-		onChildTermMove({term, direction}) {
-			const oldIndex = this.rootTerms.indexOf(term);
-			const newIndex = oldIndex + direction;
-
-			this.dragTerm({
-				terms: this.rootTerms, oldIndex, newIndex
-			});
-		},
 		onTermMove(term, direction) {
 			this.$emit('moveTerm', {term, direction});
 		},
-		onTermDrag({newIndex, oldIndex}) {
-			this.dragTerm({terms: this.childTerms, newIndex, oldIndex});
-		},
 	},
+	beforeCreate: function () {
+		this.$options.components.WnlTaxonomyTermsList = require('./TaxonomyTermsList.vue').default;
+	}
 };
 </script>

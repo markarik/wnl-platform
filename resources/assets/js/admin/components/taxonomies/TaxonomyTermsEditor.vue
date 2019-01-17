@@ -13,16 +13,7 @@
 					</span>
 				</span>
 			</div>
-			<ul v-if="!isLoadingTerms">
-				<draggable @end="onTermDrag" :value="rootTerms">
-					<wnl-taxonomy-term-item
-						v-for="term in rootTerms"
-						:term="term"
-						:key="term.id"
-						@moveTerm="onChildTermMove"
-					/>
-				</draggable>
-			</ul>
+			<wnl-taxonomy-terms-list v-if="!isLoadingTerms" :terms="rootTerms"/>
 			<wnl-text-loader v-else />
 		</div>
 		<div class="terms-editor__panel is-right">
@@ -62,16 +53,14 @@
 
 <script>
 import {mapActions, mapState} from 'vuex';
-import draggable from 'vuedraggable';
 
-import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
+import WnlTaxonomyTermsList from 'js/admin/components/taxonomies/TaxonomyTermsList';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
 import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
 
 export default {
 	components: {
-		draggable,
-		WnlTaxonomyTermItem,
+		WnlTaxonomyTermsList,
 		WnlTaxonomyTermEditorRight,
 		WnlTermAutocomplete
 	},
@@ -82,36 +71,21 @@ export default {
 		},
 	},
 	computed: {
-		rootTerms() {
-			return this.terms
-				.filter(term => term.parent_id === null)
-				.sort((termA, termB) => termA.orderNumber - termB.orderNumber);
-		},
 		...mapState('taxonomyTerms', {
 			isLoadingTerms: 'isLoading',
 			terms: 'terms',
 		}),
+		rootTerms() {
+			return this.terms.filter(({parent_id}) => parent_id === null);
+		},
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'select', 'expand', 'collapseAll', 'dragTerm']),
+		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'select', 'expand', 'collapseAll']),
 		onSearchTerm(term) {
 			this.collapseAll();
 			this.select([term.id]);
 			this.expand(term);
-		},
-		onTermDrag({newIndex, oldIndex}) {
-			this.dragTerm({
-				newIndex, oldIndex, terms: this.rootTerms
-			});
-		},
-		onChildTermMove({term, direction}) {
-			const oldIndex = this.rootTerms.indexOf(term);
-			const newIndex = Math.min(Math.max(oldIndex + direction, 0), this.rootTerms.length - 1);
-
-			this.dragTerm({
-				terms: this.rootTerms, oldIndex, newIndex
-			});
 		},
 	},
 	async mounted() {

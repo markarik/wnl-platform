@@ -66,7 +66,7 @@ export default {
 	computed: {
 		...mapState('taxonomyTerms', ['terms', 'isSaving']),
 		submitDisabled() {
-			return this.tag === null || this.isSaving;
+			return !this.tag || this.isSaving;
 		},
 	},
 	components: {

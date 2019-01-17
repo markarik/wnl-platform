@@ -41,6 +41,7 @@
 						v-for="childTerm in childTerms"
 						:key="childTerm.id"
 						:term="childTerm"
+						@moveTerm="onChildTermMove"
 					>
 					</wnl-taxonomy-term-item>
 				</draggable>
@@ -115,8 +116,7 @@ export default {
 	},
 	methods: {
 		...mapActions('taxonomyTerms', [
-			'collapseTaxonomyTerm', 'expandTaxonomyTerm', 'selectTaxonomyTerms', 'setEditorMode',
-			'moveTerm', 'dragTerm'
+			'collapseTaxonomyTerm', 'expandTaxonomyTerm', 'selectTaxonomyTerms', 'setEditorMode', 'dragTerm'
 		]),
 		add() {
 			this.setEditorMode(TAXONOMY_EDITOR_MODES.ADD);
@@ -133,12 +133,20 @@ export default {
 				this.expandTaxonomyTerm(this.term);
 			}
 		},
-		onTermMove(term, direction) {
-			this.moveTerm({term, direction});
+		onChildTermMove({term, direction}) {
+			const oldIndex = this.rootTerms.indexOf(term);
+			const newIndex = oldIndex + direction;
+
+			this.dragTerm({
+				terms: this.rootTerms, oldIndex, newIndex
+			});
 		},
 		onTermDrag({newIndex, oldIndex}) {
 			this.dragTerm({terms: this.childTerms, newIndex, oldIndex});
-		}
+		},
+		onTermMove(term, direction) {
+			this.$emit('moveTerm', {term, direction});
+		},
 	},
 };
 </script>

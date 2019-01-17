@@ -16,6 +16,7 @@
 						v-for="term in rootTerms"
 						:term="term"
 						:key="term.id"
+						@moveTerm="onChildTermMove"
 					/>
 				</draggable>
 			</ul>
@@ -85,16 +86,21 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'setFilter', 'moveTerm', 'dragTerm']),
+		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'setFilter', 'dragTerm']),
 		onFilterChange({target: {value}}) {
 			this.setFilter(value);
-		},
-		onTermMove(term, direction) {
-			this.moveTerm({term, direction});
 		},
 		onTermDrag({newIndex, oldIndex}) {
 			this.dragTerm({
 				newIndex, oldIndex, terms: this.rootTerms
+			});
+		},
+		onChildTermMove({term, direction}) {
+			const oldIndex = this.rootTerms.indexOf(term);
+			const newIndex = Math.min(Math.max(oldIndex + direction, 0), this.rootTerms.length - 1);
+
+			this.dragTerm({
+				terms: this.rootTerms, oldIndex, newIndex
 			});
 		},
 	},

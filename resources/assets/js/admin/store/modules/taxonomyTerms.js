@@ -69,28 +69,6 @@ const mutations = {
 	[types.SET_TAXONOMY_TERM_EDITOR_MODE] (state, payload) {
 		set(state, 'editorMode', payload);
 	},
-	[types.MOVE_TERM] (state, {term, replaceWith}) {
-		const replaceWithOrderNumber = replaceWith.orderNumber;
-		const termOrderNumber = term.orderNumber;
-
-		set(state, 'terms', state.terms.map(stateTerm => {
-			if (stateTerm.id === term.id) {
-				return {
-					...term,
-					orderNumber: replaceWithOrderNumber
-				};
-			}
-
-			if (stateTerm.id === replaceWith.id) {
-				return {
-					...replaceWith,
-					orderNumber: termOrderNumber
-				};
-			}
-
-			return stateTerm;
-		}));
-	},
 	[types.REORDER_TERMS] (state, list) {
 		const updatedList = list.map((item, index) => {
 			return {
@@ -176,23 +154,11 @@ const actions = {
 		commit(types.SET_TAXONOMY_TERMS_FILTER, filter);
 	},
 
-	async moveTerm({commit, state}, {term, direction}) {
-		const newIndex = term.orderNumber + direction;
-		const replaceWith = state.terms.find(sibling => sibling.parent_id === term.parent_id && sibling.orderNumber === newIndex);
-
-		commit(types.MOVE_TERM, {
-			term,
-			replaceWith,
-		});
-
-		await axios.put(getApiUrl('taxonomy_terms/move'), {
-			term: term.id,
-			direction
-		});
-	},
-
 	async dragTerm({commit, state}, {terms, oldIndex, newIndex}) {
 		const direction = newIndex - oldIndex;
+
+		if (direction === 0) return;
+
 		const term = terms[oldIndex];
 
 		terms.splice(oldIndex, 1);

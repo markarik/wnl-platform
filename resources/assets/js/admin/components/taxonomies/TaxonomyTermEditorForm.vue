@@ -27,7 +27,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.info
-		color: #aaa
+		color: $color-gray-dimmed
 </style>
 
 <script>

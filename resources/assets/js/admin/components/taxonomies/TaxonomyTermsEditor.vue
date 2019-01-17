@@ -83,11 +83,11 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'selectTaxonomyTerms', 'expandTaxonomyTerm', 'collapseAll']),
+		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'select', 'expand', 'collapseAll']),
 		onSearchTerm(term) {
 			this.collapseAll();
-			this.selectTaxonomyTerms([term.id]);
-			this.expandTaxonomyTerm(term);
+			this.select([term.id]);
+			this.expand(term);
 		},
 	},
 	async mounted() {

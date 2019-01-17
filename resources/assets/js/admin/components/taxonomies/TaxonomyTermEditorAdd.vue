@@ -37,13 +37,34 @@ export default {
 		WnlTaxonomyTermEditorForm
 	},
 	methods: {
+		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('taxonomyTerms', {
 			'createTerm': 'create',
-			'selectTaxonomyTerms': 'selectTaxonomyTerms',
+			'expandTerm': 'expand',
+			'selectTerms': 'select',
 		}),
 		async onSave(term) {
-			await this.createTerm(term);
-			this.selectTaxonomyTerms([]);
+			try {
+				await this.createTerm(term);
+
+				if (term.parent_id) {
+					this.expandTerm(term.parent_id);
+				}
+
+				this.selectTerms([]);
+
+				this.addAutoDismissableAlert({
+					text: 'Dodano pojęcie!',
+					type: 'success'
+				});
+			} catch (error) {
+				$wnl.logger.capture(error);
+
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+					type: 'error',
+				});
+			}
 		},
 		initializeParent(selectedTerms) {
 			if (selectedTerms.length) {

@@ -2,7 +2,7 @@
 	<li class="taxonomy-term-item">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<div class="media-content">
-				<input class="checkbox" type="checkbox" :checked="isSelected" />
+				<input class="checkbox margin right" type="checkbox" :checked="isSelected" />
 				<span>{{term.tag.name}}</span>
 			</div>
 			<div class="media-right central">
@@ -57,11 +57,12 @@
 			cursor: move
 			align-items: center
 			border-bottom: 1px solid $color-inactive-gray
-			padding: $margin-small 0
+			padding: $margin-small 0 $margin-small $margin-base
 		&__list
 			margin-left: $margin-big
 		&__action
 			cursor: pointer
+			margin: 0 $margin-tiny
 			padding: $margin-small-minus
 
 		.is-selected
@@ -80,8 +81,8 @@
 
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex';
-import {TAXONOMY_EDITOR_MODES} from '../../../consts/taxonomyTerms';
+import {mapActions, mapState} from 'vuex';
+import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
 import draggable from 'vuedraggable';
 
 export default {
@@ -97,13 +98,12 @@ export default {
 		},
 	},
 	computed: {
-		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms']),
-		...mapGetters('taxonomyTerms', ['filteredTerms']),
+		...mapState('taxonomyTerms', ['terms', 'expandedTerms', 'selectedTerms']),
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},
 		childTerms() {
-			return this.filteredTerms
+			return this.terms
 				.filter(term => term.parent_id === this.term.id)
 				.sort((termA, termB) => termA.orderNumber - termB.orderNumber);
 		},
@@ -115,22 +115,25 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions('taxonomyTerms', [
-			'collapseTaxonomyTerm', 'expandTaxonomyTerm', 'selectTaxonomyTerms', 'setEditorMode', 'dragTerm'
-		]),
+		...mapActions('taxonomyTerms', ['setEditorMode', 'dragTerm']),
+		...mapActions('taxonomyTerms', {
+			'collapseTerm': 'collapse',
+			'expandTerm': 'expand',
+			'selectTerms': 'select',
+		}),
 		add() {
 			this.setEditorMode(TAXONOMY_EDITOR_MODES.ADD);
-			this.selectTaxonomyTerms([this.term.id]);
+			this.selectTerms([this.term.id]);
 		},
 		edit() {
 			this.setEditorMode(TAXONOMY_EDITOR_MODES.EDIT);
-			this.selectTaxonomyTerms([this.term.id]);
+			this.selectTerms([this.term.id]);
 		},
 		toggle() {
 			if (this.isExpanded) {
-				this.collapseTaxonomyTerm(this.term);
+				this.collapseTerm(this.term.id);
 			} else {
-				this.expandTaxonomyTerm(this.term);
+				this.expandTerm(this.term.id);
 			}
 		},
 		onChildTermMove({term, direction}) {
@@ -141,11 +144,11 @@ export default {
 				terms: this.rootTerms, oldIndex, newIndex
 			});
 		},
-		onTermDrag({newIndex, oldIndex}) {
-			this.dragTerm({terms: this.childTerms, newIndex, oldIndex});
-		},
 		onTermMove(term, direction) {
 			this.$emit('moveTerm', {term, direction});
+		},
+		onTermDrag({newIndex, oldIndex}) {
+			this.dragTerm({terms: this.childTerms, newIndex, oldIndex});
 		},
 	},
 };

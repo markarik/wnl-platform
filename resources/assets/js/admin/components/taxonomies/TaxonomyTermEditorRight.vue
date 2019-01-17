@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="terms-editor-right">
 		<nav class="tabs is-uppercase small">
 			<ul>
 				<li v-for="mode in modes" :class="mode.key === editorMode ? 'is-active' : ''">
@@ -14,6 +14,15 @@
 		<component :is="activeMode.componentName" :taxonomyId="taxonomyId" />
 	</div>
 </template>
+
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.terms-editor-right
+		padding-top: $margin-big
+		position: sticky
+		top: -30px
+</style>
 
 <script>
 import {mapActions, mapState} from 'vuex';
@@ -68,10 +77,11 @@ export default {
 		WnlTaxonomyTermEditorEdit,
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['selectTaxonomyTerms', 'setEditorMode']),
+		...mapActions('taxonomyTerms', [{'selectTerms': 'select'}, 'setEditorMode']),
+		...mapActions('taxonomyTerms', {'selectTerms': 'select'}),
 		changeEditorMode(mode) {
 			if (mode === TAXONOMY_EDITOR_MODES.ADD) {
-				this.selectTaxonomyTerms([]);
+				this.selectTerms([]);
 			}
 
 			this.setEditorMode(mode);

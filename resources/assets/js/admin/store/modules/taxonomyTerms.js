@@ -1,9 +1,9 @@
-import { isEmpty, uniq } from 'lodash';
 import axios from 'axios';
+import { uniq } from 'lodash';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
 import * as types from 'js/admin/store/mutations-types';
-import {TAXONOMY_EDITOR_MODES} from '../../../consts/taxonomyTerms';
+import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
 
 // Namespace
 const namespaced = true;
@@ -11,7 +11,6 @@ const namespaced = true;
 const initialState = {
 	editorMode: TAXONOMY_EDITOR_MODES.ADD,
 	expandedTerms: [],
-	filter: '',
 	isLoading: false,
 	isSaving: false,
 	selectedTerms: [],
@@ -22,14 +21,6 @@ const state = Object.assign({}, initialState);
 
 // Getters
 const getters = {
-	filteredTerms: state => {
-		if (state.filter === '') {
-			return state.terms;
-		} else {
-			// TODO make filtering smart to include parents even when they don't match pattern
-			return state.terms.filter(term => term.tag.name.toLocaleLowerCase().includes(state.filter.toLocaleLowerCase()));
-		}
-	},
 	termById: state => id => {
 		return state.terms.filter(term => term.id === id)[0];
 	}
@@ -56,9 +47,6 @@ const mutations = {
 	},
 	[types.UPDATE_TERM] (state, payload) {
 		set(state.terms, state.terms.findIndex(term => term.id === payload.id), payload);
-	},
-	[types.SET_TAXONOMY_TERMS_FILTER] (state, payload) {
-		set(state, 'filter', payload);
 	},
 	[types.SELECT_TAXONOMY_TERMS] (state, payload) {
 		set(state, 'selectedTerms', payload);
@@ -150,10 +138,6 @@ const actions = {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, false);
 	},
 
-	setFilter({commit}, filter) {
-		commit(types.SET_TAXONOMY_TERMS_FILTER, filter);
-	},
-
 	async dragTerm({commit, dispatch}, {terms, oldIndex, newIndex}) {
 		const direction = newIndex - oldIndex;
 
@@ -183,15 +167,20 @@ const actions = {
 		commit(types.SET_TAXONOMY_TERM_EDITOR_MODE, editorMode);
 	},
 
-	selectTaxonomyTerms({commit}, selectedTerms) {
+	select({commit}, selectedTerms) {
 		commit(types.SELECT_TAXONOMY_TERMS, selectedTerms);
 	},
 
-	collapseTaxonomyTerm({commit}, term) {
-		commit(types.SET_EXPANDED_TAXONOMY_TERMS, state.expandedTerms.filter(id => id !== term.id));
+	collapse({commit}, termId) {
+		commit(types.SET_EXPANDED_TAXONOMY_TERMS, state.expandedTerms.filter(id => id !== termId));
+	},
+	collapseAll({commit}) {
+		commit(types.SET_EXPANDED_TAXONOMY_TERMS, []);
 	},
 
-	expandTaxonomyTerm({commit}, term) {
+	expand({commit, getters}, termId) {
+		const term = getters.termById(termId);
+
 		commit(types.SET_EXPANDED_TAXONOMY_TERMS, uniq([
 			...state.expandedTerms,
 			...term.ancestors.map(ancestor => ancestor.id),

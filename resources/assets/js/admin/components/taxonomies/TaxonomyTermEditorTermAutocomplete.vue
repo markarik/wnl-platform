@@ -12,6 +12,7 @@
 			<wnl-autocomplete
 				:items="autocompleteTerms"
 				:onItemChosen="onSelect"
+				:isDown="true"
 			>
 				<template slot-scope="slotProps">
 					<div>

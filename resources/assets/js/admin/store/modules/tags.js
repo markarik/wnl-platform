@@ -36,10 +36,12 @@ const actions = {
 		commit(types.SET_TAGS_LOADING, false);
 	},
 	async create({commit}, name) {
-		const {data: tag} = axios.post(getApiUrl(`tags`), {
+		const {data: tag} = await axios.post(getApiUrl(`tags`), {
 			name
 		});
 		commit(types.ADD_TAG, tag);
+
+		return tag;
 	}
 };
 

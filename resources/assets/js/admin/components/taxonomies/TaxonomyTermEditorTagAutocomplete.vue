@@ -9,10 +9,26 @@
 			<wnl-autocomplete
 				:items="autocompleteTags"
 				:onItemChosen="onSelect"
+				:isDown="true"
 			>
 				<template slot-scope="slotProps">
 					<div>
 						{{slotProps.item.name}}
+					</div>
+				</template>
+				<template slot="footer">
+					<div v-if="autocompleteTags.length === 0 && search !== ''">
+						<div class="margin">
+							Nie mamy tagu <strong>{{search}}</strong>
+						</div>
+						<div class="autocomplete-footer-button-container">
+							<button class="button" @click="onTagAdd">
+								<span class="icon is-small">
+									<i class="fa fa-plus" aria-hidden="true"></i>
+								</span>
+								<span>Dodaj nowy tag</span>
+							</button>
+						</div>
 					</div>
 				</template>
 			</wnl-autocomplete>
@@ -26,6 +42,11 @@
 	.autocomplete-selected
 		display: flex
 		justify-content: space-between
+
+	.autocomplete-footer-button-container
+		border-top: $border-light-gray
+		padding: $margin-base
+		text-align: right
 
 </style>
 
@@ -59,7 +80,6 @@ export default {
 			tags.push(...this.tags.filter(tag => tag.name.toLocaleLowerCase().includes(lowerSearch)));
 
 			return uniqBy(tags, 'id').slice(0, 25);
-			// TODO add tags
 		},
 	},
 	components: {
@@ -73,6 +93,11 @@ export default {
 		onSelect(item) {
 			this.search = '';
 			this.$emit('change', item);
+		},
+		async onTagAdd() {
+			const tag = await this.createTag(this.search);
+			this.search = '';
+			this.$emit('change', tag);
 		},
 	},
 	mounted() {

@@ -68,10 +68,11 @@ export default {
 		WnlTaxonomyTermEditorEdit,
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['selectTaxonomyTerms', 'setEditorMode']),
+		...mapActions('taxonomyTerms', [{'selectTerms': 'select'}, 'setEditorMode']),
+		...mapActions('taxonomyTerms', {'selectTerms': 'select'}),
 		changeEditorMode(mode) {
 			if (mode === TAXONOMY_EDITOR_MODES.ADD) {
-				this.selectTaxonomyTerms([]);
+				this.selectTerms([]);
 			}
 
 			this.setEditorMode(mode);

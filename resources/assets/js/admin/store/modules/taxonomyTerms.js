@@ -124,15 +124,15 @@ const actions = {
 		commit(types.SET_TAXONOMY_TERM_EDITOR_MODE, editorMode);
 	},
 
-	selectTaxonomyTerms({commit}, selectedTerms) {
+	select({commit}, selectedTerms) {
 		commit(types.SELECT_TAXONOMY_TERMS, selectedTerms);
 	},
 
-	collapseTaxonomyTerm({commit}, term) {
+	collapse({commit}, term) {
 		commit(types.SET_EXPANDED_TAXONOMY_TERMS, state.expandedTerms.filter(id => id !== term.id));
 	},
 
-	expandTaxonomyTerm({commit}, term) {
+	expand({commit}, term) {
 		commit(types.SET_EXPANDED_TAXONOMY_TERMS, uniq([
 			...state.expandedTerms,
 			...term.ancestors.map(ancestor => ancestor.id),

@@ -39,11 +39,11 @@ export default {
 	methods: {
 		...mapActions('taxonomyTerms', {
 			'createTerm': 'create',
-			'selectTaxonomyTerms': 'selectTaxonomyTerms',
+			'selectTerms': 'select',
 		}),
 		async onSave(term) {
 			await this.createTerm(term);
-			this.selectTaxonomyTerms([]);
+			this.selectTerms([]);
 		},
 		initializeParent(selectedTerms) {
 			if (selectedTerms.length) {

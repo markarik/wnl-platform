@@ -75,7 +75,9 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['expandTaxonomyTerm']),
+		...mapActions('taxonomyTerms', {
+			'expandTerm': 'expand',
+		}),
 		async onSubmitClick() {
 			try {
 				await this.onSave({
@@ -87,7 +89,7 @@ export default {
 				});
 
 				if (this.parent) {
-					this.expandTaxonomyTerm(this.parent);
+					this.expandTerm(this.parent);
 				}
 
 				this.addAutoDismissableAlert({

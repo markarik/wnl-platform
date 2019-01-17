@@ -97,20 +97,25 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['collapseTaxonomyTerm', 'expandTaxonomyTerm', 'selectTaxonomyTerms', 'setEditorMode']),
+		...mapActions('taxonomyTerms', ['setEditorMode']),
+		...mapActions('taxonomyTerms', {
+			'collapseTerm': 'collapse',
+			'expandTerm': 'expand',
+			'selectTerms': 'select'
+		}),
 		add() {
 			this.setEditorMode(TAXONOMY_EDITOR_MODES.ADD);
-			this.selectTaxonomyTerms([this.term.id]);
+			this.selectTerms([this.term.id]);
 		},
 		edit() {
 			this.setEditorMode(TAXONOMY_EDITOR_MODES.EDIT);
-			this.selectTaxonomyTerms([this.term.id]);
+			this.selectTerms([this.term.id]);
 		},
 		toggle() {
 			if (this.isExpanded) {
-				this.collapseTaxonomyTerm(this.term);
+				this.collapseTerm(this.term);
 			} else {
-				this.expandTaxonomyTerm(this.term);
+				this.expandTerm(this.term);
 			}
 		},
 	},

@@ -15,7 +15,7 @@ import WnlTaxonomyTermEditorForm from 'js/admin/components/taxonomies/TaxonomyTe
 export default {
 	props: {
 		taxonomyId: {
-			type: String|Number,
+			type: [String, Number],
 			required: true,
 		},
 	},

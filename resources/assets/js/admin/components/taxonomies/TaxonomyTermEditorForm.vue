@@ -56,7 +56,7 @@ export default {
 			required: true,
 		},
 		taxonomyId: {
-			type: String|Number,
+			type: [String, Number],
 			required: true,
 		},
 		term: {

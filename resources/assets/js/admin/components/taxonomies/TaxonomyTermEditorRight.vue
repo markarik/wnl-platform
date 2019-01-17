@@ -34,7 +34,7 @@ import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
 export default {
 	props: {
 		taxonomyId: {
-			type: String|Number,
+			type: [String, Number],
 			required: true,
 		}
 	},

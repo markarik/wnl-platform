@@ -67,7 +67,7 @@ import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEdit
 export default {
 	props: {
 		taxonomyId: {
-			type: String|Number,
+			type: [String, Number],
 			required: true,
 		},
 	},

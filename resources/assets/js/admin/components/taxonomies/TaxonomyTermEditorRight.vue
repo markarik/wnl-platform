@@ -2,9 +2,9 @@
 	<div class="terms-editor-right">
 		<nav class="tabs is-uppercase small">
 			<ul>
-				<li v-for="mode in modes" :class="mode.key === editorMode ? 'is-active' : ''">
+				<li v-for="mode in modes" :class="{'is-active': mode.key === editorMode}">
 					<a @click="changeEditorMode(mode.key)">
-						<span class="icon is-small"><i :class="`fa ${mode.icon}`" aria-hidden="true"></i></span>
+						<span class="icon is-small"><i :class="['fa', mode.icon]" aria-hidden="true"></i></span>
 						<span>{{mode.label}}</span>
 					</a>
 				</li>
@@ -45,13 +45,13 @@ export default {
 					icon: 'fa-plus',
 					key: TAXONOMY_EDITOR_MODES.ADD,
 					label: 'Dodaj',
-					componentName: 'wnl-taxonomy-term-editor-add'
+					componentName: WnlTaxonomyTermEditorAdd
 				},
 				{
 					icon: 'fa-pencil',
 					key: TAXONOMY_EDITOR_MODES.EDIT,
 					label: 'Edytuj',
-					componentName: 'wnl-taxonomy-term-editor-edit'
+					componentName: WnlTaxonomyTermEditorEdit
 				},
 				{
 					icon: 'fa-compress',
@@ -72,13 +72,11 @@ export default {
 			return this.modes.find(mode => mode.key === this.editorMode);
 		}
 	},
-	components: {
-		WnlTaxonomyTermEditorAdd,
-		WnlTaxonomyTermEditorEdit,
-	},
 	methods: {
-		...mapActions('taxonomyTerms', [{'selectTerms': 'select'}, 'setEditorMode']),
-		...mapActions('taxonomyTerms', {'selectTerms': 'select'}),
+		...mapActions('taxonomyTerms', {
+			selectTerms: 'select',
+			setEditorMode: 'setEditorMode',
+		}),
 		changeEditorMode(mode) {
 			if (mode === TAXONOMY_EDITOR_MODES.ADD) {
 				this.selectTerms([]);

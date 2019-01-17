@@ -1,6 +1,6 @@
 <template>
 	<wnl-taxonomy-term-editor-form
-		v-if="term"
+		v-if="term.id"
 		submit-label="Zapisz"
 		:on-save="onSave"
 		:taxonomy-id="taxonomyId"

@@ -17,12 +17,12 @@ const initialState = {
 	terms: [],
 };
 
-const state = Object.assign({}, initialState);
+const state = {...initialState};
 
 // Getters
 const getters = {
 	termById: state => id => {
-		return state.terms.filter(term => term.id === id)[0];
+		return state.terms.find(term => term.id === id);
 	}
 };
 

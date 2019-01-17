@@ -72,15 +72,15 @@ export default {
 			parent: null,
 		};
 	},
+	components: {
+		WnlTermAutocomplete,
+		WnlTagAutocomplete
+	},
 	computed: {
 		...mapState('taxonomyTerms', ['terms', 'isSaving']),
 		submitDisabled() {
 			return !this.tag || this.isSaving;
 		},
-	},
-	components: {
-		WnlTermAutocomplete,
-		WnlTagAutocomplete
 	},
 	methods: {
 		onSubmitClick() {

@@ -19,19 +19,15 @@ export default {
 			required: true,
 		},
 	},
-	data() {
-		return {
-			term: {
-				description: '',
-				id: null,
-				tag: null,
-				parent: null,
-			}
-		};
-	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById']),
 		...mapState('taxonomyTerms', ['selectedTerms']),
+		term() {
+			if (this.selectedTerms.length) {
+				return {parent: this.termById(this.selectedTerms[0])};
+			}
+			return {};
+		}
 	},
 	components: {
 		WnlTaxonomyTermEditorForm
@@ -65,21 +61,6 @@ export default {
 					type: 'error',
 				});
 			}
-		},
-		initializeParent(selectedTerms) {
-			if (selectedTerms.length) {
-				this.term = Object.assign({}, this.term, {parent: this.termById(selectedTerms[0])});
-			} else {
-				this.term = {};
-			}
-		},
-	},
-	mounted() {
-		this.initializeParent(this.selectedTerms);
-	},
-	watch: {
-		selectedTerms(selectedTerms) {
-			this.initializeParent(selectedTerms);
 		},
 	},
 };

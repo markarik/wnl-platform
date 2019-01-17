@@ -8,8 +8,7 @@ import {TAXONOMY_EDITOR_MODES} from '../../../consts/taxonomyTerms';
 // Namespace
 const namespaced = true;
 
-// Initial state
-const state = {
+const initialState = {
 	editorMode: TAXONOMY_EDITOR_MODES.ADD,
 	expandedTerms: [],
 	filter: '',
@@ -18,6 +17,8 @@ const state = {
 	selectedTerms: [],
 	terms: [],
 };
+
+const state = Object.assign({}, initialState);
 
 // Getters
 const getters = {
@@ -36,6 +37,11 @@ const getters = {
 
 // Mutations
 const mutations = {
+	[types.RESET_TAXONOMY_TERMS_STATE] (state) {
+		Object.keys(state).forEach(key => {
+			set(state, key, initialState[key]);
+		});
+	},
 	[types.SET_TAXONOMY_TERMS_LOADING] (state, payload) {
 		set(state, 'isLoading', payload);
 	},
@@ -107,7 +113,7 @@ const includeAncestors = (term, terms) => {
 // Actions
 const actions = {
 	async fetchTermsByTaxonomy({commit}, taxonomyId) {
-		commit(types.SETUP_TERMS, []);
+		commit(types.RESET_TAXONOMY_TERMS_STATE);
 		commit(types.SET_TAXONOMY_TERMS_LOADING, true);
 		const response = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${taxonomyId}?include=tags`));
 		const {data: {included, ...termsObj}} = response;

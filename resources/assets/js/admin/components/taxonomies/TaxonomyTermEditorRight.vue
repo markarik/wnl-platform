@@ -60,7 +60,7 @@ export default {
 	computed: {
 		...mapState('taxonomyTerms', ['editorMode', 'selectedTerms']),
 		activeMode() {
-			return this.modes.find(mode => mode.key === this.editorMode)
+			return this.modes.find(mode => mode.key === this.editorMode);
 		}
 	},
 	components: {

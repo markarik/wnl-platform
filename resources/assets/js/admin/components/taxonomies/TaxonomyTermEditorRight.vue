@@ -3,7 +3,7 @@
 		<nav class="tabs is-uppercase small">
 			<ul>
 				<li v-for="mode in modes" :class="{'is-active': mode.key === editorMode}">
-					<a @click="changeEditorMode(mode.key)">
+					<a @click="setEditorMode(mode.key)">
 						<span class="icon is-small"><i :class="['fa', mode.icon]" aria-hidden="true"></i></span>
 						<span>{{mode.label}}</span>
 					</a>
@@ -77,13 +77,6 @@ export default {
 			selectTerms: 'select',
 			setEditorMode: 'setEditorMode',
 		}),
-		changeEditorMode(mode) {
-			if (mode === TAXONOMY_EDITOR_MODES.ADD) {
-				this.selectTerms([]);
-			}
-
-			this.setEditorMode(mode);
-		},
 	},
 };
 </script>

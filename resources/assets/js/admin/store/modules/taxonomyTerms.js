@@ -112,14 +112,16 @@ const actions = {
 		commit(types.SELECT_TAXONOMY_TERMS, selectedTerms);
 	},
 
-	collapse({commit}, term) {
-		commit(types.SET_EXPANDED_TAXONOMY_TERMS, state.expandedTerms.filter(id => id !== term.id));
+	collapse({commit}, termId) {
+		commit(types.SET_EXPANDED_TAXONOMY_TERMS, state.expandedTerms.filter(id => id !== termId));
 	},
 	collapseAll({commit}) {
 		commit(types.SET_EXPANDED_TAXONOMY_TERMS, []);
 	},
 
-	expand({commit}, term) {
+	expand({commit, getters}, termId) {
+		const term = getters.termById(termId);
+
 		commit(types.SET_EXPANDED_TAXONOMY_TERMS, uniq([
 			...state.expandedTerms,
 			...term.ancestors.map(ancestor => ancestor.id),

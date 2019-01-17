@@ -39,11 +39,31 @@ export default {
 		WnlTaxonomyTermEditorForm
 	},
 	methods: {
+		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('taxonomyTerms', {
+			'expandTerm': 'expand',
 			'updateTerm': 'update',
 		}),
 		async onSave(term) {
-			return await this.updateTerm(term);
+			try {
+				await this.updateTerm(term);
+
+				if (term.parent_id) {
+					this.expandTerm(term.parent_id);
+				}
+
+				this.addAutoDismissableAlert({
+					text: 'Zapisano pojęcie!',
+					type: 'success'
+				});
+			} catch (error) {
+				$wnl.logger.capture(error);
+
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+					type: 'error',
+				});
+			}
 		},
 		onSelectedTermsChange() {
 			if (this.selectedTerms.length === 0) {

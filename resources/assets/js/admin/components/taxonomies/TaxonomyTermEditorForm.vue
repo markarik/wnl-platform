@@ -74,36 +74,14 @@ export default {
 		WnlTagAutocomplete
 	},
 	methods: {
-		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', {
-			'expandTerm': 'expand',
-		}),
-		async onSubmitClick() {
-			try {
-				await this.onSave({
-					id: this.id,
-					parent_id: this.parent ? this.parent.id : null,
-					tag_id: this.tag.id,
-					description: this.description,
-					taxonomy_id: this.taxonomyId
-				});
-
-				if (this.parent) {
-					this.expandTerm(this.parent);
-				}
-
-				this.addAutoDismissableAlert({
-					text: 'Zapisano!',
-					type: 'success'
-				});
-			} catch (error) {
-				$wnl.logger.capture(error);
-
-				this.addAutoDismissableAlert({
-					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
-					type: 'error',
-				});
-			}
+		onSubmitClick() {
+			this.onSave({
+				id: this.id,
+				parent_id: this.parent ? this.parent.id : null,
+				tag_id: this.tag.id,
+				description: this.description,
+				taxonomy_id: this.taxonomyId
+			});
 		},
 		onSelectParent(term) {
 			this.parent = term;

@@ -112,9 +112,9 @@ export default {
 		},
 		toggle() {
 			if (this.isExpanded) {
-				this.collapseTerm(this.term);
+				this.collapseTerm(this.term.id);
 			} else {
-				this.expandTerm(this.term);
+				this.expandTerm(this.term.id);
 			}
 		},
 	},

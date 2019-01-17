@@ -27,7 +27,7 @@ class Parser
 
 	const LUCID_EMBED_PATTERN = '/<div[^\<]*<iframe.*lucidchart.com\/documents\/embeddedchart\/([^"]*).*<\/iframe>[^\<]*<\/div>/';
 
-	const HEADER_PATTERN = '/<h[1-6]>([\s\S]*)<\/h[1-6]>/';
+	const HEADER_PATTERN = '/<h[1-6].*>([\s\S]*)<\/h[1-6]>/U';
 
 	const SUBHEADER_PATTERN = '/<[ph\d]+.*>([\s\S](?!<p.*>))*<\/[ph\d]+>/';
 

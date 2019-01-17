@@ -10,9 +10,8 @@
 				</li>
 			</ul>
 		</nav>
-		<!--TODO Use synamic components https://vuejs.org/v2/guide/components-dynamic-async.html -->
-		<wnl-taxonomy-term-editor-add v-if="editorMode === 'add'" :taxonomyId="taxonomyId" />
-		<wnl-taxonomy-term-editor-edit v-if="editorMode === 'edit'" :taxonomyId="taxonomyId" />
+
+		<component :is="activeMode.componentName" :taxonomyId="taxonomyId" />
 	</div>
 </template>
 
@@ -37,11 +36,13 @@ export default {
 					icon: 'fa-plus',
 					key: TAXONOMY_EDITOR_MODES.ADD,
 					label: 'Dodaj',
+					componentName: 'wnl-taxonomy-term-editor-add'
 				},
 				{
 					icon: 'fa-pencil',
 					key: TAXONOMY_EDITOR_MODES.EDIT,
-					label: 'Edytuj'
+					label: 'Edytuj',
+					componentName: 'wnl-taxonomy-term-editor-edit'
 				},
 				{
 					icon: 'fa-compress',
@@ -58,6 +59,9 @@ export default {
 	},
 	computed: {
 		...mapState('taxonomyTerms', ['editorMode', 'selectedTerms']),
+		activeMode() {
+			return this.modes.find(mode => mode.key === this.editorMode)
+		}
 	},
 	components: {
 		WnlTaxonomyTermEditorAdd,

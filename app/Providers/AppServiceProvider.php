@@ -85,7 +85,7 @@ class AppServiceProvider extends ServiceProvider
 
 	public function useExternalLogger()
 	{
-		return !App::environment(['testing']);
+		return !App::environment(['dev', 'testing']);
 	}
 
 	protected function registerModelObservers()

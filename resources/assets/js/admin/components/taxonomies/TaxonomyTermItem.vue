@@ -51,6 +51,7 @@
 		&__list
 			margin-left: $margin-big
 		&__action
+			cursor: pointer
 			padding: $margin-small-minus
 
 		.is-selected

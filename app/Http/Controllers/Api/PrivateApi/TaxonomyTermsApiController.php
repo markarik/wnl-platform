@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Course\MoveTaxonomyTerm;
 use App\Http\Requests\Course\UpdateTaxonomyTerm;
 use App\Models\TaxonomyTerm;
 use Illuminate\Http\Request;
@@ -51,8 +52,8 @@ class TaxonomyTermsApiController extends ApiController {
 		return $this->transformAndRespond($taxonomyTerm);
 	}
 
-	public function move(Request $request) {
-		$target = TaxonomyTerm::find($request->get('term'));
+	public function move(MoveTaxonomyTerm $request) {
+		$target = TaxonomyTerm::find($request->get('term_id'));
 		$direction = $request->get('direction');
 
 		if ($direction > 0) {

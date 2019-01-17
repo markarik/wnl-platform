@@ -154,7 +154,7 @@ const actions = {
 		commit(types.SET_TAXONOMY_TERMS_FILTER, filter);
 	},
 
-	async dragTerm({commit, state}, {terms, oldIndex, newIndex}) {
+	async dragTerm({commit, dispatch}, {terms, oldIndex, newIndex}) {
 		const direction = newIndex - oldIndex;
 
 		if (direction === 0) return;
@@ -166,10 +166,17 @@ const actions = {
 
 		commit(types.REORDER_TERMS, terms);
 
-		await axios.put(getApiUrl('taxonomy_terms/move'), {
-			term: term.id,
-			direction
-		});
+		try {
+			await axios.put(getApiUrl('taxonomy_terms/move'), {
+				term_id: term.id,
+				direction
+			});
+		} catch (e) {
+			$wnl.logger.error(error);
+			dispatch('addAlert', {
+				type: 'error', text: 'Nie udało się zapisać zmiany. Odśwież stronę i spróbuj ponownie.'
+			}, {root: true});
+		}
 	},
 
 	setEditorMode({commit}, editorMode) {

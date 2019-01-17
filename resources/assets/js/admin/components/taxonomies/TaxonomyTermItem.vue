@@ -4,7 +4,6 @@
 			<div class="media-content">
 				<input class="checkbox" type="checkbox" :checked="isSelected" />
 				<span>{{term.tag.name}}</span>
-				{{term.orderNumber}}
 			</div>
 			<div class="media-right central">
 				<span
@@ -55,6 +54,7 @@
 
 	.taxonomy-term-item
 		&__content
+			cursor: move
 			align-items: center
 			border-bottom: 1px solid $color-inactive-gray
 			padding: $margin-small 0

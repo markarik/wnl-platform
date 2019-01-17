@@ -144,7 +144,6 @@ const actions = {
 		if (direction === 0) return;
 
 		const term = terms[oldIndex];
-
 		terms.splice(oldIndex, 1);
 		terms.splice(newIndex, 0, term);
 
@@ -155,10 +154,11 @@ const actions = {
 				term_id: term.id,
 				direction
 			});
-		} catch (e) {
+		} catch (error) {
 			$wnl.logger.error(error);
-			dispatch('addAlert', {
-				type: 'error', text: 'Nie udało się zapisać zmiany. Odśwież stronę i spróbuj ponownie.'
+			dispatch('addAutoDismissableAlert', {
+				type: 'error',
+				text: 'Nie udało się zapisać zmiany. Odśwież stronę i spróbuj ponownie. Być może Twoje drzewo jest nieaktulane.'
 			}, {root: true});
 		}
 	},

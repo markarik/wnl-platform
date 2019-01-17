@@ -56,10 +56,18 @@ class TaxonomyTermsApiController extends ApiController {
 		$target = TaxonomyTerm::find($request->get('term_id'));
 		$direction = $request->get('direction');
 
+		if ($direction === 0) {
+			return $this->respondOk();
+		}
+
 		if ($direction > 0) {
-			$target->down($direction);
+			$success = $target->down($direction);
 		} else {
-			$target->up(abs($direction));
+			$success = $target->up(abs($direction));
+		}
+
+		if (!$success) {
+			return $this->respondUnprocessableEntity('direction out of range');
 		}
 
 		return $this->respondOk();

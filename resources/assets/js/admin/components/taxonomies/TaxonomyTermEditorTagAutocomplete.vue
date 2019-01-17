@@ -16,10 +16,10 @@
 						{{slotProps.item.name}}
 					</div>
 				</template>
-				<template slot="footer">
-					<div v-if="autocompleteTags.length === 0 && search !== ''">
+				<template slot="footer" v-if="autocompleteTags.length === 0 && search !== ''">
+					<div>
 						<div class="margin">
-							Nie mamy tagu <strong>{{search}}</strong>
+							Nie mamy taga <strong>{{search}}</strong>
 						</div>
 						<div class="autocomplete-footer-button-container">
 							<button class="button" @click="onTagAdd">

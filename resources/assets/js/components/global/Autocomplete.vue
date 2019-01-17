@@ -2,12 +2,12 @@
 	<div
 		class="autocomplete-box"
 		v-bind:class="{'is-down': isDown}"
+		v-show="hasItems || $slots.footer"
 	>
 		<ul
-			class="autocomplete-box-list"
+			class="autocomplete-box__list"
 			tabindex="-1"
 			@keydown="onKeyDown"
-			v-if="items.length"
 		>
 			<li
 				class="autocomplete-box__item"
@@ -30,6 +30,7 @@
 		background: $autocomplete-box-background
 		border: $autocomplete-box-border
 		bottom: 44px
+		box-shadow: $autocomplete-box-shadow
 		color: $autocomplete-text-color
 		left: 0
 		max-width: 300px
@@ -48,7 +49,6 @@
 			outline: none
 
 		&__list
-			box-shadow: $autocomplete-box-shadow
 			max-height: 50vh
 			overflow-y: auto
 

@@ -2,11 +2,14 @@
 	<div class="terms-editor">
 		<div class="terms-editor__panel is-left">
 			<div class="terms-editor__panel__header">
-				<h4 class="title is-5"><strong>Hierarchia pojęć</strong></h4>
+				<h4 class="title is-5"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
 				<span class="control has-icons-right">
-					<input class="input" type="search" placeholder="Filtruj po nazwie..." @input="onFilterChange" :value="filter" />
+					<wnl-term-autocomplete
+						@change="onSearchTerm"
+						placeholder="Szukaj pojęcia"
+					/>
 					<span class="icon is-small is-right">
-						<i class="fa fa-filter"></i>
+						<i class="fa fa-search"></i>
 					</span>
 				</span>
 			</div>
@@ -51,10 +54,11 @@
 </style>
 
 <script>
-import {mapActions, mapState, mapGetters} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
+import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
 
 export default {
 	props: {
@@ -65,23 +69,25 @@ export default {
 	},
 	computed: {
 		rootTerms() {
-			return this.filteredTerms.filter(term => term.parent_id === null);
+			return this.terms.filter(term => term.parent_id === null);
 		},
 		...mapState('taxonomyTerms', {
 			isLoadingTerms: 'isLoading',
-			filter: 'filter'
+			terms: 'terms',
 		}),
-		...mapGetters('taxonomyTerms', ['filteredTerms']),
 	},
 	components: {
 		WnlTaxonomyTermItem,
-		WnlTaxonomyTermEditorRight
+		WnlTaxonomyTermEditorRight,
+		WnlTermAutocomplete
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'setFilter']),
-		onFilterChange({target: {value}}) {
-			this.setFilter(value);
+		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'selectTaxonomyTerms', 'expandTaxonomyTerm', 'collapseAll']),
+		onSearchTerm(term) {
+			this.collapseAll();
+			this.selectTaxonomyTerms([term.id]);
+			this.expandTaxonomyTerm(term);
 		},
 	},
 	async mounted() {

@@ -1,19 +1,22 @@
-import { isEmpty } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import axios from 'axios';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
 import * as types from 'js/admin/store/mutations-types';
-
-// Helper functions
+import {TAXONOMY_EDITOR_MODES} from '../../../consts/taxonomyTerms';
 
 // Namespace
 const namespaced = true;
 
 // Initial state
 const state = {
-	isLoading: false,
-	terms: [],
+	editorMode: TAXONOMY_EDITOR_MODES.ADD,
+	expandedTerms: [],
 	filter: '',
+	isLoading: false,
+	isSaving: false,
+	selectedTerms: [],
+	terms: [],
 };
 
 // Getters
@@ -26,6 +29,9 @@ const getters = {
 			return state.terms.filter(term => term.tag.name.toLocaleLowerCase().includes(state.filter.toLocaleLowerCase()));
 		}
 	},
+	termById: state => id => {
+		return state.terms.filter(term => term.id === id)[0];
+	}
 };
 
 // Mutations
@@ -33,14 +39,29 @@ const mutations = {
 	[types.SET_TAXONOMY_TERMS_LOADING] (state, payload) {
 		set(state, 'isLoading', payload);
 	},
+	[types.SET_TAXONOMY_TERMS_SAVING] (state, payload) {
+		set(state, 'isSaving', payload);
+	},
 	[types.SETUP_TERMS] (state, payload) {
 		set(state, 'terms', payload);
 	},
 	[types.ADD_TERM] (state, payload) {
 		state.terms.push(payload);
 	},
+	[types.UPDATE_TERM] (state, payload) {
+		set(state.terms, state.terms.findIndex(term => term.id === payload.id), payload);
+	},
 	[types.SET_TAXONOMY_TERMS_FILTER] (state, payload) {
 		set(state, 'filter', payload);
+	},
+	[types.SELECT_TAXONOMY_TERMS] (state, payload) {
+		set(state, 'selectedTerms', payload);
+	},
+	[types.SET_EXPANDED_TAXONOMY_TERMS] (state, payload) {
+		set(state, 'expandedTerms', payload);
+	},
+	[types.SET_TAXONOMY_TERM_EDITOR_MODE] (state, payload) {
+		set(state, 'editorMode', payload);
 	},
 	[types.MOVE_TERM] (state, {term, replaceWith}) {
 		const replaceWithOrderNumber = replaceWith.orderNumber;
@@ -111,10 +132,20 @@ const actions = {
 		commit(types.SET_TAXONOMY_TERMS_LOADING, false);
 	},
 
-	async create({commit}, taxonomyTerm) {
+	async create({commit, state}, taxonomyTerm) {
+		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 		const {data: {included, ...term}} = response;
-		commit(types.ADD_TERM, includeTag(term, included.tags));
+		commit(types.ADD_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
+		commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+	},
+
+	async update({commit, state}, taxonomyTerm) {
+		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
+		const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
+		const {data: {included, ...term}} = response;
+		commit(types.UPDATE_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
+		commit(types.SET_TAXONOMY_TERMS_SAVING, false);
 	},
 
 	setFilter({commit}, filter) {
@@ -134,7 +165,27 @@ const actions = {
 			term: term.id,
 			direction
 		});
-	}
+	},
+
+	setEditorMode({commit}, editorMode) {
+		commit(types.SET_TAXONOMY_TERM_EDITOR_MODE, editorMode);
+	},
+
+	selectTaxonomyTerms({commit}, selectedTerms) {
+		commit(types.SELECT_TAXONOMY_TERMS, selectedTerms);
+	},
+
+	collapseTaxonomyTerm({commit}, term) {
+		commit(types.SET_EXPANDED_TAXONOMY_TERMS, state.expandedTerms.filter(id => id !== term.id));
+	},
+
+	expandTaxonomyTerm({commit}, term) {
+		commit(types.SET_EXPANDED_TAXONOMY_TERMS, uniq([
+			...state.expandedTerms,
+			...term.ancestors.map(ancestor => ancestor.id),
+			term.id
+		]));
+	},
 };
 
 export default {

@@ -4,7 +4,7 @@
 			<div class="terms-editor__panel__header">
 				<h4 class="title is-5"><strong>Hierarchia pojęć</strong></h4>
 				<span class="control has-icons-right">
-					<input class="input" type="search" placeholder="Filtruj po naziwe..." @input="onFilterChange" :value="filter" />
+					<input class="input" type="search" placeholder="Filtruj po nazwie..." @input="onFilterChange" :value="filter" />
 					<span class="icon is-small is-right">
 						<i class="fa fa-filter"></i>
 					</span>
@@ -21,7 +21,9 @@
 			<wnl-text-loader v-else />
 		</div>
 		<div class="terms-editor__panel is-right">
-			<wnl-taxonomy-term-editor-right />
+			<wnl-taxonomy-term-editor-right
+				:taxonomyId="taxonomyId"
+			/>
 		</div>
 	</div>
 </template>
@@ -30,19 +32,19 @@
 	@import 'resources/assets/sass/variables'
 
 	.terms-editor
-		border-top: 2px solid $color-lightest-gray
+		border-top: 1px solid $color-lightest-gray
 		display: flex
-		padding-top: 20px
+		padding-top: $margin-base
 
 		&__panel
 			flex: 50%
 
 			&.is-left
-				border-right: 2px solid $color-lightest-gray
-				padding-right: 20px
+				border-right: 1px solid $color-lightest-gray
+				padding-right: $margin-base
 
 			&.is-right
-				padding-left: 20px
+				padding-left: $margin-base
 
 			&__header
 				display: flex

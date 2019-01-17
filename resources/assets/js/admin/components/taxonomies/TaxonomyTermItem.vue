@@ -1,23 +1,29 @@
 <template>
 	<li class="taxonomy-term-item">
-		<div class="media taxonomy-term-item__content">
+		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<div class="media-content">
-				<input class="checkbox" type="checkbox" />
+				<input class="checkbox" type="checkbox" :checked="isSelected" />
 				<span>{{term.tag.name}}</span>
 				{{term.orderNumber}}
 			</div>
 			<div class="media-right central">
 				<span
 					class="icon-small taxonomy-term-item__action"
-					@click="showChildren = !showChildren"
+					@click="toggle"
 					v-if="childTerms.length"
 				>
-					<i :title="chevronTitle" :class="chevronClass"></i>
+					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action">
+				<span
+					class="icon-small taxonomy-term-item__action"
+					@click="edit"
+				>
 					<i title="Edytuj" class="fa fa-pencil"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action">
+				<span
+					class="icon-small taxonomy-term-item__action"
+					@click="add"
+				>
 					<i title="Dodaj" class="fa fa-plus"></i>
 				</span>
 				<span class="icon-small taxonomy-term-item__action" @click="move(term, -1)">
@@ -29,7 +35,7 @@
 			</div>
 		</div>
 		<transition name="fade">
-			<ul v-if="showChildren && childTerms.length" class="taxonomy-term-item__list">
+			<ul v-if="isExpanded" class="taxonomy-term-item__list">
 				<wnl-taxonomy-term-item
 					v-for="childTerm in childTerms"
 					:key="childTerm.id"
@@ -48,12 +54,16 @@
 	.taxonomy-term-item
 		&__content
 			align-items: center
-			border-bottom: 2px solid $color-inactive-gray
+			border-bottom: 1px solid $color-inactive-gray
 			padding: $margin-small 0
 		&__list
 			margin-left: $margin-big
 		&__action
+			cursor: pointer
 			padding: $margin-small-minus
+
+		.is-selected
+			background: $color-ocean-blue-less-opacity
 
 	.fa-chevron-down
 		transition: all .1s linear
@@ -68,7 +78,8 @@
 
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapActions, mapGetters, mapState} from 'vuex';
+import {TAXONOMY_EDITOR_MODES} from '../../../consts/taxonomyTerms';
 
 export default {
 	// Name is required to allow recursive rendering
@@ -79,35 +90,44 @@ export default {
 			required: true,
 		},
 	},
-	data() {
-		return {
-			showChildren: false,
-		};
-	},
 	computed: {
+		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms']),
 		...mapGetters('taxonomyTerms', ['filteredTerms']),
-		chevronClass() {
-			const classes = ['fa', 'fa-chevron-down'];
-
-			if (this.showChildren) {
-				classes.push('fa-rotate-180');
-			}
-
-			return classes.join(' ');
-		},
 		chevronTitle() {
-			return this.showChildren ? 'Zwiń' : 'Rozwiń';
+			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},
 		childTerms() {
 			return this.filteredTerms
 				.filter(term => term.parent_id === this.term.id)
 				.sort((termA, termB) => termA.orderNumber - termB.orderNumber);
 		},
+		isSelected() {
+			return this.selectedTerms.includes(this.term.id);
+		},
+		isExpanded() {
+			return this.expandedTerms.includes(this.term.id)  && this.childTerms.length;
+		},
 	},
 	methods: {
+		...mapActions('taxonomyTerms', ['collapseTaxonomyTerm', 'expandTaxonomyTerm', 'selectTaxonomyTerms', 'setEditorMode']),
+		add() {
+			this.setEditorMode(TAXONOMY_EDITOR_MODES.ADD);
+			this.selectTaxonomyTerms([this.term.id]);
+		},
+		edit() {
+			this.setEditorMode(TAXONOMY_EDITOR_MODES.EDIT);
+			this.selectTaxonomyTerms([this.term.id]);
+		},
+		toggle() {
+			if (this.isExpanded) {
+				this.collapseTaxonomyTerm(this.term);
+			} else {
+				this.expandTaxonomyTerm(this.term);
+			}
+		},
 		move(...args) {
 			this.$emit('moveTerm', ...args);
 		}
-	}
+	},
 };
 </script>

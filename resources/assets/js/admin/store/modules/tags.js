@@ -4,8 +4,6 @@ import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
 import * as types from 'js/admin/store/mutations-types';
 
-// Helper functions
-
 // Namespace
 const namespaced = true;
 
@@ -23,6 +21,9 @@ const mutations = {
 	[types.SETUP_TAGS] (state, payload) {
 		set(state, 'tags', payload);
 	},
+	[types.ADD_TAG] (state, payload) {
+		state.tags.push(payload);
+	},
 };
 
 // Actions
@@ -34,6 +35,14 @@ const actions = {
 		commit(types.SETUP_TAGS, tags);
 		commit(types.SET_TAGS_LOADING, false);
 	},
+	async create({commit}, name) {
+		const {data: tag} = await axios.post(getApiUrl(`tags`), {
+			name
+		});
+		commit(types.ADD_TAG, tag);
+
+		return tag;
+	}
 };
 
 export default {

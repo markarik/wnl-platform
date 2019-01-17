@@ -26,23 +26,21 @@
 				>
 					<i title="Dodaj" class="fa fa-plus"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action" @click="move(term, -1)">
+				<span class="icon-small taxonomy-term-item__action" @click="onTermMove(term, -1)">
 					<i title="Do góry" class="fa fa-arrow-up"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action" @click="move(term, 1)">
+				<span class="icon-small taxonomy-term-item__action" @click="onTermMove(term, 1)">
 					<i title="Na dół" class="fa fa-arrow-down"></i>
 				</span>
 			</div>
 		</div>
 		<transition name="fade">
 			<ul v-if="isExpanded" class="taxonomy-term-item__list">
-				<draggable @end="onChildTermDrag" :value="childTerms">
+				<draggable @end="onTermDrag" :value="childTerms">
 					<wnl-taxonomy-term-item
 						v-for="childTerm in childTerms"
 						:key="childTerm.id"
 						:term="childTerm"
-						@moveTerm="move"
-						@dragTerm="drag"
 					>
 					</wnl-taxonomy-term-item>
 				</draggable>
@@ -116,7 +114,10 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['collapseTaxonomyTerm', 'expandTaxonomyTerm', 'selectTaxonomyTerms', 'setEditorMode']),
+		...mapActions('taxonomyTerms', [
+			'collapseTaxonomyTerm', 'expandTaxonomyTerm', 'selectTaxonomyTerms', 'setEditorMode',
+			'moveTerm', 'dragTerm'
+		]),
 		add() {
 			this.setEditorMode(TAXONOMY_EDITOR_MODES.ADD);
 			this.selectTaxonomyTerms([this.term.id]);
@@ -132,17 +133,11 @@ export default {
 				this.expandTaxonomyTerm(this.term);
 			}
 		},
-		move(...args) {
-			this.$emit('moveTerm', ...args);
+		onTermMove(term, direction) {
+			this.moveTerm({term, direction});
 		},
-		drag(...args) {
-			this.$emit('dragTerm', ...args);
-		},
-		onChildTermDrag(event) {
-			this.$emit('dragTerm', {
-				...event,
-				terms: this.childTerms
-			});
+		onTermDrag({newIndex, oldIndex}) {
+			this.dragTerm({terms: this.childTerms, newIndex, oldIndex});
 		}
 	},
 };

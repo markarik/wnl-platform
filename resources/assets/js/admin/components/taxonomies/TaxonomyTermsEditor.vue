@@ -11,13 +11,11 @@
 				</span>
 			</div>
 			<ul v-if="!isLoadingTerms">
-				<draggable @end="onRootTermDrag" :value="rootTerms">
+				<draggable @end="onTermDrag" :value="rootTerms">
 					<wnl-taxonomy-term-item
 						v-for="term in rootTerms"
 						:term="term"
 						:key="term.id"
-						@moveTerm="onTermMove"
-						@dragTerm="onTermDrag"
 					/>
 				</draggable>
 			</ul>
@@ -94,15 +92,11 @@ export default {
 		onTermMove(term, direction) {
 			this.moveTerm({term, direction});
 		},
-		onRootTermDrag(event) {
-			this.onTermDrag({
-				...event,
-				terms: this.rootTerms
+		onTermDrag({newIndex, oldIndex}) {
+			this.dragTerm({
+				newIndex, oldIndex, terms: this.rootTerms
 			});
 		},
-		onTermDrag({newIndex, oldIndex, terms}) {
-			this.dragTerm({terms, newIndex, oldIndex});
-		}
 	},
 	async mounted() {
 		try {

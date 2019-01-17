@@ -1,5 +1,5 @@
 <template>
-	<div class="margin bottom">
+	<div>
 		<div v-if="selected" class="autocomplete-selected">
 				<span>
 					<span v-if="selected.ancestors.length">{{selected.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
@@ -31,6 +31,7 @@
 	.autocomplete-selected
 		display: flex
 		justify-content: space-between
+		padding: $margin-small-minus
 
 	.autocomplete-parent-term
 		color: $color-inactive-gray

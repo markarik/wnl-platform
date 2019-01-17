@@ -1,24 +1,30 @@
 <template>
 	<div>
-		<h5 class="title is-5 is-uppercase is-marginless"><strong>Nadrzędne pojęcie</strong></h5>
-		<span class="info small">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
-		<wnl-term-autocomplete
-			@change="onSelectParent"
-			:selected="parent"
-		/>
+		<div class="field">
+			<label class=" label is-uppercase"><strong>Nadrzędne pojęcie</strong></label>
+			<span class="info small">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
+			<wnl-term-autocomplete
+				@change="onSelectParent"
+				:selected="parent"
+			/>
+		</div>
 
-		<h5 class="title is-5 is-uppercase is-marginless"><strong>Tag źródłowy</strong></h5>
-		<span class="info">Wybierz tag, na podstawie którego chcesz utworzyć pojęcie, lub utwórz nowy.</span>
-		<wnl-tag-autocomplete
-			@change="onSelectTag"
-			:selected="tag"
-		/>
+		<div class="field">
+			<label class="label is-uppercase"><strong>Tag źródłowy</strong></label>
+			<span class="info">Wybierz tag, na podstawie którego chcesz utworzyć pojęcie, lub utwórz nowy.</span>
+			<wnl-tag-autocomplete
+				@change="onSelectTag"
+				:selected="tag"
+			/>
+		</div>
 
-		<h5 class="title is-5 is-uppercase is-marginless"><strong>Notatka</strong></h5>
-		<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
-		<textarea class="textarea margin bottom" v-model="description" placeholder="Wpisz tekst" />
-		<div class="has-text-centered">
-			<button class="button" @click="onSubmitClick" :disabled="submitDisabled">{{submitLabel}}</button>
+		<div class="field">
+			<label class="label is-uppercase"><strong>Notatka</strong></label>
+			<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
+			<textarea class="textarea margin bottom" v-model="description" placeholder="Wpisz tekst" />
+			<div class="has-text-centered">
+				<button class="button" @click="onSubmitClick" :disabled="submitDisabled">{{submitLabel}}</button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -28,6 +34,9 @@
 
 	.info
 		color: $color-gray-dimmed
+
+	.field
+		margin-bottom: $margin-big
 </style>
 
 <script>

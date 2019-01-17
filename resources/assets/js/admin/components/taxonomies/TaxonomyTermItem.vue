@@ -2,7 +2,7 @@
 	<li class="taxonomy-term-item">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<div class="media-content">
-				<input class="checkbox" type="checkbox" :checked="isSelected" />
+				<input class="checkbox margin right" type="checkbox" :checked="isSelected" />
 				<span>{{term.tag.name}}</span>
 			</div>
 			<div class="media-right central">
@@ -47,11 +47,12 @@
 		&__content
 			align-items: center
 			border-bottom: 1px solid $color-inactive-gray
-			padding: $margin-small 0
+			padding: $margin-small 0 $margin-small $margin-base
 		&__list
 			margin-left: $margin-big
 		&__action
 			cursor: pointer
+			margin: 0 $margin-tiny
 			padding: $margin-small-minus
 
 		.is-selected

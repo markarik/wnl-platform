@@ -36,21 +36,25 @@
 	.terms-editor
 		border-top: 1px solid $color-lightest-gray
 		display: flex
-		padding-top: $margin-base
 
 		&__panel
 			flex: 50%
 
 			&.is-left
 				border-right: 1px solid $color-lightest-gray
-				padding-right: $margin-base
+				padding-right: $margin-big
 
 			&.is-right
-				padding-left: $margin-base
+				padding-left: $margin-big
 
 			&__header
+				background-color: $color-white
 				display: flex
 				justify-content: space-between
+				padding-top: $margin-big
+				position: sticky
+				top: -30px
+				z-index: 1
 </style>
 
 <script>

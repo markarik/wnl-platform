@@ -1,5 +1,5 @@
 <template>
-	<div class="margin bottom">
+	<div>
 		<div v-if="selected" class="autocomplete-selected">
 			{{selected.name}}
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
@@ -42,6 +42,7 @@
 	.autocomplete-selected
 		display: flex
 		justify-content: space-between
+		padding: $margin-small-minus
 
 	.autocomplete-footer-button-container
 		border-top: $border-light-gray

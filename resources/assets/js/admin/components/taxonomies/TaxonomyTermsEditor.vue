@@ -11,12 +11,15 @@
 				</span>
 			</div>
 			<ul v-if="!isLoadingTerms">
-				<wnl-taxonomy-term-item
-					v-for="term in rootTerms"
-					:term="term"
-					:key="term.id"
-					@moveTerm="onTermMove"
-				/>
+				<draggable @end="onRootTermDrag" :value="rootTerms">
+					<wnl-taxonomy-term-item
+						v-for="term in rootTerms"
+						:term="term"
+						:key="term.id"
+						@moveTerm="onTermMove"
+						@dragTerm="onTermDrag"
+					/>
+				</draggable>
 			</ul>
 			<wnl-text-loader v-else />
 		</div>
@@ -53,11 +56,17 @@
 
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
+import draggable from 'vuedraggable';
 
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
 
 export default {
+	components: {
+		draggable,
+		WnlTaxonomyTermItem,
+		WnlTaxonomyTermEditorRight
+	},
 	props: {
 		taxonomyId: {
 			type: String|Number,
@@ -76,18 +85,23 @@ export default {
 		}),
 		...mapGetters('taxonomyTerms', ['filteredTerms']),
 	},
-	components: {
-		WnlTaxonomyTermItem,
-		WnlTaxonomyTermEditorRight
-	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'setFilter', 'moveTerm']),
+		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'setFilter', 'moveTerm', 'dragTerm']),
 		onFilterChange({target: {value}}) {
 			this.setFilter(value);
 		},
 		onTermMove(term, direction) {
 			this.moveTerm({term, direction});
+		},
+		onRootTermDrag(event) {
+			this.onTermDrag({
+				...event,
+				terms: this.rootTerms
+			});
+		},
+		onTermDrag({newIndex, oldIndex, terms}) {
+			this.dragTerm({terms, newIndex, oldIndex});
 		}
 	},
 	async mounted() {

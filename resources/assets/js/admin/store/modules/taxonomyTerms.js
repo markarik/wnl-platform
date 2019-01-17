@@ -90,6 +90,24 @@ const mutations = {
 
 			return stateTerm;
 		}));
+	},
+	[types.REORDER_TERMS] (state, list) {
+		const updatedList = list.map((item, index) => {
+			return {
+				...item,
+				orderNumber: index
+			};
+		});
+
+		set(state, 'terms', state.terms.map(stateTerm => {
+			const updatedTerm = updatedList.find(({id}) => id === stateTerm.id);
+
+			if (updatedTerm) {
+				return updatedTerm;
+			}
+
+			return stateTerm;
+		}));
 	}
 };
 
@@ -166,6 +184,21 @@ const actions = {
 			term,
 			replaceWith,
 		});
+
+		await axios.put(getApiUrl('taxonomy_terms/move'), {
+			term: term.id,
+			direction
+		});
+	},
+
+	async dragTerm({commit, state}, {terms, oldIndex, newIndex}) {
+		const direction = newIndex - oldIndex;
+		const term = terms[oldIndex];
+
+		terms.splice(oldIndex, 1);
+		terms.splice(newIndex, 0, term);
+
+		commit(types.REORDER_TERMS, terms);
 
 		await axios.put(getApiUrl('taxonomy_terms/move'), {
 			term: term.id,

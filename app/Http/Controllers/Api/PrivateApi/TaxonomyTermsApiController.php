@@ -56,9 +56,9 @@ class TaxonomyTermsApiController extends ApiController {
 		$direction = $request->get('direction');
 
 		if ($direction > 0) {
-			$target->down();
+			$target->down($direction);
 		} else {
-			$target->up();
+			$target->up(abs($direction));
 		}
 
 		return $this->respondOk();

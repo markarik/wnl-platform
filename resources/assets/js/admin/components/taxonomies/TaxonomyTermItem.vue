@@ -36,13 +36,16 @@
 		</div>
 		<transition name="fade">
 			<ul v-if="isExpanded" class="taxonomy-term-item__list">
-				<wnl-taxonomy-term-item
-					v-for="childTerm in childTerms"
-					:key="childTerm.id"
-					:term="childTerm"
-					@moveTerm="move"
-				>
-				</wnl-taxonomy-term-item>
+				<draggable @end="onChildTermDrag" :value="childTerms">
+					<wnl-taxonomy-term-item
+						v-for="childTerm in childTerms"
+						:key="childTerm.id"
+						:term="childTerm"
+						@moveTerm="move"
+						@dragTerm="drag"
+					>
+					</wnl-taxonomy-term-item>
+				</draggable>
 			</ul>
 		</transition>
 	</li>
@@ -80,10 +83,14 @@
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex';
 import {TAXONOMY_EDITOR_MODES} from '../../../consts/taxonomyTerms';
+import draggable from 'vuedraggable';
 
 export default {
 	// Name is required to allow recursive rendering
 	name: 'wnl-taxonomy-term-item',
+	components: {
+		draggable
+	},
 	props: {
 		term: {
 			type: Object,
@@ -127,6 +134,15 @@ export default {
 		},
 		move(...args) {
 			this.$emit('moveTerm', ...args);
+		},
+		drag(...args) {
+			this.$emit('dragTerm', ...args);
+		},
+		onChildTermDrag(event) {
+			this.$emit('dragTerm', {
+				...event,
+				terms: this.childTerms
+			});
 		}
 	},
 };

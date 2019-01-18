@@ -138,7 +138,7 @@ export default {
 				this.$router.push({ name: 'taxonomies' });
 			} catch (error) {
 				this.addAutoDismissableAlert({
-					text: 'Coś poszło nie tak. Spróbuj ponownie, a jak nie zadziała to daj znać nerdom',
+					text: 'Coś poszło nie tak. Spróbuj ponownie.',
 					type: ALERT_TYPES.ERROR
 				});
 			}

@@ -2,6 +2,6 @@
 
 return [
 	'errors' => [
-		'delete-disallowed' => 'Nie możesz usunąć tej taksonomi.',
+		'delete-disallowed' => 'Nie możesz usunąć tej taksonomii.',
 	],
 ];

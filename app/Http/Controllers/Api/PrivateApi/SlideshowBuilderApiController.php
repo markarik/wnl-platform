@@ -193,7 +193,6 @@ class SlideshowBuilderApiController extends ApiController
 			'font-variant-caps: normal;',
 			'font-variant-caps: normal;',
 			'font-weight: normal;',
-			'data-has-line-height=""',
 			'font-style: normal;',
 			'font-family: &quot;Open Sans&quot;, sans-serif;',
 			'data-placeholder-text="Text"',

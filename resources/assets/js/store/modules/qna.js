@@ -259,7 +259,7 @@ const mutations = {
 		_.each(included, (items, resource) => {
 			let resources = state[resource];
 			_.each(items, (item, index) => {
-				resources[index] = item;
+				set(resources, index, item);
 			});
 			set(state, resource, resources);
 		});

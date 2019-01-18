@@ -47,8 +47,6 @@ export default {
 					this.expandTerm(term.parent_id);
 				}
 
-				this.selectTerms([]);
-
 				this.addAutoDismissableAlert({
 					text: 'Dodano pojęcie!',
 					type: 'success'

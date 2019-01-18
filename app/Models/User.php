@@ -253,7 +253,7 @@ class User extends Authenticatable
 
 	protected function getSubscriptionStatus($dates)
 	{
-		if ($this->isAdmin() || $this->isModerator()) return self::SUBSCRIPTION_STATUS_ACTIVE;
+		if ($this->hasRole(['admin', 'moderator', 'test'])) return self::SUBSCRIPTION_STATUS_ACTIVE;
 
 		list ($min, $max) = $dates;
 
@@ -307,14 +307,14 @@ class User extends Authenticatable
 	/**
 	 * Determine whether the user has the given role.
 	 *
-	 * @param $roleName
+	 * @param array|string $roleNames
 	 *
 	 * @return bool
 	 */
-	public function hasRole($roleName)
+	public function hasRole($roleNames)
 	{
 		foreach ($this->roles as $role) {
-			if ($role->name === $roleName) {
+			if (in_array($role->name, (array) $roleNames)) {
 				return true;
 			}
 		}

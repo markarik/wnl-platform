@@ -91,7 +91,7 @@ export default {
 		onSearchTerm(term) {
 			this.collapseAll();
 			this.select([term.id]);
-			this.expand(term);
+			this.expand(term.id);
 		},
 	},
 	async mounted() {

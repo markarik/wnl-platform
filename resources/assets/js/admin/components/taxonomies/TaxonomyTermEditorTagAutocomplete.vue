@@ -2,7 +2,7 @@
 	<div>
 		<div v-if="selected" class="autocomplete-selected">
 			{{selected.name}}
-			<span class="icon is-small clickable" @click="onSelect({})"><i class="fa fa-close" aria-hidden="true"></i></span>
+			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
 		<div class="control" v-else>
 			<input class="input" v-model="search" placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć" />
@@ -87,6 +87,7 @@ export default {
 		WnlAutocomplete
 	},
 	methods: {
+		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('tags', {
 			fetchAllTags: 'fetchAll',
 			createTag: 'create',
@@ -96,9 +97,18 @@ export default {
 			this.$emit('change', item);
 		},
 		async onTagAdd() {
-			const tag = await this.createTag(this.search);
-			this.search = '';
-			this.$emit('change', tag);
+			try {
+				const tag = await this.createTag(this.search);
+				this.search = '';
+				this.$emit('change', tag);
+			} catch (error) {
+				$wnl.logger.capture(error);
+
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+					type: 'error',
+				});
+			}
 		},
 	},
 	mounted() {

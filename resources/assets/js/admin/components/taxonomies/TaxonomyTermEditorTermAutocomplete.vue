@@ -5,7 +5,7 @@
 				<span v-if="selected.ancestors.length">{{selected.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
 				{{selected.tag.name}}
 			</span>
-			<span class="icon is-small clickable" @click="onSelect({})"><i class="fa fa-close" aria-hidden="true"></i></span>
+			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
 		<div class="control" v-else>
 			<input class="input" v-model="search" :placeholder="placeholder" />

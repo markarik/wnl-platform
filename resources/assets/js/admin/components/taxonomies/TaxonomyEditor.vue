@@ -12,7 +12,8 @@
 			<div class="header">
 				<h2 class="title is-2">Edycja taksonomii <span v-if="isEdit">(Id: {{id}})</span></h2>
 				<div class="field is-grouped">
-					<button v-if="isEdit" class="button is-danger margin right" type="button" @click="onDelete">
+					<!-- TODO PLAT-924 unblock deleting "reserved" taxonomies -->
+					<button v-if="isEdit && id > 3" class="button is-danger margin right" type="button" @click="onDelete">
 						<span class="icon is-small"><i class="fa fa-trash"></i></span>
 						<span>Usuń</span>
 					</button>

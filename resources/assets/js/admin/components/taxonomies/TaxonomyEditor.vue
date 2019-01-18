@@ -115,7 +115,6 @@ export default {
 			}
 		},
 		async onDelete() {
-			// TODO protect id=1,2,3 from being deleted
 			try {
 				await this.$swal({
 					type: 'warning',

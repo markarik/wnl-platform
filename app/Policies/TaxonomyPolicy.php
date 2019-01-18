@@ -8,7 +8,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TaxonomyPolicy
 {
-    use HandlesAuthorization;
+	use HandlesAuthorization;
 
 	public function before($user, $ability)
 	{

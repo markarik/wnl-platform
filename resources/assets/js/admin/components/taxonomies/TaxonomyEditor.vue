@@ -71,7 +71,7 @@ import {mapActions} from 'vuex';
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
 import {getApiUrl} from 'js/utils/env';
-import {ALERT_TYPES} from '../../../consts/alert';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
 	props: {

@@ -40,7 +40,7 @@
 </style>
 
 <script>
-import {mapActions, mapState} from 'vuex';
+import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
 import WnlTagAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTagAutocomplete';
@@ -79,6 +79,7 @@ export default {
 	},
 	computed: {
 		...mapState('taxonomyTerms', ['terms', 'isSaving']),
+		...mapGetters('taxonomyTerms', ['getAncestorsById']),
 		submitDisabled() {
 			return !this.tag || this.isSaving;
 		},
@@ -95,7 +96,7 @@ export default {
 			});
 		},
 		onSelectParent(term) {
-			if (term && term.ancestors.find(t => t.id === this.id)) {
+			if (term && this.getAncestorsById(term.id).find(t => t.id === this.id)) {
 				this.addAutoDismissableAlert({
 					text: 'Nie możesz przenieść pojęcia do jego potomka.',
 					type: ALERT_TYPES.ERROR,

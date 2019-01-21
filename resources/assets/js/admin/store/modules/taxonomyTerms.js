@@ -23,6 +23,17 @@ const state = {...initialState};
 const getters = {
 	termById: state => id => {
 		return state.terms.find(term => term.id === id);
+	},
+	getAncestorsById: state => id => {
+		const ancestors = [];
+
+		let current = state.terms.find(term => term.id === id);
+		while (current.parent_id) {
+			current = state.terms.find(currentTerm => currentTerm.id === current.parent_id);
+			ancestors.unshift(current);
+		}
+
+		return ancestors;
 	}
 };
 
@@ -82,18 +93,6 @@ const includeTag = (term, tags) => {
 	return term;
 };
 
-const includeAncestors = (term, terms) => {
-	term.ancestors = [];
-
-	let current = term;
-	while (current.parent_id) {
-		current = terms.find(currentTerm => currentTerm.id === current.parent_id);
-		term.ancestors.unshift(current);
-	}
-
-	return term;
-};
-
 // Actions
 const actions = {
 	async fetchTermsByTaxonomy({commit}, taxonomyId) {
@@ -118,7 +117,7 @@ const actions = {
 
 			commit(
 				types.SETUP_TERMS,
-				termsWithOrderNumbers.map(term => includeAncestors(includeTag(term, included.tags), termsWithOrderNumbers))
+				termsWithOrderNumbers.map(term => includeTag(term, included.tags), termsWithOrderNumbers)
 			);
 		} catch (error) {
 			throw error;
@@ -132,7 +131,7 @@ const actions = {
 		try {
 			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
-			commit(types.ADD_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
+			commit(types.ADD_TERM, includeTag(term, included.tags), state.terms);
 			commit(types.REORDER_TERMS, state.terms.filter(listedTerm => listedTerm.parent_id === term.parent_id));
 		} catch (error) {
 			throw error;
@@ -146,7 +145,7 @@ const actions = {
 		try {
 			const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
 			const {data: {included, ...term}} = response;
-			commit(types.UPDATE_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
+			commit(types.UPDATE_TERM, includeTag(term, included.tags), state.terms);
 			commit(types.REORDER_TERMS, state.terms.filter(listedTerm => listedTerm.parent_id === term.parent_id));
 		} catch (error) {
 			throw error;
@@ -200,7 +199,7 @@ const actions = {
 
 		commit(types.SET_EXPANDED_TAXONOMY_TERMS, uniq([
 			...state.expandedTerms,
-			...term.ancestors.map(ancestor => ancestor.id),
+			...getters.getAncestorsById(term.id).map(ancestor => ancestor.id),
 			term.id
 		]));
 	},

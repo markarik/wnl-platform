@@ -2,7 +2,7 @@
 	<div>
 		<div v-if="selected" class="autocomplete-selected">
 			<span>
-				<span v-if="selected.ancestors.length">{{selected.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
+				<span v-if="ancestors.length">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
 				{{selected.tag.name}}
 			</span>
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
@@ -16,7 +16,7 @@
 			>
 				<template slot-scope="slotProps">
 					<div>
-						<div class="autocomplete-parent-term">{{slotProps.item.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}}</div>
+						<div class="autocomplete-parent-term">{{getAncestorsById(slotProps.item.id).map(ancestor => ancestor.tag.name).join(' > ')}}</div>
 						<div>{{slotProps.item.tag.name}}</div>
 					</div>
 				</template>
@@ -39,7 +39,7 @@
 </style>
 
 <script>
-import {mapState} from 'vuex';
+import {mapState, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
@@ -65,6 +65,7 @@ export default {
 	},
 	computed: {
 		...mapState('taxonomyTerms', ['terms']),
+		...mapGetters('taxonomyTerms', ['getAncestorsById']),
 		autocompleteTerms() {
 			if (!this.search) {
 				return [];
@@ -76,6 +77,9 @@ export default {
 
 			return uniqBy(terms, 'id').slice(0, 25);
 		},
+		ancestors() {
+			return this.getAncestorsById(this.selected.id);
+		}
 	},
 	methods: {
 		onSelect(item) {

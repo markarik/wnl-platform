@@ -28,7 +28,7 @@ export default {
 			default: () => true,
 		},
 		sourceTagId: {
-			type: Number|String,
+			type: [String, Number],
 			required: true,
 		},
 	},

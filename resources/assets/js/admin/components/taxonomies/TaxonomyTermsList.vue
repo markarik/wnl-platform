@@ -18,8 +18,6 @@ import VueDraggable from 'vuedraggable';
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
 
 export default {
-	// Name is required to allow recursive rendering
-	name: 'wnl-taxonomy-terms-list',
 	components: {
 		VueDraggable,
 		WnlTaxonomyTermItem

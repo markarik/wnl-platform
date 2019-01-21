@@ -1,7 +1,12 @@
 <template>
 	<li class="taxonomy-term-item" :id="`term-${term.id}`">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
-			<div class="media-content">
+			<span
+				class="icon-small taxonomy-term-item__action"
+			>
+				<i title="drag" class="fa fa-bars"></i>
+			</span>
+			<div class="media-content v-central">
 				<input class="checkbox margin right" type="checkbox" :checked="isSelected" />
 				<span>{{term.tag.name}}</span>
 			</div>
@@ -79,8 +84,6 @@ import {mapActions, mapState} from 'vuex';
 import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
 
 export default {
-	// Name is required to allow recursive rendering
-	name: 'wnl-taxonomy-term-item',
 	props: {
 		term: {
 			type: Object,

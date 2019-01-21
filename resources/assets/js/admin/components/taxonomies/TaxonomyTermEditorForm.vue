@@ -94,7 +94,6 @@ export default {
 				tag_id: this.tag.id,
 				description: this.description,
 				taxonomy_id: this.taxonomyId,
-				orderNumber: this.orderNumber
 			});
 		},
 		onSelectParent(term) {
@@ -105,21 +104,17 @@ export default {
 				});
 				return;
 			}
-			const parentId = term ? term.id : null;
-
 			this.parent = term;
-			this.orderNumber = this.getSiblingsByParentId({parentId, id: this.id}).length;
 			this.$emit('parentChange', term);
 		},
 		onSelectTag(tag) {
 			this.tag = tag;
 		},
-		onTermUpdated({description, id, tag, parent, orderNumber}) {
+		onTermUpdated({description, id, tag, parent}) {
 			this.description = description;
 			this.id = id;
 			this.tag = tag;
 			this.parent = parent;
-			this.orderNumber = orderNumber;
 		}
 	},
 	watch: {

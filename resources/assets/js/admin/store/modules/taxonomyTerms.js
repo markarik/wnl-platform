@@ -35,8 +35,8 @@ const getters = {
 
 		return ancestors;
 	},
-	getSiblingsByParentId: state => ({parentId, id}) => {
-		return state.terms.filter(stateTerm => stateTerm.parent_id === parentId && stateTerm.id !== id);
+	getSiblingsByParentId: state => ({parentId}) => {
+		return state.terms.filter(stateTerm => stateTerm.parent_id === parentId);
 	}
 };
 
@@ -72,12 +72,12 @@ const mutations = {
 		set(state, 'editorMode', payload);
 	},
 	[types.REORDER_TERMS] (state, list) {
-		const updatedList = list.map((item, index) => {
-			return {
+		const updatedList = list
+			.sort((termA, termB) => termA - termB)
+			.map((item, index) => ({
 				...item,
 				orderNumber: index
-			};
-		});
+			}));
 
 		set(state, 'terms', state.terms.map(stateTerm => {
 			const updatedTerm = updatedList.find(({id}) => id === stateTerm.id);
@@ -143,11 +143,19 @@ const actions = {
 		}
 	},
 
-	async update({commit, state}, taxonomyTerm) {
+	async update({commit, state, getters}, taxonomyTerm) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		try {
 			const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
 			const {data: {included, ...term}} = response;
+
+			const {parent_id: oldParentId} = getters.termById(taxonomyTerm.id);
+			const {parent_id: updatedParentId} = taxonomyTerm;
+
+			if (oldParentId !== updatedParentId) {
+				taxonomyTerm.orderNumber = getters.getSiblingsByParentId({parentId: updatedParentId}).length;
+			}
+
 			commit(types.UPDATE_TERM, includeTag({...taxonomyTerm, ...term}, included.tags), state.terms);
 		} catch (error) {
 			throw error;

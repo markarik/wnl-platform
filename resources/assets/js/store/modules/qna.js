@@ -257,16 +257,7 @@ const mutations = {
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
-			let resources = state[resource];
-			// Firstly, set up store with observable resources object
-			set(state, resource, resources);
-			_.each(items, (item, index) => {
-				// Secondly, update the resources object without destroying existing observable props
-				// Avoid calling set here - it has bad influence on performance
-				// Avoid setting index straight on the resources object - it looses it's observable props
-				resources = { ...resources, [index]: item };
-			});
-			// Thirdly, update the store with updated resources object
+			const resources = { ...state[resource], ...items };
 			set(state, resource, resources);
 		});
 	},

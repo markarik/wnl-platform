@@ -89,7 +89,7 @@ export default {
 			this.select([term.id]);
 			this.expand(term.id);
 
-			this.scrollToTaxnomyTerm(term);
+			this.scrollToTaxonomyTerm(term);
 		},
 	},
 	mixins: [

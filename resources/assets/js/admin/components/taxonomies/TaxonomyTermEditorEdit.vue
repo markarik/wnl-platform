@@ -38,10 +38,8 @@ export default {
 			const term = this.termById(this.selectedTerms[0]);
 
 			return {
-				description: term.description,
-				id: term.id,
+				...term,
 				parent: this.getAncestorsById(term.id).slice(-1)[0],
-				tag: term.tag
 			};
 		}
 	},

@@ -34,6 +34,9 @@ const getters = {
 		}
 
 		return ancestors;
+	},
+	getSiblingsByParentId: state => ({parentId, id}) => {
+		return state.terms.filter(stateTerm => stateTerm.parent_id === parentId && stateTerm.id !== id);
 	}
 };
 
@@ -145,8 +148,7 @@ const actions = {
 		try {
 			const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
 			const {data: {included, ...term}} = response;
-			commit(types.UPDATE_TERM, includeTag(term, included.tags), state.terms);
-			commit(types.REORDER_TERMS, state.terms.filter(listedTerm => listedTerm.parent_id === term.parent_id));
+			commit(types.UPDATE_TERM, includeTag({...taxonomyTerm, ...term}, included.tags), state.terms);
 		} catch (error) {
 			throw error;
 		} finally {

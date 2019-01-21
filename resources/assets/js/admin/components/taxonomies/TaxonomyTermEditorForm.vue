@@ -79,7 +79,7 @@ export default {
 	},
 	computed: {
 		...mapState('taxonomyTerms', ['terms', 'isSaving']),
-		...mapGetters('taxonomyTerms', ['getAncestorsById']),
+		...mapGetters('taxonomyTerms', ['getAncestorsById', 'getSiblingsByParentId']),
 		submitDisabled() {
 			return !this.tag || this.isSaving;
 		},
@@ -87,12 +87,15 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		onSubmitClick() {
+			const parentId = this.parent ? this.parent.id : null;
+
 			this.onSave({
 				id: this.id,
-				parent_id: this.parent ? this.parent.id : null,
+				parent_id: parentId,
 				tag_id: this.tag.id,
 				description: this.description,
-				taxonomy_id: this.taxonomyId
+				taxonomy_id: this.taxonomyId,
+				orderNumber: this.getSiblingsByParentId({parentId, id: this.id}).length
 			});
 		},
 		onSelectParent(term) {

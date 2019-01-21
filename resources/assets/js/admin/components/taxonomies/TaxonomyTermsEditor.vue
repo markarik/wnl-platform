@@ -64,7 +64,7 @@ import {mapActions, mapState} from 'vuex';
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
 import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
-import {scrollToElement} from '../../../utils/animations';
+import scrollToTaxonomyTermMixin from 'js/admin/mixins/scroll-to-taxonomy-term';
 
 export default {
 	props: {
@@ -95,12 +95,12 @@ export default {
 			this.select([term.id]);
 			this.expand(term.id);
 
-			await Vue.nextTick();
-			// wait for collapse animation to finish
-			setTimeout(() => scrollToElement(document.getElementById(`term-${term.id}`), 150, 500, document.querySelector('.admin-right')), 300);
-
+			this.scrollToTaxnomyTerm(term)
 		},
 	},
+	mixins: [
+		scrollToTaxonomyTermMixin,
+	],
 	async mounted() {
 		try {
 			this.fetchTermsByTaxonomy(this.taxonomyId);

@@ -4,6 +4,7 @@
 		:on-save="onSave"
 		:taxonomy-id="taxonomyId"
 		:term="term"
+		@parentChange="onParentChange"
 	/>
 </template>
 
@@ -11,6 +12,7 @@
 import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTaxonomyTermEditorForm from 'js/admin/components/taxonomies/TaxonomyTermEditorForm';
+import scrollToTaxonomyTermMixin from 'js/admin/mixins/scroll-to-taxonomy-term';
 
 export default {
 	props: {
@@ -60,6 +62,20 @@ export default {
 				});
 			}
 		},
+		onParentChange(parent) {
+			if (parent) {
+				this.selectTerms([parent.id]);
+				this.expandTerm(parent.id);
+
+				if (parent) {
+					this.scrollToTaxnomyTerm(parent);
+				}
+			}
+		},
+
 	},
+	mixins: [
+		scrollToTaxonomyTermMixin,
+	],
 };
 </script>

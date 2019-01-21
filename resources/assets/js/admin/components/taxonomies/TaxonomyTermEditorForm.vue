@@ -94,6 +94,7 @@ export default {
 		},
 		onSelectParent(term) {
 			this.parent = term;
+			this.$emit('parentChange', term);
 		},
 		onSelectTag(tag) {
 			this.tag = tag;

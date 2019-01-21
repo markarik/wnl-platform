@@ -37,7 +37,7 @@
 		top: 50%
 
 		&.flash
-			animation: flash 1s ease-out
+			animation: flash 0.2s ease-out
 
 	@keyframes flash
 		0%

@@ -86,7 +86,7 @@ const actions = {
 			const terms = Object.values(termsObj);
 			commit(types.SETUP_TERMS, terms.map(term => includeTag(term, included.tags)));
 		} catch (error) {
-			throw error
+			throw error;
 		} finally {
 			commit(types.SET_TAXONOMY_TERMS_LOADING, false);
 		}

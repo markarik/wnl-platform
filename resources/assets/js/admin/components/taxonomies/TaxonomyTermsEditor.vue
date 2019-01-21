@@ -95,7 +95,7 @@ export default {
 			this.select([term.id]);
 			this.expand(term.id);
 
-			this.scrollToTaxnomyTerm(term)
+			this.scrollToTaxnomyTerm(term);
 		},
 	},
 	mixins: [

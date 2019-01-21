@@ -80,7 +80,7 @@
 
 
 <script>
-import {mapActions, mapState} from 'vuex';
+import {mapActions, mapState, mapGetters} from 'vuex';
 import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
 
 export default {
@@ -92,12 +92,12 @@ export default {
 	},
 	computed: {
 		...mapState('taxonomyTerms', ['terms', 'expandedTerms', 'selectedTerms']),
+		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},
 		childTerms() {
-			return this.terms
-				.filter(term => term.parent_id === this.term.id);
+			return this.getChildrenByParentId(this.term.id);
 		},
 		isSelected() {
 			return this.selectedTerms.includes(this.term.id);

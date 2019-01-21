@@ -52,8 +52,7 @@
 </style>
 
 <script>
-import Vue from 'vue';
-import {mapActions, mapState} from 'vuex';
+import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTaxonomyTermsList from 'js/admin/components/taxonomies/TaxonomyTermsList';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
@@ -75,10 +74,10 @@ export default {
 	computed: {
 		...mapState('taxonomyTerms', {
 			isLoadingTerms: 'isLoading',
-			terms: 'terms',
 		}),
+		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
 		rootTerms() {
-			return this.terms.filter(({parent_id}) => parent_id === null);
+			return this.getChildrenByParentId(null);
 		},
 	},
 	methods: {

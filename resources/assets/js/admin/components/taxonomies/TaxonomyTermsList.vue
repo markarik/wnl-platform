@@ -1,8 +1,8 @@
 <template>
 	<ul>
-		<vue-draggable @end="onTermMove" :value="sortedTerms">
+		<vue-draggable @end="onTermMove" :value="terms">
 			<wnl-taxonomy-term-item
-				v-for="term in sortedTerms"
+				v-for="term in terms"
 				:term="term"
 				:key="term.id"
 				@moveTerm="onChildTermMove"
@@ -28,25 +28,19 @@ export default {
 			required: true
 		}
 	},
-	computed: {
-		sortedTerms() {
-			return this.terms
-				.sort((termA, termB) => termA.orderNumber - termB.orderNumber);
-		},
-	},
 	methods: {
 		...mapActions('taxonomyTerms', ['moveTerm']),
 		onTermMove({newIndex, oldIndex}) {
 			this.moveTerm({
-				newIndex, oldIndex, terms: this.sortedTerms
+				newIndex, oldIndex, terms: this.terms
 			});
 		},
 		onChildTermMove({term, direction}) {
-			const oldIndex = this.sortedTerms.indexOf(term);
-			const newIndex = Math.min(Math.max(oldIndex + direction, 0), this.sortedTerms.length - 1);
+			const oldIndex = this.terms.indexOf(term);
+			const newIndex = Math.min(Math.max(oldIndex + direction, 0), this.terms.length - 1);
 
 			this.moveTerm({
-				terms: this.sortedTerms, oldIndex, newIndex
+				terms: this.terms, oldIndex, newIndex
 			});
 		},
 	}

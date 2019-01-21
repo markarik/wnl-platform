@@ -35,8 +35,10 @@ const getters = {
 
 		return ancestors;
 	},
-	getSiblingsByParentId: state => ({parentId}) => {
-		return state.terms.filter(stateTerm => stateTerm.parent_id === parentId);
+	getChildrenByParentId: state => (parentId) => {
+		return state.terms
+			.filter(stateTerm => stateTerm.parent_id === parentId)
+			.sort((termA, termB) => termA.orderNumber - termB.orderNumber);
 	}
 };
 
@@ -153,7 +155,7 @@ const actions = {
 			const {parent_id: updatedParentId} = taxonomyTerm;
 
 			if (oldParentId !== updatedParentId) {
-				taxonomyTerm.orderNumber = getters.getSiblingsByParentId({parentId: updatedParentId}).length;
+				taxonomyTerm.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
 			}
 
 			commit(types.UPDATE_TERM, includeTag({...taxonomyTerm, ...term}, included.tags), state.terms);
@@ -180,6 +182,10 @@ const actions = {
 				term_id: term.id,
 				direction
 			});
+			dispatch('addAutoDismissableAlert', {
+				type: 'success',
+				text: 'Zapisano!'
+			}, {root: true});
 		} catch (error) {
 			$wnl.logger.error(error);
 			dispatch('addAutoDismissableAlert', {

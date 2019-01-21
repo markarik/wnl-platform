@@ -58,11 +58,13 @@
 </style>
 
 <script>
+import Vue from 'vue';
 import {mapActions, mapState} from 'vuex';
 
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
 import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
+import {scrollToElement} from '../../../utils/animations';
 
 export default {
 	props: {
@@ -88,10 +90,15 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'select', 'expand', 'collapseAll']),
-		onSearchTerm(term) {
+		async onSearchTerm(term) {
 			this.collapseAll();
 			this.select([term.id]);
 			this.expand(term.id);
+
+			await Vue.nextTick();
+			// wait for collapse animation to finish
+			setTimeout(() => scrollToElement(document.getElementById(`term-${term.id}`), 150, 500, document.querySelector('.admin-right')), 300);
+
 		},
 	},
 	async mounted() {

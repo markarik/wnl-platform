@@ -1,5 +1,5 @@
 <template>
-	<li class="taxonomy-term-item">
+	<li class="taxonomy-term-item" :id="`term-${term.id}`">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<div class="media-content">
 				<input class="checkbox margin right" type="checkbox" :checked="isSelected" />

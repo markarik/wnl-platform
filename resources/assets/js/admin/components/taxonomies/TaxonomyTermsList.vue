@@ -37,9 +37,9 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['dragTerm']),
+		...mapActions('taxonomyTerms', ['moveTerm']),
 		onTermMove({newIndex, oldIndex}) {
-			this.dragTerm({
+			this.moveTerm({
 				newIndex, oldIndex, terms: this.sortedTerms
 			});
 		},
@@ -47,7 +47,7 @@ export default {
 			const oldIndex = this.sortedTerms.indexOf(term);
 			const newIndex = Math.min(Math.max(oldIndex + direction, 0), this.sortedTerms.length - 1);
 
-			this.dragTerm({
+			this.moveTerm({
 				terms: this.sortedTerms, oldIndex, newIndex
 			});
 		},

@@ -104,7 +104,7 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['setEditorMode', 'dragTerm']),
+		...mapActions('taxonomyTerms', ['setEditorMode']),
 		...mapActions('taxonomyTerms', {
 			'collapseTerm': 'collapse',
 			'expandTerm': 'expand',
@@ -130,6 +130,7 @@ export default {
 		},
 	},
 	beforeCreate: function () {
+		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
 		this.$options.components.WnlTaxonomyTermsList = require('./TaxonomyTermsList.vue').default;
 	}
 };

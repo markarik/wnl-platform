@@ -156,7 +156,7 @@ const actions = {
 		}
 	},
 
-	async dragTerm({commit, dispatch}, {terms, oldIndex, newIndex}) {
+	async moveTerm({commit, dispatch}, {terms, oldIndex, newIndex}) {
 		const direction = newIndex - oldIndex;
 
 		if (direction === 0) return;

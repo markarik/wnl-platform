@@ -120,7 +120,6 @@ const actions = {
 				types.SETUP_TERMS,
 				termsWithOrderNumbers.map(term => includeAncestors(includeTag(term, included.tags), termsWithOrderNumbers))
 			);
-
 		} catch (error) {
 			throw error;
 		} finally {
@@ -134,6 +133,7 @@ const actions = {
 			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
 			commit(types.ADD_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
+			commit(types.REORDER_TERMS, state.terms.filter(listedTerm => listedTerm.parent_id === term.parent_id));
 		} catch (error) {
 			throw error;
 		} finally {
@@ -147,6 +147,7 @@ const actions = {
 			const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
 			const {data: {included, ...term}} = response;
 			commit(types.UPDATE_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
+			commit(types.REORDER_TERMS, state.terms.filter(listedTerm => listedTerm.parent_id === term.parent_id));
 		} catch (error) {
 			throw error;
 		} finally {

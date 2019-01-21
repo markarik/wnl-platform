@@ -20,6 +20,9 @@ import {mapActions, mapGetters, mapState} from 'vuex';
 import WnlTaxonomyTermEditorForm from 'js/admin/components/taxonomies/TaxonomyTermEditorForm';
 
 export default {
+	components: {
+		WnlTaxonomyTermEditorForm
+	},
 	props: {
 		taxonomyId: {
 			type: [String, Number],
@@ -42,9 +45,6 @@ export default {
 				parent: this.getAncestorsById(term.id).slice(-1)[0],
 			};
 		}
-	},
-	components: {
-		WnlTaxonomyTermEditorForm
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

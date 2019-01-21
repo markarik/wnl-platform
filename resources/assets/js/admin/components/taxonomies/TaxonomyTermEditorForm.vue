@@ -71,6 +71,7 @@ export default {
 			id: null,
 			tag: null,
 			parent: null,
+			orderNumber: null
 		};
 	},
 	components: {
@@ -87,15 +88,13 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		onSubmitClick() {
-			const parentId = this.parent ? this.parent.id : null;
-
 			this.onSave({
 				id: this.id,
-				parent_id: parentId,
+				parent_id: this.parent ? this.parent.id : null,
 				tag_id: this.tag.id,
 				description: this.description,
 				taxonomy_id: this.taxonomyId,
-				orderNumber: this.getSiblingsByParentId({parentId, id: this.id}).length
+				orderNumber: this.orderNumber
 			});
 		},
 		onSelectParent(term) {
@@ -106,18 +105,21 @@ export default {
 				});
 				return;
 			}
+			const parentId = term ? term.id : null;
 
 			this.parent = term;
+			this.orderNumber = this.getSiblingsByParentId({parentId, id: this.id}).length;
 			this.$emit('parentChange', term);
 		},
 		onSelectTag(tag) {
 			this.tag = tag;
 		},
-		onTermUpdated({description, id, tag, parent}) {
+		onTermUpdated({description, id, tag, parent, orderNumber}) {
 			this.description = description;
 			this.id = id;
 			this.tag = tag;
 			this.parent = parent;
+			this.orderNumber = orderNumber;
 		}
 	},
 	watch: {

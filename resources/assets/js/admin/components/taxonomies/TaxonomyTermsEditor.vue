@@ -52,11 +52,13 @@
 </style>
 
 <script>
+import Vue from 'vue';
 import {mapActions, mapState} from 'vuex';
 
 import WnlTaxonomyTermsList from 'js/admin/components/taxonomies/TaxonomyTermsList';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
 import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
+import scrollToTaxonomyTermMixin from 'js/admin/mixins/scroll-to-taxonomy-term';
 
 export default {
 	components: {
@@ -66,7 +68,7 @@ export default {
 	},
 	props: {
 		taxonomyId: {
-			type: String|Number,
+			type: [String, Number],
 			required: true,
 		},
 	},
@@ -82,12 +84,17 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'select', 'expand', 'collapseAll']),
-		onSearchTerm(term) {
+		async onSearchTerm(term) {
 			this.collapseAll();
 			this.select([term.id]);
-			this.expand(term);
+			this.expand(term.id);
+
+			this.scrollToTaxnomyTerm(term)
 		},
 	},
+	mixins: [
+		scrollToTaxonomyTermMixin,
+	],
 	async mounted() {
 		try {
 			this.fetchTermsByTaxonomy(this.taxonomyId);

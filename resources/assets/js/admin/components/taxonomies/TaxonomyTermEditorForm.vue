@@ -44,6 +44,7 @@ import {mapActions, mapState} from 'vuex';
 
 import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
 import WnlTagAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTagAutocomplete';
+import {ALERT_TYPES} from '../../../consts/alert';
 
 export default {
 	props: {
@@ -56,7 +57,7 @@ export default {
 			required: true,
 		},
 		taxonomyId: {
-			type: String|Number,
+			type: [String, Number],
 			required: true,
 		},
 		term: {
@@ -72,17 +73,18 @@ export default {
 			parent: null,
 		};
 	},
+	components: {
+		WnlTermAutocomplete,
+		WnlTagAutocomplete
+	},
 	computed: {
 		...mapState('taxonomyTerms', ['terms', 'isSaving']),
 		submitDisabled() {
 			return !this.tag || this.isSaving;
 		},
 	},
-	components: {
-		WnlTermAutocomplete,
-		WnlTagAutocomplete
-	},
 	methods: {
+		...mapActions(['addAutoDismissableAlert']),
 		onSubmitClick() {
 			this.onSave({
 				id: this.id,
@@ -93,7 +95,16 @@ export default {
 			});
 		},
 		onSelectParent(term) {
+			if (term && term.ancestors.find(t => t.id === this.id)) {
+				this.addAutoDismissableAlert({
+					text: 'Nie możesz przenieść pojęcia do jego potomka.',
+					type: ALERT_TYPES.ERROR,
+				});
+				return;
+			}
+
 			this.parent = term;
+			this.$emit('parentChange', term);
 		},
 		onSelectTag(tag) {
 			this.tag = tag;

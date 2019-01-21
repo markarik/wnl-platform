@@ -4,6 +4,7 @@
 		:on-save="onSave"
 		:taxonomy-id="taxonomyId"
 		:term="term"
+		@parentChange="onParentChange"
 	/>
 </template>
 
@@ -11,27 +12,24 @@
 import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTaxonomyTermEditorForm from 'js/admin/components/taxonomies/TaxonomyTermEditorForm';
+import scrollToTaxonomyTermMixin from 'js/admin/mixins/scroll-to-taxonomy-term';
 
 export default {
 	props: {
 		taxonomyId: {
-			type: String|Number,
+			type: [String, Number],
 			required: true,
 		},
-	},
-	data() {
-		return {
-			term: {
-				description: '',
-				id: null,
-				tag: null,
-				parent: null,
-			}
-		};
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById']),
 		...mapState('taxonomyTerms', ['selectedTerms']),
+		term() {
+			if (this.selectedTerms.length) {
+				return {parent: this.termById(this.selectedTerms[0])};
+			}
+			return {};
+		}
 	},
 	components: {
 		WnlTaxonomyTermEditorForm
@@ -51,8 +49,6 @@ export default {
 					this.expandTerm(term.parent_id);
 				}
 
-				this.selectTerms([]);
-
 				this.addAutoDismissableAlert({
 					text: 'Dodano pojęcie!',
 					type: 'success'
@@ -66,21 +62,20 @@ export default {
 				});
 			}
 		},
-		initializeParent(selectedTerms) {
-			if (selectedTerms.length) {
-				this.term = Object.assign({}, this.term, {parent: this.termById(selectedTerms[0])});
-			} else {
-				this.term = {};
+		onParentChange(parent) {
+			if (parent) {
+				this.selectTerms([parent.id]);
+				this.expandTerm(parent.id);
+
+				if (parent) {
+					this.scrollToTaxnomyTerm(parent);
+				}
 			}
 		},
+
 	},
-	mounted() {
-		this.initializeParent(this.selectedTerms);
-	},
-	watch: {
-		selectedTerms(selectedTerms) {
-			this.initializeParent(selectedTerms);
-		},
-	},
+	mixins: [
+		scrollToTaxonomyTermMixin,
+	],
 };
 </script>

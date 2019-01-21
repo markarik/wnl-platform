@@ -1,6 +1,6 @@
 <template>
 	<wnl-taxonomy-term-editor-form
-		v-if="term"
+		v-if="term.id"
 		submit-label="Zapisz"
 		:on-save="onSave"
 		:taxonomy-id="taxonomyId"
@@ -22,18 +22,28 @@ import WnlTaxonomyTermEditorForm from 'js/admin/components/taxonomies/TaxonomyTe
 export default {
 	props: {
 		taxonomyId: {
-			type: String|Number,
+			type: [String, Number],
 			required: true,
 		},
-	},
-	data() {
-		return {
-			term: null,
-		};
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById']),
 		...mapState('taxonomyTerms', ['selectedTerms']),
+		term() {
+			if (this.selectedTerms.length === 0) {
+				return {};
+			}
+
+			// TODO figure out multiple terms selected
+			const term = this.termById(this.selectedTerms[0]);
+
+			return {
+				description: term.description,
+				id: term.id,
+				parent: term.ancestors.slice(-1)[0],
+				tag: term.tag
+			};
+		}
 	},
 	components: {
 		WnlTaxonomyTermEditorForm
@@ -65,30 +75,6 @@ export default {
 				});
 			}
 		},
-		onSelectedTermsChange() {
-			if (this.selectedTerms.length === 0) {
-				this.term = null;
-				return;
-			}
-
-			// TODO figure out multiple terms selected
-			const term = this.termById(this.selectedTerms[0]);
-
-			this.term = {
-				description: term.description,
-				id: term.id,
-				parent: term.ancestors.slice(-1)[0],
-				tag: term.tag
-			};
-		}
-	},
-	watch: {
-		selectedTerms() {
-			this.onSelectedTermsChange();
-		}
-	},
-	mounted() {
-		this.onSelectedTermsChange();
 	},
 };
 </script>

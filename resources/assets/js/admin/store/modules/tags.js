@@ -31,9 +31,14 @@ const actions = {
 	async fetchAll({commit}) {
 		commit(types.SETUP_TAGS, []);
 		commit(types.SET_TAGS_LOADING, true);
-		const {data: tags} = await axios.get(getApiUrl('tags/all'));
-		commit(types.SETUP_TAGS, tags);
-		commit(types.SET_TAGS_LOADING, false);
+		try {
+			const {data: tags} = await axios.get(getApiUrl('tags/all'));
+			commit(types.SETUP_TAGS, tags);
+		} catch (error) {
+			throw error;
+		} finally {
+			commit(types.SET_TAGS_LOADING, false);
+		}
 	},
 	async create({commit}, name) {
 		const {data: tag} = await axios.post(getApiUrl('tags'), {

@@ -1,5 +1,5 @@
 <template>
-	<li class="taxonomy-term-item">
+	<li class="taxonomy-term-item" :id="`term-${term.id}`">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<div class="media-content">
 				<input class="checkbox margin right" type="checkbox" :checked="isSelected" />
@@ -15,15 +15,15 @@
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
-					@click="edit"
-				>
-					<i title="Edytuj" class="fa fa-pencil"></i>
-				</span>
-				<span
-					class="icon-small taxonomy-term-item__action"
 					@click="add"
 				>
 					<i title="Dodaj" class="fa fa-plus"></i>
+				</span>
+				<span
+					class="icon-small taxonomy-term-item__action"
+					@click="edit"
+				>
+					<i title="Edytuj" class="fa fa-pencil"></i>
 				</span>
 				<span class="icon-small taxonomy-term-item__action" @click="onTermMove(term, -1)">
 					<i title="Do góry" class="fa fa-arrow-up"></i>

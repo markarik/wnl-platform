@@ -1,10 +1,10 @@
 <template>
 	<div>
 		<div v-if="selected" class="autocomplete-selected">
-				<span>
-					<span v-if="selected.ancestors.length">{{selected.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
-					{{selected.tag.name}}
-				</span>
+			<span>
+				<span v-if="selected.ancestors.length">{{selected.ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
+				{{selected.tag.name}}
+			</span>
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
 		<div class="control" v-else>
@@ -60,6 +60,9 @@ export default {
 			search: '',
 		};
 	},
+	components: {
+		WnlAutocomplete
+	},
 	computed: {
 		...mapState('taxonomyTerms', ['terms']),
 		autocompleteTerms() {
@@ -73,9 +76,6 @@ export default {
 
 			return uniqBy(terms, 'id').slice(0, 25);
 		},
-	},
-	components: {
-		WnlAutocomplete
 	},
 	methods: {
 		onSelect(item) {

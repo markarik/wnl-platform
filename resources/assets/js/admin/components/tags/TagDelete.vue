@@ -45,7 +45,7 @@ export default {
 	},
 	props: {
 		id: {
-			type: String|Number,
+			type: [String, Number],
 			required: true,
 		},
 		isDeleteAllowed: {

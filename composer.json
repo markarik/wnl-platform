@@ -16,7 +16,7 @@
 		"league/flysystem-aws-s3-v3": "^1.0",
 		"intervention/image": "^2.3",
 		"laravel/scout": "^4.0",
-		"bethink/elastic-scout": "3.*",
+		"bethink/elastic-scout": "3.0.8",
 		"doctrine/dbal": "2.5.13",
 		"graham-campbell/throttle": "^7.0",
 		"nao-pon/flysystem-google-drive": "~1.1",

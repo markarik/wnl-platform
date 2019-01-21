@@ -28,6 +28,7 @@
 import {mapActions, mapState} from 'vuex';
 
 import WnlTaxonomyTermEditorAdd from 'js/admin/components/taxonomies/TaxonomyTermEditorAdd';
+import WnlTaxonomyTermEditorDelete from 'js/admin/components/taxonomies/TaxonomyTermEditorDelete';
 import WnlTaxonomyTermEditorEdit from 'js/admin/components/taxonomies/TaxonomyTermEditorEdit';
 import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
 
@@ -61,7 +62,8 @@ export default {
 				{
 					icon: 'fa-close',
 					key: TAXONOMY_EDITOR_MODES.DELETE,
-					label: 'Usuń'
+					label: 'Usuń',
+					componentName: WnlTaxonomyTermEditorDelete
 				}
 			],
 		};

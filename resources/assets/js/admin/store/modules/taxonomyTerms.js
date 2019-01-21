@@ -64,6 +64,10 @@ const mutations = {
 	[types.UPDATE_TERM] (state, payload) {
 		set(state.terms, state.terms.findIndex(term => term.id === payload.id), payload);
 	},
+	[types.DELETE_TERM] (state, payload) {
+		const index = state.terms.findIndex((term) => term.id === payload.id);
+		state.terms.splice(index, 1);
+	},
 	[types.SELECT_TAXONOMY_TERMS] (state, payload) {
 		set(state, 'selectedTerms', payload);
 	},
@@ -159,6 +163,20 @@ const actions = {
 			}
 
 			commit(types.UPDATE_TERM, includeTag({...taxonomyTerm, ...term}, included.tags), state.terms);
+		} catch (error) {
+			throw error;
+		} finally {
+			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+		}
+	},
+
+	async delete({commit, state}, taxonomyTerm) {
+		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
+		try {
+			await axios.delete(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}`));
+
+			commit(types.DELETE_TERM, taxonomyTerm);
+			commit(types.REORDER_TERMS, state.terms);
 		} catch (error) {
 			throw error;
 		} finally {

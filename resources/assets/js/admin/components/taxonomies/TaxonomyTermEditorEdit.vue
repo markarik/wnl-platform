@@ -27,7 +27,7 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters('taxonomyTerms', ['termById']),
+		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
 		...mapState('taxonomyTerms', ['selectedTerms']),
 		term() {
 			if (this.selectedTerms.length === 0) {
@@ -40,7 +40,7 @@ export default {
 			return {
 				description: term.description,
 				id: term.id,
-				parent: term.ancestors.slice(-1)[0],
+				parent: this.getAncestorsById(term.id).slice(-1)[0],
 				tag: term.tag
 			};
 		}

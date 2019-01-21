@@ -23,16 +23,6 @@ class MigrateCourseStructure extends Command
 	protected $description = 'Migrate data to new tree based course structure';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed
@@ -42,9 +32,19 @@ class MigrateCourseStructure extends Command
 		$groups = Group::all();
 
 		foreach ($groups as $group) {
-			$groupNode = CourseStructureNode::create(['name' => $group->name, 'type' => 'group']);
+			$groupNode = CourseStructureNode::create([
+				'type' => 'group',
+				'course_id' => 1,
+				'structurable_type' => 'App\\Models\\Group',
+				'structurable_id' => $group->id,
+			]);
 			foreach ($group->lessons as $lesson) {
-				CourseStructureNode::create(['name' => $lesson->name, 'type' => 'lesson'], $groupNode);
+				CourseStructureNode::create([
+					'type' => 'lesson',
+					'course_id' => 1,
+					'structurable_type' => 'App\\Models\\Lesson',
+					'structurable_id' => $lesson->id,
+				], $groupNode);
 				print 'L';
 			}
 			print 'G';

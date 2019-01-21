@@ -1,7 +1,7 @@
 <template>
 	<nav class="pagination" role="navigation">
 		<ul class="pagination-list">
-			<li v-for="n, index in items" :key="index">
+			<li v-for="(n, index) in items" :key="index">
 				<a v-if="isPage(n)" class="pagination-link" :class="{'is-current': currentPage === n}" @click="changePage(n)">{{n}}</a>
 				<span v-else class="pagination-ellipsis">&hellip;</span>
 			</li>

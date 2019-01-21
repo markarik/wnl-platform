@@ -23,7 +23,7 @@
 		<div v-else>
 			<h3 class="has-text-centered">O nie! Ta lekcja nie jest jeszcze dostępna!</h3>
 			<p class="has-text-centered margin vertical">
-				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"></img>
+				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
 			</p>
 			<p class="has-text-centered">
 				<router-link to="/" class="button is-outlined is-primary">Wróć do auli</router-link>

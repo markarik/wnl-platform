@@ -25,6 +25,10 @@ abstract class Event
 	{
 		$this->referer = Request::header('X-BETHINK-LOCATION');
 		$this->id = Uuid::uuid4()->toString();
+
+		if (!Request::header('X-Socket-ID')) {
+			\Log::error('X-Socket-ID header missing');
+		}
 	}
 
 	/**

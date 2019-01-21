@@ -12,10 +12,9 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	.label
 		display: inline
-
 </style>
 
 <script>

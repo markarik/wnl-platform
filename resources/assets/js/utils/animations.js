@@ -6,7 +6,7 @@ export function scrollToTop() {
 }
 
 export function scrollToElement(element, distance = 150, duration = 500, scrollable = false) {
-	if (typeof element !== undefined) {
+	if (element) {
 		scrollToY(element.offsetTop + element.offsetParent.offsetTop - distance, duration, scrollable);
 	}
 }

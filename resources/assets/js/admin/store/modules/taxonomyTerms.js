@@ -81,27 +81,42 @@ const actions = {
 	async fetchTermsByTaxonomy({commit}, taxonomyId) {
 		commit(types.RESET_TAXONOMY_TERMS_STATE);
 		commit(types.SET_TAXONOMY_TERMS_LOADING, true);
-		const response = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${taxonomyId}?include=tags`));
-		const {data: {included, ...termsObj}} = response;
-		const terms = Object.values(termsObj);
-		commit(types.SETUP_TERMS, terms.map(term => includeAncestors(includeTag(term, included.tags), terms)));
-		commit(types.SET_TAXONOMY_TERMS_LOADING, false);
+		try {
+			const response = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${taxonomyId}?include=tags`));
+			const {data: {included, ...termsObj}} = response;
+			const terms = Object.values(termsObj);
+			commit(types.SETUP_TERMS, terms.map(term => includeAncestors(includeTag(term, included.tags), terms)));
+		} catch (error) {
+			throw error
+		} finally {
+			commit(types.SET_TAXONOMY_TERMS_LOADING, false);
+		}
 	},
 
 	async create({commit, state}, taxonomyTerm) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
-		const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
-		const {data: {included, ...term}} = response;
-		commit(types.ADD_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
-		commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+		try {
+			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
+			const {data: {included, ...term}} = response;
+			commit(types.ADD_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
+		} catch (error) {
+			throw error;
+		} finally {
+			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+		}
 	},
 
 	async update({commit, state}, taxonomyTerm) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
-		const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
-		const {data: {included, ...term}} = response;
-		commit(types.UPDATE_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
-		commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+		try {
+			const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
+			const {data: {included, ...term}} = response;
+			commit(types.UPDATE_TERM, includeAncestors(includeTag(term, included.tags), state.terms));
+		} catch (error) {
+			throw error;
+		} finally {
+			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+		}
 	},
 
 	setEditorMode({commit}, editorMode) {

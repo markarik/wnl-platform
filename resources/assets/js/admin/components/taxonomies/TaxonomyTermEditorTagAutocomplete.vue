@@ -56,6 +56,7 @@ import {mapState, mapActions} from 'vuex';
 import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
 	props: {
@@ -111,8 +112,18 @@ export default {
 			}
 		},
 	},
-	mounted() {
-		this.fetchAllTags();
+	async mounted() {
+		try {
+			await this.fetchAllTags();
+		} catch (error) {
+			$wnl.logger.capture(error);
+
+			this.addAutoDismissableAlert({
+				text: 'Ups, coś poszło nie tak przy pobieraniu listy dostępnych tagów, spróbuj ponownie.',
+				type: ALERT_TYPES.ERROR,
+			});
+		}
+
 	}
 };
 </script>

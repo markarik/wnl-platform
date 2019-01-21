@@ -15,15 +15,15 @@
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
-					@click="edit"
-				>
-					<i title="Edytuj" class="fa fa-pencil"></i>
-				</span>
-				<span
-					class="icon-small taxonomy-term-item__action"
 					@click="add"
 				>
 					<i title="Dodaj" class="fa fa-plus"></i>
+				</span>
+				<span
+					class="icon-small taxonomy-term-item__action"
+					@click="edit"
+				>
+					<i title="Edytuj" class="fa fa-pencil"></i>
 				</span>
 			</div>
 		</div>

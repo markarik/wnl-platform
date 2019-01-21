@@ -91,7 +91,7 @@ export default {
 		},
 	},
 	computed: {
-		...mapState('taxonomyTerms', ['terms', 'expandedTerms', 'selectedTerms']),
+		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms']),
 		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';

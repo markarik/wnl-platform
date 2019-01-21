@@ -257,10 +257,7 @@ const mutations = {
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
-			let resources = state[resource];
-			_.each(items, (item, index) => {
-				resources[index] = item;
-			});
+			const resources = { ...state[resource], ...items };
 			set(state, resource, resources);
 		});
 	},

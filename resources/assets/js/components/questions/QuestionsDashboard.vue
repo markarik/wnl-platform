@@ -347,7 +347,7 @@ export default {
 	props: {
 		id: {
 			default: 0,
-			type: Number|String,
+			type: [String, Number],
 		}
 	},
 	data() {

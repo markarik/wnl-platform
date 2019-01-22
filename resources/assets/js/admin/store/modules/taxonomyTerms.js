@@ -141,7 +141,9 @@ const actions = {
 			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
 			commit(types.ADD_TERM, includeTag(term, included.tags));
-			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {list: getters.getChildrenByParentId(taxonomyTerm.parent_id)});
+			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {
+				list: getters.getChildrenByParentId(taxonomyTerm.parent_id)
+			});
 		} catch (error) {
 			throw error;
 		} finally {
@@ -170,13 +172,15 @@ const actions = {
 		}
 	},
 
-	async delete({commit, state}, taxonomyTerm) {
+	async delete({commit, state, getters}, taxonomyTerm) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		try {
 			await axios.delete(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}`));
 
 			commit(types.DELETE_TERM, taxonomyTerm);
-			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {list: state.terms});
+			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {
+				list: getters.getChildrenByParentId(taxonomyTerm.parent_id)
+			});
 		} catch (error) {
 			throw error;
 		} finally {

@@ -137,7 +137,7 @@ const actions = {
 			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
 			commit(types.ADD_TERM, includeTag(term, included.tags));
-			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, getters.getChildrenByParentId(taxonomyTerm.parent_id));
+			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {list: getters.getChildrenByParentId(taxonomyTerm.parent_id)});
 		} catch (error) {
 			throw error;
 		} finally {

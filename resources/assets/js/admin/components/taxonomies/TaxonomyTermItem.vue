@@ -1,9 +1,7 @@
 <template>
 	<li :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']" :id="`term-${term.id}`">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
-			<span
-				class="icon-small taxonomy-term-item__action"
-			>
+			<span class="icon-small taxonomy-term-item__action taxonomy-term-item__action--drag">
 				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
 			</span>
 			<div class="media-content v-central">
@@ -64,16 +62,21 @@
 			color: $color-gray-dimmed
 
 		&__content
-			cursor: move
 			align-items: center
 			border-bottom: 1px solid $color-inactive-gray
-			padding: $margin-small 0 $margin-small $margin-base
+			padding: $margin-small 0
+
 		&__list
 			margin-left: $margin-big
+
 		&__action
 			cursor: pointer
 			margin: 0 $margin-tiny
 			padding: $margin-small-minus
+
+			&--drag
+				cursor: move
+
 			&--disabled
 				color: $color-inactive-gray
 				cursor: not-allowed

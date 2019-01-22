@@ -2,7 +2,6 @@
 	<ul>
 		<vue-draggable
 			:options="{handle: '.taxonomy-term-item__action--drag'}"
-			:v-model="terms"
 			@end="onTermDrag"
 		>
 			<wnl-taxonomy-term-item

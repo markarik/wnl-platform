@@ -86,8 +86,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['taxonomies']}", 'TaxonomiesApiController@post');
 		Route::put("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@put');
 		Route::get("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@get');
-		// TODO implement me when have tags + taxonomies relation ready
-//		Route::delete("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@delete');
+		Route::delete("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@delete');
 		Route::post("{$r['taxonomies']}/.filter", 'TaxonomiesApiController@filter');
 
 		// TaxonomyTerms

@@ -28,4 +28,16 @@ class TaxonomiesApiController extends ApiController {
 
 		return $this->transformAndRespond($taxonomy);
 	}
+
+	public function delete($id)
+	{
+		if ($id <= 3) {
+			// TODO PLAT-924 unblock deleting "reserved" taxonomies
+			return $this->respondUnprocessableEntity([
+				'message' => __('taxonomies.errors.delete-disallowed')
+			]);
+		}
+
+		return parent::delete($id);
+	}
 }

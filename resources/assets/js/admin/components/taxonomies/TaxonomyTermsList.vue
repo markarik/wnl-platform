@@ -4,25 +4,15 @@
 			<wnl-taxonomy-term-item
 				v-for="term in terms"
 				:term="term"
-				:loading="isSaving"
 				:key="term.id"
-				:class="[isSaving && 'taxonomy-term-item--disabled']"
 				@moveTerm="onChildTermArrowMove"
 			/>
 		</vue-draggable>
 	</ul>
 </template>
 
-<style lang="sass" scoped>
-	@import 'resources/assets/sass/variables'
-
-	.taxonomy-term-item--disabled
-		pointer-events: none
-		color: $color-gray-dimmed
-</style>
-
 <script>
-import {mapActions, mapState} from 'vuex';
+import {mapActions} from 'vuex';
 
 import VueDraggable from 'vuedraggable';
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
@@ -38,15 +28,16 @@ export default {
 			required: true
 		}
 	},
-	computed: {
-		...mapState('taxonomyTerms', ['isSaving'])
-	},
 	methods: {
 		...mapActions('taxonomyTerms', ['moveTerm', 'reorderSiblings']),
 		...mapActions(['addAutoDismissableAlert']),
-		async submitMove(args) {
+		async submitMove({direction, ...args}) {
+			if (direction === 0) {
+				return;
+			}
+
 			try {
-				await this.moveTerm({...args});
+				await this.moveTerm({direction, ...args});
 				this.addAutoDismissableAlert({
 					type: 'success',
 					text: 'Zapisano!'

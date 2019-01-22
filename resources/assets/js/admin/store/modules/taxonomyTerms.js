@@ -184,11 +184,6 @@ const actions = {
 	async moveTerm({dispatch, commit}, {term, direction}) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 
-		if (direction === 0) {
-			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
-			return;
-		}
-
 		try {
 			dispatch('reorderSiblings', {term, direction});
 		} catch (e) {

@@ -1,6 +1,6 @@
 <template>
 	<div
-		v-if="term.id"
+		v-if="term"
 		class="has-text-centered"
 	>
 		<p class="margin bottom">
@@ -29,7 +29,7 @@ export default {
 		...mapState('taxonomyTerms', ['isSaving', 'selectedTerms']),
 		term() {
 			if (this.selectedTerms.length === 0) {
-				return {};
+				return null;
 			}
 
 			// TODO figure out multiple terms selected

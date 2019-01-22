@@ -1,6 +1,6 @@
 <template>
 	<wnl-taxonomy-term-editor-form
-		v-if="term.id"
+		v-if="term"
 		submit-label="Zapisz"
 		:on-save="onSave"
 		:taxonomy-id="taxonomyId"
@@ -34,7 +34,7 @@ export default {
 		...mapState('taxonomyTerms', ['selectedTerms']),
 		term() {
 			if (this.selectedTerms.length === 0) {
-				return {};
+				return null;
 			}
 
 			// TODO figure out multiple terms selected

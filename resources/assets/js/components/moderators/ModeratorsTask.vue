@@ -12,7 +12,7 @@
 				<span class="tag is-light is-medium" v-t="'tasks.task.fields.status'"/>
 				<wnl-dropdown>
 					<p slot="activator" class="tag is-medium" :class="statusTag.class">
-						{{statusTag.text}}&nbsp
+						{{statusTag.text}}&nbsp;
 						<span class="icon is-small">
 							<i class="fa fa-angle-down"></i>
 						</span>

@@ -75,7 +75,7 @@
 							{{$t('questions.plan.headings.questions')}}
 						</div>
 						<div class="questions-plan-options">
-							<div v-for="filters, option in planOptions" :key="option">
+							<div v-for="(filters, option) in planOptions" :key="option">
 								<a
 									class="plan-option panel-toggle"
 									:class="{'is-active': selectedOption === option}"

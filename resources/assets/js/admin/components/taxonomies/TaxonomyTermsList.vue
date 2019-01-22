@@ -1,11 +1,11 @@
 <template>
 	<ul>
-		<vue-draggable @end="onTermMove" :value="terms">
+		<vue-draggable @end="onTermDrag" :value="terms">
 			<wnl-taxonomy-term-item
 				v-for="term in terms"
 				:term="term"
 				:key="term.id"
-				@moveTerm="onChildTermMove"
+				@moveTerm="onChildTermArrowMove"
 			/>
 		</vue-draggable>
 	</ul>
@@ -30,18 +30,38 @@ export default {
 	},
 	methods: {
 		...mapActions('taxonomyTerms', ['moveTerm']),
-		onTermMove({newIndex, oldIndex}) {
-			this.moveTerm({
-				newIndex, oldIndex, terms: this.terms
-			});
+		...mapActions(['addAutoDismissableAlert']),
+		submitMove(args) {
+			try {
+				this.moveTerm({...args});
+				this.addAutoDismissableAlert({
+					type: 'success',
+					text: 'Zapisano!'
+				});
+			} catch (e) {
+				this.addAutoDismissableAlert({
+					type: 'error',
+					text: 'Nie udało się zapisać zmiany. Odśwież stronę i spróbuj ponownie. Być może Twoje drzewo jest nieaktulane.'
+				});
+				$wnl.logger.error(e);
+				throw (e);
+			}
 		},
-		onChildTermMove({term, direction}) {
+		onTermDrag({newIndex, oldIndex}) {
+			try {
+				this.submitMove({newIndex, oldIndex, terms: this.terms});
+			} catch (e) {
+				this.submitMove({newIndex: oldIndex, oldIndex: newIndex, terms: this.terms});
+			}
+		},
+		onChildTermArrowMove({term, direction}) {
 			const oldIndex = this.terms.indexOf(term);
 			const newIndex = Math.min(Math.max(oldIndex + direction, 0), this.terms.length - 1);
-
-			this.moveTerm({
-				terms: this.terms, oldIndex, newIndex
-			});
+			try {
+				this.submitMove({newIndex, oldIndex, terms: this.terms});
+			} catch (e) {
+				this.submitMove({});
+			}
 		},
 	}
 };

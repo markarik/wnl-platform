@@ -75,7 +75,7 @@ const mutations = {
 	},
 	[types.REORDER_TERMS] (state, list) {
 		const updatedList = list
-			.sort((termA, termB) => termA - termB)
+			.sort((termA, termB) => termA.orderNumber - termB.orderNumber)
 			.map((item, index) => ({
 				...item,
 				orderNumber: index
@@ -122,7 +122,7 @@ const actions = {
 
 			commit(
 				types.SETUP_TERMS,
-				termsWithOrderNumbers.map(term => includeTag(term, included.tags), termsWithOrderNumbers)
+				termsWithOrderNumbers.map(term => includeTag(term, included.tags))
 			);
 		} catch (error) {
 			throw error;
@@ -136,7 +136,7 @@ const actions = {
 		try {
 			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
-			commit(types.ADD_TERM, includeTag(term, included.tags), state.terms);
+			commit(types.ADD_TERM, includeTag(term, included.tags));
 			commit(types.REORDER_TERMS, state.terms.filter(listedTerm => listedTerm.parent_id === term.parent_id));
 		} catch (error) {
 			throw error;
@@ -149,7 +149,7 @@ const actions = {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		try {
 			const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
-			const {data: {included, ...term}} = response;
+			const {data: {included, ...updatedTaxonomyTerm}} = response;
 
 			const {parent_id: oldParentId} = getters.termById(taxonomyTerm.id);
 			const {parent_id: updatedParentId} = taxonomyTerm;
@@ -158,7 +158,7 @@ const actions = {
 				taxonomyTerm.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
 			}
 
-			commit(types.UPDATE_TERM, includeTag({...taxonomyTerm, ...term}, included.tags), state.terms);
+			commit(types.UPDATE_TERM, includeTag({...taxonomyTerm, ...updatedTaxonomyTerm}, included.tags));
 		} catch (error) {
 			throw error;
 		} finally {
@@ -177,22 +177,10 @@ const actions = {
 
 		commit(types.REORDER_TERMS, terms);
 
-		try {
-			await axios.put(getApiUrl('taxonomy_terms/move'), {
-				term_id: term.id,
-				direction
-			});
-			dispatch('addAutoDismissableAlert', {
-				type: 'success',
-				text: 'Zapisano!'
-			}, {root: true});
-		} catch (error) {
-			$wnl.logger.error(error);
-			dispatch('addAutoDismissableAlert', {
-				type: 'error',
-				text: 'Nie udało się zapisać zmiany. Odśwież stronę i spróbuj ponownie. Być może Twoje drzewo jest nieaktulane.'
-			}, {root: true});
-		}
+		await axios.put(getApiUrl('taxonomy_terms/move'), {
+			term_id: term.id,
+			direction
+		});
 	},
 
 	setEditorMode({commit}, editorMode) {

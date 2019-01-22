@@ -151,10 +151,10 @@ const actions = {
 			const response = await axios.put(getApiUrl(`taxonomy_terms/${originalTerm.id}?include=tags`), originalTerm);
 			const {data: {included, ...updatedTerm}} = response;
 
-			const {parent_id: oldParentId} = getters.termById(originalTerm.id);
+			const {parent_id: originalParentId} = getters.termById(originalTerm.id);
 			const {parent_id: updatedParentId} = originalTerm;
 
-			if (oldParentId !== updatedParentId) {
+			if (originalParentId !== updatedParentId) {
 				originalTerm.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
 			}
 

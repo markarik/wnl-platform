@@ -26,6 +26,7 @@ class CourseStructureApiController extends ApiController
 
 	private function transformTree($tree)
 	{
+		// TODO: maybe move this function to a trait?
 		$includes = [];
 		$traverse = function ($nodes) use (&$traverse, &$includes) {
 

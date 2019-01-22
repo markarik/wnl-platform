@@ -73,9 +73,9 @@ const mutations = {
 	[types.SET_TAXONOMY_TERM_EDITOR_MODE] (state, payload) {
 		set(state, 'editorMode', payload);
 	},
-	[types.REORDER_TERMS] (state, list) {
+	// the order of items in passed list is important!
+	[types.TERMS_COUNT_ORDER_NUMBERS] (state, {list}) {
 		const updatedList = list
-			.sort((termA, termB) => termA.orderNumber - termB.orderNumber)
 			.map((item, index) => ({
 				...item,
 				orderNumber: index
@@ -137,7 +137,7 @@ const actions = {
 			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
 			commit(types.ADD_TERM, includeTag(term, included.tags));
-			commit(types.REORDER_TERMS, state.terms.filter(listedTerm => listedTerm.parent_id === term.parent_id));
+			commit(types.TERMS_COUNT_ORDER_NUMBERS, state.terms.filter(listedTerm => listedTerm.parent_id === term.parent_id));
 		} catch (error) {
 			throw error;
 		} finally {
@@ -166,16 +166,23 @@ const actions = {
 		}
 	},
 
-	async moveTerm({commit, dispatch}, {terms, oldIndex, newIndex}) {
-		const direction = newIndex - oldIndex;
+	reorderSiblings({getters, commit}, {term, direction}) {
+		const allSiblings = getters.getChildrenByParentId(term.parent_id);
+		const oldIndex = allSiblings.findIndex(sibling => sibling.id === term.id);
+		const newIndex = Math.min(Math.max(oldIndex + direction, 0), allSiblings.length - 1);
 
+		allSiblings.splice(oldIndex, 1);
+		allSiblings.splice(newIndex, 0, term);
+
+		commit(types.TERMS_COUNT_ORDER_NUMBERS, {list: allSiblings});
+
+		return allSiblings;
+	},
+
+	async moveTerm({dispatch}, {term, direction}) {
 		if (direction === 0) return;
 
-		const term = terms[oldIndex];
-		terms.splice(oldIndex, 1);
-		terms.splice(newIndex, 0, term);
-
-		commit(types.REORDER_TERMS, terms);
+		dispatch('reorderSiblings', {term, direction});
 
 		await axios.put(getApiUrl('taxonomy_terms/move'), {
 			term_id: term.id,

@@ -29,11 +29,11 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['moveTerm']),
+		...mapActions('taxonomyTerms', ['moveTerm', 'reorderSiblings']),
 		...mapActions(['addAutoDismissableAlert']),
-		submitMove(args) {
+		async submitMove(args) {
 			try {
-				this.moveTerm({...args});
+				await this.moveTerm({...args});
 				this.addAutoDismissableAlert({
 					type: 'success',
 					text: 'Zapisano!'
@@ -47,20 +47,20 @@ export default {
 				throw (e);
 			}
 		},
-		onTermDrag({newIndex, oldIndex}) {
+		async onTermDrag({newIndex, oldIndex}) {
+			const direction = newIndex - oldIndex;
+			const term = this.terms[oldIndex];
 			try {
-				this.submitMove({newIndex, oldIndex, terms: this.terms});
+				await this.submitMove({direction, term});
 			} catch (e) {
-				this.submitMove({newIndex: oldIndex, oldIndex: newIndex, terms: this.terms});
+				await this.reorderSiblings({direction: oldIndex - newIndex, term});
 			}
 		},
-		onChildTermArrowMove({term, direction}) {
-			const oldIndex = this.terms.indexOf(term);
-			const newIndex = Math.min(Math.max(oldIndex + direction, 0), this.terms.length - 1);
+		async onChildTermArrowMove({term, direction}) {
 			try {
-				this.submitMove({newIndex, oldIndex, terms: this.terms});
+				await this.submitMove({direction, term});
 			} catch (e) {
-				this.submitMove({});
+				await this.reorderSiblings({direction: -direction, term});
 			}
 		},
 	}

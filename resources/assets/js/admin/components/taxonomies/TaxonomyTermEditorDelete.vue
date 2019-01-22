@@ -29,12 +29,6 @@
 import {mapActions, mapGetters, mapState} from 'vuex';
 
 export default {
-	props: {
-		taxonomyId: {
-			type: [String, Number],
-			required: true,
-		},
-	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById']),
 		...mapState('taxonomyTerms', ['isSaving', 'selectedTerms']),

@@ -131,13 +131,13 @@ const actions = {
 		}
 	},
 
-	async create({commit, state}, taxonomyTerm) {
+	async create({commit, state, getters}, taxonomyTerm) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		try {
 			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
 			commit(types.ADD_TERM, includeTag(term, included.tags));
-			commit(types.TERMS_COUNT_ORDER_NUMBERS, state.terms.filter(listedTerm => listedTerm.parent_id === term.parent_id));
+			commit(types.TERMS_COUNT_ORDER_NUMBERS, getters.getChildrenByParentId(taxonomyTerm.parent_id));
 		} catch (error) {
 			throw error;
 		} finally {

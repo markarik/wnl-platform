@@ -74,7 +74,7 @@ const mutations = {
 		set(state, 'editorMode', payload);
 	},
 	// the order of items in passed list is important!
-	[types.TERMS_COUNT_ORDER_NUMBERS] (state, {list}) {
+	[types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS] (state, {list}) {
 		const updatedList = list
 			.map((item, index) => ({
 				...item,
@@ -137,7 +137,7 @@ const actions = {
 			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
 			commit(types.ADD_TERM, includeTag(term, included.tags));
-			commit(types.TERMS_COUNT_ORDER_NUMBERS, getters.getChildrenByParentId(taxonomyTerm.parent_id));
+			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, getters.getChildrenByParentId(taxonomyTerm.parent_id));
 		} catch (error) {
 			throw error;
 		} finally {
@@ -145,20 +145,20 @@ const actions = {
 		}
 	},
 
-	async update({commit, state, getters}, originalTerm) {
+	async update({commit, state, getters}, term) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		try {
-			const response = await axios.put(getApiUrl(`taxonomy_terms/${originalTerm.id}?include=tags`), originalTerm);
+			const response = await axios.put(getApiUrl(`taxonomy_terms/${term.id}?include=tags`), term);
 			const {data: {included, ...updatedTerm}} = response;
 
-			const {parent_id: originalParentId} = getters.termById(originalTerm.id);
-			const {parent_id: updatedParentId} = originalTerm;
+			const {parent_id: originalParentId} = getters.termById(term.id);
+			const {parent_id: updatedParentId} = updatedTerm;
 
 			if (originalParentId !== updatedParentId) {
-				originalTerm.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
+				term.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
 			}
 
-			commit(types.UPDATE_TERM, includeTag({...originalTerm, ...updatedTerm}, included.tags));
+			commit(types.UPDATE_TERM, includeTag({...term, ...updatedTerm}, included.tags));
 		} catch (error) {
 			throw error;
 		} finally {
@@ -174,7 +174,7 @@ const actions = {
 		allSiblings.splice(oldIndex, 1);
 		allSiblings.splice(newIndex, 0, term);
 
-		commit(types.TERMS_COUNT_ORDER_NUMBERS, {list: allSiblings});
+		commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {list: allSiblings});
 
 		return allSiblings;
 	},

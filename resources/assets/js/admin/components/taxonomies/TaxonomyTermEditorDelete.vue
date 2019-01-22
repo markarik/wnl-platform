@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="term.id"
-		class="center"
+		class="has-text-centered"
 	>
 		<p class="margin bottom">
 			Czy na pewno chcesz usunąć pojęcie <em><strong>{{term.tag.name}}</strong></em> wraz z potomkami?
@@ -19,11 +19,6 @@
 		Najpierw wybierz pojęcia
 	</div>
 </template>
-
-<style lang="sass" rel="stylesheet/sass" scoped>
-	.center
-		text-align: center
-</style>
 
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex';

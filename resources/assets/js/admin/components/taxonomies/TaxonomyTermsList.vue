@@ -1,11 +1,11 @@
 <template>
 	<ul>
-		<vue-draggable @end="onTermMove" :value="terms">
+		<vue-draggable @end="onTermDrag" :value="terms">
 			<wnl-taxonomy-term-item
 				v-for="term in terms"
 				:term="term"
 				:key="term.id"
-				@moveTerm="onChildTermMove"
+				@moveTerm="onChildTermArrowMove"
 			/>
 		</vue-draggable>
 	</ul>
@@ -29,19 +29,39 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['moveTerm']),
-		onTermMove({newIndex, oldIndex}) {
-			this.moveTerm({
-				newIndex, oldIndex, terms: this.terms
-			});
+		...mapActions('taxonomyTerms', ['moveTerm', 'reorderSiblings']),
+		...mapActions(['addAutoDismissableAlert']),
+		async submitMove(args) {
+			try {
+				await this.moveTerm({...args});
+				this.addAutoDismissableAlert({
+					type: 'success',
+					text: 'Zapisano!'
+				});
+			} catch (e) {
+				this.addAutoDismissableAlert({
+					type: 'error',
+					text: 'Nie udało się zapisać zmiany. Odśwież stronę i spróbuj ponownie. Być może Twoje drzewo jest nieaktulane.'
+				});
+				$wnl.logger.error(e);
+				throw (e);
+			}
 		},
-		onChildTermMove({term, direction}) {
-			const oldIndex = this.terms.indexOf(term);
-			const newIndex = Math.min(Math.max(oldIndex + direction, 0), this.terms.length - 1);
-
-			this.moveTerm({
-				terms: this.terms, oldIndex, newIndex
-			});
+		async onTermDrag({newIndex, oldIndex}) {
+			const direction = newIndex - oldIndex;
+			const term = this.terms[oldIndex];
+			try {
+				await this.submitMove({direction, term});
+			} catch (e) {
+				await this.reorderSiblings({direction: oldIndex - newIndex, term});
+			}
+		},
+		async onChildTermArrowMove({term, direction}) {
+			try {
+				await this.submitMove({direction, term});
+			} catch (e) {
+				await this.reorderSiblings({direction: -direction, term});
+			}
 		},
 	}
 };

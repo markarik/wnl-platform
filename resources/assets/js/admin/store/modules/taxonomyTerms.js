@@ -77,9 +77,9 @@ const mutations = {
 	[types.SET_TAXONOMY_TERM_EDITOR_MODE] (state, payload) {
 		set(state, 'editorMode', payload);
 	},
-	[types.REORDER_TERMS] (state, list) {
+	// the order of items in passed list is important!
+	[types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS] (state, {list}) {
 		const updatedList = list
-			.sort((termA, termB) => termA - termB)
 			.map((item, index) => ({
 				...item,
 				orderNumber: index
@@ -126,7 +126,7 @@ const actions = {
 
 			commit(
 				types.SETUP_TERMS,
-				termsWithOrderNumbers.map(term => includeTag(term, included.tags), termsWithOrderNumbers)
+				termsWithOrderNumbers.map(term => includeTag(term, included.tags))
 			);
 		} catch (error) {
 			throw error;
@@ -135,13 +135,13 @@ const actions = {
 		}
 	},
 
-	async create({commit, state}, taxonomyTerm) {
+	async create({commit, state, getters}, taxonomyTerm) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		try {
 			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
-			commit(types.ADD_TERM, includeTag(term, included.tags), state.terms);
-			commit(types.REORDER_TERMS, state.terms.filter(listedTerm => listedTerm.parent_id === term.parent_id));
+			commit(types.ADD_TERM, includeTag(term, included.tags));
+			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, getters.getChildrenByParentId(taxonomyTerm.parent_id));
 		} catch (error) {
 			throw error;
 		} finally {
@@ -149,20 +149,20 @@ const actions = {
 		}
 	},
 
-	async update({commit, state, getters}, taxonomyTerm) {
+	async update({commit, state, getters}, term) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		try {
-			const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
-			const {data: {included, ...term}} = response;
+			const response = await axios.put(getApiUrl(`taxonomy_terms/${term.id}?include=tags`), term);
+			const {data: {included, ...updatedTerm}} = response;
 
-			const {parent_id: oldParentId} = getters.termById(taxonomyTerm.id);
-			const {parent_id: updatedParentId} = taxonomyTerm;
+			const {parent_id: originalParentId} = getters.termById(term.id);
+			const {parent_id: updatedParentId} = updatedTerm;
 
-			if (oldParentId !== updatedParentId) {
-				taxonomyTerm.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
+			if (originalParentId !== updatedParentId) {
+				term.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
 			}
 
-			commit(types.UPDATE_TERM, includeTag({...taxonomyTerm, ...term}, included.tags), state.terms);
+			commit(types.UPDATE_TERM, includeTag({...term, ...updatedTerm}, included.tags));
 		} catch (error) {
 			throw error;
 		} finally {
@@ -176,7 +176,7 @@ const actions = {
 			await axios.delete(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}`));
 
 			commit(types.DELETE_TERM, taxonomyTerm);
-			commit(types.REORDER_TERMS, state.terms);
+			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {list: state.terms});
 		} catch (error) {
 			throw error;
 		} finally {
@@ -184,33 +184,28 @@ const actions = {
 		}
 	},
 
-	async moveTerm({commit, dispatch}, {terms, oldIndex, newIndex}) {
-		const direction = newIndex - oldIndex;
+	reorderSiblings({getters, commit}, {term, direction}) {
+		const allSiblings = getters.getChildrenByParentId(term.parent_id);
+		const oldIndex = allSiblings.findIndex(sibling => sibling.id === term.id);
+		const newIndex = Math.min(Math.max(oldIndex + direction, 0), allSiblings.length - 1);
 
+		allSiblings.splice(oldIndex, 1);
+		allSiblings.splice(newIndex, 0, term);
+
+		commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {list: allSiblings});
+
+		return allSiblings;
+	},
+
+	async moveTerm({dispatch}, {term, direction}) {
 		if (direction === 0) return;
 
-		const term = terms[oldIndex];
-		terms.splice(oldIndex, 1);
-		terms.splice(newIndex, 0, term);
+		dispatch('reorderSiblings', {term, direction});
 
-		commit(types.REORDER_TERMS, terms);
-
-		try {
-			await axios.put(getApiUrl('taxonomy_terms/move'), {
-				term_id: term.id,
-				direction
-			});
-			dispatch('addAutoDismissableAlert', {
-				type: 'success',
-				text: 'Zapisano!'
-			}, {root: true});
-		} catch (error) {
-			$wnl.logger.error(error);
-			dispatch('addAutoDismissableAlert', {
-				type: 'error',
-				text: 'Nie udało się zapisać zmiany. Odśwież stronę i spróbuj ponownie. Być może Twoje drzewo jest nieaktulane.'
-			}, {root: true});
-		}
+		await axios.put(getApiUrl('taxonomy_terms/move'), {
+			term_id: term.id,
+			direction
+		});
 	},
 
 	setEditorMode({commit}, editorMode) {

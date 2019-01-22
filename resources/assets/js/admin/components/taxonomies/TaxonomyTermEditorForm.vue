@@ -70,8 +70,7 @@ export default {
 			description: '',
 			id: null,
 			tag: null,
-			parent: null,
-			orderNumber: null
+			parent: null
 		};
 	},
 	components: {
@@ -80,7 +79,7 @@ export default {
 	},
 	computed: {
 		...mapState('taxonomyTerms', ['terms', 'isSaving']),
-		...mapGetters('taxonomyTerms', ['getAncestorsById', 'getSiblingsByParentId']),
+		...mapGetters('taxonomyTerms', ['getAncestorsById']),
 		submitDisabled() {
 			return !this.tag || this.isSaving;
 		},

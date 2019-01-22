@@ -13,6 +13,11 @@ class CourseStructureNodeTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['lessons', 'groups'];
 
+	public function __construct($parent = null)
+	{
+		$this->parent = $parent;
+	}
+
 	public function transform(CourseStructureNode $node)
 	{
 		$data = [
@@ -20,8 +25,12 @@ class CourseStructureNodeTransformer extends ApiTransformer
 			'structurable_type' => $node->structurable_type,
 			'structurable_id'   => $node->structurable_id,
 			'order_number'      => $node->order_number,
-			'children'          => $node->children,
+			'parent_id'         => $node->parent_id
 		];
+
+		if ($this->parent) {
+			$data = array_merge($data, $this->parent);
+		}
 
 		return $data;
 	}

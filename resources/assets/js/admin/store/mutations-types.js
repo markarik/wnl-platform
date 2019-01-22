@@ -35,3 +35,6 @@ export const SET_EXPANDED_TAXONOMY_TERMS = 'EXPAND_TAXONOMY_TERMS';
 export const SET_TAGS_LOADING = 'SET_TAGS_LOADING';
 export const SETUP_TAGS = 'SETUP_TAGS';
 export const ADD_TAG = 'ADD_TAG';
+
+// Structure nodes
+export const SETUP_NODES = 'SETUP_NODES';

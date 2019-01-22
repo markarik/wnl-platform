@@ -4,7 +4,7 @@
 			<h2 class="title is-2">Edycja struktury kursu</h2>
 		</div>
 
-		<structure-node v-for="(node, index) in nodes" :key="index" :node="node"></structure-node>
+		<structure-node v-for="(node, index) in rootNodes" :key="index" :node="node"></structure-node>
 
 
 	</div>
@@ -19,7 +19,7 @@
 
 <script>
 	import StructureNode from 'js/admin/components/structures/StructureNode';
-	import axios from 'axios';
+	import {mapActions, mapState} from 'vuex';
 	import {getApiUrl} from 'js/utils/env';
 
 	export default {
@@ -29,28 +29,22 @@
 				required: true,
 			}
 		},
-		computed: {},
+		computed: {
+			rootNodes() {
+				return this.nodes.filter(node => node.parent_id === null);
+			},
+			...mapState('structureNodes', {
+				nodes: 'nodes'
+			})
+		},
 		components: {
 			StructureNode
 		},
-		data() {
-			return {
-				nodes: {},
-			};
-		},
 		methods: {
-			async fetchStructure() {
-				try {
-					const response = await axios.get(getApiUrl(`course_structure/${this.courseId}?include=lessons,groups`));
-					const {data: {included, ...nodes}} = response;
-					this.nodes = nodes;
-				} catch (error) {
-					$wnl.logger.capture(error);
-				}
-			}
+			...mapActions('structureNodes', ['fetchStructure'])
 		},
 		mounted() {
-			this.fetchStructure();
+			this.fetchStructure(this.courseId);
 		}
 	};
 </script>

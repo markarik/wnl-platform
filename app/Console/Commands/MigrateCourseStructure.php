@@ -33,21 +33,44 @@ class MigrateCourseStructure extends Command
 
 		foreach ($groups as $group) {
 			$groupNode = CourseStructureNode::create([
-				'type' => 'group',
-				'course_id' => 1,
+				'course_id'         => 1,
 				'structurable_type' => 'App\\Models\\Group',
-				'structurable_id' => $group->id,
+				'structurable_id'   => $group->id,
 			]);
 			foreach ($group->lessons as $lesson) {
 				CourseStructureNode::create([
-					'type' => 'lesson',
-					'course_id' => 1,
+					'type'              => 'lesson',
+					'course_id'         => 1,
 					'structurable_type' => 'App\\Models\\Lesson',
-					'structurable_id' => $lesson->id,
+					'structurable_id'   => $lesson->id,
 				], $groupNode);
 				print 'L';
 			}
 			print 'G';
+		}
+
+		// TODO: Below code is for testing purposes. To be removed.
+		$kardiologiaGroup = Group::create(['name' => 'Kardiologia', 'course_id' => 1]);
+		$kardiologiaGroupNode = CourseStructureNode::create([
+			'course_id'         => 1,
+			'structurable_type' => 'App\\Models\\Group',
+			'structurable_id'   => $kardiologiaGroup->id,
+		]);
+
+		$internaGroupNode = CourseStructureNode::select()
+			->where('structurable_type', 'App\\Models\\Group')
+			->where('structurable_id', 1)
+			->first();
+
+		$internaGroupNode->prependNode($kardiologiaGroupNode);
+
+		$kardiologiaLessonNodes = CourseStructureNode::select()
+			->where('structurable_type', 'App\\Models\\Lesson')
+			->whereIn('structurable_id', [1, 2, 3, 76, 77])
+			->get();
+
+		foreach ($kardiologiaLessonNodes as $lessonNode) {
+			$lessonNode->appendToNode($kardiologiaGroupNode)->save();
 		}
 
 		print PHP_EOL;

@@ -145,20 +145,20 @@ const actions = {
 		}
 	},
 
-	async update({commit, state, getters}, taxonomyTerm) {
+	async update({commit, state, getters}, originalTerm) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		try {
-			const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
-			const {data: {included, ...updatedTaxonomyTerm}} = response;
+			const response = await axios.put(getApiUrl(`taxonomy_terms/${originalTerm.id}?include=tags`), originalTerm);
+			const {data: {included, ...updatedTerm}} = response;
 
-			const {parent_id: oldParentId} = getters.termById(taxonomyTerm.id);
-			const {parent_id: updatedParentId} = taxonomyTerm;
+			const {parent_id: oldParentId} = getters.termById(originalTerm.id);
+			const {parent_id: updatedParentId} = originalTerm;
 
 			if (oldParentId !== updatedParentId) {
-				taxonomyTerm.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
+				originalTerm.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
 			}
 
-			commit(types.UPDATE_TERM, includeTag({...taxonomyTerm, ...updatedTaxonomyTerm}, included.tags));
+			commit(types.UPDATE_TERM, includeTag({...originalTerm, ...updatedTerm}, included.tags));
 		} catch (error) {
 			throw error;
 		} finally {

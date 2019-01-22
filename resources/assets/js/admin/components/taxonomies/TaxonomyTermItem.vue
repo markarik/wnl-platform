@@ -30,10 +30,17 @@
 				>
 					<i title="Edytuj" class="fa fa-pencil"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action" @click="onTermMove(term, -1)">
+				<span
+					:class="['icon-small', 'taxonomy-term-item__action', {'taxonomy-term-item__action--disabled': !canBeMovedUp}]"
+					@click="canBeMovedUp && onTermMove(term, -1)"
+				>
 					<i title="Do góry" class="fa fa-arrow-up"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action" @click="onTermMove(term, 1)">
+				<span
+					class="icon-small taxonomy-term-item__action"
+					:class="['icon-small', 'taxonomy-term-item__action', {'taxonomy-term-item__action--disabled': !canBeMovedDown}]"
+					@click="canBeMovedDown && onTermMove(term, 1)"
+				>
 					<i title="Na dół" class="fa fa-arrow-down"></i>
 				</span>
 			</div>
@@ -67,6 +74,9 @@
 			cursor: pointer
 			margin: 0 $margin-tiny
 			padding: $margin-small-minus
+			&--disabled
+				color: $color-inactive-gray
+				cursor: not-allowed
 
 		.is-selected
 			background: $color-ocean-blue-less-opacity
@@ -97,6 +107,12 @@ export default {
 	computed: {
 		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms', 'isSaving']),
 		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
+		canBeMovedUp() {
+			return this.term.orderNumber > 0;
+		},
+		canBeMovedDown() {
+			return this.term.orderNumber < this.getChildrenByParentId(this.term.parent_id).length - 1;
+		},
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},

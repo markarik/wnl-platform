@@ -47,9 +47,6 @@ module.exports = {
 		'vue/return-in-computed-property': [
 			'off'
 		],
-		'vue/no-parsing-error': [
-			'off'
-		],
 		'vue/valid-v-for': [
 			'off'
 		],

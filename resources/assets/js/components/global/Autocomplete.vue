@@ -1,21 +1,26 @@
 <template>
-	<ul
+	<div
 		class="autocomplete-box"
 		v-bind:class="{'is-down': isDown}"
-		v-show="hasItems"
-		tabindex="-1"
-		@keydown="onKeyDown"
+		v-show="hasItems || $slots.footer"
 	>
-		<li
-			class="autocomplete-box__item"
-			v-for="item in items"
-			@click="onItemChosen(item)"
-			v-bind:class="{ active: item.active }"
-			v-bind:key="item.id"
+		<ul
+			class="autocomplete-box__list"
+			tabindex="-1"
+			@keydown="onKeyDown"
 		>
-			<slot v-bind:item="item"></slot>
-		</li>
-	</ul>
+			<li
+				class="autocomplete-box__item"
+				v-for="item in items"
+				@click="onItemChosen(item)"
+				v-bind:class="{ active: item.active }"
+				v-bind:key="item.id"
+			>
+				<slot v-bind:item="item"></slot>
+			</li>
+		</ul>
+		<slot name="footer"></slot>
+	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -24,8 +29,8 @@
 	.autocomplete-box
 		background: $autocomplete-box-background
 		border: $autocomplete-box-border
-		box-shadow: $autocomplete-box-shadow
 		bottom: 44px
+		box-shadow: $autocomplete-box-shadow
 		color: $autocomplete-text-color
 		left: 0
 		max-width: 300px
@@ -38,10 +43,14 @@
 
 		&.is-down
 			bottom: auto
-			top: 0
+			top: 100%
 
 		&:focus
 			outline: none
+
+		&__list
+			max-height: 50vh
+			overflow-y: auto
 
 		&__item
 			align-items: center

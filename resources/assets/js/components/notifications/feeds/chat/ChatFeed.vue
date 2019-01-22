@@ -11,7 +11,7 @@
 			</div>
 			<div slot="content">
 				<div class="feed-header">
-					<span class="feed-heading"v-t="'notifications.chat.heading'"/>
+					<span class="feed-heading" v-t="'notifications.chat.heading'"/>
 					<wnl-notifications-toggle :setting="setting" :icons="icons"/>
 				</div>
 

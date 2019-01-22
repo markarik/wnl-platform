@@ -24,13 +24,13 @@
 				@userEvent="proxyUserEvent"
 			></wnl-quiz-question>
 		</div>
-		<p class="has-text-centered" v-if="!plainList && !displayResults">
+		<p v-if="!plainList && !displayResults" class="has-text-centered">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
 				Sprawdź wyniki
 			</a>
-			<p v-if="canEndQuiz && !displayResults" class="has-text-centered margin vertical">
-				<a class="link" @click="$emit('checkQuiz', true)">Przerwij test i sprawdź wyniki</a>
-			</p>
+		</p>
+		<p v-if="!plainList && canEndQuiz && !displayResults" class="has-text-centered margin vertical">
+			<a class="link" @click="$emit('checkQuiz', true)">Przerwij test i sprawdź wyniki</a>
 		</p>
 	</div>
 </template>

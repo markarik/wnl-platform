@@ -29,16 +29,7 @@
 				class="margin top bottom"
 			>Opis</wnl-textarea>
 		</wnl-form>
-		<h3 class="title is-3">Pojęcia</h3>
-		<ul class="content">
-			<wnl-taxonomy-term-item
-				v-for="term in rootTerms"
-				:term="term"
-				:included="included"
-				:terms="terms"
-				:key="term.id"
-			/>
-		</ul>
+		<wnl-taxonomy-terms-editor :taxonomyId="id" v-if="isEdit" />
 	</div>
 </template>
 
@@ -66,25 +57,17 @@
 </style>
 
 <script>
-import {mapActions} from 'vuex';
-
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
-import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
+import WnlTaxonomyTermsEditor from 'js/admin/components/taxonomies/TaxonomyTermsEditor';
 import {getApiUrl} from 'js/utils/env';
 import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
 	props: {
 		id: {
-			type: String|Number,
+			type: [String, Number],
 			required: true,
 		},
-	},
-	data() {
-		return {
-			terms: [],
-			included: {},
-		};
 	},
 	computed: {
 		isEdit() {
@@ -96,19 +79,15 @@ export default {
 		resourceRoute() {
 			return this.isEdit ? `taxonomies/${this.id}` : 'taxonomies';
 		},
-		rootTerms() {
-			return this.terms.filter(term => term.parent_id === null);
-		}
 	},
 	components: {
 		WnlFormText,
 		WnlForm,
 		WnlSubmit,
 		WnlTextarea,
-		WnlTaxonomyTermItem
+		WnlTaxonomyTermsEditor,
 	},
 	methods: {
-		...mapActions(['addAutoDismissableAlert']),
 		onSubmitSuccess(data) {
 			if (!this.isEdit) {
 				this.$router.push({ name: 'taxonomy-edit', params: { id: data.id } });
@@ -142,26 +121,7 @@ export default {
 					type: ALERT_TYPES.ERROR
 				});
 			}
-
-
-
 		},
-	},
-	async mounted() {
-		if (this.id) {
-			try {
-				const response = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${this.id}?include=tags,taxonomies`));
-				const {data: {included, ...terms}} = response;
-				this.terms = Object.values(terms);
-				this.included = included;
-			} catch (error) {
-				this.addAutoDismissableAlert({
-					text: 'Coś poszło nie tak przy pobieraniu struktury Taksonomii',
-					type: ALERT_TYPES.ERROR
-				});
-			}
-
-		}
 	},
 };
 </script>

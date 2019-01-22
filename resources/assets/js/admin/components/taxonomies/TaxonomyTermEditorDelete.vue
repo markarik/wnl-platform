@@ -4,10 +4,10 @@
 		class="center"
 	>
 		<p class="margin bottom">
-			Czy na pewno chcesz usunąć pojęcie <em><strong>{{term.tag.name}}</strong></em> i wszystkich potomków?
+			Czy na pewno chcesz usunąć pojęcie <em><strong>{{term.tag.name}}</strong></em> wraz z potomkami?
 		</p>
 		<button
-			class="button is-primary is-danger"
+			class="button is-danger"
 			:disabled="isSaving"
 			@click="onDelete"
 		>Usuń pojęcie</button>

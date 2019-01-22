@@ -65,7 +65,7 @@ const mutations = {
 		set(state.terms, state.terms.findIndex(term => term.id === payload.id), payload);
 	},
 	[types.DELETE_TERM] (state, payload) {
-		const index = state.terms.findIndex((term) => term.id === payload.id);
+		const index = state.terms.findIndex(term => term.id === payload.id);
 		state.terms.splice(index, 1);
 	},
 	[types.SELECT_TAXONOMY_TERMS] (state, payload) {

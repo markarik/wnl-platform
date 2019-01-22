@@ -57,6 +57,7 @@
 </style>
 
 <script>
+import {mapActions} from 'vuex';
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
 import WnlTaxonomyTermsEditor from 'js/admin/components/taxonomies/TaxonomyTermsEditor';
 import {getApiUrl} from 'js/utils/env';
@@ -88,6 +89,7 @@ export default {
 		WnlTaxonomyTermsEditor,
 	},
 	methods: {
+		...mapActions(['addAutoDismissableAlert']),
 		onSubmitSuccess(data) {
 			if (!this.isEdit) {
 				this.$router.push({ name: 'taxonomy-edit', params: { id: data.id } });

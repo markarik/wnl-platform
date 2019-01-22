@@ -169,25 +169,43 @@ const actions = {
 	reorderSiblings({getters, commit}, {term, direction}) {
 		const allSiblings = getters.getChildrenByParentId(term.parent_id);
 		const oldIndex = allSiblings.findIndex(sibling => sibling.id === term.id);
-		const newIndex = Math.min(Math.max(oldIndex + direction, 0), allSiblings.length - 1);
+		const newIndex = oldIndex + direction;
+
+		if (newIndex < 0 || newIndex > allSiblings.length - 1) {
+			throw new Error('out of range');
+		}
 
 		allSiblings.splice(oldIndex, 1);
 		allSiblings.splice(newIndex, 0, term);
 
 		commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {list: allSiblings});
-
-		return allSiblings;
 	},
 
-	async moveTerm({dispatch}, {term, direction}) {
-		if (direction === 0) return;
+	async moveTerm({dispatch, commit}, {term, direction}) {
+		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 
-		dispatch('reorderSiblings', {term, direction});
+		if (direction === 0) {
+			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+			return;
+		}
 
-		await axios.put(getApiUrl('taxonomy_terms/move'), {
-			term_id: term.id,
-			direction
-		});
+		try {
+			dispatch('reorderSiblings', {term, direction});
+		} catch (e) {
+			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+			return;
+		}
+
+		try {
+			await axios.put(getApiUrl('taxonomy_terms/move'), {
+				term_id: term.id,
+				direction
+			});
+		} catch (e) {
+			throw e;
+		} finally {
+			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+		}
 	},
 
 	setEditorMode({commit}, editorMode) {

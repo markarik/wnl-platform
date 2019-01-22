@@ -4,15 +4,25 @@
 			<wnl-taxonomy-term-item
 				v-for="term in terms"
 				:term="term"
+				:loading="isSaving"
 				:key="term.id"
+				:class="[isSaving && 'taxonomy-term-item--disabled']"
 				@moveTerm="onChildTermArrowMove"
 			/>
 		</vue-draggable>
 	</ul>
 </template>
 
+<style lang="sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.taxonomy-term-item--disabled
+		pointer-events: none
+		color: $color-gray-dimmed
+</style>
+
 <script>
-import {mapActions} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 
 import VueDraggable from 'vuedraggable';
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
@@ -27,6 +37,9 @@ export default {
 			type: Array,
 			required: true
 		}
+	},
+	computed: {
+		...mapState('taxonomyTerms', ['isSaving'])
 	},
 	methods: {
 		...mapActions('taxonomyTerms', ['moveTerm', 'reorderSiblings']),

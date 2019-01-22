@@ -4,7 +4,7 @@
 			<span
 				class="icon-small taxonomy-term-item__action"
 			>
-				<i title="drag" class="fa fa-bars"></i>
+				<i title="drag" :class="['fa', loading ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
 			</span>
 			<div class="media-content v-central">
 				<input class="checkbox margin right" type="checkbox" :checked="isSelected" />
@@ -89,6 +89,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		loading: {
+			type: Boolean,
+			default: false
+		}
 	},
 	computed: {
 		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms']),

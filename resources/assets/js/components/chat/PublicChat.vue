@@ -5,7 +5,7 @@
 		</div>
 		<div class="tabs">
 			<ul>
-				<li  v-for="room, key in rooms" :key="key" :class="{'is-active': isActive(room)}">
+				<li v-for="(room, key) in rooms" :key="key" :class="{'is-active': isActive(room)}">
 					<a @click="changeRoom(room)">{{ room.name }}</a>
 				</li>
 			</ul>

@@ -1,10 +1,10 @@
 <template>
-	<li class="taxonomy-term-item" :id="`term-${term.id}`">
+	<li :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']" :id="`term-${term.id}`">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<span
 				class="icon-small taxonomy-term-item__action"
 			>
-				<i title="drag" class="fa fa-bars"></i>
+				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
 			</span>
 			<div class="media-content v-central">
 				<input class="checkbox margin right" type="checkbox" :checked="isSelected" />
@@ -52,6 +52,10 @@
 	@import 'resources/assets/sass/variables'
 
 	.taxonomy-term-item
+		&--disabled
+			pointer-events: none
+			color: $color-gray-dimmed
+
 		&__content
 			cursor: move
 			align-items: center
@@ -91,7 +95,7 @@ export default {
 		},
 	},
 	computed: {
-		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms']),
+		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms', 'isSaving']),
 		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';

@@ -13,6 +13,7 @@ use App\Models\QnaQuestion;
 use App\Models\QuizQuestion;
 use App\Models\Screen;
 use App\Models\Task;
+use App\Models\Taxonomy;
 use App\Models\TaxonomyTerm;
 use App\Models\User;
 use App\Models\UserAddress;
@@ -31,6 +32,7 @@ use App\Policies\OrderPolicy;
 use App\Policies\Qna\QnaAnswerPolicy;
 use App\Policies\Qna\QnaQuestionPolicy;
 use App\Policies\Task\TaskPolicy;
+use App\Policies\TaxonomyPolicy;
 use App\Policies\TaxonomyTermPolicy;
 use App\Policies\User\UserAddressPolicy;
 use App\Policies\User\UserCourseProgressPolicy;
@@ -65,6 +67,7 @@ class AuthServiceProvider extends ServiceProvider
 		Order::class              => OrderPolicy::class,
 		Invoice::class            => InvoicePolicy::class,
 		Annotation::class         => AnnotationPolicy::class,
+		Taxonomy::class           => TaxonomyPolicy::class,
 		TaxonomyTerm::class       => TaxonomyTermPolicy::class,
 	];
 

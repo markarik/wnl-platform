@@ -31,9 +31,13 @@ export default {
 	methods: {
 		...mapActions('taxonomyTerms', ['moveTerm', 'reorderSiblings']),
 		...mapActions(['addAutoDismissableAlert']),
-		async submitMove(args) {
+		async submitMove({direction, ...args}) {
+			if (direction === 0) {
+				return;
+			}
+
 			try {
-				await this.moveTerm({...args});
+				await this.moveTerm({direction, ...args});
 				this.addAutoDismissableAlert({
 					type: 'success',
 					text: 'Zapisano!'

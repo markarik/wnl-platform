@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Jobs\ArchiveCourseProgress;
 use App\Models\Comment;
 use App\Models\Lesson;
 use App\Models\QnaAnswer;
@@ -8,10 +9,9 @@ use App\Models\QnaQuestion;
 use App\Models\QuizQuestion;
 use App\Models\User;
 use App\Models\UserCourseProgress;
+use App\Models\UserQuestionsBankState;
 use App\Models\UserQuizResults;
 use App\Models\UserTime;
-use App\Jobs\ArchiveCourseProgress;
-use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
@@ -105,25 +105,32 @@ class UserStateApiController extends ApiController
 		]);
 	}
 
-	public function saveQuizPosition(Request $request, $user)
+	public function saveQuizPosition(Request $request)
 	{
-		$cacheKey = $this->hashedFilters($request->filters);
-		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
-		Cache::tags($cacheTags)->put($cacheKey, $request->position, 60 * 24);
+		$key = $this->hashedFilters($request->filters);
+		$value = $request->position;
+		$state = UserQuestionsBankState::firstOrNew(
+			['user_id' => $request->id]
+		);
+		$state->key = $key;
+		$state->value = json_encode($value);
+		$state->save();
 
 		return $this->json([
-			'position' => $request->position,
+			'position' => $value
 		]);
 	}
 
-	public function getQuizPosition(Request $request, $user)
+	public function getQuizPosition(Request $request)
 	{
-		$cacheKey = $this->hashedFilters($request->filters);
-		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
-		$cachedPosition = Cache::tags($cacheTags)->get($cacheKey, $request->position);
+		$key = $this->hashedFilters($request->filters);
+		$userState = UserQuestionsBankState::select('value')
+			->where('user_id', $request->id)
+			->where('key', $key)
+			->first();
 
 		return $this->json([
-			'position' => $cachedPosition,
+			'position' => json_decode($userState->value)
 		]);
 	}
 

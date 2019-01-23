@@ -60,7 +60,7 @@ export default {
 				// 	label: 'Połącz'
 				// },
 				{
-					icon: 'fa-close',
+					icon: 'fa-trash',
 					key: TAXONOMY_EDITOR_MODES.DELETE,
 					label: 'Usuń',
 					componentName: WnlTaxonomyTermEditorDelete

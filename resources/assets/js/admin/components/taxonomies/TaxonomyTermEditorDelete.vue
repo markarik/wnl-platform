@@ -16,7 +16,7 @@
 		<span class="icon">
 			<i class="fa fa-info-circle"></i>
 		</span>
-		Najpierw wybierz pojęcia
+		Najpierw wybierz pojęcie
 	</div>
 </template>
 

@@ -54,11 +54,11 @@ export default {
 					label: 'Edytuj',
 					componentName: WnlTaxonomyTermEditorEdit
 				},
-				{
-					icon: 'fa-compress',
-					key: TAXONOMY_EDITOR_MODES.MERGE,
-					label: 'Połącz'
-				},
+				// {
+				// 	icon: 'fa-compress',
+				// 	key: TAXONOMY_EDITOR_MODES.MERGE,
+				// 	label: 'Połącz'
+				// },
 				{
 					icon: 'fa-close',
 					key: TAXONOMY_EDITOR_MODES.DELETE,

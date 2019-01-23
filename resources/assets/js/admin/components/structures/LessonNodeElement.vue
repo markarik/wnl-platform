@@ -1,6 +1,6 @@
 <template>
 	<div class="margin bottom">
-		<router-link :to="to">{{ name }}</router-link>
+		<router-link :to="to">{{ structurable.name }}</router-link>
 	</div>
 </template>
 
@@ -11,16 +11,18 @@
 <script>
 export default {
 	name: 'LessonNodeElement',
-	props: ['structurable'],
-	data(){
-		return {...this.structurable};
+	props: {
+		structurable: {
+			required: true,
+			type: Object,
+		}
 	},
 	computed: {
 		to() {
 			return {
 				name: 'lessons',
 				params: {
-					lessonId: this.id,
+					lessonId: this.structurable.id,
 				},
 			};
 		},

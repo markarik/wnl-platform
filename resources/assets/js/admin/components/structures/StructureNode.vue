@@ -4,8 +4,7 @@
 		<structure-node
 				v-for="childNode in childNodes"
 				:key="childNode.id"
-				:node="childNode"
-				class="child-node">
+				:node="childNode">
 		</structure-node>
 	</div>
 </template>
@@ -15,9 +14,7 @@
 	@import 'resources/assets/sass/mixins'
 
 	.structure-node
-
-		.child-node
-			margin-left: $margin-big
+		margin-left: $margin-big
 </style>
 
 <script>

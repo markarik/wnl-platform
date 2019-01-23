@@ -1,6 +1,6 @@
 <template>
 	<div class="margin bottom">
-		{{ name }}
+		{{ structurable.name }}
 	</div>
 </template>
 
@@ -11,11 +11,11 @@
 <script>
 export default {
 	name: 'GroupNodeElement',
-	props: ['structurable'],
-	data(){
-		return {...this.structurable};
-	},
-	computed: {
+	props: {
+		structurable :{
+			required: true,
+			type: Object,
+		}
 	},
 };
 </script>

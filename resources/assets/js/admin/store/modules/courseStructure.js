@@ -26,13 +26,9 @@ const mutations = {
 // Actions
 const actions = {
 	async fetchStructure({commit}, courseId) {
-		try {
-			const response = await axios.get(getApiUrl(`course_structure_nodes/${courseId}?include=lessons,groups`));
-			const {data: {included, ...nodes}} = response;
-			commit(types.SETUP_COURSE_STRUCTURE, Object.values(nodes).map(node => _parseIncludes(node, included)));
-		} catch (error) {
-			$wnl.logger.capture(error);
-		}
+		const response = await axios.get(getApiUrl(`course_structure_nodes/${courseId}?include=lessons,groups`));
+		const {data: {included, ...nodes}} = response;
+		commit(types.SETUP_COURSE_STRUCTURE, Object.values(nodes).map(node => _parseIncludes(node, included)));
 	},
 };
 

@@ -25,7 +25,7 @@ export default {
 	props: {
 		courseId: {
 			required: true,
-			type: Number,
+			type: String,
 		}
 	},
 	computed: {
@@ -40,10 +40,19 @@ export default {
 		StructureNode
 	},
 	methods: {
-		...mapActions('courseStructure', ['fetchStructure'])
+		...mapActions('courseStructure', ['fetchStructure']),
+		...mapActions(['addAutoDismissableAlert']),
 	},
-	mounted() {
-		this.fetchStructure(this.courseId);
+	async mounted() {
+		try {
+			await this.fetchStructure(this.courseId);
+		} catch (error) {
+			$wnl.logger.capture(error);
+			this.addAutoDismissableAlert({
+				text: 'Nie udało się pobrać struktury :(',
+				type: 'error',
+			});
+		}
 	}
 };
 </script>

@@ -110,8 +110,14 @@ class UserStateApiController extends ApiController
 		$key = $this->hashedFilters($request->filters);
 		$value = $request->position;
 		$state = UserQuestionsBankState::firstOrNew(
-			['user_id' => $request->id]
+			['user_id' => $request->route('id')]
 		);
+
+		if (!Auth::user()->can('view', $state)) {
+			return $this->respondForbidden();
+		}
+
+
 		$state->key = $key;
 		$state->value = json_encode($value);
 		$state->save();
@@ -124,13 +130,18 @@ class UserStateApiController extends ApiController
 	public function getQuizPosition(Request $request)
 	{
 		$key = $this->hashedFilters($request->filters);
-		$userState = UserQuestionsBankState::select('value')
-			->where('user_id', $request->id)
+
+		$state = UserQuestionsBankState::select(['value', 'user_id'])
+			->where('user_id', $request->route('id'))
 			->where('key', $key)
 			->first();
 
+		if (!Auth::user()->can('view', $state)) {
+			return $this->respondForbidden();
+		}
+
 		return $this->json([
-			'position' => json_decode($userState->value)
+			'position' => json_decode($state->value)
 		]);
 	}
 

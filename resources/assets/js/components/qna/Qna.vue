@@ -19,7 +19,7 @@
 							</p>
 						</div>
 						<div class="tags" v-if="contextTags">
-							<span v-for="tag, key in contextTags" class="tag is-light" v-text="tag.name"></span>
+							<span v-for="tag in contextTags" :key="tag.id" class="tag is-light" v-text="tag.name"></span>
 						</div>
 					</div>
 				</div>

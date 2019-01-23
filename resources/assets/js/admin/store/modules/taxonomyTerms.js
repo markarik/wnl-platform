@@ -34,6 +34,11 @@ const getters = {
 		}
 
 		return ancestors;
+	},
+	getChildrenByParentId: state => (parentId) => {
+		return state.terms
+			.filter(stateTerm => stateTerm.parent_id === parentId)
+			.sort((termA, termB) => termA.orderNumber - termB.orderNumber);
 	}
 };
 
@@ -67,6 +72,24 @@ const mutations = {
 	},
 	[types.SET_TAXONOMY_TERM_EDITOR_MODE] (state, payload) {
 		set(state, 'editorMode', payload);
+	},
+	// the order of items in passed list is important!
+	[types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS] (state, {list}) {
+		const updatedList = list
+			.map((item, index) => ({
+				...item,
+				orderNumber: index
+			}));
+
+		set(state, 'terms', state.terms.map(stateTerm => {
+			const updatedTerm = updatedList.find(({id}) => id === stateTerm.id);
+
+			if (updatedTerm) {
+				return updatedTerm;
+			}
+
+			return stateTerm;
+		}));
 	}
 };
 
@@ -83,8 +106,24 @@ const actions = {
 		try {
 			const response = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${taxonomyId}?include=tags`));
 			const {data: {included, ...termsObj}} = response;
+
 			const terms = Object.values(termsObj);
-			commit(types.SETUP_TERMS, terms.map(term => includeTag(term, included.tags)));
+			const orderNumbers = {};
+			const termsWithOrderNumbers = terms.map(term => {
+				if (typeof orderNumbers[term.parent_id] === 'undefined') {
+					orderNumbers[term.parent_id] = 0;
+				} else {
+					orderNumbers[term.parent_id] = orderNumbers[term.parent_id] + 1;
+				}
+				term.orderNumber = orderNumbers[term.parent_id];
+
+				return term;
+			});
+
+			commit(
+				types.SETUP_TERMS,
+				termsWithOrderNumbers.map(term => includeTag(term, included.tags))
+			);
 		} catch (error) {
 			throw error;
 		} finally {
@@ -92,12 +131,13 @@ const actions = {
 		}
 	},
 
-	async create({commit, state}, taxonomyTerm) {
+	async create({commit, state, getters}, taxonomyTerm) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		try {
 			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
 			commit(types.ADD_TERM, includeTag(term, included.tags));
+			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {list: getters.getChildrenByParentId(taxonomyTerm.parent_id)});
 		} catch (error) {
 			throw error;
 		} finally {
@@ -105,14 +145,53 @@ const actions = {
 		}
 	},
 
-	async update({commit, state}, taxonomyTerm) {
+	async update({commit, state, getters}, term) {
 		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
 		try {
-			const response = await axios.put(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}?include=tags`), taxonomyTerm);
-			const {data: {included, ...term}} = response;
-			commit(types.UPDATE_TERM, includeTag(term, included.tags), state.terms);
+			const response = await axios.put(getApiUrl(`taxonomy_terms/${term.id}?include=tags`), term);
+			const {data: {included, ...updatedTerm}} = response;
+
+			const {parent_id: originalParentId} = getters.termById(term.id);
+			const {parent_id: updatedParentId} = updatedTerm;
+
+			if (originalParentId !== updatedParentId) {
+				term.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
+			}
+
+			commit(types.UPDATE_TERM, includeTag({...term, ...updatedTerm}, included.tags));
 		} catch (error) {
 			throw error;
+		} finally {
+			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+		}
+	},
+
+	reorderSiblings({getters, commit}, {term, direction}) {
+		const allSiblings = getters.getChildrenByParentId(term.parent_id);
+		const oldIndex = allSiblings.findIndex(sibling => sibling.id === term.id);
+		const newIndex = oldIndex + direction;
+
+		if (newIndex < 0 || newIndex > allSiblings.length - 1) {
+			throw new Error('out of range');
+		}
+
+		allSiblings.splice(oldIndex, 1);
+		allSiblings.splice(newIndex, 0, term);
+
+		commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {list: allSiblings});
+	},
+
+	async moveTerm({dispatch, commit}, {term, direction}) {
+		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
+
+		try {
+			dispatch('reorderSiblings', {term, direction});
+			await axios.put(getApiUrl('taxonomy_terms/move'), {
+				term_id: term.id,
+				direction
+			});
+		} catch (e) {
+			throw e;
 		} finally {
 			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
 		}

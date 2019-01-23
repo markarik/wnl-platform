@@ -70,7 +70,7 @@ export default {
 			description: '',
 			id: null,
 			tag: null,
-			parent: null,
+			parent: null
 		};
 	},
 	components: {
@@ -92,7 +92,7 @@ export default {
 				parent_id: this.parent ? this.parent.id : null,
 				tag_id: this.tag.id,
 				description: this.description,
-				taxonomy_id: this.taxonomyId
+				taxonomy_id: this.taxonomyId,
 			});
 		},
 		onSelectParent(term) {
@@ -103,7 +103,6 @@ export default {
 				});
 				return;
 			}
-
 			this.parent = term;
 			this.$emit('parentChange', term);
 		},

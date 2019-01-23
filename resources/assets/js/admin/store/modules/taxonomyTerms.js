@@ -208,12 +208,6 @@ const actions = {
 
 		try {
 			dispatch('reorderSiblings', {term, direction});
-		} catch (e) {
-			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
-			return;
-		}
-
-		try {
 			await axios.put(getApiUrl('taxonomy_terms/move'), {
 				term_id: term.id,
 				direction

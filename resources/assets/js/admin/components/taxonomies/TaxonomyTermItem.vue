@@ -1,9 +1,7 @@
 <template>
 	<li :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']" :id="`term-${term.id}`">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
-			<span
-				class="icon-small taxonomy-term-item__action"
-			>
+			<span class="icon-small taxonomy-term-item__action taxonomy-term-item__action--drag">
 				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
 			</span>
 			<div class="media-content v-central">
@@ -30,10 +28,17 @@
 				>
 					<i title="Edytuj" class="fa fa-pencil"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action" @click="onTermMove(term, -1)">
+				<span
+					:class="['icon-small', 'taxonomy-term-item__action', {'taxonomy-term-item__action--disabled': !canBeMovedUp}]"
+					@click="canBeMovedUp && onTermMove(term, -1)"
+				>
 					<i title="Do góry" class="fa fa-arrow-up"></i>
 				</span>
-				<span class="icon-small taxonomy-term-item__action" @click="onTermMove(term, 1)">
+				<span
+					class="icon-small taxonomy-term-item__action"
+					:class="['icon-small', 'taxonomy-term-item__action', {'taxonomy-term-item__action--disabled': !canBeMovedDown}]"
+					@click="canBeMovedDown && onTermMove(term, 1)"
+				>
 					<i title="Na dół" class="fa fa-arrow-down"></i>
 				</span>
 			</div>
@@ -57,16 +62,24 @@
 			color: $color-gray-dimmed
 
 		&__content
-			cursor: move
 			align-items: center
 			border-bottom: 1px solid $color-inactive-gray
-			padding: $margin-small 0 $margin-small $margin-base
+			padding: $margin-small 0
+
 		&__list
 			margin-left: $margin-big
+
 		&__action
 			cursor: pointer
 			margin: 0 $margin-tiny
 			padding: $margin-small-minus
+
+			&--drag
+				cursor: move
+
+			&--disabled
+				color: $color-inactive-gray
+				cursor: not-allowed
 
 		.is-selected
 			background: $color-ocean-blue-less-opacity
@@ -97,6 +110,12 @@ export default {
 	computed: {
 		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms', 'isSaving']),
 		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
+		canBeMovedUp() {
+			return this.term.orderNumber > 0;
+		},
+		canBeMovedDown() {
+			return this.term.orderNumber < this.getChildrenByParentId(this.term.parent_id).length - 1;
+		},
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},

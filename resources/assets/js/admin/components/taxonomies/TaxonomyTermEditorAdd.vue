@@ -70,6 +70,8 @@ export default {
 				this.selectTerms([parent.id]);
 				this.expandTerm(parent.id);
 				this.scrollToTaxonomyTerm(parent);
+			} else {
+				this.selectTerms([]);
 			}
 		},
 

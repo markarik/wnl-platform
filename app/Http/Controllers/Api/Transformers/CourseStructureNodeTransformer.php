@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\Transformers;
 
 use App\Http\Controllers\Api\ApiTransformer;
 use App\Models\CourseStructureNode;
+use App\Models\Group;
 use App\Models\Lesson;
 use League\Fractal\Resource\Collection;
 
@@ -37,7 +38,7 @@ class CourseStructureNodeTransformer extends ApiTransformer
 
 	public function includeLessons(CourseStructureNode $node)
 	{
-		if ($node->structurable_type === 'App\\Models\\Lesson') {
+		if ($node->structurable_type === Lesson::class) {
 			$lesson = $node->structurable;
 
 			return $this->item($lesson, new LessonTransformer(['course_structure_nodes' => $node->id]), 'lessons');
@@ -46,7 +47,7 @@ class CourseStructureNodeTransformer extends ApiTransformer
 
 	public function includeGroups(CourseStructureNode $node)
 	{
-		if ($node->structurable_type === 'App\\Models\\Group') {
+		if ($node->structurable_type === Group::class) {
 			$group = $node->structurable;
 
 			return $this->item($group, new GroupTransformer(['course_structure_nodes' => $node->id]), 'groups');

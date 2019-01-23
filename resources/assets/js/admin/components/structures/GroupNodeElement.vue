@@ -9,13 +9,13 @@
 </style>
 
 <script>
-	export default {
-		name: 'GroupNodeElement',
-		props: ['structurable'],
-		data(){
-			return {...this.structurable}
-		},
-		computed: {
-		},
-	};
+export default {
+	name: 'GroupNodeElement',
+	props: ['structurable'],
+	data(){
+		return {...this.structurable};
+	},
+	computed: {
+	},
+};
 </script>

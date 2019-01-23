@@ -13,7 +13,7 @@ export default {
 	name: 'LessonNodeElement',
 	props: ['structurable'],
 	data(){
-		return {...this.structurable}
+		return {...this.structurable};
 	},
 	computed: {
 		to() {

@@ -26,33 +26,34 @@
 </style>
 
 <script>
-	import StructureNode from 'js/admin/components/structures/StructureNode';
-	import {mapActions, mapState} from 'vuex';
-	import {getApiUrl} from 'js/utils/env';
+import StructureNode from 'js/admin/components/structures/StructureNode';
+import {mapActions, mapState} from 'vuex';
+import {getApiUrl} from 'js/utils/env';
 
-	export default {
-		name: 'StructureEditor',
-		props: {
-			courseId: {
-				required: true,
-			}
-		},
-		computed: {
-			rootNodes() {
-				return this.nodes.filter(node => node.parent_id === null);
-			},
-			...mapState('structureNodes', {
-				nodes: 'nodes'
-			})
-		},
-		components: {
-			StructureNode
-		},
-		methods: {
-			...mapActions('structureNodes', ['fetchStructure'])
-		},
-		mounted() {
-			this.fetchStructure(this.courseId);
+export default {
+	name: 'StructureEditor',
+	props: {
+		courseId: {
+			required: true,
+			type: Number,
 		}
-	};
+	},
+	computed: {
+		rootNodes() {
+			return this.nodes.filter(node => node.parent_id === null);
+		},
+		...mapState('structureNodes', {
+			nodes: 'nodes'
+		})
+	},
+	components: {
+		StructureNode
+	},
+	methods: {
+		...mapActions('structureNodes', ['fetchStructure'])
+	},
+	mounted() {
+		this.fetchStructure(this.courseId);
+	}
+};
 </script>

@@ -25,7 +25,6 @@ class CourseStructureNodeTransformer extends ApiTransformer
 			'id'                => $node->id,
 			'structurable_type' => $node->structurable_type,
 			'structurable_id'   => $node->structurable_id,
-			'order_number'      => $node->order_number,
 			'parent_id'         => $node->parent_id
 		];
 

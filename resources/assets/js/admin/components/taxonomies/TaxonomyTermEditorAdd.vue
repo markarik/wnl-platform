@@ -66,10 +66,9 @@ export default {
 			if (parent) {
 				this.selectTerms([parent.id]);
 				this.expandTerm(parent.id);
-
-				if (parent) {
-					this.scrollToTaxnomyTerm(parent);
-				}
+				this.scrollToTaxonomyTerm(parent);
+			} else {
+				this.selectTerms([]);
 			}
 		},
 

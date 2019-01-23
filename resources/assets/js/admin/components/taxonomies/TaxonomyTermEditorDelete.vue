@@ -10,7 +10,10 @@
 			class="button is-danger"
 			:disabled="isSaving"
 			@click="onDelete"
-		>Usuń pojęcie</button>
+		>
+			<span class="icon is-small"><i class="fa fa-trash" aria-hidden="true"></i></span>
+			<span>Usuń pojęcie</span>
+		</button>
 	</div>
 	<div v-else class="notification is-info">
 		<span class="icon">

@@ -5,7 +5,6 @@
 				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
 			</span>
 			<div class="media-content v-central">
-				<input class="checkbox margin right" type="checkbox" :checked="isSelected" />
 				<span>{{term.tag.name}}</span>
 			</div>
 			<div class="media-right central">
@@ -18,15 +17,21 @@
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
-					@click="add"
+					@click="onAdd"
 				>
 					<i title="Dodaj" class="fa fa-plus"></i>
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
-					@click="edit"
+					@click="onEdit"
 				>
 					<i title="Edytuj" class="fa fa-pencil"></i>
+				</span>
+				<span
+					class="icon-small taxonomy-term-item__action"
+					@click="onDelete"
+				>
+					<i title="Usuń" class="fa fa-trash"></i>
 				</span>
 				<span
 					:class="['icon-small', 'taxonomy-term-item__action', {'taxonomy-term-item__action--disabled': !canBeMovedUp}]"
@@ -136,11 +141,15 @@ export default {
 			'expandTerm': 'expand',
 			'selectTerms': 'select',
 		}),
-		add() {
+		onAdd() {
 			this.setEditorMode(TAXONOMY_EDITOR_MODES.ADD);
 			this.selectTerms([this.term.id]);
 		},
-		edit() {
+		onDelete() {
+			this.setEditorMode(TAXONOMY_EDITOR_MODES.DELETE);
+			this.selectTerms([this.term.id]);
+		},
+		onEdit() {
 			this.setEditorMode(TAXONOMY_EDITOR_MODES.EDIT);
 			this.selectTerms([this.term.id]);
 		},

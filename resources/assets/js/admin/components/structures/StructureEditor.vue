@@ -1,5 +1,5 @@
 <template>
-	<div class="structure-tree">
+	<div>
 		<div class="header">
 			<h2 class="title is-2">Edycja struktury kursu</h2>
 		</div>
@@ -12,16 +12,6 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
-
-
-	.structure-tree
-		bottom: $margin-big
-		display: flex
-		flex-direction: column
-		left: $margin-big
-		position: absolute
-		right: $margin-big
-		top: $margin-big
 
 </style>
 
@@ -42,7 +32,7 @@ export default {
 		rootNodes() {
 			return this.nodes.filter(node => node.parent_id === null);
 		},
-		...mapState('structureNodes', {
+		...mapState('courseStructure', {
 			nodes: 'nodes'
 		})
 	},
@@ -50,7 +40,7 @@ export default {
 		StructureNode
 	},
 	methods: {
-		...mapActions('structureNodes', ['fetchStructure'])
+		...mapActions('courseStructure', ['fetchStructure'])
 	},
 	mounted() {
 		this.fetchStructure(this.courseId);

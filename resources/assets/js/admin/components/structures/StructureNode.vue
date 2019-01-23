@@ -48,7 +48,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapState('structureNodes', {
+		...mapState('courseStructure', {
 			nodes: 'nodes'
 		}),
 		structurableComponent() {

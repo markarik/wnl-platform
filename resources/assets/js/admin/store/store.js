@@ -18,7 +18,7 @@ import form from 'js/store/modules/form';
 import flashcardsSets from 'js/admin/store/modules/flashcardsSets';
 import taxonomyTerms from 'js/admin/store/modules/taxonomyTerms';
 import tags from 'js/admin/store/modules/tags';
-import structureNodes from 'js/admin/store/modules/structureNodes';
+import courseStructure from 'js/admin/store/modules/courseStructure';
 
 Vue.use(Vuex);
 
@@ -41,7 +41,7 @@ export default new Vuex.Store({
 		form,
 		taxonomyTerms,
 		tags,
-		structureNodes,
+		courseStructure,
 	},
 	strict: debug
 });

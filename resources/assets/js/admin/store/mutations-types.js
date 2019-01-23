@@ -38,4 +38,4 @@ export const SETUP_TAGS = 'SETUP_TAGS';
 export const ADD_TAG = 'ADD_TAG';
 
 // Structure nodes
-export const SETUP_NODES = 'SETUP_NODES';
+export const SETUP_COURSE_STRUCTURE = 'SETUP_COURSE_STRUCTURE';

@@ -18,7 +18,7 @@ const getters = {};
 
 // Mutations
 const mutations = {
-	[types.SETUP_NODES](state, payload) {
+	[types.SETUP_COURSE_STRUCTURE](state, payload) {
 		set(state, 'nodes', payload);
 	},
 };
@@ -29,7 +29,7 @@ const actions = {
 		try {
 			const response = await axios.get(getApiUrl(`course_structure_nodes/${courseId}?include=lessons,groups`));
 			const {data: {included, ...nodes}} = response;
-			commit(types.SETUP_NODES, Object.values(nodes).map(node => _parseIncludes(node, included)));
+			commit(types.SETUP_COURSE_STRUCTURE, Object.values(nodes).map(node => _parseIncludes(node, included)));
 		} catch (error) {
 			$wnl.logger.capture(error);
 		}

@@ -16,7 +16,6 @@ class CreateCourseStructureNodesTable extends Migration
         Schema::create('course_structure_nodes', function (Blueprint $table) {
 	        $table->increments('id');
 	        $table->unsignedInteger('course_id');
-	        // TODO: discussion trigger - add here course_id ? Or maybe structure_id, as there may be many structures within a course?
 	        $table->morphs('structurable');
 	        $table->nestedSet();
 	        $table->timestamps();

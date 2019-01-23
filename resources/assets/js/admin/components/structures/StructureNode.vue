@@ -1,8 +1,6 @@
 <template>
-	<div>
-		<!--<div>{{ node.structurable_type }} {{ node.structurable_id }}</div>-->
-		<div v-if="node.structurable_type === 'App\\Models\\Group'">{{ node.group.name }}</div>
-		<div v-if="node.structurable_type === 'App\\Models\\Lesson'">{{ node.lesson.name }}</div>
+	<div class="structure-node">
+		<component :is="structurableComponent" :structurable="node.structurable"></component>
 		<structure-node
 				v-for="childNode in childNodes"
 				:key="childNode.id"
@@ -16,12 +14,16 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
-	.child-node
-		margin-left: $margin-big
+	.structure-node
+
+		.child-node
+			margin-left: $margin-big
 </style>
 
 <script>
 	import StructureNode from 'js/admin/components/structures/StructureNode';
+	import GroupNodeElement from 'js/admin/components/structures/GroupNodeElement';
+	import LessonNodeElement from 'js/admin/components/structures/LessonNodeElement';
 	import {mapState} from 'vuex';
 
 	export default {
@@ -34,11 +36,24 @@
 		},
 		components: {
 			StructureNode,
+			GroupNodeElement,
+			LessonNodeElement,
+		},
+		data() {
+			return {
+				typeComponentMap: {
+					"App\\Models\\Group": 'GroupNodeElement',
+					"App\\Models\\Lesson": 'LessonNodeElement',
+				}
+			}
 		},
 		computed: {
 			...mapState('structureNodes', {
 				nodes: 'nodes'
 			}),
+			structurableComponent() {
+				return this.typeComponentMap[this.node.structurable_type];
+			},
 			childNodes() {
 				return this.nodes.filter(node => node.parent_id === this.node.id);
 			}

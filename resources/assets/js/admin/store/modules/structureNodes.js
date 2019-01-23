@@ -38,10 +38,10 @@ const actions = {
 
 const _parseIncludes = (node, included) => {
 	if (node.hasOwnProperty('groups')) {
-		node.group = included.groups[node.groups[0]];
+		node.structurable = included.groups[node.groups[0]];
 	}
 	if (node.hasOwnProperty('lessons')) {
-		node.lesson = included.lessons[node.lessons[0]];
+		node.structurable = included.lessons[node.lessons[0]];
 	}
 	return node;
 };

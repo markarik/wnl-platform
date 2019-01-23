@@ -1,11 +1,10 @@
 <template>
-	<div>
+	<div class="structure-tree">
 		<div class="header">
 			<h2 class="title is-2">Edycja struktury kursu</h2>
 		</div>
 
 		<structure-node v-for="(node, index) in rootNodes" :key="index" :node="node"></structure-node>
-
 
 	</div>
 </template>
@@ -14,6 +13,15 @@
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
+
+	.structure-tree
+		bottom: $margin-big
+		display: flex
+		flex-direction: column
+		left: $margin-big
+		position: absolute
+		right: $margin-big
+		top: $margin-big
 
 </style>
 

@@ -13,7 +13,7 @@ return [
 	|
 	*/
 
-	'default' => env('LOG_CHANNEL', 'daily'),
+	'default' => env('LOG_CHANNEL', 'single'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -31,11 +31,10 @@ return [
 	*/
 
 	'channels' => [
-		'daily' => [
-			'driver' => 'daily',
+		'single' => [
+			'driver' => 'single',
 			'path' => storage_path('logs/laravel.log'),
 			'level' => env('APP_LOG_LEVEL', 'debug'),
-			'days' => 14,
 		],
 	],
 

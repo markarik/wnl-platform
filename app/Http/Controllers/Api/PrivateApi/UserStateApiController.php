@@ -108,20 +108,27 @@ class UserStateApiController extends ApiController
 	public function saveQuizPosition(Request $request)
 	{
 		$key = $this->hashedFilters($request->filters);
+		$userId = $request->route('id');
+		$user = User::find($userId);
+
+		if (empty($user)) {
+			return $this->respondNotFound('user does not exist');
+		}
+
 		$value = $request->position;
 		$state = UserQuestionsBankState::firstOrNew(
 			['user_id' => $request->route('id')]
 		);
 
-		if (!Auth::user()->can('update', $state)) {
+		if (!$user->can('update', $state)) {
 			return $this->respondForbidden();
 		}
 
 		$state->key = $key;
-		$state->value = json_encode($value);
+		$state->value = $value;
 		$state->save();
 
-		return $this->json([
+		return $this->respondOk([
 			'position' => $value
 		]);
 	}
@@ -129,18 +136,20 @@ class UserStateApiController extends ApiController
 	public function getQuizPosition(Request $request)
 	{
 		$key = $this->hashedFilters($request->filters);
+		$userId = $request->route('id');
+		$user = User::find($userId);
 
 		$state = UserQuestionsBankState::select(['value', 'user_id'])
-			->where('user_id', $request->route('id'))
+			->where('user_id', $userId)
 			->where('key', $key)
 			->first();
 
-		if (!empty($state) && !Auth::user()->can('view', $state)) {
+		if (!empty($state) && !$user->can('view', $state)) {
 			return $this->respondForbidden();
 		}
 
-		return $this->json([
-			'position' => json_decode($state->value ?? '')
+		return $this->respondOk([
+			'position' => $state->value ?? null
 		]);
 	}
 

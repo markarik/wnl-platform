@@ -15,6 +15,7 @@ class UserQuestionsBankState extends Model
 
 	protected $casts = [
 		'user_id' => 'int',
+		'value' => 'array'
 	];
 
 	public function user()

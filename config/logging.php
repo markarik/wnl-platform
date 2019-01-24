@@ -13,7 +13,7 @@ return [
 	|
 	*/
 
-	'default' => env('LOG_CHANNEL', 'daily'),
+	'default' => env('LOG_CHANNEL', 'single'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -31,11 +31,14 @@ return [
 	*/
 
 	'channels' => [
-		'daily' => [
-			'driver' => 'daily',
+		'single' => [
+			// Don't use daily driver until we figure out the permissions
+			// Currently we run the container using root (because of New Relic) and to avoid permissions error we do:
+			// `RUN touch storage/logs/laravel.log` in Dockerfile.php
+			// daily driver uses date in filenames so this workaround doesn't work
+			'driver' => 'single',
 			'path' => storage_path('logs/laravel.log'),
 			'level' => env('APP_LOG_LEVEL', 'debug'),
-			'days' => 14,
 		],
 	],
 

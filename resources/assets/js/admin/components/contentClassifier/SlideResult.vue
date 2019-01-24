@@ -1,14 +1,16 @@
 <template>
-	<wnl-slide-search-result
-		:hit="{_source: item}"
-	/>
+	<wnl-slide-thumb
+		:slide="item"
+	>
+		{{item.id}}
+	</wnl-slide-thumb>
 </template>
 
 <style lang="sass">
 </style>
 
 <script>
-import WnlSlideSearchResult from 'js/components/global/search/SlideSearchResult';
+import WnlSlideThumb from 'js/components/course/SlideThumb';
 
 export default {
 	props: {
@@ -18,7 +20,7 @@ export default {
 		},
 	},
 	components: {
-		WnlSlideSearchResult,
+		WnlSlideThumb,
 	}
 };
 </script>

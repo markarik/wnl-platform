@@ -1,27 +1,31 @@
 <template>
-	<div class="single-question">
-		<div class="question-container" v-if="isLoaded">
-			<div class="question-header" :class="{'is-mobile': isMobile}">
-				<span class="question-title">{{title}}</span>
-				<a class="question-back" @click="goBack">
-					<span class="icon is-small">
-						<i class="fa fa-angle-left"></i>
-					</span>
-					{{$t('quiz.single.back')}}
-				</a>
+
+	<div class="wnl-app-layout">
+		<wnl-questions-navigation />
+		<div class="single-question wnl-middle wnl-app-layout-main">
+			<div v-if="isLoaded">
+				<div class="question-header" :class="{'is-mobile': isMobile}">
+					<span class="question-title">{{title}}</span>
+					<a class="question-back" @click="goBack">
+						<span class="icon is-small">
+							<i class="fa fa-angle-left"></i>
+						</span>
+						{{$t('quiz.single.back')}}
+					</a>
+				</div>
+				<div v-if="hasError" class="notification">
+					{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
+				</div>
+				<wnl-quiz-widget v-else
+					:isSingle="true"
+					:questions="getQuestionsWithAnswers"
+					:getReaction="getReaction"
+					@selectAnswer="commitSelectAnswer"
+					@verify="resolveQuestion"
+				/>
 			</div>
-			<div v-if="hasError" class="notification">
-				{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
-			</div>
-			<wnl-quiz-widget v-else
-				:isSingle="true"
-				:questions="getQuestionsWithAnswers"
-				:getReaction="getReaction"
-				@selectAnswer="commitSelectAnswer"
-				@verify="resolveQuestion"
-			/>
+			<wnl-text-loader v-else/>
 		</div>
-		<wnl-text-loader v-else/>
 	</div>
 </template>
 
@@ -52,14 +56,7 @@
 				font-size: $font-size-minus-2
 
 	.single-question
-		display: flex
-		justify-content: center
-		padding: $margin-base 0
-		width: 100%
-
-	.question-container
-		max-width: 90vw
-		width: 600px
+		padding: $margin-base
 
 	.wnl-quiz-widget
 		margin-bottom: $margin-humongous
@@ -69,13 +66,15 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 
-import QuizWidget from 'js/components/quiz/QuizWidget';
+import WnlQuestionsNavigation from 'js/components/questions/QuestionsNavigation';
+import WnlQuizWidget from 'js/components/quiz/QuizWidget';
 import emits_events from 'js/mixins/emits-events';
 
 export default {
 	name: 'SingleQuestion',
 	components: {
-		'wnl-quiz-widget': QuizWidget,
+		WnlQuizWidget,
+		WnlQuestionsNavigation
 	},
 	mixins: [emits_events],
 	props: {

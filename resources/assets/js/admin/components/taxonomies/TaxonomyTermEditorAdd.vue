@@ -25,10 +25,13 @@ export default {
 		...mapGetters('taxonomyTerms', ['termById']),
 		...mapState('taxonomyTerms', ['selectedTerms']),
 		term() {
-			if (this.selectedTerms.length) {
-				return {parent: this.termById(this.selectedTerms[0])};
+			if (this.selectedTerms.length === 0) {
+				return null;
 			}
-			return {};
+
+			return {
+				parent: this.termById(this.selectedTerms[0])
+			};
 		}
 	},
 	components: {

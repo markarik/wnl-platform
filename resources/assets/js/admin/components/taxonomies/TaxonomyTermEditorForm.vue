@@ -46,6 +46,13 @@ import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEdit
 import WnlTagAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTagAutocomplete';
 import {ALERT_TYPES} from '../../../consts/alert';
 
+const initialState = {
+	description: '',
+	id: null,
+	tag: null,
+	parent: null,
+};
+
 export default {
 	props: {
 		onSave: {
@@ -62,15 +69,12 @@ export default {
 		},
 		term: {
 			type: Object,
-			default: () => ({}),
+			default: null,
 		},
 	},
 	data() {
 		return {
-			description: '',
-			id: null,
-			tag: null,
-			parent: null
+			...initialState
 		};
 	},
 	components: {
@@ -109,7 +113,14 @@ export default {
 		onSelectTag(tag) {
 			this.tag = tag;
 		},
-		onTermUpdated({description, id, tag, parent}) {
+		onTermUpdated(term) {
+			if (term === null) {
+				term = {
+					...initialState
+				};
+			}
+
+			const {description, id, tag, parent} = term;
 			this.description = description;
 			this.id = id;
 			this.tag = tag;

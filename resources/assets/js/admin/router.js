@@ -25,6 +25,7 @@ import DashboardNewsEdit from 'js/admin/components/dashboardNews/DashboardNewsEd
 import OrdersList from 'js/admin/components/orders/OrdersList';
 import TagsList from 'js/admin/components/tags/TagsList';
 import TagEditor from 'js/admin/components/tags/TagEditor';
+import TagContent from 'js/admin/components/tagContent/TagContent';
 import TaxonomiesList from 'js/admin/components/taxonomies/TaxonomiesList';
 import TaxonomyEditor from 'js/admin/components/taxonomies/TaxonomyEditor';
 
@@ -162,6 +163,11 @@ let routes = [
 		path: '/admin/app/tags/:id',
 		component: TagEditor,
 		props: true,
+	},
+	{
+		name: 'tag-content',
+		path: '/admin/app/tag-content',
+		component: TagContent,
 	},
 	{
 		name: 'taxonomies',

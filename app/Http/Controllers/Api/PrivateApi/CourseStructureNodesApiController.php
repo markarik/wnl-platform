@@ -1,10 +1,8 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\CourseStructureNodeTransformer;
 use App\Models\CourseStructureNode;
 use Illuminate\Http\Request;
-use League\Fractal\Resource\Collection;
 
 class CourseStructureNodesApiController extends ApiController
 {

@@ -11,7 +11,6 @@
 
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
-	@import 'resources/assets/sass/mixins'
 
 	.structure-node
 		margin-left: $margin-big

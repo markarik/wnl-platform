@@ -8,32 +8,25 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-	@import 'resources/assets/sass/variables'
-	@import 'resources/assets/sass/mixins'
-
-</style>
-
 <script>
 import StructureNode from 'js/admin/components/structures/StructureNode';
 import {mapActions, mapState} from 'vuex';
 
 export default {
-	name: 'StructureEditor',
+	components: {
+		StructureNode
+	},
 	props: {
 		courseId: {
 			required: true,
-			type: Number|String,
+			type: [String, Number],
 		}
 	},
 	computed: {
+		...mapState('courseStructure', ['nodes']),
 		rootNodes() {
 			return this.nodes.filter(node => node.parent_id === null);
 		},
-		...mapState('courseStructure', ['nodes'])
-	},
-	components: {
-		StructureNode
 	},
 	methods: {
 		...mapActions('courseStructure', ['fetchStructure']),

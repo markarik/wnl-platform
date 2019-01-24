@@ -1,5 +1,5 @@
 <template>
-	<div class="orders-list">
+	<div class="content-classifier">
 		<h3 class="title is-3">Tagowanie treści</h3>
 		<form @submit.prevent="onSearch">
 			<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field">
@@ -9,11 +9,11 @@
 			<button class="button submit is-primary" type="submit">Szukaj</button>
 		</form>
 
-		<h4>Wyszukane</h4>
-		<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="content">
-			<h5 v-if="filtered[contentType].length" class="title is-5">{{meta.name}}</h5>
-			<ul>
-				<li v-for="item in filtered[contentType]">
+		<h4 class="title is-4 margin bottom">Wyszukane</h4>
+		<div v-for="(meta, contentType) in contentTypes" :key="contentType" v-if="filtered[contentType].length">
+			<h5 class="title is-5">{{meta.name}}</h5>
+			<ul class="content-classifier-result-list margin botton">
+				<li v-for="item in filtered[contentType]" class="content-classifier-result-item">
 					<span v-if="!meta.component">(id: {{item.id}}) {{item.name || item.title || item.content}}</span>
 					<component v-else :is="meta.component" :item="item"/>
 				</li>
@@ -24,6 +24,24 @@
 </template>
 
 <style lang="sass">
+	@import 'resources/assets/sass/variables'
+
+	.content-classifier
+		&-result-list
+			display: flex
+			flex-wrap: wrap
+
+		&-result-item
+			border: $border-light-gray
+			display: flex
+			font-size: $font-size-minus-1
+			line-height: $line-height-minus
+			margin: $margin-small
+			max-height: 200px
+			min-height: 90px
+			overflow: auto
+			padding: $margin-small
+			width: 160 + 4 * $margin-small
 </style>
 
 <script>

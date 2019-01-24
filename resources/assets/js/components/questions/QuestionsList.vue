@@ -116,7 +116,7 @@
 
 <script>
 import {isEmpty, get} from 'lodash';
-import {mapGetters, mapActions, mapMutations} from 'vuex';
+import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
 import {QUESTIONS_SET_TOKEN as setToken} from 'js/store/mutations-types';
 
 import QuestionsFilters from 'js/components/questions/QuestionsFilters';
@@ -199,6 +199,9 @@ export default {
 			'getSafePage',
 			'getAnswer'
 		]),
+		...mapState('questions', {
+			'currentQuestionState': 'currentQuestion'
+		}),
 		activeFiltersNames() {
 			return this.activeFiltersObjects.map(filter => {
 				if (!filter) return;
@@ -335,11 +338,11 @@ export default {
 				.then(() => {
 					if (!payload.refresh) return false;
 
-					this.resetCurrentQuestion();
 					this.setToken();
 					this.resetPages();
+					this.resetCurrentQuestion();
 					this.fetchDynamicFilters();
-					this.setQuestion(this.currentQuestion);
+					this.setQuestion(this.currentQuestionState);
 					return this.fetchMatchingQuestions();
 				})
 				.then(() => {

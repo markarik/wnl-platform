@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use Artisan;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -30,7 +31,10 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command('orders:statsExport')
 			->hourly()
-			->withoutOverlapping();
+			->withoutOverlapping()
+			->after(function () {
+				$this->notifyPrometheusPushGateway('orders_stats_export');
+			});
 
 		$schedule
 			->command("scout:import 'App\\Models\\Slide'")
@@ -39,43 +43,95 @@ class Kernel extends ConsoleKernel
 				Artisan::call('cache:clear', [
 					'--tags' => 'courses',
 				]);
+			})
+			->after(function () {
+				$this->notifyPrometheusPushGateway('scout_import_slides');
 			});
 
 		$schedule
 			->command('coursePlans:archive')
-			->dailyAt('01:20');
+			->dailyAt('01:20')
+			->after(function () {
+				$this->notifyPrometheusPushGateway('course_plans_archive');
+			});
 
 		$schedule
 			->command('time:store')
-			->dailyAt('01:30');
+			->dailyAt('01:30')
+			->after(function () {
+				$this->notifyPrometheusPushGateway('time_store');
+			});
 
 		$schedule
 			->command('progress:store')
 			->hourly()
-			->withoutOverlapping();
+			->withoutOverlapping()
+			->after(function () {
+				$this->notifyPrometheusPushGateway('progress_store');
+			});
 
 		$schedule
 			->command('quiz:slackDaysDecrement')
-			->dailyAt('02:30');
+			->dailyAt('02:30')
+			->after(function () {
+				$this->notifyPrometheusPushGateway('quiz_slack_days_decrement');
+			});
 
 		$schedule
 			->command('orders:handleUnpaid')
-			->twiceDaily(8, 20);
+			->twiceDaily(8, 20)
+			->after(function () {
+				$this->notifyPrometheusPushGateway('orders_handle_unpaid');
+			});
 
 		$schedule
 			->command('notifications:cleanup-old --force')
-			->dailyAt('02:45');
+			->dailyAt('02:45')
+			->after(function () {
+				$this->notifyPrometheusPushGateway('notifications_cleanup_old');
+			});
 
 		$schedule
 			->command('sb:cancel')
-			->weekly();
+			->weekly()
+			->after(function () {
+				$this->notifyPrometheusPushGateway('sb_cancel');
+			});
 
 		$schedule
 			->command('invoices:jpk-send')
-			->monthlyOn(1, '06:00');
+			->monthlyOn(1, '06:00')
+			->after(function () {
+				$this->notifyPrometheusPushGateway('invoices_jpk_send');
+			});
 
 		$schedule
 			->command('data-integrity:check')
-			->dailyAt('04:00');
+			->dailyAt('04:00')
+			->after(function () {
+				$this->notifyPrometheusPushGateway('data_integrity_check');
+			});
+	}
+
+	private function notifyPrometheusPushGateway($metricName)
+	{
+		$client = new \GuzzleHttp\Client();
+		try {
+			$timestamp = time();
+			$bodyLines = [
+				"# HELP laravel_schedule_${metricName}_last_success_timestamp_seconds Last success unixtime of Laravel schedule: ${metricName}",
+				"# TYPE laravel_schedule_${metricName}_last_success_timestamp_seconds gauge",
+				"laravel_schedule_${metricName}_last_success_timestamp_seconds ${timestamp}"
+			];
+			$body = implode("\n", $bodyLines) . "\n";
+			$client->request('POST', env('PUSHGATEWAY_URL') . '/metrics/job/laravel-schedule', [
+				'body' => $body
+			]);
+		} catch (GuzzleException $exception) {
+			\Log::error('Sending laravel schedule metric to Prometheus Pushgateway failed', [
+				'metricName' => $metricName,
+				'exceptionMessage' => $exception->getMessage()
+			]);
+		}
 	}
 }

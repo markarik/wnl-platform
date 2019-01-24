@@ -4,7 +4,7 @@
 		<form @submit.prevent="onSearch">
 			<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field">
 				<label class="label">{{meta.name}}</label>
-				<input class="input" placeholder="36,45,..." v-model="filters[contentType]"/>
+				<input class="input" placeholder="Wpisz id po przecinku: 36,45,..." v-model="filters[contentType]"/>
 			</div>
 			<button class="button submit is-primary" type="submit">Szukaj</button>
 		</form>

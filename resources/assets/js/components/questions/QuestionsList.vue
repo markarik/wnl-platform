@@ -553,7 +553,7 @@ export default {
 					});
 				})
 				.then(({position}) => {
-					position && this.changeCurrentQuestion(position);
+					!isEmpty(position) && this.changeCurrentQuestion(position);
 					this.switchOverlay(false);
 					this.$trackUserEvent({
 						subcontext: this.activeView,

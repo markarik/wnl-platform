@@ -14,7 +14,7 @@
 			<h5 v-if="filtered[contentType].length" class="title is-5">{{meta.name}}</h5>
 			<ul>
 				<li v-for="item in filtered[contentType]">
-					<span v-if="!meta.component">{{item.name || item.title}} (id: {{item.id}})</span>
+					<span v-if="!meta.component">(id: {{item.id}}) {{item.name || item.title || item.content}}</span>
 					<component v-else :is="meta.component" :item="item"/>
 				</li>
 			</ul>
@@ -34,26 +34,18 @@ import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 export default {
 	data() {
 		const contentTypes = {
-			lessons: {
-				resourceName: 'lessons/.filter',
-				name: 'Lekcje',
-			},
-			pages: {
-				resourceName: 'pages/.filter',
-				name: 'Strony',
-			},
 			annotations: {
 				resourceName: 'annotations/.filter',
 				name: 'Przypisy',
-			},
-			screens: {
-				resourceName: 'screens/.filter',
-				name: 'Ekrany',
 			},
 			quizQuestions: {
 				resourceName: 'quiz_questions/.filter',
 				name: 'Pytania z bazy pytań',
 				component: WnlHtmlResult,
+			},
+			flashcards: {
+				resourceName: 'flashcards/.filter',
+				name: 'Pytania otwarte',
 			},
 			slides: {
 				resourceName: 'slides/.filter',

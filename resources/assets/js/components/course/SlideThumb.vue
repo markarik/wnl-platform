@@ -103,7 +103,7 @@ export default {
 	},
 	computed: {
 		media() {
-			return this.slide.snippet.media !== null ? mediaMap[this.slide.snippet.media] : null
+			return this.slide.snippet.media !== null ? mediaMap[this.slide.snippet.media] : null;
 		}
 	},
 	methods: {

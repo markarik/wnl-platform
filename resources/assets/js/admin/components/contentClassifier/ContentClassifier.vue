@@ -2,19 +2,19 @@
 	<div class="orders-list">
 		<h3 class="title is-3">Tagowanie treści</h3>
 		<form @submit.prevent="onSearch">
-			<div v-for="(meta, taggableType) in taggableTypes" :key="taggableType" class="field">
+			<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field">
 				<label class="label">{{meta.name}}</label>
-				<input class="input" placeholder="36,45,..." v-model="filters[taggableType]"/>
+				<input class="input" placeholder="36,45,..." v-model="filters[contentType]"/>
 			</div>
 			<button class="button submit is-primary" type="submit">Szukaj</button>
 		</form>
 
 		<h4>Wyszukane</h4>
-		<div v-for="(meta, taggableType) in taggableTypes" :key="taggableType">
-			<h5 v-if="filtered[taggableType].length" class="title is-5">{{meta.name}}</h5>
+		<div v-for="(meta, contentType) in contentTypes" :key="contentType">
+			<h5 v-if="filtered[contentType].length" class="title is-5">{{meta.name}}</h5>
 			<ul>
 				<!-- TODO handle quiz questions HTML markup -->
-				<li v-for="item in filtered[taggableType]">{{item.name || item.title || item.text}} (id: {{item.id}})</li>
+				<li v-for="item in filtered[contentType]">{{item.name || item.title || item.text}} (id: {{item.id}})</li>
 			</ul>
 		</div>
 
@@ -29,7 +29,7 @@ import {getApiUrl} from 'js/utils/env';
 
 export default {
 	data() {
-		const taggableTypes = {
+		const contentTypes = {
 			lessons: {
 				resourceName: 'lessons/.filter',
 				name: 'Lekcje',
@@ -56,45 +56,45 @@ export default {
 			},
 		};
 
-		const filters = Object.keys(taggableTypes).reduce(
-			(collector, taggableType) => {
-				collector[taggableType] = '';
+		const filters = Object.keys(contentTypes).reduce(
+			(collector, contentType) => {
+				collector[contentType] = '';
 				return collector;
 			},
 			{}
 		);
 
-		const filtered = Object.keys(taggableTypes).reduce(
-			(collector, taggableType) => {
-				collector[taggableType] = [];
+		const filtered = Object.keys(contentTypes).reduce(
+			(collector, contentType) => {
+				collector[contentType] = [];
 				return collector;
 			},
 			{}
 		);
 
 		return {
-			taggableTypes,
+			contentTypes,
 			filters,
 			filtered,
 		};
 	},
 	methods: {
 		async onSearch() {
-			Object.entries(this.taggableTypes).forEach(
-				async ([taggableType, taggableMeta]) => {
-					if (this.filters[taggableType] === '') {
+			Object.entries(this.contentTypes).forEach(
+				async ([contentType, meta]) => {
+					if (this.filters[contentType] === '') {
 						return;
 					}
 
-					const {data: {data}} = await axios.post(getApiUrl(taggableMeta.resourceName), {
+					const {data: {data}} = await axios.post(getApiUrl(meta.resourceName), {
 						filters: [
 							{
-								by_ids: {ids: this.filters[taggableType].split(',')},
+								by_ids: {ids: this.filters[contentType].split(',')},
 							},
 						],
 					});
 
-					this.filtered[taggableType] = data;
+					this.filtered[contentType] = data;
 				}
 			);
 		}

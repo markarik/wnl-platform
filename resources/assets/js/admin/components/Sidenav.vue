@@ -23,7 +23,7 @@
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'tags' }">Edycja tagów</router-link></li>
 			<li><router-link :to="{ name: 'taxonomies' }">Edycja taksonomii</router-link></li>
-			<li><router-link :to="{ name: 'tag-content' }">Tagowanie treści</router-link></li>
+			<li><router-link :to="{ name: 'content-classifier' }">Klasyfikacja treści</router-link></li>
 		</ul>
 
 		<p class="menu-label">

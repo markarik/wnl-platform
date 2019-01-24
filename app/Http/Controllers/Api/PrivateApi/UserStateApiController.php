@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Jobs\ArchiveCourseProgress;
 use App\Models\Comment;
 use App\Models\Lesson;
 use App\Models\QnaAnswer;
@@ -8,10 +9,9 @@ use App\Models\QnaQuestion;
 use App\Models\QuizQuestion;
 use App\Models\User;
 use App\Models\UserCourseProgress;
+use App\Models\UserQuestionsBankState;
 use App\Models\UserQuizResults;
 use App\Models\UserTime;
-use App\Jobs\ArchiveCourseProgress;
-use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
@@ -105,25 +105,49 @@ class UserStateApiController extends ApiController
 		]);
 	}
 
-	public function saveQuizPosition(Request $request, $user)
+	public function saveQuizPosition(Request $request)
 	{
-		$cacheKey = $this->hashedFilters($request->filters);
-		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
-		Cache::tags($cacheTags)->put($cacheKey, $request->position, 60 * 24);
+		$key = $this->hashedFilters($request->filters);
+		$userId = $request->route('id');
+		$user = User::find($userId);
 
-		return $this->json([
-			'position' => $request->position,
+		if (empty($user)) {
+			return $this->respondNotFound('user does not exist');
+		}
+
+		$value = $request->position;
+		$state = UserQuestionsBankState::firstOrNew(
+			['user_id' => $userId]
+		);
+
+		if (!Auth::user()->can('update', $state)) {
+			return $this->respondForbidden();
+		}
+
+		$state->key = $key;
+		$state->value = $value;
+		$state->save();
+
+		return $this->respondOk([
+			'position' => $value
 		]);
 	}
 
-	public function getQuizPosition(Request $request, $user)
+	public function getQuizPosition(Request $request)
 	{
-		$cacheKey = $this->hashedFilters($request->filters);
-		$cacheTags = $this->getFiltersCacheTags(config('papi.resources.quiz-questions'), $user);
-		$cachedPosition = Cache::tags($cacheTags)->get($cacheKey, $request->position);
+		$key = $this->hashedFilters($request->filters);
+		$userId = $request->route('id');
 
-		return $this->json([
-			'position' => $cachedPosition,
+		$state = UserQuestionsBankState::firstOrNew(
+			['user_id' => $userId, 'key' => $key]
+		);
+
+		if (!Auth::user()->can('view', $state)) {
+			return $this->respondForbidden();
+		}
+
+		return $this->respondOk([
+			'position' => $state->value
 		]);
 	}
 

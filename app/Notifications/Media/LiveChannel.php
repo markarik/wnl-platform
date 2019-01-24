@@ -22,6 +22,12 @@ class LiveChannel
 			$notifiable, $notification, is_array($message) ? $message : $message->data
 		);
 
-		broadcast($event)->toOthers();
+		// We don't want to use broadcast()->toOthers because X-Socket-ID header is not always set
+		// Instead we  can relay on actors->id field which is added to all events
+		if ($notifiable->id === $notification->event->data['actors']['id']){
+			return;
+		}
+
+		broadcast($event);
 	}
 }

@@ -117,10 +117,10 @@ class UserStateApiController extends ApiController
 
 		$value = $request->position;
 		$state = UserQuestionsBankState::firstOrNew(
-			['user_id' => $request->route('id')]
+			['user_id' => $userId]
 		);
 
-		if (!$user->can('update', $state)) {
+		if (!Auth::user()->can('update', $state)) {
 			return $this->respondForbidden();
 		}
 
@@ -137,13 +137,12 @@ class UserStateApiController extends ApiController
 	{
 		$key = $this->hashedFilters($request->filters);
 		$userId = $request->route('id');
-		$user = User::find($userId);
 
 		$state = UserQuestionsBankState::firstOrNew(
 			['user_id' => $userId, 'key' => $key]
 		);
 
-		if (!$user->can('view', $state)) {
+		if (!Auth::user()->can('view', $state)) {
 			return $this->respondForbidden();
 		}
 

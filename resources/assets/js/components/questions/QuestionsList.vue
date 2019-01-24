@@ -339,6 +339,7 @@ export default {
 					this.setToken();
 					this.resetPages();
 					this.fetchDynamicFilters();
+					this.setQuestion(this.currentQuestion);
 					return this.fetchMatchingQuestions();
 				})
 				.then(() => {

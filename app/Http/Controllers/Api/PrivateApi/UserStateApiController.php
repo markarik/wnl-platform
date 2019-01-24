@@ -139,17 +139,16 @@ class UserStateApiController extends ApiController
 		$userId = $request->route('id');
 		$user = User::find($userId);
 
-		$state = UserQuestionsBankState::select(['value', 'user_id'])
-			->where('user_id', $userId)
-			->where('key', $key)
-			->first();
+		$state = UserQuestionsBankState::firstOrNew(
+			['user_id' => $userId, 'key' => $key]
+		);
 
-		if (!empty($state) && !$user->can('view', $state)) {
+		if (!$user->can('view', $state)) {
 			return $this->respondForbidden();
 		}
 
 		return $this->respondOk([
-			'position' => $state->value ?? null
+			'position' => $state->value
 		]);
 	}
 

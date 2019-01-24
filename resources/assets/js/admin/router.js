@@ -4,6 +4,7 @@ import Router from 'vue-router';
 import Lessons from 'js/admin/components/lessons/Lessons';
 import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor';
 import CourseEditor from 'js/admin/components/courses/CourseEditor';
+import StructureEditor from 'js/admin/components/structures/StructureEditor';
 import Groups from 'js/admin/components/groups/Groups';
 import GroupEditor from 'js/admin/components/groups/GroupEditor';
 import EditSlide from 'js/admin/components/slides/EditSlide';
@@ -43,6 +44,12 @@ let routes = [
 				component: ScreensEditor
 			},
 		]
+	},
+	{
+		name: 'structure-edit',
+		path: '/admin/app/course-structure/:courseId',
+		component: StructureEditor,
+		props: true,
 	},
 	{
 		name: 'course-edit',

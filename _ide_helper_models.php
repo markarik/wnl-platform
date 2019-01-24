@@ -94,6 +94,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $description
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TagsTaxonomy[] $tagsTaxonomy
+ * @property-read \Kalnoy\Nestedset\Collection|\App\Models\TaxonomyTerm[] $taxonomyTerms
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy query()
@@ -806,6 +807,39 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereZip($value)
  */
 	class User extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\CourseStructureNode
+ *
+ * @property int $id
+ * @property int $course_id
+ * @property string $structurable_type
+ * @property int $structurable_id
+ * @property int $_lft
+ * @property int $_rgt
+ * @property int|null $parent_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Kalnoy\Nestedset\Collection|\App\Models\CourseStructureNode[] $children
+ * @property-read \App\Models\CourseStructureNode|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $structurable
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode d()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereCourseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereLft($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereRgt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereStructurableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereStructurableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereUpdatedAt($value)
+ */
+	class CourseStructureNode extends \Eloquent {}
 }
 
 namespace App\Models{

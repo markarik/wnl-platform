@@ -10,11 +10,14 @@
 		</form>
 
 		<h4>Wyszukane</h4>
-		<div v-for="(meta, contentType) in contentTypes" :key="contentType">
+		<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="content">
 			<h5 v-if="filtered[contentType].length" class="title is-5">{{meta.name}}</h5>
 			<ul>
 				<!-- TODO handle quiz questions HTML markup -->
-				<li v-for="item in filtered[contentType]">{{item.name || item.title || item.text}} (id: {{item.id}})</li>
+				<li v-for="item in filtered[contentType]">
+					<span v-if="!meta.component">{{item.name || item.title || item.text}} (id: {{item.id}})</span>
+					<component v-else :is="meta.component" :item="item"/>
+				</li>
 			</ul>
 		</div>
 
@@ -26,6 +29,7 @@
 
 <script>
 import {getApiUrl} from 'js/utils/env';
+import WnlHtmlResult from 'js/admin/components/contentClassifier/HtmlResult';
 
 export default {
 	data() {
@@ -49,6 +53,7 @@ export default {
 			quizQuestions: {
 				resourceName: 'quiz_questions/.filter',
 				name: 'Pytania z bazy pytań',
+				component: WnlHtmlResult
 			},
 			slides: {
 				resourceName: 'slides/.filter',

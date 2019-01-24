@@ -113,7 +113,7 @@ class UserStateApiController extends ApiController
 			['user_id' => $request->route('id')]
 		);
 
-		if (!Auth::user()->can('view', $state)) {
+		if (!Auth::user()->can('update', $state)) {
 			return $this->respondForbidden();
 		}
 

@@ -12,7 +12,7 @@
 export default {
 	name: 'GroupNodeElement',
 	props: {
-		structurable :{
+		structurable: {
 			required: true,
 			type: Object,
 		}

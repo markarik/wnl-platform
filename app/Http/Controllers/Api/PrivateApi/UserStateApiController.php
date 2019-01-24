@@ -117,7 +117,6 @@ class UserStateApiController extends ApiController
 			return $this->respondForbidden();
 		}
 
-
 		$state->key = $key;
 		$state->value = json_encode($value);
 		$state->save();
@@ -136,12 +135,12 @@ class UserStateApiController extends ApiController
 			->where('key', $key)
 			->first();
 
-		if (!Auth::user()->can('view', $state)) {
+		if (!empty($state) && !Auth::user()->can('view', $state)) {
 			return $this->respondForbidden();
 		}
 
 		return $this->json([
-			'position' => json_decode($state->value)
+			'position' => json_decode($state->value ?? '')
 		]);
 	}
 

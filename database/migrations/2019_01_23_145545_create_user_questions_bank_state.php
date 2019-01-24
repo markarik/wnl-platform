@@ -13,11 +13,11 @@ class CreateUserQuestionsBankState extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('user_questions_bank_state', function (Blueprint $table) {
+		Schema::create('user_questions_bank_states', function (Blueprint $table) {
 			$table->increments('id');
 			$table->string('key');
 			$table->json('value');
-			$table->unsignedInteger('user_id');
+			$table->unsignedInteger('user_id')->index();
 			$table->timestamps();
 		});
 	}
@@ -29,6 +29,6 @@ class CreateUserQuestionsBankState extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('user_questions_bank_state');
+		Schema::dropIfExists('user_questions_bank_states');
 	}
 }

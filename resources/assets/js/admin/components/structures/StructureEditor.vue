@@ -4,8 +4,7 @@
 			<h2 class="title is-2">Edycja struktury kursu</h2>
 		</div>
 
-		<structure-node v-for="(node, index) in rootNodes" :key="index" :node="node"></structure-node>
-
+		<structure-node v-for="node in rootNodes" :key="node.id" :node="node"></structure-node>
 	</div>
 </template>
 
@@ -18,23 +17,20 @@
 <script>
 import StructureNode from 'js/admin/components/structures/StructureNode';
 import {mapActions, mapState} from 'vuex';
-import {getApiUrl} from 'js/utils/env';
 
 export default {
 	name: 'StructureEditor',
 	props: {
 		courseId: {
 			required: true,
-			type: String,
+			type: Number|String,
 		}
 	},
 	computed: {
 		rootNodes() {
 			return this.nodes.filter(node => node.parent_id === null);
 		},
-		...mapState('courseStructure', {
-			nodes: 'nodes'
-		})
+		...mapState('courseStructure', ['nodes'])
 	},
 	components: {
 		StructureNode

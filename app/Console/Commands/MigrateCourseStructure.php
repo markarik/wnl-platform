@@ -13,7 +13,7 @@ class MigrateCourseStructure extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'course:migrate-structure';
+	protected $signature = 'data-migration:create-nested-course-structure';
 
 	/**
 	 * The console command description.
@@ -39,7 +39,6 @@ class MigrateCourseStructure extends Command
 			]);
 			foreach ($group->lessons as $lesson) {
 				CourseStructureNode::create([
-					'type'              => 'lesson',
 					'course_id'         => 1,
 					'structurable_type' => 'App\\Models\\Lesson',
 					'structurable_id'   => $lesson->id,

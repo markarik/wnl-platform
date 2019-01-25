@@ -9,13 +9,12 @@
 			<button class="button submit is-primary" type="submit">Szukaj</button>
 		</form>
 
-		<h4 class="title is-4 margin bottom">Wyszukane</h4>
-		<div v-for="(meta, contentType) in contentTypes" :key="contentType" v-if="filtered[contentType].length">
-			<h5 class="title is-5">{{meta.name}}</h5>
-			<ul class="content-classifier-result-list margin botton">
-				<li v-for="item in filtered[contentType]" class="content-classifier-result-item">
-					<span v-if="!meta.component">(id: {{item.id}}) {{item.name || item.title || item.content}}</span>
-					<component v-else :is="meta.component" :item="item"/>
+		<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
+		<div v-for="(meta, contentType) in contentTypes" :key="contentType" v-if="filteredContent[contentType].length">
+			<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
+			<ul class="content-classifier-result-list margin bottom">
+				<li v-for="item in filteredContent[contentType]" class="content-classifier-result-item">
+					<component :is="meta.component" :item="item"/>
 				</li>
 			</ul>
 		</div>
@@ -48,6 +47,8 @@
 import {getApiUrl} from 'js/utils/env';
 import WnlHtmlResult from 'js/admin/components/contentClassifier/HtmlResult';
 import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
+import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
+import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
 
 export default {
 	data() {
@@ -55,6 +56,7 @@ export default {
 			annotations: {
 				resourceName: 'annotations/.filter',
 				name: 'Przypisy',
+				component: WnlAnnotationResult,
 			},
 			quizQuestions: {
 				resourceName: 'quiz_questions/.filter',
@@ -64,6 +66,7 @@ export default {
 			flashcards: {
 				resourceName: 'flashcards/.filter',
 				name: 'Pytania otwarte',
+				component: WnlFlashcardResult,
 			},
 			slides: {
 				resourceName: 'slides/.filter',
@@ -72,26 +75,21 @@ export default {
 			},
 		};
 
-		const filters = Object.keys(contentTypes).reduce(
+		const filtersSetup = Object.keys(contentTypes).reduce(
 			(collector, contentType) => {
-				collector[contentType] = '';
+				collector.filters[contentType] = '';
+				collector.filteredContent[contentType] = [];
 				return collector;
 			},
-			{}
-		);
-
-		const filtered = Object.keys(contentTypes).reduce(
-			(collector, contentType) => {
-				collector[contentType] = [];
-				return collector;
-			},
-			{}
+			{
+				filters: {},
+				filteredContent: {}
+			}
 		);
 
 		return {
 			contentTypes,
-			filters,
-			filtered,
+			...filtersSetup
 		};
 	},
 	methods: {
@@ -110,7 +108,7 @@ export default {
 						],
 					});
 
-					this.filtered[contentType] = data;
+					this.filteredContent[contentType] = data;
 				}
 			);
 		}

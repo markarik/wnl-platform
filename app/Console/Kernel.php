@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
 			->hourly()
 			->withoutOverlapping()
 			->after(function () {
-				$this->notifyPrometheusPushGateway('orders_stats_export');
+				$this->notifyPrometheusPushgateway('orders_stats_export');
 			});
 
 		$schedule
@@ -45,21 +45,21 @@ class Kernel extends ConsoleKernel
 				]);
 			})
 			->after(function () {
-				$this->notifyPrometheusPushGateway('scout_import_slides');
+				$this->notifyPrometheusPushgateway('scout_import_slides');
 			});
 
 		$schedule
 			->command('coursePlans:archive')
 			->dailyAt('01:20')
 			->after(function () {
-				$this->notifyPrometheusPushGateway('course_plans_archive');
+				$this->notifyPrometheusPushgateway('course_plans_archive');
 			});
 
 		$schedule
 			->command('time:store')
 			->dailyAt('01:30')
 			->after(function () {
-				$this->notifyPrometheusPushGateway('time_store');
+				$this->notifyPrometheusPushgateway('time_store');
 			});
 
 		$schedule
@@ -67,53 +67,53 @@ class Kernel extends ConsoleKernel
 			->hourly()
 			->withoutOverlapping()
 			->after(function () {
-				$this->notifyPrometheusPushGateway('progress_store');
+				$this->notifyPrometheusPushgateway('progress_store');
 			});
 
 		$schedule
 			->command('quiz:slackDaysDecrement')
 			->dailyAt('02:30')
 			->after(function () {
-				$this->notifyPrometheusPushGateway('quiz_slack_days_decrement');
+				$this->notifyPrometheusPushgateway('quiz_slack_days_decrement');
 			});
 
 		$schedule
 			->command('orders:handleUnpaid')
 			->twiceDaily(8, 20)
 			->after(function () {
-				$this->notifyPrometheusPushGateway('orders_handle_unpaid');
+				$this->notifyPrometheusPushgateway('orders_handle_unpaid');
 			});
 
 		$schedule
 			->command('notifications:cleanup-old --force')
 			->dailyAt('02:45')
 			->after(function () {
-				$this->notifyPrometheusPushGateway('notifications_cleanup_old');
+				$this->notifyPrometheusPushgateway('notifications_cleanup_old');
 			});
 
 		$schedule
 			->command('sb:cancel')
 			->weekly()
 			->after(function () {
-				$this->notifyPrometheusPushGateway('sb_cancel');
+				$this->notifyPrometheusPushgateway('sb_cancel');
 			});
 
 		$schedule
 			->command('invoices:jpk-send')
 			->monthlyOn(1, '06:00')
 			->after(function () {
-				$this->notifyPrometheusPushGateway('invoices_jpk_send');
+				$this->notifyPrometheusPushgateway('invoices_jpk_send');
 			});
 
 		$schedule
 			->command('data-integrity:check')
 			->dailyAt('04:00')
 			->after(function () {
-				$this->notifyPrometheusPushGateway('data_integrity_check');
+				$this->notifyPrometheusPushgateway('data_integrity_check');
 			});
 	}
 
-	private function notifyPrometheusPushGateway($metricName)
+	private function notifyPrometheusPushgateway($metricName)
 	{
 		$client = new \GuzzleHttp\Client();
 		try {

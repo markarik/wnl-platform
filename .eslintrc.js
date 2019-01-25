@@ -35,9 +35,6 @@ module.exports = {
 		'vue/require-prop-type-constructor': [
 			'off'
 		],
-		'vue/no-side-effects-in-computed-properties': [
-			'off'
-		],
 		'vue/require-valid-default-prop': [
 			'off'
 		],

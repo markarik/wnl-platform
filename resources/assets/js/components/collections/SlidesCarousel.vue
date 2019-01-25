@@ -10,21 +10,9 @@
 		</p>
 		<div class="slides-carousel-container" v-if="bookmarkedSlidesIds.length > 0">
 			<div class="slides-carousel">
-				<div class="slide-thumb" :key="index" v-for="(slide, index) in sortedSlides" @click="showSlide(index)">
-					<div class="thumb-meta">
-						<span class="thumb-slide-number">{{getSlideDisplayNumberFromIndex(index)}}</span>
-						<span class="icon is-tiny" v-if="slide.media"><i class="fa" :class="slide.media.icon"></i></span>
-					</div>
-					<p class="thumb-heading metadata">{{slide.header}}</p>
-					<div class="slide-snippet" v-html="slide.snippet"></div>
-					<div class="slide-snippet has-media" v-if="slide.media">
-						<span class="icon is-tiny">
-							<i class="fa" :class="slide.media.icon"></i>
-						</span>
-						{{slide.media.text}}
-					</div>
-					<div class="shadow"></div>
-				</div>
+				<wnl-slide-thumb :key="index" v-for="(slide, index) in sortedSlides" @slideClick="showSlide(index)" :slide="slide">
+					{{getSlideDisplayNumberFromIndex(index)}}
+				</wnl-slide-thumb>
 			</div>
 		</div>
 		<div v-else class="notification has-text-centered">
@@ -48,8 +36,6 @@
 	@import 'resources/assets/sass/mixins'
 
 	$carousel-height: 105px
-	$thumb-height: 90px
-	$thumb-width: 160px
 
 	.is-not-visible
 		visibility: hidden
@@ -85,82 +71,14 @@
 		position: absolute
 		top: 0
 		width: 100%
-
-	.slide-thumb
-		background-color: $color-white
-		cursor: pointer
-		flex: 1 0 $thumb-width
-		height: $thumb-height
-		margin: $margin-small $margin-small $margin-base
-		max-width: $thumb-width
-		overflow: hidden
-		padding: $margin-small
-		position: relative
-		text-align: center
-		transition: color $transition-length-base
-		width: $thumb-width
-
-		&:hover
-			color: $color-ocean-blue
-			transition: color $transition-length-base
-
-			.shadow
-				height: 0
-				transition: height $transition-length-base
-
-		.thumb-meta
-			align-items: center
-			display: flex
-			justify-content: space-between
-
-		.thumb-slide-number
-			font-size: $font-size-minus-3
-			line-height: $line-height-minus
-			margin-bottom: $margin-tiny
-			text-align: left
-
-		.thumb-heading
-			line-height: $line-height-minus
-			margin-bottom: $margin-small
-
-		.slide-snippet
-			font-size: $font-size-minus-2
-			line-height: $line-height-minus
-
-			&.has-media
-				margin-top: $margin-small
-
-		.shadow
-			+white-shadow-inside()
-
-			bottom: 0
-			height: 50%
-			position: absolute
-			transition: height $transition-length-base
-			width: 100%
 </style>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import context from 'js/consts/events_map/context.json';
 import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue';
 import {getApiUrl} from 'js/utils/env';
 import emits_events from 'js/mixins/emits-events';
-
-const mediaMap = {
-	chart: {
-		icon: 'fa-sitemap',
-		text: 'Diagram',
-	},
-	movie: {
-		icon: 'fa-film',
-		text: 'Film',
-	},
-	audio: {
-		icon: 'fa-music',
-		text: 'Nagranie audio',
-	},
-};
+import WnlSlideThumb from 'js/components/course/SlideThumb';
 
 export default {
 	name: 'SlidesCarousel',
@@ -190,20 +108,12 @@ export default {
 	},
 	components: {
 		'wnl-slideshow': Slideshow,
+		WnlSlideThumb,
 	},
 	computed: {
 		...mapGetters('collections', ['slidesContent', 'getSlidesIdsForCategory']),
 		...mapGetters('slideshow', {'currentPresentableSlides': 'slides',}),
 		...mapGetters('slideshow', ['presentableSortedSlidesIds']),
-		slides() {
-			return this.slidesContent.map((slide) => ({
-				header: slide.snippet.header,
-				snippet: slide.snippet.content,
-				media: slide.snippet.media !== null ? mediaMap[slide.snippet.media] : null,
-				content: slide.content,
-				id: slide.id
-			}));
-		},
 		sortedSlides() {
 			return this.currentSlideshowSlides.sort(({id: id1}, {id: id2}) => {
 				const slideOne = this.currentPresentableSlides[id1];
@@ -216,7 +126,7 @@ export default {
 			return Object.keys(this.currentPresentableSlides).length > 0;
 		},
 		currentSlideshowSlides() {
-			return (this.presentableLoaded && this.slides.filter((slide) => this.currentPresentableSlides[slide.id])) || [];
+			return (this.presentableLoaded && this.slidesContent.filter((slide) => this.currentPresentableSlides[slide.id])) || [];
 		},
 		currentSlideOrderNumber() {
 			if (this.mode === this.contentModes.bookmark) {

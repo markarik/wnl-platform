@@ -22,7 +22,7 @@ export default {
 		},
 		messageArguments: {
 			type: Object,
-			default: {}
+			default: () => {}
 		},
 	},
 	computed: {

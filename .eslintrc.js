@@ -35,9 +35,6 @@ module.exports = {
 		'vue/no-side-effects-in-computed-properties': [
 			'off'
 		],
-		'vue/require-valid-default-prop': [
-			'off'
-		],
 		'vue/no-use-v-if-with-v-for': [
 			'off'
 		],

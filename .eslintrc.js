@@ -32,9 +32,6 @@ module.exports = {
 			'always'
 		],
 		// TODO enable these rules, one by one
-		'vue/require-prop-type-constructor': [
-			'off'
-		],
 		'vue/no-side-effects-in-computed-properties': [
 			'off'
 		],

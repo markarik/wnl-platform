@@ -38,7 +38,7 @@ export default {
 			required: true,
 		},
 		list: {
-			type: Array|Object,
+			type: [Array, Object],
 			required: true,
 		},
 		sortDirection: {

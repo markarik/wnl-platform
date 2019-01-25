@@ -7,12 +7,11 @@
 		<p class="thumb-heading metadata">{{slide.snippet.header}}</p>
 		<div class="slide-snippet" v-html="slide.snippet.content"></div>
 		<div class="slide-snippet has-media" v-if="media">
-						<span class="icon is-tiny">
-							<i class="fa" :class="media.icon"></i>
-						</span>
+			<span class="icon is-tiny">
+				<i class="fa" :class="media.icon"></i>
+			</span>
 			{{media.text}}
 		</div>
-		<div class="shadow"></div>
 	</div>
 </template>
 
@@ -39,11 +38,9 @@
 
 		&:hover
 			color: $color-ocean-blue
-			transition: color $transition-length-base
 
-			.shadow
+			&::after
 				height: 0
-				transition: height $transition-length-base
 
 		.thumb-meta
 			align-items: center
@@ -67,10 +64,12 @@
 			&.has-media
 				margin-top: $margin-small
 
-		.shadow
+		&::after
 			+white-shadow-inside()
 
 			bottom: 0
+			content: ''
+			display: block
 			height: 50%
 			position: absolute
 			transition: height $transition-length-base

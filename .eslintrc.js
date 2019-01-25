@@ -41,9 +41,6 @@ module.exports = {
 		'vue/no-use-v-if-with-v-for': [
 			'off'
 		],
-		'vue/return-in-computed-property': [
-			'off'
-		],
 		'vue/valid-v-for': [
 			'off'
 		],

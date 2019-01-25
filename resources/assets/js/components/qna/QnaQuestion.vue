@@ -334,7 +334,7 @@ export default {
 		isNotFetchedAnswerInUrl() {
 			const questionId = _.get(this.$route, 'query.qna_question');
 
-			if (questionId == this.questionId && this.answerInUrl) return true;
+			return questionId == this.questionId && this.answerInUrl;
 		},
 	},
 	methods: {

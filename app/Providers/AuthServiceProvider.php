@@ -20,6 +20,7 @@ use App\Models\UserAddress;
 use App\Models\UserBillingData;
 use App\Models\UserCourseProgress;
 use App\Models\UserProfile;
+use App\Models\UserQuestionsBankState;
 use App\Models\UserSettings;
 use App\Policies\Chat\ChatRoomPolicy;
 use App\Policies\AnnotationPolicy;
@@ -40,6 +41,7 @@ use App\Policies\User\UserProfilePolicy;
 use App\Policies\User\UserBillingPolicy;
 use App\Policies\User\UserSettingsPolicy;
 use App\Policies\User\UserPolicy;
+use App\Policies\User\UserQuestionsBankStatePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -69,6 +71,7 @@ class AuthServiceProvider extends ServiceProvider
 		Annotation::class         => AnnotationPolicy::class,
 		Taxonomy::class           => TaxonomyPolicy::class,
 		TaxonomyTerm::class       => TaxonomyTermPolicy::class,
+		UserQuestionsBankState::class => UserQuestionsBankStatePolicy::class
 	];
 
 	/**

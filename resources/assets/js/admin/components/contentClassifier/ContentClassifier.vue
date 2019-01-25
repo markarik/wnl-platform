@@ -1,6 +1,6 @@
 <template>
 	<div class="content-classifier">
-		<h3 class="title is-3">Tagowanie treści</h3>
+		<h3 class="title is-3">Klasyfikacja treści</h3>
 		<form @submit.prevent="onSearch">
 			<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field">
 				<label class="label">{{meta.name}}</label>

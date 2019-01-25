@@ -124,7 +124,7 @@ let types = {
 	mockexam: {
 		text: 'Próbny egzamin',
 		value: 'mockexam',
-		hasMeta: false,
+		hasMeta: true,
 	},
 	flashcards: {
 		text: 'Powtórki',

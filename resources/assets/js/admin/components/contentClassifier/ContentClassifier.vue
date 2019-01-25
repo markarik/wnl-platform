@@ -10,14 +10,17 @@
 		</form>
 
 		<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
-		<div v-for="(meta, contentType) in contentTypes" :key="contentType" v-if="filteredContent[contentType].length">
-			<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
-			<ul class="content-classifier-result-list margin bottom">
-				<li v-for="item in filteredContent[contentType]" class="content-classifier-result-item">
-					<component :is="meta.component" :item="item"/>
-				</li>
-			</ul>
+		<div v-if="!isLoading">
+			<div v-for="(meta, contentType) in contentTypes" :key="contentType" v-if="filteredContent[contentType].length">
+				<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
+				<ul class="content-classifier-result-list margin bottom">
+					<li v-for="item in filteredContent[contentType]" class="content-classifier-result-item">
+						<component :is="meta.component" :item="item"/>
+					</li>
+				</ul>
+			</div>
 		</div>
+		<wnl-text-loader v-else />
 
 	</div>
 </template>
@@ -44,11 +47,14 @@
 </style>
 
 <script>
+import {mapActions} from 'vuex';
+
 import {getApiUrl} from 'js/utils/env';
 import WnlHtmlResult from 'js/admin/components/contentClassifier/HtmlResult';
 import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
 	data() {
@@ -89,28 +95,44 @@ export default {
 
 		return {
 			contentTypes,
-			...filtersSetup
+			...filtersSetup,
+			isLoading: false,
 		};
 	},
 	methods: {
+		...mapActions(['addAutoDismissableAlert']),
 		async onSearch() {
-			Object.entries(this.contentTypes).forEach(
+			this.isLoading = true;
+
+			const promises = Object.entries(this.contentTypes).map(
 				async ([contentType, meta]) => {
 					if (this.filters[contentType] === '') {
+						this.filteredContent[contentType] = [];
 						return;
 					}
 
-					const {data: {data}} = await axios.post(getApiUrl(meta.resourceName), {
-						filters: [
-							{
-								by_ids: {ids: this.filters[contentType].split(',')},
-							},
-						],
-					});
+					try {
+						const {data: {data}} = await axios.post(getApiUrl(meta.resourceName), {
+							filters: [
+								{
+									by_ids: {ids: this.filters[contentType].split(',')},
+								},
+							],
+						});
 
-					this.filteredContent[contentType] = data;
+						this.filteredContent[contentType] = data;
+					} catch (error) {
+						$wnl.logger.capture(error);
+						this.addAutoDismissableAlert({
+							text: 'Coś poszło nie tak. Spróbuj ponownie.',
+							type: ALERT_TYPES.ERROR
+						});
+					}
 				}
 			);
+
+			await Promise.all(promises);
+			this.isLoading = false;
 		}
 	}
 };

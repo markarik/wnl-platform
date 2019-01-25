@@ -6,9 +6,6 @@
 	</wnl-slide-thumb>
 </template>
 
-<style lang="sass">
-</style>
-
 <script>
 import WnlSlideThumb from 'js/components/course/SlideThumb';
 

@@ -107,32 +107,47 @@ export default {
 			const promises = Object.entries(this.contentTypes).map(
 				async ([contentType, meta]) => {
 					if (this.filters[contentType] === '') {
-						this.filteredContent[contentType] = [];
-						return;
+						return {
+							contentType,
+							data: []
+						};
 					}
 
-					try {
-						const {data: {data}} = await axios.post(getApiUrl(meta.resourceName), {
-							filters: [
-								{
-									by_ids: {ids: this.filters[contentType].split(',')},
-								},
-							],
-						});
+					const {data: {data}} = await axios.post(getApiUrl(meta.resourceName), {
+						filters: [
+							{
+								by_ids: {ids: this.filters[contentType].split(',')},
+							},
+						],
+					});
 
-						this.filteredContent[contentType] = data;
-					} catch (error) {
-						$wnl.logger.capture(error);
-						this.addAutoDismissableAlert({
-							text: 'Coś poszło nie tak. Spróbuj ponownie.',
-							type: ALERT_TYPES.ERROR
-						});
-					}
+					return {
+						contentType,
+						data
+					};
 				}
 			);
 
-			await Promise.all(promises);
-			this.isLoading = false;
+			await Promise.all(promises)
+				.then((values) => {
+					values.forEach(({contentType, data}) => {
+						this.filteredContent[contentType] = data;
+					});
+				})
+				.catch((error) => {
+					Object.keys(this.filteredContent).forEach((contentType) => {
+						this.filteredContent[contentType] = [];
+					});
+
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert({
+						text: 'Coś poszło nie tak. Spróbuj ponownie.',
+						type: ALERT_TYPES.ERROR
+					});
+				})
+				.then(() => {
+					this.isLoading = false;
+				});
 		}
 	}
 };

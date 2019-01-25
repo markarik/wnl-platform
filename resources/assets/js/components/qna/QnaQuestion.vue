@@ -1,8 +1,5 @@
 <template>
 	<div class="qna-thread" :class="{'is-mobile': isMobile}">
-		<div class="question-loader" v-if="loading">
-			<wnl-text-loader></wnl-text-loader>
-		</div>
 		<div class="qna-question" ref="highlight">
 			<wnl-vote
 				type="up"
@@ -123,11 +120,6 @@
 		margin-left: $margin-small
 		margin-right: $margin-tiny
 
-	.question-loader
-		border-top: $border-light-gray
-		margin: $margin-big
-		padding: $margin-big
-
 	.qna-question
 		background: $color-background-lighter-gray
 		border-bottom: $border-light-gray
@@ -238,7 +230,6 @@ export default {
 	data() {
 		return {
 			showAllAnswers: false,
-			loading: false,
 			showAnswerForm: false,
 			reactableResource: 'qna_questions',
 			highlightableResources: ['qna_question', 'reaction'],
@@ -339,12 +330,8 @@ export default {
 		},
 		dispatchFetchQuestion() {
 			return this.fetchQuestion(this.id)
-				.then(() => {
-					this.loading = false;
-				})
 				.catch((error) => {
 					$wnl.logger.error(error);
-					this.loading = false;
 				});
 		},
 		getAnswer(id) {

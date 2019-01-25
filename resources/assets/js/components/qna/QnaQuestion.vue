@@ -266,15 +266,7 @@ export default {
 			return this.question.text;
 		},
 		author() {
-			if (this.question.hasOwnProperty('profiles')) {
-				return this.profile(this.question.profiles[0]);
-			} else {
-				this.loading = true;
-				this.dispatchFetchQuestion()
-					.then(() => {
-						return this.profile(this.question.profiles[0]);
-					});
-			}
+			return this.profile(this.question.profiles[0]);
 		},
 		isCurrentUserAuthor() {
 			return this.currentUserId === this.author.user_id;

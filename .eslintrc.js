@@ -47,9 +47,6 @@ module.exports = {
 		'vue/require-v-for-key': [
 			'off'
 		],
-		'vue/no-async-in-computed-properties': [
-			'off'
-		],
 	},
 	globals: {
 		$: true,

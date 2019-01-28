@@ -12,6 +12,18 @@
 
 namespace App\Models{
 /**
+ * App\Models\UserQuestionsBankState
+ *
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState query()
+ */
+	class UserQuestionsBankState extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\PaymentMethod
  *
  * @property int $id
@@ -993,6 +1005,17 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LessonUserAccess whereUserId($value)
  */
 	class LessonUserAccess extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\TaxonomyTermable
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable query()
+ */
+	class TaxonomyTermable extends \Eloquent {}
 }
 
 namespace App\Models{

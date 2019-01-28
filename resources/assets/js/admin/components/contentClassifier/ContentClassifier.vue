@@ -73,6 +73,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import {mapActions} from 'vuex';
 
 import {getApiUrl} from 'js/utils/env';
@@ -180,8 +181,21 @@ export default {
 				this.isLoading = false;
 			}
 		},
-		onTermAdded(term) {
-			console.log(term);
+		async onTermAdded(term) {
+			try {
+				await axios.put(getApiUrl(`taxonomy_termables/${term.id}`), {
+					annotations: this.filteredContent.annotations.map(item => item.id),
+					flashcards: this.filteredContent.flashcards.map(item => item.id),
+					quiz_questions: this.filteredContent.quizQuestions.map(item => item.id),
+					slides: this.filteredContent.slides.map(item => item.id),
+				});
+			} catch (error) {
+				$wnl.logger.capture(error);
+				this.addAutoDismissableAlert({
+					text: 'Nie udało się zapisać nowej klasyfikacji. Spróbuj ponownie.',
+					type: ALERT_TYPES.ERROR
+				});
+			}
 		}
 	},
 	async mounted() {

@@ -1,10 +1,10 @@
 <template>
 	<ul>
 		<vue-draggable
-			:options="{handle: '.taxonomy-term-item__action--drag'}"
+			:options="{handle: '.structure-node-item__action--drag'}"
 			@end="onTermDrag"
 		>
-			<wnl-taxonomy-term-item
+			<wnl-structure-node-item
 				v-for="term in terms"
 				:term="term"
 				:key="term.id"
@@ -18,12 +18,12 @@
 import {mapActions} from 'vuex';
 
 import VueDraggable from 'vuedraggable';
-import WnlTaxonomyTermItem from 'js/admin/components/structure/TaxonomyTermItem';
+import WnlStructureNodeItem from 'js/admin/components/structure/StructureNodeItem';
 
 export default {
 	components: {
 		VueDraggable,
-		WnlTaxonomyTermItem
+		WnlStructureNodeItem
 	},
 	props: {
 		terms: {

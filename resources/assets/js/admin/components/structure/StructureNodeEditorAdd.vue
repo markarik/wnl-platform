@@ -1,5 +1,5 @@
 <template>
-	<wnl-taxonomy-term-editor-form
+	<wnl-structure-node-editor-form
 		submit-label="Dodaj pojęcie"
 		:on-save="onSave"
 		:taxonomy-id="taxonomyId"
@@ -11,7 +11,7 @@
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 
-import WnlTaxonomyTermEditorForm from 'js/admin/components/structure/TaxonomyTermEditorForm';
+import WnlStructureNodeEditorForm from 'js/admin/components/structure/StructureNodeEditorForm';
 import scrollToTaxonomyTermMixin from 'js/admin/mixins/scroll-to-taxonomy-term';
 
 export default {
@@ -35,7 +35,7 @@ export default {
 		}
 	},
 	components: {
-		WnlTaxonomyTermEditorForm
+		WnlStructureNodeEditorForm
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

@@ -4,7 +4,7 @@
 			<div class="terms-editor__panel__header">
 				<h4 class="title is-5"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
 				<span class="control has-icons-right">
-					<wnl-term-autocomplete
+					<wnl-node-autocomplete
 						@change="onSearchTerm"
 						placeholder="Szukaj pojęcia"
 					/>
@@ -13,11 +13,11 @@
 					</span>
 				</span>
 			</div>
-			<wnl-taxonomy-terms-list v-if="!isLoadingTerms" :terms="rootTerms"/>
+			<wnl-structure-nodes-list v-if="!isLoadingTerms" :terms="rootTerms"/>
 			<wnl-text-loader v-else />
 		</div>
 		<div class="terms-editor__panel is-right">
-			<wnl-taxonomy-term-editor-right
+			<wnl-structure-node-editor-right
 				:taxonomyId="taxonomyId"
 			/>
 		</div>
@@ -54,16 +54,16 @@
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 
-import WnlTaxonomyTermsList from 'js/admin/components/structure/TaxonomyTermsList';
-import WnlTaxonomyTermEditorRight from 'js/admin/components/structure/TaxonomyTermEditorRight';
-import WnlTermAutocomplete from 'js/admin/components/structure/TaxonomyTermEditorTermAutocomplete';
+import WnlStructureNodesList from 'js/admin/components/structure/StructureNodesList';
+import WnlStructureNodeEditorRight from 'js/admin/components/structure/StructureNodeEditorRight';
+import WnlNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
 import scrollToTaxonomyTermMixin from 'js/admin/mixins/scroll-to-taxonomy-term';
 
 export default {
 	components: {
-		WnlTaxonomyTermsList,
-		WnlTaxonomyTermEditorRight,
-		WnlTermAutocomplete
+		WnlStructureNodesList,
+		WnlStructureNodeEditorRight,
+		WnlNodeAutocomplete
 	},
 	props: {
 		taxonomyId: {

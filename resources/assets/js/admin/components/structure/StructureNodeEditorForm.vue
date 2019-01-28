@@ -3,7 +3,7 @@
 		<div class="field">
 			<label class=" label is-uppercase"><strong>Nadrzędne pojęcie</strong></label>
 			<span class="info small">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
-			<wnl-term-autocomplete
+			<wnl-node-autocomplete
 				@change="onSelectParent"
 				:selected="parent"
 			/>
@@ -39,8 +39,8 @@
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 
-import WnlTermAutocomplete from 'js/admin/components/structure/TaxonomyTermEditorTermAutocomplete';
-import WnlStructurableAutocomplete from 'js/admin/components/structure/TaxonomyTermEditorStructurableAutocomplete';
+import WnlNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
+import WnlStructurableAutocomplete from 'js/admin/components/structure/StructureNodeEditorStructurableAutocomplete';
 import {ALERT_TYPES} from '../../../consts/alert';
 
 const initialState = {
@@ -74,7 +74,7 @@ export default {
 		};
 	},
 	components: {
-		WnlTermAutocomplete,
+		WnlNodeAutocomplete,
 		WnlStructurableAutocomplete,
 	},
 	computed: {

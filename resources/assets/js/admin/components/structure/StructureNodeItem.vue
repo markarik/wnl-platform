@@ -1,7 +1,7 @@
 <template>
-	<li :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']" :id="`term-${term.id}`">
-		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
-			<span class="icon-small taxonomy-term-item__action taxonomy-term-item__action--drag">
+	<li :class="['structure-node-item', isSaving && 'structure-node-item--disabled']" :id="`term-${term.id}`">
+		<div :class="['media', 'structure-node-item__content', {'is-selected': isSelected}]">
+			<span class="icon-small structure-node-item__action structure-node-item__action--drag">
 				<i title="drag" :class="['fa', itemClass]"></i>
 			</span>
 			<div class="media-content v-central">
@@ -9,39 +9,39 @@
 			</div>
 			<div class="media-right central">
 				<span
-					class="icon-small taxonomy-term-item__action"
+					class="icon-small structure-node-item__action"
 					@click="toggle"
 					v-if="childTerms.length"
 				>
 					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]"></i>
 				</span>
 				<span
-					class="icon-small taxonomy-term-item__action"
+					class="icon-small structure-node-item__action"
 					@click="onAdd"
 				>
 					<i title="Dodaj" class="fa fa-plus"></i>
 				</span>
 				<span
-					class="icon-small taxonomy-term-item__action"
+					class="icon-small structure-node-item__action"
 					@click="onEdit"
 				>
 					<i title="Edytuj" class="fa fa-pencil"></i>
 				</span>
 				<span
-					class="icon-small taxonomy-term-item__action"
+					class="icon-small structure-node-item__action"
 					@click="onDelete"
 				>
 					<i title="Usuń" class="fa fa-trash"></i>
 				</span>
 				<span
-					:class="['icon-small', 'taxonomy-term-item__action', {'taxonomy-term-item__action--disabled': !canBeMovedUp}]"
+					:class="['icon-small', 'structure-node-item__action', {'structure-node-item__action--disabled': !canBeMovedUp}]"
 					@click="canBeMovedUp && onTermMove(term, -1)"
 				>
 					<i title="Do góry" class="fa fa-arrow-up"></i>
 				</span>
 				<span
-					class="icon-small taxonomy-term-item__action"
-					:class="['icon-small', 'taxonomy-term-item__action', {'taxonomy-term-item__action--disabled': !canBeMovedDown}]"
+					class="icon-small structure-node-item__action"
+					:class="['icon-small', 'structure-node-item__action', {'structure-node-item__action--disabled': !canBeMovedDown}]"
 					@click="canBeMovedDown && onTermMove(term, 1)"
 				>
 					<i title="Na dół" class="fa fa-arrow-down"></i>
@@ -49,9 +49,9 @@
 			</div>
 		</div>
 		<transition name="fade">
-			<wnl-taxonomy-terms-list
+			<wnl-structure-nodes-list
 				v-if="isExpanded"
-				class="taxonomy-term-item__list"
+				class="structure-node-item__list"
 				:terms="childTerms"
 			/>
 		</transition>
@@ -61,7 +61,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.taxonomy-term-item
+	.structure-node-item
 		&--disabled
 			pointer-events: none
 			color: $color-gray-dimmed
@@ -172,7 +172,7 @@ export default {
 	},
 	beforeCreate: function () {
 		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
-		this.$options.components.WnlTaxonomyTermsList = require('./TaxonomyTermsList.vue').default;
+		this.$options.components.WnlStructureNodesList = require('./StructureNodesList.vue').default;
 	}
 };
 </script>

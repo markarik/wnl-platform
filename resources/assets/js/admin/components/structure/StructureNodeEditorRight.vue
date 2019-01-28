@@ -27,9 +27,9 @@
 <script>
 import {mapActions, mapState} from 'vuex';
 
-import WnlTaxonomyTermEditorAdd from 'js/admin/components/structure/TaxonomyTermEditorAdd';
-import WnlTaxonomyTermEditorDelete from 'js/admin/components/structure/TaxonomyTermEditorDelete';
-import WnlTaxonomyTermEditorEdit from 'js/admin/components/structure/TaxonomyTermEditorEdit';
+import WnlStructureNodeEditorAdd from 'js/admin/components/structure/StructureNodeEditorAdd';
+import WnlStructureNodeEditorDelete from 'js/admin/components/structure/StructureNodeEditorDelete';
+import WnlStructureNodeEditorEdit from 'js/admin/components/structure/StructureNodeEditorEdit';
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 
 export default {
@@ -46,13 +46,13 @@ export default {
 					icon: 'fa-plus',
 					key: NESTED_SET_EDITOR_MODES.ADD,
 					label: 'Dodaj',
-					componentName: WnlTaxonomyTermEditorAdd
+					componentName: WnlStructureNodeEditorAdd
 				},
 				{
 					icon: 'fa-pencil',
 					key: NESTED_SET_EDITOR_MODES.EDIT,
 					label: 'Edytuj',
-					componentName: WnlTaxonomyTermEditorEdit
+					componentName: WnlStructureNodeEditorEdit
 				},
 				// {
 				// 	icon: 'fa-compress',
@@ -63,7 +63,7 @@ export default {
 					icon: 'fa-trash',
 					key: NESTED_SET_EDITOR_MODES.DELETE,
 					label: 'Usuń',
-					componentName: WnlTaxonomyTermEditorDelete
+					componentName: WnlStructureNodeEditorDelete
 				}
 			],
 		};

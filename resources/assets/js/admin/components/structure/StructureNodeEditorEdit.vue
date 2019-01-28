@@ -1,5 +1,5 @@
 <template>
-	<wnl-taxonomy-term-editor-form
+	<wnl-structure-node-editor-form
 		v-if="term"
 		submit-label="Zapisz"
 		:on-save="onSave"
@@ -17,11 +17,11 @@
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex';
 
-import WnlTaxonomyTermEditorForm from 'js/admin/components/structure/TaxonomyTermEditorForm';
+import WnlStructureNodeEditorForm from 'js/admin/components/structure/StructureNodeEditorForm';
 
 export default {
 	components: {
-		WnlTaxonomyTermEditorForm
+		WnlStructureNodeEditorForm
 	},
 	props: {
 		taxonomyId: {

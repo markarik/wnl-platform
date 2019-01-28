@@ -2,7 +2,7 @@
 	<li :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']" :id="`term-${term.id}`">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<span class="icon-small taxonomy-term-item__action taxonomy-term-item__action--drag">
-				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
+				<i title="drag" :class="['fa', itemClass]"></i>
 			</span>
 			<div class="media-content v-central">
 				<span>{{term.structurable.name}}</span>
@@ -104,6 +104,7 @@
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
+import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure'
 
 export default {
 	props: {
@@ -133,6 +134,11 @@ export default {
 		isExpanded() {
 			return this.expandedTerms.includes(this.term.id)  && this.childTerms.length;
 		},
+		itemClass() {
+			if (this.isSaving) return 'fa-circle-o-notch fa-spin';
+			if (this.term.structurable_type === COURSE_STRUCTURE_TYPES.GROUP) return 'fa-folder';
+			if (this.term.structurable_type === COURSE_STRUCTURE_TYPES.LESSON) return 'fa-book';
+		}
 	},
 	methods: {
 		...mapActions('courseStructure', ['setEditorMode']),

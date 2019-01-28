@@ -26,13 +26,13 @@
 								<span class="icon is-small">
 									<i class="fa fa-plus" aria-hidden="true"></i>
 								</span>
-								<span>Dodaj nową lekcję</span>
+								<span>Nowa lekcja</span>
 							</button>
 							<button class="button" @click="onGroupAdd">
 								<span class="icon is-small">
 									<i class="fa fa-plus" aria-hidden="true"></i>
 								</span>
-								<span>Dodaj nową Grupę</span>
+								<span>Nowa grupa</span>
 							</button>
 						</div>
 					</div>
@@ -54,6 +54,8 @@
 		border-top: $border-light-gray
 		padding: $margin-base
 		text-align: right
+		display: flex
+		flex-direction: row
 
 </style>
 

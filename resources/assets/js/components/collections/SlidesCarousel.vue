@@ -115,12 +115,14 @@ export default {
 		...mapGetters('slideshow', {'currentPresentableSlides': 'slides',}),
 		...mapGetters('slideshow', ['presentableSortedSlidesIds']),
 		sortedSlides() {
-			return this.currentSlideshowSlides.sort(({id: id1}, {id: id2}) => {
-				const slideOne = this.currentPresentableSlides[id1];
-				const slideTwo = this.currentPresentableSlides[id2];
+			return this.currentSlideshowSlides
+				.slice()
+				.sort(({id: id1}, {id: id2}) => {
+					const slideOne = this.currentPresentableSlides[id1];
+					const slideTwo = this.currentPresentableSlides[id2];
 
-				return slideOne.order_number - slideTwo.order_number;
-			});
+					return slideOne.order_number - slideTwo.order_number;
+				});
 		},
 		presentableLoaded() {
 			return Object.keys(this.currentPresentableSlides).length > 0;

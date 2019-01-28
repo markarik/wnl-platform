@@ -4,7 +4,7 @@ namespace App\Http\Requests\Course;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MoveTaxonomyTerm extends FormRequest {
+class UpdateCourseStructureNode extends FormRequest {
 	/**
 	 * Determine if the user is authorized to make this request.
 	 *
@@ -21,8 +21,11 @@ class MoveTaxonomyTerm extends FormRequest {
 	 */
 	public function rules() {
 		return [
-			'id' => 'required|numeric|exists:taxonomy_terms,id',
-			'direction' => 'required|numeric',
+			'parent_id' => 'nullable|numeric|exists:course_structure_nodes,id',
+			'structurable_id' => 'required|numeric', // TODO: Add custom validation method for structurables.
+			'structurable_type' => 'required|numeric',
+			'course_id' => 'required|numeric|exists:courses,id',
+			'description' => 'string|max:1000|nullable',
 		];
 	}
 }

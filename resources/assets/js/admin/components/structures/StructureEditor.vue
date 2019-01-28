@@ -8,6 +8,14 @@
 	</div>
 </template>
 
+<style lang="sass" rel="stylesheet/sass" scoped>
+	@import 'resources/assets/sass/variables'
+
+	.header
+		margin-bottom: $margin-medium
+
+</style>
+
 <script>
 import StructureNode from 'js/admin/components/structures/StructureNode';
 import {mapActions, mapState} from 'vuex';

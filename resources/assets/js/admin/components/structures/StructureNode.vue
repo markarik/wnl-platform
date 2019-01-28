@@ -1,6 +1,7 @@
 <template>
 	<div class="structure-node">
 		<component :is="structurableComponent" :structurable="node.structurable"></component>
+
 		<structure-node
 				v-for="childNode in childNodes"
 				:key="childNode.id"

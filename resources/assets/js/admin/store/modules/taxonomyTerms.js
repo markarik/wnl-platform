@@ -209,7 +209,7 @@ const actions = {
 		try {
 			dispatch('reorderSiblings', {term, direction});
 			await axios.put(getApiUrl('taxonomy_terms/move'), {
-				term_id: term.id,
+				id: term.id,
 				direction
 			});
 		} catch (e) {

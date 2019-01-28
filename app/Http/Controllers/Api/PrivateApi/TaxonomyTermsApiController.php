@@ -53,7 +53,7 @@ class TaxonomyTermsApiController extends ApiController {
 	}
 
 	public function move(MoveTaxonomyTerm $request) {
-		$target = TaxonomyTerm::find($request->get('term_id'));
+		$target = TaxonomyTerm::find($request->get('id'));
 		$direction = $request->get('direction');
 
 		if ($direction === 0) {

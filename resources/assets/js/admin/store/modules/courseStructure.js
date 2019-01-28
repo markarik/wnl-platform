@@ -100,9 +100,11 @@ const mutations = {
 const _parseIncludes = (node, included) => {
 	if (node.hasOwnProperty('groups')) {
 		node.structurable = included.groups[node.groups[0]];
+		node.structurable.type = 'App\\Models\\Group';
 	}
 	if (node.hasOwnProperty('lessons')) {
 		node.structurable = included.lessons[node.lessons[0]];
+		node.structurable.type = 'App\\Models\\Lesson';
 	}
 	return node;
 };
@@ -145,7 +147,7 @@ const actions = {
 		try {
 			const response = await axios.post(getApiUrl('course_structure_nodes?include=lessons,groups'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
-			commit(types.ADD_TERM, includeTag(term, included.tags));
+			commit(types.ADD_TERM, _parseIncludes(term, included));
 			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {
 				list: getters.getChildrenByParentId(taxonomyTerm.parent_id)
 			});
@@ -169,7 +171,7 @@ const actions = {
 				term.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
 			}
 
-			commit(types.UPDATE_TERM, includeTag({...term, ...updatedTerm}, included.tags));
+			commit(types.UPDATE_TERM, _parseIncludes({...term, ...updatedTerm}, included));
 		} catch (error) {
 			throw error;
 		} finally {

@@ -1,6 +1,6 @@
 <template>
 	<aside class="sidenav-aside course-sidenav">
-		<wnl-sidenav :breadcrumbs="breadcrumbs" :items="items" :itemsHeading="itemsHeading" :options="sidenavOptions"></wnl-sidenav>
+		<wnl-course-navigation :itemsHeading="itemsHeading" :options="sidenavOptions"></wnl-course-navigation>
 	</aside>
 </template>
 
@@ -16,20 +16,17 @@
 </style>
 
 <script>
-import _ from 'lodash';
-import { mapGetters } from 'vuex';
+import {mapGetters} from 'vuex';
 
-import Sidenav from 'js/components/global/Sidenav.vue';
-
-import * as mutations from 'js/store/mutations-types';
-import { resource } from 'js/utils/config';
+import WnlCourseNavigation from 'js/components/course/navigation/CourseNavigation';
+import {resource} from 'js/utils/config';
 import {STATUS_COMPLETE} from '../../services/progressStore';
 import navigation from 'js/services/navigation';
 
 export default {
 	name: 'Navigation',
 	components: {
-		'wnl-sidenav': Sidenav
+		WnlCourseNavigation
 	},
 	props: ['context', 'isLesson'],
 	computed: {
@@ -60,13 +57,6 @@ export default {
 		},
 		courseProgress() {
 			return this.getCourseProgress(this.context.courseId);
-		},
-		breadcrumbs() {
-			let breadcrumbs = [], courseItem;
-
-			breadcrumbs.push(this.getCourseItem());
-
-			return breadcrumbs;
 		},
 		itemsHeading() {
 			return this.isLesson ? this.getLesson(this.context.lessonId).name : null;

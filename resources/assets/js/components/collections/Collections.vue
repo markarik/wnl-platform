@@ -158,7 +158,6 @@ import MainNav from 'js/components/MainNav';
 import QnaCollection from 'js/components/collections/QnaCollection';
 import QuizCollection from 'js/components/collections/QuizCollection';
 import SlidesCarousel from 'js/components/collections/SlidesCarousel';
-import { resource } from 'js/utils/config';
 import navigation from 'js/services/navigation';
 import { layouts } from 'js/store/modules/ui';
 

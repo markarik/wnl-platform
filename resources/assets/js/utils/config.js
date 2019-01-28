@@ -11,6 +11,8 @@ export const modelToResourceMap = {
 	'App\\Models\\QuizQuestion': 'quiz_questions',
 	'App\\Models\\Slide': 'slides',
 	'App\\Models\\QnaAnswer': 'qna_answers',
+	'App\\Models\\Lesson': 'lessons',
+	'App\\Models\\Group': 'groups'
 };
 
 export const getModelByResource = (resource) => {

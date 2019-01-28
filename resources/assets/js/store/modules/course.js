@@ -3,6 +3,7 @@ import {set, delete as destroy} from 'vue';
 import {getApiUrl} from 'js/utils/env';
 import {resource} from 'js/utils/config';
 import * as types from 'js/store/mutations-types';
+import { modelToResourceMap } from 'js/utils/config';
 
 // Helper functions
 function getCourseApiUrl(courseId) {
@@ -12,6 +13,14 @@ function getCourseApiUrl(courseId) {
 		groups.lessons.screens.tags
 		&user=current&exclude=screens.content`
 	);
+}
+
+function _getCourseStructure(courseId = 1) {
+	return axios.get(getApiUrl(`course_structure_nodes/${courseId}`), {
+		params: {
+			include: 'groups,lessons'
+		}
+	});
 }
 
 const STATUS_NONE = 'none';
@@ -160,6 +169,9 @@ const mutations = {
 	[types.COURSE_READY] (state) {
 		set(state, 'ready', true);
 	},
+	[types.SET_NEW_STRUCTURE](state, payload) {
+		set(state, 'newStructure', payload);
+	},
 	[types.SET_STRUCTURE] (state, data) {
 		set(state, 'id', data.id);
 		set(state, 'name', data.name);
@@ -203,7 +215,24 @@ const actions = {
 				});
 		});
 	},
-	setStructure({commit, rootGetters}, courseId = 1) {
+	async setStructureNew({commit}, courseId = 1) {
+		const response = await _getCourseStructure(courseId);
+		const {data: {included, ...structureObj}} = response;
+		const structure = Object.values(structureObj);
+
+		const withIncludes = structure.map(node => {
+			const include = modelToResourceMap[node.structurable_type];
+			const value = included[include][node.structurable_id];
+
+			return {
+				...node,
+				model: value
+			};
+		});
+		commit(types.SET_NEW_STRUCTURE, withIncludes);
+	},
+	setStructure({commit, rootGetters, dispatch}, courseId = 1) {
+		dispatch('setStructureNew');
 		return axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
 			.then(response => {
 				commit(types.SET_STRUCTURE, response.data);

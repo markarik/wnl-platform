@@ -1,18 +1,11 @@
 <template>
 	<div class="wnl-sidenav" v-bind:class="{ mobile: isMobileNavigation }">
-		<div class="items" v-if="items">
-			<div class="item heading small" v-if="itemsHeading">
-				<span class="item-wrapper">
-					{{itemsHeading}}
-				</span>
-			</div>
-			<wnl-sidenav-group v-for="(item, index) in items"
-				:item="item"
-				:key="index"
-				:forceGroupOpen="isOption('forceGroupsOpen')"
-				:showSubitemsCount="isOption('showSubitemsCount')"
+		<div class="items">
+			<wnl-group-item v-for="(item) in rootItems"
+				 :item="item"
+				 :key="item.id"
 			>
-			</wnl-sidenav-group>
+			</wnl-group-item>
 		</div>
 	</div>
 </template>
@@ -117,27 +110,25 @@
 		.icon
 			vertical-align: baseline
 
-
 	.is-active
 		font-weight: $font-weight-bold
 </style>
 
 <script>
-import SidenavGroup from 'js/components/global/SidenavGroup';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
+import WnlGroupItem from 'js/components/course/navigation/GroupItem';
 
 export default {
-	props: ['items', 'itemsHeading', 'options'],
+	props: ['itemsHeading', 'options'],
 	components: {
-		'wnl-sidenav-group': SidenavGroup,
+		WnlGroupItem
 	},
 	computed: {
-		...mapGetters(['isMobileNavigation'])
-	},
-	methods: {
-		isOption(option) {
-			return typeof this.options === 'object' && !!this.options[option];
+		...mapGetters(['isMobileNavigation']),
+		...mapState('course', ['newStructure']),
+		rootItems() {
+			return this.newStructure.filter(item => !item.parent_id);
 		}
-	}
+	},
 };
 </script>

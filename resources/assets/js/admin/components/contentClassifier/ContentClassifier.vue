@@ -132,26 +132,25 @@ export default {
 				}
 			);
 
-			await Promise.all(promises)
-				.then((values) => {
-					values.forEach(({contentType, data}) => {
-						this.filteredContent[contentType] = data;
-					});
-				})
-				.catch((error) => {
-					Object.keys(this.filteredContent).forEach((contentType) => {
-						this.filteredContent[contentType] = [];
-					});
+			try {
+				const values = await Promise.all(promises);
 
-					$wnl.logger.capture(error);
-					this.addAutoDismissableAlert({
-						text: 'Coś poszło nie tak. Spróbuj ponownie.',
-						type: ALERT_TYPES.ERROR
-					});
-				})
-				.then(() => {
-					this.isLoading = false;
+				values.forEach(({contentType, data}) => {
+					this.filteredContent[contentType] = data;
 				});
+			} catch (error) {
+				Object.keys(this.filteredContent).forEach((contentType) => {
+					this.filteredContent[contentType] = [];
+				});
+
+				$wnl.logger.capture(error);
+				this.addAutoDismissableAlert({
+					text: 'Coś poszło nie tak. Spróbuj ponownie.',
+					type: ALERT_TYPES.ERROR
+				});
+			} finally {
+				this.isLoading = false;
+			}
 		}
 	}
 };

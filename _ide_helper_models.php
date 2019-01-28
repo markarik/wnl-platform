@@ -14,10 +14,22 @@ namespace App\Models{
 /**
  * App\Models\UserQuestionsBankState
  *
+ * @property int $id
+ * @property string $key
+ * @property array $value
+ * @property int $user_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState whereKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserQuestionsBankState whereValue($value)
  */
 	class UserQuestionsBankState extends \Eloquent {}
 }
@@ -1011,9 +1023,17 @@ namespace App\Models{
 /**
  * App\Models\TaxonomyTermable
  *
+ * @property int $id
+ * @property int $taxonomy_term_id
+ * @property int $taxonomy_termable_id
+ * @property string $taxonomy_termable_type
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable whereTaxonomyTermId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable whereTaxonomyTermableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable whereTaxonomyTermableType($value)
  */
 	class TaxonomyTermable extends \Eloquent {}
 }
@@ -1143,6 +1163,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Keyword[] $keywords
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags
+ * @property-read \Kalnoy\Nestedset\Collection|\App\Models\TaxonomyTerm[] $taxonomyTerms
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Annotation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Annotation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Annotation query()
@@ -1695,6 +1716,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuizSet[] $sets
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Slide[] $slides
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags
+ * @property-read \Kalnoy\Nestedset\Collection|\App\Models\TaxonomyTerm[] $taxonomyTerms
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserQuizResults[] $userQuizResults
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QuizQuestion newModelQuery()
@@ -1899,6 +1921,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Slideshow[] $slideshow
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Subsection[] $subsections
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags
+ * @property-read \Kalnoy\Nestedset\Collection|\App\Models\TaxonomyTerm[] $taxonomyTerms
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slide newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slide newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slide query()

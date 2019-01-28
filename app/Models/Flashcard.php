@@ -31,4 +31,9 @@ class Flashcard extends Model
 	{
 		return $this->morphToMany('App\Models\Tag', 'taggable');
 	}
+
+	public function taxonomyTerms()
+	{
+		return $this->morphToMany('App\Models\TaxonomyTerm', 'taxonomy_termable');
+	}
 }

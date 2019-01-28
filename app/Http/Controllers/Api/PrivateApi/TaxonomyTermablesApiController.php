@@ -23,19 +23,19 @@ class TaxonomyTermablesApiController extends ApiController {
 		$insertables = [
 			[
 				'field' => 'annotations',
-				'type' => 'App\\Model\\Annotation',
+				'type' => 'App\\Models\\Annotation',
 			],
 			[
 				'field' => 'flashcards',
-				'type' => 'App\\Model\\Flashcard',
+				'type' => 'App\\Models\\Flashcard',
 			],
 			[
 				'field' => 'quiz_questions',
-				'type' => 'App\\Model\\QuizQuestion',
+				'type' => 'App\\Models\\QuizQuestion',
 			],
 			[
 				'field' => 'slides',
-				'type' => 'App\\Model\\Slide',
+				'type' => 'App\\Models\\Slide',
 			],
 		];
 

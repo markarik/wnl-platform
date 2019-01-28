@@ -31,6 +31,10 @@
 
 			<div class="content-classifier__panel-editor">
 				<h4 class="title is-4 margin bottom">Zarządzaj</h4>
+				<label class="label is-uppercase"><strong>Pojęcia</strong></label>
+				<ul class="margin bottom">
+					<li v-for="term in activeTaxonomyTerms" :key="term.id">{{term.tag.name}}</li>
+				</ul>
 				<div class="field">
 					<label class="label is-uppercase"><strong>Dodaj pojęcie</strong></label>
 					<wnl-taxonomy-term-autocomplete
@@ -74,7 +78,8 @@
 
 <script>
 import axios from 'axios';
-import {mapActions} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
+import {uniqBy} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
 import {ALERT_TYPES} from 'js/consts/alert';
@@ -131,6 +136,25 @@ export default {
 			isLoading: false,
 		};
 	},
+	computed: {
+		...mapGetters('taxonomyTerms', ['termById']),
+		activeTaxonomyTerms() {
+			const taxonomyTerms = [];
+
+			// TODO simplify the spaghetti
+			Object.keys(this.filteredContent)
+				.forEach(contentType => {
+					this.filteredContent[contentType]
+						.forEach(item => {
+							if (item.taxonomy_terms) {
+								taxonomyTerms.push(...item.taxonomy_terms.map(id => this.termById(id)));
+							}
+						});
+				});
+
+			return uniqBy(taxonomyTerms, term => term.id);
+		}
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy']),
@@ -142,21 +166,26 @@ export default {
 					if (this.filters[contentType] === '') {
 						return {
 							contentType,
-							data: []
+							items: []
 						};
 					}
 
-					const {data: {data}} = await axios.post(getApiUrl(meta.resourceName), {
+					const {data} = await axios.post(getApiUrl(meta.resourceName), {
 						filters: [
 							{
 								by_ids: {ids: this.filters[contentType].split(',')},
 							},
 						],
+						include: 'taxonomy_terms',
+						// TODO use wnl-paginated-list instead
+						limit: 10000,
 					});
+
+					const {data: {included = {}, ...items}} = data;
 
 					return {
 						contentType,
-						data
+						items: Object.values(items)
 					};
 				}
 			);
@@ -164,8 +193,8 @@ export default {
 			try {
 				const values = await Promise.all(promises);
 
-				values.forEach(({contentType, data}) => {
-					this.filteredContent[contentType] = data;
+				values.forEach(({contentType, items}) => {
+					this.filteredContent[contentType] = items;
 				});
 			} catch (error) {
 				Object.keys(this.filteredContent).forEach((contentType) => {
@@ -200,6 +229,7 @@ export default {
 	},
 	async mounted() {
 		try {
+			// TODO get id from a taxonomy selector
 			await this.fetchTermsByTaxonomy(4);
 		} catch (error) {
 			this.addAutoDismissableAlert({

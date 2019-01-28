@@ -31,17 +31,8 @@ module.exports = {
 			'error',
 			'always'
 		],
-		// TODO enable these rules, one by one
-		'vue/no-side-effects-in-computed-properties': [
-			'off'
-		],
+		// TODO enable this rule
 		'vue/no-use-v-if-with-v-for': [
-			'off'
-		],
-		'vue/return-in-computed-property': [
-			'off'
-		],
-		'vue/no-async-in-computed-properties': [
 			'off'
 		],
 	},

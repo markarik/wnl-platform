@@ -200,9 +200,7 @@ export default {
 			return getApiUrl(`slideshow_builder/${this.presentableType === 'category' ? 'category/' : ''}${this.presentableId}`);
 		},
 		iframe() {
-			if (this.loaded) {
-				return this.$el.getElementsByTagName('iframe')[0];
-			}
+			return this.loaded ? this.$el.getElementsByTagName('iframe')[0] : null;
 		},
 	},
 	methods: {

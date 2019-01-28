@@ -5,9 +5,9 @@
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
 		<div class="control" v-else>
-			<input class="input" v-model="search" placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć" />
+			<input class="input" v-model="search" placeholder="Wpisz nazwę lekcji/grupy, który chcesz dołączyć lub utworzyć" />
 			<wnl-autocomplete
-				:items="autocompleteTags"
+				:items="autocompleteItems"
 				:onItemChosen="onSelect"
 				:isDown="true"
 			>
@@ -16,17 +16,23 @@
 						{{slotProps.item.name}}
 					</div>
 				</template>
-				<template slot="footer" v-if="autocompleteTags.length === 0 && search !== ''">
+				<template slot="footer" v-if="autocompleteItems.length === 0 && search !== ''">
 					<div>
 						<div class="margin">
-							Nie mamy taga <strong>{{search}}</strong>
+							Nie mamy lekcji ani grupy o nazwie <strong>{{search}}</strong>
 						</div>
 						<div class="autocomplete-footer-button-container">
-							<button class="button" @click="onTagAdd">
+							<button class="button" @click="onLessonAdd">
 								<span class="icon is-small">
 									<i class="fa fa-plus" aria-hidden="true"></i>
 								</span>
-								<span>Dodaj nowy tag</span>
+								<span>Dodaj nową lekcję</span>
+							</button>
+							<button class="button" @click="onGroupAdd">
+								<span class="icon is-small">
+									<i class="fa fa-plus" aria-hidden="true"></i>
+								</span>
+								<span>Dodaj nową Grupę</span>
 							</button>
 						</div>
 					</div>
@@ -71,17 +77,28 @@ export default {
 		};
 	},
 	computed: {
-		...mapState('tags', ['tags']),
-		autocompleteTags() {
+		...mapState('lessons', ['lessons']),
+		...mapState('groups', ['groups']),
+		autocompleteItems() {
 			if (!this.search) {
 				return [];
 			}
 			const lowerSearch = this.search.toLocaleLowerCase();
 
-			const tags = this.tags.filter(tag => tag.name.toLocaleLowerCase().startsWith(lowerSearch));
-			tags.push(...this.tags.filter(tag => tag.name.toLocaleLowerCase().includes(lowerSearch)));
+			const items = [
+				...this.lessons.map(lesson => {
+					lesson.type = 'App\\Models\\Lesson';
+					return lesson;
+				}),
+				...this.groups.map(group => {
+					group.type = 'App\\Models\\Group';
+					return group;
+				})];
 
-			return uniqBy(tags, 'id').slice(0, 25);
+			const filteredItems = items.filter(item => item.name.toLocaleLowerCase().startsWith(lowerSearch));
+			filteredItems.push(...items.filter(item => item.name.toLocaleLowerCase().includes(lowerSearch)));
+
+			return uniqBy(filteredItems, (item => [item.id, item.type].join())).slice(0, 25);
 		},
 	},
 	components: {
@@ -89,19 +106,37 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('tags', {
-			fetchAllTags: 'fetchAll',
-			createTag: 'create',
+		...mapActions('lessons', {
+			setupLessons: 'setup',
+			createLesson: 'create',
+		}),
+		...mapActions('groups', {
+			fetchAllGroups: 'fetchAll',
+			createGroup: 'create',
 		}),
 		onSelect(item) {
 			this.search = '';
 			this.$emit('change', item);
 		},
-		async onTagAdd() {
+		async onLessonAdd() {
 			try {
-				const tag = await this.createTag(this.search);
+				const lesson = await this.createLesson(this.search);
 				this.search = '';
-				this.$emit('change', tag);
+				this.$emit('change', lesson);
+			} catch (error) {
+				$wnl.logger.capture(error);
+
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+					type: 'error',
+				});
+			}
+		},
+		async onGroupAdd() {
+			try {
+				const group = await this.createGroup(this.search);
+				this.search = '';
+				this.$emit('change', group);
 			} catch (error) {
 				$wnl.logger.capture(error);
 
@@ -114,7 +149,7 @@ export default {
 	},
 	async mounted() {
 		try {
-			await this.fetchAllTags();
+			await Promise.all([this.setupLessons(), this.fetchAllGroups()]);
 		} catch (error) {
 			$wnl.logger.capture(error);
 

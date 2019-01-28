@@ -4,6 +4,7 @@ export const USERS_SETUP_CURRENT = 'USERS_SETUP_CURRENT';
 // Lessons
 export const LESSONS_READY = 'LESSONS_READY';
 export const SETUP_LESSONS = 'SETUP_LESSONS';
+export const ADD_LESSON = 'ADD_LESSON';
 
 //Quiz questions
 export const SETUP_QUIZ_QUESTION = 'SETUP_QUIZ_QUESTION';
@@ -36,6 +37,11 @@ export const SET_EXPANDED_TAXONOMY_TERMS = 'EXPAND_TAXONOMY_TERMS';
 export const SET_TAGS_LOADING = 'SET_TAGS_LOADING';
 export const SETUP_TAGS = 'SETUP_TAGS';
 export const ADD_TAG = 'ADD_TAG';
+
+// Groups
+export const SETUP_GROUPS = 'SETUP_GROUPS';
+export const ADD_GROUP = 'ADD_GROUP';
+export const SET_GROUPS_LOADING = 'SET_COURSE_STRUCTURE_LOADING';
 
 // Structure nodes
 export const SETUP_COURSE_STRUCTURE = 'SETUP_COURSE_STRUCTURE';

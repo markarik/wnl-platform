@@ -12,6 +12,10 @@
 		<div class="field">
 			<label class="label is-uppercase"><strong>Tag źródłowy</strong></label>
 			<span class="info">Wybierz tag, na podstawie którego chcesz utworzyć pojęcie, lub utwórz nowy.</span>
+			<wnl-structurable-autocomplete
+				@change="onSelectStructurable"
+				:selected="structurable"
+			/>
 		</div>
 
 		<div class="field">
@@ -39,12 +43,14 @@
 import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTermAutocomplete from 'js/admin/components/structure/TaxonomyTermEditorTermAutocomplete';
+import WnlStructurableAutocomplete from 'js/admin/components/structure/TaxonomyTermEditorStructurableAutocomplete';
 import {ALERT_TYPES} from '../../../consts/alert';
 
 const initialState = {
 	description: '',
 	id: null,
 	parent: null,
+	structurable: null,
 };
 
 export default {
@@ -73,12 +79,13 @@ export default {
 	},
 	components: {
 		WnlTermAutocomplete,
+		WnlStructurableAutocomplete,
 	},
 	computed: {
 		...mapState('courseStructure', ['terms', 'isSaving']),
 		...mapGetters('courseStructure', ['getAncestorsById']),
 		submitDisabled() {
-			return this.isSaving;
+			return !this.structurable || this.isSaving;
 		},
 	},
 	methods: {
@@ -87,8 +94,10 @@ export default {
 			this.onSave({
 				id: this.id,
 				parent_id: this.parent ? this.parent.id : null,
+				structurable_id: this.structurable.id,
+				structurable_type: this.structurable.type,
 				description: this.description,
-				taxonomy_id: this.taxonomyId,
+				course_id: this.taxonomyId,
 			});
 		},
 		onSelectParent(term) {
@@ -103,6 +112,10 @@ export default {
 			this.$emit('parentChange', term);
 		},
 
+		onSelectStructurable(structurable) {
+			this.structurable = structurable;
+		},
+
 		onTermUpdated(term) {
 			if (term === null) {
 				term = {
@@ -110,10 +123,11 @@ export default {
 				};
 			}
 
-			const {description, id, parent} = term;
+			const {description, id, parent, structurable} = term;
 			this.description = description;
 			this.id = id;
 			this.parent = parent;
+			this.structurable = structurable;
 		}
 	},
 	watch: {

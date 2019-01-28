@@ -23,7 +23,7 @@ class UpdateCourseStructureNode extends FormRequest {
 		return [
 			'parent_id' => 'nullable|numeric|exists:course_structure_nodes,id',
 			'structurable_id' => 'required|numeric', // TODO: Add custom validation method for structurables.
-			'structurable_type' => 'required|numeric',
+			'structurable_type' => 'required|string',
 			'course_id' => 'required|numeric|exists:courses,id',
 			'description' => 'string|max:1000|nullable',
 		];

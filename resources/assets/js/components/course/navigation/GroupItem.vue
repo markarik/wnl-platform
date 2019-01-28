@@ -1,26 +1,22 @@
 <template>
-	<div class="wnl-sidenav-group" :class="{'no-items': !hasSubitems}">
-		<div class="wnl-sidenav-item-wrapper">
-			<div class="wnl-sidenav-group-toggle" @click="isOpen = !isOpen">
-				<span class="item-wrapper">
-					<div class="sidenav-icon-wrapper">
-						<span class="icon is-small" v-if="hasSubitems">
-							<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
-						</span>
-					</div>
-					<span class="sidenav-item-content">
-						{{groupItem.text}}
-						<span class="subitems-count" v-if="hasSubitems">({{subitems.length}})</span>
-					</span>
+	<div class="wnl-navigation-group" :class="{'no-items': !hasSubitems}">
+		<div class="wnl-navigation-group__toggle" @click="isOpen = !isOpen">
+			<div class="wnl-navigation-group__item">
+				<span class="icon is-small" v-if="hasSubitems">
+					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
+				</span>
+				<span class="sidenav-item-content">
+					{{groupItem.text}}
+					<span class="wnl-navigation-group__count" v-if="hasSubitems">({{subitems.length}})</span>
 				</span>
 			</div>
-			<ul class="wnl-sidenav-subitems" v-if="canRenderSubitems">
-				<wnl-lesson-item
-					v-for="(subitem) in subitems"
-					:item="subitem"
-					:key="subitem.id"
-				></wnl-lesson-item>
-			</ul>
+		</div>
+		<div class="wnl-sidenav-subitems" v-if="canRenderSubitems">
+			<wnl-lesson-item
+				v-for="(subitem) in subitems"
+				:item="subitem"
+				:key="subitem.id"
+			></wnl-lesson-item>
 		</div>
 	</div>
 </template>
@@ -28,103 +24,48 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.wnl-sidenav-group
+	.wnl-navigation-group
 		margin-bottom: $margin-base
 
-	.wnl-sidenav-group-toggle
-		color: $color-gray
-		cursor: pointer
-		transition: background-color $transition-length-base
-
-		&:hover
-			background-color: $color-background-lighter-gray
+		&__toggle
+			color: $color-gray
+			cursor: pointer
 			transition: background-color $transition-length-base
+			padding: 7px 0 12px 0
 
-		.subitems-count
+			&:hover
+				background-color: $color-background-lighter-gray
+				transition: background-color $transition-length-base
+
+		&__count
 			color: $color-background-gray
 			font-size: $font-size-minus-3
 
-	.wnl-sidenav-group.no-items
-		margin-bottom: 0
+		&__item
+			display: flex
+			align-items: center
+			line-height: 1.5em
+			padding: 7px 15px
+			word-break: break-word
+			word-wrap: break-word
+			font-size: 0.875rem
+			letter-spacing: 1px
+			text-transform: uppercase
 
-		.wnl-sidenav-group-toggle
-			color: $color-background-gray
-			cursor: default
+			.toggle
+				margin-right: 5px
+				color: $color-background-gray
+				transition: all $transition-length-base
 
-			&:hover
-				background: transparent
+		&.no-items
+			margin-bottom: 0
 
-			.item
-				margin: 0
-				padding: $margin-tiny 0
+			.wnl-navigation-group__toggle
+				color: $color-background-gray
+				cursor: default
 
-	=subitem-indent($nestLevel)
-		margin-left: $margin-base + $margin-base * $nestLevel
-
-	.item-wrapper
-		height: 100%
-		width: 100%
-		user-select: none
-
-	.is-grouped
-		padding-left: $margin-base
-
-	.has-icon
-		.icon
-			color: $color-inactive-gray
-
-	.icon.is-small
-		font-size: $font-size-minus-1
-		margin-top: -1px
-		margin-right: $margin-tiny
-
-	.sidenav-icon-wrapper
-		margin-right: 5px
-
-		.icon
-			margin-top: 0
-
-	.sidenav-item-meta
-		color: $color-background-gray
-		font-size: $font-size-minus-3
-		line-height: $line-height-plus
-
-	a
-		transition: background-color $transition-length-base
-
-		&:hover
-			color: $color-ocean-blue
-
-		&.router-link-exact-active
-			background: $color-background-lighter-gray
-			font-weight: $font-weight-regular
-			transition: background-color $transition-length-base
-
-		&.is-active
-			font-weight: $font-weight-regular
-
-	.todo
-		a:before
-			color: $color-background-gray
-			content: '○'
-			margin-left: $margin-tiny
-
-		a.is-completed:before
-			content: '✓'
-
-	.subitem
-		+subitem-indent(0)
-
-		.icon.is-small
-			margin-right: 0
-
-	.subitem--second
-		+subitem-indent(2)
-
-	.toggle
-		color: $color-background-gray
-		transition: all $transition-length-base
-
+				&:hover
+					background: transparent
 </style>
 
 <script>

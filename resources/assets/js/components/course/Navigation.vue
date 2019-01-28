@@ -1,6 +1,6 @@
 <template>
 	<aside class="sidenav-aside course-sidenav">
-		<wnl-course-navigation :itemsHeading="itemsHeading" :options="sidenavOptions"></wnl-course-navigation>
+		<wnl-course-navigation></wnl-course-navigation>
 	</aside>
 </template>
 
@@ -70,124 +70,6 @@ export default {
 		},
 	},
 	methods: {
-		getCourseNavigation() {
-			if (this.isStructureEmpty) {
-				$wnl.logger.debug('Empty structure, WTF?');
-				$wnl.logger.debug(this.structure);
-				return;
-			}
-
-			let navigation = [];
-
-			if (this.groups.length === 0) {
-				return navigation;
-			}
-			for (let i = 0, groupsLen = this.groups.length; i < groupsLen; i++) {
-				let groupId = this.groups[i],
-					group = this.structure[resource('groups')][groupId];
-
-				const groupItem = this.getGroupItem(group);
-				navigation.push(groupItem);
-
-				if (!group.hasOwnProperty(resource('lessons'))) {
-					continue;
-				}
-
-				groupItem.subitems = [];
-
-				for (let j = 0, lessonsLen = group[resource('lessons')].length; j < lessonsLen; j++) {
-					let lessonId = group[resource('lessons')][j],
-						lesson = this.structure[resource('lessons')][lessonId];
-
-					groupItem.subitems.push(this.getLessonItem(lesson));
-				}
-			}
-
-			return navigation;
-		},
-		getLessonNavigation() {
-			if (this.isStructureEmpty) {
-				$wnl.logger.debug('Empty structure, WTF?');
-				$wnl.logger.debug(this.structure);
-				return;
-			}
-
-			let navigation = [],
-				lesson = this.structure[resource('lessons')][this.context.lessonId],
-				screens = this.getScreens(lesson.id);
-
-			if (!lesson.hasOwnProperty(resource('screens'))) {
-				return navigation;
-			}
-
-			screens.forEach((screen) => {
-				navigation.push(this.getScreenItem(screen));
-
-				if (screen.hasOwnProperty(resource('sections'))) {
-					let sectionsIds = screen.sections;
-
-					sectionsIds.forEach((sectionId, index) => {
-						let section = this.structure[resource('sections')][sectionId];
-						navigation.push(this.getSectionItem(section));
-
-						if (section.hasOwnProperty('subsections')) {
-							let subsectionsIds = section.subsections;
-
-							subsectionsIds.forEach((subsectionId, index) => {
-								let subsection = this.structure['subsections'][subsectionId];
-								navigation.push(this.getSubsectionItem(subsection, section));
-							});
-						}
-					});
-				}
-			});
-
-			return navigation;
-		},
-		getCourseItem() {
-			return navigation.composeItem({
-				text: this.name,
-				itemClass: 'has-icon',
-				routeName: resource('courses'),
-				routeParms: {
-					courseId: this.context.courseId,
-				},
-				iconClass: 'fa-home',
-				iconTitle: 'Strona główna kursu'
-			});
-		},
-		getGroupItem(group) {
-			return navigation.composeItem({text: group.name, itemClass: 'heading small'});
-		},
-		getLessonItem(lesson, withProgress = true) {
-			let cssClass = 'is-grouped ', iconClass = '', iconTitle = '';
-
-			if (withProgress) {
-				cssClass += 'with-progress';
-
-				if (this.courseProgress.lessons && this.courseProgress.lessons.hasOwnProperty(lesson.id)) {
-					cssClass = `${cssClass} ${this.courseProgress.lessons[lesson.id].status}`;
-				}
-			} else {
-				cssClass += 'has-icon';
-				iconClass = 'fa-graduation-cap';
-				iconTitle = 'Obecna lekcja';
-			}
-
-			return navigation.composeItem({
-				text: lesson.name,
-				itemClass: cssClass,
-				routeName: resource('lessons'),
-				routeParams: {
-					courseId: this.courseId,
-					lessonId: lesson.id,
-				},
-				isDisabled: !this.isLessonAvailable(lesson.id),
-				iconClass,
-				iconTitle
-			});
-
-		},
 		getScreenItem(screen) {
 			const params = {
 				courseId: this.courseId,

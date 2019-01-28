@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-sidenav" v-bind:class="{ mobile: isMobileNavigation }">
+	<div class="wnl-course-navigation" v-bind:class="{ mobile: isMobileNavigation }">
 		<div class="items">
 			<wnl-group-item v-for="(item) in rootItems"
 				 :item="item"
@@ -10,10 +10,10 @@
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.wnl-sidenav
+	.wnl-course-navigation
 		&.mobile
 			height: auto
 			width: 100%
@@ -119,7 +119,6 @@ import { mapGetters, mapState } from 'vuex';
 import WnlGroupItem from 'js/components/course/navigation/GroupItem';
 
 export default {
-	props: ['itemsHeading', 'options'],
 	components: {
 		WnlGroupItem
 	},

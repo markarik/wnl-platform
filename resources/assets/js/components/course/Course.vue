@@ -8,7 +8,6 @@
 			<wnl-course-navigation
 				v-if="$currentEditionParticipant.isAllowed('access')"
 				:context="context"
-				:isLesson="isLesson"
 			>
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>

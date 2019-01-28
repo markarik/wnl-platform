@@ -1,5 +1,5 @@
 <template>
-	<li class="item" :class="[itemClass, { disabled: item.isDisabled }]">
+	<div class="item" :class="[itemClass, { disabled: item.isDisabled }]">
 		<router-link
 			class="item-wrapper"
 			:class="{'router-link-exact-active': item.active, 'is-disabled': item.isDisabled, 'is-completed': item.completed}"
@@ -16,7 +16,7 @@
 				{{lessonItem.text}}
 			</span>
 		</router-link>
-	</li>
+	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>

@@ -63,6 +63,7 @@ return [
 	"unique"               => "Ta wartość jest już zajęta.",
 	"url"                  => "Ten adres URL jest nieprawidłowy.",
 	"timezone"             => "Ta wartość musi być prawidłową strefą czasową.",
+	"morph_exists"         => "Wybrana wartość nie istnieje.",
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Language Lines

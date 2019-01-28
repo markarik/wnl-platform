@@ -259,20 +259,3 @@ export default {
 	getters,
 	actions
 };
-
-
-// const mutations = {
-// 	[types.SETUP_COURSE_STRUCTURE](state, payload) {
-// 		set(state, 'nodes', payload);
-// 	},
-// };
-//
-// // Actions
-// const actions = {
-// 	async fetchStructure({commit}, courseId) {
-// 		const response = await axios.get(getApiUrl(`course_structure_nodes/${courseId}?include=lessons,groups`));
-// 		const {data: {included, ...nodes}} = response;
-// 		commit(types.SETUP_COURSE_STRUCTURE, Object.values(nodes).map(node => _parseIncludes(node, included)));
-// 	},
-// };
-//

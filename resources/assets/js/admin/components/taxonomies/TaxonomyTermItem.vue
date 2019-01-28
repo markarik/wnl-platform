@@ -103,7 +103,7 @@
 
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
-import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
+import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 
 export default {
 	props: {
@@ -142,15 +142,15 @@ export default {
 			'selectTerms': 'select',
 		}),
 		onAdd() {
-			this.setEditorMode(TAXONOMY_EDITOR_MODES.ADD);
+			this.setEditorMode(NESTED_SET_EDITOR_MODES.ADD);
 			this.selectTerms([this.term.id]);
 		},
 		onDelete() {
-			this.setEditorMode(TAXONOMY_EDITOR_MODES.DELETE);
+			this.setEditorMode(NESTED_SET_EDITOR_MODES.DELETE);
 			this.selectTerms([this.term.id]);
 		},
 		onEdit() {
-			this.setEditorMode(TAXONOMY_EDITOR_MODES.EDIT);
+			this.setEditorMode(NESTED_SET_EDITOR_MODES.EDIT);
 			this.selectTerms([this.term.id]);
 		},
 		toggle() {

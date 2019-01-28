@@ -30,7 +30,7 @@ import {mapActions, mapState} from 'vuex';
 import WnlTaxonomyTermEditorAdd from 'js/admin/components/taxonomies/TaxonomyTermEditorAdd';
 import WnlTaxonomyTermEditorDelete from 'js/admin/components/taxonomies/TaxonomyTermEditorDelete';
 import WnlTaxonomyTermEditorEdit from 'js/admin/components/taxonomies/TaxonomyTermEditorEdit';
-import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
+import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 
 export default {
 	props: {
@@ -44,24 +44,24 @@ export default {
 			modes: [
 				{
 					icon: 'fa-plus',
-					key: TAXONOMY_EDITOR_MODES.ADD,
+					key: NESTED_SET_EDITOR_MODES.ADD,
 					label: 'Dodaj',
 					componentName: WnlTaxonomyTermEditorAdd
 				},
 				{
 					icon: 'fa-pencil',
-					key: TAXONOMY_EDITOR_MODES.EDIT,
+					key: NESTED_SET_EDITOR_MODES.EDIT,
 					label: 'Edytuj',
 					componentName: WnlTaxonomyTermEditorEdit
 				},
 				// {
 				// 	icon: 'fa-compress',
-				// 	key: TAXONOMY_EDITOR_MODES.MERGE,
+				// 	key: NESTED_SET_EDITOR_MODES.MERGE,
 				// 	label: 'Połącz'
 				// },
 				{
 					icon: 'fa-trash',
-					key: TAXONOMY_EDITOR_MODES.DELETE,
+					key: NESTED_SET_EDITOR_MODES.DELETE,
 					label: 'Usuń',
 					componentName: WnlTaxonomyTermEditorDelete
 				}

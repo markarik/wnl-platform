@@ -3,13 +3,13 @@ import { uniq } from 'lodash';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
 import * as types from 'js/admin/store/mutations-types';
-import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
+import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 
 // Namespace
 const namespaced = true;
 
 const initialState = {
-	editorMode: TAXONOMY_EDITOR_MODES.ADD,
+	editorMode: NESTED_SET_EDITOR_MODES.ADD,
 	expandedTerms: [],
 	isLoading: false,
 	isSaving: false,
@@ -44,41 +44,41 @@ const getters = {
 
 // Mutations
 const mutations = {
-	[types.RESET_TAXONOMY_TERMS_STATE] (state) {
+	[types.RESET_NESTED_SET_STATE] (state) {
 		Object.keys(state).forEach(key => {
 			set(state, key, initialState[key]);
 		});
 	},
-	[types.SET_TAXONOMY_TERMS_LOADING] (state, payload) {
+	[types.SET_NESTED_SET_LOADING] (state, payload) {
 		set(state, 'isLoading', payload);
 	},
-	[types.SET_TAXONOMY_TERMS_SAVING] (state, payload) {
+	[types.SET_NESTED_SET_SAVING] (state, payload) {
 		set(state, 'isSaving', payload);
 	},
-	[types.SETUP_TERMS] (state, payload) {
+	[types.SETUP_NESTED_SET] (state, payload) {
 		set(state, 'terms', payload);
 	},
-	[types.ADD_TERM] (state, payload) {
+	[types.SETUP_NESTED_SET] (state, payload) {
 		state.terms.push(payload);
 	},
-	[types.UPDATE_TERM] (state, payload) {
+	[types.UPDATE_NESTED_SET_NODE] (state, payload) {
 		set(state.terms, state.terms.findIndex(term => term.id === payload.id), payload);
 	},
-	[types.DELETE_TERM] (state, payload) {
+	[types.DELETE_NESTED_SET_NODE] (state, payload) {
 		const index = state.terms.findIndex(term => term.id === payload.id);
 		state.terms.splice(index, 1);
 	},
-	[types.SELECT_TAXONOMY_TERMS] (state, payload) {
+	[types.SELECT_NESTED_SET] (state, payload) {
 		set(state, 'selectedTerms', payload);
 	},
-	[types.SET_EXPANDED_TAXONOMY_TERMS] (state, payload) {
+	[types.SET_EXPANDED_NESTED_SET] (state, payload) {
 		set(state, 'expandedTerms', payload);
 	},
-	[types.SET_TAXONOMY_TERM_EDITOR_MODE] (state, payload) {
+	[types.SET_NESTED_SET_EDITOR_MODE] (state, payload) {
 		set(state, 'editorMode', payload);
 	},
 	// the order of items in passed list is important!
-	[types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS] (state, {list}) {
+	[types.UPDATE_NESTED_SET_ORDER_NUMBERS] (state, {list}) {
 		const updatedList = list
 			.map((item, index) => ({
 				...item,
@@ -105,8 +105,8 @@ const includeTag = (term, tags) => {
 // Actions
 const actions = {
 	async fetchTermsByTaxonomy({commit}, taxonomyId) {
-		commit(types.RESET_TAXONOMY_TERMS_STATE);
-		commit(types.SET_TAXONOMY_TERMS_LOADING, true);
+		commit(types.RESET_NESTED_SET_STATE);
+		commit(types.SET_NESTED_SET_LOADING, true);
 		try {
 			const response = await axios.get(getApiUrl(`taxonomy_terms/byTaxonomy/${taxonomyId}?include=tags`));
 			const {data: {included, ...termsObj}} = response;
@@ -125,34 +125,34 @@ const actions = {
 			});
 
 			commit(
-				types.SETUP_TERMS,
+				types.SETUP_NESTED_SET,
 				termsWithOrderNumbers.map(term => includeTag(term, included.tags))
 			);
 		} catch (error) {
 			throw error;
 		} finally {
-			commit(types.SET_TAXONOMY_TERMS_LOADING, false);
+			commit(types.SET_NESTED_SET_LOADING, false);
 		}
 	},
 
 	async create({commit, state, getters}, taxonomyTerm) {
-		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
+		commit(types.SET_NESTED_SET_SAVING, true);
 		try {
 			const response = await axios.post(getApiUrl('taxonomy_terms?include=tags'), taxonomyTerm);
 			const {data: {included, ...term}} = response;
-			commit(types.ADD_TERM, includeTag(term, included.tags));
-			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {
+			commit(types.SETUP_NESTED_SET, includeTag(term, included.tags));
+			commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {
 				list: getters.getChildrenByParentId(taxonomyTerm.parent_id)
 			});
 		} catch (error) {
 			throw error;
 		} finally {
-			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+			commit(types.SET_NESTED_SET_SAVING, false);
 		}
 	},
 
 	async update({commit, state, getters}, term) {
-		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
+		commit(types.SET_NESTED_SET_SAVING, true);
 		try {
 			const response = await axios.put(getApiUrl(`taxonomy_terms/${term.id}?include=tags`), term);
 			const {data: {included, ...updatedTerm}} = response;
@@ -164,27 +164,27 @@ const actions = {
 				term.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
 			}
 
-			commit(types.UPDATE_TERM, includeTag({...term, ...updatedTerm}, included.tags));
+			commit(types.UPDATE_NESTED_SET_NODE, includeTag({...term, ...updatedTerm}, included.tags));
 		} catch (error) {
 			throw error;
 		} finally {
-			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+			commit(types.SET_NESTED_SET_SAVING, false);
 		}
 	},
 
 	async delete({commit, state, getters}, taxonomyTerm) {
-		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
+		commit(types.SET_NESTED_SET_SAVING, true);
 		try {
 			await axios.delete(getApiUrl(`taxonomy_terms/${taxonomyTerm.id}`));
 
-			commit(types.DELETE_TERM, taxonomyTerm);
-			commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {
+			commit(types.DELETE_NESTED_SET_NODE, taxonomyTerm);
+			commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {
 				list: getters.getChildrenByParentId(taxonomyTerm.parent_id)
 			});
 		} catch (error) {
 			throw error;
 		} finally {
-			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+			commit(types.SET_NESTED_SET_SAVING, false);
 		}
 	},
 
@@ -200,11 +200,11 @@ const actions = {
 		allSiblings.splice(oldIndex, 1);
 		allSiblings.splice(newIndex, 0, term);
 
-		commit(types.UPDATE_SIBLINGS_LIST_ORDER_NUMBERS, {list: allSiblings});
+		commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {list: allSiblings});
 	},
 
 	async moveTerm({dispatch, commit}, {term, direction}) {
-		commit(types.SET_TAXONOMY_TERMS_SAVING, true);
+		commit(types.SET_NESTED_SET_SAVING, true);
 
 		try {
 			dispatch('reorderSiblings', {term, direction});
@@ -215,29 +215,29 @@ const actions = {
 		} catch (e) {
 			throw e;
 		} finally {
-			commit(types.SET_TAXONOMY_TERMS_SAVING, false);
+			commit(types.SET_NESTED_SET_SAVING, false);
 		}
 	},
 
 	setEditorMode({commit}, editorMode) {
-		commit(types.SET_TAXONOMY_TERM_EDITOR_MODE, editorMode);
+		commit(types.SET_NESTED_SET_EDITOR_MODE, editorMode);
 	},
 
 	select({commit}, selectedTerms) {
-		commit(types.SELECT_TAXONOMY_TERMS, selectedTerms);
+		commit(types.SELECT_NESTED_SET, selectedTerms);
 	},
 
 	collapse({commit}, termId) {
-		commit(types.SET_EXPANDED_TAXONOMY_TERMS, state.expandedTerms.filter(id => id !== termId));
+		commit(types.SET_EXPANDED_NESTED_SET, state.expandedTerms.filter(id => id !== termId));
 	},
 	collapseAll({commit}) {
-		commit(types.SET_EXPANDED_TAXONOMY_TERMS, []);
+		commit(types.SET_EXPANDED_NESTED_SET, []);
 	},
 
 	expand({commit, getters}, termId) {
 		const term = getters.termById(termId);
 
-		commit(types.SET_EXPANDED_TAXONOMY_TERMS, uniq([
+		commit(types.SET_EXPANDED_NESTED_SET, uniq([
 			...state.expandedTerms,
 			...getters.getAncestorsById(term.id).map(ancestor => ancestor.id),
 			term.id

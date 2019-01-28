@@ -4,7 +4,7 @@
 		class="has-text-centered"
 	>
 		<p class="margin bottom">
-			Czy na pewno chcesz usunąć pojęcie <em><strong>{{term.tag.name}}</strong></em> wraz z potomkami?
+			Czy na pewno chcesz usunąć pojęcie <em><strong>{{term.structurable.name}}</strong></em> wraz z potomkami?
 		</p>
 		<button
 			class="button is-danger"

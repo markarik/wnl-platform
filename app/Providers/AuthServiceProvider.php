@@ -27,7 +27,7 @@ use App\Policies\AnnotationPolicy;
 use App\Policies\CommentPolicy;
 use App\Policies\Course\QuizQuestionPolicy;
 use App\Policies\Course\ScreensPolicy;
-use App\Policies\CourseStructureNodePolicy;
+use App\Policies\Course\CourseStructureNodePolicy;
 use App\Policies\NotificationPolicy;
 use App\Policies\InvoicePolicy;
 use App\Policies\OrderPolicy;

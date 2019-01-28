@@ -14,7 +14,11 @@
 			<div v-for="(meta, contentType) in contentTypes" :key="contentType" v-if="filteredContent[contentType].length">
 				<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
 				<ul class="content-classifier-result-list margin bottom">
-					<li v-for="item in filteredContent[contentType]" class="content-classifier-result-item">
+					<li
+						v-for="item in filteredContent[contentType]"
+						:key="item.id"
+						class="content-classifier-result-item"
+					>
 						<component :is="meta.component" :item="item"/>
 					</li>
 				</ul>

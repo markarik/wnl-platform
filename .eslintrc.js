@@ -41,12 +41,6 @@ module.exports = {
 		'vue/return-in-computed-property': [
 			'off'
 		],
-		'vue/valid-v-for': [
-			'off'
-		],
-		'vue/require-v-for-key': [
-			'off'
-		],
 		'vue/no-async-in-computed-properties': [
 			'off'
 		],

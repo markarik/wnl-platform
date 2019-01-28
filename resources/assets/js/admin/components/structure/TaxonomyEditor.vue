@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h2 class="title is-2">Edycja taksonomii <span v-if="isEdit">(Id: {{id}})</span></h2>
+		<h2 class="title is-2">Edycja struktury kursu <span v-if="isEdit">(Id: {{id}})</span></h2>
 
 		<wnl-taxonomy-terms-editor :taxonomyId="id" v-if="isEdit" />
 	</div>

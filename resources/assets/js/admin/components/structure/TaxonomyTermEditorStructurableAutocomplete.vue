@@ -13,7 +13,7 @@
 			>
 				<template slot-scope="slotProps">
 					<div>
-						{{slotProps.item.name}}
+						{{slotProps.item.name}} ({{slotProps.item.type}})
 					</div>
 				</template>
 				<template slot="footer" v-if="autocompleteItems.length === 0 && search !== ''">

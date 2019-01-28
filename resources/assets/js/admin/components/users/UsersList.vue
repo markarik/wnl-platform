@@ -66,7 +66,7 @@ export default {
 	},
 	props: {
 		usersResponse: {
-			type: Object|Array,
+			type: [Object, Array],
 			required: true
 		},
 	},

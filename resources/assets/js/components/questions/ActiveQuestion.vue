@@ -100,7 +100,7 @@ export default {
 		},
 		question: {
 			type: Object,
-			default: {},
+			default: () => {},
 		},
 		questionNumber: {
 			type: Number,

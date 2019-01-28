@@ -18,6 +18,7 @@
 					<span
 						class="tag"
 						v-for="tag in annotation.tags"
+						:key="tag.id"
 						:style="{backgroundColor: getColourForStr(tag.name)}">
 						{{tag.name}}
 					</span>

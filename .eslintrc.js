@@ -31,20 +31,8 @@ module.exports = {
 			'error',
 			'always'
 		],
-		// TODO enable these rules, one by one
-		'vue/require-prop-type-constructor': [
-			'off'
-		],
-		'vue/require-valid-default-prop': [
-			'off'
-		],
+		// TODO enable this rule
 		'vue/no-use-v-if-with-v-for': [
-			'off'
-		],
-		'vue/valid-v-for': [
-			'off'
-		],
-		'vue/require-v-for-key': [
 			'off'
 		],
 	},

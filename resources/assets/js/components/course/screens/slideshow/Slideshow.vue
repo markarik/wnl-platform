@@ -253,7 +253,7 @@ export default {
 			return index + 1;
 		},
 		goToSlide(slideIndex) {
-			if(slideIndex && slideIndex > -1) {
+			if(typeof slideIndex !== 'undefined' && slideIndex > -1) {
 				this.slideChanged = true;
 
 				const newSlideId = this.getSlideIdFromIndex(slideIndex);

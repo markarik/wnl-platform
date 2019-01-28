@@ -4,6 +4,8 @@ export const USERS_SETUP_CURRENT = 'USERS_SETUP_CURRENT';
 // Lessons
 export const LESSONS_READY = 'LESSONS_READY';
 export const SETUP_LESSONS = 'SETUP_LESSONS';
+export const ADD_LESSON = 'ADD_LESSON';
+export const SET_LESSONS_LOADING = 'SET_COURSE_STRUCTURE_LOADING';
 
 //Quiz questions
 export const SETUP_QUIZ_QUESTION = 'SETUP_QUIZ_QUESTION';

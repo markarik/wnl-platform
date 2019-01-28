@@ -96,13 +96,13 @@ export const nestedSetMutations = {
 };
 
 // Actions
-export const nestedSetActions = (resourceName, includesParser) => {
+export const nestedSetActions = ({resourceName, includesParser, includeResources, subPath}) => {
 	return {
 		async fetchTermsByTaxonomy({commit}, courseId) {
 			commit(types.RESET_NESTED_SET_STATE);
 			commit(types.SET_NESTED_SET_LOADING, true);
 			try {
-				const response = await axios.get(getApiUrl(`${resourceName}/${courseId}?include=lessons,groups`));
+				const response = await axios.get(getApiUrl(`${resourceName}${subPath}/${courseId}?include=${includeResources}`));
 				const {data: {included, ...termsObj}} = response;
 
 				const terms = Object.values(termsObj);
@@ -132,9 +132,9 @@ export const nestedSetActions = (resourceName, includesParser) => {
 		async create({commit, state, getters}, taxonomyTerm) {
 			commit(types.SET_NESTED_SET_SAVING, true);
 			try {
-				const response = await axios.post(getApiUrl('course_structure_nodes?include=lessons,groups'), taxonomyTerm);
+				const response = await axios.post(getApiUrl(`${resourceName}?include=${includeResources}`), taxonomyTerm);
 				const {data: {included, ...term}} = response;
-				commit(types.ADD_NESTED_SET_NODE, includeTag(term, included.tags));
+				commit(types.ADD_NESTED_SET_NODE, includesParser(term, included));
 				commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {
 					list: getters.getChildrenByParentId(taxonomyTerm.parent_id)
 				});
@@ -148,7 +148,7 @@ export const nestedSetActions = (resourceName, includesParser) => {
 		async update({commit, state, getters}, term) {
 			commit(types.SET_NESTED_SET_SAVING, true);
 			try {
-				const response = await axios.put(getApiUrl(`course_structure_nodes/${term.id}?include=lessons,groups`), term);
+				const response = await axios.put(getApiUrl(`${resourceName}/${term.id}?include=${includeResources}`), term);
 				const {data: {included, ...updatedTerm}} = response;
 
 				const {parent_id: originalParentId} = getters.termById(term.id);
@@ -158,7 +158,7 @@ export const nestedSetActions = (resourceName, includesParser) => {
 					term.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
 				}
 
-				commit(types.UPDATE_NESTED_SET_NODE, includeTag({...term, ...updatedTerm}, included.tags));
+				commit(types.UPDATE_NESTED_SET_NODE, includesParser({...term, ...updatedTerm}, included));
 			} catch (error) {
 				throw error;
 			} finally {
@@ -169,7 +169,7 @@ export const nestedSetActions = (resourceName, includesParser) => {
 		async delete({commit, state, getters}, taxonomyTerm) {
 			commit(types.SET_NESTED_SET_SAVING, true);
 			try {
-				await axios.delete(getApiUrl(`course_structure_nodes/${taxonomyTerm.id}`));
+				await axios.delete(getApiUrl(`${resourceName}/${taxonomyTerm.id}`));
 
 				commit(types.DELETE_NESTED_SET_NODE, taxonomyTerm);
 				commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {
@@ -202,7 +202,7 @@ export const nestedSetActions = (resourceName, includesParser) => {
 
 			try {
 				dispatch('reorderSiblings', {term, direction});
-				await axios.put(getApiUrl('course_structure_nodes/move'), {
+				await axios.put(getApiUrl(`${resourceName}/move`), {
 					id: term.id,
 					direction
 				});
@@ -237,5 +237,5 @@ export const nestedSetActions = (resourceName, includesParser) => {
 				term.id
 			]));
 		},
-	}
+	};
 };

@@ -30,7 +30,12 @@ const mutations = {
 
 // Actions
 const actions = {
-	...nestedSetActions('course_structure_nodes', _parseIncludes)
+	...nestedSetActions({
+		resourceName: 'taxonomy_terms',
+		includesParser: _parseIncludes,
+		includeResources: 'groups,lessons',
+		subPath: '',
+	})
 };
 
 export default {

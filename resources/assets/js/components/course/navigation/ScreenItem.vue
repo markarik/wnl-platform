@@ -106,9 +106,6 @@ export default {
 		...mapGetters('progress', {
 			getCourseProgress: 'getCourse',
 		}),
-		...mapGetters('course', [
-			'isLessonAvailable',
-		]),
 		courseProgress() {
 			return this.getCourseProgress(1);
 		},
@@ -125,7 +122,7 @@ export default {
 			return this.lessonItem.to;
 		},
 		lessonItem() {
-			const lesson = this.item.model;
+			const lesson = this.item;
 			let cssClass = 'is-grouped with-progress', iconClass = '', iconTitle = '';
 
 			if (this.courseProgress.lessons && this.courseProgress.lessons.hasOwnProperty(lesson.id)) {
@@ -140,7 +137,6 @@ export default {
 					courseId: 1,
 					lessonId: lesson.id,
 				},
-				isDisabled: !this.isLessonAvailable(lesson.id),
 				iconClass,
 				iconTitle
 			});

@@ -37,6 +37,7 @@ const state = {
 	name: '',
 	groups: [],
 	structure: {},
+	lessons: {}
 };
 
 // Getters
@@ -83,16 +84,9 @@ const getters = {
 		return subsections.map((subsections) => subsections.slide);
 	},
 	getScreens: state => (lessonId) => {
-		let screensIds = state.structure[resource('lessons')][lessonId][resource('screens')];
-
-		if (_.isEmpty(screensIds)) {
-			return [];
-		}
-
-		return _.sortBy(
-			screensIds.map((screenId) => state.structure[resource('screens')][screenId]),
-			'order_number'
-		);
+		if (!state.lessons[lessonId]) return [];
+		return state.lessons[lessonId].screens
+			.sort((screenA, screenB) => screenA.order_number - screenB.order_number);
 	},
 	getAdjacentScreenId: (state, getters) => (lessonId, currentScreenId, direction) => {
 		let screens = getters.getScreens(lessonId);
@@ -172,6 +166,11 @@ const mutations = {
 	[types.SET_NEW_STRUCTURE](state, payload) {
 		set(state, 'newStructure', payload);
 	},
+	[types.SET_SCREENS](state, {screens, lessonId}) {
+		set(state.lessons, lessonId, {
+			screens
+		});
+	},
 	[types.SET_STRUCTURE] (state, data) {
 		set(state, 'id', data.id);
 		set(state, 'name', data.name);
@@ -213,6 +212,13 @@ const actions = {
 					$wnl.logger.error(reason);
 					return reject(reason);
 				});
+		});
+	},
+	async setupLesson({commit}, lessonId) {
+		const response = await axios.get(getApiUrl(`lessons/${lessonId}/screens`));
+		commit(types.SET_SCREENS, {
+			screens: response.data,
+			lessonId
 		});
 	},
 	async setStructureNew({commit}, courseId = 1) {

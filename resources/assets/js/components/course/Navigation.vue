@@ -1,6 +1,7 @@
 <template>
 	<aside class="sidenav-aside course-sidenav">
-		<wnl-course-navigation></wnl-course-navigation>
+		<wnl-lesson-navigation v-if="isLesson"></wnl-lesson-navigation>
+		<wnl-course-navigation v-else></wnl-course-navigation>
 	</aside>
 </template>
 
@@ -19,6 +20,7 @@
 import {mapGetters} from 'vuex';
 
 import WnlCourseNavigation from 'js/components/course/navigation/CourseNavigation';
+import WnlLessonNavigation from 'js/components/course/navigation/LessonNavigation';
 import {resource} from 'js/utils/config';
 import {STATUS_COMPLETE} from '../../services/progressStore';
 import navigation from 'js/services/navigation';
@@ -26,7 +28,7 @@ import navigation from 'js/services/navigation';
 export default {
 	name: 'Navigation',
 	components: {
-		WnlCourseNavigation
+		WnlCourseNavigation, WnlLessonNavigation
 	},
 	props: ['context', 'isLesson'],
 	computed: {

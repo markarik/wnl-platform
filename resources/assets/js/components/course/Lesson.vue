@@ -17,7 +17,6 @@
 				<router-view @userEvent="onUserEvent"/>
 			</div>
 			<div class="wnl-lesson-previous-next-nav">
-				<wnl-previous-next></wnl-previous-next>
 			</div>
 		</div>
 		<div v-else>
@@ -188,6 +187,7 @@ export default {
 		]),
 		...mapActions(['setupCurrentUser']),
 		...mapActions('users', ['setActiveUsers', 'userJoined', 'userLeft']),
+		...mapActions('course', ['setupLesson']),
 		onUserEvent(payload) {
 			this.$trackUserEvent({
 				...payload,
@@ -304,6 +304,7 @@ export default {
 		},
 	},
 	mounted () {
+		this.setupLesson(this.lesson.id);
 		this.launchLesson();
 		window.addEventListener('resize', this.updateElementHeight);
 	},

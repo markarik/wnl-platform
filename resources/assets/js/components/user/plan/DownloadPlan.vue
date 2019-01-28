@@ -56,9 +56,11 @@ export default {
 		...mapGetters('course', ['getRequiredLessons']),
 		...mapGetters(['currentUserId']),
 		sortedRequiredUserLessons() {
-			return this.requiredLessons.sort((lessonA, lessonB) => {
-				return lessonA.startDate - lessonB.startDate;
-			});
+			return this.requiredLessons
+				.slice()
+				.sort((lessonA, lessonB) => {
+					return lessonA.startDate - lessonB.startDate;
+				});
 		},
 		requiredLessons() {
 			return Object.values(this.getRequiredLessons).filter(requiredLesson => {

@@ -91,7 +91,7 @@ export default {
 		},
 		questions: {
 			type: Array,
-			default: [],
+			default: () => [],
 		},
 		getReaction: {
 			default: () => {},

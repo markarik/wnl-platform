@@ -123,7 +123,7 @@
 									<th>Termin płatności</th>
 									<th>Zapłacone / Do&nbsp;zapłaty</th>
 								</tr>
-								<tr v-for="(instalment, index) in order.instalments.instalments">
+								<tr v-for="(instalment, index) in order.instalments.instalments" :key="index">
 									<td>{{index + 1}}</td>
 									<td>
 										{{ instalmentDate(instalment.date) }}

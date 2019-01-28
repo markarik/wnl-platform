@@ -6,7 +6,11 @@
 				<strong>Wybrane zestawy</strong>
 				<ul>
 					<draggable v-model="flashcardsSetIds" @start="drag=true" @end="drag=false">
-						<li v-for="flashcardsSetId in flashcardsSetIds" class="flashcards-set">
+						<li
+							v-for="flashcardsSetId in flashcardsSetIds"
+							:key="flashcardsSetId"
+							class="flashcards-set"
+						>
 							<div class="flashcards-set-content">
 								{{flashcardsSetId}}. {{allFlashcardsSets.find(flashcardset => flashcardset.id === flashcardsSetId).name}}
 							</div>

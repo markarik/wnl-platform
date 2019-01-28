@@ -19,9 +19,6 @@
 		</div>
 
 		<div class="field">
-			<label class="label is-uppercase"><strong>Notatka</strong></label>
-			<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
-			<textarea class="textarea margin bottom" v-model="description" placeholder="Wpisz tekst" />
 			<div class="has-text-centered">
 				<button class="button" @click="onSubmitClick" :disabled="submitDisabled">{{submitLabel}}</button>
 			</div>
@@ -47,7 +44,6 @@ import WnlStructurableAutocomplete from 'js/admin/components/structure/TaxonomyT
 import {ALERT_TYPES} from '../../../consts/alert';
 
 const initialState = {
-	description: '',
 	id: null,
 	parent: null,
 	structurable: null,
@@ -96,7 +92,6 @@ export default {
 				parent_id: this.parent ? this.parent.id : null,
 				structurable_id: this.structurable.id,
 				structurable_type: this.structurable.type,
-				description: this.description,
 				course_id: this.taxonomyId,
 			});
 		},
@@ -123,8 +118,7 @@ export default {
 				};
 			}
 
-			const {description, id, parent, structurable} = term;
-			this.description = description;
+			const {id, parent, structurable} = term;
 			this.id = id;
 			this.parent = parent;
 			this.structurable = structurable;

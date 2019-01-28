@@ -9,23 +9,38 @@
 			<button class="button submit is-primary" type="submit">Szukaj</button>
 		</form>
 
-		<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
-		<div v-if="!isLoading">
-			<div v-for="(meta, contentType) in contentTypes" :key="contentType" v-if="filteredContent[contentType].length">
-				<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
-				<ul class="content-classifier-result-list margin bottom">
-					<li
-						v-for="item in filteredContent[contentType]"
-						:key="item.id"
-						class="content-classifier-result-item"
-					>
-						<component :is="meta.component" :item="item"/>
-					</li>
-				</ul>
+		<div class="content-classifier__panels">
+			<div class="content-classifier__panel-results">
+				<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
+				<div v-if="!isLoading">
+					<div v-for="(meta, contentType) in contentTypes" :key="contentType" v-if="filteredContent[contentType].length">
+						<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
+						<ul class="content-classifier__result-list margin bottom">
+							<li
+								v-for="item in filteredContent[contentType]"
+								:key="item.id"
+								class="content-classifier__result-item"
+							>
+								<component :is="meta.component" :item="item"/>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<wnl-text-loader v-else />
+			</div>
+
+			<div class="content-classifier__panel-editor">
+				<h4 class="title is-4 margin bottom">Zarządzaj</h4>
+				<div class="field">
+					<label class="label is-uppercase"><strong>Dodaj pojęcie</strong></label>
+					<wnl-taxonomy-term-autocomplete
+						placeholder="Wyszukaj pojęcie"
+						@change="onTermAdded"
+					/>
+				</div>
+
 			</div>
 		</div>
-		<wnl-text-loader v-else />
-
 	</div>
 </template>
 
@@ -33,11 +48,18 @@
 	@import 'resources/assets/sass/variables'
 
 	.content-classifier
-		&-result-list
+		&__panels
+			display: flex
+
+		&__panel-results,
+		&__panel-editor
+			flex: 50%
+
+		&__result-list
 			display: flex
 			flex-wrap: wrap
 
-		&-result-item
+		&__result-item
 			border: $border-light-gray
 			display: flex
 			font-size: $font-size-minus-1
@@ -54,13 +76,18 @@
 import {mapActions} from 'vuex';
 
 import {getApiUrl} from 'js/utils/env';
+import {ALERT_TYPES} from 'js/consts/alert';
+
 import WnlHtmlResult from 'js/admin/components/contentClassifier/HtmlResult';
 import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
-import {ALERT_TYPES} from 'js/consts/alert';
+import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
 
 export default {
+	components: {
+		WnlTaxonomyTermAutocomplete
+	},
 	data() {
 		const contentTypes = {
 			annotations: {
@@ -105,6 +132,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy']),
 		async onSearch() {
 			this.isLoading = true;
 
@@ -151,7 +179,20 @@ export default {
 			} finally {
 				this.isLoading = false;
 			}
+		},
+		onTermAdded(term) {
+			console.log(term);
 		}
-	}
+	},
+	async mounted() {
+		try {
+			await this.fetchTermsByTaxonomy(4);
+		} catch (error) {
+			this.addAutoDismissableAlert({
+				text: 'Coś poszło nie tak przy pobieraniu struktury Taksonomii',
+				type: 'error'
+			});
+		}
+	},
 };
 </script>

@@ -82,7 +82,7 @@ export default {
 		WnlTagAutocomplete
 	},
 	computed: {
-		...mapState('taxonomyTerms', ['terms', 'isSaving']),
+		...mapState('taxonomyTerms', {terms: 'nodes', isSaving: 'isSaving'}),
 		...mapGetters('taxonomyTerms', ['getAncestorsById']),
 		submitDisabled() {
 			return !this.tag || this.isSaving;

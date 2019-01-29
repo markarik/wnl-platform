@@ -2,13 +2,13 @@
 	<ul>
 		<vue-draggable
 			:options="{handle: '.structure-node-item__action--drag'}"
-			@end="onTermDrag"
+			@end="onnodeDrag"
 		>
 			<wnl-structure-node-item
-				v-for="term in terms"
-				:term="term"
-				:key="term.id"
-				@moveTerm="onChildTermArrowMove"
+				v-for="node in nodes"
+				:node="node"
+				:key="node.id"
+				@movenode="onChildnodeArrowMove"
 			/>
 		</vue-draggable>
 	</ul>
@@ -26,13 +26,13 @@ export default {
 		WnlStructureNodeItem
 	},
 	props: {
-		terms: {
+		nodes: {
 			type: Array,
 			required: true
 		}
 	},
 	methods: {
-		...mapActions('courseStructure', ['moveTerm', 'reorderSiblings']),
+		...mapActions('courseStructure', ['movenode', 'reorderSiblings']),
 		...mapActions(['addAutoDismissableAlert']),
 		async submitMove({direction, ...args}) {
 			if (direction === 0) {
@@ -40,7 +40,7 @@ export default {
 			}
 
 			try {
-				await this.moveTerm({direction, ...args});
+				await this.movenode({direction, ...args});
 				this.addAutoDismissableAlert({
 					type: 'success',
 					text: 'Zapisano!'
@@ -54,20 +54,20 @@ export default {
 				throw (e);
 			}
 		},
-		async onTermDrag({newIndex, oldIndex}) {
+		async onnodeDrag({newIndex, oldIndex}) {
 			const direction = newIndex - oldIndex;
-			const term = this.terms[oldIndex];
+			const node = this.nodes[oldIndex];
 			try {
-				await this.submitMove({direction, term});
+				await this.submitMove({direction, node});
 			} catch (e) {
-				await this.reorderSiblings({direction: oldIndex - newIndex, term});
+				await this.reorderSiblings({direction: oldIndex - newIndex, node});
 			}
 		},
-		async onChildTermArrowMove({term, direction}) {
+		async onChildnodeArrowMove({node, direction}) {
 			try {
-				await this.submitMove({direction, term});
+				await this.submitMove({direction, node});
 			} catch (e) {
-				await this.reorderSiblings({direction: -direction, term});
+				await this.reorderSiblings({direction: -direction, node});
 			}
 		},
 	}

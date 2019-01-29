@@ -32,7 +32,10 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['moveTerm', 'reorderSiblings']),
+		...mapActions('taxonomyTerms', {
+			moveTerm: 'moveNode',
+			reorderSiblings: 'reorderSiblings',
+		}),
 		...mapActions(['addAutoDismissableAlert']),
 		async submitMove({direction, ...args}) {
 			if (direction === 0) {
@@ -58,16 +61,16 @@ export default {
 			const direction = newIndex - oldIndex;
 			const term = this.terms[oldIndex];
 			try {
-				await this.submitMove({direction, term});
+				await this.submitMove({direction, node: term});
 			} catch (e) {
-				await this.reorderSiblings({direction: oldIndex - newIndex, term});
+				await this.reorderSiblings({direction: oldIndex - newIndex, node: term});
 			}
 		},
 		async onChildTermArrowMove({term, direction}) {
 			try {
-				await this.submitMove({direction, term});
+				await this.submitMove({direction, node: term});
 			} catch (e) {
-				await this.reorderSiblings({direction: -direction, term});
+				await this.reorderSiblings({direction: -direction, node: term});
 			}
 		},
 	}

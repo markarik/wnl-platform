@@ -3,7 +3,7 @@
 		submit-label="Dodaj pojęcie"
 		:on-save="onSave"
 		:courseId="courseId"
-		:term="term"
+		:node="node"
 		@parentChange="onParentChange"
 	/>
 </template>
@@ -22,15 +22,15 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters('courseStructure', ['termById']),
-		...mapState('courseStructure', ['selectedTerms']),
-		term() {
-			if (this.selectedTerms.length === 0) {
+		...mapGetters('courseStructure', ['nodeById']),
+		...mapState('courseStructure', ['selectedNodes']),
+		node() {
+			if (this.selectedNodes.length === 0) {
 				return null;
 			}
 
 			return {
-				parent: this.termById(this.selectedTerms[0])
+				parent: this.nodeById(this.selectedNodes[0])
 			};
 		}
 	},
@@ -40,16 +40,16 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('courseStructure', {
-			'createTerm': 'create',
-			'expandTerm': 'expand',
-			'selectTerms': 'select',
+			'createNode': 'create',
+			'expandNode': 'expand',
+			'selectNodes': 'select',
 		}),
-		async onSave(term) {
+		async onSave(node) {
 			try {
-				await this.createTerm(term);
+				await this.createNode(node);
 
-				if (term.parent_id) {
-					this.expandTerm(term.parent_id);
+				if (node.parent_id) {
+					this.expandNode(node.parent_id);
 				}
 
 				this.addAutoDismissableAlert({
@@ -67,11 +67,11 @@ export default {
 		},
 		onParentChange(parent) {
 			if (parent) {
-				this.selectTerms([parent.id]);
-				this.expandTerm(parent.id);
+				this.selectNodes([parent.id]);
+				this.expandNode(parent.id);
 				this.scrollToNode(parent);
 			} else {
-				this.selectTerms([]);
+				this.selectNodes([]);
 			}
 		},
 

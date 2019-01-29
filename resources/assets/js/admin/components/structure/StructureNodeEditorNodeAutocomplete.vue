@@ -10,13 +10,13 @@
 		<div class="control" v-else>
 			<input class="input" v-model="search" :placeholder="placeholder" />
 			<wnl-autocomplete
-				:items="autocompleteTerms"
+				:items="autocompletenodes"
 				:onItemChosen="onSelect"
 				:isDown="true"
 			>
 				<template slot-scope="slotProps">
 					<div>
-						<div class="autocomplete-parent-term">{{getAncestorsById(slotProps.item.id).map(ancestor => ancestor.structurable.name).join(' > ')}}</div>
+						<div class="autocomplete-parent-node">{{getAncestorsById(slotProps.item.id).map(ancestor => ancestor.structurable.name).join(' > ')}}</div>
 						<div>{{slotProps.item.structurable.name}}</div>
 					</div>
 				</template>
@@ -33,7 +33,7 @@
 		justify-content: space-between
 		padding: $margin-small-minus
 
-	.autocomplete-parent-term
+	.autocomplete-parent-node
 		color: $color-inactive-gray
 
 </style>
@@ -64,18 +64,18 @@ export default {
 		WnlAutocomplete
 	},
 	computed: {
-		...mapState('courseStructure', ['terms']),
+		...mapState('courseStructure', ['nodes']),
 		...mapGetters('courseStructure', ['getAncestorsById']),
-		autocompleteTerms() {
+		autocompletenodes() {
 			if (!this.search) {
 				return [];
 			}
 			const lowerSearch = this.search.toLocaleLowerCase();
 
-			const terms = this.terms.filter(term => term.structurable.name.toLocaleLowerCase().startsWith(lowerSearch));
-			terms.push(...this.terms.filter(term => term.structurable.name.toLocaleLowerCase().includes(lowerSearch)));
+			const nodes = this.nodes.filter(node => node.structurable.name.toLocaleLowerCase().startsWith(lowerSearch));
+			nodes.push(...this.nodes.filter(node => node.structurable.name.toLocaleLowerCase().includes(lowerSearch)));
 
-			return uniqBy(terms, 'id').slice(0, 25);
+			return uniqBy(nodes, 'id').slice(0, 25);
 		},
 		ancestors() {
 			return this.getAncestorsById(this.selected.id);

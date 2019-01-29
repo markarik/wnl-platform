@@ -22,8 +22,8 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters('taxonomyTerms', ['termById']),
-		...mapState('taxonomyTerms', ['selectedTerms']),
+		...mapGetters('taxonomyTerms', {termById: 'nodeById'}),
+		...mapState('taxonomyTerms', {selectedTerms: 'selectedNodes'}),
 		term() {
 			if (this.selectedTerms.length === 0) {
 				return null;

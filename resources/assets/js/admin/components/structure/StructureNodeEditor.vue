@@ -12,7 +12,7 @@
 					</span>
 				</span>
 			</div>
-			<wnl-structure-nodes-list v-if="!isLoading" :terms="getRootNodes"/>
+			<wnl-structure-nodes-list v-if="!isLoading" :nodes="getRootNodes"/>
 			<wnl-text-loader v-else />
 		</div>
 		<div class="editor__panel is-right">
@@ -76,7 +76,7 @@ export default {
 	computed: {
 		...mapState('courseStructure', {
 			isLoading: 'isLoading',
-			terms: 'terms',
+			nodes: 'nodes',
 		}),
 		...mapGetters('courseStructure', ['getChildrenByParentId', 'getRootNodes']),
 	},

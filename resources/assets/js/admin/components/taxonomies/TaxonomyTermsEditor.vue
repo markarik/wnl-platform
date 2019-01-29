@@ -74,7 +74,7 @@ export default {
 	computed: {
 		...mapState('taxonomyTerms', {
 			isLoadingTerms: 'isLoading',
-			terms: 'terms',
+			terms: 'nodes',
 		}),
 		...mapGetters('taxonomyTerms', ['getChildrenByParentId', 'getRootNodes']),
 	},

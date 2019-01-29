@@ -1,10 +1,10 @@
 <template>
 	<div
-		v-if="term"
+		v-if="node"
 		class="has-text-centered"
 	>
 		<p class="margin bottom">
-			Czy na pewno chcesz usunąć pojęcie <em><strong>{{term.structurable.name}}</strong></em> wraz z potomkami?
+			Czy na pewno chcesz usunąć pojęcie <em><strong>{{node.structurable.name}}</strong></em> wraz z potomkami?
 		</p>
 		<button
 			class="button is-danger"
@@ -28,27 +28,27 @@ import {mapActions, mapGetters, mapState} from 'vuex';
 
 export default {
 	computed: {
-		...mapGetters('courseStructure', ['termById']),
-		...mapState('courseStructure', ['isSaving', 'selectedTerms']),
-		term() {
-			if (this.selectedTerms.length === 0) {
+		...mapGetters('courseStructure', ['nodeById']),
+		...mapState('courseStructure', ['isSaving', 'selectedNodes']),
+		node() {
+			if (this.selectedNodes.length === 0) {
 				return null;
 			}
 
-			// TODO figure out multiple terms selected
-			return this.termById(this.selectedTerms[0]);
+			// TODO figure out multiple nodes selected
+			return this.nodeById(this.selectedNodes[0]);
 		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('courseStructure', {
-			'deleteTerm': 'delete',
-			'selectTerms': 'select'
+			'deleteNode': 'delete',
+			'selectNodes': 'select'
 		}),
 		async onDelete() {
 			try {
-				await this.deleteTerm(this.term);
-				this.selectTerms([]);
+				await this.deleteNode(this.node);
+				this.selectNodes([]);
 
 				this.addAutoDismissableAlert({
 					text: 'Usunięto pojęcie!',

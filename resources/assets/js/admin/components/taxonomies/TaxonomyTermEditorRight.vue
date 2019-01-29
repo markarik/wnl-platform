@@ -73,7 +73,10 @@ export default {
 		};
 	},
 	computed: {
-		...mapState('taxonomyTerms', ['editorMode', 'selectedTerms']),
+		...mapState('taxonomyTerms', {
+			editorMode: 'editorMode',
+			selectedTerms: 'selectedNodes',
+		}),
 		activeMode() {
 			return this.modes.find(mode => mode.key === this.editorMode);
 		}

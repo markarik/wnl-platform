@@ -1,5 +1,5 @@
 <template>
-	<div class="terms-editor-right">
+	<div class="Nodes-editor-right">
 		<nav class="tabs is-uppercase small">
 			<ul>
 				<li v-for="mode in modes" :class="{'is-active': mode.key === editorMode}" :key="mode.key">
@@ -18,7 +18,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.terms-editor-right
+	.Nodes-editor-right
 		padding-top: $margin-big
 		position: sticky
 		top: -30px
@@ -64,14 +64,14 @@ export default {
 		};
 	},
 	computed: {
-		...mapState('courseStructure', ['editorMode', 'selectedTerms']),
+		...mapState('courseStructure', ['editorMode', 'selectedNodes']),
 		activeMode() {
 			return this.modes.find(mode => mode.key === this.editorMode);
 		}
 	},
 	methods: {
 		...mapActions('courseStructure', {
-			selectTerms: 'select',
+			selectNodes: 'select',
 			setEditorMode: 'setEditorMode',
 		}),
 	},

@@ -44,8 +44,8 @@ const actions = {
 	async _delete({}, term) {
 		await axios.delete(getApiUrl(`${resource}/${term.id}`));
 	},
-	async _move({}, {term, direction}) {
-		await axios.put(getApiUrl(`${resource}/move`), {id: term.id, direction});
+	async _move({}, {node, direction}) {
+		await axios.put(getApiUrl(`${resource}/move`), {id: node.id, direction});
 	},
 };
 

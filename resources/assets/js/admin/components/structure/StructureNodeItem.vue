@@ -1,17 +1,17 @@
 <template>
-	<li :class="['structure-node-item', isSaving && 'structure-node-item--disabled']" :id="`term-${term.id}`">
+	<li :class="['structure-node-item', isSaving && 'structure-node-item--disabled']" :id="`Node-${node.id}`">
 		<div :class="['media', 'structure-node-item__content', {'is-selected': isSelected}]">
 			<span class="icon-small structure-node-item__action structure-node-item__action--drag">
 				<i title="drag" :class="['fa', itemClass]"></i>
 			</span>
 			<div class="media-content v-central">
-				<span>{{term.structurable.name}}</span>
+				<span>{{node.structurable.name}}</span>
 			</div>
 			<div class="media-right central">
 				<span
 					class="icon-small structure-node-item__action"
 					@click="toggle"
-					v-if="childTerms.length"
+					v-if="childNodes.length"
 				>
 					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]"></i>
 				</span>
@@ -35,14 +35,14 @@
 				</span>
 				<span
 					:class="['icon-small', 'structure-node-item__action', {'structure-node-item__action--disabled': !canBeMovedUp}]"
-					@click="canBeMovedUp && onTermMove(term, -1)"
+					@click="canBeMovedUp && onNodeMove(node, -1)"
 				>
 					<i title="Do góry" class="fa fa-arrow-up"></i>
 				</span>
 				<span
 					class="icon-small structure-node-item__action"
 					:class="['icon-small', 'structure-node-item__action', {'structure-node-item__action--disabled': !canBeMovedDown}]"
-					@click="canBeMovedDown && onTermMove(term, 1)"
+					@click="canBeMovedDown && onNodeMove(node, 1)"
 				>
 					<i title="Na dół" class="fa fa-arrow-down"></i>
 				</span>
@@ -52,7 +52,7 @@
 			<wnl-structure-nodes-list
 				v-if="isExpanded"
 				class="structure-node-item__list"
-				:terms="childTerms"
+				:nodes="childNodes"
 			/>
 		</transition>
 	</li>
@@ -108,66 +108,66 @@ import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
 
 export default {
 	props: {
-		term: {
+		node: {
 			type: Object,
 			required: true,
 		},
 	},
 	computed: {
-		...mapState('courseStructure', ['expandedTerms', 'selectedTerms', 'isSaving']),
+		...mapState('courseStructure', ['expandedNodes', 'selectedNodes', 'isSaving']),
 		...mapGetters('courseStructure', ['getChildrenByParentId']),
 		canBeMovedUp() {
-			return this.term.orderNumber > 0;
+			return this.node.orderNumber > 0;
 		},
 		canBeMovedDown() {
-			return this.term.orderNumber < this.getChildrenByParentId(this.term.parent_id).length - 1;
+			return this.node.orderNumber < this.getChildrenByParentId(this.node.parent_id).length - 1;
 		},
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},
-		childTerms() {
-			return this.getChildrenByParentId(this.term.id);
+		childNodes() {
+			return this.getChildrenByParentId(this.node.id);
 		},
 		isSelected() {
-			return this.selectedTerms.includes(this.term.id);
+			return this.selectedNodes.includes(this.node.id);
 		},
 		isExpanded() {
-			return this.expandedTerms.includes(this.term.id)  && this.childTerms.length;
+			return this.expandedNodes.includes(this.node.id)  && this.childNodes.length;
 		},
 		itemClass() {
 			if (this.isSaving) return 'fa-circle-o-notch fa-spin';
-			if (this.term.structurable_type === COURSE_STRUCTURE_TYPES.LESSON) return 'fa-book';
+			if (this.node.structurable_type === COURSE_STRUCTURE_TYPES.LESSON) return 'fa-book';
 			return 'fa-folder';
 		}
 	},
 	methods: {
 		...mapActions('courseStructure', ['setEditorMode']),
 		...mapActions('courseStructure', {
-			'collapseTerm': 'collapse',
-			'expandTerm': 'expand',
-			'selectTerms': 'select',
+			'collapseNode': 'collapse',
+			'expandNode': 'expand',
+			'selectNodes': 'select',
 		}),
 		onAdd() {
 			this.setEditorMode(NESTED_SET_EDITOR_MODES.ADD);
-			this.selectTerms([this.term.id]);
+			this.selectNodes([this.node.id]);
 		},
 		onDelete() {
 			this.setEditorMode(NESTED_SET_EDITOR_MODES.DELETE);
-			this.selectTerms([this.term.id]);
+			this.selectNodes([this.node.id]);
 		},
 		onEdit() {
 			this.setEditorMode(NESTED_SET_EDITOR_MODES.EDIT);
-			this.selectTerms([this.term.id]);
+			this.selectNodes([this.node.id]);
 		},
 		toggle() {
 			if (this.isExpanded) {
-				this.collapseTerm(this.term.id);
+				this.collapseNode(this.node.id);
 			} else {
-				this.expandTerm(this.term.id);
+				this.expandNode(this.node.id);
 			}
 		},
-		onTermMove(term, direction) {
-			this.$emit('moveTerm', {term, direction});
+		onNodeMove(Node, direction) {
+			this.$emit('moveNode', {Node, direction});
 		},
 	},
 	beforeCreate: function () {

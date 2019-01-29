@@ -113,7 +113,11 @@ export default {
 		},
 	},
 	computed: {
-		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms', 'isSaving']),
+		...mapState('taxonomyTerms', {
+			expandedTerms: 'expandedNodes',
+			selectedTerms: 'selectedNodes',
+			isSaving: 'isSaving',
+		}),
 		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
 		canBeMovedUp() {
 			return this.term.orderNumber > 0;

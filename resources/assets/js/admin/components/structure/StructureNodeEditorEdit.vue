@@ -1,10 +1,10 @@
 <template>
 	<wnl-structure-node-editor-form
-		v-if="term"
+		v-if="node"
 		submit-label="Zapisz"
 		:on-save="onSave"
 		:courseId="courseId"
-		:term="term"
+		:node="node"
 	/>
 	<div v-else class="notification is-info">
 		<span class="icon">
@@ -30,34 +30,34 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters('courseStructure', ['termById', 'getAncestorsById']),
-		...mapState('courseStructure', ['selectedTerms']),
-		term() {
-			if (this.selectedTerms.length === 0) {
+		...mapGetters('courseStructure', ['nodeById', 'getAncestorsById']),
+		...mapState('courseStructure', ['selectedNodes']),
+		node() {
+			if (this.selectedNodes.length === 0) {
 				return null;
 			}
 
-			// TODO figure out multiple terms selected
-			const term = this.termById(this.selectedTerms[0]);
+			// TODO figure out multiple Nodes selected
+			const node = this.nodeById(this.selectedNodes[0]);
 
 			return {
-				...term,
-				parent: this.getAncestorsById(term.id).slice(-1)[0],
+				...node,
+				parent: this.getAncestorsById(node.id).slice(-1)[0],
 			};
 		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('courseStructure', {
-			'expandTerm': 'expand',
-			'updateTerm': 'update',
+			'expandNode': 'expand',
+			'updateNode': 'update',
 		}),
-		async onSave(term) {
+		async onSave(Node) {
 			try {
-				await this.updateTerm(term);
+				await this.updateNode(Node);
 
-				if (term.parent_id) {
-					this.expandTerm(term.parent_id);
+				if (Node.parent_id) {
+					this.expandNode(Node.parent_id);
 				}
 
 				this.addAutoDismissableAlert({

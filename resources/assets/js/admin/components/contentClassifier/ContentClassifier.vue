@@ -127,6 +127,17 @@ export default {
 		async onSearch() {
 			this.isLoading = true;
 
+			const parseIncludes = (item, included) => {
+				item.taxonomyTerms = item.taxonomy_terms.map(termId => {
+					const term = included.taxonomy_terms[termId];
+					term.tag =  included.tags[term.tags[0]]
+
+					return term;
+				});
+
+				return item;
+			};
+
 			const promises = Object.entries(this.contentTypes).map(
 				async ([contentType, meta]) => {
 					if (this.filters[contentType] === '') {
@@ -142,7 +153,7 @@ export default {
 								by_ids: {ids: this.filters[contentType].split(',')},
 							},
 						],
-						include: 'taxonomy_terms',
+						include: 'taxonomy_terms.tags',
 						// TODO use wnl-paginated-list instead
 						limit: 10000,
 					});
@@ -151,7 +162,7 @@ export default {
 
 					return {
 						contentType,
-						items: Object.values(items)
+						items: Object.values(items).map(item => parseIncludes(item, included))
 					};
 				}
 			);

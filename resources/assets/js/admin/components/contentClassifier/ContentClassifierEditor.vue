@@ -67,13 +67,13 @@ export default {
 				.forEach(contentType => {
 					this.filteredContent[contentType]
 						.forEach(item => {
-							if (item.taxonomy_terms) {
-								taxonomyTerms.push(...item.taxonomy_terms.map(id => this.termById(id)));
+							if (item.taxonomyTerms) {
+								taxonomyTerms.push(...item.taxonomyTerms);
 							}
 						});
 				});
 
-			return uniqBy(taxonomyTerms, term => term.id);
+			return uniqBy(taxonomyTerms, 'id');
 		},
 		taxonomiesOptions() {
 			if (!this.taxonomies) {

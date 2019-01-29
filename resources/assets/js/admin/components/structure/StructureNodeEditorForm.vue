@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<div class="field">
-			<label class=" label is-uppercase"><strong>Nadrzędne pojęcie</strong></label>
-			<span class="info small">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
+			<label class=" label is-uppercase"><strong>Gałąź nadrzędna</strong></label>
+			<span class="info small">Pozostaw puste, aby dodać pojęcie na najwyższym poziomie.</span>
 			<wnl-node-autocomplete
 				@change="onSelectParent"
 				:selected="parent"
@@ -11,7 +11,7 @@
 
 		<div class="field">
 			<label class="label is-uppercase"><strong>Tag źródłowy</strong></label>
-			<span class="info">Wybierz tag, na podstawie którego chcesz utworzyć pojęcie, lub utwórz nowy.</span>
+			<span class="info">Wybierz lekcję/grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową.</span>
 			<wnl-structurable-autocomplete
 				@change="onSelectStructurable"
 				:selected="structurable"

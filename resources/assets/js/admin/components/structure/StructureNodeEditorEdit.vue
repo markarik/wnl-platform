@@ -10,7 +10,7 @@
 		<span class="icon">
 			<i class="fa fa-info-circle"></i>
 		</span>
-		Najpierw wybierz pojęcie
+		Najpierw wybierz gałąź struktury
 	</div>
 </template>
 

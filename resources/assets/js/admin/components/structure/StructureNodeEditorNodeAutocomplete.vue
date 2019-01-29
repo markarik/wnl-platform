@@ -52,7 +52,7 @@ export default {
 		},
 		placeholder: {
 			type: String,
-			default: 'Wpisz nazwę nadrzędnego pojęcia'
+			default: 'Wpisz nazwę nadrzędnej lekcji / grupy'
 		}
 	},
 	data() {

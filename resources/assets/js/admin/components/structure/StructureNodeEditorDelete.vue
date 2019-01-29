@@ -4,7 +4,7 @@
 		class="has-text-centered"
 	>
 		<p class="margin bottom">
-			Czy na pewno chcesz usunąć pojęcie <em><strong>{{node.structurable.name}}</strong></em> wraz z potomkami?
+			Czy na pewno chcesz usunąć <em><strong>{{node.structurable.name}}</strong></em> wraz z potomkami?
 		</p>
 		<button
 			class="button is-danger"
@@ -12,14 +12,14 @@
 			@click="onDelete"
 		>
 			<span class="icon is-small"><i class="fa fa-trash" aria-hidden="true"></i></span>
-			<span>Usuń pojęcie</span>
+			<span>Usuń</span>
 		</button>
 	</div>
 	<div v-else class="notification is-info">
 		<span class="icon">
 			<i class="fa fa-info-circle"></i>
 		</span>
-		Najpierw wybierz pojęcie
+		Najpierw wybierz gałąź struktury
 	</div>
 </template>
 

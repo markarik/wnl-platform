@@ -1,6 +1,6 @@
 <template>
 	<wnl-structure-node-editor-form
-		submit-label="Dodaj pojęcie"
+		submit-label="Dodaj"
 		:on-save="onSave"
 		:courseId="courseId"
 		:node="node"

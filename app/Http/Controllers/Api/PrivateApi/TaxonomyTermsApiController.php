@@ -89,19 +89,19 @@ class TaxonomyTermsApiController extends ApiController {
 		$taxonomyTermableTypes = [
 			[
 				'requestParam' => 'annotations',
-				'columnValue' => Annotation::class,
+				'className' => Annotation::class,
 			],
 			[
 				'requestParam' => 'flashcards',
-				'columnValue' => Flashcard::class,
+				'className' => Flashcard::class,
 			],
 			[
 				'requestParam' => 'quiz_questions',
-				'columnValue' => QuizQuestion::class,
+				'className' => QuizQuestion::class,
 			],
 			[
 				'requestParam' => 'slides',
-				'columnValue' => Slide::class,
+				'className' => Slide::class,
 			],
 		];
 
@@ -115,7 +115,7 @@ class TaxonomyTermsApiController extends ApiController {
 					$insert []= [
 						'taxonomy_term_id' => $taxonomyTerm->id,
 						'taxonomy_termable_id' => $termableId,
-						'taxonomy_termable_type' => $taxonomyTermableType['columnValue']
+						'taxonomy_termable_type' => $taxonomyTermableType['className']
 					];
 				}
 			}

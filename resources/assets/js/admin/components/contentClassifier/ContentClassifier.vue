@@ -42,7 +42,7 @@
 		&__panels
 			display: flex
 
-		&__panel-results,
+		&__panel-results
 			flex: 50%
 
 		&__result-list
@@ -64,8 +64,7 @@
 
 <script>
 import axios from 'axios';
-import {mapActions, mapGetters} from 'vuex';
-import {uniqBy} from 'lodash';
+import {mapActions} from 'vuex';
 
 import {getApiUrl} from 'js/utils/env';
 import {ALERT_TYPES} from 'js/consts/alert';

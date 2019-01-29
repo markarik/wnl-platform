@@ -8,7 +8,15 @@
 					{{group.taxonomy.name}}
 				</div>
 				<ul>
-					<li v-for="term in group.terms" :key="term.id"><strong>{{term.tag.name}}</strong> ({{getItemsCountByTermId(term.id)}}/{{allItemsCount}})</li>
+					<li v-for="term in group.terms" :key="term.id">
+						<strong>{{term.tag.name}}</strong> ({{getItemsCountByTermId(term.id)}}/{{allItemsCount}})
+						<button
+							class="button is-danger is-small"
+							@click="onDetachTaxonomyTermable(term)"
+						>
+							<i class="fa fa-trash"></i>
+						</button>
+					</li>
 				</ul>
 			</li>
 		</ul>
@@ -108,6 +116,22 @@ export default {
 		}),
 		getItemsCountByTermId(termId) {
 			return this.flattenItems.filter(item => item.taxonomyTerms.find(term => term.id === termId)).length;
+		},
+		async onDetachTaxonomyTermable(term) {
+			try {
+				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/detach`), {
+					annotations: this.filteredContent.annotations.map(item => item.id),
+					flashcards: this.filteredContent.flashcards.map(item => item.id),
+					quiz_questions: this.filteredContent.quizQuestions.map(item => item.id),
+					slides: this.filteredContent.slides.map(item => item.id),
+				});
+			} catch (error) {
+				$wnl.logger.capture(error);
+				this.addAutoDismissableAlert({
+					text: 'Nie udało się usunąć klasyfikacji. Spróbuj ponownie.',
+					type: ALERT_TYPES.ERROR
+				});
+			}
 		},
 		async onTermAdded(term) {
 			try {

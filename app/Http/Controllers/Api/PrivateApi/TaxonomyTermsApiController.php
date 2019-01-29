@@ -13,6 +13,25 @@ use App\Models\TaxonomyTermable;
 use Illuminate\Http\Request;
 
 class TaxonomyTermsApiController extends ApiController {
+	const TAXONOMY_TERMABLE_TYPES = [
+		[
+			'requestParam' => 'annotations',
+			'className' => Annotation::class,
+		],
+		[
+			'requestParam' => 'flashcards',
+			'className' => Flashcard::class,
+		],
+		[
+			'requestParam' => 'quiz_questions',
+			'className' => QuizQuestion::class,
+		],
+		[
+			'requestParam' => 'slides',
+			'className' => Slide::class,
+		],
+	];
+
 	public function __construct(Request $request) {
 		parent::__construct($request);
 		$this->resourceName = config('papi.resources.taxonomy-terms');
@@ -86,28 +105,9 @@ class TaxonomyTermsApiController extends ApiController {
 			return $this->respondNotFound('Taxonomy term does not exist');
 		}
 
-		$taxonomyTermableTypes = [
-			[
-				'requestParam' => 'annotations',
-				'className' => Annotation::class,
-			],
-			[
-				'requestParam' => 'flashcards',
-				'className' => Flashcard::class,
-			],
-			[
-				'requestParam' => 'quiz_questions',
-				'className' => QuizQuestion::class,
-			],
-			[
-				'requestParam' => 'slides',
-				'className' => Slide::class,
-			],
-		];
-
 		$insert = [];
 
-		foreach ($taxonomyTermableTypes as $taxonomyTermableType) {
+		foreach (self::TAXONOMY_TERMABLE_TYPES as $taxonomyTermableType) {
 			$requestParamValue = $request[$taxonomyTermableType['requestParam']];
 
 			if (!empty($requestParamValue)) {
@@ -126,6 +126,41 @@ class TaxonomyTermsApiController extends ApiController {
 			// See https://stackoverflow.com/questions/548541/insert-ignore-vs-insert-on-duplicate-key-update
 			'id' => 'id'
 		]);
+
+		return $this->respondOk();
+	}
+
+	public function detach(AttachTaxonomyTerm $request, $id) {
+		$taxonomyTerm = TaxonomyTerm::find($id);
+
+		if (!$taxonomyTerm) {
+			return $this->respondNotFound('Taxonomy term does not exist');
+		}
+
+		$pdo = \DB::connection()->getPdo();
+		$tuplesToDelete = [];
+
+		foreach (self::TAXONOMY_TERMABLE_TYPES as $taxonomyTermableType) {
+			$requestParamValue = $request[$taxonomyTermableType['requestParam']];
+
+			if (!empty($requestParamValue)) {
+				foreach ($requestParamValue as $termableId) {
+					$tuplesToDelete []= "(" .
+						$pdo->quote($taxonomyTerm->id) .
+						", " .
+						$pdo->quote($termableId) .
+						", " .
+						$pdo->quote($taxonomyTermableType['className']) .
+						")";
+				}
+			}
+		}
+
+		\DB::statement(
+			'delete from taxonomy_termables where (taxonomy_term_id, taxonomy_termable_id, taxonomy_termable_type) in (' .
+				implode(',', $tuplesToDelete) .
+				')'
+		);
 
 		return $this->respondOk();
 	}

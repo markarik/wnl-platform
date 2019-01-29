@@ -1,5 +1,7 @@
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 import {nestedSetMutations, nestedSetGetters, nestedSetActions, initialState} from 'js/admin/store/modules/nestedSet';
+import axios from 'axios/index';
+import { getApiUrl } from 'js/utils/env';
 
 // Namespace
 const namespaced = true;
@@ -10,6 +12,9 @@ const includeTag = (term, {tags}) => {
 	term.tag = tags[term.tags[0]];
 	return term;
 };
+
+const resource = 'taxonomy_terms';
+const include = '?include=tags';
 
 // Getters
 const getters = {
@@ -23,12 +28,25 @@ const mutations = {
 
 // Actions
 const actions = {
-	...nestedSetActions({
-		resourceName: 'taxonomy_terms',
-		includesParser: includeTag,
-		includeResources: 'tags',
-		subPath: '/byTaxonomy',
-	})
+	...nestedSetActions,
+	async _fetch({}, taxonomyId) {
+		const {data: {included, ...terms}} = await axios.get(getApiUrl(`${resource}/byTaxonomy/${taxonomyId}${include}`));
+		return Object.values(terms).map(term => includeTag(term, included));
+	},
+	async _post({}, termData) {
+		const {data: {included, ...term}} = await axios.post(getApiUrl(`${resource}${include}`), termData);
+		return includeTag(term, included);
+	},
+	async _put({}, termData) {
+		const {data: {included, ...term}} = await axios.put(getApiUrl(`${resource}/${termData.id}${include}`), termData);
+		return includeTag(term, included);
+	},
+	async _delete({}, term) {
+		await axios.delete(getApiUrl(`${resource}/${term.id}`));
+	},
+	async _move({}, {term, direction}) {
+		await axios.put(getApiUrl(`${resource}/move`), {id: term.id, direction});
+	},
 };
 
 export default {

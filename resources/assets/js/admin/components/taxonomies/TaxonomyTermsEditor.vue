@@ -83,7 +83,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'select', 'expand', 'collapseAll']),
+		...mapActions('taxonomyTerms', ['setUpNestedSet', 'select', 'expand', 'collapseAll']),
 		async onSearchTerm(term) {
 			this.collapseAll();
 			this.select([term.id]);
@@ -97,7 +97,7 @@ export default {
 	],
 	async mounted() {
 		try {
-			this.fetchTermsByTaxonomy(this.taxonomyId);
+			this.setUpNestedSet(this.taxonomyId);
 		} catch (error) {
 			this.addAutoDismissableAlert({
 				text: 'Coś poszło nie tak przy pobieraniu struktury Taksonomii',

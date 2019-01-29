@@ -22,9 +22,6 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	=subitem-indent($nestLevel)
-		margin-left: $margin-base + $margin-base * $nestLevel
-
 	.item-wrapper
 		height: 100%
 		width: 100%
@@ -32,10 +29,6 @@
 
 	.is-grouped
 		padding-left: $margin-base
-
-	.has-icon
-		.icon
-			color: $color-inactive-gray
 
 	.icon.is-small
 		font-size: $font-size-minus-1
@@ -67,27 +60,6 @@
 		&.is-active
 			font-weight: $font-weight-regular
 
-	.todo
-		a:before
-			color: $color-background-gray
-			content: '○'
-			margin-left: $margin-tiny
-
-		a.is-completed:before
-			content: '✓'
-
-	.subitem
-		+subitem-indent(0)
-
-		.icon.is-small
-			margin-right: 0
-
-	.subitem--second
-		+subitem-indent(2)
-
-	.toggle
-		color: $color-background-gray
-		transition: all $transition-length-base
 </style>
 
 <script>

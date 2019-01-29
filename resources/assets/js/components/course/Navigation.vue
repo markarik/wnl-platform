@@ -22,7 +22,6 @@ import {mapGetters} from 'vuex';
 import WnlCourseNavigation from 'js/components/course/navigation/CourseNavigation';
 import WnlLessonNavigation from 'js/components/course/navigation/LessonNavigation';
 import {resource} from 'js/utils/config';
-import {STATUS_COMPLETE} from '../../services/progressStore';
 import navigation from 'js/services/navigation';
 
 export default {
@@ -34,68 +33,14 @@ export default {
 	computed: {
 		...mapGetters(['currentUserRoles', 'lessonState']),
 		...mapGetters('course', [
-			'name',
-			'groups',
-			'structure',
-			'getLesson',
-			'getScreens',
-			'isLessonAvailable',
 			'courseId',
 		]),
 		...mapGetters('progress', {
-			getCourseProgress: 'getCourse',
 			getScreenProgress: 'getScreen',
-			getLessonProgress: 'getLesson',
 			getSectionProgress: 'getSection'
 		}),
-		sidenavOptions() {
-			return {
-				hasGroups: !this.isLesson,
-				showSubitemsCount: true,
-			};
-		},
-		isStructureEmpty() {
-			return typeof this.structure !== 'object' || this.structure.length === 0;
-		},
-		courseProgress() {
-			return this.getCourseProgress(this.context.courseId);
-		},
-		itemsHeading() {
-			return this.isLesson ? this.getLesson(this.context.lessonId).name : null;
-		},
-		items() {
-			if (this.isLesson) {
-				return this.getLessonNavigation();
-			} else {
-				return this.getCourseNavigation();
-			}
-		},
 	},
 	methods: {
-		getScreenItem(screen) {
-			const params = {
-				courseId: this.courseId,
-				lessonId: screen[resource('lessons')],
-				screenId: screen.id,
-			};
-
-			const lesson = this.getLessonProgress(params.courseId, params.lessonId);
-			const screens = lesson && lesson.screens || [];
-			const completed = screens[screen.id] && screens[screen.id].status === STATUS_COMPLETE;
-			const itemProps = {
-				text: screen.name,
-				itemClass: 'todo',
-				routeName: resource('screens'),
-				routeParams: params,
-				completed
-			};
-
-			if (screen.slides_count) {
-				return navigation.composeItem({...itemProps, meta: `(${screen.slides_count})`});
-			}
-
-			return navigation.composeItem(itemProps);
-		},
 		getSectionItem(section) {
 			const params = {
 				courseId: this.courseId,

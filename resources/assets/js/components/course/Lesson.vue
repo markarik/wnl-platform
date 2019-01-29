@@ -17,6 +17,7 @@
 				<router-view @userEvent="onUserEvent"/>
 			</div>
 			<div class="wnl-lesson-previous-next-nav">
+				<wnl-previous-next></wnl-previous-next>
 			</div>
 		</div>
 		<div v-else>
@@ -303,8 +304,8 @@ export default {
 			this.elementHeight = this.$parent.$el.offsetHeight;
 		},
 	},
-	mounted () {
-		this.setupLesson(this.lesson.id);
+	async mounted () {
+		await this.setupLesson(this.lesson.id);
 		this.launchLesson();
 		window.addEventListener('resize', this.updateElementHeight);
 	},

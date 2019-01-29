@@ -86,12 +86,13 @@ const getters = {
 	getScreens: state => (lessonId) => {
 		if (!state.lessons[lessonId]) return [];
 		return state.lessons[lessonId].screens
+			.map(screen => screen)
 			.sort((screenA, screenB) => screenA.order_number - screenB.order_number);
 	},
 	getAdjacentScreenId: (state, getters) => (lessonId, currentScreenId, direction) => {
 		let screens = getters.getScreens(lessonId);
 
-		if (_.isEmpty(screens)) return undefined;
+		if (!screens.length) return;
 
 		let currentScreenIndex = _.findIndex(screens, {'id': parseInt(currentScreenId)}),
 			adjScreenIndex;
@@ -237,8 +238,8 @@ const actions = {
 		});
 		commit(types.SET_NEW_STRUCTURE, withIncludes);
 	},
-	setStructure({commit, rootGetters, dispatch}, courseId = 1) {
-		dispatch('setStructureNew');
+	async setStructure({commit, rootGetters, dispatch}, courseId = 1) {
+		await dispatch('setStructureNew');
 		return axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
 			.then(response => {
 				commit(types.SET_STRUCTURE, response.data);

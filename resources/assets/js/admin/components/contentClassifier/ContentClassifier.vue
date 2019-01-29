@@ -128,12 +128,13 @@ export default {
 			this.isLoading = true;
 
 			const parseIncludes = (item, included) => {
-				item.taxonomyTerms = item.taxonomy_terms.map(termId => {
+				item.taxonomyTerms = item.taxonomy_terms ? item.taxonomy_terms.map(termId => {
 					const term = included.taxonomy_terms[termId];
-					term.tag =  included.tags[term.tags[0]]
+					term.tag = included.tags[term.tags[0]];
+					term.taxonomy = included.taxonomies[term.taxonomies[0]];
 
 					return term;
-				});
+				}) : [];
 
 				return item;
 			};
@@ -153,7 +154,7 @@ export default {
 								by_ids: {ids: this.filters[contentType].split(',')},
 							},
 						],
-						include: 'taxonomy_terms.tags',
+						include: 'taxonomy_terms.tags,taxonomy_terms.taxonomies',
 						// TODO use wnl-paginated-list instead
 						limit: 10000,
 					});

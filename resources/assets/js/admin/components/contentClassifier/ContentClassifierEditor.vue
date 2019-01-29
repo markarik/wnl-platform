@@ -3,7 +3,14 @@
 		<h4 class="title is-4 margin bottom">Zarządzaj</h4>
 		<label class="label is-uppercase"><strong>Pojęcia</strong></label>
 		<ul class="margin bottom">
-			<li v-for="term in activeTaxonomyTerms" :key="term.id">{{term.tag.name}}</li>
+			<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">
+				<div class="content-classifier__panel-editor__taxonomy">
+					{{group.taxonomy.name}}
+				</div>
+				<ul>
+					<li v-for="term in group.terms" :key="term.id"><strong>{{term.tag.name}}</strong></li>
+				</ul>
+			</li>
 		</ul>
 		<div class="field">
 			<label class="label is-uppercase"><strong>Dodaj pojęcie</strong></label>
@@ -27,6 +34,9 @@
 	.content-classifier
 		&__panel-editor
 			flex: 50%
+
+			&__taxonomy
+				text-transform: uppercase
 </style>
 
 <script>
@@ -59,21 +69,26 @@ export default {
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById']),
 		...mapState('taxonomies', ['taxonomies']),
-		activeTaxonomyTerms() {
-			const taxonomyTerms = [];
+		flattenItems() {
+			return [].concat(...Object.values(this.filteredContent));
+		},
 
-			// TODO simplify the spaghetti
-			Object.keys(this.filteredContent)
-				.forEach(contentType => {
-					this.filteredContent[contentType]
-						.forEach(item => {
-							if (item.taxonomyTerms) {
-								taxonomyTerms.push(...item.taxonomyTerms);
-							}
-						});
-				});
+		groupedTaxonomyTerms() {
+			const taxonomyTerms = uniqBy([].concat(...this.flattenItems.map(item => item.taxonomyTerms)), 'id');
+			const groupedTerms = {};
 
-			return uniqBy(taxonomyTerms, 'id');
+			taxonomyTerms.forEach(term => {
+				if (!groupedTerms[term.taxonomy.id]) {
+					groupedTerms[term.taxonomy.id] = {
+						taxonomy: term.taxonomy,
+						terms: [],
+					};
+				}
+
+				groupedTerms[term.taxonomy.id].terms.push(term);
+			});
+
+			return groupedTerms;
 		},
 		taxonomiesOptions() {
 			if (!this.taxonomies) {

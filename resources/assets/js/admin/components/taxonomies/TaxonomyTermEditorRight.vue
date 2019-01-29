@@ -2,7 +2,11 @@
 	<div class="terms-editor-right">
 		<nav class="tabs is-uppercase small">
 			<ul>
-				<li v-for="mode in modes" :class="{'is-active': mode.key === editorMode}">
+				<li
+					v-for="mode in modes"
+					:key="mode.key"
+					:class="{'is-active': mode.key === editorMode}"
+				>
 					<a @click="setEditorMode(mode.key)">
 						<span class="icon is-small"><i :class="['fa', mode.icon]" aria-hidden="true"></i></span>
 						<span>{{mode.label}}</span>

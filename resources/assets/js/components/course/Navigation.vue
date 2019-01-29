@@ -69,9 +69,7 @@ export default {
 			return breadcrumbs;
 		},
 		itemsHeading() {
-			if (this.isLesson) {
-				return this.getLesson(this.context.lessonId).name;
-			}
+			return this.isLesson ? this.getLesson(this.context.lessonId).name : null;
 		},
 		items() {
 			if (this.isLesson) {

@@ -101,6 +101,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::put("{$r['course-structure-nodes']}/move", 'CourseStructureNodesApiController@move');
 		Route::put("{$r['course-structure-nodes']}/{id}", 'CourseStructureNodesApiController@put');
 		Route::delete("{$r['course-structure-nodes']}/{id}", 'CourseStructureNodesApiController@delete');
+
+		// Slides
+		Route::post("{$r['slides']}/.filter", 'SlidesApiController@filter');
 	});
 
 	// Count
@@ -289,7 +292,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/time", 'UserStateApiController@incrementTime');
 
-	Route::post("{$r['users']}/{user}/{$r['user-state']}/quizPosition", 'UserStateApiController@getQuizPosition');
+	Route::post("{$r['users']}/{id}/{$r['user-state']}/quizPosition", 'UserStateApiController@getQuizPosition');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/quizPosition", 'UserStateApiController@saveQuizPosition');
 
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/stats", 'UserStateApiController@getStats');

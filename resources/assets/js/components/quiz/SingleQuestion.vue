@@ -2,29 +2,31 @@
 
 	<div class="wnl-app-layout">
 		<wnl-questions-navigation />
-		<div class="single-question wnl-middle wnl-app-layout-main">
-			<div v-if="isLoaded">
-				<div class="question-header" :class="{'is-mobile': isMobile}">
-					<span class="question-title">{{title}}</span>
-					<a class="question-back" @click="goBack">
-						<span class="icon is-small">
-							<i class="fa fa-angle-left"></i>
-						</span>
-						{{$t('quiz.single.back')}}
-					</a>
+		<div class="wnl-middle wnl-app-layout-main">
+			<div class="scrollable-main-container single-question">
+				<div v-if="isLoaded">
+					<div class="question-header" :class="{'is-mobile': isMobile}">
+						<span class="question-title">{{title}}</span>
+						<a class="question-back" @click="goBack">
+							<span class="icon is-small">
+								<i class="fa fa-angle-left"></i>
+							</span>
+							{{$t('quiz.single.back')}}
+						</a>
+					</div>
+					<div v-if="hasError" class="notification">
+						{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
+					</div>
+					<wnl-quiz-widget v-else
+						:isSingle="true"
+						:questions="getQuestionsWithAnswers"
+						:getReaction="getReaction"
+						@selectAnswer="commitSelectAnswer"
+						@verify="resolveQuestion"
+					/>
 				</div>
-				<div v-if="hasError" class="notification">
-					{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
-				</div>
-				<wnl-quiz-widget v-else
-					:isSingle="true"
-					:questions="getQuestionsWithAnswers"
-					:getReaction="getReaction"
-					@selectAnswer="commitSelectAnswer"
-					@verify="resolveQuestion"
-				/>
+				<wnl-text-loader v-else/>
 			</div>
-			<wnl-text-loader v-else/>
 		</div>
 	</div>
 </template>

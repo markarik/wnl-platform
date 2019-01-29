@@ -8,7 +8,7 @@
 					{{group.taxonomy.name}}
 				</div>
 				<ul>
-					<li v-for="term in group.terms" :key="term.id"><strong>{{term.tag.name}}</strong></li>
+					<li v-for="term in group.terms" :key="term.id"><strong>{{term.tag.name}}</strong> ({{getItemsCountByTermId(term.id)}}/{{allItemsCount}})</li>
 				</ul>
 			</li>
 		</ul>
@@ -72,7 +72,9 @@ export default {
 		flattenItems() {
 			return [].concat(...Object.values(this.filteredContent));
 		},
-
+		allItemsCount() {
+			return this.flattenItems.length;
+		},
 		groupedTaxonomyTerms() {
 			const taxonomyTerms = uniqBy([].concat(...this.flattenItems.map(item => item.taxonomyTerms)), 'id');
 			const groupedTerms = {};
@@ -104,7 +106,9 @@ export default {
 		...mapActions('taxonomies', {
 			fetchTaxonomies: 'fetchAll',
 		}),
-
+		getItemsCountByTermId(termId) {
+			return this.flattenItems.filter(item => item.taxonomyTerms.find(term => term.id === termId)).length;
+		},
 		async onTermAdded(term) {
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/attach`), {

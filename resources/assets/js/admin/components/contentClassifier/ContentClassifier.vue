@@ -28,22 +28,9 @@
 				</div>
 				<wnl-text-loader v-else />
 			</div>
-
-			<div class="content-classifier__panel-editor">
-				<h4 class="title is-4 margin bottom">Zarządzaj</h4>
-				<label class="label is-uppercase"><strong>Pojęcia</strong></label>
-				<ul class="margin bottom">
-					<li v-for="term in activeTaxonomyTerms" :key="term.id">{{term.tag.name}}</li>
-				</ul>
-				<div class="field">
-					<label class="label is-uppercase"><strong>Dodaj pojęcie</strong></label>
-					<wnl-taxonomy-term-autocomplete
-						placeholder="Wyszukaj pojęcie"
-						@change="onTermAdded"
-					/>
-				</div>
-
-			</div>
+			<wnl-content-classifier-editor
+				:filteredContent="filteredContent"
+			/>
 		</div>
 	</div>
 </template>
@@ -56,7 +43,6 @@
 			display: flex
 
 		&__panel-results,
-		&__panel-editor
 			flex: 50%
 
 		&__result-list
@@ -88,11 +74,11 @@ import WnlHtmlResult from 'js/admin/components/contentClassifier/HtmlResult';
 import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
-import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
+import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
 
 export default {
 	components: {
-		WnlTaxonomyTermAutocomplete
+		WnlContentClassifierEditor
 	},
 	data() {
 		const contentTypes = {
@@ -136,28 +122,8 @@ export default {
 			isLoading: false,
 		};
 	},
-	computed: {
-		...mapGetters('taxonomyTerms', ['termById']),
-		activeTaxonomyTerms() {
-			const taxonomyTerms = [];
-
-			// TODO simplify the spaghetti
-			Object.keys(this.filteredContent)
-				.forEach(contentType => {
-					this.filteredContent[contentType]
-						.forEach(item => {
-							if (item.taxonomy_terms) {
-								taxonomyTerms.push(...item.taxonomy_terms.map(id => this.termById(id)));
-							}
-						});
-				});
-
-			return uniqBy(taxonomyTerms, term => term.id);
-		}
-	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy']),
 		async onSearch() {
 			this.isLoading = true;
 
@@ -210,33 +176,6 @@ export default {
 				this.isLoading = false;
 			}
 		},
-		async onTermAdded(term) {
-			try {
-				await axios.put(getApiUrl(`taxonomy_termables/${term.id}`), {
-					annotations: this.filteredContent.annotations.map(item => item.id),
-					flashcards: this.filteredContent.flashcards.map(item => item.id),
-					quiz_questions: this.filteredContent.quizQuestions.map(item => item.id),
-					slides: this.filteredContent.slides.map(item => item.id),
-				});
-			} catch (error) {
-				$wnl.logger.capture(error);
-				this.addAutoDismissableAlert({
-					text: 'Nie udało się zapisać nowej klasyfikacji. Spróbuj ponownie.',
-					type: ALERT_TYPES.ERROR
-				});
-			}
-		}
-	},
-	async mounted() {
-		try {
-			// TODO get id from a taxonomy selector
-			await this.fetchTermsByTaxonomy(4);
-		} catch (error) {
-			this.addAutoDismissableAlert({
-				text: 'Coś poszło nie tak przy pobieraniu struktury Taksonomii',
-				type: 'error'
-			});
-		}
 	},
 };
 </script>

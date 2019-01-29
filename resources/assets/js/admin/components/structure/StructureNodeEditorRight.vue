@@ -2,7 +2,7 @@
 	<div class="terms-editor-right">
 		<nav class="tabs is-uppercase small">
 			<ul>
-				<li v-for="mode in modes" :class="{'is-active': mode.key === editorMode}">
+				<li v-for="mode in modes" :class="{'is-active': mode.key === editorMode}" :key="mode.key">
 					<a @click="setEditorMode(mode.key)">
 						<span class="icon is-small"><i :class="['fa', mode.icon]" aria-hidden="true"></i></span>
 						<span>{{mode.label}}</span>
@@ -11,7 +11,7 @@
 			</ul>
 		</nav>
 
-		<component :is="activeMode.componentName" :taxonomyId="taxonomyId" />
+		<component :is="activeMode.componentName" :courseId="courseId" />
 	</div>
 </template>
 
@@ -34,7 +34,7 @@ import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 
 export default {
 	props: {
-		taxonomyId: {
+		courseId: {
 			type: [String, Number],
 			required: true,
 		}
@@ -54,11 +54,6 @@ export default {
 					label: 'Edytuj',
 					componentName: WnlStructureNodeEditorEdit
 				},
-				// {
-				// 	icon: 'fa-compress',
-				// 	key: NESTED_SET_EDITOR_MODES.MERGE,
-				// 	label: 'Połącz'
-				// },
 				{
 					icon: 'fa-trash',
 					key: NESTED_SET_EDITOR_MODES.DELETE,

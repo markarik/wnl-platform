@@ -104,7 +104,7 @@
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
-import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure'
+import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
 
 export default {
 	props: {
@@ -136,8 +136,8 @@ export default {
 		},
 		itemClass() {
 			if (this.isSaving) return 'fa-circle-o-notch fa-spin';
-			if (this.term.structurable_type === COURSE_STRUCTURE_TYPES.GROUP) return 'fa-folder';
 			if (this.term.structurable_type === COURSE_STRUCTURE_TYPES.LESSON) return 'fa-book';
+			return 'fa-folder';
 		}
 	},
 	methods: {

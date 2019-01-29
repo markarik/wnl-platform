@@ -1,24 +1,23 @@
 <template>
-	<div class="terms-editor">
-		<div class="terms-editor__panel is-left">
-			<div class="terms-editor__panel__header">
-				<h4 class="title is-5"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
-				<span class="control has-icons-right">
+	<div class="editor">
+		<div class="editor__panel is-left">
+			<div class="editor__panel__header">
+				<span class="control has-icons-right search">
 					<wnl-node-autocomplete
-						@change="onSearchTerm"
-						placeholder="Szukaj pojęcia"
+						@change="onSearch"
+						placeholder="Szukaj"
 					/>
 					<span class="icon is-small is-right">
 						<i class="fa fa-search"></i>
 					</span>
 				</span>
 			</div>
-			<wnl-structure-nodes-list v-if="!isLoadingTerms" :terms="rootTerms"/>
+			<wnl-structure-nodes-list v-if="!isLoading" :terms="getRootNodes"/>
 			<wnl-text-loader v-else />
 		</div>
-		<div class="terms-editor__panel is-right">
+		<div class="editor__panel is-right">
 			<wnl-structure-node-editor-right
-				:taxonomyId="taxonomyId"
+				:courseId="courseId"
 			/>
 		</div>
 	</div>
@@ -27,7 +26,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.terms-editor
+	.editor
 		border-top: 1px solid $color-lightest-gray
 		display: flex
 
@@ -44,11 +43,14 @@
 			&__header
 				background-color: $color-white
 				display: flex
-				justify-content: space-between
+				justify-content: stretch
 				padding-top: $margin-big
 				position: sticky
 				top: -30px
 				z-index: 1
+
+			.search
+				width: 100%
 </style>
 
 <script>
@@ -57,7 +59,7 @@ import {mapActions, mapState, mapGetters} from 'vuex';
 import WnlStructureNodesList from 'js/admin/components/structure/StructureNodesList';
 import WnlStructureNodeEditorRight from 'js/admin/components/structure/StructureNodeEditorRight';
 import WnlNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
-import scrollToTaxonomyTermMixin from 'js/admin/mixins/scroll-to-taxonomy-term';
+import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
 export default {
 	components: {
@@ -66,44 +68,43 @@ export default {
 		WnlNodeAutocomplete
 	},
 	props: {
-		taxonomyId: {
+		courseId: {
 			type: [String, Number],
 			required: true,
 		},
 	},
 	computed: {
 		...mapState('courseStructure', {
-			isLoadingTerms: 'isLoading',
+			isLoading: 'isLoading',
 			terms: 'terms',
 		}),
-		...mapGetters('courseStructure', ['getChildrenByParentId']),
-		rootTerms() {
-			return this.getChildrenByParentId(null);
-		},
+		...mapGetters('courseStructure', ['getChildrenByParentId', 'getRootNodes']),
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('courseStructure', ['setUpNestedSet', 'select', 'expand', 'collapseAll']),
-		async onSearchTerm(term) {
+		...mapActions('courseStructure', ['setUpNestedSet', 'select', 'expand', 'expandAll', 'collapseAll']),
+		async onSearch(node) {
 			this.collapseAll();
-			this.select([term.id]);
-			this.expand(term.id);
+			this.select([node.id]);
+			this.expand(node.id);
 
-			this.scrollToTaxonomyTerm(term);
+			this.scrollToNode(node);
 		},
 	},
 	mixins: [
-		scrollToTaxonomyTermMixin,
+		scrollToNodeMixin,
 	],
 	async mounted() {
 		try {
-			this.setUpNestedSet(this.taxonomyId);
+			await this.setUpNestedSet(this.courseId);
 		} catch (error) {
+			$wnl.logger.capture(error);
 			this.addAutoDismissableAlert({
-				text: 'Coś poszło nie tak przy pobieraniu struktury Taksonomii',
+				text: 'Coś poszło nie tak przy pobieraniu struktury',
 				type: 'error'
 			});
 		}
+		this.expandAll();
 	},
 };
 </script>

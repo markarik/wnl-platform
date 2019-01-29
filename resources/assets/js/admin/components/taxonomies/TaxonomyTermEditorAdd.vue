@@ -12,7 +12,7 @@
 import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTaxonomyTermEditorForm from 'js/admin/components/taxonomies/TaxonomyTermEditorForm';
-import scrollToTaxonomyTermMixin from 'js/admin/mixins/scroll-to-taxonomy-term';
+import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
 export default {
 	props: {
@@ -69,7 +69,7 @@ export default {
 			if (parent) {
 				this.selectTerms([parent.id]);
 				this.expandTerm(parent.id);
-				this.scrollToTaxonomyTerm(parent);
+				this.scrollToNode(parent);
 			} else {
 				this.selectTerms([]);
 			}
@@ -77,7 +77,7 @@ export default {
 
 	},
 	mixins: [
-		scrollToTaxonomyTermMixin,
+		scrollToNodeMixin,
 	],
 };
 </script>

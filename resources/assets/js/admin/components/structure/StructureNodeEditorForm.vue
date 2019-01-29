@@ -59,7 +59,7 @@ export default {
 			type: String,
 			required: true,
 		},
-		taxonomyId: {
+		courseId: {
 			type: [String, Number],
 			required: true,
 		},
@@ -92,7 +92,7 @@ export default {
 				parent_id: this.parent ? this.parent.id : null,
 				structurable_id: this.structurable.id,
 				structurable_type: this.structurable.type,
-				course_id: this.taxonomyId,
+				course_id: this.courseId,
 			});
 		},
 		onSelectParent(term) {

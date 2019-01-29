@@ -37,7 +37,8 @@ export const nestedSetGetters = {
 		return state.terms
 			.filter(stateTerm => stateTerm.parent_id === parentId)
 			.sort((termA, termB) => termA.orderNumber - termB.orderNumber);
-	}
+	},
+	getRootNodes: (state, getters) => getters.getChildrenByParentId(null)
 };
 
 // Mutations
@@ -209,8 +210,13 @@ export const nestedSetActions = {
 	collapse({commit, state}, termId) {
 		commit(types.SET_EXPANDED_NESTED_SET, state.expandedTerms.filter(id => id !== termId));
 	},
+
 	collapseAll({commit}) {
 		commit(types.SET_EXPANDED_NESTED_SET, []);
+	},
+
+	expandAll({commit, state}) {
+		commit(types.SET_EXPANDED_NESTED_SET, state.terms.map(term => term.id));
 	},
 
 	expand({commit, getters, state}, termId) {

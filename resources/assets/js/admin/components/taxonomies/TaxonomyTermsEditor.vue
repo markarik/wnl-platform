@@ -13,7 +13,7 @@
 					</span>
 				</span>
 			</div>
-			<wnl-taxonomy-terms-list v-if="!isLoadingTerms" :terms="rootTerms"/>
+			<wnl-taxonomy-terms-list v-if="!isLoadingTerms" :terms="getRootNodes"/>
 			<wnl-text-loader v-else />
 		</div>
 		<div class="terms-editor__panel is-right">
@@ -57,7 +57,7 @@ import {mapActions, mapState, mapGetters} from 'vuex';
 import WnlTaxonomyTermsList from 'js/admin/components/taxonomies/TaxonomyTermsList';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
 import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
-import scrollToTaxonomyTermMixin from 'js/admin/mixins/scroll-to-taxonomy-term';
+import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
 export default {
 	components: {
@@ -76,10 +76,7 @@ export default {
 			isLoadingTerms: 'isLoading',
 			terms: 'terms',
 		}),
-		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
-		rootTerms() {
-			return this.getChildrenByParentId(null);
-		},
+		...mapGetters('taxonomyTerms', ['getChildrenByParentId', 'getRootNodes']),
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -89,11 +86,11 @@ export default {
 			this.select([term.id]);
 			this.expand(term.id);
 
-			this.scrollToTaxonomyTerm(term);
+			this.scrollToNode(term);
 		},
 	},
 	mixins: [
-		scrollToTaxonomyTermMixin,
+		scrollToNodeMixin,
 	],
 	async mounted() {
 		try {

@@ -3,7 +3,7 @@
 		v-if="term"
 		submit-label="Zapisz"
 		:on-save="onSave"
-		:taxonomy-id="taxonomyId"
+		:courseId="courseId"
 		:term="term"
 	/>
 	<div v-else class="notification is-info">
@@ -24,7 +24,7 @@ export default {
 		WnlStructureNodeEditorForm
 	},
 	props: {
-		taxonomyId: {
+		courseId: {
 			type: [String, Number],
 			required: true,
 		},

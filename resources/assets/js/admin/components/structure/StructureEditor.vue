@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<h2 class="title is-2">Edycja struktury kursu <span v-if="isEdit">(Id: {{id}})</span></h2>
+		<h2 class="title is-2">Edycja struktury kursu</h2>
 
-		<wnl-structure-nodes-editor :taxonomyId="id" v-if="isEdit" />
+		<wnl-structure-nodes-editor :courseId="courseId" v-if="isEdit" />
 	</div>
 </template>
 
@@ -13,7 +13,7 @@ import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
 	props: {
-		id: {
+		courseId: {
 			type: [String, Number],
 			required: true,
 		},

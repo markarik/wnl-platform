@@ -48,7 +48,7 @@ let routes = [
 	},
 	{
 		name: 'structure-edit',
-		path: '/admin/app/course-structure/:id',
+		path: '/admin/app/course-structure/:courseId',
 		component: StructureEditor,
 		props: true,
 	},

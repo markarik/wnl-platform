@@ -2,7 +2,7 @@
 	<wnl-structure-node-editor-form
 		submit-label="Dodaj pojęcie"
 		:on-save="onSave"
-		:taxonomy-id="taxonomyId"
+		:courseId="courseId"
 		:term="term"
 		@parentChange="onParentChange"
 	/>
@@ -12,11 +12,11 @@
 import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlStructureNodeEditorForm from 'js/admin/components/structure/StructureNodeEditorForm';
-import scrollToTaxonomyTermMixin from 'js/admin/mixins/scroll-to-taxonomy-term';
+import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
 export default {
 	props: {
-		taxonomyId: {
+		courseId: {
 			type: [String, Number],
 			required: true,
 		},
@@ -69,7 +69,7 @@ export default {
 			if (parent) {
 				this.selectTerms([parent.id]);
 				this.expandTerm(parent.id);
-				this.scrollToTaxonomyTerm(parent);
+				this.scrollToNode(parent);
 			} else {
 				this.selectTerms([]);
 			}
@@ -77,7 +77,7 @@ export default {
 
 	},
 	mixins: [
-		scrollToTaxonomyTermMixin,
+		scrollToNodeMixin,
 	],
 };
 </script>

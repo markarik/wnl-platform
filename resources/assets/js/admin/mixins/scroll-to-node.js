@@ -3,7 +3,7 @@ import {scrollToElement} from 'js/utils/animations';
 
 export default {
 	methods: {
-		async scrollToTaxonomyTerm(term) {
+		async scrollToNode(term) {
 			await Vue.nextTick();
 			// wait for collapse animation to finish
 			setTimeout(

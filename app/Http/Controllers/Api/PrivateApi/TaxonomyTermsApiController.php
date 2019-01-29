@@ -1,9 +1,15 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Course\AttachTaxonomyTerm;
 use App\Http\Requests\Course\MoveTaxonomyTerm;
 use App\Http\Requests\Course\UpdateTaxonomyTerm;
+use App\Models\Annotation;
+use App\Models\Flashcard;
+use App\Models\QuizQuestion;
+use App\Models\Slide;
 use App\Models\TaxonomyTerm;
+use App\Models\TaxonomyTermable;
 use Illuminate\Http\Request;
 
 class TaxonomyTermsApiController extends ApiController {
@@ -69,6 +75,57 @@ class TaxonomyTermsApiController extends ApiController {
 		if (!$success) {
 			return $this->respondUnprocessableEntity('direction out of range');
 		}
+
+		return $this->respondOk();
+	}
+
+	public function attach(AttachTaxonomyTerm $request, $id) {
+		$taxonomyTerm = TaxonomyTerm::find($id);
+
+		if (!$taxonomyTerm) {
+			return $this->respondNotFound('Taxonomy term does not exist');
+		}
+
+		$taxonomyTermableTypes = [
+			[
+				'requestParam' => 'annotations',
+				'columnValue' => Annotation::class,
+			],
+			[
+				'requestParam' => 'flashcards',
+				'columnValue' => Flashcard::class,
+			],
+			[
+				'requestParam' => 'quiz_questions',
+				'columnValue' => QuizQuestion::class,
+			],
+			[
+				'requestParam' => 'slides',
+				'columnValue' => Slide::class,
+			],
+		];
+
+		$insert = [];
+
+		foreach ($taxonomyTermableTypes as $taxonomyTermableType) {
+			$requestParamValue = $request[$taxonomyTermableType['requestParam']];
+
+			if (!empty($requestParamValue)) {
+				foreach ($requestParamValue as $termableId) {
+					$insert []= [
+						'taxonomy_term_id' => $taxonomyTerm->id,
+						'taxonomy_termable_id' => $termableId,
+						'taxonomy_termable_type' => $taxonomyTermableType['columnValue']
+					];
+				}
+			}
+		}
+
+		TaxonomyTermable::insertOnDuplicateKey($insert, [
+			// Ignore duplicate keys without ignoring other errors
+			// See https://stackoverflow.com/questions/548541/insert-ignore-vs-insert-on-duplicate-key-update
+			'id' => 'id'
+		]);
 
 		return $this->respondOk();
 	}

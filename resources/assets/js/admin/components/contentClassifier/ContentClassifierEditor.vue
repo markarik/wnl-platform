@@ -107,7 +107,7 @@ export default {
 
 		async onTermAdded(term) {
 			try {
-				await axios.put(getApiUrl(`taxonomy_termables/${term.id}`), {
+				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/attach`), {
 					annotations: this.filteredContent.annotations.map(item => item.id),
 					flashcards: this.filteredContent.flashcards.map(item => item.id),
 					quiz_questions: this.filteredContent.quizQuestions.map(item => item.id),

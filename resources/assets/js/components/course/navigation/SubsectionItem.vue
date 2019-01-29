@@ -1,22 +1,23 @@
 <template>
 	<div class="item" :class="[itemClass, { disabled: item.isDisabled }]">
 		<router-link
-			class="item-wrapper"
-			:class="{'router-link-exact-active': screenItem.active, 'is-disabled': screenItem.isDisabled, 'is-completed': screenItem.completed}"
-			:to="to"
+				class="item-wrapper"
+				:class="{'router-link-exact-active': subsectionItem.active, 'is-disabled': subsectionItem.isDisabled, 'is-completed': subsectionItem.completed}"
+				:to="to"
 		>
 			<span class="sidenav-item-content">
-				{{screenItem.text}}
-				<span class="sidenav-item-meta" v-if="hasMeta">{{screenItem.meta}}</span>
+				{{subsectionItem.text}}
+				<span class="sidenav-item-meta" v-if="hasMeta">{{subsectionItem.meta}}</span>
 			</span>
 		</router-link>
-		<wnl-section-item v-for="section in screenSections" :key="section.id" :item="section"></wnl-section-item>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.item
+		margin-left: $margin-base
 	.item-wrapper
 		height: 100%
 		width: 100%
@@ -60,13 +61,9 @@
 import {mapGetters} from 'vuex';
 import navigation from 'js/services/navigation';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
-import WnlSectionItem from 'js/components/course/navigation/SectionItem';
 
 export default {
-	name: 'ScreenItem',
-	components: {
-		WnlSectionItem
-	},
+	name: 'SubsectionItem',
 	props: {
 		item: {
 			type: Object,
@@ -75,60 +72,58 @@ export default {
 	},
 	computed: {
 		...mapGetters(['lessonState']),
-		...mapGetters('course', ['getSectionsForScreen']),
 		...mapGetters('progress', {
-			getScreenProgress: 'getScreen',
-			getCourseProgress: 'getCourse',
-			getLessonProgress: 'getLesson',
 			getSectionProgress: 'getSection'
 		}),
 		lessonId() {
 			return this.item.lessons;
 		},
 		courseId() {
-			return 1;
+			return this.$route.params.courseId;
+		},
+		sectionId() {
+			return this.item.sections;
 		},
 		screenId() {
-			return this.item.id;
+			return this.item.screens;
 		},
 		itemClass() {
-			return this.screenItem.itemClass;
+			return this.subsectionItem.itemClass;
 		},
 		to() {
-			return this.screenItem.to;
+			return this.subsectionItem.to;
 		},
 		hasMeta() {
-			return typeof this.screenItem.meta !== 'undefined' && this.screenItem.meta.length > 0;
+			return typeof this.subsectionItem.meta !== 'undefined' && this.subsectionItem.meta.length > 0;
 		},
-		screenItem() {
-			const screen = this.item;
+		subsectionItem() {
+			const subsection = this.item;
 			const params = {
 				courseId: this.courseId,
 				lessonId: this.lessonId,
 				screenId: this.screenId,
+				slide: subsection.slide,
 			};
-			const completed = this.getScreenProgress(this.courseId, params.lessonId, screen.id);
-			const itemProps = {
-				text: screen.name,
-				itemClass: 'todo',
+			const isSubsectionActive = this.lessonState.activeSubsection === subsection.id;
+			const sectionProgress = this.getSectionProgress(this.courseId, this.lessonId, this.screenId, this.sectionId) || {}
+			return navigation.composeItem({
+				text: subsection.name,
+				itemClass: 'small subitem todo',
 				routeName: 'screens',
 				routeParams: params,
-				completed
-			};
-
-			if (screen.slides_count) {
-				return navigation.composeItem({...itemProps, meta: `(${screen.slides_count})`});
-			}
-			return navigation.composeItem(itemProps);
+				method: 'replace',
+				iconClass: 'fa-angle-right',
+				iconTitle: subsection.name,
+				completed: sectionProgress[subsection.id],
+				active: isSubsectionActive,
+				meta: `(${subsection.slidesCount})`
+			});
 		},
-		screenSections() {
-			return this.getSectionsForScreen(this.screenId);
-		}
 	},
 	methods: {
 		hasClass(className) {
 			return !!this.itemClass && this.itemClass.indexOf(className) > -1;
-		}
+		},
 	},
 };
 </script>

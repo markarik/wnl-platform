@@ -53,8 +53,11 @@ class TaxonomyTermablesApiController extends ApiController {
 			}
 		}
 
-		// TODO this will throw error when trying to insert a duplicate
-		TaxonomyTermable::insert($insert);
+		TaxonomyTermable::insertOnDuplicateKey($insert, [
+			// Ignore duplicate keys without ignoring other errors
+			// See https://stackoverflow.com/questions/548541/insert-ignore-vs-insert-on-duplicate-key-update
+			'id' => 'id'
+		]);
 
 		return $this->respondOk();
 	}

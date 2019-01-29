@@ -13,6 +13,13 @@ const state = {
 	taxonomies: [],
 };
 
+// Getters
+const getters = {
+	taxonomyById: state => id => {
+		return state.taxonomies.find(taxonomy => taxonomy.id === id);
+	},
+};
+
 // Mutations
 const mutations = {
 	[types.SET_TAXONOMIES_LOADING] (state, payload) {
@@ -42,6 +49,7 @@ const actions = {
 export default {
 	namespaced,
 	state,
+	getters,
 	mutations,
 	actions
 };

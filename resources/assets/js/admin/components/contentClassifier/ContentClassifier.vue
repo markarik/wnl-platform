@@ -30,6 +30,7 @@
 			</div>
 			<wnl-content-classifier-editor
 				:filteredContent="filteredContent"
+				@onTermAdded="onTermAdded"
 			/>
 		</div>
 	</div>
@@ -186,6 +187,16 @@ export default {
 			} finally {
 				this.isLoading = false;
 			}
+		},
+		onTermAdded(term, taxonomy) {
+			Object.keys(this.filteredContent).forEach((contentType) => {
+				this.filteredContent[contentType].forEach((item) => {
+					item.taxonomyTerms.push({
+						...term,
+						taxonomy
+					});
+				});
+			});
 		},
 	},
 };

@@ -76,6 +76,7 @@ export default {
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById']),
+		...mapGetters('taxonomies', ['taxonomyById']),
 		...mapState('taxonomies', ['taxonomies']),
 		flattenItems() {
 			return [].concat(...Object.values(this.filteredContent));
@@ -141,6 +142,8 @@ export default {
 					quiz_questions: this.filteredContent.quizQuestions.map(item => item.id),
 					slides: this.filteredContent.slides.map(item => item.id),
 				});
+
+				this.$emit('onTermAdded', term, this.taxonomyById(this.taxonomyId));
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

@@ -12,9 +12,18 @@
 						<strong>{{term.tag.name}}</strong> ({{getItemsCountByTermId(term.id)}}/{{allItemsCount}})
 						<button
 							class="button is-danger is-small"
+							title="Odznacz"
 							@click="onDetachTaxonomyTermable(term)"
 						>
 							<i class="fa fa-trash"></i>
+						</button>
+						<button
+							class="button is-small"
+							title="Oznacz wszystko"
+							v-if="getItemsCountByTermId(term.id) < allItemsCount"
+							@click="onTermAdded(term)"
+						>
+							<i class="fa fa-plus"></i>
 						</button>
 					</li>
 				</ul>

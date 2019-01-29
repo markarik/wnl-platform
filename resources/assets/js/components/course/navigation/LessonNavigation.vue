@@ -22,7 +22,6 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import navigation from 'js/services/navigation';
 import WnlScreenItem from 'js/components/course/navigation/ScreenItem';
 
 export default {
@@ -32,7 +31,7 @@ export default {
 	},
 	computed: {
 		...mapGetters('course', [
-			'getScreens',
+			'getScreensForLesson',
 			'getLesson'
 		]),
 		lessonId() {
@@ -42,7 +41,7 @@ export default {
 			return this.getLesson(this.lessonId) || {};
 		},
 		screens() {
-			return this.getScreens(this.lessonId);
+			return this.getScreensForLesson(this.lessonId);
 		},
 	},
 };

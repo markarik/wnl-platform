@@ -139,14 +139,14 @@ export default {
 			});
 		}
 	},
-	mounted() {
-		this.fetchContent();
+	async mounted() {
+		await this.fetchContent();
 		this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
 		this.trackScreenOpen();
 	},
 	watch: {
-		screenId() {
-			this.fetchContent();
+		async screenId() {
+			await this.fetchContent();
 			this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
 			this.trackScreenOpen();
 		}

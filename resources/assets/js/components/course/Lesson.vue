@@ -14,7 +14,7 @@
 						</div>
 					</div>
 				</div>
-				<router-view @userEvent="onUserEvent"/>
+				<router-view @userEvent="onUserEvent" v-if="lessonReady"/>
 			</div>
 			<div class="wnl-lesson-previous-next-nav">
 				<wnl-previous-next></wnl-previous-next>
@@ -80,15 +80,16 @@ export default {
 				 * (which btw is defined as 100% of its parent element),
 				 * all browsers are able to beautifully scroll the content.
 				 */
-			elementHeight: _.get(this.$parent, '$el.offsetHeight') || '100%'
+			elementHeight: _.get(this.$parent, '$el.offsetHeight') || '100%',
+			lessonReady: false
 		};
 	},
 	computed: {
 		...mapGetters('course', [
-			'getScreens',
+			'getScreensForLesson',
 			'getLesson',
-			'getSections',
-			'getSubsections',
+			'getSectionsForScreen',
+			'getSubsectionsForSection',
 			'getScreen',
 			'getScreenSectionsCheckpoints',
 			'getSectionSubsectionsCheckpoints',
@@ -125,27 +126,33 @@ export default {
 			return this.lesson.order_number;
 		},
 		screens() {
-			return this.getScreens(this.lessonId);
+			return this.getScreensForLesson(this.lessonId);
 		},
 		currentScreen() {
 			return this.getScreen(this.screenId);
 		},
 		currentSection() {
+			if (!this.sectionsReversed) return;
+
 			return this.sectionsReversed.find((section) => this.slide >= section.slide);
 		},
 		currentSubsection() {
+			if (!this.subsectionsReversed) return;
+
 			return this.subsectionsReversed.find((subsection) => this.slide >= subsection.slide);
 		},
 		sectionsReversed() {
-			const sectionsIds = _.get(this.currentScreen, 'sections', []);
-			const sections = this.getSections(sectionsIds);
+			if (!this.currentScreen) return;
+
+			const sections = this.getSectionsForScreen(this.currentScreen.id);
 
 			// map needed because reverse modifies intial array
 			return sections.map(el => el).reverse();
 		},
 		subsectionsReversed() {
-			const subsectionsIds = _.get(this.currentSection, 'subsections', []);
-			const subsections = this.getSubsections(subsectionsIds);
+			if (!this.currentSection) return;
+
+			const subsections = this.getSubsectionsForSection(this.currentSection.id);
 
 			// map needed because reverse modifies intial array
 			return subsections.map(el => el).reverse();
@@ -306,6 +313,7 @@ export default {
 	},
 	async mounted () {
 		await this.setupLesson(this.lesson.id);
+		this.lessonReady = true;
 		this.launchLesson();
 		window.addEventListener('resize', this.updateElementHeight);
 	},

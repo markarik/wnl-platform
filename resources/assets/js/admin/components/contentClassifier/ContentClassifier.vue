@@ -30,7 +30,8 @@
 			</div>
 			<wnl-content-classifier-editor
 				:filteredContent="filteredContent"
-				@onTermAdded="onTermAdded"
+				@onTaxonomyTermAttached="onTaxonomyTermAttached"
+				@onTaxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 		</div>
 	</div>
@@ -65,7 +66,9 @@
 
 <script>
 import axios from 'axios';
+import {delete as vueDelete} from 'vue';
 import {mapActions} from 'vuex';
+import {findIndex, some} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
 import {ALERT_TYPES} from 'js/consts/alert';
@@ -188,13 +191,26 @@ export default {
 				this.isLoading = false;
 			}
 		},
-		onTermAdded(term, taxonomy) {
+		onTaxonomyTermAttached(term, taxonomy) {
 			Object.keys(this.filteredContent).forEach((contentType) => {
 				this.filteredContent[contentType].forEach((item) => {
-					item.taxonomyTerms.push({
-						...term,
-						taxonomy
-					});
+					if (!some(item.taxonomyTerms, {id: term.id})) {
+						item.taxonomyTerms.push({
+							...term,
+							taxonomy
+						});
+					}
+				});
+			});
+		},
+		onTaxonomyTermDetached(term) {
+			Object.keys(this.filteredContent).forEach((contentType) => {
+				this.filteredContent[contentType].forEach((item) => {
+					const index = findIndex(item.taxonomyTerms, {id: term.id});
+
+					if (index > -1) {
+						vueDelete(item.taxonomyTerms, index);
+					}
 				});
 			});
 		},

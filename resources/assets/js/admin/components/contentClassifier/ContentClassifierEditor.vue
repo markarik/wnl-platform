@@ -13,7 +13,7 @@
 						<button
 							class="button is-danger is-small"
 							title="Odznacz"
-							@click="onDetachTaxonomyTermable(term)"
+							@click="onDetachTaxonomyTerm(term)"
 						>
 							<i class="fa fa-trash"></i>
 						</button>
@@ -21,7 +21,7 @@
 							class="button is-small"
 							title="Oznacz wszystko"
 							v-if="getItemsCountByTermId(term.id) < allItemsCount"
-							@click="onTermAdded(term)"
+							@click="onAttachTaxonomyTerm(term)"
 						>
 							<i class="fa fa-plus"></i>
 						</button>
@@ -38,7 +38,7 @@
 			/>
 			<wnl-taxonomy-term-autocomplete
 				placeholder="Wyszukaj pojęcie"
-				@change="onTermAdded"
+				@change="onAttachTaxonomyTerm"
 			/>
 		</div>
 
@@ -127,7 +127,7 @@ export default {
 		getItemsCountByTermId(termId) {
 			return this.flattenItems.filter(item => item.taxonomyTerms.find(term => term.id === termId)).length;
 		},
-		async onDetachTaxonomyTermable(term) {
+		async onDetachTaxonomyTerm(term) {
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/detach`), {
 					annotations: this.filteredContent.annotations.map(item => item.id),
@@ -135,6 +135,8 @@ export default {
 					quiz_questions: this.filteredContent.quizQuestions.map(item => item.id),
 					slides: this.filteredContent.slides.map(item => item.id),
 				});
+
+				this.$emit('onTaxonomyTermDetached', term);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
@@ -143,7 +145,7 @@ export default {
 				});
 			}
 		},
-		async onTermAdded(term) {
+		async onAttachTaxonomyTerm(term) {
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/attach`), {
 					annotations: this.filteredContent.annotations.map(item => item.id),
@@ -152,7 +154,7 @@ export default {
 					slides: this.filteredContent.slides.map(item => item.id),
 				});
 
-				this.$emit('onTermAdded', term, this.taxonomyById(this.taxonomyId));
+				this.$emit('onTaxonomyTermAttached', term, this.taxonomyById(this.taxonomyId));
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

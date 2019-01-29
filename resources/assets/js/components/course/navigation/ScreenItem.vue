@@ -20,11 +20,19 @@
 		height: 100%
 		width: 100%
 		user-select: none
+		display: flex
+		line-height: 1.5em
+		padding: 7px 15px
+		word-break: break-word
+		word-wrap: break-word
 
 	.sidenav-item-meta
 		color: $color-background-gray
 		font-size: $font-size-minus-3
 		line-height: $line-height-plus
+
+	.sidenav-item-content
+		margin-left: 5px
 
 	a
 		transition: background-color $transition-length-base
@@ -58,13 +66,11 @@ export default {
 		item: {
 			type: Object,
 			required: true
-		}
+		},
 	},
 	computed: {
 		...mapGetters('progress', {
 			getScreenProgress: 'getScreen',
-			getLessonProgress: 'getLesson',
-			getSectionProgress: 'getSection'
 		}),
 		itemClass() {
 			return this.screenItem.itemClass;
@@ -82,9 +88,7 @@ export default {
 				lessonId: this.$route.params.lessonId,
 				screenId: this.item.id,
 			};
-			const lesson = this.getLessonProgress(params.courseId, params.lessonId);
-			const screens = lesson && lesson.screens || [];
-			const completed = screens[screen.id] && screens[screen.id].status === STATUS_COMPLETE;
+			const completed = this.getScreenProgress(1, params.lessonId, screen.id);
 			const itemProps = {
 				text: screen.name,
 				itemClass: 'todo',

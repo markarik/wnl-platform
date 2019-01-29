@@ -9,7 +9,7 @@
 				</div>
 				<ul>
 					<li v-for="term in group.terms" :key="term.id">
-						<strong>{{term.tag.name}}</strong> ({{getItemsCountByTermId(term.id)}}/{{allItemsCount}})
+						<strong>{{[term, ...term.ancestors].reverse().map(item => item.tag.name).join(' > ')}}</strong> ({{getItemsCountByTermId(term.id)}}/{{allItemsCount}})
 						<button
 							class="button is-danger is-small"
 							title="Odznacz"

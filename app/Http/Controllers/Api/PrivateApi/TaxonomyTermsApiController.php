@@ -1,7 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Requests\Course\AttachTaxonomyTerm;
+use App\Http\Requests\Course\UpdateTaxonomyTermRelations;
 use App\Http\Requests\Course\MoveTaxonomyTerm;
 use App\Http\Requests\Course\UpdateTaxonomyTerm;
 use App\Models\TaxonomyTerm;
@@ -75,7 +75,7 @@ class TaxonomyTermsApiController extends ApiController {
 		return $this->respondOk();
 	}
 
-	public function attach(AttachTaxonomyTerm $request, $id) {
+	public function attach(UpdateTaxonomyTermRelations $request, $id) {
 		$taxonomyTerm = TaxonomyTerm::find($id);
 
 		if (!$taxonomyTerm) {
@@ -101,7 +101,7 @@ class TaxonomyTermsApiController extends ApiController {
 		return $this->respondOk();
 	}
 
-	public function detach(AttachTaxonomyTerm $request, $id) {
+	public function detach(UpdateTaxonomyTermRelations $request, $id) {
 		$taxonomyTerm = TaxonomyTerm::find($id);
 
 		if (!$taxonomyTerm) {

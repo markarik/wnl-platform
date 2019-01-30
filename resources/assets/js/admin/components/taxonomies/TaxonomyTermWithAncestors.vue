@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="parent-term">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}}</div>
-		<strong>{{term.tag.name}}</strong> <span>{{customText}}</span>
+		<strong>{{term.tag.name}}</strong>
 	</div>
 </template>
 
@@ -25,10 +25,6 @@ export default {
 			type: Array,
 			default: () => [],
 		},
-		customText: {
-			type: String,
-			default: '',
-		}
 	},
 };
 </script>

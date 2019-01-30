@@ -18,16 +18,17 @@
 						<wnl-taxonomy-term-with-ancestors
 							:term="term"
 							:ancestors="term.ancestors"
-							:customText="`(${getItemsCountByTermId(term.id)}/${allItemsCount})`"
+							class="content-classifier__panel-editor__term__name"
 						/>
-						<button
-							class="button is-small margin left"
-							title="Oznacz wszystko"
-							v-if="getItemsCountByTermId(term.id) < allItemsCount"
+						<a
+							class="margin left"
+							v-if="term.itemsCount < allItemsCount"
 							@click="onAttachTaxonomyTerm(term)"
 						>
-							<i class="fa fa-plus"></i>
-						</button>
+							<span class="icon is-small"><i class="fa fa-plus"></i></span>
+							Dodaj do wszystkich
+						</a>
+						<span class="margin left">({{term.itemsCount}}/{{allItemsCount}})</span>
 					</li>
 				</ul>
 			</li>
@@ -62,6 +63,9 @@
 				align-items: center
 				display: flex
 				margin-bottom: $margin-medium
+				&__name
+					flex-grow: 1
+
 			&__taxonomy
 				text-transform: uppercase
 			&__term-select
@@ -121,8 +125,11 @@ export default {
 					};
 				}
 
+				term.itemsCount = this.getItemsCountByTermId(term.id);
 				groupedTerms[term.taxonomy.id].terms.push(term);
 			});
+
+			Object.keys(groupedTerms).forEach(taxonomyId => groupedTerms[taxonomyId].terms.sort((a, b) => b.itemsCount - a.itemsCount));
 
 			return groupedTerms;
 		},

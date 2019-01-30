@@ -91,7 +91,7 @@ class Slide extends Model
 				['slide_id', '=', $this->id],
 			])->first()->order_number;
 
-			$model['context']['section']['id'] = $section->name;
+			$model['context']['section']['name'] = $section->name;
 			$model['context']['section']['id'] = $section->id;
 			$model['context']['screen']['id'] = $screen->id;
 			$model['context']['lesson']['id'] = $lesson->id;

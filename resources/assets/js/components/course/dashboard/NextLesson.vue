@@ -63,8 +63,6 @@ import context from 'js/consts/events_map/context.json';
 import emits_events from 'js/mixins/emits-events';
 
 const STATUS_NONE = 'none';
-const STATUS_IN_PROGRESS = 'in-progress';
-const STATUS_AVAILABLE = 'available';
 
 export default {
 	name: 'NextLesson',

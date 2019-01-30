@@ -26,11 +26,10 @@ const state = {
 	id: 0,
 	name: '',
 	groups: [],
-	structure: {},
 	sections: {},
 	subsections: {},
 	screens: {},
-	newStructure: []
+	structure: []
 };
 
 // Getters
@@ -39,10 +38,9 @@ const getters = {
 	courseId: state => state.id,
 	name: state => state.name,
 	groups: state => {
-		return state.newStructure.filter(node => node.structurable_type === getModelByResource('groups'))
+		return state.structure.filter(node => node.structurable_type === getModelByResource('groups'))
 			.map(node => node.model);
 	},
-	structure: state => state.structure,
 	getGroup: (state, getters) => (groupId) => {
 		return getters.groups.find(group => group.id.toString() === groupId.toString()) || {};
 	},
@@ -50,7 +48,7 @@ const getters = {
 		return getters.getLessons.filter(lesson => lesson.groups.toString() === groupId.toString());
 	},
 	getLessons: state => {
-		return state.newStructure.filter(node => node.structurable_type === getModelByResource('lessons'))
+		return state.structure.filter(node => node.structurable_type === getModelByResource('lessons'))
 			.map(node => node.model);
 	},
 	getRequiredLessons: (state, getters) => {
@@ -166,8 +164,8 @@ const mutations = {
 	[types.COURSE_READY] (state) {
 		set(state, 'ready', true);
 	},
-	[types.SET_NEW_STRUCTURE](state, payload) {
-		set(state, 'newStructure', payload);
+	[types.SET_STRUCTURE](state, payload) {
+		set(state, 'structure', payload);
 	},
 	[types.SET_SCREENS](state, screens) {
 		set(state, 'screens', {
@@ -186,15 +184,6 @@ const mutations = {
 			...state.subsections,
 			...subsections
 		});
-	},
-	[types.SET_STRUCTURE] (state, data) {
-		set(state, 'id', data.id);
-		set(state, 'name', data.name);
-		set(state, resource('groups'), data[resource('groups')]);
-		set(state, 'structure', data.included);
-	},
-	[types.SET_SCREEN_CONTENT] (state, {data, screenId}) {
-		set(state.screens[screenId], 'content', data.content);
 	},
 };
 
@@ -249,14 +238,8 @@ const actions = {
 				model: value
 			};
 		});
-		commit(types.SET_NEW_STRUCTURE, withIncludes);
+		commit(types.SET_STRUCTURE, withIncludes);
 	},
-	fetchScreenContent({commit}, screenId) {
-		return axios.get(getApiUrl(`screens/${screenId}`))
-			.then(({data}) => {
-				commit(types.SET_SCREEN_CONTENT, {data, screenId});
-			});
-	}
 };
 
 export default {

@@ -86,7 +86,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapState('course', ['newStructure']),
+		...mapState('course', ['structure']),
 		...mapGetters(['isNavigationGroupExpanded']),
 		groupItem() {
 			return navigation.composeItem({text: this.item.model.name, itemClass: 'heading small'});
@@ -98,7 +98,7 @@ export default {
 			return this.subitems.length;
 		},
 		subitems() {
-			return this.newStructure.filter(node => node.parent_id === this.item.id);
+			return this.structure.filter(node => node.parent_id === this.item.id);
 		},
 		toggleIcon() {
 			return this.isOpen ? 'fa-angle-up' : 'fa-angle-down';

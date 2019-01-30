@@ -124,9 +124,9 @@ export default {
 	},
 	computed: {
 		...mapGetters(['isMobileNavigation']),
-		...mapState('course', ['newStructure']),
+		...mapState('course', ['structure']),
 		rootItems() {
-			return this.newStructure.filter(item => !item.parent_id);
+			return this.structure.filter(item => !item.parent_id);
 		}
 	},
 };

@@ -116,20 +116,7 @@ export default {
 	},
 	methods: {
 		...mapActions('qna', ['fetchQuestionsForDiscussion']),
-		...mapActions('course', ['fetchScreenContent']),
 		...mapActions(['toggleOverlay']),
-
-		fetchContent() {
-			if (this.screenData.hasOwnProperty('content')) return;
-
-			this.toggleOverlay({source: 'screens', display: true});
-			this.fetchScreenContent(this.screenId)
-				.then(() => this.toggleOverlay({source: 'screens', display: false}))
-				.catch((error) => {
-					this.toggleOverlay({source: 'screens', display: false});
-					$wnl.logger.capture(error);
-				});
-		},
 		trackScreenOpen() {
 			this.emitUserEvent({
 				feature: features.screen.value,
@@ -139,14 +126,12 @@ export default {
 			});
 		}
 	},
-	async mounted() {
-		await this.fetchContent();
+	mounted() {
 		this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
 		this.trackScreenOpen();
 	},
 	watch: {
-		async screenId() {
-			await this.fetchContent();
+		screenId() {
 			this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
 			this.trackScreenOpen();
 		}

@@ -78,8 +78,8 @@ export default {
 		WnlStructurableAutocomplete,
 	},
 	computed: {
-		...mapState('courseStructure', ['Nodes', 'isSaving']),
-		...mapGetters('courseStructure', ['getAncestorsById']),
+		...mapState('courseStructure', ['nodes', 'isSaving']),
+		...mapGetters('courseStructure', ['getAncestorsById', 'getParentNode']),
 		submitDisabled() {
 			return !this.structurable || this.isSaving;
 		},
@@ -95,32 +95,32 @@ export default {
 				course_id: this.courseId,
 			});
 		},
-		onSelectParent(Node) {
-			if (Node && this.getAncestorsById(Node.id).find(t => t.id === this.id)) {
+		onSelectParent(node) {
+			if (node && this.getAncestorsById(node.id).find(t => t.id === this.id)) {
 				this.addAutoDismissableAlert({
 					text: 'Nie możesz przenieść pojęcia do jego potomka.',
 					type: ALERT_TYPES.ERROR,
 				});
 				return;
 			}
-			this.parent = Node;
-			this.$emit('parentChange', Node);
+			this.parent = node;
+			this.$emit('parentChange', node);
 		},
 
 		onSelectStructurable(structurable) {
 			this.structurable = structurable;
 		},
 
-		onNodeUpdated(Node) {
-			if (Node === null) {
-				Node = {
+		onNodeUpdated(node) {
+			if (node === null) {
+				node = {
 					...initialState
 				};
 			}
 
-			const {id, parent, structurable} = Node;
+			const {id, structurable} = node;
 			this.id = id;
-			this.parent = parent;
+			this.parent = this.getParentNode(node);
 			this.structurable = structurable;
 		}
 	},

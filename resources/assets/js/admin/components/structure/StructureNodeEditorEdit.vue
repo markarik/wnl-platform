@@ -1,10 +1,10 @@
 <template>
 	<wnl-structure-node-editor-form
-		v-if="node"
+		v-if="currentNode"
 		submit-label="Zapisz"
 		:on-save="onSave"
 		:courseId="courseId"
-		:node="node"
+		:node="currentNode"
 	/>
 	<div v-else class="notification is-info">
 		<span class="icon">
@@ -15,8 +15,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex';
-
+import {mapActions, mapGetters} from 'vuex';
 import WnlStructureNodeEditorForm from 'js/admin/components/structure/StructureNodeEditorForm';
 
 export default {
@@ -30,21 +29,7 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters('courseStructure', ['nodeById', 'getAncestorsById']),
-		...mapState('courseStructure', ['selectedNodes']),
-		node() {
-			if (this.selectedNodes.length === 0) {
-				return null;
-			}
-
-			// TODO figure out multiple Nodes selected
-			const node = this.nodeById(this.selectedNodes[0]);
-
-			return {
-				...node,
-				parent: this.getAncestorsById(node.id).slice(-1)[0],
-			};
-		}
+		...mapGetters('courseStructure', ['nodeById', 'currentNode']),
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -52,12 +37,12 @@ export default {
 			'expandNode': 'expand',
 			'updateNode': 'update',
 		}),
-		async onSave(Node) {
+		async onSave(node) {
 			try {
-				await this.updateNode(Node);
+				await this.updateNode(node);
 
-				if (Node.parent_id) {
-					this.expandNode(Node.parent_id);
+				if (node.parent_id) {
+					this.expandNode(node.parent_id);
 				}
 
 				this.addAutoDismissableAlert({

@@ -15,6 +15,12 @@ import WnlStructureNodeEditorForm from 'js/admin/components/structure/StructureN
 import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
 export default {
+	components: {
+		WnlStructureNodeEditorForm
+	},
+	mixins: [
+		scrollToNodeMixin,
+	],
 	props: {
 		courseId: {
 			type: [String, Number],
@@ -33,9 +39,6 @@ export default {
 				parent: this.nodeById(this.selectedNodes[0])
 			};
 		}
-	},
-	components: {
-		WnlStructureNodeEditorForm
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -76,8 +79,5 @@ export default {
 		},
 
 	},
-	mixins: [
-		scrollToNodeMixin,
-	],
 };
 </script>

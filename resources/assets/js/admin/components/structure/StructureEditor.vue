@@ -26,7 +26,5 @@ export default {
 	components: {
 		WnlStructureNodesEditor,
 	},
-	methods: {
-	},
 };
 </script>

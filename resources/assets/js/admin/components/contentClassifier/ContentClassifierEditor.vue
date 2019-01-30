@@ -38,8 +38,8 @@
 								'left': true,
 								'clickable': term.itemsCount < allItemsCount
 							}"
+							:title="term.itemsCount < allItemsCount ? 'Dodaj do wszystkich' : null"
 							@click="(term.itemsCount < allItemsCount) && onAttachTaxonomyTerm(term)"
-							title="Dodaj do wszystkich"
 						>
 							<span class="icon is-small" v-if="term.itemsCount < allItemsCount"><i class="fa fa-plus"></i></span>
 							<span>{{term.itemsCount}}/{{allItemsCount}}</span>

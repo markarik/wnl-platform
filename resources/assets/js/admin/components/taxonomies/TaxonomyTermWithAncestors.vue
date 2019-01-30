@@ -10,7 +10,7 @@
 
 	.parent-term
 		color: $color-lighter-gray
-		font-size: $font-size-minus-1
+		font-size: $font-size-minus-2
 
 </style>
 

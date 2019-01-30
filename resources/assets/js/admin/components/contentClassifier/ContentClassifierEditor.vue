@@ -1,16 +1,24 @@
 <template>
-	<div v-bind:class="{
+	<div :class="{
 		'content-classifier__panel-editor': true,
 		'is-loading': isLoading,
 	}">
-		<h4 class="title is-4 margin bottom">Zarządzaj</h4>
+		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
 		<ul class="margin bottom">
 			<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">
 				<div class="content-classifier__panel-editor__taxonomy">
 					{{group.taxonomy.name}}
 				</div>
 				<ul>
-					<li v-for="term in group.terms" :key="term.id" class="content-classifier__panel-editor__term">
+					<li
+						v-for="term in group.terms"
+						:key="term.id"
+						:class="[{
+							'content-classifier__panel-editor__term': true,
+							'content-classifier__panel-editor__term--has-parent': term.parent_id !== null,
+							'content-classifier__panel-editor__term--is-partial': term.itemsCount < allItemsCount,
+						}]"
+					>
 						<span
 							class="icon is-small margin right clickable"
 							title="Odznacz"
@@ -23,21 +31,21 @@
 							:ancestors="term.ancestors"
 							class="content-classifier__panel-editor__term__name"
 						/>
-						<a
-							class="margin left"
+						<span
+							class="content-classifier__panel-editor__term__counter margin left"
 							v-if="term.itemsCount < allItemsCount"
 							@click="onAttachTaxonomyTerm(term)"
 							title="Dodaj do wszystkich"
 						>
 							<span class="icon is-small"><i class="fa fa-plus"></i></span>
-						</a>
-						<span class="margin left">({{term.itemsCount}}/{{allItemsCount}})</span>
+							<span>{{term.itemsCount}}/{{allItemsCount}}</span>
+						</span>
 					</li>
 				</ul>
 			</li>
 		</ul>
 		<div class="field">
-			<label class="label is-uppercase"><strong>Dodaj pojęcie</strong></label>
+			<label class="label is-uppercase"><strong>Przypisz pojęcie</strong></label>
 			<div class="content-classifier__panel-editor__term-select">
 				<wnl-select
 					:options="taxonomiesOptions"
@@ -66,9 +74,20 @@
 				align-items: center
 				border-bottom: $border-light-gray
 				display: flex
-				padding: $margin-small 0
+				padding: $margin-medium 0
+
+				&--has-parent &__name
+					font-size: $font-size-minus-1
+
+				&--is-partial
+					opacity: .6
+
 				&__name
 					flex-grow: 1
+
+				&__counter
+					cursor: pointer
+					font-size: $font-size-minus-1
 
 			&__taxonomy
 				text-transform: uppercase

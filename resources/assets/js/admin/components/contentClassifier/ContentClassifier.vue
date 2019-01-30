@@ -12,17 +12,19 @@
 			<div class="content-classifier__panel-results">
 				<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
 				<div v-if="!isLoading">
-					<div v-for="(meta, contentType) in contentTypes" :key="contentType" v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length">
-						<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
-						<ul class="content-classifier__result-list margin bottom">
-							<li
-								v-for="item in groupedFilteredContent[contentType]"
-								:key="item.id"
-								class="content-classifier__result-item"
-							>
-								<component :is="meta.component" :item="item"/>
-							</li>
-						</ul>
+					<div v-for="(meta, contentType) in contentTypes" :key="contentType">
+						<div v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length">
+							<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
+							<ul class="content-classifier__result-list margin bottom">
+								<li
+									v-for="item in groupedFilteredContent[contentType]"
+									:key="item.id"
+									class="content-classifier__result-item"
+								>
+									<component :is="meta.component" :item="item"/>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 				<wnl-text-loader v-else />

@@ -27,9 +27,9 @@
 							class="margin left"
 							v-if="term.itemsCount < allItemsCount"
 							@click="onAttachTaxonomyTerm(term)"
+							title="Dodaj do wszystkich"
 						>
 							<span class="icon is-small"><i class="fa fa-plus"></i></span>
-							Dodaj do wszystkich
 						</a>
 						<span class="margin left">({{term.itemsCount}}/{{allItemsCount}})</span>
 					</li>

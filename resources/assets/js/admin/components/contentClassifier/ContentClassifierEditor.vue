@@ -103,7 +103,7 @@ export default {
 	},
 	props: {
 		filteredContent: {
-			type: Object,
+			type: Array,
 			required: true,
 		}
 	},
@@ -111,14 +111,11 @@ export default {
 		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
 		...mapGetters('taxonomies', ['taxonomyById']),
 		...mapState('taxonomies', ['taxonomies']),
-		flattenItems() {
-			return [].concat(...Object.values(this.filteredContent));
-		},
 		allItemsCount() {
-			return this.flattenItems.length;
+			return this.filteredContent.length;
 		},
 		groupedTaxonomyTerms() {
-			const taxonomyTerms = uniqBy([].concat(...this.flattenItems.map(item => item.taxonomyTerms)), 'id');
+			const taxonomyTerms = uniqBy([].concat(...this.filteredContent.map(item => item.taxonomyTerms)), 'id');
 			const groupedTerms = {};
 
 			taxonomyTerms.forEach(term => {
@@ -152,16 +149,19 @@ export default {
 			fetchTaxonomies: 'fetchAll',
 		}),
 		getItemsCountByTermId(termId) {
-			return this.flattenItems.filter(item => item.taxonomyTerms.find(term => term.id === termId)).length;
+			return this.filteredContent.filter(item => item.taxonomyTerms.find(term => term.id === termId)).length;
+		},
+		getItemsByType(contentType) {
+			return this.filteredContent.filter(item => item.type === contentType);
 		},
 		async onDetachTaxonomyTerm(term) {
 			this.isLoading = true;
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/detach`), {
-					annotations: this.filteredContent.annotations.map(item => item.id),
-					flashcards: this.filteredContent.flashcards.map(item => item.id),
-					quiz_questions: this.filteredContent.quizQuestions.map(item => item.id),
-					slides: this.filteredContent.slides.map(item => item.id),
+					annotations: this.getItemsByType('annotations').map(item => item.id),
+					flashcards: this.getItemsByType('flashcards').map(item => item.id),
+					quiz_questions: this.getItemsByType('quizQuestions').map(item => item.id),
+					slides: this.getItemsByType('slides').map(item => item.id),
 				});
 
 				this.$emit('onTaxonomyTermDetached', term);
@@ -179,10 +179,10 @@ export default {
 			this.isLoading = true;
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/attach`), {
-					annotations: this.filteredContent.annotations.map(item => item.id),
-					flashcards: this.filteredContent.flashcards.map(item => item.id),
-					quiz_questions: this.filteredContent.quizQuestions.map(item => item.id),
-					slides: this.filteredContent.slides.map(item => item.id),
+					annotations: this.getItemsByType('annotations').map(item => item.id),
+					flashcards: this.getItemsByType('flashcards').map(item => item.id),
+					quiz_questions: this.getItemsByType('quizQuestions').map(item => item.id),
+					slides: this.getItemsByType('slides').map(item => item.id),
 				});
 
 				const termToAdd = {

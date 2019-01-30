@@ -8,16 +8,15 @@
 			</div>
 			<button class="button submit is-primary" type="submit">Szukaj</button>
 		</form>
-
 		<div class="content-classifier__panels">
 			<div class="content-classifier__panel-results">
 				<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
 				<div v-if="!isLoading">
-					<div v-for="(meta, contentType) in contentTypes" :key="contentType" v-if="filteredContent[contentType].length">
+					<div v-for="(meta, contentType) in contentTypes" :key="contentType" v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length">
 						<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
 						<ul class="content-classifier__result-list margin bottom">
 							<li
-								v-for="item in filteredContent[contentType]"
+								v-for="item in groupedFilteredContent[contentType]"
 								:key="item.id"
 								class="content-classifier__result-item"
 							>
@@ -69,7 +68,7 @@
 import axios from 'axios';
 import {delete as vueDelete} from 'vue';
 import {mapActions} from 'vuex';
-import {findIndex, some} from 'lodash';
+import {groupBy} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
 import {ALERT_TYPES} from 'js/consts/alert';
@@ -108,23 +107,25 @@ export default {
 			},
 		};
 
-		const filtersSetup = Object.keys(contentTypes).reduce(
+		const filters = Object.keys(contentTypes).reduce(
 			(collector, contentType) => {
-				collector.filters[contentType] = '';
-				collector.filteredContent[contentType] = [];
+				collector[contentType] = '';
 				return collector;
 			},
-			{
-				filters: {},
-				filteredContent: {}
-			}
+			{}
 		);
 
 		return {
 			contentTypes,
-			...filtersSetup,
+			filters,
+			filteredContent: [],
 			isLoading: false,
 		};
+	},
+	computed: {
+		groupedFilteredContent() {
+			return groupBy(this.filteredContent, 'type');
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -156,10 +157,7 @@ export default {
 			const promises = Object.entries(this.contentTypes).map(
 				async ([contentType, meta]) => {
 					if (this.filters[contentType] === '') {
-						return {
-							contentType,
-							items: []
-						};
+						return [];
 					}
 
 					const {data} = await axios.post(getApiUrl(meta.resourceName), {
@@ -175,23 +173,19 @@ export default {
 
 					const {data: {included = {}, ...items}} = data;
 
-					return {
-						contentType,
-						items: Object.values(items).map(item => parseIncludes(item, included))
-					};
+					return Object.values(items).map(item => {
+						item.type = contentType;
+						return parseIncludes(item, included);
+					});
 				}
 			);
 
 			try {
 				const values = await Promise.all(promises);
 
-				values.forEach(({contentType, items}) => {
-					this.filteredContent[contentType] = items;
-				});
+				this.filteredContent = [].concat(...values);
 			} catch (error) {
-				Object.keys(this.filteredContent).forEach((contentType) => {
-					this.filteredContent[contentType] = [];
-				});
+				this.filteredContent = [];
 
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
@@ -203,23 +197,19 @@ export default {
 			}
 		},
 		onTaxonomyTermAttached(term) {
-			Object.keys(this.filteredContent).forEach((contentType) => {
-				this.filteredContent[contentType].forEach((item) => {
-					if (!some(item.taxonomyTerms, {id: term.id})) {
-						item.taxonomyTerms.push(term);
-					}
-				});
+			this.filteredContent.forEach((item) => {
+				if (!item.taxonomyTerms.find(({id}) => id === term.id)) {
+					item.taxonomyTerms.push(term);
+				}
 			});
 		},
 		onTaxonomyTermDetached(term) {
-			Object.keys(this.filteredContent).forEach((contentType) => {
-				this.filteredContent[contentType].forEach((item) => {
-					const index = findIndex(item.taxonomyTerms, {id: term.id});
+			this.filteredContent.forEach((item) => {
+				const index = item.taxonomyTerms.findIndex(({id}) => id === term.id);
 
-					if (index > -1) {
-						vueDelete(item.taxonomyTerms, index);
-					}
-				});
+				if (index > -1) {
+					vueDelete(item.taxonomyTerms, index);
+				}
 			});
 		},
 	},

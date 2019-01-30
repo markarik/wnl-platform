@@ -25,9 +25,8 @@ class UpdateLesson extends FormRequest
 	{
 		return [
 			'name' => 'required|string',
-//			TODO make these fields optional, but make sur we handle it correctly during the transition period
-			'group_id' => 'required|numeric|exists:groups,id',
-			'is_required' => 'required|boolean',
+			'group_id' => 'numeric|exists:groups,id',
+			'is_required' => 'boolean',
 		];
 	}
 }

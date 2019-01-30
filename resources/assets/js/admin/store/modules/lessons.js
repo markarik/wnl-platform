@@ -34,6 +34,9 @@ const mutations = {
 	},
 	[types.SETUP_LESSONS] (state, payload) {
 		set(state, 'lessons', payload);
+	},
+	[types.ADD_LESSON] (state, lesson) {
+		state.lessons.push(lesson);
 	}
 };
 

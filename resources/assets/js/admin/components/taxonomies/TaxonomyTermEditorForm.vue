@@ -44,7 +44,7 @@ import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
 import WnlTagAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTagAutocomplete';
-import {ALERT_TYPES} from '../../../consts/alert';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 const initialState = {
 	description: '',

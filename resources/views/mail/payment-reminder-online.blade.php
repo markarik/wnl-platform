@@ -1,9 +1,9 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Witaj ponownie {{ $order->user->first_name or '{first_name}' }}!</h3>
+	<h3>Witaj ponownie {{ $order->user->first_name ?? '{first_name}' }}!</h3>
 
-	<p>Piszemy do Ciebie, żeby przypomnieć o płatności za zamówienie nr {{ $order->id or '{order_no}' }} na kurs <strong>{{$order->product->name or '{product_name}'}}</strong>.</p>
+	<p>Piszemy do Ciebie, żeby przypomnieć o płatności za zamówienie nr {{ $order->id ?? '{order_no}' }} na kurs <strong>{{$order->product->name ?? '{product_name}'}}</strong>.</p>
 
 	<p>W przypadku braku płatności, zamówienie zostanie <strong>automatycznie anulowane po upływie 2 dni roboczych.</strong> 😔</p>
 

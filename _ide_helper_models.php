@@ -92,11 +92,14 @@ namespace App\Models{
  * @property string $name
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $description
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TagsTaxonomy[] $tagsTaxonomy
+ * @property-read \Kalnoy\Nestedset\Collection|\App\Models\TaxonomyTerm[] $taxonomyTerms
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy whereUpdatedAt($value)
@@ -329,6 +332,43 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Presentable whereUpdatedAt($value)
  */
 	class Presentable extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * Class TaxonomyTerm
+ *
+ * @package App\Models
+ * 
+ * NodeTrait Docs: https://github.com/lazychaser/laravel-nestedset
+ * @property int $id
+ * @property int $_lft
+ * @property int $_rgt
+ * @property int|null $parent_id
+ * @property int $tag_id
+ * @property int $taxonomy_id
+ * @property string|null $description
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Kalnoy\Nestedset\Collection|\App\Models\TaxonomyTerm[] $children
+ * @property-read \App\Models\TaxonomyTerm|null $parent
+ * @property-read \App\Models\Tag $tag
+ * @property-read \App\Models\Taxonomy $taxonomy
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm d()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm whereLft($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm whereRgt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm whereTagId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm whereTaxonomyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm whereUpdatedAt($value)
+ */
+	class TaxonomyTerm extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -577,6 +617,8 @@ namespace App\Models{
  * @property string|null $color
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lesson[] $lessons
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QnaQuestion[] $questions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taggable[] $taggables
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Taxonomy[] $taxonomies
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tag newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tag newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Tag query()
@@ -769,6 +811,39 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\CourseStructureNode
+ *
+ * @property int $id
+ * @property int $course_id
+ * @property string $structurable_type
+ * @property int $structurable_id
+ * @property int $_lft
+ * @property int $_rgt
+ * @property int|null $parent_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Kalnoy\Nestedset\Collection|\App\Models\CourseStructureNode[] $children
+ * @property-read \App\Models\CourseStructureNode|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $structurable
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode d()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereCourseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereLft($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereRgt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereStructurableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereStructurableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode whereUpdatedAt($value)
+ */
+	class CourseStructureNode extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Role
  *
  * @property int $id
@@ -881,6 +956,28 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Discussion
+ *
+ * @property int $id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Page $page
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QnaQuestion[] $questions
+ * @property-read \App\Models\Screen $screen
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Discussion newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Discussion newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Discussion query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Discussion whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Discussion whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Discussion whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Discussion whereUpdatedAt($value)
+ */
+	class Discussion extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\LessonUserAccess
  *
  * @property int $id
@@ -984,7 +1081,9 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $discussion_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QnaAnswer[] $answers
+ * @property-read \App\Models\Discussion $discussion
  * @property-read mixed $page
  * @property-read mixed $screen
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reaction[] $reactions
@@ -998,6 +1097,7 @@ namespace App\Models{
  * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QnaQuestion whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QnaQuestion whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QnaQuestion whereDiscussionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QnaQuestion whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QnaQuestion whereMeta($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QnaQuestion whereText($value)
@@ -1119,6 +1219,9 @@ namespace App\Models{
  * @property array|null $meta
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $is_discussable
+ * @property int|null $discussion_id
+ * @property-read \App\Models\Discussion|null $discussion
  * @property-read mixed $slideshow
  * @property-read \App\Models\Lesson $lesson
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Section[] $sections
@@ -1128,7 +1231,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Screen query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Screen whereContent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Screen whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Screen whereDiscussionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Screen whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Screen whereIsDiscussable($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Screen whereLessonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Screen whereMeta($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Screen whereName($value)
@@ -1647,13 +1752,18 @@ namespace App\Models{
  * @property string|null $slug
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $is_discussable
+ * @property int|null $discussion_id
+ * @property-read \App\Models\Discussion|null $discussion
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page whereContent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page whereDiscussionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page whereIsDiscussable($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Page whereUpdatedAt($value)

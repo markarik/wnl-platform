@@ -52,7 +52,7 @@
 						<span class="results-heading">
 							{{$t('questions.solving.results.displayOnly')}}
 						</span>
-						<span v-for="questions, status in testResults"
+						<span v-for="(questions, status) in testResults"
 							v-if="questions.length > 0"
 							:class="[{'is-active': filterResults === status}, `results-${status}`]"
 							:key="status"

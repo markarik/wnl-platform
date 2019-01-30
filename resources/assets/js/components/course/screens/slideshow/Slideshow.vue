@@ -200,9 +200,7 @@ export default {
 			return getApiUrl(`slideshow_builder/${this.presentableType === 'category' ? 'category/' : ''}${this.presentableId}`);
 		},
 		iframe() {
-			if (this.loaded) {
-				return this.$el.getElementsByTagName('iframe')[0];
-			}
+			return this.loaded ? this.$el.getElementsByTagName('iframe')[0] : null;
 		},
 	},
 	methods: {
@@ -255,7 +253,7 @@ export default {
 			return index + 1;
 		},
 		goToSlide(slideIndex) {
-			if(slideIndex && slideIndex > -1) {
+			if(typeof slideIndex !== 'undefined' && slideIndex > -1) {
 				this.slideChanged = true;
 
 				const newSlideId = this.getSlideIdFromIndex(slideIndex);

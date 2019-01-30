@@ -4,6 +4,7 @@
 			Lekcje
 		</p>
 		<ul class="menu-list">
+			<li><router-link :to="{ name: 'structure-edit', params: {courseId: 1} }">Edycja struktury</router-link></li>
 			<li><router-link :to="{ name: 'course-edit', params: {id: 1} }">Edycja kursu</router-link></li>
 			<li><router-link :to="{ name: 'groups' }">Edycja grup lekcji</router-link></li>
 			<li><router-link :to="{ name: 'lessons' }">Edycja lekcji</router-link></li>
@@ -23,6 +24,7 @@
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'tags' }">Edycja tagów</router-link></li>
 			<li><router-link :to="{ name: 'taxonomies' }">Edycja taksonomii</router-link></li>
+			<li><router-link :to="{ name: 'content-classifier' }">Klasyfikacja treści</router-link></li>
 		</ul>
 
 		<p class="menu-label">

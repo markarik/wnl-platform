@@ -86,12 +86,18 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['taxonomies']}", 'TaxonomiesApiController@post');
 		Route::put("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@put');
 		Route::get("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@get');
-		// TODO implement me when have tags + taxonomies relation ready
-//		Route::delete("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@delete');
+		Route::delete("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@delete');
 		Route::post("{$r['taxonomies']}/.filter", 'TaxonomiesApiController@filter');
 
 		// TaxonomyTerms
+		Route::post("{$r['taxonomy-terms']}", 'TaxonomyTermsApiController@post');
+		Route::put("{$r['taxonomy-terms']}/move", 'TaxonomyTermsApiController@move');
+		Route::put("{$r['taxonomy-terms']}/{id}", 'TaxonomyTermsApiController@put');
+		Route::delete("{$r['taxonomy-terms']}/{id}", 'TaxonomyTermsApiController@delete');
 		Route::get("{$r['taxonomy-terms']}/byTaxonomy/{taxonomyId}", 'TaxonomyTermsApiController@getByTaxonomy');
+
+		// Slides
+		Route::post("{$r['slides']}/.filter", 'SlidesApiController@filter');
 	});
 
 	// Count
@@ -109,6 +115,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::group(['middleware' => ['account-status', 'subscription']], function () use ($r) {
 		// Courses
 		Route::get("{$r['courses']}/{id}/structure", 'CoursesApiController@getStructure');
+		Route::get("{$r['course-structure-nodes']}/{courseId}", 'CourseStructureNodesApiController@getByCourseId');
 
 		// Groups
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
@@ -279,7 +286,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/time", 'UserStateApiController@incrementTime');
 
-	Route::post("{$r['users']}/{user}/{$r['user-state']}/quizPosition", 'UserStateApiController@getQuizPosition');
+	Route::post("{$r['users']}/{id}/{$r['user-state']}/quizPosition", 'UserStateApiController@getQuizPosition');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/quizPosition", 'UserStateApiController@saveQuizPosition');
 
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/stats", 'UserStateApiController@getStats');

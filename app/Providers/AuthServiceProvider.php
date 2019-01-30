@@ -13,11 +13,14 @@ use App\Models\QnaQuestion;
 use App\Models\QuizQuestion;
 use App\Models\Screen;
 use App\Models\Task;
+use App\Models\Taxonomy;
+use App\Models\TaxonomyTerm;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\UserBillingData;
 use App\Models\UserCourseProgress;
 use App\Models\UserProfile;
+use App\Models\UserQuestionsBankState;
 use App\Models\UserSettings;
 use App\Policies\Chat\ChatRoomPolicy;
 use App\Policies\AnnotationPolicy;
@@ -30,12 +33,15 @@ use App\Policies\OrderPolicy;
 use App\Policies\Qna\QnaAnswerPolicy;
 use App\Policies\Qna\QnaQuestionPolicy;
 use App\Policies\Task\TaskPolicy;
+use App\Policies\TaxonomyPolicy;
+use App\Policies\TaxonomyTermPolicy;
 use App\Policies\User\UserAddressPolicy;
 use App\Policies\User\UserCourseProgressPolicy;
 use App\Policies\User\UserProfilePolicy;
 use App\Policies\User\UserBillingPolicy;
 use App\Policies\User\UserSettingsPolicy;
 use App\Policies\User\UserPolicy;
+use App\Policies\User\UserQuestionsBankStatePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -62,7 +68,10 @@ class AuthServiceProvider extends ServiceProvider
 		UserCourseProgress::class => UserCourseProgressPolicy::class,
 		Order::class              => OrderPolicy::class,
 		Invoice::class            => InvoicePolicy::class,
-		Annotation::class         => AnnotationPolicy::class
+		Annotation::class         => AnnotationPolicy::class,
+		Taxonomy::class           => TaxonomyPolicy::class,
+		TaxonomyTerm::class       => TaxonomyTermPolicy::class,
+		UserQuestionsBankState::class => UserQuestionsBankStatePolicy::class
 	];
 
 	/**

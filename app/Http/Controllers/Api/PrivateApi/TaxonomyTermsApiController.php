@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Course\MoveTaxonomyTerm;
+use App\Http\Requests\Course\UpdateTaxonomyTerm;
 use App\Models\TaxonomyTerm;
 use Illuminate\Http\Request;
 
@@ -11,6 +13,63 @@ class TaxonomyTermsApiController extends ApiController {
 	}
 
 	public function getByTaxonomy($taxonomyId) {
-		return $this->transformAndRespond(TaxonomyTerm::where('taxonomy_id', $taxonomyId)->get()->toFlatTree());
+		return $this->transformAndRespond(TaxonomyTerm::where('taxonomy_id', $taxonomyId)
+			->defaultOrder()
+			->get()
+			->toFlatTree()
+		);
+	}
+
+	public function post(UpdateTaxonomyTerm $request) {
+		$parentTaxonomyTerm = null;
+		if ($request->parent_id) {
+			$parentTaxonomyTerm = TaxonomyTerm::find($request->parent_id);
+		}
+
+		$taxonomyTerm = TaxonomyTerm::create($request->all(), $parentTaxonomyTerm);
+
+		return $this->transformAndRespond($taxonomyTerm);
+	}
+
+	public function put(UpdateTaxonomyTerm $request) {
+		$taxonomyTerm = TaxonomyTerm::find($request->route('id'));
+		$newParentId = $request->get('parent_id');
+
+		if ($newParentId !== $taxonomyTerm->parent_id) {
+			if ($newParentId === null) {
+				$taxonomyTerm->makeRoot();
+			} else {
+				$taxonomyTerm->appendToNode(TaxonomyTerm::find($newParentId));
+			}
+		}
+
+		if (!$taxonomyTerm) {
+			return $this->respondNotFound();
+		}
+
+		$taxonomyTerm->update($request->all());
+
+		return $this->transformAndRespond($taxonomyTerm);
+	}
+
+	public function move(MoveTaxonomyTerm $request) {
+		$target = TaxonomyTerm::find($request->get('term_id'));
+		$direction = $request->get('direction');
+
+		if ($direction === 0) {
+			return $this->respondOk();
+		}
+
+		if ($direction > 0) {
+			$success = $target->down($direction);
+		} else {
+			$success = $target->up(abs($direction));
+		}
+
+		if (!$success) {
+			return $this->respondUnprocessableEntity('direction out of range');
+		}
+
+		return $this->respondOk();
 	}
 }

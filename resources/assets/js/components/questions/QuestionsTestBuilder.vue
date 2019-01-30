@@ -25,7 +25,7 @@
 						{{$t('questions.solving.test.headers.count')}}
 					</p>
 					<ul class="set-sizes">
-						<li v-for="size, index in sizesToChoose"
+						<li v-for="(size, index) in sizesToChoose"
 							class="set-sizes-option"
 							:class="{'is-selected': size === testQuestionsCount}"
 							:key="index"

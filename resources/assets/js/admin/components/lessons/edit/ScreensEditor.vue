@@ -124,7 +124,7 @@ let types = {
 	mockexam: {
 		text: 'Próbny egzamin',
 		value: 'mockexam',
-		hasMeta: false,
+		hasMeta: true,
 	},
 	flashcards: {
 		text: 'Powtórki',
@@ -181,11 +181,14 @@ export default {
 			return Object.keys(types).map((key, index) => types[key]);
 		},
 		currentType() {
-			let type = this.screenForm.type;
+			const type = this.screenForm.type;
+
 			if (type !== null && types.hasOwnProperty(type)) {
 				return types[type];
 			}
- 			},
+
+			return null;
+		},
 		hasChanged() {
 			return !_.isEqual(this.screenForm.data(), this.screenForm.originalData);
 		},

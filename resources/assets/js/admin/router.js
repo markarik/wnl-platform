@@ -4,6 +4,7 @@ import Router from 'vue-router';
 import Lessons from 'js/admin/components/lessons/Lessons';
 import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor';
 import CourseEditor from 'js/admin/components/courses/CourseEditor';
+import StructureEditor from 'js/admin/components/structures/StructureEditor';
 import Groups from 'js/admin/components/groups/Groups';
 import GroupEditor from 'js/admin/components/groups/GroupEditor';
 import EditSlide from 'js/admin/components/slides/EditSlide';
@@ -25,6 +26,7 @@ import DashboardNewsEdit from 'js/admin/components/dashboardNews/DashboardNewsEd
 import OrdersList from 'js/admin/components/orders/OrdersList';
 import TagsList from 'js/admin/components/tags/TagsList';
 import TagEditor from 'js/admin/components/tags/TagEditor';
+import ContentClassifier from 'js/admin/components/contentClassifier/ContentClassifier';
 import TaxonomiesList from 'js/admin/components/taxonomies/TaxonomiesList';
 import TaxonomyEditor from 'js/admin/components/taxonomies/TaxonomyEditor';
 
@@ -43,6 +45,12 @@ let routes = [
 				component: ScreensEditor
 			},
 		]
+	},
+	{
+		name: 'structure-edit',
+		path: '/admin/app/course-structure/:courseId',
+		component: StructureEditor,
+		props: true,
 	},
 	{
 		name: 'course-edit',
@@ -162,6 +170,11 @@ let routes = [
 		path: '/admin/app/tags/:id',
 		component: TagEditor,
 		props: true,
+	},
+	{
+		name: 'content-classifier',
+		path: '/admin/app/content-classifier',
+		component: ContentClassifier,
 	},
 	{
 		name: 'taxonomies',

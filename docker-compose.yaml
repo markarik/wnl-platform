@@ -17,13 +17,15 @@ services:
 
   redis:
     container_name: redis
-    image: redis:4.0.9-alpine
+    image: redis:5.0.3-alpine
     ports:
       - "6379:6379"
     command: redis-server
     user: redis:redis
     sysctls:
       - net.core.somaxconn=1024
+    volumes:
+      - ${LOCAL_DEV_PATH}/redis/data/:/data
 
   php:
     container_name: php
@@ -53,6 +55,17 @@ services:
     command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:work --queue=notifications --tries=3 --daemon
     depends_on:
       - redis
+
+  chat-queue-worker:
+      container_name: chat-queue-worker
+      image: bethink/php:7.2.7-fpm-alpine3.7
+      volumes:
+        - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
+      command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan chat:process-queue
+      depends_on:
+        - redis
+        - rabbit
+      restart: always
 
   composer:
     container_name: composer

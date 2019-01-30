@@ -114,7 +114,7 @@ import WnlPaginatedSortableTable from 'js/admin/components/lists/PaginatedSortab
 export default {
 	props: {
 		id: {
-			type: String|Number,
+			type: [String, Number],
 			required: true,
 		},
 	},

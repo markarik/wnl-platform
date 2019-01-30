@@ -525,6 +525,11 @@ ol {
 
 // Helpers
 
+.v-central {
+	align-items: center;
+	display: flex;
+}
+
 .central {
 	align-items: center;
 	display: flex;
@@ -562,4 +567,8 @@ ol {
 		margin: 0 0 0 1em;
 	}
 
+}
+
+.is-uppercase {
+	text-transform: uppercase;
 }

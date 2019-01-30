@@ -11,8 +11,6 @@ class TaxonomyTermsApiController extends ApiController
 {
 	use OperatesOnNestedSets;
 
-	const MODEL_CLASS = TaxonomyTerm::class;
-
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);

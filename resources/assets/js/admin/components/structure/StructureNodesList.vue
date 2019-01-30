@@ -8,7 +8,7 @@
 				v-for="node in nodes"
 				:node="node"
 				:key="node.id"
-				@movenode="onChildnodeArrowMove"
+				@moveNode="onChildnodeArrowMove"
 			/>
 		</vue-draggable>
 	</ul>
@@ -32,7 +32,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('courseStructure', ['movenode', 'reorderSiblings']),
+		...mapActions('courseStructure', ['moveNode', 'reorderSiblings']),
 		...mapActions(['addAutoDismissableAlert']),
 		async submitMove({direction, ...args}) {
 			if (direction === 0) {
@@ -40,7 +40,7 @@ export default {
 			}
 
 			try {
-				await this.movenode({direction, ...args});
+				await this.moveNode({direction, ...args});
 				this.addAutoDismissableAlert({
 					type: 'success',
 					text: 'Zapisano!'

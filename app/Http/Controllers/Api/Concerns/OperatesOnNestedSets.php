@@ -9,39 +9,39 @@ trait OperatesOnNestedSets
 	{
 		$parentTaxonomyTerm = null;
 		if ($request->parent_id) {
-			$parentTaxonomyTerm = (self::MODEL_CLASS)::find($request->parent_id);
+			$parentTaxonomyTerm = (self::getResourceModel($this->resourceName))::find($request->parent_id);
 		}
 
-		$taxonomyTerm = (self::MODEL_CLASS)::create($request->all(), $parentTaxonomyTerm);
+		$node = (self::getResourceModel($this->resourceName))::create($request->all(), $parentTaxonomyTerm);
 
-		return $this->transformAndRespond($taxonomyTerm);
+		return $this->transformAndRespond($node);
 	}
 
 	public function putNode($request)
 	{
-		$taxonomyTerm = (self::MODEL_CLASS)::find($request->route('id'));
+		$node = (self::getResourceModel($this->resourceName))::find($request->route('id'));
 		$newParentId = $request->get('parent_id');
 
-		if ($newParentId !== $taxonomyTerm->parent_id) {
-			if ($newParentId === null) {
-				$taxonomyTerm->makeRoot();
-			} else {
-				$taxonomyTerm->appendToNode((self::MODEL_CLASS)::find($newParentId));
-			}
-		}
-
-		if (!$taxonomyTerm) {
+		if (!$node) {
 			return $this->respondNotFound();
 		}
 
-		$taxonomyTerm->update($request->all());
+		if ($newParentId !== $node->parent_id) {
+			if ($newParentId === null) {
+				$node->makeRoot();
+			} else {
+				$node->appendToNode((self::getResourceModel($this->resourceName))::find($newParentId));
+			}
+		}
 
-		return $this->transformAndRespond($taxonomyTerm);
+		$node->update($request->all());
+
+		return $this->transformAndRespond($node);
 	}
 
 	public function moveNode($request)
 	{
-		$target = (self::MODEL_CLASS)::find($request->get('id'));
+		$target = (self::getResourceModel($this->resourceName))::find($request->get('id'));
 		$direction = $request->get('direction');
 
 		if ($direction === 0) {

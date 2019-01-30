@@ -166,8 +166,8 @@ export default {
 				this.expandNode(this.node.id);
 			}
 		},
-		onNodeMove(Node, direction) {
-			this.$emit('moveNode', {Node, direction});
+		onNodeMove(node, direction) {
+			this.$emit('moveNode', {node, direction});
 		},
 	},
 	beforeCreate: function () {

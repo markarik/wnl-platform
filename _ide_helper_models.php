@@ -55,6 +55,29 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Flashcard
+ *
+ * @property int $id
+ * @property string $content
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\FlashcardsSet[] $flashcardsSets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags
+ * @property-read \Kalnoy\Nestedset\Collection|\App\Models\TaxonomyTerm[] $taxonomyTerms
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserFlashcardNote[] $userFlashcardNotes
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Flashcard newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Flashcard newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Flashcard query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Flashcard whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Flashcard whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Flashcard whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Flashcard whereUpdatedAt($value)
+ */
+	class Flashcard extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\ExamResults
  *
  * @property int $id
@@ -374,8 +397,12 @@ namespace App\Models{
  * @property string|null $description
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Annotation[] $annotations
  * @property-read \Kalnoy\Nestedset\Collection|\App\Models\TaxonomyTerm[] $children
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Flashcard[] $flashcards
  * @property-read \App\Models\TaxonomyTerm|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuizQuestion[] $quizQuestions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Slide[] $slides
  * @property-read \App\Models\Tag $tag
  * @property-read \App\Models\Taxonomy $taxonomy
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTerm d()

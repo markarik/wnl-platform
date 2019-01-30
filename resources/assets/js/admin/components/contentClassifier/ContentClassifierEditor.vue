@@ -13,11 +13,11 @@
 					<li
 						v-for="term in group.terms"
 						:key="term.id"
-						:class="[{
+						:class="{
 							'content-classifier__panel-editor__term': true,
 							'content-classifier__panel-editor__term--has-parent': term.parent_id !== null,
 							'content-classifier__panel-editor__term--is-partial': term.itemsCount < allItemsCount,
-						}]"
+						}"
 					>
 						<span
 							class="icon is-small margin right clickable"
@@ -32,12 +32,16 @@
 							class="content-classifier__panel-editor__term__name"
 						/>
 						<span
-							class="content-classifier__panel-editor__term__counter margin left"
-							v-if="term.itemsCount < allItemsCount"
-							@click="onAttachTaxonomyTerm(term)"
+							:class="{
+								'content-classifier__panel-editor__term__counter': true,
+								'margin': true,
+								'left': true,
+								'clickable': term.itemsCount < allItemsCount
+							}"
+							@click="(term.itemsCount < allItemsCount) && onAttachTaxonomyTerm(term)"
 							title="Dodaj do wszystkich"
 						>
-							<span class="icon is-small"><i class="fa fa-plus"></i></span>
+							<span class="icon is-small" v-if="term.itemsCount < allItemsCount"><i class="fa fa-plus"></i></span>
 							<span>{{term.itemsCount}}/{{allItemsCount}}</span>
 						</span>
 					</li>
@@ -87,7 +91,6 @@
 					flex-grow: 1
 
 				&__counter
-					cursor: pointer
 					font-size: $font-size-minus-1
 
 			&__taxonomy

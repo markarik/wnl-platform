@@ -142,21 +142,25 @@ export default {
 		},
 		groupedTaxonomyTerms() {
 			const taxonomyTerms = uniqBy([].concat(...this.filteredContent.map(item => item.taxonomyTerms)), 'id');
-			const groupedTerms = {};
+			const groupedTerms = taxonomyTerms.reduce(
+				(collector, term) => {
+					if (!collector[term.taxonomy.id]) {
+						collector[term.taxonomy.id] = {
+							taxonomy: term.taxonomy,
+							terms: [],
+						};
+					}
 
-			taxonomyTerms.forEach(term => {
-				if (!groupedTerms[term.taxonomy.id]) {
-					groupedTerms[term.taxonomy.id] = {
-						taxonomy: term.taxonomy,
-						terms: [],
-					};
-				}
+					term.itemsCount = this.getItemsCountByTermId(term.id);
+					collector[term.taxonomy.id].terms.push(term);
 
-				term.itemsCount = this.getItemsCountByTermId(term.id);
-				groupedTerms[term.taxonomy.id].terms.push(term);
-			});
+					return collector;
+				},
+				{}
+			);
 
-			Object.keys(groupedTerms).forEach(taxonomyId => groupedTerms[taxonomyId].terms.sort((a, b) => b.itemsCount - a.itemsCount));
+			Object.keys(groupedTerms)
+				.forEach(taxonomyId => groupedTerms[taxonomyId].terms.sort((a, b) => b.itemsCount - a.itemsCount));
 
 			return groupedTerms;
 		},

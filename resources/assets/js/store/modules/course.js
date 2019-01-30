@@ -39,7 +39,8 @@ const state = {
 	structure: {},
 	sections: {},
 	subsections: {},
-	screens: {}
+	screens: {},
+	newStructure: []
 };
 
 // Getters
@@ -47,14 +48,17 @@ const getters = {
 	ready: state => state.ready,
 	courseId: state => state.id,
 	name: state => state.name,
-	groups: state => state[resource('groups')],
+	groups: state => {
+		return state.newStructure.filter(node => node.structurable_type === getModelByResource('groups'))
+			.map(node => node.model);
+	},
 	structure: state => state.structure,
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
 	getLessons: state => {
 		return state.newStructure.filter(node => node.structurable_type === getModelByResource('lessons'))
 			.map(node => node.model);
 	},
-	getRequiredLessons: (state, getters, rootState, rootGetters) => {
+	getRequiredLessons: (state, getters) => {
 		return Object.values(getters.getLessons)
 			.filter(lesson => lesson.is_required && lesson.isAccessible);
 	},
@@ -63,7 +67,7 @@ const getters = {
 			.filter(lesson => lesson.isAccessible);
 	},
 	getLesson: (state, getters) => (lessonId) => {
-		return getters.getLessons.find(lesson => lesson.id === lessonId);
+		return getters.getLessons.find(lesson => lesson.id.toString() === lessonId.toString()) || {};
 	},
 	isLessonAvailable: (state, getters) => (lessonId) => {
 		const lesson = getters.getLesson(lessonId);
@@ -101,7 +105,6 @@ const getters = {
 	},
 	getSectionSubsectionsCheckpoints: (state, getters) => (sectionId) => {
 		const subsections = getters.getSubsectionsForSection(sectionId);
-		console.log(subsections, '...subsections');
 		return subsections.map((subsections) => subsections.slide);
 	},
 	getAdjacentScreenId: (state, getters) => (lessonId, currentScreenId, direction) => {

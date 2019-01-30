@@ -1,6 +1,6 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
-		<div class="wnl-lesson" v-if="isLessonAvailable(lesson.id)">
+		<div class="wnl-lesson" v-if="isLessonAvailable(lessonId)">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
 					<div class="level-left">
@@ -143,6 +143,7 @@ export default {
 		},
 		sectionsReversed() {
 			if (!this.currentScreen) return;
+			if (!this.currentScreen.id) return;
 
 			const sections = this.getSectionsForScreen(this.currentScreen.id);
 
@@ -312,7 +313,7 @@ export default {
 		},
 	},
 	async mounted () {
-		await this.setupLesson(this.lesson.id);
+		await this.setupLesson(this.lessonId);
 		this.lessonReady = true;
 		this.launchLesson();
 		window.addEventListener('resize', this.updateElementHeight);

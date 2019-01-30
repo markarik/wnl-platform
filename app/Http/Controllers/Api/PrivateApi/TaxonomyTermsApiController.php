@@ -112,7 +112,7 @@ class TaxonomyTermsApiController extends ApiController {
 
 			if (!empty($requestParamValue)) {
 				foreach ($requestParamValue as $termableId) {
-					$insert []= [
+					$insert[] = [
 						'taxonomy_term_id' => $taxonomyTerm->id,
 						'taxonomy_termable_id' => $termableId,
 						'taxonomy_termable_type' => $taxonomyTermableType['className']

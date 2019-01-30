@@ -73,7 +73,7 @@ h5 {
 }
 
 .text-dimmed {
-	color: $color-gray-dimmed;
+	color: $color-gray;
 }
 
 .normal {
@@ -89,7 +89,7 @@ h5 {
 }
 
 .content {
-	color: $color-gray-lighter;
+	color: $color-darker-gray;
 }
 
 // Links
@@ -108,11 +108,11 @@ a.is-active {
 }
 
 a.secondary-link {
-	color: $color-gray-dimmed;
+	color: $color-gray;
 
 	&:hover,
 	&:active {
-		color: $color-gray;
+		color: $color-darkest-gray;
 	}
 }
 
@@ -399,7 +399,7 @@ ol {
 .panel-toggle {
 	border: $border-light-gray;
 	border-radius: $border-radius-small;
-	color: $color-gray-dimmed;
+	color: $color-gray;
 	font-size: $font-size-minus-2;
 	font-weight: $font-weight-bold;
 	margin: $margin-base $margin-small 0 0;
@@ -409,8 +409,8 @@ ol {
 	user-select: none;
 
 	&:hover {
-		border-color: $color-gray-dimmed;
-		color: $color-gray;
+		border-color: $color-gray;
+		color: $color-darkest-gray;
 		transition: all $transition-length-base;
 	}
 

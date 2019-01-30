@@ -53,7 +53,7 @@
 		width: 100%
 
 		.icon
-			color: $color-gray-dimmed
+			color: $color-gray
 
 			&:hover
 				cursor: pointer

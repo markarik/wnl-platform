@@ -1,24 +1,27 @@
 <template>
 	<div class="content-classifier__panel-editor">
 		<h4 class="title is-4 margin bottom">Zarządzaj</h4>
-		<label class="label is-uppercase"><strong>Pojęcia</strong></label>
 		<ul class="margin bottom">
 			<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">
 				<div class="content-classifier__panel-editor__taxonomy">
 					{{group.taxonomy.name}}
 				</div>
 				<ul>
-					<li v-for="term in group.terms" :key="term.id">
-						<strong>{{[...term.ancestors, term].map(item => item.tag.name).join(' > ')}}</strong> ({{getItemsCountByTermId(term.id)}}/{{allItemsCount}})
-						<button
-							class="button is-danger is-small"
+					<li v-for="term in group.terms" :key="term.id" class="content-classifier__panel-editor__term">
+						<span
+							class="icon is-small margin right"
 							title="Odznacz"
 							@click="onDetachTaxonomyTerm(term)"
 						>
-							<i class="fa fa-trash"></i>
-						</button>
+							<i class="fa fa-close"></i>
+						</span>
+						<wnl-taxonomy-term-with-ancestors
+							:term="term"
+							:ancestors="term.ancestors"
+							:customText="`(${getItemsCountByTermId(term.id)}/${allItemsCount})`"
+						/>
 						<button
-							class="button is-small"
+							class="button is-small margin left"
 							title="Oznacz wszystko"
 							v-if="getItemsCountByTermId(term.id) < allItemsCount"
 							@click="onAttachTaxonomyTerm(term)"
@@ -31,15 +34,18 @@
 		</ul>
 		<div class="field">
 			<label class="label is-uppercase"><strong>Dodaj pojęcie</strong></label>
-			<wnl-select
-				:options="taxonomiesOptions"
-				v-model="taxonomyId"
-				@input="onTaxonomyChange"
-			/>
-			<wnl-taxonomy-term-autocomplete
-				placeholder="Wyszukaj pojęcie"
-				@change="onAttachTaxonomyTerm"
-			/>
+			<div class="content-classifier__panel-editor__term-select">
+				<wnl-select
+					:options="taxonomiesOptions"
+					v-model="taxonomyId"
+					@input="onTaxonomyChange"
+				/>
+				<wnl-taxonomy-term-autocomplete
+					placeholder="Zacznij pisać, aby wyszukać pojęcie"
+					@change="onAttachTaxonomyTerm"
+					class="margin left content-classifier__panel-editor__term-select__autocomplete"
+				/>
+			</div>
 		</div>
 
 	</div>
@@ -52,8 +58,16 @@
 		&__panel-editor
 			flex: 50%
 
+			&__term
+				align-items: center
+				display: flex
+				margin-bottom: $margin-medium
 			&__taxonomy
 				text-transform: uppercase
+			&__term-select
+				display: flex
+				&__autocomplete
+					flex-grow: 1
 </style>
 
 <script>
@@ -66,11 +80,13 @@ import {ALERT_TYPES} from 'js/consts/alert';
 
 import WnlSelect from 'js/admin/components/forms/Select';
 import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
+import WnlTaxonomyTermWithAncestors from 'js/admin/components/taxonomies/TaxonomyTermWithAncestors';
 
 export default {
 	components: {
-		WnlTaxonomyTermAutocomplete,
 		WnlSelect,
+		WnlTaxonomyTermAutocomplete,
+		WnlTaxonomyTermWithAncestors,
 	},
 	data() {
 		return {

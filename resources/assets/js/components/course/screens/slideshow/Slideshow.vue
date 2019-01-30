@@ -41,7 +41,7 @@
 
 	.wnl-slideshow-background-control
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		display: flex
 		font-size: $font-size-minus-2
 		justify-content: space-between
@@ -67,7 +67,7 @@
 				border: 1px solid $color-inactive-gray
 
 			&.dark
-				background: $color-gray
+				background: $color-darkest-gray
 
 			&.image
 				+gradient-horizontal($gradient-bg-image-left, $gradient-bg-image-right)

@@ -5,9 +5,10 @@ $color-dark-blue: #2F4999;
 $color-orange: #cc3e17;
 $color-purple: #62378d;
 $color-purple-second: #7B569F;
-$color-gray: #0c1726;
-$color-gray-lighter: #262B37;
-$color-gray-dimmed: #696969;
+$color-darkest-gray: #0c1726;
+$color-darker-gray: #262B37;
+$color-gray: #696969;
+$color-lighter-gray: #aaa;
 $color-inactive-gray: #cdd0da;
 $color-light-gray: #efefef;
 $color-lightest-gray: #f7f7f7;
@@ -69,7 +70,7 @@ $line-height-minus: 1.25em;
 $line-height-base: 1.5em;
 $line-height-plus: 1.75em;
 
-$color-body: $color-gray;
+$color-body: $color-darkest-gray;
 
 $font-weight-light: 300;
 $font-weight-regular: 400;
@@ -78,7 +79,7 @@ $font-weight-black: 900;
 
 // Borders
 $border-light-gray: 1px solid $color-light-gray;
-$border-dark-gray: 1px solid $color-gray-dimmed;
+$border-dark-gray: 1px solid $color-gray;
 $border-thick: 3px;
 
 // Buttons
@@ -143,7 +144,7 @@ $warning: $color-yellow;
 $danger: $color-red;
 $info: $color-blue;
 
-$text: $color-gray;
+$text: $color-darkest-gray;
 
 // z-index positioning
 $z-index-navbar: 50;

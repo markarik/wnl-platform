@@ -15,10 +15,10 @@
 				:isDown="true"
 			>
 				<template slot-scope="slotProps">
-					<div>
-						<div class="autocomplete-parent-term">{{getAncestorsById(slotProps.item.id).map(ancestor => ancestor.tag.name).join(' > ')}}</div>
-						<div>{{slotProps.item.tag.name}}</div>
-					</div>
+					<wnl-taxonomy-term-with-ancestors
+						:term="slotProps.item"
+						:ancestors="getAncestorsById(slotProps.item.id)"
+					/>
 				</template>
 			</wnl-autocomplete>
 		</div>
@@ -43,6 +43,7 @@ import {mapState, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
+import WnlTaxonomyTermWithAncestors from 'js/admin/components/taxonomies/TaxonomyTermWithAncestors';
 
 export default {
 	props: {
@@ -61,7 +62,8 @@ export default {
 		};
 	},
 	components: {
-		WnlAutocomplete
+		WnlAutocomplete,
+		WnlTaxonomyTermWithAncestors
 	},
 	computed: {
 		...mapState('taxonomyTerms', ['terms']),

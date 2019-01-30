@@ -98,7 +98,7 @@
 
 		.wnl-main-nav-item
 			align-items: center
-			color: $color-gray-dimmed
+			color: $color-gray
 			display: flex
 			flex-direction: column
 			justify-content: center

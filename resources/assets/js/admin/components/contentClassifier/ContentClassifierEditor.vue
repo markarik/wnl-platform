@@ -141,7 +141,7 @@ export default {
 			return this.filteredContent.length;
 		},
 		groupedTaxonomyTerms() {
-			const taxonomyTerms = uniqBy([].concat(...this.filteredContent.map(item => item.taxonomyTerms)), 'id');
+			const taxonomyTerms = uniqBy(this.filteredContent.map(item => item.taxonomyTerms), 'id');
 			const groupedTerms = {};
 
 			taxonomyTerms.forEach(term => {

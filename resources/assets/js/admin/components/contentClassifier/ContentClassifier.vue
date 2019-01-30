@@ -184,7 +184,7 @@ export default {
 			try {
 				const values = await Promise.all(promises);
 
-				this.filteredContent = [].concat(...values);
+				this.filteredContent = [...values];
 			} catch (error) {
 				this.filteredContent = [];
 

@@ -68,7 +68,6 @@
 
 <script>
 import axios from 'axios';
-import {delete as vueDelete} from 'vue';
 import {mapActions} from 'vuex';
 import {groupBy} from 'lodash';
 
@@ -210,7 +209,7 @@ export default {
 				const index = item.taxonomyTerms.findIndex(({id}) => id === term.id);
 
 				if (index > -1) {
-					vueDelete(item.taxonomyTerms, index);
+					item.taxonomyTerms.splice(index, 1);
 				}
 			});
 		},

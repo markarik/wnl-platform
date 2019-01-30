@@ -71,13 +71,12 @@ const getters = {
 		return Object.values(state.screens)
 			.sort((screenA, screenB) => screenA.order_number - screenB.order_number)
 			.filter(screen => {
-				return screen.lessons.toString() === lessonId.toString();
+				return screen.lessons && screen.lessons.toString() === lessonId.toString();
 			});
 	},
 	getSection: state => (sectionId) => state.section[sectionId] || {},
 	getSectionsForScreen: state => (screenId) => {
 		return Object.values(state.sections)
-			.sort((sectionA, sectionB) => sectionA.order_number - sectionB.order_number)
 			.filter(section => {
 				return section.screens.toString() === screenId.toString();
 			});
@@ -89,14 +88,13 @@ const getters = {
 	},
 	getSubsectionsForSection: state => (sectionId) => {
 		return Object.values(state.subsections)
-			.sort((subsectionA, subsectionB) => subsectionA.order_number - subsectionB.order_number)
 			.filter(subsection => {
 				return subsection.sections.toString() === sectionId.toString();
 			});
 	},
 	getSectionSubsectionsCheckpoints: (state, getters) => (sectionId) => {
 		const subsections = getters.getSubsectionsForSection(sectionId);
-
+		console.log(subsections, '...subsections');
 		return subsections.map((subsections) => subsections.slide);
 	},
 	getAdjacentScreenId: (state, getters) => (lessonId, currentScreenId, direction) => {

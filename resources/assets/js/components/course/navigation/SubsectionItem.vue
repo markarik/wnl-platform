@@ -105,7 +105,11 @@ export default {
 				slide: subsection.slide,
 			};
 			const isSubsectionActive = this.lessonState.activeSubsection === subsection.id;
-			const sectionProgress = this.getSectionProgress(this.courseId, this.lessonId, this.screenId, this.sectionId) || {}
+			const sectionProgress = this.getSectionProgress(
+				this.courseId, this.lessonId, this.screenId, this.sectionId
+			);
+			const subsectionsProgress = sectionProgress && sectionProgress.subsections;
+			const subsectionProgress = subsectionsProgress && subsectionsProgress[subsection.id];
 			return navigation.composeItem({
 				text: subsection.name,
 				itemClass: 'small subitem todo',
@@ -114,15 +118,10 @@ export default {
 				method: 'replace',
 				iconClass: 'fa-angle-right',
 				iconTitle: subsection.name,
-				completed: sectionProgress[subsection.id],
+				completed: subsectionProgress && subsectionProgress.status === STATUS_COMPLETE,
 				active: isSubsectionActive,
 				meta: `(${subsection.slidesCount})`
 			});
-		},
-	},
-	methods: {
-		hasClass(className) {
-			return !!this.itemClass && this.itemClass.indexOf(className) > -1;
 		},
 	},
 };

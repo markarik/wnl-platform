@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "369ee27c30ce6001265094567363a874",
+    "content-hash": "32bbbc020ee1031630cd3a3688818db8",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -5027,51 +5027,6 @@
                 "environment"
             ],
             "time": "2018-10-30T17:29:25+00:00"
-        },
-        {
-            "name": "yadakhov/insert-on-duplicate-key",
-            "version": "v1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yadakhov/insert-on-duplicate-key.git",
-                "reference": "13962f769aed9887138bc7e78fd4aac97a7ebf9c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yadakhov/insert-on-duplicate-key/zipball/13962f769aed9887138bc7e78fd4aac97a7ebf9c",
-                "reference": "13962f769aed9887138bc7e78fd4aac97a7ebf9c",
-                "shasum": ""
-            },
-            "require-dev": {
-                "illuminate/database": "^5.1",
-                "phpunit/dbunit": "^2.0",
-                "phpunit/phpunit": "~5.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Yadakhov\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Yada Khov",
-                    "email": "yada.khov@gmail.com",
-                    "homepage": "https://github.com/yadakhov"
-                }
-            ],
-            "description": "A trait for MySQL INSERT ON DUPLICATE KEY UPDATE.",
-            "homepage": "https://github.com/yadakhov/insert-on-duplicate-key",
-            "keywords": [
-                "database",
-                "eloquent",
-                "mysql"
-            ],
-            "time": "2017-04-27T16:19:41+00:00"
         },
         {
             "name": "zendframework/zend-diactoros",

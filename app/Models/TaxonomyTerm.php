@@ -24,4 +24,20 @@ class TaxonomyTerm extends Model
 	public function tag() {
 		return $this->belongsTo('App\Models\Tag');
 	}
+
+	public function annotations() {
+		return $this->morphedByMany('App\Models\Annotation', 'taxonomy_termable');
+	}
+
+	public function flashcards() {
+		return $this->morphedByMany('App\Models\Flashcard', 'taxonomy_termable');
+	}
+
+	public function quizQuestions() {
+		return $this->morphedByMany('App\Models\QuizQuestion', 'taxonomy_termable');
+	}
+
+	public function slides() {
+		return $this->morphedByMany('App\Models\Slide', 'taxonomy_termable');
+	}
 }

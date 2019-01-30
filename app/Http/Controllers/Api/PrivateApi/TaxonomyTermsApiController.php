@@ -4,33 +4,10 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Course\AttachTaxonomyTerm;
 use App\Http\Requests\Course\MoveTaxonomyTerm;
 use App\Http\Requests\Course\UpdateTaxonomyTerm;
-use App\Models\Annotation;
-use App\Models\Flashcard;
-use App\Models\QuizQuestion;
-use App\Models\Slide;
 use App\Models\TaxonomyTerm;
-use App\Models\TaxonomyTermable;
 use Illuminate\Http\Request;
 
 class TaxonomyTermsApiController extends ApiController {
-	const TAXONOMY_TERMABLE_TYPES = [
-		[
-			'requestParam' => 'annotations',
-			'className' => Annotation::class,
-		],
-		[
-			'requestParam' => 'flashcards',
-			'className' => Flashcard::class,
-		],
-		[
-			'requestParam' => 'quiz_questions',
-			'className' => QuizQuestion::class,
-		],
-		[
-			'requestParam' => 'slides',
-			'className' => Slide::class,
-		],
-	];
 
 	public function __construct(Request $request) {
 		parent::__construct($request);
@@ -105,27 +82,21 @@ class TaxonomyTermsApiController extends ApiController {
 			return $this->respondNotFound('Taxonomy term does not exist');
 		}
 
-		$insert = [];
-
-		foreach (self::TAXONOMY_TERMABLE_TYPES as $taxonomyTermableType) {
-			$requestParamValue = $request[$taxonomyTermableType['requestParam']];
-
-			if (!empty($requestParamValue)) {
-				foreach ($requestParamValue as $termableId) {
-					$insert[]= [
-						'taxonomy_term_id' => $taxonomyTerm->id,
-						'taxonomy_termable_id' => $termableId,
-						'taxonomy_termable_type' => $taxonomyTermableType['className']
-					];
-				}
-			}
+		if (!empty($request['annotations'])) {
+			$taxonomyTerm->annotations()->attach($request['annotations']);
 		}
 
-		TaxonomyTermable::insertOnDuplicateKey($insert, [
-			// Ignore duplicate keys without ignoring other errors
-			// See https://stackoverflow.com/questions/548541/insert-ignore-vs-insert-on-duplicate-key-update
-			'id' => 'id'
-		]);
+		if (!empty($request['flashcards'])) {
+			$taxonomyTerm->flashcards()->attach($request['flashcards']);
+		}
+
+		if (!empty($request['quiz_questions'])) {
+			$taxonomyTerm->quizQuestions()->attach($request['quiz_questions']);
+		}
+
+		if (!empty($request['slides'])) {
+			$taxonomyTerm->slides()->attach($request['slides']);
+		}
 
 		return $this->respondOk();
 	}
@@ -137,30 +108,21 @@ class TaxonomyTermsApiController extends ApiController {
 			return $this->respondNotFound('Taxonomy term does not exist');
 		}
 
-		$pdo = \DB::connection()->getPdo();
-		$tuplesToDelete = [];
-
-		foreach (self::TAXONOMY_TERMABLE_TYPES as $taxonomyTermableType) {
-			$requestParamValue = $request[$taxonomyTermableType['requestParam']];
-
-			if (!empty($requestParamValue)) {
-				foreach ($requestParamValue as $termableId) {
-					$tuplesToDelete []= "(" .
-						$pdo->quote($taxonomyTerm->id) .
-						", " .
-						$pdo->quote($termableId) .
-						", " .
-						$pdo->quote($taxonomyTermableType['className']) .
-						")";
-				}
-			}
+		if (!empty($request['annotations'])) {
+			$taxonomyTerm->annotations()->detach($request['annotations']);
 		}
 
-		\DB::statement(
-			'delete from taxonomy_termables where (taxonomy_term_id, taxonomy_termable_id, taxonomy_termable_type) in (' .
-				implode(',', $tuplesToDelete) .
-				')'
-		);
+		if (!empty($request['flashcards'])) {
+			$taxonomyTerm->flashcards()->detach($request['flashcards']);
+		}
+
+		if (!empty($request['quiz_questions'])) {
+			$taxonomyTerm->quizQuestions()->detach($request['quiz_questions']);
+		}
+
+		if (!empty($request['slides'])) {
+			$taxonomyTerm->slides()->detach($request['slides']);
+		}
 
 		return $this->respondOk();
 	}

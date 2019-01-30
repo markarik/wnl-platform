@@ -21,8 +21,7 @@
 		"graham-campbell/throttle": "^7.0",
 		"nao-pon/flysystem-google-drive": "~1.1",
 		"bschmitt/laravel-amqp": "^1.2",
-		"kalnoy/nestedset": "^4.3",
-		"yadakhov/insert-on-duplicate-key": "^1.2"
+		"kalnoy/nestedset": "^4.3"
 	},
 	"require-dev": {
 		"laravel/dusk": "^4.0",

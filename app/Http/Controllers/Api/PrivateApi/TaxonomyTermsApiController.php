@@ -83,19 +83,19 @@ class TaxonomyTermsApiController extends ApiController {
 		}
 
 		if (!empty($request['annotations'])) {
-			$taxonomyTerm->annotations()->attach($request['annotations']);
+			$taxonomyTerm->annotations()->syncWithoutDetaching($request['annotations']);
 		}
 
 		if (!empty($request['flashcards'])) {
-			$taxonomyTerm->flashcards()->attach($request['flashcards']);
+			$taxonomyTerm->flashcards()->syncWithoutDetaching($request['flashcards']);
 		}
 
 		if (!empty($request['quiz_questions'])) {
-			$taxonomyTerm->quizQuestions()->attach($request['quiz_questions']);
+			$taxonomyTerm->quizQuestions()->syncWithoutDetaching($request['quiz_questions']);
 		}
 
 		if (!empty($request['slides'])) {
-			$taxonomyTerm->slides()->attach($request['slides']);
+			$taxonomyTerm->slides()->syncWithoutDetaching($request['slides']);
 		}
 
 		return $this->respondOk();

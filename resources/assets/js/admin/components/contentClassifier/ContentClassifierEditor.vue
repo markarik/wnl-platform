@@ -1,5 +1,8 @@
 <template>
-	<div class="content-classifier__panel-editor">
+	<div v-bind:class="{
+		'content-classifier__panel-editor': true,
+		'is-loading': isLoading,
+	}">
 		<h4 class="title is-4 margin bottom">Zarządzaj</h4>
 		<ul class="margin bottom">
 			<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">
@@ -9,7 +12,7 @@
 				<ul>
 					<li v-for="term in group.terms" :key="term.id" class="content-classifier__panel-editor__term">
 						<span
-							class="icon is-small margin right"
+							class="icon is-small margin right clickable"
 							title="Odznacz"
 							@click="onDetachTaxonomyTerm(term)"
 						>
@@ -95,6 +98,7 @@ export default {
 	data() {
 		return {
 			taxonomyId: null,
+			isLoading: false,
 		};
 	},
 	props: {
@@ -151,6 +155,7 @@ export default {
 			return this.flattenItems.filter(item => item.taxonomyTerms.find(term => term.id === termId)).length;
 		},
 		async onDetachTaxonomyTerm(term) {
+			this.isLoading = true;
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/detach`), {
 					annotations: this.filteredContent.annotations.map(item => item.id),
@@ -166,9 +171,12 @@ export default {
 					text: 'Nie udało się usunąć klasyfikacji. Spróbuj ponownie.',
 					type: ALERT_TYPES.ERROR
 				});
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async onAttachTaxonomyTerm(term) {
+			this.isLoading = true;
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/attach`), {
 					annotations: this.filteredContent.annotations.map(item => item.id),
@@ -189,6 +197,8 @@ export default {
 					text: 'Nie udało się zapisać nowej klasyfikacji. Spróbuj ponownie.',
 					type: ALERT_TYPES.ERROR
 				});
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async onTaxonomyChange(taxonomyId) {

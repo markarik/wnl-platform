@@ -29,6 +29,7 @@
 				<wnl-text-loader v-else />
 			</div>
 			<wnl-content-classifier-editor
+				v-show="!isLoading"
 				:filteredContent="filteredContent"
 				@onTaxonomyTermAttached="onTaxonomyTermAttached"
 				@onTaxonomyTermDetached="onTaxonomyTermDetached"

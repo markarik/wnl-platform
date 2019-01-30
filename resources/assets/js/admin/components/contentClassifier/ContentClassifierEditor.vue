@@ -95,7 +95,6 @@
 
 			&__term-select
 				display: flex
-				align-items: center
 
 				&__autocomplete
 					flex-grow: 1

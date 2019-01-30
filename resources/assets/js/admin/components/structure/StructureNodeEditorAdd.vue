@@ -3,7 +3,7 @@
 		submit-label="Dodaj"
 		:on-save="onSave"
 		:courseId="courseId"
-		:node="node"
+		:node="currentNode"
 		@parentChange="onParentChange"
 	/>
 </template>
@@ -28,17 +28,7 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters('courseStructure', ['nodeById']),
-		...mapState('courseStructure', ['selectedNodes']),
-		node() {
-			if (this.selectedNodes.length === 0) {
-				return null;
-			}
-
-			return {
-				parent: this.nodeById(this.selectedNodes[0])
-			};
-		}
+		...mapGetters('courseStructure', ['nodeById', 'currentNode']),
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

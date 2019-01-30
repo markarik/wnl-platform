@@ -179,8 +179,8 @@ export default {
 
 				const termToAdd = {
 					...term,
-					taxonomy: this.taxonomyById(this.taxonomyId),
-					ancestors: this.getAncestorsById(term.id),
+					taxonomy: term.taxonomy || this.taxonomyById(this.taxonomyId),
+					ancestors: term.ancestors || this.getAncestorsById(term.id),
 				};
 				this.$emit('onTaxonomyTermAttached', termToAdd);
 			} catch (error) {

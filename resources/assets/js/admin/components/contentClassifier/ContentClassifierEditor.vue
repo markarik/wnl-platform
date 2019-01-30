@@ -15,7 +15,7 @@
 						:key="term.id"
 						:class="{
 							'content-classifier__panel-editor__term': true,
-							'content-classifier__panel-editor__term--has-parent': term.parent_id !== null,
+							'has-parent': term.parent_id !== null,
 						}"
 					>
 						<span
@@ -82,7 +82,7 @@
 				display: flex
 				padding: $margin-medium 0
 
-				&--has-parent &__name
+				&.has-parent &__name
 					font-size: $font-size-minus-1
 
 				&__name

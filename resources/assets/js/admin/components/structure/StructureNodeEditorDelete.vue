@@ -43,7 +43,7 @@ export default {
 				this.selectNodes([]);
 
 				this.addAutoDismissableAlert({
-					text: 'Usunięto pojęcie!',
+					text: 'Usunięto pomyślnie!',
 					type: 'success'
 				});
 			} catch (error) {

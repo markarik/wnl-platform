@@ -46,7 +46,7 @@ export default {
 				}
 
 				this.addAutoDismissableAlert({
-					text: 'Dodano pojęcie!',
+					text: 'Dodano!',
 					type: 'success'
 				});
 			} catch (error) {

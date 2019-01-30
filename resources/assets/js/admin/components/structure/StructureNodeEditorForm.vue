@@ -2,7 +2,7 @@
 	<div>
 		<div class="field">
 			<label class=" label is-uppercase"><strong>Gałąź nadrzędna</strong></label>
-			<span class="info small">Pozostaw puste, aby dodać pojęcie na najwyższym poziomie.</span>
+			<span class="info small">Pozostaw puste, aby dodać gałąź na najwyższym poziomie.</span>
 			<wnl-node-autocomplete
 				@change="onSelectParent"
 				:selected="parent"
@@ -10,8 +10,8 @@
 		</div>
 
 		<div class="field">
-			<label class="label is-uppercase"><strong>Tag źródłowy</strong></label>
-			<span class="info">Wybierz lekcję/grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową.</span>
+			<label class="label is-uppercase"><strong>Powiązana jednostka struktury</strong></label>
+			<span class="info">Wybierz lekcję / grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową.</span>
 			<wnl-structurable-autocomplete
 				@change="onSelectStructurable"
 				:selected="structurable"
@@ -98,7 +98,7 @@ export default {
 		onSelectParent(node) {
 			if (node && this.getAncestorsById(node.id).find(t => t.id === this.id)) {
 				this.addAutoDismissableAlert({
-					text: 'Nie możesz przenieść pojęcia do jego potomka.',
+					text: 'Nie możesz przenieść gałęzi do jej potomka.',
 					type: ALERT_TYPES.ERROR,
 				});
 				return;

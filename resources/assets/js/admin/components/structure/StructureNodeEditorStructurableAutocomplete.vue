@@ -55,7 +55,6 @@
 		padding: $margin-base
 		text-align: right
 		display: flex
-		flex-direction: row
 
 </style>
 
@@ -156,7 +155,7 @@ export default {
 			$wnl.logger.capture(error);
 
 			this.addAutoDismissableAlert({
-				text: 'Ups, coś poszło nie tak przy pobieraniu listy dostępnych tagów, spróbuj ponownie.',
+				text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
 				type: ALERT_TYPES.ERROR,
 			});
 		}

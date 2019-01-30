@@ -46,7 +46,7 @@ export default {
 				}
 
 				this.addAutoDismissableAlert({
-					text: 'Zapisano pojęcie!',
+					text: 'Zapisano!',
 					type: 'success'
 				});
 			} catch (error) {

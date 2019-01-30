@@ -1,5 +1,5 @@
 <template>
-	<div class="Nodes-editor-right">
+	<div class="nodes-editor-right">
 		<nav class="tabs is-uppercase small">
 			<ul>
 				<li v-for="mode in modes" :class="{'is-active': mode.key === editorMode}" :key="mode.key">
@@ -18,7 +18,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.Nodes-editor-right
+	.nodes-editor-right
 		padding-top: $margin-big
 		position: sticky
 		top: -30px

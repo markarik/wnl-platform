@@ -14,7 +14,7 @@
 						</div>
 					</div>
 				</div>
-				<router-view @userEvent="onUserEvent" v-if="lessonReady"/>
+				<router-view @userEvent="onUserEvent"/>
 			</div>
 			<div class="wnl-lesson-previous-next-nav">
 				<wnl-previous-next></wnl-previous-next>
@@ -81,7 +81,6 @@ export default {
 				 * all browsers are able to beautifully scroll the content.
 				 */
 			elementHeight: _.get(this.$parent, '$el.offsetHeight') || '100%',
-			lessonReady: false
 		};
 	},
 	computed: {
@@ -314,7 +313,6 @@ export default {
 	},
 	async mounted () {
 		await this.setupLesson(this.lessonId);
-		this.lessonReady = true;
 		this.launchLesson();
 		window.addEventListener('resize', this.updateElementHeight);
 	},

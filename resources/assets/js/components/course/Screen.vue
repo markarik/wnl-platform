@@ -105,12 +105,16 @@ export default {
 			return this.screenData.tags;
 		},
 		component() {
+			if (!this.type) return;
+
 			return TYPES_MAP[this.type].component;
 		},
 		showQna() {
 			return this.screenData.is_discussable;
 		},
 		eventFeatureComponent() {
+			if (!this.type) return;
+
 			return TYPES_MAP[this.type].feature_component;
 		}
 	},

@@ -24,7 +24,6 @@ return [
 		'tags'                    => 'tags',
 		'taxonomies'              => 'taxonomies',
 		'taxonomy-terms'          => 'taxonomy_terms',
-		'taxonomy-termables'      => 'taxonomy_termables',
 		'taggables'               => 'taggables',
 		'qna-questions'           => 'qna_questions',
 		'qna-answers'             => 'qna_answers',

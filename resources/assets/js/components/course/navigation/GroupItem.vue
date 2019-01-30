@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-navigation-group" :class="{'no-items': !hasSubitems}">
-		<div class="wnl-navigation-group__toggle" @click="isOpen = !isOpen">
+		<div class="wnl-navigation-group__toggle" @click="toggleNavigationGroup({groupIndex: item.id, isOpen: !isOpen})">
 			<div class="wnl-navigation-group__item">
 				<span class="icon is-small" v-if="hasSubitems">
 					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
@@ -70,7 +70,7 @@
 
 <script>
 import WnlLessonItem from 'js/components/course/navigation/LessonItem';
-import { mapState } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import navigation from 'js/services/navigation';
 
 export default {
@@ -84,13 +84,9 @@ export default {
 			required: true
 		}
 	},
-	data() {
-		return {
-			isOpen: false
-		};
-	},
 	computed: {
 		...mapState('course', ['newStructure']),
+		...mapGetters(['isNavigationGroupExpanded']),
 		groupItem() {
 			return navigation.composeItem({text: this.item.model.name, itemClass: 'heading small'});
 		},
@@ -106,6 +102,12 @@ export default {
 		toggleIcon() {
 			return this.isOpen ? 'fa-angle-up' : 'fa-angle-down';
 		},
+		isOpen() {
+			return !!this.isNavigationGroupExpanded(this.item.id);
+		}
+	},
+	methods: {
+		...mapActions(['toggleNavigationGroup'])
 	},
 };
 </script>

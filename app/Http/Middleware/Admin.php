@@ -18,6 +18,7 @@ class Admin extends Authenticate
 	 */
 	public function handle($request, Closure $next, ...$guards)
 	{
+		dd($request);
 		$this->authenticate($request, $guards);
 
 		abort_unless(Auth::user()->isAdmin(), 403, 'Unauthorized');

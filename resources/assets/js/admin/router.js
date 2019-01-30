@@ -94,18 +94,16 @@ let routes = [
 		name: 'quizes',
 		path: '/admin/app/quizes',
 		component: QuizQuestionsList,
-		children: [
-			{
-				name: 'quiz-editor',
-				path: 'edit/:quizId',
-				component: QuizQuestionEdit,
-			},
-			{
-				name: 'quiz-creator',
-				path: 'new',
-				component: QuizQuestionCreate
-			}
-		],
+	},
+	{
+		name: 'quiz-editor',
+		path: '/admin/app/quizes/edit/:quizId',
+		component: QuizQuestionEdit,
+	},
+	{
+		name: 'quiz-creator',
+		path: '/admin/app/quizes/new',
+		component: QuizQuestionCreate
 	},
 	{
 		name: 'flashcards-sets',

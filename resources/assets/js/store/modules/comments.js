@@ -136,7 +136,10 @@ export const commentsMutations = {
 		Object.keys(commentsResourceObj).forEach(resource => {
 			Object.keys(commentsResourceObj[resource]).forEach(resourceId => {
 				const oldComments = state[resource][resourceId].comments || [];
-				const commentsIds = _.uniq(oldComments.concat(Object.keys(commentsResourceObj[resource][resourceId])));
+				const commentsIds = _.uniqBy(
+					oldComments.concat(Object.keys(commentsResourceObj[resource][resourceId])),
+					commentId => commentId.toString()
+				);
 				set(state[resource][resourceId], 'comments', commentsIds);
 			});
 		});

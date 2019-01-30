@@ -387,7 +387,8 @@ const actions = {
 			filters,
 			limit,
 			randomize,
-			include: 'quiz_answers,reactions,comments.profiles,slides'
+			include: 'quiz_answers,reactions,comments.profiles,slides',
+			cachedPagination: false
 		}).then(response => {
 			const {answers, questions, slides, included} = _handleResponse(response, commit);
 			const comments = _.get(included, 'comments');
@@ -478,7 +479,7 @@ const _fetchQuestions = (requestParams) => {
 	// Cached pagination was developed to address a specific issue within quiz questions bank.
 	// Therefore it should be used in that single place only.
 	// To be refactored, see https://bethink.atlassian.net/browse/PLAT-868
-	return axios.post(getApiUrl('quiz_questions/.filter'),  {...requestParams, cachedPagination: true});
+	return axios.post(getApiUrl('quiz_questions/.filter'),  {cachedPagination: true, ...requestParams});
 };
 
 const _fetchQuestionsData = (id) => {

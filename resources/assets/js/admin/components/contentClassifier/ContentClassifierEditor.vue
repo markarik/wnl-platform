@@ -9,7 +9,7 @@
 				</div>
 				<ul>
 					<li v-for="term in group.terms" :key="term.id">
-						<strong>{{[term, ...term.ancestors].reverse().map(item => item.tag.name).join(' > ')}}</strong> ({{getItemsCountByTermId(term.id)}}/{{allItemsCount}})
+						<strong>{{[...term.ancestors, term].map(item => item.tag.name).join(' > ')}}</strong> ({{getItemsCountByTermId(term.id)}}/{{allItemsCount}})
 						<button
 							class="button is-danger is-small"
 							title="Odznacz"
@@ -84,7 +84,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters('taxonomyTerms', ['termById']),
+		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
 		...mapGetters('taxonomies', ['taxonomyById']),
 		...mapState('taxonomies', ['taxonomies']),
 		flattenItems() {
@@ -154,7 +154,12 @@ export default {
 					slides: this.filteredContent.slides.map(item => item.id),
 				});
 
-				this.$emit('onTaxonomyTermAttached', term, this.taxonomyById(this.taxonomyId));
+				const termToAdd = {
+					...term,
+					taxonomy: this.taxonomyById(this.taxonomyId),
+					ancestors: this.getAncestorsById(term.id),
+				};
+				this.$emit('onTaxonomyTermAttached', termToAdd);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

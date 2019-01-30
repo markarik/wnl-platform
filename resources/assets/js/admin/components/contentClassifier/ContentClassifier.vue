@@ -141,7 +141,7 @@ export default {
 					while (currentTerm.parent_id) {
 						const parentTerm = included.ancestors[currentTerm.parent_id];
 						parentTerm.tag = included.tags[parentTerm.tags[0]];
-						term.ancestors.push(parentTerm);
+						term.ancestors.unshift(parentTerm);
 
 						currentTerm = parentTerm;
 					}
@@ -201,14 +201,11 @@ export default {
 				this.isLoading = false;
 			}
 		},
-		onTaxonomyTermAttached(term, taxonomy) {
+		onTaxonomyTermAttached(term) {
 			Object.keys(this.filteredContent).forEach((contentType) => {
 				this.filteredContent[contentType].forEach((item) => {
 					if (!some(item.taxonomyTerms, {id: term.id})) {
-						item.taxonomyTerms.push({
-							...term,
-							taxonomy
-						});
+						item.taxonomyTerms.push(term);
 					}
 				});
 			});

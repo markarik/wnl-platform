@@ -54,17 +54,18 @@ const getters = {
 	},
 	structure: state => state.structure,
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
+	getLessonsForGroup: (state, getters) => groupId => {
+		return getters.getLessons.filter(lesson => lesson.groups.toString() === groupId.toString());
+	},
 	getLessons: state => {
 		return state.newStructure.filter(node => node.structurable_type === getModelByResource('lessons'))
 			.map(node => node.model);
 	},
 	getRequiredLessons: (state, getters) => {
-		return Object.values(getters.getLessons)
-			.filter(lesson => lesson.is_required && lesson.isAccessible);
+		return getters.getLessons.filter(lesson => lesson.is_required && lesson.isAccessible);
 	},
 	userLessons: (state, getters) => {
-		return Object.values(getters.getLessons)
-			.filter(lesson => lesson.isAccessible);
+		return getters.getLessons.filter(lesson => lesson.isAccessible);
 	},
 	getLesson: (state, getters) => (lessonId) => {
 		return getters.getLessons.find(lesson => lesson.id.toString() === lessonId.toString()) || {};
@@ -142,29 +143,24 @@ const getters = {
 
 			return lesson;
 		} else {
-			const sortedLessonsIds = Object.keys(getters.getLessons).sort((keyA, keyB) => {
-				const lessonA = getters.getLessons[keyA];
-				const lessonB = getters.getLessons[keyB];
-
+			const sortedLessons = getters.getLessons.sort((lessonA, lessonB) => {
 				const byOrderNumber = lessonA.order_number - lessonB.order_number;
 				if (byOrderNumber === 0) {
 					return lessonA.id - lessonB.id;
 				}
 				return byOrderNumber;
-			}).map(Number);
+			});
 
-			for (let i = 0; i < sortedLessonsIds.length; i++) {
-				const lessonId = sortedLessonsIds[i];
-				const isAvailable = getters.isLessonAvailable(lessonId);
-				const isAccessible = getters.isLessonAccessible(lessonId);
+			for (let i = 0; i < sortedLessons.length; i++) {
+				const lesson = sortedLessons[lesson];
+				const isAvailable = lesson.isAvailable;
+				const isAccessible = lesson.isAccessible;
 				if (isAvailable &&
-					!rootGetters['progress/wasLessonStarted'](state.id, lessonId)
+					!rootGetters['progress/wasLessonStarted'](state.id, lesson.id)
 				) {
-					const lesson = getters.getLesson(lessonId);
 					lesson.status = STATUS_AVAILABLE;
 					return lesson;
 				} else if (!isAvailable && isAccessible) {
-					const lesson = getters.getLesson(lessonId);
 					lesson.status = STATUS_NONE;
 					return lesson;
 				}

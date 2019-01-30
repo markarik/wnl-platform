@@ -44,7 +44,7 @@
 				</div>
 			</div>
 			<div class="groups">
-				<ul class="groups-list" v-if="structure">
+				<ul class="groups-list">
 					<li class="group" v-for="(item, index) in groupsWithLessons"
 							:key="index">
 						<span class="item-toggle" @click="toggleItem(item)">
@@ -235,8 +235,8 @@ export default {
 	computed: {
 		...mapGetters('course', [
 			'groups',
-			'structure',
 			'userLessons',
+			'getLessonsForGroup'
 		]),
 		...mapGetters(['currentUserId']),
 		startDateConfig() {
@@ -245,13 +245,10 @@ export default {
 			};
 		},
 		groupsWithLessons() {
-			return this.groups.map(groupId => {
-				const group = this.structure[resource('groups')][groupId];
+			return this.groups.map(group => {
 				return {
 					...group,
-					lessons: group[resource('lessons')].map(lessonId => {
-						return this.structure[resource('lessons')][lessonId];
-					})
+					lessons: this.getLessonsForGroup(group.id)
 				};
 			});
 		},

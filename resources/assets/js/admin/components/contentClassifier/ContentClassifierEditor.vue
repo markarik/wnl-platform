@@ -49,6 +49,7 @@
 			<div class="content-classifier__panel-editor__term-select">
 				<wnl-select
 					:options="taxonomiesOptions"
+					class="is-marginless"
 					v-model="taxonomyId"
 					@input="onTaxonomyChange"
 				/>
@@ -91,8 +92,11 @@
 
 			&__taxonomy
 				text-transform: uppercase
+
 			&__term-select
 				display: flex
+				align-items: center
+
 				&__autocomplete
 					flex-grow: 1
 </style>

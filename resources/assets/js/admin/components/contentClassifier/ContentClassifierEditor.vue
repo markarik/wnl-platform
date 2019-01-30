@@ -64,8 +64,9 @@
 
 			&__term
 				align-items: center
+				border-bottom: $border-light-gray
 				display: flex
-				margin-bottom: $margin-medium
+				padding: $margin-small 0
 				&__name
 					flex-grow: 1
 

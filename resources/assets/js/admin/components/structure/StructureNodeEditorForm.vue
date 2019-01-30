@@ -41,7 +41,7 @@ import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
 import WnlStructurableAutocomplete from 'js/admin/components/structure/StructureNodeEditorStructurableAutocomplete';
-import {ALERT_TYPES} from '../../../consts/alert';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 const initialState = {
 	id: null,
@@ -125,8 +125,8 @@ export default {
 		}
 	},
 	watch: {
-		Node(Node) {
-			this.onNodeUpdated(Node);
+		node(node) {
+			this.onNodeUpdated(node);
 		}
 	},
 	mounted() {

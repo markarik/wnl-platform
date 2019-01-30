@@ -7,12 +7,12 @@ trait OperatesOnNestedSets
 {
 	public function postNode($request)
 	{
-		$parentTaxonomyTerm = null;
+		$parentNode = null;
 		if ($request->parent_id) {
-			$parentTaxonomyTerm = (self::getResourceModel($this->resourceName))::find($request->parent_id);
+			$parentNode = (self::getResourceModel($this->resourceName))::find($request->parent_id);
 		}
 
-		$node = (self::getResourceModel($this->resourceName))::create($request->all(), $parentTaxonomyTerm);
+		$node = (self::getResourceModel($this->resourceName))::create($request->all(), $parentNode);
 
 		return $this->transformAndRespond($node);
 	}

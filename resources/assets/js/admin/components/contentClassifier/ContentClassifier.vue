@@ -80,6 +80,28 @@ import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardR
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
 import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
 
+const parseIncludes = (item, included) => {
+	item.taxonomyTerms = item.taxonomy_terms ? item.taxonomy_terms.map(termId => {
+		const term = included.taxonomy_terms[termId];
+		term.tag = included.tags[term.tags[0]];
+		term.taxonomy = included.taxonomies[term.taxonomies[0]];
+		term.ancestors = [];
+
+		let currentTerm = term;
+		while (currentTerm.parent_id) {
+			const parentTerm = included.ancestors[currentTerm.parent_id];
+			parentTerm.tag = included.tags[parentTerm.tags[0]];
+			term.ancestors.unshift(parentTerm);
+
+			currentTerm = parentTerm;
+		}
+
+		return term;
+	}) : [];
+
+	return item;
+};
+
 export default {
 	components: {
 		WnlContentClassifierEditor
@@ -130,56 +152,33 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+		async fetchContent([contentType, meta]) {
+			if (this.filters[contentType] === '') {
+				return [];
+			}
+
+			const {data} = await axios.post(getApiUrl(meta.resourceName), {
+				filters: [
+					{
+						by_ids: {ids: this.filters[contentType].split(',')},
+					},
+				],
+				include: 'taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags',
+				// TODO use wnl-paginated-list instead
+				limit: 10000,
+			});
+
+			const {data: {included = {}, ...items}} = data;
+
+			return Object.values(items).map(item => {
+				item.type = contentType;
+				return parseIncludes(item, included);
+			});
+		},
 		async onSearch() {
 			this.isLoading = true;
 
-			const parseIncludes = (item, included) => {
-				item.taxonomyTerms = item.taxonomy_terms ? item.taxonomy_terms.map(termId => {
-					const term = included.taxonomy_terms[termId];
-					term.tag = included.tags[term.tags[0]];
-					term.taxonomy = included.taxonomies[term.taxonomies[0]];
-					term.ancestors = [];
-
-					let currentTerm = term;
-					while (currentTerm.parent_id) {
-						const parentTerm = included.ancestors[currentTerm.parent_id];
-						parentTerm.tag = included.tags[parentTerm.tags[0]];
-						term.ancestors.unshift(parentTerm);
-
-						currentTerm = parentTerm;
-					}
-
-					return term;
-				}) : [];
-
-				return item;
-			};
-
-			const promises = Object.entries(this.contentTypes).map(
-				async ([contentType, meta]) => {
-					if (this.filters[contentType] === '') {
-						return [];
-					}
-
-					const {data} = await axios.post(getApiUrl(meta.resourceName), {
-						filters: [
-							{
-								by_ids: {ids: this.filters[contentType].split(',')},
-							},
-						],
-						include: 'taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags',
-						// TODO use wnl-paginated-list instead
-						limit: 10000,
-					});
-
-					const {data: {included = {}, ...items}} = data;
-
-					return Object.values(items).map(item => {
-						item.type = contentType;
-						return parseIncludes(item, included);
-					});
-				}
-			);
+			const promises = Object.entries(this.contentTypes).map(this.fetchContent);
 
 			try {
 				const values = await Promise.all(promises);

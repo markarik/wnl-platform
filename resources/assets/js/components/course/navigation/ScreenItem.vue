@@ -107,13 +107,13 @@ export default {
 				lessonId: this.lessonId,
 				screenId: this.screenId,
 			};
-			const completed = this.getScreenProgress(this.courseId, params.lessonId, screen.id);
+			const screenProgress = this.getScreenProgress(this.courseId, params.lessonId, screen.id) || {};
 			const itemProps = {
 				text: screen.name,
 				itemClass: 'todo',
 				routeName: 'screens',
 				routeParams: params,
-				completed
+				completed: screenProgress.status === STATUS_COMPLETE
 			};
 
 			if (screen.slides_count) {

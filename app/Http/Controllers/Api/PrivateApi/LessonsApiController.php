@@ -16,8 +16,6 @@ class LessonsApiController extends ApiController {
 	public function post(UpdateLesson $request) {
 		$lesson = Lesson::create($request->all());
 
-		CoursesApiController::clearCache();
-
 		return $this->transformAndRespond($lesson);
 	}
 
@@ -29,8 +27,6 @@ class LessonsApiController extends ApiController {
 		}
 
 		$lesson->update($request->all());
-
-		CoursesApiController::clearCache();
 
 		return $this->respondOk();
 	}

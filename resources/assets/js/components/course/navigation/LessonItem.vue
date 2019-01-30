@@ -1,8 +1,8 @@
 <template>
-	<div class="item" :class="[itemClass, { disabled: item.isDisabled }]">
+	<div class="item" :class="[itemClass, { disabled: lessonItem.isDisabled }]">
 		<router-link
 			class="item-wrapper"
-			:class="{'router-link-exact-active': item.active, 'is-disabled': item.isDisabled, 'is-completed': item.completed}"
+			:class="{'router-link-exact-active': lessonItem.active, 'is-disabled': lessonItem.isDisabled, 'is-completed': lessonItem.completed}"
 			:to="to"
 		>
 			<div class="sidenav-icon-wrapper">
@@ -21,6 +21,13 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.item.disabled
+		pointer-events: none
+		color: $color-light-gray
+
+		&:hover
+			color: $color-ocean-blue
 
 	.item-wrapper
 		height: 100%
@@ -49,11 +56,13 @@
 	a
 		transition: background-color $transition-length-base
 
+		&.is-disabled
+			color: $color-light-gray
+
 		&:hover
 			color: $color-ocean-blue
 
 		&.router-link-exact-active
-			background: $color-background-lighter-gray
 			font-weight: $font-weight-regular
 			transition: background-color $transition-length-base
 

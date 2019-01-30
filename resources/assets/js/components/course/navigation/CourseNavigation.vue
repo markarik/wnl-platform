@@ -2,8 +2,8 @@
 	<div class="wnl-course-navigation" v-bind:class="{ mobile: isMobileNavigation }">
 		<div class="items">
 			<wnl-group-item v-for="(item) in rootItems"
-				 :item="item"
-				 :key="item.id"
+				:item="item"
+				:key="item.id"
 			>
 			</wnl-group-item>
 		</div>

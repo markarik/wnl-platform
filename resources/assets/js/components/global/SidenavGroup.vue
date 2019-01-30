@@ -72,7 +72,6 @@ export default {
 	props: ['item', 'forceGroupOpen', 'showSubitemsCount'],
 	computed: {
 		...mapGetters(['isNavigationGroupExpanded']),
-		...mapGetters('course', ['nextLesson']),
 		canRenderSubitems() {
 			return this.hasSubitems && this.isOpen;
 		},
@@ -95,24 +94,6 @@ export default {
 	mounted() {
 		if (this.forceGroupOpen && this.isNavigationGroupExpanded(this.groupIndex) !== false) {
 			this.toggleNavigationGroup({groupIndex: this.groupIndex, isOpen: true});
-		}
-	},
-	watch: {
-		nextLesson(val) {
-			if (!this.item || !this.item.subitems || !val) {
-				return;
-			}
-
-			const isCurrentlyInProgress = this.item.subitems.some((subitem) => {
-				return subitem.to.params && subitem.to.params.lessonId === val.id;
-			});
-
-			if (isCurrentlyInProgress) {
-				this.toggleNavigationGroup({
-					groupIndex: this.groupIndex,
-					isOpen: true
-				});
-			}
 		}
 	},
 };

@@ -69,8 +69,9 @@
 </style>
 
 <script>
-import WnlLessonItem from 'js/components/course/navigation/LessonItem';
 import { mapState, mapGetters, mapActions } from 'vuex';
+
+import WnlLessonItem from 'js/components/course/navigation/LessonItem';
 import navigation from 'js/services/navigation';
 
 export default {
@@ -94,7 +95,7 @@ export default {
 			return this.hasSubitems && this.isOpen;
 		},
 		hasSubitems() {
-			return this.subitems && this. subitems.length > 0;
+			return this.subitems.length;
 		},
 		subitems() {
 			return this.newStructure.filter(node => node.parent_id === this.item.id);

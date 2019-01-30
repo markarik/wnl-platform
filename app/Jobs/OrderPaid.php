@@ -44,7 +44,6 @@ class OrderPaid implements ShouldQueue
 		$this->handleInstalments();
 		$this->sendConfirmation();
 
-		CoursesApiController::clearUserCache($this->order->user->id);
 		\Cache::forget(User::getSubscriptionKey($this->order->user->id));
 	}
 

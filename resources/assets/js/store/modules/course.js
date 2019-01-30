@@ -1,19 +1,9 @@
 import _ from 'lodash';
-import {set, delete as destroy} from 'vue';
+import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
 import {resource} from 'js/utils/config';
 import * as types from 'js/store/mutations-types';
 import { modelToResourceMap, getModelByResource } from 'js/utils/config';
-
-// Helper functions
-function getCourseApiUrl(courseId) {
-	return getApiUrl(
-		`${resource('courses')}/${courseId}/structure
-		?include=groups.lessons.screens.sections.subsections,
-		groups.lessons.screens.tags
-		&user=current&exclude=screens.content`
-	);
-}
 
 function _getCourseStructure(courseId = 1) {
 	return axios.get(getApiUrl(`course_structure_nodes/${courseId}`), {
@@ -53,7 +43,9 @@ const getters = {
 			.map(node => node.model);
 	},
 	structure: state => state.structure,
-	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
+	getGroup: (state, getters) => (groupId) => {
+		return getters.groups.find(group => group.id.toString() === groupId.toString()) || {};
+	},
 	getLessonsForGroup: (state, getters) => groupId => {
 		return getters.getLessons.filter(lesson => lesson.groups.toString() === groupId.toString());
 	},
@@ -73,10 +65,6 @@ const getters = {
 	isLessonAvailable: (state, getters) => (lessonId) => {
 		const lesson = getters.getLesson(lessonId);
 		return lesson && lesson.isAvailable;
-	},
-	isLessonAccessible: (state, getters) => (lessonId) => {
-		const lesson = getters.getLesson(lessonId);
-		return lesson && lesson.isAccessible;
 	},
 	getScreen: state => (screenId) => state.screens[screenId] || {},
 	getScreensForLesson: state => (lessonId) => {
@@ -152,7 +140,7 @@ const getters = {
 			});
 
 			for (let i = 0; i < sortedLessons.length; i++) {
-				const lesson = sortedLessons[lesson];
+				const lesson = sortedLessons[i];
 				const isAvailable = lesson.isAvailable;
 				const isAccessible = lesson.isAccessible;
 				if (isAvailable &&
@@ -215,7 +203,7 @@ const actions = {
 	setup({commit, dispatch, rootGetters}, courseId) {
 		return new Promise((resolve, reject) => {
 			Promise.all([
-				dispatch('setStructure', courseId),
+				dispatch('setStructure'),
 				dispatch('progress/setupCourse', courseId, {root: true}),
 			])
 				.then(() => {
@@ -247,7 +235,7 @@ const actions = {
 		commit(types.SET_SECTIONS, sections);
 		commit(types.SET_SUBSECTIONS, subsections);
 	},
-	async setStructureNew({commit}, courseId = 1) {
+	async setStructure({commit}, courseId = 1) {
 		const response = await _getCourseStructure(courseId);
 		const {data: {included, ...structureObj}} = response;
 		const structure = Object.values(structureObj);
@@ -262,13 +250,6 @@ const actions = {
 			};
 		});
 		commit(types.SET_NEW_STRUCTURE, withIncludes);
-	},
-	async setStructure({commit, rootGetters, dispatch}, courseId = 1) {
-		await dispatch('setStructureNew');
-		return axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
-			.then(response => {
-				commit(types.SET_STRUCTURE, response.data);
-			});
 	},
 	fetchScreenContent({commit}, screenId) {
 		return axios.get(getApiUrl(`screens/${screenId}`))

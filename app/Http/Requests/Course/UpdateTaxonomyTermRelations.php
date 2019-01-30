@@ -21,10 +21,18 @@ class UpdateTaxonomyTermRelations extends FormRequest {
 	 */
 	public function rules() {
 		return [
+			'id' => 'numeric|exists:taxonomy_terms,id',
 			'annotations.*' => 'numeric|exists:annotations,id',
 			'flashcards.*' => 'numeric|exists:flashcards,id',
 			'quiz_questions.*' => 'numeric|exists:quiz_questions,id',
 			'slides.*' => 'numeric|exists:slides,id',
 		];
+	}
+
+	public function all($keys = null)
+	{
+		$data = parent::all($keys);
+		$data['id'] = $this->route('id');
+		return $data;
 	}
 }

@@ -78,10 +78,6 @@ class TaxonomyTermsApiController extends ApiController {
 	public function attach(UpdateTaxonomyTermRelations $request, $id) {
 		$taxonomyTerm = TaxonomyTerm::find($id);
 
-		if (!$taxonomyTerm) {
-			return $this->respondNotFound('Taxonomy term does not exist');
-		}
-
 		if (!empty($request['annotations'])) {
 			$taxonomyTerm->annotations()->syncWithoutDetaching($request['annotations']);
 		}
@@ -103,10 +99,6 @@ class TaxonomyTermsApiController extends ApiController {
 
 	public function detach(UpdateTaxonomyTermRelations $request, $id) {
 		$taxonomyTerm = TaxonomyTerm::find($id);
-
-		if (!$taxonomyTerm) {
-			return $this->respondNotFound('Taxonomy term does not exist');
-		}
 
 		if (!empty($request['annotations'])) {
 			$taxonomyTerm->annotations()->detach($request['annotations']);

@@ -3,7 +3,7 @@ import {set, delete as destroy} from 'vue';
 import {getApiUrl} from 'js/utils/env';
 import {resource} from 'js/utils/config';
 import * as types from 'js/store/mutations-types';
-import { modelToResourceMap } from 'js/utils/config';
+import { modelToResourceMap, getModelByResource } from 'js/utils/config';
 
 // Helper functions
 function getCourseApiUrl(courseId) {
@@ -50,7 +50,10 @@ const getters = {
 	groups: state => state[resource('groups')],
 	structure: state => state.structure,
 	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
-	getLessons: state => state.structure[resource('lessons')] || {},
+	getLessons: state => {
+		return state.newStructure.filter(node => node.structurable_type === getModelByResource('lessons'))
+			.map(node => node.model);
+	},
 	getRequiredLessons: (state, getters, rootState, rootGetters) => {
 		return Object.values(getters.getLessons)
 			.filter(lesson => lesson.is_required && lesson.isAccessible);
@@ -59,12 +62,16 @@ const getters = {
 		return Object.values(getters.getLessons)
 			.filter(lesson => lesson.isAccessible);
 	},
-	getLesson: state => (lessonId) => _.get(state.structure[resource('lessons')], lessonId, {}),
-	isLessonAvailable: (state) => (lessonId) => {
-		return state.structure[resource('lessons')][lessonId].isAvailable;
+	getLesson: (state, getters) => (lessonId) => {
+		return getters.getLessons.find(lesson => lesson.id === lessonId);
 	},
-	isLessonAccessible: (state) => (lessonId) => {
-		return state.structure[resource('lessons')][lessonId].isAccessible;
+	isLessonAvailable: (state, getters) => (lessonId) => {
+		const lesson = getters.getLesson(lessonId);
+		return lesson && lesson.isAvailable;
+	},
+	isLessonAccessible: (state, getters) => (lessonId) => {
+		const lesson = getters.getLesson(lessonId);
+		return lesson && lesson.isAccessible;
 	},
 	getScreen: state => (screenId) => state.screens[screenId] || {},
 	getScreensForLesson: state => (lessonId) => {
@@ -199,19 +206,6 @@ const mutations = {
 		set(state, resource('groups'), data[resource('groups')]);
 		set(state, 'structure', data.included);
 	},
-	[types.COURSE_REMOVE_GROUP] (state, payload) {
-		state.groups.splice(payload.index, 1);
-		destroy(state.structure.groups, payload.id);
-		payload.lessons.forEach((lesson) => {
-			destroy(state.structure.lessons, lesson);
-		});
-	},
-	[types.COURSE_SET_LESSON_AVAILABILITY] (state, payload) {
-		set(state.structure.lessons[payload.lessonId], 'isAvailable', payload.status);
-	},
-	[types.COURSE_UPDATE_LESSON_START_DATE] (state, payload) {
-		set(state.structure.lessons[payload.lessonId], 'startDate', payload.start_date);
-	},
 	[types.SET_SCREEN_CONTENT] (state, {data, screenId}) {
 		set(state.screens[screenId], 'content', data.content);
 	},
@@ -276,12 +270,6 @@ const actions = {
 			.then(response => {
 				commit(types.SET_STRUCTURE, response.data);
 			});
-	},
-	setLessonAvailabilityStatus({commit}, payload) {
-		commit(types.COURSE_SET_LESSON_AVAILABILITY, payload);
-	},
-	updateLessonStartDate({commit}, payload) {
-		commit(types.COURSE_UPDATE_LESSON_START_DATE, payload);
 	},
 	fetchScreenContent({commit}, screenId) {
 		return axios.get(getApiUrl(`screens/${screenId}`))

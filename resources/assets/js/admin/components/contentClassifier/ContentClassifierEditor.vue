@@ -16,7 +16,6 @@
 						:class="{
 							'content-classifier__panel-editor__term': true,
 							'content-classifier__panel-editor__term--has-parent': term.parent_id !== null,
-							'content-classifier__panel-editor__term--is-partial': term.itemsCount < allItemsCount,
 						}"
 					>
 						<span
@@ -33,15 +32,17 @@
 						/>
 						<span
 							:class="{
-								'content-classifier__panel-editor__term__counter': true,
 								'margin': true,
 								'left': true,
-								'clickable': term.itemsCount < allItemsCount
+								'tag': true,
+								'strong': hasAllItemsAttached(term),
+								'is-white': !hasAllItemsAttached(term),
+								'clickable': !hasAllItemsAttached(term),
 							}"
-							:title="(term.itemsCount < allItemsCount) && 'Dodaj do wszystkich'"
-							@click="(term.itemsCount < allItemsCount) && onAttachTaxonomyTerm(term)"
+							:title="!hasAllItemsAttached(term) && 'Dodaj do wszystkich'"
+							@click="!hasAllItemsAttached(term) && onAttachTaxonomyTerm(term)"
 						>
-							<span class="icon is-small" v-if="term.itemsCount < allItemsCount"><i class="fa fa-plus"></i></span>
+							<span class="icon is-small" v-if="!hasAllItemsAttached(term)"><i class="fa fa-plus"></i></span>
 							<span>{{term.itemsCount}}/{{allItemsCount}}</span>
 						</span>
 					</li>
@@ -84,14 +85,8 @@
 				&--has-parent &__name
 					font-size: $font-size-minus-1
 
-				&--is-partial
-					opacity: .6
-
 				&__name
 					flex-grow: 1
-
-				&__counter
-					font-size: $font-size-minus-1
 
 			&__taxonomy
 				text-transform: uppercase
@@ -186,6 +181,9 @@ export default {
 		},
 		getItemsByType(contentType) {
 			return this.filteredContent.filter(item => item.type === contentType);
+		},
+		hasAllItemsAttached(term) {
+			return term.itemsCount === this.allItemsCount;
 		},
 		async onDetachTaxonomyTerm(term) {
 			this.isLoading = true;

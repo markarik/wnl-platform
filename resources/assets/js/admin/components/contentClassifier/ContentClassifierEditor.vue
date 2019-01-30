@@ -98,6 +98,9 @@
 
 				&__autocomplete
 					flex-grow: 1
+
+		.icon.is-small .fa
+			font-size: $font-size-minus-2
 </style>
 
 <script>

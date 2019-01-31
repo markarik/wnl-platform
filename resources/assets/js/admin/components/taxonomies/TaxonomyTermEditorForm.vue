@@ -3,7 +3,7 @@
 		<div class="field">
 			<label class=" label is-uppercase"><strong>Nadrzędne pojęcie</strong></label>
 			<span class="info small">Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii.</span>
-			<wnl-term-autocomplete
+			<wnl-taxonomy-term-autocomplete
 				@change="onSelectParent"
 				:selected="parent"
 			/>
@@ -33,7 +33,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.info
-		color: $color-gray-dimmed
+		color: $color-gray
 
 	.field
 		margin-bottom: $margin-big
@@ -42,9 +42,9 @@
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 
-import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
+import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
 import WnlTagAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTagAutocomplete';
-import {ALERT_TYPES} from '../../../consts/alert';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 const initialState = {
 	description: '',
@@ -78,7 +78,7 @@ export default {
 		};
 	},
 	components: {
-		WnlTermAutocomplete,
+		WnlTaxonomyTermAutocomplete,
 		WnlTagAutocomplete
 	},
 	computed: {

@@ -41,6 +41,11 @@ class QuizQuestion extends Model
 		return $this->morphToMany('App\Models\Tag', 'taggable');
 	}
 
+	public function taxonomyTerms()
+	{
+		return $this->morphToMany('App\Models\TaxonomyTerm', 'taxonomy_termable');
+	}
+
 	public function reactions()
 	{
 		return $this->morphToMany('App\Models\Reaction', 'reactable');

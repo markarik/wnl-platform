@@ -1,3 +1,5 @@
+@import 'node_modules/bulma/sass/utilities/_all.sass';
+
 html, body {
 	color: $color-body;
 	font-family: $font-family-sans-serif;
@@ -73,7 +75,7 @@ h5 {
 }
 
 .text-dimmed {
-	color: $color-gray-dimmed;
+	color: $color-gray;
 }
 
 .normal {
@@ -89,7 +91,7 @@ h5 {
 }
 
 .content {
-	color: $color-gray-lighter;
+	color: $color-darker-gray;
 }
 
 // Links
@@ -108,11 +110,11 @@ a.is-active {
 }
 
 a.secondary-link {
-	color: $color-gray-dimmed;
+	color: $color-gray;
 
 	&:hover,
 	&:active {
-		color: $color-gray;
+		color: $color-darkest-gray;
 	}
 }
 
@@ -399,7 +401,7 @@ ol {
 .panel-toggle {
 	border: $border-light-gray;
 	border-radius: $border-radius-small;
-	color: $color-gray-dimmed;
+	color: $color-gray;
 	font-size: $font-size-minus-2;
 	font-weight: $font-weight-bold;
 	margin: $margin-base $margin-small 0 0;
@@ -409,8 +411,8 @@ ol {
 	user-select: none;
 
 	&:hover {
-		border-color: $color-gray-dimmed;
-		color: $color-gray;
+		border-color: $color-gray;
+		color: $color-darkest-gray;
 		transition: all $transition-length-base;
 	}
 
@@ -571,4 +573,21 @@ ol {
 
 .is-uppercase {
 	text-transform: uppercase;
+}
+
+
+.is-loading {
+	opacity: .5;
+	pointer-events: none;
+	position: relative;
+
+	&:after {
+		@include loader;
+		border-width: 0.25em;
+		height: 5em;
+		left: calc(50% - 2.5em);
+		position: absolute;
+		top: calc(50% - 2.5em);
+		width: 5em;
+	}
 }

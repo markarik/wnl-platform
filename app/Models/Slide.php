@@ -53,6 +53,11 @@ class Slide extends Model
 		return $this->morphToMany('App\Models\Tag', 'taggable');
 	}
 
+	public function taxonomyTerms()
+	{
+		return $this->morphToMany('App\Models\TaxonomyTerm', 'taxonomy_termable');
+	}
+
 	public function quizQuestions()
 	{
 		return $this->belongsToMany('App\Models\QuizQuestion', 'slide_quiz_question');

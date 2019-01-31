@@ -47,7 +47,7 @@
 		overflow-y: scroll
 
 	.rooms-header
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		display: flex
 		justify-content: space-between

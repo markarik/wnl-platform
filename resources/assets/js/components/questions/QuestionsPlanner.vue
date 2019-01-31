@@ -163,7 +163,7 @@
 
 	.questions-breadcrumbs
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		display: flex
 		margin-right: $margin-base
@@ -215,7 +215,7 @@
 
 	.preserveProgress
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		display: flex
 		justify-content: center
 		font-size: $font-size-minus-2

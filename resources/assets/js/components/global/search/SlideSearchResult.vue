@@ -35,7 +35,7 @@
 	$thumb-width: 290px
 
 	.slide-router-link
-		color: $color-gray
+		color: $color-darkest-gray
 		margin: $margin-small $margin-small $margin-base
 
 	.slide-context

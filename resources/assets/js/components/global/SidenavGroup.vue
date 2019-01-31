@@ -32,7 +32,7 @@
 		margin-bottom: $margin-base
 
 	.wnl-sidenav-group-toggle
-		color: $color-gray
+		color: $color-darkest-gray
 		cursor: pointer
 		transition: background-color $transition-length-base
 

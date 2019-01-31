@@ -4,7 +4,7 @@
 			<div class="terms-editor__panel__header">
 				<h4 class="title is-5"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
 				<span class="control has-icons-right">
-					<wnl-term-autocomplete
+					<wnl-taxonomy-term-autocomplete
 						@change="onSearchTerm"
 						placeholder="Szukaj pojęcia"
 					/>

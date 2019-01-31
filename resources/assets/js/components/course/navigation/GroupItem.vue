@@ -31,7 +31,7 @@
 			color: $color-darkest-gray
 			cursor: pointer
 			transition: background-color $transition-length-base
-			padding: 7px 0 4px 0
+			padding: $margin-small 0
 
 			&:hover
 				background-color: $color-background-lighter-gray
@@ -53,7 +53,7 @@
 			text-transform: uppercase
 
 			.icon
-				margin-right: 7px
+				margin-right: $margin-small
 
 			.toggle
 				color: $color-background-gray

@@ -7,7 +7,6 @@
 			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
 			<wnl-course-navigation
 				v-if="$currentEditionParticipant.isAllowed('access')"
-				:context="context"
 				:isLesson="isLesson"
 			>
 			</wnl-course-navigation>

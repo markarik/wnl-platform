@@ -44,11 +44,11 @@
 		&__item
 			display: flex
 			align-items: flex-start
-			line-height: 1.5em
-			padding: 7px 15px
+			line-height: $line-height-base
+			padding: $margin-small $margin-base
 			word-break: break-word
 			word-wrap: break-word
-			font-size: 0.875rem
+			font-size: $font-size-minus-1
 			letter-spacing: 1px
 			text-transform: uppercase
 

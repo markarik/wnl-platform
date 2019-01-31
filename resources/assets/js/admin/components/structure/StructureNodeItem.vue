@@ -64,7 +64,7 @@
 	.structure-node-item
 		&--disabled
 			pointer-events: none
-			color: $color-gray
+			color: $color-darkest-gray
 
 		&__content
 			align-items: center

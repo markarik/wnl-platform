@@ -30,7 +30,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.info
-		color: $color-gray
+		color: $color-darkest-gray
 
 	.field
 		margin-bottom: $margin-big

@@ -1,10 +1,10 @@
 <template>
-		<div>
-			<span class="item-wrapper heading">
-				{{lesson.name}}
-			</span>
-			<wnl-screen-item v-for="screen in screens" :key="screen.id" :item="screen" :lessonId="lessonId"></wnl-screen-item>
-		</div>
+	<div>
+		<span class="item-wrapper heading">
+			{{lesson.name}}
+		</span>
+		<wnl-screen-item v-for="screen in screens" :key="screen.id" :item="screen" :lessonId="lessonId"></wnl-screen-item>
+	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -12,11 +12,11 @@
 
 	.item-wrapper
 		display: flex
-		line-height: 1.5em
-		padding: 14px 15px
+		line-height: $line-height-base
+		padding: $margin-base
 		word-break: break-word
 		word-wrap: break-word
-		font-size: .875rem
+		font-size: $font-size-minus-1
 
 </style>
 

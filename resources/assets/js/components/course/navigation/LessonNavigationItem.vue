@@ -61,7 +61,7 @@
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 
 export default {
-	name: 'ScreenItem',
+	name: 'LessonNavigationItem',
 	props: {
 		navigationItem: {
 			type: Object,

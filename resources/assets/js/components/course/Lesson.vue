@@ -141,8 +141,7 @@ export default {
 			return this.subsectionsReversed.find((subsection) => this.slide >= subsection.slide);
 		},
 		sectionsReversed() {
-			if (!this.currentScreen) return;
-			if (!this.currentScreen.id) return;
+			if (!(this.currentScreen && this.currentScreen.id)) return;
 
 			const sections = this.getSectionsForScreen(this.currentScreen.id);
 

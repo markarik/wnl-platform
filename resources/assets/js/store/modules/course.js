@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
-import {resource} from 'js/utils/config';
+import {resources} from 'js/utils/constants';
 import * as types from 'js/store/mutations-types';
-import { modelToResourceMap, getModelByResource } from 'js/utils/config';
+import { modelToResourceMap, getModelByResource, resource } from 'js/utils/config';
 
 function _getCourseStructure(courseId = 1) {
 	return axios.get(getApiUrl(`course_structure_nodes/${courseId}`), {
@@ -38,17 +38,19 @@ const getters = {
 	courseId: state => state.id,
 	name: state => state.name,
 	groups: state => {
-		return state.structure.filter(node => node.structurable_type === getModelByResource('groups'))
+		return state.structure.filter(node => node.structurable_type === getModelByResource(resources.groups))
 			.map(node => node.model);
 	},
-	getGroup: (state, getters) => (groupId) => {
-		return getters.groups.find(group => group.id.toString() === groupId.toString()) || {};
+	getGroup: (state, getters) => groupId => {
+		const castedGroupId = groupId.toString();
+		return getters.groups.find(group => group.id.toString() === castedGroupId) || {};
 	},
 	getLessonsForGroup: (state, getters) => groupId => {
-		return getters.getLessons.filter(lesson => lesson.groups.toString() === groupId.toString());
+		const castedGroupId = groupId.toString();
+		return getters.getLessons.filter(lesson => lesson.groups.toString() === castedGroupId);
 	},
 	getLessons: state => {
-		return state.structure.filter(node => node.structurable_type === getModelByResource('lessons'))
+		return state.structure.filter(node => node.structurable_type === getModelByResource(resources.lessons))
 			.map(node => node.model);
 	},
 	getRequiredLessons: (state, getters) => {
@@ -57,40 +59,45 @@ const getters = {
 	userLessons: (state, getters) => {
 		return getters.getLessons.filter(lesson => lesson.isAccessible);
 	},
-	getLesson: (state, getters) => (lessonId) => {
+	getLesson: (state, getters) => lessonId => {
 		return getters.getLessons.find(lesson => lesson.id.toString() === lessonId.toString()) || {};
 	},
-	isLessonAvailable: (state, getters) => (lessonId) => {
+	isLessonAvailable: (state, getters) => lessonId => {
 		const lesson = getters.getLesson(lessonId);
 		return lesson && lesson.isAvailable;
 	},
-	getScreen: state => (screenId) => state.screens[screenId] || {},
-	getScreensForLesson: state => (lessonId) => {
+	getScreen: state => screenId => state.screens[screenId] || {},
+	getScreensForLesson: state => lessonId => {
+		const castedLessonId = lessonId;
 		return Object.values(state.screens)
-			.sort((screenA, screenB) => screenA.order_number - screenB.order_number)
 			.filter(screen => {
-				return screen.lessons && screen.lessons.toString() === lessonId.toString();
-			});
+				return screen.lessons && screen.lessons.toString() === castedLessonId;
+			})
+			.sort((screenA, screenB) => screenA.order_number - screenB.order_number);
 	},
-	getSection: state => (sectionId) => state.section[sectionId] || {},
-	getSectionsForScreen: state => (screenId) => {
+	getSection: state => sectionId => state.section[sectionId] || {},
+	getSectionsForScreen: state => screenId => {
+		const castedScreenId = screenId.toString();
+
 		return Object.values(state.sections)
 			.filter(section => {
-				return section.screens.toString() === screenId.toString();
+				return section.screens.toString() === castedScreenId;
 			});
 	},
-	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {
+	getScreenSectionsCheckpoints: (state, getters) => screenId => {
 		const sections = getters.getSectionsForScreen(screenId);
 
 		return sections.map((section) => section.slide);
 	},
-	getSubsectionsForSection: state => (sectionId) => {
+	getSubsectionsForSection: state => sectionId => {
+		const castedSectionId = sectionId.toString();
+
 		return Object.values(state.subsections)
 			.filter(subsection => {
-				return subsection.sections.toString() === sectionId.toString();
+				return subsection.sections.toString() === castedSectionId;
 			});
 	},
-	getSectionSubsectionsCheckpoints: (state, getters) => (sectionId) => {
+	getSectionSubsectionsCheckpoints: (state, getters) => sectionId => {
 		const subsections = getters.getSubsectionsForSection(sectionId);
 		return subsections.map((subsections) => subsections.slide);
 	},

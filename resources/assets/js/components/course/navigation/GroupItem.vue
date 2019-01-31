@@ -1,19 +1,19 @@
 <template>
-	<div class="wnl-navigation-group" :class="{'no-items': !hasSubitems}">
+	<div class="wnl-navigation-group" :class="{'no-items': !hasChildren}">
 		<div class="wnl-navigation-group__toggle" @click="toggleNavigationGroup({groupIndex: item.id, isOpen: !isOpen})">
 			<div class="wnl-navigation-group__item">
-				<span class="icon is-small" v-if="hasSubitems">
+				<span class="icon is-small" v-if="hasChildren">
 					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
 				</span>
 				<span class="sidenav-item-content">
 					{{groupItem.text}}
-					<span class="wnl-navigation-group__count" v-if="hasSubitems">({{subitems.length}})</span>
+					<span class="wnl-navigation-group__count" v-if="hasChildren">({{children.length}})</span>
 				</span>
 			</div>
 		</div>
-		<div class="wnl-sidenav-subitems" v-if="canRenderSubitems">
+		<div class="wnl-sidenav-children" v-if="canRenderChildren">
 			<wnl-lesson-item
-				v-for="(subitem) in subitems"
+				v-for="(subitem) in children"
 				:item="subitem"
 				:key="subitem.id"
 			></wnl-lesson-item>
@@ -28,10 +28,10 @@
 		margin-bottom: $margin-base
 
 		&__toggle
-			color: $color-gray
+			color: $color-darkest-gray
 			cursor: pointer
 			transition: background-color $transition-length-base
-			padding: 7px 0 12px 0
+			padding: 7px 0 4px 0
 
 			&:hover
 				background-color: $color-background-lighter-gray
@@ -43,7 +43,7 @@
 
 		&__item
 			display: flex
-			align-items: center
+			align-items: flex-start
 			line-height: 1.5em
 			padding: 7px 15px
 			word-break: break-word
@@ -52,10 +52,12 @@
 			letter-spacing: 1px
 			text-transform: uppercase
 
+			.icon
+				margin-right: 7px
+
 			.toggle
-				margin-right: 5px
 				color: $color-background-gray
-				transition: all $transition-length-base
+				transition: transform $transition-length-base
 
 		&.no-items
 			margin-bottom: 0
@@ -91,17 +93,14 @@ export default {
 		groupItem() {
 			return navigation.composeItem({text: this.item.model.name, itemClass: 'heading small'});
 		},
-		canRenderSubitems() {
-			return this.hasSubitems && this.isOpen;
+		canRenderChildren() {
+			return this.hasChildren && this.isOpen;
 		},
-		hasSubitems() {
-			return this.subitems.length;
+		hasChildren() {
+			return this.children.length;
 		},
-		subitems() {
+		children() {
 			return this.structure.filter(node => node.parent_id === this.item.id);
-		},
-		toggleIcon() {
-			return this.isOpen ? 'fa-angle-up' : 'fa-angle-down';
 		},
 		isOpen() {
 			return !!this.isNavigationGroupExpanded(this.item.id);

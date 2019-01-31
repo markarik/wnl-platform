@@ -14,12 +14,6 @@ class CoursesApiController extends ApiController
 		$this->resourceName = config('papi.resources.courses');
 	}
 
-	public function getStructure($id)
-	{
-		$data = $this->get($id)->getData();
-		return $this->respondOk($data);
-	}
-
 	public function put(UpdateCourse $request, $id) {
 		$course = Course::find($id);
 

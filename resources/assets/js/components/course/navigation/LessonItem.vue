@@ -73,7 +73,9 @@
 
 <script>
 import {mapGetters} from 'vuex';
+
 import navigation from 'js/services/navigation';
+import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 
 export default {
 	name: 'LessonItem',
@@ -90,14 +92,22 @@ export default {
 		...mapGetters('course', [
 			'isLessonAvailable',
 		]),
+		courseId() {
+			return this.$route.params.courseId;
+		},
 		courseProgress() {
-			return this.getCourseProgress(1);
+			return this.getCourseProgress(this.courseId);
+		},
+		lessonProgress() {
+			return this.courseProgress.lessons
+				&& this.courseProgress.lessons[this.item.model.id]
+				&& this.courseProgress.lessons[this.item.model.id].status;
 		},
 		isInProgress() {
-			return this.hasClass('in-progress');
+			return this.lessonProgress === STATUS_IN_PROGRESS;
 		},
 		isComplete() {
-			return this.hasClass('complete');
+			return this.lessonProgress === STATUS_COMPLETE;
 		},
 		itemClass() {
 			return this.lessonItem.itemClass;
@@ -107,10 +117,10 @@ export default {
 		},
 		lessonItem() {
 			const lesson = this.item.model;
-			let cssClass = 'is-grouped with-progress', iconClass = '', iconTitle = '';
+			let cssClass = 'is-grouped with-progress';
 
-			if (this.courseProgress.lessons && this.courseProgress.lessons.hasOwnProperty(lesson.id)) {
-				cssClass = `${cssClass} ${this.courseProgress.lessons[lesson.id].status}`;
+			if (this.lessonProgress) {
+				cssClass = `${cssClass} ${this.lessonProgress}`;
 			}
 
 			return navigation.composeItem({
@@ -118,18 +128,13 @@ export default {
 				itemClass: cssClass,
 				routeName: 'lessons',
 				routeParams: {
-					courseId: 1,
+					courseId: this.courseId,
 					lessonId: lesson.id,
 				},
 				isDisabled: !this.isLessonAvailable(lesson.id),
-				iconClass,
-				iconTitle
+				iconClass: '',
+				iconTitle: ''
 			});
-		}
-	},
-	methods: {
-		hasClass(className) {
-			return !!this.itemClass && this.itemClass.indexOf(className) > -1;
 		}
 	},
 };

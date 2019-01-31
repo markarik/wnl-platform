@@ -1,18 +1,11 @@
 <template>
-	<wnl-lesson-navigation-item :navigationItem="subsectionItem" class="item__subsection"></wnl-lesson-navigation-item>
+	<wnl-lesson-navigation-item :navigationItem="subsectionItem" class="margin left"></wnl-lesson-navigation-item>
 </template>
-
-<style lang="sass" rel="stylesheet/sass" scoped>
-	@import 'resources/assets/sass/variables'
-
-	.item__subsection
-		margin-left: $margin-base
-</style>
 
 <script>
 import {mapGetters} from 'vuex';
 import navigation from 'js/services/navigation';
-import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
+import {STATUS_COMPLETE} from 'js/services/progressStore';
 import WnlLessonNavigationItem from 'js/components/course/navigation/LessonNavigationItem';
 
 export default {

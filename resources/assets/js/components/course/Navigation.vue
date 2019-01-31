@@ -17,8 +17,6 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
-
 import WnlCourseNavigation from 'js/components/course/navigation/CourseNavigation';
 import WnlLessonNavigation from 'js/components/course/navigation/LessonNavigation';
 
@@ -27,13 +25,6 @@ export default {
 	components: {
 		WnlCourseNavigation, WnlLessonNavigation
 	},
-	props: ['context', 'isLesson'],
-	computed: {
-		...mapGetters(['currentUserRoles', 'lessonState']),
-		...mapGetters('progress', {
-			getScreenProgress: 'getScreen',
-			getSectionProgress: 'getSection'
-		}),
-	},
+	props: ['isLesson'],
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
 	<wnl-lesson-navigation-item :navigationItem="screenItem">
-		<wnl-section-item v-for="section in screenSections" :key="section.id" :item="section" slot="children"></wnl-section-item>
+		<wnl-section-item v-for="section in screenSections" :key="section.id" :item="section" slot="children"/>
 	</wnl-lesson-navigation-item>
 </template>
 
@@ -53,10 +53,7 @@ export default {
 				completed: screenProgress.status === STATUS_COMPLETE
 			};
 
-			if (screen.slides_count) {
-				return navigation.composeItem({...itemProps, meta: `(${screen.slides_count})`});
-			}
-			return navigation.composeItem(itemProps);
+			return navigation.composeItem({...itemProps, ...screen.slides_count && {meta: `(${screen.slides_count})`}});
 		},
 		screenSections() {
 			return this.getSectionsForScreen(this.screenId);

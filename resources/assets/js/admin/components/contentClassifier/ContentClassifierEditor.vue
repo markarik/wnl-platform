@@ -4,68 +4,73 @@
 		'is-loading': isLoading,
 	}">
 		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
-		<ul class="margin bottom">
-			<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">
-				<div class="content-classifier__panel-editor__taxonomy">
-					{{group.taxonomy.name}}
-				</div>
-				<ul>
-					<li
-						v-for="term in group.terms"
-						:key="term.id"
-						:class="{
-							'content-classifier__panel-editor__term': true,
-							'has-parent': term.parent_id !== null,
-						}"
-					>
-						<span
-							class="icon is-small margin right clickable"
-							title="Odznacz"
-							@click="onDetachTaxonomyTerm(term)"
-						>
-							<i class="fa fa-close"></i>
-						</span>
-						<wnl-taxonomy-term-with-ancestors
-							:term="term"
-							:ancestors="term.ancestors"
-							class="content-classifier__panel-editor__term__name"
-						/>
-						<span
+		<div v-if="this.filteredContent.length > 0">
+			<ul class="margin bottom">
+				<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">
+					<div class="content-classifier__panel-editor__taxonomy">
+						{{group.taxonomy.name}}
+					</div>
+					<ul>
+						<li
+							v-for="term in group.terms"
+							:key="term.id"
 							:class="{
-								'margin': true,
-								'left': true,
-								'tag': true,
-								'strong': hasAllItemsAttached(term),
-								'is-white': !hasAllItemsAttached(term),
-								'clickable': !hasAllItemsAttached(term),
+								'content-classifier__panel-editor__term': true,
+								'has-parent': term.parent_id !== null,
 							}"
-							:title="!hasAllItemsAttached(term) && 'Dodaj do wszystkich'"
-							@click="!hasAllItemsAttached(term) && onAttachTaxonomyTerm(term)"
 						>
-							<span class="icon is-small" v-if="!hasAllItemsAttached(term)"><i class="fa fa-plus"></i></span>
-							<span>{{term.itemsCount}}/{{allItemsCount}}</span>
-						</span>
-					</li>
-				</ul>
-			</li>
-		</ul>
-		<div class="field">
-			<label class="label is-uppercase"><strong>Przypisz pojęcie</strong></label>
-			<div class="content-classifier__panel-editor__term-select">
-				<wnl-select
-					:options="taxonomiesOptions"
-					class="is-marginless"
-					v-model="taxonomyId"
-					@input="onTaxonomyChange"
-				/>
-				<wnl-taxonomy-term-autocomplete
-					placeholder="Zacznij pisać, aby wyszukać pojęcie"
-					@change="onAttachTaxonomyTerm"
-					class="margin left content-classifier__panel-editor__term-select__autocomplete"
-				/>
+							<span
+								class="icon is-small margin right clickable"
+								title="Odznacz"
+								@click="onDetachTaxonomyTerm(term)"
+							>
+								<i class="fa fa-close"></i>
+							</span>
+							<wnl-taxonomy-term-with-ancestors
+								:term="term"
+								:ancestors="term.ancestors"
+								class="content-classifier__panel-editor__term__name"
+							/>
+							<span
+								:class="{
+									'margin': true,
+									'left': true,
+									'tag': true,
+									'strong': hasAllItemsAttached(term),
+									'is-white': !hasAllItemsAttached(term),
+									'clickable': !hasAllItemsAttached(term),
+								}"
+								:title="!hasAllItemsAttached(term) && 'Dodaj do wszystkich'"
+								@click="!hasAllItemsAttached(term) && onAttachTaxonomyTerm(term)"
+							>
+								<span class="icon is-small" v-if="!hasAllItemsAttached(term)"><i class="fa fa-plus"></i></span>
+								<span>{{term.itemsCount}}/{{allItemsCount}}</span>
+							</span>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<div class="field">
+				<label class="label is-uppercase"><strong>Przypisz pojęcie</strong></label>
+				<div class="content-classifier__panel-editor__term-select">
+					<wnl-select
+						:options="taxonomiesOptions"
+						class="is-marginless"
+						v-model="taxonomyId"
+						@input="onTaxonomyChange"
+					/>
+					<wnl-taxonomy-term-autocomplete
+						placeholder="Zacznij pisać, aby wyszukać pojęcie"
+						@change="onAttachTaxonomyTerm"
+						class="margin left content-classifier__panel-editor__term-select__autocomplete"
+					/>
+				</div>
 			</div>
 		</div>
-
+		<div v-else class="notification is-info">
+			<span class="icon"><i class="fa fa-info-circle"></i></span>
+			<span>Najpierw wybierz treść do klasyfikacji</span>
+		</div>
 	</div>
 </template>
 

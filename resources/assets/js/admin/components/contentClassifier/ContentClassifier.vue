@@ -149,11 +149,7 @@ export default {
 	},
 	computed: {
 		groupedFilteredContent() {
-			return {
-				...Object.keys(this.filters),
-				...groupBy(this.filteredContent, 'type')
-			};
-			// return groupBy(this.filteredContent, 'type');
+			return groupBy(this.filteredContent, 'type');
 		}
 	},
 	methods: {

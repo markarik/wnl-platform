@@ -68,7 +68,7 @@ const getters = {
 	},
 	getScreen: state => screenId => state.screens[screenId] || {},
 	getScreensForLesson: state => lessonId => {
-		const castedLessonId = lessonId;
+		const castedLessonId = lessonId.toString();
 		return Object.values(state.screens)
 			.filter(screen => {
 				return screen.lessons && screen.lessons.toString() === castedLessonId;
@@ -224,8 +224,8 @@ const actions = {
 			screens[screen.id] = screen;
 			return screens;
 		}, {});
-		const sections = included.sections;
-		const subsections = included.subsections;
+		const sections = included ? included.sections : {};
+		const subsections = included ? included.subsections : {};
 
 		commit(types.SET_SCREENS, screens);
 		commit(types.SET_SECTIONS, sections);

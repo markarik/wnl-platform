@@ -132,7 +132,7 @@ class AppServiceProvider extends ServiceProvider
 				return false;
 			}
 
-			return !empty(resolve($type)->find($value));
+			return resolve($type)->whereKey($value)->exists();
 		});
 	}
 

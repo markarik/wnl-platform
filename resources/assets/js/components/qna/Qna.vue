@@ -100,7 +100,7 @@
 
 	.qna-meta
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		display: flex
 		flex-wrap: wrap
 		font-size: $font-size-minus-1
@@ -117,7 +117,7 @@
 		display: flex
 
 	.qna-title
-		color: $color-gray-dimmed
+		color: $color-gray
 		margin-bottom: $margin-tiny
 		margin-top: $margin-base
 

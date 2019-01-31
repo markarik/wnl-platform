@@ -63,7 +63,7 @@
 	.author
 		font-weight: $font-weight-bold
 		&.author-forgotten
-			color: $color-gray-dimmed
+			color: $color-gray
 			pointer-events: none
 
 	.comment-icon-link

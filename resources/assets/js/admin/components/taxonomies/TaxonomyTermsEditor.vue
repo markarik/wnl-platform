@@ -4,7 +4,7 @@
 			<div class="terms-editor__panel__header">
 				<h4 class="title is-5"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
 				<span class="control has-icons-right">
-					<wnl-term-autocomplete
+					<wnl-taxonomy-term-autocomplete
 						@change="onSearchTerm"
 						placeholder="Szukaj pojęcia"
 					/>
@@ -56,14 +56,14 @@ import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTaxonomyTermsList from 'js/admin/components/taxonomies/TaxonomyTermsList';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
-import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
+import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
 import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
 export default {
 	components: {
 		WnlTaxonomyTermsList,
 		WnlTaxonomyTermEditorRight,
-		WnlTermAutocomplete
+		WnlTaxonomyTermAutocomplete
 	},
 	props: {
 		taxonomyId: {

@@ -53,7 +53,7 @@
 
 	.activator
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		cursor: pointer
 		display: flex
 		height: 100%
@@ -69,10 +69,10 @@
 
 		&.is-active
 			background-color: $color-background-light-gray
-			color: $color-gray
+			color: $color-darkest-gray
 
 			.username
-				color: $color-gray
+				color: $color-darkest-gray
 				font-weight: $font-weight-regular
 
 		.icon

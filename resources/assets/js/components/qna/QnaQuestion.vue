@@ -132,7 +132,7 @@
 		align-items: center
 		color: $color-sky-blue
 		&.author-forgotten
-			color: $color-gray-dimmed
+			color: $color-gray
 			pointer-events: none
 
 	.qna-question-content
@@ -147,7 +147,7 @@
 			font-weight: $font-weight-black
 
 	.qna-answers-heading
-		color: $color-gray-dimmed
+		color: $color-gray
 
 	.qna-answers
 		margin: $margin-base $margin-huge $margin-huge $margin-huge
@@ -170,7 +170,7 @@
 
 	.qna-answers-show-all
 		display: block
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		margin-top: $margin-base
 		text-align: center
@@ -178,10 +178,10 @@
 
 		&:active,
 		&:visited
-			color: $color-gray-dimmed
+			color: $color-gray
 
 		&:hover
-			color: $color-gray
+			color: $color-darkest-gray
 
 	.qna-wrapper
 		display: flex

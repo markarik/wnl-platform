@@ -18,7 +18,7 @@ class SlideshowResetOrder extends Command
 	 * The console command description.
 	 *
 	 * @var string
-	 */
+	 */app/Http/Controllers/Api/PrivateApi/TaxonomyTermsApiController.php
 	protected $description = 'Command description';
 
 	/**

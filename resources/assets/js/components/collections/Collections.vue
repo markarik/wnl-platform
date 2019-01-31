@@ -86,7 +86,7 @@
 
 	.collections-placeholder
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		display: flex
 		flex-direction: column
 		font-size: $font-size-plus-1
@@ -122,7 +122,7 @@
 
 	.collections-breadcrumbs
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		display: flex
 		margin-right: $margin-base
 

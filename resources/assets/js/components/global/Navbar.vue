@@ -111,7 +111,7 @@
 		width: $navbar-height - 2 * $margin-small
 
 		.icon
-			color: $color-gray-dimmed
+			color: $color-gray
 
 	.wnl-navbar-sidenav-toggle
 		padding-left: 0

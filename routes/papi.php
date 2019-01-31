@@ -95,6 +95,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::put("{$r['taxonomy-terms']}/{id}", 'TaxonomyTermsApiController@put');
 		Route::delete("{$r['taxonomy-terms']}/{id}", 'TaxonomyTermsApiController@delete');
 		Route::get("{$r['taxonomy-terms']}/byTaxonomy/{taxonomyId}", 'TaxonomyTermsApiController@getByTaxonomy');
+		Route::post("{$r['taxonomy-terms']}/{id}/attach", 'TaxonomyTermsApiController@attach');
+		Route::post("{$r['taxonomy-terms']}/{id}/detach", 'TaxonomyTermsApiController@detach');
 
 		// Course structure
 		Route::post("{$r['course-structure-nodes']}", 'CourseStructureNodesApiController@post');

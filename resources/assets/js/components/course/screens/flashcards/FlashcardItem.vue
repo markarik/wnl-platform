@@ -108,7 +108,7 @@
 		margin-top: $margin-base
 
 		&--solved
-			color: $color-gray-dimmed
+			color: $color-gray
 
 			.flashcards-list__item__container
 				background: $color-background-lightest-gray

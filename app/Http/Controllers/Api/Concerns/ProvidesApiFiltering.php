@@ -22,7 +22,7 @@ trait ProvidesApiFiltering
 	public function filter(Request $request)
 	{
 		$order = $request->get('order');
-		$model = app(static::getResourceModel($this->resourceName));
+		$model = $this->eagerLoadIncludes(static::getResourceModel($this->resourceName));
 		$userFiltersPersistanceToken = $request->get('token');
 
 		if (!empty ($order)) {

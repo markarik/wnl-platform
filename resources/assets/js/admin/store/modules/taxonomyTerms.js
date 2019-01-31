@@ -8,13 +8,13 @@ const namespaced = true;
 
 const state = {...initialState};
 
-const includeTag = (term, {tags}) => {
-	term.tag = tags[term.tags[0]];
+const includeTag = (term, {tag}) => {
+	term.tag = tag[term.tag[0]];
 	return term;
 };
 
 const resource = 'taxonomy_terms';
-const include = '?include=tags';
+const include = '?include=tag';
 
 // Getters
 const getters = {

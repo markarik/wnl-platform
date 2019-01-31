@@ -13,18 +13,20 @@
 				<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
 				<div v-if="!isLoading">
 					<div v-for="(meta, contentType) in contentTypes" :key="contentType">
-						<div v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length">
-							<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
-							<ul class="content-classifier__result-list margin bottom">
-								<li
-									v-for="item in groupedFilteredContent[contentType]"
-									:key="item.id"
-									class="content-classifier__result-item"
-								>
-									<component :is="meta.component" :item="item"/>
-								</li>
-							</ul>
-						</div>
+						<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
+						<ul
+							v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length"
+							class="content-classifier__result-list margin bottom"
+						>
+							<li
+								v-for="item in groupedFilteredContent[contentType]"
+								:key="item.id"
+								class="content-classifier__result-item"
+							>
+								<component :is="meta.component" :item="item"/>
+							</li>
+						</ul>
+						<p class="margin bottom" v-else>Brak wyników</p>
 					</div>
 				</div>
 				<wnl-text-loader v-else />
@@ -147,7 +149,11 @@ export default {
 	},
 	computed: {
 		groupedFilteredContent() {
-			return groupBy(this.filteredContent, 'type');
+			return {
+				...Object.keys(this.filters),
+				...groupBy(this.filteredContent, 'type')
+			};
+			// return groupBy(this.filteredContent, 'type');
 		}
 	},
 	methods: {

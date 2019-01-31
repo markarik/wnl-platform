@@ -76,7 +76,7 @@ export default {
 			return this.navigationItem.to;
 		},
 		hasMeta() {
-			return typeof this.navigationItem.meta !== 'undefined' && this.navigationItem.meta.length > 0;
+			return this.navigationItem.meta && this.navigationItem.meta.length > 0;
 		},
 	},
 };

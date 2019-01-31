@@ -116,8 +116,6 @@ export default {
 				node = {
 					...initialState
 				};
-			} else {
-				node.parent = this.getParentNode(node);
 			}
 
 			const {id, structurable, parent} = node;

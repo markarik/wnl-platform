@@ -39,13 +39,6 @@ export const nestedSetGetters = {
 			.sort((nodeA, nodeB) => nodeA.orderNumber - nodeB.orderNumber);
 	},
 	getRootNodes: (state, getters) => getters.getChildrenByParentId(null),
-	currentNode: (state, getters) => {
-		if (state.selectedNodes.length === 0) return null;
-		return getters.nodeById(state.selectedNodes[0]);
-	},
-	getParentNode: (state, getters) => node => {
-		return getters.getAncestorsById(node.id).slice(-1)[0];
-	}
 };
 
 // Mutations

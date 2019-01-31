@@ -1,10 +1,10 @@
 <template>
 	<div
-		v-if="currentNode"
+		v-if="node"
 		class="has-text-centered"
 	>
 		<p class="margin bottom">
-			Czy na pewno chcesz usunąć <em><strong>{{currentNode.structurable.name}}</strong></em> wraz z potomkami?
+			Czy na pewno chcesz usunąć <em><strong>{{node.structurable.name}}</strong></em> wraz z potomkami?
 		</p>
 		<button
 			class="button is-danger"
@@ -28,8 +28,15 @@ import {mapActions, mapGetters, mapState} from 'vuex';
 
 export default {
 	computed: {
-		...mapGetters('courseStructure', ['nodeById', 'currentNode']),
-		...mapState('courseStructure', ['isSaving']),
+		...mapGetters('courseStructure', ['nodeById']),
+		...mapState('courseStructure', ['isSaving', 'selectedNodes']),
+		node() {
+			if (this.selectedNodes.length === 0) {
+				return null;
+			}
+
+			return this.nodeById(this.selectedNodes[0]);
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -39,7 +46,7 @@ export default {
 		}),
 		async onDelete() {
 			try {
-				await this.deleteNode(this.currentNode);
+				await this.deleteNode(this.node);
 				this.selectNodes([]);
 
 				this.addAutoDismissableAlert({

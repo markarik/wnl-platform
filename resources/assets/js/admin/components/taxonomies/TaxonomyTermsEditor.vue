@@ -80,12 +80,9 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['setUpNestedSet', 'select', 'expand', 'collapseAll']),
-		async onSearchTerm(term) {
-			this.collapseAll();
-			this.select([term.id]);
-			this.expand(term.id);
-
+		...mapActions('taxonomyTerms', ['setUpNestedSet', 'onNodeSearch']),
+		async onSearch(term) {
+			this.onNodeSearch(term);
 			this.scrollToNode(term);
 		},
 	},

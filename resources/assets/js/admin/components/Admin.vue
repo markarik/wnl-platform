@@ -36,27 +36,25 @@
 </style>
 
 <script>
-	import Navbar from 'js/components/global/Navbar.vue'
-	import Sidenav from 'js/admin/components/Sidenav.vue'
-	import Alerts from "js/components/global/GlobalAlerts";
-	import {mapActions, mapGetters} from 'vuex'
+import Sidenav from 'js/admin/components/Sidenav.vue';
+import Alerts from 'js/components/global/GlobalAlerts';
+import {mapActions, mapGetters} from 'vuex';
 
-	export default {
-		name: 'Admin',
-		components: {
-			'wnl-navbar': Navbar,
-			'wnl-sidenav': Sidenav,
-			'wnl-alerts': Alerts
-		},
-		computed: {
-			...mapGetters(['currentUserId', 'alerts'])
-		},
-		methods: {
-			...mapActions(['setupCurrentUser']),
-			...mapActions('notifications', ['initNotifications']),
-		},
-		mounted() {
-			this.setupCurrentUser()
-		},
-	}
+export default {
+	name: 'Admin',
+	components: {
+		'wnl-sidenav': Sidenav,
+		'wnl-alerts': Alerts
+	},
+	computed: {
+		...mapGetters(['currentUserId', 'alerts'])
+	},
+	methods: {
+		...mapActions(['setupCurrentUser']),
+		...mapActions('notifications', ['initNotifications']),
+	},
+	mounted() {
+		this.setupCurrentUser();
+	},
+};
 </script>

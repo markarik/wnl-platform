@@ -35,7 +35,7 @@
 	$thumb-width: 290px
 
 	.slide-router-link
-		color: $color-gray
+		color: $color-darkest-gray
 		margin: $margin-small $margin-small $margin-base
 
 	.slide-context
@@ -109,91 +109,91 @@
 </style>
 
 <script>
-	import {truncate} from 'lodash'
-	import {mapGetters} from 'vuex'
+import {truncate} from 'lodash';
+import {mapGetters} from 'vuex';
 
-	import SlideLink from 'js/components/global/SlideLink'
+import SlideLink from 'js/components/global/SlideLink';
 
-	const mediaMap = {
-		chart: {
-			icon: 'fa-sitemap',
-			text: 'Diagram',
+const mediaMap = {
+	chart: {
+		icon: 'fa-sitemap',
+		text: 'Diagram',
+	},
+	movie: {
+		icon: 'fa-film',
+		text: 'Film',
+	},
+	audio: {
+		icon: 'fa-music',
+		text: 'Nagranie audio',
+	},
+};
+
+export default {
+	name: 'SlideSearchResult',
+	props: {
+		hit: {
+			required: true,
+			type: Object,
 		},
-		movie: {
-			icon: 'fa-film',
-			text: 'Film',
+	},
+	components: {
+		'wnl-slide-link': SlideLink,
+	},
+	computed: {
+		...mapGetters('course', ['getGroup', 'getLesson', 'getSection']),
+		context() {
+			return this.hit._source.context;
 		},
-		audio: {
-			icon: 'fa-music',
-			text: 'Nagranie audio',
+		content() {
+			return this.hit._source.content;
+		},
+		groupName() {
+			return this.getGroup(this.context.group.id).name;
+		},
+		header() {
+			return this.getHighlight(this.hit, 'snippet.header') || this.hit._source.snippet.header;
+		},
+		id() {
+			return this.hit._source.id;
+		},
+		lessonName() {
+			return this.getLesson(this.context.lesson.id).name;
+		},
+		media() {
+			return this.hit._source.snippet && this.hit._source.snippet.media !== null ? mediaMap[this.hit._source.snippet.media] : null;
+		},
+		page() {
+			return this.hit._source.snippet.page;
+		},
+		sectionName() {
+			return this.getSection(this.context.section.id).name;
+		},
+		slideNumber() {
+			return this.context.orderNumber + 1;
+		},
+		snippet() {
+			return this.getHighlight(this.hit, 'snippet.content') || this.hit._source.snippet.content;
+		},
+	},
+	methods: {
+		getHighlight(hit, key) {
+			const highlight = _.get(hit, `highlight["${key}"]`);
+
+			if (Array.isArray(highlight)) {
+				return highlight.join('...');
+			}
+
+			return highlight;
+		},
+		onThumbnailClick(event) {
+			if (!event.metaKey && !event.ctrlKey) {
+				this.$emit('resultClicked');
+			}
+		},
+		truncate(text, length) {
+			return truncate(text, {length});
 		},
 	}
-
-	export default {
-		name: 'SlideSearchResult',
-		props: {
-			hit: {
-				required: true,
-				type: Object,
-			},
-		},
-		components: {
-			'wnl-slide-link': SlideLink,
-		},
-		computed: {
-			...mapGetters('course', ['getGroup', 'getLesson', 'getSection']),
-			context() {
-				return this.hit._source.context
-			},
-			content() {
-				return this.hit._source.content
-			},
-			groupName() {
-				return this.getGroup(this.context.group.id).name
-			},
-			header() {
-				return this.getHighlight(this.hit, 'snippet.header') || this.hit._source.snippet.header
-			},
-			id() {
-				return this.hit._source.id
-			},
-			lessonName() {
-				return this.getLesson(this.context.lesson.id).name
-			},
-			media() {
-				return this.hit._source.snippet && this.hit._source.snippet.media !== null ? mediaMap[this.hit._source.snippet.media] : null
-			},
-			page() {
-				return this.hit._source.snippet.page
-			},
-			sectionName() {
-				return this.getSection(this.context.section.id).name
-			},
-			slideNumber() {
-				return this.context.orderNumber + 1
-			},
-			snippet() {
-				return this.getHighlight(this.hit, 'snippet.content') || this.hit._source.snippet.content
-			},
-		},
-		methods: {
-			getHighlight(hit, key) {
-				const highlight = _.get(hit, `highlight["${key}"]`)
-
-				if (Array.isArray(highlight)) {
-					return highlight.join('...')
-				}
-
-				return highlight
-			},
-			onThumbnailClick(event) {
-				if (!event.metaKey && !event.ctrlKey) {
-					this.$emit('resultClicked')
-				}
-			},
-			truncate(text, length) {
-				return truncate(text, {length})
-			},
-		}
-	}
+};
 </script>

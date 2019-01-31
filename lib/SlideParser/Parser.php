@@ -27,7 +27,7 @@ class Parser
 
 	const LUCID_EMBED_PATTERN = '/<div[^\<]*<iframe.*lucidchart.com\/documents\/embeddedchart\/([^"]*).*<\/iframe>[^\<]*<\/div>/';
 
-	const HEADER_PATTERN = '/<h.*>([\s\S]*)<\/h.*>/';
+	const HEADER_PATTERN = '/<h[1-6].*>([\s\S]*)<\/h[1-6]>/U';
 
 	const SUBHEADER_PATTERN = '/<[ph\d]+.*>([\s\S](?!<p.*>))*<\/[ph\d]+>/';
 
@@ -89,9 +89,11 @@ class Parser
 	/**
 	 * @param $fileContents - string/html
 	 *
-	 * @throws ParseErrorException
+	 * @param null $screenId
+	 * @param null $discussionId
+	 * @param bool $enableSlidesMatching
 	 */
-	public function parse($fileContents, $screenId = null, $enableSlidesMatching = false)
+	public function parse($fileContents, $screenId = null, $discussionId = null, $enableSlidesMatching = false)
 	{
 		// TODO: Unspaghettize this code
 		$iteration = 0;
@@ -185,6 +187,11 @@ class Parser
 
 					if ($screenId) {
 						$screenData['id'] = intval($screenId);
+					}
+
+					if ($discussionId) {
+						$screenData['discussion_id'] = $discussionId;
+						$screenData['is_discussable'] = true;
 					}
 
 					$this->courseModels['screen'] = $lesson->screens()->create($screenData);
@@ -396,7 +403,11 @@ class Parser
 		$match = $this->match(self::HEADER_PATTERN, $slideHtml);
 
 		if ($match) {
-			$snippet['header'] = strip_tags($match[0][1]);
+			$header = $match[0][1];
+			$header = str_replace('<br>', ' ', $header);
+			$header = strip_tags($header);
+			$header = trim($header);
+			$snippet['header'] = $header;
 			$slideHtml = preg_replace(self::HEADER_PATTERN, '', $slideHtml);
 		}
 
@@ -448,70 +459,72 @@ class Parser
 
 	public function handleImages($html)
 	{
-		$match = $this->match(self::IMAGE_PATTERN, $html);
+		$matches = $this->match(self::IMAGE_PATTERN, $html);
 
-		if ($match === false) {
+		if ($matches === false) {
 			return $html;
 		}
 
-		$imgTag = $match[0][0];
-		$imageUrl = $match[0][1];
+		foreach ($matches as $match) {
+			$imgTag = $match[0];
+			$imageUrl = $match[1];
 
-		if (stripos($imgTag, 'data-') === false) {
-			// Check if img tag contains data attributes - if not we don't need to migrate it
-			return $html;
+			if (stripos($imgTag, 'data-') === false) {
+				// Check if img tag contains data attributes - if not we don't need to migrate it
+				continue;
+			}
+
+			try {
+				$image = Image::make(Url::encodeFullUrl($imageUrl));
+			}
+			catch (\Exception $e) {
+				\Log::error("Fetching image from {$imageUrl} failed with message: {$e->getMessage()}.");
+				continue;
+			}
+
+			$mime = $image->mime;
+			$supported = ['image/jpeg', 'image/gif', 'image/png'];
+			if (!in_array($mime, $supported)) {
+				\Log::error("Unsupported image type: {$mime}");
+
+				continue;
+			}
+
+			$template = self::IMAGE_TEMPLATE;
+
+			if ($mime === 'image/gif') {
+				$data = @file_get_contents($imageUrl);
+				$ext = 'gif';
+				$template = self::GIF_TEMPLATE;
+			} else if ($mime === 'image/png') {
+				$data = $image->resize(1920, 1080, function ($constraint) {
+					$constraint->aspectRatio();
+					$constraint->upsize();
+				})->stream('png');
+				$ext = 'png';
+			}
+			else {
+				$background = $image->resize(1920, 1080, function ($constraint) {
+					$constraint->aspectRatio();
+					$constraint->upsize();
+				});
+				$canvas = Image::canvas($image->width(), $image->height(), '#fff');
+				$data = $canvas->insert($background)->stream('jpg', 80);
+				$ext = 'jpg';
+			}
+
+			if (!$data) {
+				\Log::error("Fetching image from {$imageUrl} failed.");
+
+				continue;
+			}
+
+			$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
+			Storage::put('public/' . $path, $data->__toString(), 'public');
+
+			$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
+			$html = str_replace($imgTag, $viewerHtml, $html);
 		}
-
-		try {
-			$image = Image::make(Url::encodeFullUrl($imageUrl));
-		}
-		catch (\Exception $e) {
-			\Log::error("Fetching image from {$imageUrl} failed with message: {$e->getMessage()}.");
-			return $html;
-		}
-
-		$mime = $image->mime;
-		$supported = ['image/jpeg', 'image/gif', 'image/png'];
-		if (!in_array($mime, $supported)) {
-			\Log::error("Unsupported image type: {$mime}");
-
-			return $html;
-		}
-
-		$template = self::IMAGE_TEMPLATE;
-
-		if ($mime === 'image/gif') {
-			$data = @file_get_contents($imageUrl);
-			$ext = 'gif';
-			$template = self::GIF_TEMPLATE;
-		} else if ($mime === 'image/png') {
-			$data = $image->resize(1920, 1080, function ($constraint) {
-				$constraint->aspectRatio();
-				$constraint->upsize();
-			})->stream('png');
-			$ext = 'png';
-		}
-		else {
-			$background = $image->resize(1920, 1080, function ($constraint) {
-				$constraint->aspectRatio();
-				$constraint->upsize();
-			});
-			$canvas = Image::canvas($image->width(), $image->height(), '#fff');
-			$data = $canvas->insert($background)->stream('jpg', 80);
-			$ext = 'jpg';
-		}
-
-		if (!$data) {
-			\Log::error("Fetching image from {$imageUrl} failed.");
-
-			return $html;
-		}
-
-		$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
-		Storage::put('public/' . $path, $data->__toString(), 'public');
-
-		$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
-		$html = str_replace($imgTag, $viewerHtml, $html);
 
 		return $html;
 	}

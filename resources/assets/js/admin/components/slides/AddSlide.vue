@@ -26,28 +26,28 @@
 </template>
 
 <script>
-	import SlidesEditor from 'js/admin/components/slides/SlideEditor'
-	import { getApiUrl } from 'js/utils/env'
+import SlidesEditor from 'js/admin/components/slides/SlideEditor';
+import { getApiUrl } from 'js/utils/env';
 
-	export default {
-		name: 'AddSlide',
-		components: {
-			'wnl-slides-editor': SlidesEditor,
-		},
-		data() {
+export default {
+	name: 'AddSlide',
+	components: {
+		'wnl-slides-editor': SlidesEditor,
+	},
+	data() {
+		return {
+			screenId: null,
+			slideOrderNo: null,
+			resourceUrl: getApiUrl('slides'),
+		};
+	},
+	computed: {
+		requestPayload() {
 			return {
-				screenId: null,
-				slideOrderNo: null,
-				resourceUrl: getApiUrl('slides'),
-			}
-		},
-		computed: {
-			requestPayload() {
-				return {
-					screen: this.screenId,
-					order_number: this.slideOrderNo
-				}
-			}
-		},
-	}
+				screen: this.screenId,
+				order_number: this.slideOrderNo
+			};
+		}
+	},
+};
 </script>

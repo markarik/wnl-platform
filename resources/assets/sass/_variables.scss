@@ -5,11 +5,13 @@ $color-dark-blue: #2F4999;
 $color-orange: #cc3e17;
 $color-purple: #62378d;
 $color-purple-second: #7B569F;
-$color-gray: #0c1726;
-$color-gray-lighter: #262B37;
-$color-gray-dimmed: #696969;
+$color-darkest-gray: #0c1726;
+$color-darker-gray: #262B37;
+$color-gray: #696969;
+$color-lighter-gray: #aaa;
 $color-inactive-gray: #cdd0da;
 $color-light-gray: #efefef;
+$color-lightest-gray: #f7f7f7;
 $color-background-gray: #7a7f91;
 $color-background-light-gray: #efefef;
 $color-background-lighter-gray: #f7f7f7;
@@ -21,6 +23,7 @@ $color-white-overlay: rgba(255,255,255,0.93);
 $color-correct-shadow: rgba(68, 180, 144, 0.7);
 $color-dark-blue-opacity: rgba(47,73,153, 0.7);
 $color-ocean-blue-opacity: rgba(15, 150, 152, 0.7);
+$color-ocean-blue-less-opacity: rgba(15, 150, 152, 0.25);
 $color-incorrect-shadow: rgba(229, 61, 44, 0.7);
 
 $color-green: #44b490;
@@ -32,7 +35,7 @@ $color-blue: #2f4999;
 $mention-text-color: #009699;
 $autocomplete-box-shadow: 1px 0 2px 0 rgba(132, 102, 102, 0.15);
 $autocomplete-text-color: #0f1a29;
-$autocomplete-box-border: solid 0.5px #d6d9e1;
+$autocomplete-box-border: solid 1px #d6d9e1;
 $autocomplete-box-background: #fff;
 $autocomplete-active-item-background: #009699;
 $autocomplete-active-item-text-color: #fff;
@@ -67,7 +70,7 @@ $line-height-minus: 1.25em;
 $line-height-base: 1.5em;
 $line-height-plus: 1.75em;
 
-$color-body: $color-gray;
+$color-body: $color-darkest-gray;
 
 $font-weight-light: 300;
 $font-weight-regular: 400;
@@ -76,7 +79,7 @@ $font-weight-black: 900;
 
 // Borders
 $border-light-gray: 1px solid $color-light-gray;
-$border-dark-gray: 1px solid $color-gray-dimmed;
+$border-dark-gray: 1px solid $color-gray;
 $border-thick: 3px;
 
 // Buttons
@@ -141,7 +144,7 @@ $warning: $color-yellow;
 $danger: $color-red;
 $info: $color-blue;
 
-$text: $color-gray;
+$text: $color-darkest-gray;
 
 // z-index positioning
 $z-index-navbar: 50;

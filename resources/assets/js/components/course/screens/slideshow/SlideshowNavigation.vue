@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="nav-container">
 		<label class="label" for="wnl-slideshow-navigation-">
 			Idź do slajdu
@@ -21,7 +21,7 @@
 		border-bottom: 1px solid $color-ocean-blue
 		border-radius: 0
 		box-shadow: none
-		color: $color-gray
+		color: $color-darkest-gray
 		font-size: $font-size-minus-1
 		line-height: 1em
 		text-align: center
@@ -35,21 +35,21 @@
 </style>
 
 <script>
-	import { debounce } from 'lodash'
+import { debounce } from 'lodash';
 
-	export default {
-		name: 'SlideshowNavigation',
-		data() {
-			return {
-				slideNumber: 1
+export default {
+	name: 'SlideshowNavigation',
+	data() {
+		return {
+			slideNumber: 1
+		};
+	},
+	methods: {
+		onChange: debounce(function () {
+			if (parseInt(this.slideNumber) > 0) {
+				this.$emit('navigateToSlide', this.slideNumber);
 			}
-		},
-		methods: {
-			onChange: debounce(function () {
-				if (parseInt(this.slideNumber) > 0) {
-					this.$emit('navigateToSlide', this.slideNumber)
-				}
-			}, 500),
-		}
+		}, 500),
 	}
+};
 </script>

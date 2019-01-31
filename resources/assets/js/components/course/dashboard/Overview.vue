@@ -18,7 +18,7 @@
 		</div>
 		<!-- Next lesson -->
 		<div class="overview-progress box">
-			<wnl-next-lesson/>
+			<wnl-next-lesson @userEvent="trackUserEvent"/>
 			<wnl-your-progress/>
 			<!-- <div class="has-text-centered margin vertical">
 				<a
@@ -40,7 +40,7 @@
 			</span>
 		</div>
 		<div class="current-view-controls">
-			<a v-for="panel, index in panels" class="panel-toggle"
+			<a v-for="(panel, index) in panels" class="panel-toggle"
 				:class="{'is-active': overviewView === panel.slug}"
 				:key="index"
 				@click="changeOverviewView(panel.slug)"
@@ -52,7 +52,13 @@
 			</a>
 		</div>
 		<wnl-stream-feed v-show="overviewView === 'stream'"/>
-		<wnl-qna :sortingEnabled="true" :numbersDisabled="true" v-show="overviewView === 'qna'" :hideTitle="true" class="wnl-overview-qna"/>
+		<wnl-qna
+			:sortingEnabled="true"
+			:numbersDisabled="true"
+			v-show="overviewView === 'qna'"
+			:hideTitle="true"
+			class="wnl-overview-qna"
+		/>
 	</div>
 </template>
 
@@ -102,70 +108,75 @@
 </style>
 
 <script>
-	import emoji from 'node-emoji'
-	import { mapGetters, mapActions } from 'vuex'
+import {mapActions, mapGetters} from 'vuex';
 
-	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
-	import DashboardNews from 'js/components/course/dashboard/DashboardNews'
-	import NextLesson from 'js/components/course/dashboard/NextLesson'
-	import Qna from 'js/components/qna/Qna'
-	import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed'
-	import YourProgress from 'js/components/course/dashboard/YourProgress'
-	import { resource } from 'js/utils/config'
-	import moment from 'moment'
-	import {getUrl} from 'js/utils/env'
+import ActiveUsers from 'js/components/course/dashboard/ActiveUsers';
+import DashboardNews from 'js/components/course/dashboard/DashboardNews';
+import NextLesson from 'js/components/course/dashboard/NextLesson';
+import Qna from 'js/components/qna/Qna';
+import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed';
+import YourProgress from 'js/components/course/dashboard/YourProgress';
+import moment from 'moment';
+import {getUrl} from 'js/utils/env';
+import context from 'js/consts/events_map/context.json';
 
-	export default {
-		name: 'Overview',
-		components: {
-			'wnl-active-users': ActiveUsers,
-			'wnl-dashboard-news': DashboardNews,
-			'wnl-next-lesson': NextLesson,
-			'wnl-qna': Qna,
-			'wnl-stream-feed': StreamFeed,
-			'wnl-your-progress': YourProgress,
+export default {
+	name: 'Overview',
+	components: {
+		'wnl-active-users': ActiveUsers,
+		'wnl-dashboard-news': DashboardNews,
+		'wnl-next-lesson': NextLesson,
+		'wnl-qna': Qna,
+		'wnl-stream-feed': StreamFeed,
+		'wnl-your-progress': YourProgress,
+	},
+	props: ['courseId'],
+	computed: {
+		...mapGetters('progress', [
+			'isLessonComplete',
+			'wasCourseStarted',
+		]),
+		...mapGetters([
+			'currentUserName',
+			'overviewView',
+		]),
+		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
+		isBeginning() {
+			return !this.wasCourseStarted(this.courseId);
 		},
-		props: ['courseId'],
-		computed: {
-			...mapGetters('progress', [
-				'isLessonComplete',
-				'wasCourseStarted',
-			]),
-			...mapGetters([
-				'currentUserName',
-				'overviewView',
-			]),
-			...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
-			isBeginning() {
-				return !this.wasCourseStarted(this.courseId)
-			},
-			panels() {
-				return [
-					{
-						name: this.$t('dashboard.news.stream'),
-						slug: 'stream',
-						icon: 'fa-commenting-o'
-					},
-					{
-						name: this.$t('dashboard.news.qna'),
-						slug: 'qna',
-						icon: 'fa-question-circle-o',
-					},
-				]
-			},
-			userFriendlySubscriptionDate() {
-				return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL')
-			},
-			signUpLink() {
-				return getUrl('payment/select-product')
-			},
+		panels() {
+			return [
+				{
+					name: this.$t('dashboard.news.stream'),
+					slug: 'stream',
+					icon: 'fa-commenting-o'
+				},
+				{
+					name: this.$t('dashboard.news.qna'),
+					slug: 'qna',
+					icon: 'fa-question-circle-o',
+				},
+			];
 		},
-		methods: {
-			...mapActions(['changeOverviewView']),
-			...mapActions('qna', ['fetchLatestQuestions']),
+		userFriendlySubscriptionDate() {
+			return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL');
 		},
-		mounted() {
-			this.fetchLatestQuestions()
+		signUpLink() {
+			return getUrl('payment/select-product');
+		},
+	},
+	methods: {
+		...mapActions(['changeOverviewView']),
+		...mapActions('qna', ['fetchLatestQuestions']),
+		trackUserEvent(payload) {
+			this.$trackUserEvent({
+				...payload,
+				context: context.dashboard.value,
+			});
 		}
+	},
+	mounted() {
+		this.fetchLatestQuestions();
 	}
+};
 </script>

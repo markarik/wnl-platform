@@ -17,7 +17,7 @@
 				</ul>
 			</div>
 		</div>
-		<wnl-modal :isModalVisible="modalVisible" @closeModal="toggleModal(false)" v-if="modalVisible">
+		<wnl-modal @closeModal="toggleModal(false)" v-if="modalVisible">
 			<wnl-user-profile-modal :author="modalUser"/>
 		</wnl-modal>
 	</div>
@@ -69,48 +69,48 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-import UserProfileModal from 'js/components/users/UserProfileModal'
-import Modal from 'js/components/global/Modal'
+import UserProfileModal from 'js/components/users/UserProfileModal';
+import Modal from 'js/components/global/Modal';
 
-	export default {
-		name: 'ActiveUsers',
-		components: {
-			'wnl-user-profile-modal': UserProfileModal,
-			'wnl-modal': Modal
+export default {
+	name: 'ActiveUsers',
+	components: {
+		'wnl-user-profile-modal': UserProfileModal,
+		'wnl-modal': Modal
+	},
+	props: {
+		channel: {
+			type: String,
+			default: 'activeUsers'
 		},
-		props: {
-			channel: {
-				type: String,
-				default: 'activeUsers'
-			},
-			message: {
-				type: String,
-				default: 'dashboard.activeUsers',
-			},
+		message: {
+			type: String,
+			default: 'dashboard.activeUsers',
 		},
-		data() {
-			return {
-				modalVisible: false,
-				modalUser: {}
-			}
+	},
+	data() {
+		return {
+			modalVisible: false,
+			modalUser: {}
+		};
+	},
+	computed: {
+		...mapGetters(['currentUserId']),
+		...mapGetters('users', ['activeUsers']),
+		activeUsersCount() {
+			return this.usersToCount.length;
 		},
-		computed: {
-			...mapGetters(['currentUserId']),
-			...mapGetters('users', ['activeUsers']),
-			activeUsersCount() {
-				return this.usersToCount.length
-			},
-			usersToCount() {
-				return this.activeUsers(this.channel).filter((user) => this.currentUserId !== user.id)
-			},
+		usersToCount() {
+			return this.activeUsers(this.channel).filter((user) => this.currentUserId !== user.id);
 		},
-		methods: {
-			toggleModal(isVisible, modalUser={}) {
-				this.modalVisible = isVisible
-				this.modalUser = modalUser
-			}
+	},
+	methods: {
+		toggleModal(isVisible, modalUser={}) {
+			this.modalVisible = isVisible;
+			this.modalUser = modalUser;
 		}
 	}
+};
 </script>

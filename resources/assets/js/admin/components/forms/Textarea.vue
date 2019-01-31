@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="field">
 
 		<label :for="name" class="label">
@@ -22,8 +22,8 @@
 </style>
 
 <script>
-	export default {
-		name: 'wnl-form-textarea',
-		props: ['name', 'form'],
-	}
+export default {
+	name: 'wnl-form-textarea',
+	props: ['name', 'form'],
+};
 </script>

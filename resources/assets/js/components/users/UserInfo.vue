@@ -1,15 +1,15 @@
 <template>
     <div class="user-info full-width-sidenav-slot">
-        <span class="label"v-t="label"></span>
+        <span class="label" v-t="label"></span>
         <span class="info">{{info}}</span>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'UserInfo',
-    props: ['label', 'info'],
-}
+	name: 'UserInfo',
+	props: ['label', 'info'],
+};
 </script>
 
 <style lang="sass">
@@ -22,7 +22,7 @@ export default {
         padding-bottom: $margin-base
         width: 100%
         .label
-            color: $color-gray-dimmed
+            color: $color-gray
             font-size: $font-size-plus-1
             font-weight: $font-weight-regular
             text-transform: uppercase

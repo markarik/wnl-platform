@@ -112,134 +112,132 @@
 </style>
 
 <script>
-	import {isEqual} from 'lodash';
-	import {mapGetters, mapActions, mapState} from 'vuex';
-	import draggable from 'vuedraggable';
+import {isEqual} from 'lodash';
+import {mapGetters, mapActions, mapState} from 'vuex';
+import draggable from 'vuedraggable';
 
-	import Form from 'js/classes/forms/Form'
-	import {getApiUrl} from 'js/utils/env'
+import Form from 'js/classes/forms/Form';
+import {getApiUrl} from 'js/utils/env';
 
-	import WnlAutocomplete from 'js/components/global/Autocomplete';
-	import WnlFlashcardAutocompleteItem from 'js/admin/components/flashcards/edit/FlashcardAutocompleteItem'
-	import WnlFormTextarea from "js/admin/components/forms/Textarea";
-	import WnlFormInput from "js/admin/components/forms/Input";
-	import WnlQuill from 'js/admin/components/forms/Quill';
-	import WnlSelect from 'js/admin/components/forms/Select';
-	import WnlFlashcardsSetListItem from 'js/admin/components/flashcards/edit/FlashcardsSetListItem';
+import WnlAutocomplete from 'js/components/global/Autocomplete';
+import WnlFlashcardAutocompleteItem from 'js/admin/components/flashcards/edit/FlashcardAutocompleteItem';
+import WnlFormInput from 'js/admin/components/forms/Input';
+import WnlQuill from 'js/admin/components/forms/Quill';
+import WnlSelect from 'js/admin/components/forms/Select';
+import WnlFlashcardsSetListItem from 'js/admin/components/flashcards/edit/FlashcardsSetListItem';
 
-	export default {
-		name: 'FlashcardsSetEditor',
-		components: {
-			WnlAutocomplete,
-			WnlFormInput,
-			WnlQuill,
-			WnlFormTextarea,
-			WnlSelect,
-			WnlFlashcardsSetListItem,
-			draggable,
-			WnlFlashcardAutocompleteItem,
-		},
-		props: ['flashcardsSetId'],
-		data() {
-			return {
-				form: new Form({
-					name: '',
-					description: '',
-					mind_maps_text: '',
-					lesson_id: null,
-					flashcards: [],
-				}),
-				flashcardInput: '',
-				loading: false,
-			}
-		},
-		computed: {
-			...mapGetters('lessons', ['allLessons']),
-			...mapState('flashcards', {
-				allFlashcards: 'flashcards',
-				areFlashcardsReady: 'ready'
+export default {
+	name: 'FlashcardsSetEditor',
+	components: {
+		WnlAutocomplete,
+		WnlFormInput,
+		WnlQuill,
+		WnlSelect,
+		WnlFlashcardsSetListItem,
+		draggable,
+		WnlFlashcardAutocompleteItem,
+	},
+	props: ['flashcardsSetId'],
+	data() {
+		return {
+			form: new Form({
+				name: '',
+				description: '',
+				mind_maps_text: '',
+				lesson_id: null,
+				flashcards: [],
 			}),
-			lessonsOptions() {
-				return this.allLessons.map(lesson => ({
-					text: lesson.name,
-					value: lesson.id,
-				}));
-			},
-			isEdit() {
-				return this.flashcardsSetId !== 'new';
-			},
-			flashcardsSetResourceUrl() {
-				return getApiUrl(this.isEdit ? `flashcards_sets/${this.flashcardsSetId}?include=flashcards` : 'flashcards_sets');
-			},
-			hasChanged() {
-				return !isEqual(this.form.originalData, this.form.data());
-			},
-			flashcardAutocompleteItems() {
-				if (this.flashcardInput === '') {
-					return [];
-				}
+			flashcardInput: '',
+			loading: false,
+		};
+	},
+	computed: {
+		...mapGetters('lessons', ['allLessons']),
+		...mapState('flashcards', {
+			allFlashcards: 'flashcards',
+			areFlashcardsReady: 'ready'
+		}),
+		lessonsOptions() {
+			return this.allLessons.map(lesson => ({
+				text: lesson.name,
+				value: lesson.id,
+			}));
+		},
+		isEdit() {
+			return this.flashcardsSetId !== 'new';
+		},
+		flashcardsSetResourceUrl() {
+			return getApiUrl(this.isEdit ? `flashcards_sets/${this.flashcardsSetId}?include=flashcards` : 'flashcards_sets');
+		},
+		hasChanged() {
+			return !isEqual(this.form.originalData, this.form.data());
+		},
+		flashcardAutocompleteItems() {
+			if (this.flashcardInput === '') {
+				return [];
+			}
 
-				return this.allFlashcards
-					.filter(flashcard => !this.form.flashcards.includes(flashcard.id) &&
+			return this.allFlashcards
+				.filter(flashcard => !this.form.flashcards.includes(flashcard.id) &&
 						(
 							flashcard.id === parseInt(this.flashcardInput, 10) ||
 							flashcard.content.toLowerCase().includes(this.flashcardInput.toLowerCase())
 						)
-					)
-					.slice(0, 10)
-			}
+				)
+				.slice(0, 10);
+		}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('lessons', {setupLessons: 'setup'}),
+		...mapActions('flashcards', {
+			setupFlashcards: 'setup',
+		}),
+		...mapActions('flashcardsSets', {
+			invalidateFlashcardsSetsCache: 'invalidateCache',
+		}),
+		onDescriptionInput() {
+			this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
 		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			...mapActions('lessons', {setupLessons: 'setup'}),
-			...mapActions('flashcards', {
-				setupFlashcards: 'setup',
-			}),
-			...mapActions('flashcardsSets', {
-				invalidateFlashcardsSetsCache: 'invalidateCache',
-			}),
-			onDescriptionInput() {
-				this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
-			},
-			removeFlashcard(flashcardId) {
-				this.form.flashcards = this.form.flashcards.filter(id => id !== flashcardId)
-			},
-			flashcardsSetFormSubmit() {
-				if (!this.hasChanged) {
-					return false;
-				}
+		removeFlashcard(flashcardId) {
+			this.form.flashcards = this.form.flashcards.filter(id => id !== flashcardId);
+		},
+		flashcardsSetFormSubmit() {
+			if (!this.hasChanged) {
+				return false;
+			}
 
-				this.loading = true;
-				this.form[this.isEdit ? 'put' : 'post'](this.flashcardsSetResourceUrl)
-					.then(response => {
-						this.loading = false;
-						this.addAutoDismissableAlert({
-							text: 'Zestaw pytań zapisany!',
-							type: 'success'
-						});
-						this.invalidateFlashcardsSetsCache();
-						this.form.originalData = this.form.data()
-					})
-					.catch(exception => {
-						this.loading = false;
-						this.addAutoDismissableAlert({
-							text: 'Nie udało się :(',
-							type: 'error'
-						});
-						$wnl.logger.capture(exception)
-					})
-			},
-			addFlashcard(flashcard) {
-				this.form.flashcards.push(flashcard.id);
-				this.flashcardInput = '';
-			}
+			this.loading = true;
+			this.form[this.isEdit ? 'put' : 'post'](this.flashcardsSetResourceUrl)
+				.then(response => {
+					this.loading = false;
+					this.addAutoDismissableAlert({
+						text: 'Zestaw pytań zapisany!',
+						type: 'success'
+					});
+					this.invalidateFlashcardsSetsCache();
+					this.form.originalData = this.form.data();
+				})
+				.catch(exception => {
+					this.loading = false;
+					this.addAutoDismissableAlert({
+						text: 'Nie udało się :(',
+						type: 'error'
+					});
+					$wnl.logger.capture(exception);
+				});
 		},
-		mounted() {
-			if (this.isEdit) {
-				this.form.populate(this.flashcardsSetResourceUrl);
-			}
-			this.setupLessons();
-			this.setupFlashcards();
-		},
-	}
+		addFlashcard(flashcard) {
+			this.form.flashcards.push(flashcard.id);
+			this.flashcardInput = '';
+		}
+	},
+	mounted() {
+		if (this.isEdit) {
+			this.form.populate(this.flashcardsSetResourceUrl);
+		}
+		this.setupLessons();
+		this.setupFlashcards();
+	},
+};
 </script>

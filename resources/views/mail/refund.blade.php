@@ -3,7 +3,7 @@
 @section('content')
 	<h3>Cześć {{ $user->first_name or '{first_name}' }}!</h3>
 
-	<p style="font-size: 1.25em;">Wykonaliśmy zwrot {{ $value or '{value}' }}zł na Twoje konto!</p>
+	<p style="font-size: 1.25em;">Wykonaliśmy zwrot {{ $value ?? '{value}' }}zł na Twoje konto!</p>
 
 	<p>W załączniku znajdziesz fakturę korygującą do Twojego zamówienia. ;)</p>
 

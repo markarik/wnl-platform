@@ -12,7 +12,7 @@
 				<span class="tag is-light is-medium" v-t="'tasks.task.fields.status'"/>
 				<wnl-dropdown>
 					<p slot="activator" class="tag is-medium" :class="statusTag.class">
-						{{statusTag.text}}&nbsp
+						{{statusTag.text}}&nbsp;
 						<span class="icon is-small">
 							<i class="fa fa-angle-down"></i>
 						</span>
@@ -88,14 +88,14 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex';
 
-import Dropdown from 'js/components/global/Dropdown'
-import Autocomplete from 'js/components/global/Autocomplete'
-import TaskEvents from 'js/components/moderators/ModeratorsTaskEvents'
-import ModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutocomplete'
+import Dropdown from 'js/components/global/Dropdown';
+import Autocomplete from 'js/components/global/Autocomplete';
+import TaskEvents from 'js/components/moderators/ModeratorsTaskEvents';
+import ModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutocomplete';
 
-import { timeFromS } from 'js/utils/time'
+import { timeFromS } from 'js/utils/time';
 
 export default {
 	props: {
@@ -126,58 +126,58 @@ export default {
 				REOPEN: 'reopen'
 			},
 			showAutocomplete: false,
-		}
+		};
 	},
 	computed: {
 		...mapGetters(['currentUserId']),
 		title() {
-			return this.task.text || this.$t('tasks.task.defaultTitle')
+			return this.task.text || this.$t('tasks.task.defaultTitle');
 		},
 		statusTag() {
 			switch (this.task.status) {
-				case this.status.OPEN:
-					return {
-						class: 'is-warning',
-						text: this.$t('tasks.task.status.open')
-					}
-				case this.status.IN_PROGRESS:
-					return {
-						class: 'is-info',
-						text: this.$t('tasks.task.status.inProgress')
-					}
-				case this.status.DONE:
-					return {
-						class: 'is-success',
-						text: this.$t('tasks.task.status.done')
-					}
-				case this.status.REOPEN:
-					return {
-						class: 'is-danger',
-						text: this.$t('tasks.task.status.reopen')
-					}
-				default:
-					return {
-						class: 'is-ligth',
-						text: this.$t('tasks.task.status.unknown')
-					}
+			case this.status.OPEN:
+				return {
+					class: 'is-warning',
+					text: this.$t('tasks.task.status.open')
+				};
+			case this.status.IN_PROGRESS:
+				return {
+					class: 'is-info',
+					text: this.$t('tasks.task.status.inProgress')
+				};
+			case this.status.DONE:
+				return {
+					class: 'is-success',
+					text: this.$t('tasks.task.status.done')
+				};
+			case this.status.REOPEN:
+				return {
+					class: 'is-danger',
+					text: this.$t('tasks.task.status.reopen')
+				};
+			default:
+				return {
+					class: 'is-ligth',
+					text: this.$t('tasks.task.status.unknown')
+				};
 			}
 		},
 		eventsCount() {
-			return this.task.events.length
+			return this.task.events.length;
 		},
 		lastEvent() {
-			return this.task.events[this.eventsCount - 1]
+			return this.task.events[this.eventsCount - 1];
 		},
 		taskContext() {
 			if (_.get(this.lastEvent, 'data.context.dynamic')) {
-				const dynamic = _.get(this.lastEvent, 'data.context.dynamic')
+				const dynamic = _.get(this.lastEvent, 'data.context.dynamic');
 				return {
 					name: 'dynamicContextMiddleRoute',
 					params: {
 						resource: dynamic.resource,
 						context: dynamic.value
 					}
-				}
+				};
 			}
 
 			if (this.lastEvent.data.context) {
@@ -186,29 +186,29 @@ export default {
 					query: {
 						[this.lastEvent.data.objects.type]: this.lastEvent.data.objects.id
 					}
-				}
+				};
 			}
 
-			return _.get(this.lastEvent, 'data.context', this.lastEvent.data.referer)
+			return _.get(this.lastEvent, 'data.context', this.lastEvent.data.referer);
 		},
 		formatedCreatedAt() {
-			return timeFromS(this.task.created_at)
+			return timeFromS(this.task.created_at);
 		},
 		formatedUpdatedAt() {
-			return timeFromS(this.task.updated_at)
+			return timeFromS(this.task.updated_at);
 		},
 	},
 	methods: {
 		assign(user = {}) {
-			this.$emit('assign', {assignee_id: user.user_id || null, id: this.task.id})
-			this.showAutocomplete = false
+			this.$emit('assign', {assignee_id: user.user_id || null, id: this.task.id});
+			this.showAutocomplete = false;
 		},
 	},
 	watch: {
 		closeDropdown(newValue) {
 			if (!newValue) return;
 
-			this.showAutocomplete = false
+			this.showAutocomplete = false;
 		}
 	}
 };

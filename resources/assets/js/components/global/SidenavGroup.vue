@@ -32,7 +32,7 @@
 		margin-bottom: $margin-base
 
 	.wnl-sidenav-group-toggle
-		color: $color-gray
+		color: $color-darkest-gray
 		cursor: pointer
 		transition: background-color $transition-length-base
 
@@ -61,59 +61,59 @@
 </style>
 
 <script>
-	import SidenavItem from 'js/components/global/SidenavItem'
-	import { mapGetters, mapActions } from 'vuex'
+import SidenavItem from 'js/components/global/SidenavItem';
+import { mapGetters, mapActions } from 'vuex';
 
-	export default {
-		components: {
-			'wnl-sidenav-item': SidenavItem
+export default {
+	components: {
+		'wnl-sidenav-item': SidenavItem
+	},
+	name: 'SidenavGroup',
+	props: ['item', 'forceGroupOpen', 'showSubitemsCount'],
+	computed: {
+		...mapGetters(['isNavigationGroupExpanded']),
+		...mapGetters('course', ['nextLesson']),
+		canRenderSubitems() {
+			return this.hasSubitems && this.isOpen;
 		},
-		name: 'SidenavGroup',
-		props: ['item', 'forceGroupOpen', 'showSubitemsCount'],
-		computed: {
-			...mapGetters(['isNavigationGroupExpanded']),
-			...mapGetters('course', ['nextLesson']),
-			canRenderSubitems() {
-				return this.hasSubitems && this.isOpen
-			},
-			hasSubitems() {
-				return this.item.subitems && this.item.subitems.length > 0
-			},
-			toggleIcon() {
-				return this.isOpen ? 'fa-angle-up' : 'fa-angle-down'
-			},
-			isOpen() {
-				return this.isNavigationGroupExpanded(this.groupIndex)
-			},
-			groupIndex() {
-				return `${this.$route.name}/${this.item.text}`
+		hasSubitems() {
+			return this.item.subitems && this.item.subitems.length > 0;
+		},
+		toggleIcon() {
+			return this.isOpen ? 'fa-angle-up' : 'fa-angle-down';
+		},
+		isOpen() {
+			return this.isNavigationGroupExpanded(this.groupIndex);
+		},
+		groupIndex() {
+			return `${this.$route.name}/${this.item.text}`;
+		}
+	},
+	methods: {
+		...mapActions(['toggleNavigationGroup'])
+	},
+	mounted() {
+		if (this.forceGroupOpen && this.isNavigationGroupExpanded(this.groupIndex) !== false) {
+			this.toggleNavigationGroup({groupIndex: this.groupIndex, isOpen: true});
+		}
+	},
+	watch: {
+		nextLesson(val) {
+			if (!this.item || !this.item.subitems || !val) {
+				return;
 			}
-		},
-		methods: {
-			...mapActions(['toggleNavigationGroup'])
-		},
-		mounted() {
-			if (this.forceGroupOpen && this.isNavigationGroupExpanded(this.groupIndex) !== false) {
-				this.toggleNavigationGroup({groupIndex: this.groupIndex, isOpen: true})
-			}
-		},
-		watch: {
-			nextLesson(val) {
-				if (!this.item || !this.item.subitems || !val) {
-					return
-				}
 
-				const isCurrentlyInProgress = this.item.subitems.some((subitem) => {
-					return subitem.to.params && subitem.to.params.lessonId === val.id
-				})
+			const isCurrentlyInProgress = this.item.subitems.some((subitem) => {
+				return subitem.to.params && subitem.to.params.lessonId === val.id;
+			});
 
-				if (isCurrentlyInProgress) {
-					this.toggleNavigationGroup({
-						groupIndex: this.groupIndex,
-						isOpen: true
-					})
-				}
+			if (isCurrentlyInProgress) {
+				this.toggleNavigationGroup({
+					groupIndex: this.groupIndex,
+					isOpen: true
+				});
 			}
-		},
-	}
+		}
+	},
+};
 </script>

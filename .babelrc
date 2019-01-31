@@ -1,25 +1,15 @@
 {
   "plugins": [
-      "transform-object-rest-spread",
-      "transform-runtime"
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-transform-runtime"
   ],
   "presets": [
-    ["env", {
-      "targets": {
-        "browsers": ["iOS >= 10"]
-      },
-      "modules": false
+    ["@babel/preset-env", {
+      "modules": false,
+      "useBuiltIns": "entry"
     }]
   ],
   "ignore": [
     "resources/vendor/**/*.js"
-  ],
-  "env": {
-    "test": {
-      "presets": [
-        "es2015"
-      ],
-      "plugins": ["rewire"]
-    }
-  }
+  ]
 }

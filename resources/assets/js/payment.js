@@ -1,10 +1,11 @@
-window.$ = window.jQuery = require('jquery');
-let moment = require('moment');
+import $ from 'jquery';
+import moment from 'moment';
+import 'moment-duration-format';
 
-require('moment-duration-format');
+window.$ = window.jQuery = $;
 
 function getTimeLeft(date) {
-	return moment.duration(moment(date*1000).diff(moment(), 'seconds'), 'seconds').format('d[d] h[h] m[m] s[s]')
+	return moment.duration(moment(date*1000).diff(moment(), 'seconds'), 'seconds').format('d[d] h[h] m[m] s[s]');
 }
 
 $(function () {
@@ -16,11 +17,11 @@ $(function () {
 		theDate        = countdown.data('start'), // ;)
 		firstNameInput = $('#first_name'),
 		lastNameInput = $('#last_name'),
-		recipientInput = $('#recipient')
+		recipientInput = $('#recipient');
 
 	lastNameInput.on('change', () => {
 		if (recipientInput.val() === '') {
-			recipientInput.val(`${firstNameInput.val()} ${lastNameInput.val()}`)
+			recipientInput.val(`${firstNameInput.val()} ${lastNameInput.val()}`);
 		}
 	});
 
@@ -37,9 +38,9 @@ $(function () {
 	});
 
 	$('button.p24-submit').click(function () {
-        let formId = $(this).data('id');
-        let payment = $(this).data('payment');
-        $(this).addClass('is-loading');
+		let formId = $(this).data('id');
+		let payment = $(this).data('payment');
+		$(this).addClass('is-loading');
 
 		$.ajax({
 			data: {

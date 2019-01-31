@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="scrollable-main-container">
 		<div class="level wnl-screen-title">
 			<div class="level-left">
@@ -26,31 +26,28 @@
 </template>
 
 <script>
-	import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex';
 
-	import { Form, Check, Text } from 'js/components/global/form'
-	import Toggler from 'js/components/global/Toggler'
+import { Form, Check } from 'js/components/global/form';
 
-	export default {
-		components: {
-			'wnl-form': Form,
-			'wnl-form-check': Check,
-			'wnl-toggler': Toggler,
-			'wnl-form-text': Text,
+export default {
+	components: {
+		'wnl-form': Form,
+		'wnl-form-check': Check,
+	},
+	computed: {
+		...mapGetters(['getAllSettings']),
+	},
+	methods: {
+		...mapActions(['changeUserSetting']),
+		onSubmitSuccess(response, newData) {
+			Object.keys(newData).forEach(setting => {
+				let value = newData[setting];
+				if (newData[setting] !== this.getAllSettings[setting]) {
+					this.changeUserSetting({setting, value});
+				}
+			});
 		},
-		computed: {
-			...mapGetters(['getAllSettings']),
-		},
-		methods: {
-			...mapActions(['changeUserSetting']),
-			onSubmitSuccess(response, newData) {
-				Object.keys(newData).forEach(setting => {
-					let value = newData[setting]
-					if (newData[setting] !== this.getAllSettings[setting]) {
-						this.changeUserSetting({setting, value})
-					}
-				})
-			},
-		}
 	}
+};
 </script>

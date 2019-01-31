@@ -111,7 +111,7 @@
 		width: $navbar-height - 2 * $margin-small
 
 		.icon
-			color: $color-gray-dimmed
+			color: $color-gray
 
 	.wnl-navbar-sidenav-toggle
 		padding-left: 0
@@ -141,55 +141,53 @@
 </style>
 
 <script>
-	import currentEditionParticipant from 'js/perimeters/currentEditionParticipant'
+import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 
-	import Breadcrumbs from 'js/components/global/Breadcrumbs'
-	import Search from 'js/components/global/search/Search'
-	import UserDropdown from 'js/components/user/UserDropdown.vue'
-	import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed'
-	import ChatFeed from 'js/components/notifications/feeds/chat/ChatFeed'
-	import { mapGetters, mapActions } from 'vuex'
-	import { getImageUrl, getUrl } from 'js/utils/env'
+import Search from 'js/components/global/search/Search';
+import UserDropdown from 'js/components/user/UserDropdown.vue';
+import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed';
+import ChatFeed from 'js/components/notifications/feeds/chat/ChatFeed';
+import { mapGetters, mapActions } from 'vuex';
+import { getImageUrl, getUrl } from 'js/utils/env';
 
-	export default {
-		name: 'Navbar',
-		perimeters: [currentEditionParticipant],
-		components: {
-			'wnl-breadcrumbs': Breadcrumbs,
-			'wnl-user-dropdown': UserDropdown,
-			'wnl-personal-feed': PersonalFeed,
-			'wnl-search': Search,
-			'wnl-chat-feed': ChatFeed,
+export default {
+	name: 'Navbar',
+	perimeters: [currentEditionParticipant],
+	components: {
+		'wnl-user-dropdown': UserDropdown,
+		'wnl-personal-feed': PersonalFeed,
+		'wnl-search': Search,
+		'wnl-chat-feed': ChatFeed,
+	},
+	computed: {
+		...mapGetters([
+			'canShowChatToggleInNavbar',
+			'canShowControlsInNavbar',
+			'canShowSidenavTrigger',
+			'currentUserFullName',
+			'isChatVisible',
+			'isMobile',
+			'isTouchScreen',
+			'isSidenavOpen',
+		]),
+		chatIconClass() {
+			return this.isChatVisible ? 'fa-close' : 'fa-comments-o';
 		},
-		computed: {
-			...mapGetters([
-				'canShowChatToggleInNavbar',
-				'canShowControlsInNavbar',
-				'canShowSidenavTrigger',
-				'currentUserFullName',
-				'isChatVisible',
-				'isMobile',
-				'isTouchScreen',
-				'isSidenavOpen',
-			]),
-			chatIconClass() {
-				return this.isChatVisible ? 'fa-close' : 'fa-comments-o'
-			},
-			logoSrc() {
-				return getImageUrl('wnl-logo-image.svg')
-			},
-			logoTextSrc() {
-				return getImageUrl('wnl-logo-text.svg')
-			},
-			sidenavIconClass() {
-				return this.isSidenavOpen ? 'fa-close' : 'fa-bars'
-			},
-			signUpLink() {
-				return getUrl('payment/select-product')
-			},
+		logoSrc() {
+			return getImageUrl('wnl-logo-image.svg');
 		},
-		methods: {
-			...mapActions(['toggleSidenav', 'toggleChat'])
-		}
+		logoTextSrc() {
+			return getImageUrl('wnl-logo-text.svg');
+		},
+		sidenavIconClass() {
+			return this.isSidenavOpen ? 'fa-close' : 'fa-bars';
+		},
+		signUpLink() {
+			return getUrl('payment/select-product');
+		},
+	},
+	methods: {
+		...mapActions(['toggleSidenav', 'toggleChat'])
 	}
+};
 </script>

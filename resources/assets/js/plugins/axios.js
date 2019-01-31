@@ -1,5 +1,6 @@
-import * as types from 'js/store/mutations-types'
+import axios from 'axios';
 import { get } from 'lodash';
+import * as types from 'js/store/mutations-types';
 
 export default (Vue, {store, router}) => {
 	/**
@@ -8,7 +9,7 @@ export default (Vue, {store, router}) => {
 	 * included with Laravel will automatically verify the header's value.
 	 */
 
-	window.axios = require('axios');
+	window.axios = axios;
 
 	window.axios.defaults.headers.common = {
 		'X-CSRF-TOKEN': window.Laravel.csrfToken,
@@ -20,19 +21,19 @@ export default (Vue, {store, router}) => {
 	window.axios.interceptors.response.use(
 		(response) => Promise.resolve(response),
 		(error) => {
-			if (error.response.status === 403) {
+			if (error.response && error.response.status === 403) {
 				const isSuspended = !!get(error, 'response.data.account_suspended');
 
 				if (isSuspended) {
 					router.push('/');
-					return store.commit(types.USERS_SET_ACCOUNT_SUSPENDED, true)
+					return store.commit(types.USERS_SET_ACCOUNT_SUSPENDED, true);
 				}
 			}
-			if (error.response.status === 401) {
+			if (error.response && error.response.status === 401) {
 				window.location.replace('/login');
 			}
 
-			return Promise.reject(error)
+			return Promise.reject(error);
 		}
 	);
-}
+};

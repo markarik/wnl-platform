@@ -37,4 +37,4 @@ export const ui = {
 		unauthorized: 'Nie masz uprawnień do tego działania.',
 	},
 	accountDeleted: 'Konto usunięte'
-}
+};

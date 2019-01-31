@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Api\PrivateApi\CoursesApiController;
 use Illuminate\Console\Command;
 use App\Models\Screen;
 use App\Models\Section;
@@ -9,7 +10,6 @@ use App\Models\Slide;
 use App\Models\Slideshow;
 use App\Models\Subsection;
 use App\Models\Presentable;
-use Cache;
 
 class SlideshowsRemove extends Command
 {
@@ -92,7 +92,7 @@ class SlideshowsRemove extends Command
 			$bar->finish();
 
 			// TODO: https://bethink.atlassian.net/browse/PLAT-506 !!
-			Cache::tags('editions')->flush();
+			CoursesApiController::clearCache();
 
 			$this->info("\n\nThe end! Now go, and see what you broke.\n");
 		}

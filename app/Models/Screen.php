@@ -13,7 +13,10 @@ class Screen extends Model
 		'meta' => 'array',
 	];
 
-	protected $fillable = ['content', 'type', 'name', 'meta', 'lesson_id', 'order_number', 'id'];
+	protected $fillable = [
+		'content', 'type', 'name', 'meta', 'lesson_id',
+		'order_number', 'id', 'discussion_id', 'is_discussable'
+	];
 
 	public function lesson()
 	{
@@ -28,6 +31,11 @@ class Screen extends Model
 	public function tags()
 	{
 		return $this->morphToMany('App\Models\Tag', 'taggable');
+	}
+
+	public function discussion()
+	{
+		return $this->belongsTo('\App\Models\Discussion');
 	}
 
 	public function getSlideshowAttribute()

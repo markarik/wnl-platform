@@ -34,184 +34,184 @@
 </style>
 
 <script>
-	import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex';
 
-	import MainNav from 'js/components/MainNav'
-	import MyProfile from 'js/components/user/MyProfile'
-	import Sidenav from 'js/components/global/Sidenav'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
-	import { isProduction } from 'js/utils/env'
-	import context from 'js/consts/events_map/context.json';
+import MainNav from 'js/components/MainNav';
+import MyProfile from 'js/components/user/MyProfile';
+import Sidenav from 'js/components/global/Sidenav';
+import SidenavSlot from 'js/components/global/SidenavSlot';
+import { isProduction } from 'js/utils/env';
+import context from 'js/consts/events_map/context.json';
 
-	export default {
-		name: 'Myself',
-		components: {
-			'wnl-main-nav': MainNav,
-			'wnl-my-profile': MyProfile,
-			'wnl-sidenav': Sidenav,
-			'wnl-sidenav-slot': SidenavSlot,
+export default {
+	name: 'Myself',
+	components: {
+		'wnl-main-nav': MainNav,
+		'wnl-my-profile': MyProfile,
+		'wnl-sidenav': Sidenav,
+		'wnl-sidenav-slot': SidenavSlot,
+	},
+	props: ['view'],
+	computed: {
+		...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
+		isProduction() {
+			return isProduction();
 		},
-		props: ['view'],
-		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
-			isProduction() {
-				return isProduction()
-			},
-			items() {
-				let items = [
-					{
-						text: 'Konto',
-						itemClass: 'heading small',
+		items() {
+			let items = [
+				{
+					text: 'Konto',
+					itemClass: 'heading small',
+				},
+				{
+					text: 'Twoje zamówienia',
+					itemClass: 'has-icon',
+					to: {
+						name: 'my-orders',
+						params: {},
 					},
-					{
-						text: 'Twoje zamówienia',
-						itemClass: 'has-icon',
-						to: {
-							name: 'my-orders',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-shopping-cart',
-						iconTitle: 'Twoje zamówienia',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-shopping-cart',
+					iconTitle: 'Twoje zamówienia',
+				},
+				{
+					text: 'Profil publiczny',
+					itemClass: 'has-icon',
+					to: {
+						name: 'my-profile',
+						params: {},
 					},
-					{
-						text: 'Profil publiczny',
-						itemClass: 'has-icon',
-						to: {
-							name: 'my-profile',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-user',
-						iconTitle: 'Profil publiczny',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-user',
+					iconTitle: 'Profil publiczny',
+				},
+				{
+					text: 'Twoje prywatne dane',
+					itemClass: 'has-icon',
+					to: {
+						name: 'personal-data',
+						params: {},
 					},
-					{
-						text: 'Twoje prywatne dane',
-						itemClass: 'has-icon',
-						to: {
-							name: 'personal-data',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-address-card-o',
-						iconTitle: 'Twoje prywatne dane',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-address-card-o',
+					iconTitle: 'Twoje prywatne dane',
+				},
+				{
+					text: 'Dane do faktury',
+					itemClass: 'has-icon',
+					to: {
+						name: 'my-billing-data',
+						params: {},
 					},
-					{
-						text: 'Dane do faktury',
-						itemClass: 'has-icon',
-						to: {
-							name: 'my-billing-data',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-file-o',
-						iconTitle: 'Profil publiczny',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-file-o',
+					iconTitle: 'Profil publiczny',
+				},
+				{
+					text: 'Ustawienia',
+					itemClass: 'has-icon',
+					to: {
+						name: 'my-settings',
+						params: {},
 					},
-					{
-						text: 'Ustawienia',
-						itemClass: 'has-icon',
-						to: {
-							name: 'my-settings',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-sliders',
-						iconTitle: 'Profil publiczny',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-sliders',
+					iconTitle: 'Profil publiczny',
+				},
+				{
+					text: 'Statystyki',
+					itemClass: 'has-icon',
+					to: {
+						name: 'stats'
 					},
-					{
-						text: 'Statystyki',
-						itemClass: 'has-icon',
-						to: {
-							name: 'stats'
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-line-chart',
-						iconTitle: 'Statystyki',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-line-chart',
+					iconTitle: 'Statystyki',
+				},
+				{
+					text: 'Plan pracy',
+					itemClass: 'has-icon',
+					to: {
+						name: 'lessons-availabilites'
 					},
-					{
-						text: 'Plan pracy',
-						itemClass: 'has-icon',
-						to: {
-							name: 'lessons-availabilites'
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa fa-tasks',
-						iconTitle: 'Plan pracy',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa fa-tasks',
+					iconTitle: 'Plan pracy',
+				},
+				{
+					text: 'Certyfikaty',
+					itemClass: 'has-icon',
+					to: {
+						name: 'certificates',
+						params: {},
 					},
-					{
-						text: 'Certyfikaty',
-						itemClass: 'has-icon',
-						to: {
-							name: 'certificates',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-trophy',
-						iconTitle: 'Certyfikaty',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-trophy',
+					iconTitle: 'Certyfikaty',
+				},
+				{
+					text: 'Usuwanie postępu',
+					itemClass: 'has-icon',
+					to: {
+						name: 'progress-reset'
 					},
-					{
-						text: 'Usuwanie postępu',
-						itemClass: 'has-icon',
-						to: {
-							name: 'progress-reset'
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa fa-exclamation-triangle',
-						iconTitle: 'Usuwanie postępu',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa fa-exclamation-triangle',
+					iconTitle: 'Usuwanie postępu',
+				},
+				{
+					text: 'Zmiana hasła',
+					itemClass: 'has-icon',
+					to: {
+						name: 'my-password',
+						params: {},
 					},
-					{
-						text: 'Zmiana hasła',
-						itemClass: 'has-icon',
-						to: {
-							name: 'my-password',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-key',
-						iconTitle: 'Zmiana hasła',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-key',
+					iconTitle: 'Zmiana hasła',
+				},
+				{
+					text: 'Usuń konto',
+					itemClass: 'has-icon',
+					to: {
+						name: 'delete-account',
 					},
-					{
-						text: 'Usuń konto',
-						itemClass: 'has-icon',
-						to: {
-							name: 'delete-account',
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-ban',
-						iconTitle: 'Usuń konto',
-					},
-				]
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-ban',
+					iconTitle: 'Usuń konto',
+				},
+			];
 
-				return items
-			},
-			isMainRoute() {
-				return this.$route.name === 'myself'
-			},
+			return items;
 		},
-		methods: {
-			...mapActions(['killChat']),
-			goToDefaultRoute() {
-				if (!this.view) {
-					this.$router.replace({ name: 'my-orders' })
-				}
-			},
-			onUserEvent(payload) {
-				this.$trackUserEvent({
-					context: context.account.value,
-					...payload
-				})
+		isMainRoute() {
+			return this.$route.name === 'myself';
+		},
+	},
+	methods: {
+		...mapActions(['killChat']),
+		goToDefaultRoute() {
+			if (!this.view) {
+				this.$router.replace({ name: 'my-orders' });
 			}
 		},
-	}
+		onUserEvent(payload) {
+			this.$trackUserEvent({
+				context: context.account.value,
+				...payload
+			});
+		}
+	},
+};
 </script>

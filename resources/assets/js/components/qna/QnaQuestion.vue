@@ -1,8 +1,5 @@
 <template>
 	<div class="qna-thread" :class="{'is-mobile': isMobile}">
-		<div class="question-loader" v-if="loading">
-			<wnl-text-loader></wnl-text-loader>
-		</div>
 		<div class="qna-question" ref="highlight">
 			<wnl-vote
 				type="up"
@@ -85,7 +82,13 @@
 					@submitSuccess="onSubmitSuccess">
 				</wnl-qna-new-answer-form>
 			</transition>
-			<wnl-qna-answer v-if="hasAnswers && !showAllAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly" :refresh="refreshQuestionAndShowAnswers"></wnl-qna-answer>
+			<wnl-qna-answer
+				v-if="hasAnswers && !showAllAnswers"
+				:answer="latestAnswer"
+				:questionId="questionId"
+				:readOnly="readOnly"
+				:refresh="refreshQuestionAndShowAnswers"
+			></wnl-qna-answer>
 			<wnl-qna-answer v-else-if="showAllAnswers"
 				v-for="answer in allAnswers"
 				:answer="answer"
@@ -100,7 +103,7 @@
 				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
-		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+		<wnl-modal @closeModal="closeModal" v-if="isVisible">
 			<wnl-user-profile-modal :author="author"/>
 		</wnl-modal>
 	</div>
@@ -117,11 +120,6 @@
 		margin-left: $margin-small
 		margin-right: $margin-tiny
 
-	.question-loader
-		border-top: $border-light-gray
-		margin: $margin-big
-		padding: $margin-big
-
 	.qna-question
 		background: $color-background-lighter-gray
 		border-bottom: $border-light-gray
@@ -134,7 +132,7 @@
 		align-items: center
 		color: $color-sky-blue
 		&.author-forgotten
-			color: $color-gray-dimmed
+			color: $color-gray
 			pointer-events: none
 
 	.qna-question-content
@@ -149,7 +147,7 @@
 			font-weight: $font-weight-black
 
 	.qna-answers-heading
-		color: $color-gray-dimmed
+		color: $color-gray
 
 	.qna-answers
 		margin: $margin-base $margin-huge $margin-huge $margin-huge
@@ -172,7 +170,7 @@
 
 	.qna-answers-show-all
 		display: block
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		margin-top: $margin-base
 		text-align: center
@@ -180,10 +178,10 @@
 
 		&:active,
 		&:visited
-			color: $color-gray-dimmed
+			color: $color-gray
 
 		&:hover
-			color: $color-gray
+			color: $color-darkest-gray
 
 	.qna-wrapper
 		display: flex
@@ -198,203 +196,189 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import { mapGetters, mapActions } from 'vuex'
+import _ from 'lodash';
+import { mapGetters, mapActions } from 'vuex';
 
-	import UserProfileModal from 'js/components/users/UserProfileModal'
-	import Delete from 'js/components/global/form/Delete'
-	import Resolve from 'js/components/global/form/Resolve'
-	import NewAnswerForm from 'js/components/qna/NewAnswerForm'
-	import QnaAnswer from 'js/components/qna/QnaAnswer'
-	import Vote from 'js/components/global/reactions/Vote'
-	import Bookmark from 'js/components/global/reactions/Bookmark'
-	import highlight from 'js/mixins/highlight'
-	import Watch from 'js/components/global/reactions/Watch'
-	import Modal from 'js/components/global/Modal'
-	import moderatorFeatures from 'js/perimeters/moderator'
-	import { timeFromS } from 'js/utils/time'
+import UserProfileModal from 'js/components/users/UserProfileModal';
+import Delete from 'js/components/global/form/Delete';
+import Resolve from 'js/components/global/form/Resolve';
+import NewAnswerForm from 'js/components/qna/NewAnswerForm';
+import QnaAnswer from 'js/components/qna/QnaAnswer';
+import Vote from 'js/components/global/reactions/Vote';
+import Bookmark from 'js/components/global/reactions/Bookmark';
+import highlight from 'js/mixins/highlight';
+import Watch from 'js/components/global/reactions/Watch';
+import Modal from 'js/components/global/Modal';
+import moderatorFeatures from 'js/perimeters/moderator';
+import { timeFromS } from 'js/utils/time';
 
-	export default {
-		name: 'QnaQuestion',
-		mixins: [ highlight ],
-		perimeters: [moderatorFeatures],
-		components: {
-			'wnl-delete': Delete,
-			'wnl-resolve': Resolve,
-			'wnl-vote': Vote,
-			'wnl-qna-answer': QnaAnswer,
-			'wnl-qna-new-answer-form': NewAnswerForm,
-			'wnl-bookmark': Bookmark,
-			'wnl-watch': Watch,
-			'wnl-modal': Modal,
-			'wnl-user-profile-modal': UserProfileModal,
+export default {
+	mixins: [ highlight ],
+	perimeters: [moderatorFeatures],
+	components: {
+		'wnl-delete': Delete,
+		'wnl-resolve': Resolve,
+		'wnl-vote': Vote,
+		'wnl-qna-answer': QnaAnswer,
+		'wnl-qna-new-answer-form': NewAnswerForm,
+		'wnl-bookmark': Bookmark,
+		'wnl-watch': Watch,
+		'wnl-modal': Modal,
+		'wnl-user-profile-modal': UserProfileModal,
+	},
+	props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
+	data() {
+		return {
+			showAllAnswers: false,
+			showAnswerForm: false,
+			reactableResource: 'qna_questions',
+			highlightableResources: ['qna_question', 'reaction'],
+			isVisible: false,
+		};
+	},
+	computed: {
+		...mapGetters('qna', [
+			'profile',
+			'getQuestion',
+			'questionAnswersFromHighestUpvoteCount',
+			'questionTags',
+			'getReaction',
+			'questionAnswers',
+			'answer'
+		]),
+		...mapGetters(['currentUserId', 'isMobile', 'isOverlayVisible']),
+		question() {
+			return this.getQuestion(this.questionId);
 		},
-		props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
-		data() {
-			return {
-				showAllAnswers: false,
-				loading: false,
-				showAnswerForm: false,
-				reactableResource: "qna_questions",
-				highlightableResources: ["qna_question", "reaction"],
-				isVisible: false,
+		id() {
+			return this.questionId;
+		},
+		content() {
+			return this.question.text;
+		},
+		author() {
+			return this.profile(this.question.profiles[0]);
+		},
+		isCurrentUserAuthor() {
+			return this.currentUserId === this.author.user_id;
+		},
+		resourceRoute() {
+			return `qna_questions/${this.id}`;
+		},
+		deleteTarget() {
+			return 'to pytanie';
+		},
+		time() {
+			return timeFromS(this.question.created_at);
+		},
+		answersFromHighestUpvoteCount() {
+			return this.questionAnswersFromHighestUpvoteCount(this.id);
+		},
+		hasAnswers() {
+			return this.answersFromHighestUpvoteCount.length > 0;
+		},
+		latestAnswer() {
+			if (this.config.highlighted[this.id]) {
+				const answerId = this.config.highlighted[this.id];
+				return this.answer(answerId);
+			} else {
+				return _.head(this.answersFromHighestUpvoteCount) || {};
 			}
 		},
-		computed: {
-			...mapGetters('qna', [
-				'profile',
-				'getQuestion',
-				'questionAnswersFromHighestUpvoteCount',
-				'questionTags',
-				'getReaction',
-				'questionAnswers',
-				'answer'
-			]),
-			...mapGetters(['currentUserId', 'isMobile', 'isOverlayVisible']),
-			question() {
-				return this.getQuestion(this.questionId)
-			},
-			id() {
-				return this.questionId
-			},
-			content() {
-				return this.question.text
-			},
-			author() {
-				if (this.question.hasOwnProperty('profiles')) {
-					return this.profile(this.question.profiles[0])
-				} else {
-					this.loading = true
-					this.dispatchFetchQuestion()
-						.then(() => {
-							return this.profile(this.question.profiles[0])
-						})
-				}
-			},
-			isCurrentUserAuthor() {
-				return this.currentUserId === this.author.user_id
-			},
-			resourceRoute() {
-				return `qna_questions/${this.id}`
-			},
-			deleteTarget() {
-				return 'to pytanie'
-			},
-			time() {
-				return timeFromS(this.question.created_at)
-			},
-			answersFromHighestUpvoteCount() {
-				return this.questionAnswersFromHighestUpvoteCount(this.id)
-			},
-			hasAnswers() {
-				return this.answersFromHighestUpvoteCount.length > 0
-			},
-			latestAnswer() {
-				if (this.config.highlighted[this.id]) {
-					const answerId = this.config.highlighted[this.id]
-					return this.answer(answerId)
-				} else {
-					return _.head(this.answersFromHighestUpvoteCount) || {}
-				}
-			},
-			otherAnswers() {
-				return _.tail(this.answersFromHighestUpvoteCount) || []
-			},
-			allAnswers() {
-				return this.answersFromHighestUpvoteCount
-			},
-			tags() {
-				return this.questionTags(this.questionId).map((tag) => tag.name) || []
-			},
-			bookmarkState() {
-				return this.getReaction(this.reactableResource, this.questionId, "bookmark")
-			},
-			watchState() {
-				return this.getReaction(this.reactableResource, this.questionId, "watch")
-			},
-			voteState() {
-				return this.getReaction(this.reactableResource, this.questionId, "upvote")
-			},
-			isQuestionInUrl() {
-				return !_.get(this.$route, 'query.qna_answer') && _.get(this.$route, 'query.qna_question') == this.questionId
-			},
-			answerInUrl() {
-				return _.get(this.$route, 'query.qna_answer')
-			},
-			isQuestionAnswerInUrl() {
-				if (this.isNotFetchedAnswerInUrl) return true
-
-				return !!this.questionAnswers(this.questionId).find((answer) => answer.id == this.answerInUrl)
-			},
-			isNotFetchedAnswerInUrl() {
-				const questionId = _.get(this.$route, 'query.qna_question')
-
-				if (questionId == this.questionId && this.answerInUrl) return true
-			},
+		otherAnswers() {
+			return _.tail(this.answersFromHighestUpvoteCount) || [];
 		},
-		methods: {
-			...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
-			showModal() {
-				this.isVisible = true
-			},
-			closeModal() {
-				this.isVisible = false
-			},
-			dispatchFetchQuestion() {
-				return this.fetchQuestion(this.id)
-					.then(() => {
-						this.loading = false
-					})
-					.catch((error) => {
-						$wnl.logger.error(error)
-						this.loading = false
-					})
-			},
-			getAnswer(id) {
-				return this.answersFromHighestUpvoteCount.filter(answer => answer.id == id)
-			},
-			hasAnswer(id) {
-				return this.getAnswer(id).length > 0
-			},
-			onDeleteSuccess() {
-				this.removeQuestion(this.id)
-			},
-			onSubmitSuccess() {
-				this.showAnswerForm = false
-				this.dispatchFetchQuestion()
-			},
-			refreshQuestionAndShowAnswers() {
-				return this.dispatchFetchQuestion(() => {
-					this.showAllAnswers = true
-				})
-			}
+		allAnswers() {
+			return this.answersFromHighestUpvoteCount;
 		},
-		mounted() {
-			if (this.isQuestionAnswerInUrl) {
-				this.showAllAnswers = true
-			}
+		tags() {
+			return this.questionTags(this.questionId).map((tag) => tag.name) || [];
+		},
+		bookmarkState() {
+			return this.getReaction(this.reactableResource, this.questionId, 'bookmark');
+		},
+		watchState() {
+			return this.getReaction(this.reactableResource, this.questionId, 'watch');
+		},
+		voteState() {
+			return this.getReaction(this.reactableResource, this.questionId, 'upvote');
+		},
+		isQuestionInUrl() {
+			return !_.get(this.$route, 'query.qna_answer') && _.get(this.$route, 'query.qna_question') == this.questionId;
+		},
+		answerInUrl() {
+			return _.get(this.$route, 'query.qna_answer');
+		},
+		isQuestionAnswerInUrl() {
+			if (this.isNotFetchedAnswerInUrl) return true;
 
+			return !!this.questionAnswers(this.questionId).find((answer) => answer.id == this.answerInUrl);
+		},
+		isNotFetchedAnswerInUrl() {
+			const questionId = _.get(this.$route, 'query.qna_question');
+
+			return questionId == this.questionId && this.answerInUrl;
+		},
+	},
+	methods: {
+		...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
+		showModal() {
+			this.isVisible = true;
+		},
+		closeModal() {
+			this.isVisible = false;
+		},
+		dispatchFetchQuestion() {
+			return this.fetchQuestion(this.id)
+				.catch((error) => {
+					$wnl.logger.error(error);
+				});
+		},
+		getAnswer(id) {
+			return this.answersFromHighestUpvoteCount.filter(answer => answer.id == id);
+		},
+		hasAnswer(id) {
+			return this.getAnswer(id).length > 0;
+		},
+		onDeleteSuccess() {
+			this.removeQuestion(this.id);
+		},
+		onSubmitSuccess() {
+			this.showAnswerForm = false;
+			this.dispatchFetchQuestion();
+		},
+		refreshQuestionAndShowAnswers() {
+			return this.dispatchFetchQuestion(() => {
+				this.showAllAnswers = true;
+			});
+		}
+	},
+	mounted() {
+		if (this.isQuestionAnswerInUrl) {
+			this.showAllAnswers = true;
+		}
+
+		if (!this.isOverlayVisible && this.isQuestionInUrl) {
+			this.scrollAndHighlight();
+		}
+	},
+	watch: {
+		'$route' (newRoute, oldRoute) {
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
-				this.scrollAndHighlight()
+				this.dispatchFetchQuestion()
+					.then(() => this.scrollAndHighlight());
+			}
+
+			if (this.isQuestionAnswerInUrl) {
+				if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion();
+				this.showAllAnswers = true;
 			}
 		},
-		watch: {
-			'$route' (newRoute, oldRoute) {
-				if (!this.isOverlayVisible && this.isQuestionInUrl) {
-					this.dispatchFetchQuestion()
-						.then(() => this.scrollAndHighlight())
-				}
-
-				if (this.isQuestionAnswerInUrl) {
-					if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion()
-					this.showAllAnswers = true
-				}
-			},
-			'isOverlayVisible' () {
-				if (!this.isOverlayVisible && this.isQuestionInUrl) {
-					this.scrollAndHighlight()
-				}
-			},
+		'isOverlayVisible' () {
+			if (!this.isOverlayVisible && this.isQuestionInUrl) {
+				this.scrollAndHighlight();
+			}
 		},
-	}
+	},
+};
 </script>

@@ -56,142 +56,142 @@
 		position: relative
 </style>
 <script>
-	import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection'
-	import Message from './Message.vue'
-	import {nextTick} from 'vue'
-	import _ from 'lodash'
-	import highlight from 'js/mixins/highlight'
+import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection';
+import Message from './Message.vue';
+import {nextTick} from 'vue';
+import _ from 'lodash';
+import highlight from 'js/mixins/highlight';
 
-	import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex';
 
-	export default {
-		components: {
-			'wnl-message': Message,
+export default {
+	components: {
+		'wnl-message': Message,
+	},
+	props: {
+		room: {
+			required: true,
 		},
-		props: {
-			room: {
-				required: true,
-			},
-			highlightedMessageId: {
-				required: false
-			},
-			loaded: {
-				required: true,
-				type: Boolean
-			},
-			messages: {
-				required: true,
-				type: Array
-			},
-			onScrollTop: {
-				required: true,
-				type: Function
-			},
-			hasMore: {
-				required: true,
-				type: Boolean
-			}
+		highlightedMessageId: {
+			required: false
 		},
-		data() {
-			return {
-				isPulling: false,
-			}
+		loaded: {
+			required: true,
+			type: Boolean
 		},
-		mixins: [highlight],
-		computed: {
-			...mapGetters(['isOverlayVisible']),
-			...mapGetters('chatMessages', ['getRoomById', 'getProfileByUserId']),
-			isAuthorUnique() {
-				return this.messages.map((message, index) => {
-					if (index === 0) return true
+		messages: {
+			required: true,
+			type: Array
+		},
+		onScrollTop: {
+			required: true,
+			type: Function
+		},
+		hasMore: {
+			required: true,
+			type: Boolean
+		}
+	},
+	data() {
+		return {
+			isPulling: false,
+		};
+	},
+	mixins: [highlight],
+	computed: {
+		...mapGetters(['isOverlayVisible']),
+		...mapGetters('chatMessages', ['getRoomById', 'getProfileByUserId']),
+		isAuthorUnique() {
+			return this.messages.map((message, index) => {
+				if (index === 0) return true;
 
-					let previous     = index - 1,
-						halfHourInMs = 1000 * 60 * 30
+				let previous     = index - 1,
+					halfHourInMs = 1000 * 60 * 30;
 
-					return message.user_id !== this.messages[previous].user_id ||
-						message.time - this.messages[previous].time > halfHourInMs
-				})
-			},
-			container() {
-				return this.$el.getElementsByClassName('wnl-chat-messages')[0]
-			},
-			content() {
-				return this.$el.getElementsByClassName('wnl-chat-content')[0]
-			},
+				return message.user_id !== this.messages[previous].user_id ||
+						message.time - this.messages[previous].time > halfHourInMs;
+			});
 		},
-		methods: {
-			scrollToBottom() {
-				nextTick(() => {
-					this.container.scroll({
-						top: this.container.scrollHeight + 100,
-						behavior: 'smooth'
-					})
-				})
-			},
-			pullDebouncer(event) {
-				const target = event.target
-				const scrollPosition = target.scrollTop < 0 ?
-					target.scrollHeight + target.scrollTop
-					: target.scrollTop
-				const height = target.scrollHeight
-				const shouldPull =
+		container() {
+			return this.$el.getElementsByClassName('wnl-chat-messages')[0];
+		},
+		content() {
+			return this.$el.getElementsByClassName('wnl-chat-content')[0];
+		},
+	},
+	methods: {
+		scrollToBottom() {
+			nextTick(() => {
+				this.container.scroll({
+					top: this.container.scrollHeight + 100,
+					behavior: 'smooth'
+				});
+			});
+		},
+		pullDebouncer(event) {
+			const target = event.target;
+			const scrollPosition = target.scrollTop < 0 ?
+				target.scrollHeight + target.scrollTop
+				: target.scrollTop;
+			const height = target.scrollHeight;
+			const shouldPull =
 						// make sure we're not pulling from cold storage at the moment,
 						!this.isPulling &&
 						// we're reaching the top of the messages container,
 
 						(scrollPosition / height) < 0.1 &&
-						this.hasMore
+						this.hasMore;
 
-				if (shouldPull) this.pull()
-			},
-			onScroll(event) {
-				this.pullDebouncer.call(this, event)
-			},
-			pull() {
-				this.isPulling = true
-				const heightBefore = this.container.scrollHeight
-				this.onScrollTop()
-					.then(() =>  {
-						const heightAfter = this.container.scrollHeight
-						this.container.scrollTop = heightAfter - heightBefore
-						this.isPulling = false
-					})
-			},
-			scrollToMessageById(clientId) {
-				const matchingMessage = this.$el.querySelector(`[data-id="${clientId}"]`)
+			if (shouldPull) this.pull();
+		},
+		onScroll(event) {
+			this.pullDebouncer.call(this, event);
+		},
+		pull() {
+			this.isPulling = true;
+			const heightBefore = this.container.scrollHeight;
+			this.onScrollTop()
+				.then(() =>  {
+					const heightAfter = this.container.scrollHeight;
+					this.container.scrollTop = heightAfter - heightBefore;
+					this.isPulling = false;
+				});
+		},
+		scrollToMessageById(clientId) {
+			const matchingMessage = this.$el.querySelector(`[data-id="${clientId}"]`);
 
-				if (matchingMessage) {
-					this.$refs.highlight = matchingMessage
-					this.scrollToPositionAndHighlight(
-						['chatChannel', 'messageId', 'messageTime', 'roomId'],
-						matchingMessage.offsetTop,
-						this.$refs.messagesContainer
-					)
-				}
-			},
-			getMessageClientId(message) {
-				return `${message.time}${message.user_id}`
-			},
-			getMessageAuthor(message) {
-				return this.getProfileByUserId(message.user_id)
+			if (matchingMessage) {
+				this.$refs.highlight = matchingMessage;
+				this.scrollToPositionAndHighlight(
+					['chatChannel', 'messageId', 'messageTime', 'roomId'],
+					matchingMessage.offsetTop,
+					this.$refs.messagesContainer
+				);
 			}
 		},
-		mounted() {
-			this.pullDebouncer = _.debounce(this.pullDebouncer, 300)
-			this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.scrollToBottom)
+		getMessageClientId(message) {
+			return `${message.time}${message.user_id}`;
 		},
-		beforeDestroy() {
-			this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.scrollToBottom)
+		getMessageAuthor(message) {
+			return this.getProfileByUserId(message.user_id);
+		}
+	},
+	mounted() {
+		this.pullDebouncer = _.debounce(this.pullDebouncer, 300);
+		this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.scrollToBottom);
+	},
+	beforeDestroy() {
+		this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.scrollToBottom);
+	},
+	watch: {
+		highlightedMessageId() {
+			if (this.highlightedMessageId) this.scrollToMessageById(this.highlightedMessageId);
 		},
-		watch: {
-			highlightedMessageId() {
-				if (this.highlightedMessageId) this.scrollToMessageById(this.highlightedMessageId)
-			},
-			'loaded' (newVal) {
-				// required by firefox
-				this.scrollToBottom()
-			}
+		'loaded' (newVal) {
+			// required by firefox
+			this.scrollToBottom();
 		}
 	}
+};
 
 </script>

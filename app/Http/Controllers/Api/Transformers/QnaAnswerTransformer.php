@@ -4,27 +4,33 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 
-use App\Models\QnaAnswer;
-use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ApiTransformer;
+use App\Models\QnaAnswer;
 
 
 class QnaAnswerTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['profiles', 'comments'];
+	protected $parent;
+
+	public function __construct($parent = null)
+	{
+		$this->parent = $parent;
+	}
 
 	public function transform(QnaAnswer $answer)
 	{
-		if (empty($answer->question)) {
-			return [];
-		}
 		$data = [
 			'id'            => $answer->id,
 			'text'          => $answer->text,
-			'qna_questions' => $answer->question->id,
+			'qna_questions' => $answer->question_id,
 			'created_at'    => $answer->created_at->timestamp,
 			'updated_at'    => $answer->updated_at->timestamp,
 		];
+
+		if ($this->parent) {
+			$data = array_merge($data, $this->parent);
+		}
 
 		if (self::shouldInclude('reactions')) {
 			$data = array_merge($data, ReactionsCountTransformer::transform($answer));

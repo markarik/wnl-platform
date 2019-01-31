@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="field">
 
 		<label :for="name" class="label">
@@ -9,7 +9,9 @@
 				  class="textarea normal"
 				  :name="name"
 				  @input="$emit('input', $event.target.value)"
-				  :placeholder="placeholder">
+				  :placeholder="placeholder"
+				  v-model="inputValue"
+		>
 		</textarea>
 
 		<span class="help is-danger"
@@ -25,16 +27,16 @@
 </style>
 
 <script>
-	import { formInput } from 'js/mixins/form-input'
+import { formInput } from 'js/mixins/form-input';
 
-	export default {
-		name: 'Textarea',
-		props: ['name', 'placeholder'],
-		mixins: [formInput],
-		computed: {
-			default() {
-				return ''
-			},
-		}
+export default {
+	name: 'Textarea',
+	props: ['name', 'placeholder'],
+	mixins: [formInput],
+	computed: {
+		default() {
+			return '';
+		},
 	}
+};
 </script>

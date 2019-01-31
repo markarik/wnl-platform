@@ -91,7 +91,7 @@
 		text-transform: uppercase
 
 	.plan-progress-explain
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 
 	.plan-progress-bar
@@ -139,106 +139,106 @@
 </style>
 
 <script>
-	import moment from 'moment'
-	import {mapGetters} from 'vuex'
+import moment from 'moment';
+import {mapGetters} from 'vuex';
 
-	import emits_events from 'js/mixins/emits-events'
-	import features from 'js/consts/events_map/features.json';
+import emits_events from 'js/mixins/emits-events';
+import features from 'js/consts/events_map/features.json';
 
-	export default {
-		name: 'QuestionsPlanProgress',
-		mixins: [emits_events],
-		props: {
-			allowChange: {
-				default: true,
-				type: Boolean,
-			},
-			plan: {
-				required: true,
-				type: Object,
-			},
+export default {
+	name: 'QuestionsPlanProgress',
+	mixins: [emits_events],
+	props: {
+		allowChange: {
+			default: true,
+			type: Boolean,
 		},
-		computed: {
-			...mapGetters(['isMobile']),
-			average() {
-				return Math.ceil(this.plan.stats.done / (this.planResolvingSince - this.slackDaysUsed))
-			},
-			averagePlanned() {
-				return Math.ceil(this.plan.stats.total / this.plannedDaysCount)
-			},
-			exceededPlanDate() {
-				return this.daysSoFar > this.plannedDaysCount
-			},
-			hasMoreQuestionsThanPlanned() {
-				if (this.questionsLeftPerDay > this.averagePlanned) {
-					return this.questionsLeftPerDay
-				} else {
-					return false
-				}
-			},
-			questionsLeftPerDay() {
-				const questionsLeft = this.plan.stats.total - this.plan.stats.done
-				const daysLeft = this.plannedDaysCount - this.daysSoFar + 1
-
-				return Math.ceil(questionsLeft / daysLeft)
-			},
-			averageStatus() {
-				return this.average >= this.averagePlanned ? 'greater' : 'less'
-			},
-			created() {
-				return moment(this.plan.created_at).format('LLL')
-			},
-			daysSoFar() {
-				const diff = moment().startOf('day').diff(this.planStartDate, 'days')
-				return diff < 0 ? 0 : diff + 1
-			},
-			donePercent() {
-				return Math.round(this.plan.stats.done * 100 / this.plan.stats.total)
-			},
-			endDate() {
-				return moment(this.plan.end_date.date)
-			},
-			hasStarted() {
-				return this.daysSoFar > 0
-			},
-			plannedDaysCount() {
-				return this.endDate.diff(this.planStartDate, 'days') - this.plan.slack_days_planned + 1
-			},
-			plannedRoute() {
-				return {
-					name: 'questions-list',
-					params: {
-						presetFilters: [
-							'quiz-planned.items[0]',
-						],
-					},
-				}
-			},
-			slackDaysUsed() {
-				return this.plan.slack_days_planned - this.plan.slack_days_left
-			},
-			planStartDate() {
-				return moment(this.plan.start_date.date)
-			},
-			planResolvingSince() {
-				const resolvingStarted =  this.plan.calculated_start_date
-					? moment(this.plan.calculated_start_date.date) : moment(this.plan.start_date.date)
-
-				const diff = moment().startOf('day').diff(resolvingStarted, 'days')
-
-				return diff < 0 ? 0 : diff + 1
+		plan: {
+			required: true,
+			type: Object,
+		},
+	},
+	computed: {
+		...mapGetters(['isMobile']),
+		average() {
+			return Math.ceil(this.plan.stats.done / (this.planResolvingSince - this.slackDaysUsed));
+		},
+		averagePlanned() {
+			return Math.ceil(this.plan.stats.total / this.plannedDaysCount);
+		},
+		exceededPlanDate() {
+			return this.daysSoFar > this.plannedDaysCount;
+		},
+		hasMoreQuestionsThanPlanned() {
+			if (this.questionsLeftPerDay > this.averagePlanned) {
+				return this.questionsLeftPerDay;
+			} else {
+				return false;
 			}
 		},
-		methods: {
-			onPlanClick() {
-				this.emitUserEvent({
-					feature_component: features.dashboard.feature_components.planned_questions.value,
-					action: features.dashboard.feature_components.planned_questions.actions.open.value,
-					target: this.plan.id
-				})
+		questionsLeftPerDay() {
+			const questionsLeft = this.plan.stats.total - this.plan.stats.done;
+			const daysLeft = this.plannedDaysCount - this.daysSoFar + 1;
 
-				this.$router.push(this.plannedRoute)
-			}
+			return Math.ceil(questionsLeft / daysLeft);
 		},
-	}
+		averageStatus() {
+			return this.average >= this.averagePlanned ? 'greater' : 'less';
+		},
+		created() {
+			return moment(this.plan.created_at).format('LLL');
+		},
+		daysSoFar() {
+			const diff = moment().startOf('day').diff(this.planStartDate, 'days');
+			return diff < 0 ? 0 : diff + 1;
+		},
+		donePercent() {
+			return Math.round(this.plan.stats.done * 100 / this.plan.stats.total);
+		},
+		endDate() {
+			return moment(this.plan.end_date.date);
+		},
+		hasStarted() {
+			return this.daysSoFar > 0;
+		},
+		plannedDaysCount() {
+			return this.endDate.diff(this.planStartDate, 'days') - this.plan.slack_days_planned + 1;
+		},
+		plannedRoute() {
+			return {
+				name: 'questions-list',
+				params: {
+					presetFilters: [
+						'quiz-planned.items[0]',
+					],
+				},
+			};
+		},
+		slackDaysUsed() {
+			return this.plan.slack_days_planned - this.plan.slack_days_left;
+		},
+		planStartDate() {
+			return moment(this.plan.start_date.date);
+		},
+		planResolvingSince() {
+			const resolvingStarted =  this.plan.calculated_start_date
+				? moment(this.plan.calculated_start_date.date) : moment(this.plan.start_date.date);
+
+			const diff = moment().startOf('day').diff(resolvingStarted, 'days');
+
+			return diff < 0 ? 0 : diff + 1;
+		}
+	},
+	methods: {
+		onPlanClick() {
+			this.emitUserEvent({
+				feature_component: features.dashboard.feature_components.planned_questions.value,
+				action: features.dashboard.feature_components.planned_questions.actions.open.value,
+				target: this.plan.id
+			});
+
+			this.$router.push(this.plannedRoute);
+		}
+	},
+};
 </script>

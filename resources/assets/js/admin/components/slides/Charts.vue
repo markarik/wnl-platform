@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div>
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 				   :alert="alert"
@@ -16,22 +16,22 @@
 </style>
 
 <script>
-	import { alerts } from 'js/mixins/alerts'
-	import {getUrl} from 'js/utils/env'
+import { alerts } from 'js/mixins/alerts';
+import {getUrl} from 'js/utils/env';
 
-	export default {
-		mixins: [ alerts ],
-		methods: {
-			updateCharts() {
-				axios.get(getUrl(`admin/update-charts`))
-						.then(response => {
-							this.successFading('OK, to może trochę potrwać. Kiedy skończę, dam znać na slacku.', 4000)
-						})
-						.catch(error => {
-							this.errorFading('Ups... Coś poszło nie tak.', 4000)
-							$wnl.logger.capture(error)
-						})
-			}
+export default {
+	mixins: [ alerts ],
+	methods: {
+		updateCharts() {
+			axios.get(getUrl('admin/update-charts'))
+				.then(response => {
+					this.successFading('OK, to może trochę potrwać. Kiedy skończę, dam znać na slacku.', 4000);
+				})
+				.catch(error => {
+					this.errorFading('Ups... Coś poszło nie tak.', 4000);
+					$wnl.logger.capture(error);
+				});
 		}
 	}
+};
 </script>

@@ -146,296 +146,294 @@
 </style>
 
 <script>
-	import {mapActions, mapGetters} from 'vuex'
-	import {nextTick} from 	'vue'
+import {mapActions, mapGetters} from 'vuex';
+import {nextTick} from 	'vue';
 
-	import { getApiUrl } from 'js/utils/env'
-	import {scrollToTop} from 'js/utils/animations'
-	import {FILTER_TYPES, buildFiltersByPath, parseFilters} from 'js/services/apiFiltering'
+import { getApiUrl } from 'js/utils/env';
+import {scrollToTop} from 'js/utils/animations';
+import {FILTER_TYPES, buildFiltersByPath, parseFilters} from 'js/services/apiFiltering';
 
-	import MainNav from 'js/components/MainNav'
-	import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed'
-	import ModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutocomplete'
-	import PublicChat from 'js/components/chat/PublicChat'
-	import Sidenav from 'js/components/global/Sidenav'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
-	import Accordion from 'js/components/global/accordion/Accordion'
-	import withChat from 'js/mixins/with-chat'
-	import Alert from 'js/components/global/GlobalAlert'
+import MainNav from 'js/components/MainNav';
+import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed';
+import ModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutocomplete';
+import PublicChat from 'js/components/chat/PublicChat';
+import SidenavSlot from 'js/components/global/SidenavSlot';
+import Accordion from 'js/components/global/accordion/Accordion';
+import withChat from 'js/mixins/with-chat';
+import Alert from 'js/components/global/GlobalAlert';
 
 
-	export default {
-		name: 'ModeratorsDashboard',
-		data() {
+export default {
+	name: 'ModeratorsDashboard',
+	data() {
+		return {
+			quickFilters: this.initialQuickFilters(),
+			sorting: this.initialSorting(),
+			subjectTypeFilters: {},
+			selectedByTypeFilters: {},
+			labelFilters: {},
+			selectedByLabelFilters: {},
+			moderators: [],
+			showAutocomplete: false,
+			autocompleteUser: {},
+			bodyClicked: false
+		};
+	},
+	components: {
+		'wnl-main-nav': MainNav,
+		'wnl-moderators-feed': ModeratorsFeed,
+		'wnl-moderators-autocomplete': ModeratorsAutocomplete,
+		'wnl-public-chat': PublicChat,
+		'wnl-sidenav-slot': SidenavSlot,
+		'wnl-accordion': Accordion,
+		'wnl-alert': Alert
+	},
+	mixins: [withChat],
+	computed: {
+		...mapGetters([
+			'isSidenavVisible',
+			'isSidenavMounted',
+			'isChatMounted',
+			'isChatVisible',
+			'isChatToggleVisible'
+		]),
+		...mapGetters('tasks', ['updatedTasks']),
+		...mapGetters(['currentUserId']),
+		chatRooms() {
+			return [
+				{name: '#moderatorzy', channel: 'moderatorzy'},
+			];
+		},
+		accordionConfig() {
 			return {
-				quickFilters: this.initialQuickFilters(),
-				sorting: this.initialSorting(),
-				subjectTypeFilters: {},
-				selectedByTypeFilters: {},
-				labelFilters: {},
-				selectedByLabelFilters: {},
-				moderators: [],
-				showAutocomplete: false,
-				autocompleteUser: {},
-				bodyClicked: false
+				disableEmpty: false,
+				isMobile: false,
+				expanded: ['task-subject_type'],
+				selectedElements: this.activeFiltersByType
+			};
+		},
+		accordionConfigByLesson() {
+			return {
+				disableEmpty: false,
+				isMobile: false,
+				showCounts: false,
+				selectedElements: this.activeFiltersByLesson
+			};
+		},
+		activeFiltersByType() {
+			return Object.keys(this.selectedByTypeFilters).filter(key => this.selectedByTypeFilters[key]);
+		},
+		activeFiltersByLesson() {
+			return Object.keys(this.selectedByLabelFilters).filter(key => this.selectedByLabelFilters[key]);
+		}
+	},
+	methods: {
+		...mapActions(['toggleChat', 'toggleOverlay']),
+		...mapActions('tasks', ['pullTasks']),
+		onItemToggled({path, selected}) {
+			this.selectedByTypeFilters[path] = selected;
+			this.fetchTasks();
+		},
+		onTagSelect({path, selected}) {
+			this.selectedByLabelFilters[path] = selected;
+			this.fetchTasks();
+		},
+		buildRequestParams() {
+			const activeQuickFilters = this.quickFilters.filter(filter => filter.isActive);
+			const parsedFilters = [];
+			activeQuickFilters.forEach(filter => {
+				parsedFilters.push({
+					[filter.group]: filter.value()
+				});
+			});
+			parsedFilters.push(...parseFilters(this.activeFiltersByType, this.subjectTypeFilters, this.currentUserId));
+			parsedFilters.push(...parseFilters(this.activeFiltersByLesson, this.labelFilters, this.currentUserId));
+
+			if (this.autocompleteUser.user_id) {
+				parsedFilters.push({
+					'task-assignee': {user_id: this.autocompleteUser.user_id}
+				});
 			}
+
+			const activeSorting = this.sorting.find(filter => filter.isActive);
+			const order = {
+				...activeSorting.order(activeSorting.dir)
+			};
+
+			return {
+				filters: parsedFilters,
+				order
+			};
 		},
-		components: {
-			'wnl-main-nav': MainNav,
-			'wnl-moderators-feed': ModeratorsFeed,
-			'wnl-moderators-autocomplete': ModeratorsAutocomplete,
-			'wnl-public-chat': PublicChat,
-			'wnl-sidenav': Sidenav,
-			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-accordion': Accordion,
-			'wnl-alert': Alert
-		},
-		mixins: [withChat],
-		computed: {
-			...mapGetters([
-				'isSidenavVisible',
-				'isSidenavMounted',
-				'isChatMounted',
-				'isChatVisible',
-				'isChatToggleVisible'
-			]),
-			...mapGetters('tasks', ['updatedTasks']),
-			...mapGetters(['currentUserId']),
-			chatRooms() {
-				return [
-					{name: '#moderatorzy', channel: 'moderatorzy'},
-				]
-			},
-			accordionConfig() {
-				return {
-					disableEmpty: false,
-					isMobile: false,
-					expanded: ['task-subject_type'],
-					selectedElements: this.activeFiltersByType
-				}
-			},
-			accordionConfigByLesson() {
-				return {
-					disableEmpty: false,
-					isMobile: false,
-					showCounts: false,
-					selectedElements: this.activeFiltersByLesson
-				}
-			},
-			activeFiltersByType() {
-				return Object.keys(this.selectedByTypeFilters).filter(key => this.selectedByTypeFilters[key])
-			},
-			activeFiltersByLesson() {
-				return Object.keys(this.selectedByLabelFilters).filter(key => this.selectedByLabelFilters[key])
-			}
-		},
-		methods: {
-			...mapActions(['toggleChat', 'toggleOverlay']),
-			...mapActions('tasks', ['pullTasks']),
-			onItemToggled({path, selected}) {
-				this.selectedByTypeFilters[path] = selected
-				this.fetchTasks()
-			},
-			onTagSelect({path, selected}) {
-				this.selectedByLabelFilters[path] = selected
-				this.fetchTasks()
-			},
-			buildRequestParams() {
-				const activeQuickFilters = this.quickFilters.filter(filter => filter.isActive)
-				const parsedFilters = []
-				activeQuickFilters.forEach(filter => {
-					parsedFilters.push({
-						[filter.group]: filter.value()
-					})
-				})
-				parsedFilters.push(...parseFilters(this.activeFiltersByType, this.subjectTypeFilters, this.currentUserId))
-				parsedFilters.push(...parseFilters(this.activeFiltersByLesson, this.labelFilters, this.currentUserId))
-
-				if (this.autocompleteUser.user_id) {
-					parsedFilters.push({
-						'task-assignee': {user_id: this.autocompleteUser.user_id}
-					})
-				}
-
-				const activeSorting = this.sorting.find(filter => filter.isActive)
-				const order = {
-					...activeSorting.order(activeSorting.dir)
-				}
-
-				return {
-					filters: parsedFilters,
-					order
-				}
-			},
-			fetchTasks({...params}) {
-				this.toggleOverlay({source: 'moderatorsFeed', display: true})
-				this.pullTasks({...this.buildRequestParams(), ...params})
-					.then(() => {
-						scrollToTop()
-						this.toggleOverlay({source: 'moderatorsFeed', display: false})
-					})
-			},
-			onRefresh() {
-				this.quickFilters = this.initialQuickFilters()
-				this.sorting = this.initialSorting()
-				this.selectedByLabelFilters = this.buildByLessonFiltering()
-				this.selectedByTypeFilters = this.buildByTypeFiltering()
-				this.fetchTasks()
-			},
-			initialSorting() {
-				return [
-					{
-						name: this.$t('tasks.sorting.options.byCreatedAt'),
-						dir: 'desc',
-						isActive: true,
-						order: (dir = 'desc') => {
-							return {'created_at': dir}
-						}
-					},
-					{
-						name: this.$t('tasks.sorting.options.byUpdatedAt'),
-						dir: 'desc',
-						isActive: false,
-						order: (dir = 'desc') => {
-							return {'updated_at': dir}
-						}
-					}
-				]
-			},
-			initialQuickFilters() {
-				return [
-					{
-						group: 'task-assignee',
-						value: () => ({user_id: this.currentUserId}),
-						isActive: true,
-						name: this.$t('tasks.quickFilters.filters.my')
-					},
-					{
-						group: 'task-status',
-						value: () => ({
-							excluded: ['done'],
-							included: []
-						}),
-						isActive: true,
-						name: this.$t('tasks.quickFilters.filters.notDone')
-					},
-					{
-						group: 'task-assignee',
-						value: () => ({user_id: null}),
-						isActive: false,
-						name: this.$t('tasks.quickFilters.filters.unassigned')
-					}
-				]
-			},
-			buildByTypeFiltering() {
-				return buildFiltersByPath(this.subjectTypeFilters)
-			},
-			buildByLessonFiltering() {
-				return buildFiltersByPath(this.labelFilters)
-			},
-			onQuickFilterChange(quickFilter) {
-				quickFilter.isActive = !quickFilter.isActive
-				this.pullTasks(this.buildRequestParams())
-			},
-			onSortClick(sort) {
-				if (sort.isActive) {
-					sort.dir = sort.dir === 'desc' ? 'asc' : 'desc'
-				} else {
-					this.sorting.forEach(sort => sort.isActive = false)
-					sort.isActive = true
-				}
-
-				this.pullTasks(this.buildRequestParams())
-			},
-			search(user = {}) {
-				const {filters, ...rest} = this.buildRequestParams();
-				this.autocompleteUser = user
-
-				this.pullTasks(this.buildRequestParams())
-				.catch(() => {
-					this.autocompleteUser = {}
-				})
-				this.showAutocomplete = false
-			},
-			clickHandler() {
-				this.bodyClicked = true
-				this.showAutocomplete = false
-				nextTick(() => {
-					this.bodyClicked = false
-				})
-			},
-			parseSubjectFilters(filters) {
-				return {
-					'task-labels': {
-						name: this.$t('tasks.filters.byLesson.title'),
-						type: FILTER_TYPES.LIST,
-						items: filters.map(filter => {
-							return {
-								name: filter.name,
-								value: filter.name,
-								items: filter.categories.map(childFilter => {
-									return {
-										name: childFilter.name,
-										value: childFilter.name
-									}
-								})
-							}
-						})
-					}
-				}
-			},
-			parseSubjectTypeFilters(filters) {
-				return {
-					'task-subject_type': {
-						name: this.$t('tasks.filters.byType.title'),
-						type: FILTER_TYPES.LIST,
-						items: filters.map(filter => {
-							return {
-								name: this.$t(`tasks.filters.byType.${filter}`),
-								value: filter
-							}
-						})
-					}
-				}
-			}
-		},
-		mounted() {
-			document.addEventListener('click', this.clickHandler)
-
-			this.toggleOverlay({source: 'moderatorsFeed', display: true})
-
-			const promisedTasks = this.pullTasks(this.buildRequestParams())
-			const promisedFilters = axios.post(getApiUrl('tasks/.filterList'), {
-				filters: []
-			})
-
-			Promise.all([promisedTasks, promisedFilters])
-				.then(([tasks, filtersList]) => {
-					this.moderators = filtersList.data['task-assignee']
-
-					this.labelFilters = this.parseSubjectFilters(filtersList.data['task-labels'])
-					this.selectedByLabelFilters = this.buildByLessonFiltering()
-
-					this.subjectTypeFilters = this.parseSubjectTypeFilters(filtersList.data['task-subject_type'])
-					this.selectedByTypeFilters = this.buildByTypeFiltering()
-
-					this.toggleOverlay({source: 'moderatorsFeed', display: false})
-				}).catch(error => {
-					this.toggleOverlay({source: 'moderatorsFeed', display: false})
-					this.$store.dispatch('addAlert', {
-						text: this.$t('ui.error.somethingWentWrongUnofficial'),
-						type: 'error'
-					});
-					$wnl.logger.error(error);
+		fetchTasks({...params}) {
+			this.toggleOverlay({source: 'moderatorsFeed', display: true});
+			this.pullTasks({...this.buildRequestParams(), ...params})
+				.then(() => {
+					scrollToTop();
+					this.toggleOverlay({source: 'moderatorsFeed', display: false});
 				});
 		},
-		beforeDestroy() {
-			document.removeEventListener('click', this.clickHandler)
+		onRefresh() {
+			this.quickFilters = this.initialQuickFilters();
+			this.sorting = this.initialSorting();
+			this.selectedByLabelFilters = this.buildByLessonFiltering();
+			this.selectedByTypeFilters = this.buildByTypeFiltering();
+			this.fetchTasks();
 		},
-		watch: {
-			'$route.query.chatChannel' (newVal) {
-				newVal && !this.isChatVisible && this.toggleChat();
+		initialSorting() {
+			return [
+				{
+					name: this.$t('tasks.sorting.options.byCreatedAt'),
+					dir: 'desc',
+					isActive: true,
+					order: (dir = 'desc') => {
+						return {'created_at': dir};
+					}
+				},
+				{
+					name: this.$t('tasks.sorting.options.byUpdatedAt'),
+					dir: 'desc',
+					isActive: false,
+					order: (dir = 'desc') => {
+						return {'updated_at': dir};
+					}
+				}
+			];
+		},
+		initialQuickFilters() {
+			return [
+				{
+					group: 'task-assignee',
+					value: () => ({user_id: this.currentUserId}),
+					isActive: true,
+					name: this.$t('tasks.quickFilters.filters.my')
+				},
+				{
+					group: 'task-status',
+					value: () => ({
+						excluded: ['done'],
+						included: []
+					}),
+					isActive: true,
+					name: this.$t('tasks.quickFilters.filters.notDone')
+				},
+				{
+					group: 'task-assignee',
+					value: () => ({user_id: null}),
+					isActive: false,
+					name: this.$t('tasks.quickFilters.filters.unassigned')
+				}
+			];
+		},
+		buildByTypeFiltering() {
+			return buildFiltersByPath(this.subjectTypeFilters);
+		},
+		buildByLessonFiltering() {
+			return buildFiltersByPath(this.labelFilters);
+		},
+		onQuickFilterChange(quickFilter) {
+			quickFilter.isActive = !quickFilter.isActive;
+			this.pullTasks(this.buildRequestParams());
+		},
+		onSortClick(sort) {
+			if (sort.isActive) {
+				sort.dir = sort.dir === 'desc' ? 'asc' : 'desc';
+			} else {
+				this.sorting.forEach(sort => sort.isActive = false);
+				sort.isActive = true;
 			}
+
+			this.pullTasks(this.buildRequestParams());
 		},
-	}
+		search(user = {}) {
+			const {filters, ...rest} = this.buildRequestParams();
+			this.autocompleteUser = user;
+
+			this.pullTasks(this.buildRequestParams())
+				.catch(() => {
+					this.autocompleteUser = {};
+				});
+			this.showAutocomplete = false;
+		},
+		clickHandler() {
+			this.bodyClicked = true;
+			this.showAutocomplete = false;
+			nextTick(() => {
+				this.bodyClicked = false;
+			});
+		},
+		parseSubjectFilters(filters) {
+			return {
+				'task-labels': {
+					name: this.$t('tasks.filters.byLesson.title'),
+					type: FILTER_TYPES.LIST,
+					items: filters.map(filter => {
+						return {
+							name: filter.name,
+							value: filter.name,
+							items: filter.categories.map(childFilter => {
+								return {
+									name: childFilter.name,
+									value: childFilter.name
+								};
+							})
+						};
+					})
+				}
+			};
+		},
+		parseSubjectTypeFilters(filters) {
+			return {
+				'task-subject_type': {
+					name: this.$t('tasks.filters.byType.title'),
+					type: FILTER_TYPES.LIST,
+					items: filters.map(filter => {
+						return {
+							name: this.$t(`tasks.filters.byType.${filter}`),
+							value: filter
+						};
+					})
+				}
+			};
+		}
+	},
+	mounted() {
+		document.addEventListener('click', this.clickHandler);
+
+		this.toggleOverlay({source: 'moderatorsFeed', display: true});
+
+		const promisedTasks = this.pullTasks(this.buildRequestParams());
+		const promisedFilters = axios.post(getApiUrl('tasks/.filterList'), {
+			filters: []
+		});
+
+		Promise.all([promisedTasks, promisedFilters])
+			.then(([tasks, filtersList]) => {
+				this.moderators = filtersList.data['task-assignee'];
+
+				this.labelFilters = this.parseSubjectFilters(filtersList.data['task-labels']);
+				this.selectedByLabelFilters = this.buildByLessonFiltering();
+
+				this.subjectTypeFilters = this.parseSubjectTypeFilters(filtersList.data['task-subject_type']);
+				this.selectedByTypeFilters = this.buildByTypeFiltering();
+
+				this.toggleOverlay({source: 'moderatorsFeed', display: false});
+			}).catch(error => {
+				this.toggleOverlay({source: 'moderatorsFeed', display: false});
+				this.$store.dispatch('addAlert', {
+					text: this.$t('ui.error.somethingWentWrongUnofficial'),
+					type: 'error'
+				});
+				$wnl.logger.error(error);
+			});
+	},
+	beforeDestroy() {
+		document.removeEventListener('click', this.clickHandler);
+	},
+	watch: {
+		'$route.query.chatChannel' (newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
+		}
+	},
+};
 </script>

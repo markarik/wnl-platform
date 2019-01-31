@@ -20,20 +20,20 @@
 
 	.breadcrumb-link,
 	.breadcrumb-link:visited
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-2
 
 	.breadcrumb-link:hover
-		color: $color-gray
+		color: $color-darkest-gray
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-	export default {
-		name: 'Breadcrumbs',
-		computed: {
-			...mapGetters(['breadcrumbs'])
-		},
-	}
+export default {
+	name: 'Breadcrumbs',
+	computed: {
+		...mapGetters(['breadcrumbs'])
+	},
+};
 </script>

@@ -78,70 +78,70 @@
 </style>
 
 <script>
-	import {nextTick} from 'vue'
-	import emits_events from 'js/mixins/emits-events';
-	import features from 'js/consts/events_map/features.json';
+import {nextTick} from 'vue';
+import emits_events from 'js/mixins/emits-events';
+import features from 'js/consts/events_map/features.json';
 
-	export default {
-		name: 'SlidePreview',
-		data() {
-			return {
-				isLoading: true
-			}
+export default {
+	name: 'SlidePreview',
+	data() {
+		return {
+			isLoading: true
+		};
+	},
+	mixins: [emits_events],
+	props: {
+		content: {
+			type: String,
+			default: ''
 		},
-		mixins: [emits_events],
-		props: {
-			content: {
-				type: String,
-				default: ''
-			},
-			showModal: {
-				type: Boolean,
-				default: false
-			},
-			slidesCount: {
-				type: Number | String,
-			}
+		showModal: {
+			type: Boolean,
+			default: false
 		},
-		computed: {
-			hasManySlides() {
-				return this.slidesCount > 1
-			}
-		},
-		methods: {
-			onLoad() {
-				frames["slidePreview"].document.body.classList.add("is-without-controls")
-				nextTick(() => this.isLoading = false)
-				this.emitUserEvent({
-					action: features.slide_preview.actions.open.value
-				})
-			},
-			onKeydown(e) {
-				switch(e.keyCode) {
-					case 37: // left arrow
-						e.stopPropagation()
-						this.$emit('switchSlide', -1)
-						break
-					case 39: // right arrow
-						e.stopPropagation()
-						this.$emit('switchSlide', 1)
-						break
-					case 27: // esc
-						this.$emit('closeModal')
-						break
-				}
-			}
-		},
-		watch: {
-			'showModal' (newValue) {
-				this.isLoading = newValue
-			}
-		},
-		mounted() {
-			document.body.addEventListener('keydown', this.onKeydown)
-		},
-		beforeDestroy() {
-			document.body.removeEventListener('keydown', this.onKeydown)
+		slidesCount: {
+			type: [Number, String],
 		}
+	},
+	computed: {
+		hasManySlides() {
+			return this.slidesCount > 1;
+		}
+	},
+	methods: {
+		onLoad() {
+			frames['slidePreview'].document.body.classList.add('is-without-controls');
+			nextTick(() => this.isLoading = false);
+			this.emitUserEvent({
+				action: features.slide_preview.actions.open.value
+			});
+		},
+		onKeydown(e) {
+			switch(e.keyCode) {
+			case 37: // left arrow
+				e.stopPropagation();
+				this.$emit('switchSlide', -1);
+				break;
+			case 39: // right arrow
+				e.stopPropagation();
+				this.$emit('switchSlide', 1);
+				break;
+			case 27: // esc
+				this.$emit('closeModal');
+				break;
+			}
+		}
+	},
+	watch: {
+		'showModal' (newValue) {
+			this.isLoading = newValue;
+		}
+	},
+	mounted() {
+		document.body.addEventListener('keydown', this.onKeydown);
+	},
+	beforeDestroy() {
+		document.body.removeEventListener('keydown', this.onKeydown);
 	}
+};
 </script>

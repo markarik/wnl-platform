@@ -4,6 +4,7 @@ use App\Jobs\CalculateCoursePlan;
 use App\Http\Controllers\Api\ApiController;
 use Carbon\Carbon;
 use Cache;
+use Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\User\UpdateUserLesson;
 use App\Http\Requests\User\UpdateLessonsPreset;
@@ -11,6 +12,7 @@ use App\Http\Requests\User\UpdateLessonsBatch;
 use App\Models\UserLesson;
 use App\Models\User;
 use DB;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
 class UserLessonApiController extends ApiController
@@ -19,6 +21,12 @@ class UserLessonApiController extends ApiController
 	{
 		parent::__construct($request);
 		$this->resourceName = config('papi.resources.user-lesson');
+	}
+
+	public function getForUser(Request $request, $userId) {
+		$result = UserLesson::where(['user_id' => $userId])->get();
+
+		return $this->transformAndRespond($result);
 	}
 
 	public function put(UpdateUserLesson $request)
@@ -40,7 +48,7 @@ class UserLessonApiController extends ApiController
 			'start_date' => Carbon::parse($request->input('date')),
 		]);
 
-		\Cache::forget(EditionsApiController::key($userId));
+		CoursesApiController::clearUserCache($userId);
 
 		return $this->respondOk();
 	}
@@ -62,7 +70,7 @@ class UserLessonApiController extends ApiController
 
 		$plan = dispatch_now(new CalculateCoursePlan($user, $options));
 
-		\Cache::forget(EditionsApiController::key($user->id));
+		CoursesApiController::clearUserCache($user->id);
 		$lessons = $user->lessonsAvailability()->get();
 		$controller = new LessonsApiController($request);
 
@@ -93,8 +101,55 @@ class UserLessonApiController extends ApiController
 			);
 		}
 
-		\Cache::forget(EditionsApiController::key($userId));
+		CoursesApiController::clearUserCache($userId);
 
 		return $this->respondOk();
+	}
+
+	public function exportPlan(Request $request)
+	{
+		$userId = $request->route('userId');
+		$user = User::fetch($userId);
+
+		if (empty($user)) {
+			return $this->respondNotFound();
+		}
+
+		if (!Auth::user()->can('view', $user)) {
+			return $this->respondForbidden();
+		}
+
+		$userLessons = UserLesson::where('user_id', $userId)->get();
+
+		$csvData = [];
+
+		$csvData = $userLessons
+			->sortBy('start_date')
+			->map(function($userLesson) use ($user) {
+				return [
+					"name" => $userLesson->lesson->name,
+					"start_date" => $userLesson->start_date->format('m/d/Y')
+				];
+			});
+
+		$csvData->prepend([
+			'name' => 'Subject',
+			'start_date' => 'Start Date'
+		]);
+
+		return new StreamedResponse(
+			function() use($csvData) {
+				$buffer = fopen('php://output', 'w');
+				foreach($csvData as $row) {
+					fputcsv($buffer, $row);
+				}
+				fclose($buffer);
+			},
+			200,
+			[
+				'Content-type'        => 'text/csv',
+				'Content-Disposition' => 'attachment; filename=plan_pracy.csv'
+			]
+		);
 	}
 }

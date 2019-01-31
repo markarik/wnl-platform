@@ -125,7 +125,10 @@ class OrdersHandleUnpaid extends Command
 				'start_date' => Carbon::today(),
 				'end_date' => Carbon::tomorrow(),
 				'target' => SiteWideMessage::SITE_WIDE_ALERT_DISPLAY_TARGET,
-				'message' => trans('site_wide_messages.unpaid-instalment-reminder', ['orderId' => $order->id])
+				'message' => trans('site_wide_messages.unpaid-instalment-reminder', [
+					'dueDate' => Carbon::parse($instalment->due_date)->format('Y-m-d'),
+					'orderId' => $order->id
+				])
 			]);
 
 			// next instalment due date is in one day

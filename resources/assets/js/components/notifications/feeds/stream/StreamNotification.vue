@@ -26,19 +26,19 @@
 			</div>
 			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
 				<div @click="dispatchMarkAsSeen" @contextmenu="dispatchMarkAsSeen">
-					<router-link v-if="hasDynamicContext" :to="dynamicRoute">
+					<router-link v-if="hasDynamicContext" :to="dynamicRoute" @click.native="trackNotificationClick">
 						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
 							<span v-if="loading" class="loader"></span>
 							<i v-else class="fa fa-angle-right"></i>
 						</span>
 					</router-link>
-					<router-link v-else-if="hasFullContext" :to="routeContext">
+					<router-link v-else-if="hasFullContext" :to="routeContext" @click.native="trackNotificationClick">
 						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
 							<span v-if="loading" class="loader"></span>
 							<i v-else class="fa fa-angle-right"></i>
 						</span>
 					</router-link>
-					<a v-else :href="routeContext">
+					<a v-else :href="routeContext" @click.native="trackNotificationClick">
 						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
 							<span v-if="loading" class="loader"></span>
 							<i v-else class="fa fa-angle-right"></i>
@@ -53,8 +53,8 @@
 		</div>
 		<div class="delete-message" v-if="deleted" v-t="'notifications.messages.deleted'"/>
 		<div class="delete-message" v-if="resolved" v-t="'notifications.messages.resolved'"/>
-		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="message.actors"/>
+		<wnl-modal @closeModal="closeModal" v-if="isVisible">
+			<wnl-user-profile-modal :author="userForModal"/>
 		</wnl-modal>
 	</div>
 </template>
@@ -118,7 +118,7 @@
 				font-weight: $font-weight-bold
 
 		.object-text
-			color: $color-gray-dimmed
+			color: $color-gray
 			font-style: italic
 			line-height: $line-height-minus
 			margin-bottom: $margin-tiny
@@ -180,93 +180,114 @@
 </style>
 
 <script>
-	import { truncate, camelCase, get } from 'lodash'
-	import { mapActions, mapGetters } from 'vuex'
+import { truncate, camelCase, get } from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
 
-	import Avatar from 'js/components/global/Avatar'
-	import UserProfileModal from 'js/components/users/UserProfileModal'
-	import Modal from 'js/components/global/Modal'
-	import { notification } from 'js/components/notifications/notification'
-	import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time'
-	import { sanitizeName } from 'js/store/modules/users'
+import Avatar from 'js/components/global/Avatar';
+import UserProfileModal from 'js/components/users/UserProfileModal';
+import Modal from 'js/components/global/Modal';
+import { notification } from 'js/components/notifications/notification';
+import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time';
+import { sanitizeName } from 'js/store/modules/users';
+import context from 'js/consts/events_map/context.json';
 
-	export default {
-		name: 'StreamNotification',
-		mixins: [notification],
-		components: {
-			'wnl-avatar': Avatar,
-			'wnl-modal': Modal,
-			'wnl-user-profile-modal': UserProfileModal
+export default {
+	name: 'StreamNotification',
+	mixins: [notification],
+	components: {
+		'wnl-avatar': Avatar,
+		'wnl-modal': Modal,
+		'wnl-user-profile-modal': UserProfileModal
+	},
+	props: {
+		icon: {
+			required: true,
+			type: String
 		},
-		props: {
-			icon: {
-				required: true,
-				type: String
-			},
-		},
-		data() {
+	},
+	data() {
+		return {
+			objectTextLength: 200,
+			subjectTextLength: 300,
+			isVisible: false
+		};
+	},
+	computed: {
+		...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
+		userForModal() {
 			return {
-				objectTextLength: 200,
-				subjectTextLength: 300,
-				isVisible: false
+				...this.message.actors,
+				user_id: this.message.actors.id
+			};
+		},
+		displayName() {
+			return sanitizeName(this.message.actors.display_name);
+		},
+		action() {
+			return this.$t(`notifications.events.${camelCase(this.message.event)}`);
+		},
+		justDate() {
+			return justMonthAndDayFromS(this.message.timestamp);
+		},
+		justTime() {
+			return justTimeFromS(this.message.timestamp);
+		},
+		object() {
+			const objects = this.message.objects;
+			const subject = this.message.subject;
+			const type = !!objects ? objects.type : subject.type;
+			const choice = !!objects ? this.currentUserId === objects.author ? 2 : 1 : 1;
+
+			return this.$tc(`notifications.objects.${camelCase(type)}`, choice);
+		},
+	},
+	methods: {
+		showModal() {
+			this.isVisible = true;
+		},
+		closeModal() {
+			this.isVisible = false;
+		},
+		...mapActions('notifications', ['markAsUnread']),
+		toggleNotification() {
+			this.loading = true;
+
+			if (this.isRead) {
+				return this.markAsUnread({notification: this.message, channel: this.channel})
+					.then(() => this.loading = false);
+			}
+
+			return this.markAsRead({notification: this.message, channel: this.channel})
+				.then(() => this.loading = false);
+		},
+		dispatchMarkAsSeen() {
+			if(!this.hasContext) return false;
+
+			this.loading = true;
+
+			if (!this.isSeen) {
+				this.markAsSeen({notification: this.message, channel: this.channel})
+					.then(() => {
+						this.loading = false;
+					});
+			} else {
+				this.loading = false;
 			}
 		},
-		computed: {
-			...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
-			displayName() {
-				return sanitizeName(this.message.actors.display_name)
-			},
-			action() {
-				return this.$t(`notifications.events.${camelCase(this.message.event)}`)
-			},
-			justDate() {
-				return justMonthAndDayFromS(this.message.timestamp)
-			},
-			justTime() {
-				return justTimeFromS(this.message.timestamp)
-			},
-			object() {
-				const objects = this.message.objects
-				const subject = this.message.subject
-				const type = !!objects ? objects.type : subject.type
-				const choice = !!objects ? this.currentUserId === objects.author ? 2 : 1 : 1
+		trackNotificationClick() {
+			const lessonId = _.get(this.routeContext, 'params.lessonId');
+			const payload = {
+				feature: context.dashboard.features.news_feed.value,
+				action: context.dashboard.features.news_feed.actions.click_link.value,
+				context: context.dashboard.value,
+			};
 
-				return this.$tc(`notifications.objects.${camelCase(type)}`, choice)
-			},
-		},
-		methods: {
-			showModal() {
-				this.isVisible = true
-			},
-			closeModal() {
-				this.isVisible = false
-			},
-			...mapActions('notifications', ['markAsUnread']),
-			toggleNotification() {
-				this.loading = true
+			if (lessonId) {
+				payload.target = lessonId;
+			}
 
-				if (this.isRead) {
-					return this.markAsUnread({notification: this.message, channel: this.channel})
-						.then(() => this.loading = false)
-				}
-
-				return this.markAsRead({notification: this.message, channel: this.channel})
-					.then(() => this.loading = false)
-			},
-			dispatchMarkAsSeen() {
-				if(!this.hasContext) return false;
-
-				this.loading = true
-
-				if (!this.isSeen) {
-					this.markAsSeen({notification: this.message, channel: this.channel})
-						.then(() => {
-							this.loading = false
-						})
-				} else {
-					this.loading = false
-				}
-			},
-		},
-	}
+			this.$trackUserEvent(payload);
+		}
+	},
+};
 </script>

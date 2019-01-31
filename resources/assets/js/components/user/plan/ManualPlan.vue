@@ -152,7 +152,7 @@
 					margin-bottom: $margin-small
 					width: 100%
 					.icon
-						color: $color-gray
+						color: $color-darkest-gray
 					.subitems-count
 						color: $color-background-gray
 						font-size: $font-size-minus-2
@@ -172,16 +172,16 @@
 							background-color: $color-background-lightest-gray
 						.subitem-name
 							align-self: flex-end
-							color: $color-gray
+							color: $color-darkest-gray
 							width: 65%
 							&.is-grayed-out
-								color: $color-gray-dimmed
+								color: $color-gray
 						.subitem-left-side
 							align-items: center
 							display: flex
 							margin-right: $margin-small
 							.not-accesible
-								color: $color-gray-dimmed
+								color: $color-gray
 								font-size: $font-size-plus-1
 								text-align: center
 								cursor: not-allowed
@@ -195,155 +195,157 @@
 </style>
 
 <script>
-	import TextOverlay from 'js/components/global/TextOverlay.vue'
-	import Datepicker from 'js/components/global/Datepicker'
-	import { mapGetters, mapActions } from 'vuex'
-	import { resource } from 'js/utils/config'
-	import moment from 'moment'
-	import { getApiUrl } from 'js/utils/env'
-	import momentTimezone from 'moment-timezone'
-	import { isEmpty } from 'lodash'
-	import emits_events from 'js/mixins/emits-events'
-	import features from 'js/consts/events_map/features.json';
+import TextOverlay from 'js/components/global/TextOverlay.vue';
+import Datepicker from 'js/components/global/Datepicker';
+import { mapGetters, mapActions } from 'vuex';
+import { resource } from 'js/utils/config';
+import moment from 'moment';
+import { getApiUrl } from 'js/utils/env';
+import momentTimezone from 'moment-timezone';
+import { isEmpty } from 'lodash';
+import emits_events from 'js/mixins/emits-events';
+import features from 'js/consts/events_map/features.json';
 
-	export default {
-		name: 'ManualPlan',
-		components: {
-			'wnl-text-overlay': TextOverlay,
-			'wnl-datepicker': Datepicker,
-		},
-		mixins: [emits_events],
-		data() {
+export default {
+	name: 'ManualPlan',
+	components: {
+		'wnl-text-overlay': TextOverlay,
+		'wnl-datepicker': Datepicker,
+	},
+	mixins: [emits_events],
+	data() {
+		return {
+			openGroups: [1],
+			manualStartDates: [],
+			isLoading: false,
+			alertSuccess: {
+				text: this.$i18n.t('lessonsAvailability.alertSuccess'),
+				type: 'success',
+			},
+			alertError: {
+				text: this.$i18n.t('lessonsAvailability.alertError'),
+				type: 'error',
+			},
+			defaultDateConfig: {
+				altInput: true,
+				disableMobile: true,
+			},
+		};
+	},
+	computed: {
+		...mapGetters('course', [
+			'groups',
+			'structure',
+			'userLessons',
+		]),
+		...mapGetters(['currentUserId']),
+		startDateConfig() {
 			return {
-				openGroups: [1],
-				manualStartDates: [],
-				isLoading: false,
-				alertSuccess: {
-					text: this.$i18n.t('lessonsAvailability.alertSuccess'),
-					type: 'success',
-				},
-				alertError: {
-					text: this.$i18n.t('lessonsAvailability.alertError'),
-					type: 'error',
-				},
-				defaultDateConfig: {
-					altInput: true,
-					disableMobile: true,
-				},
-			}
+				...this.defaultDateConfig
+			};
 		},
-		computed: {
-			...mapGetters('course', [
-				'groups',
-				'structure',
-				'userLessons',
-			]),
-			...mapGetters(['currentUserId']),
-			startDateConfig() {
+		groupsWithLessons() {
+			return this.groups.map(groupId => {
+				const group = this.structure[resource('groups')][groupId];
 				return {
-					...this.defaultDateConfig
-				}
-			},
-			groupsWithLessons() {
-				return this.groups.map(groupId => {
-					const group = this.structure[resource('groups')][groupId]
-					return {
-						...group,
-						lessons: group[resource('lessons')].map(lessonId => {
-							return this.structure[resource('lessons')][lessonId]
-						})
-					}
-				})
-			},
-			sortedManualStartDates() {
-				return this.manualStartDates.sort((a, b) => {
-					const dateA = new Date(a.startDate)
-					const dateB = new Date(b.startDate)
-					return dateA - dateB
-				})
-			},
+					...group,
+					lessons: group[resource('lessons')].map(lessonId => {
+						return this.structure[resource('lessons')][lessonId];
+					})
+				};
+			});
 		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			...mapActions('course', ['setStructure']),
-			isEven(index) {
-				return index % 2 === 0
-			},
-			getStartDate(item) {
-				return item.startDate ? new Date (item.startDate*1000) : new Date();
-			},
-			toggleItem(item) {
-				if (this.openGroups.indexOf(item.id) === -1) {
-					this.openGroups.push(item.id)
-				} else {
-					const index = this.openGroups.indexOf(item.id)
-					if (index > -1) {
-						this.openGroups.splice(index, 1)
-					}
+		sortedManualStartDates() {
+			return this.manualStartDates
+				.slice()
+				.sort((a, b) => {
+					const dateA = new Date(a.startDate);
+					const dateB = new Date(b.startDate);
+					return dateA - dateB;
+				});
+		},
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('course', ['setStructure']),
+		isEven(index) {
+			return index % 2 === 0;
+		},
+		getStartDate(item) {
+			return item.startDate ? new Date (item.startDate*1000) : new Date();
+		},
+		toggleItem(item) {
+			if (this.openGroups.indexOf(item.id) === -1) {
+				this.openGroups.push(item.id);
+			} else {
+				const index = this.openGroups.indexOf(item.id);
+				if (index > -1) {
+					this.openGroups.splice(index, 1);
 				}
-			},
-			isOpen(item) {
-				return this.openGroups.indexOf(item.id) > -1
-			},
-			onStartDateChange(newStartDate, subitem) {
-				if (!newStartDate[0]) return
-
-				const lessonWithStartDate = {
-					lessonId: subitem.id,
-					lessonName: subitem.name,
-					oldDate: moment(subitem.startDate * 1000).format('LL'),
-					startDate: newStartDate[0],
-					formatedStartDate: moment(newStartDate[0]).format('LL'),
-				}
-
-				const index = this.manualStartDates.findIndex((el) => {
-					return el.lessonId === lessonWithStartDate.lessonId
-				})
-
-				if (index === -1) {
-					this.manualStartDates.push(lessonWithStartDate)
-				} else {
-					this.manualStartDates.splice(index, 1, lessonWithStartDate)
-				}
-			},
-			async acceptPlan() {
-				if (!this.validate()) {
-					return false
-				}
-
-				this.isLoading = true
-				try {
-					await axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
-						manual_start_dates: this.manualStartDates,
-						timezone: momentTimezone.tz.guess(),
-					})
-					await this.setStructure()
-					this.isLoading = false
-					this.manualStartDates = []
-					this.addAutoDismissableAlert(this.alertSuccess)
-					this.emitUserEvent({
-						action: features.manual_settings.actions.save_plan.value,
-						feature: features.manual_settings.value,
-					})
-				}
-				catch(error) {
-					this.isLoading = false
-					this.manualStartDates = []
-					$wnl.logger.capture(error)
-					this.addAutoDismissableAlert(this.alertError)
-				}
-			},
-			validate() {
-				if (isEmpty(this.manualStartDates)) {
-					this.addAutoDismissableAlert({
-						text: `Aby ustawić plan, należy zmienić chociaż jedną datę! :)`,
-						type: 'error',
-						timeout: 3000,
-					})
-					return false
-				}
-				return true
 			}
+		},
+		isOpen(item) {
+			return this.openGroups.indexOf(item.id) > -1;
+		},
+		onStartDateChange(newStartDate, subitem) {
+			if (!newStartDate[0]) return;
+
+			const lessonWithStartDate = {
+				lessonId: subitem.id,
+				lessonName: subitem.name,
+				oldDate: moment(subitem.startDate * 1000).format('LL'),
+				startDate: newStartDate[0],
+				formatedStartDate: moment(newStartDate[0]).format('LL'),
+			};
+
+			const index = this.manualStartDates.findIndex((el) => {
+				return el.lessonId === lessonWithStartDate.lessonId;
+			});
+
+			if (index === -1) {
+				this.manualStartDates.push(lessonWithStartDate);
+			} else {
+				this.manualStartDates.splice(index, 1, lessonWithStartDate);
+			}
+		},
+		async acceptPlan() {
+			if (!this.validate()) {
+				return false;
+			}
+
+			this.isLoading = true;
+			try {
+				await axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
+					manual_start_dates: this.manualStartDates,
+					timezone: momentTimezone.tz.guess(),
+				});
+				await this.setStructure();
+				this.isLoading = false;
+				this.manualStartDates = [];
+				this.addAutoDismissableAlert(this.alertSuccess);
+				this.emitUserEvent({
+					action: features.manual_settings.actions.save_plan.value,
+					feature: features.manual_settings.value,
+				});
+			}
+			catch(error) {
+				this.isLoading = false;
+				this.manualStartDates = [];
+				$wnl.logger.capture(error);
+				this.addAutoDismissableAlert(this.alertError);
+			}
+		},
+		validate() {
+			if (isEmpty(this.manualStartDates)) {
+				this.addAutoDismissableAlert({
+					text: 'Aby ustawić plan, należy zmienić chociaż jedną datę! :)',
+					type: 'error',
+					timeout: 3000,
+				});
+				return false;
+			}
+			return true;
 		}
 	}
+};
 </script>

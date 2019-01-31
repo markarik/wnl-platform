@@ -1,6 +1,8 @@
-window.io = require('socket.io-client');
-const Echo = require('laravel-echo');
-import {envValue as env} from 'js/utils/env'
+import io from 'socket.io-client';
+window.io = io;
+
+import Echo from 'laravel-echo';
+import {envValue as env} from 'js/utils/env';
 
 window.Echo = new Echo({
 	broadcaster: 'socket.io',

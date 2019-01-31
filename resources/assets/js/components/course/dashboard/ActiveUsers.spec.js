@@ -4,17 +4,17 @@ import {expect} from 'chai';
 import Vuex from 'vuex';
 import ActiveUsers from './ActiveUsers.vue';
 import Avatar from 'js/components/global/Avatar.vue';
-import VueI18n from 'vue-i18n'
-import { pl } from 'js/i18n'
+import VueI18n from 'vue-i18n';
+import { pl } from 'js/i18n';
 
 Vue.use(Vuex);
 Vue.use(VueI18n);
-Vue.config.lang = 'pl'
+Vue.config.lang = 'pl';
 
-const messages = {pl}
-const i18n = new VueI18n({fallbackLocal: 'pl', locale: 'pl', messages})
+const messages = {pl};
+const i18n = new VueI18n({fallbackLocal: 'pl', locale: 'pl', messages});
 
-Vue.component('wnl-avatar', Avatar)
+Vue.component('wnl-avatar', Avatar);
 
 describe('ActiveUsers.vue', () => {
 	let store;
@@ -33,7 +33,7 @@ describe('ActiveUsers.vue', () => {
 						]
 					}
 				}
-			}
+			};
 			getters = {
 				currentUserId: () => 7,
 			};
@@ -47,7 +47,7 @@ describe('ActiveUsers.vue', () => {
 			const wrapper = mount(ActiveUsers, {store, i18n});
 			expect(wrapper.vm.activeUsersCount).to.equal(1);
 		});
-	})
+	});
 
 	context('when no users', () => {
 		beforeEach(() => {
@@ -58,7 +58,7 @@ describe('ActiveUsers.vue', () => {
 						activeUsers: () => (channel) => []
 					}
 				}
-			}
+			};
 			getters = {
 				currentUserId: () => 7,
 			};
@@ -74,5 +74,5 @@ describe('ActiveUsers.vue', () => {
 			expect(wrapper.vm.activeUsersCount).to.equal(0);
 			expect(wrapper.find('.active-users-container').length).to.equal(0);
 		});
-	})
+	});
 });

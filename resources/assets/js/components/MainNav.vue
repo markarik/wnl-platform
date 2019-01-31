@@ -98,7 +98,7 @@
 
 		.wnl-main-nav-item
 			align-items: center
-			color: $color-gray-dimmed
+			color: $color-gray
 			display: flex
 			flex-direction: column
 			justify-content: center
@@ -123,21 +123,21 @@
 </style>
 
 <script>
-	import {mapGetters} from 'vuex'
-	import moderatorFeatures from 'js/perimeters/moderator'
-	import currentEditionParticipant from 'js/perimeters/currentEditionParticipant'
-	import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant'
-	import {getUrl} from 'js/utils/env'
+import {mapGetters} from 'vuex';
+import moderatorFeatures from 'js/perimeters/moderator';
+import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
+import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
+import {getUrl} from 'js/utils/env';
 
-	export default {
-		name: 'MainNav',
-		props: ['isHorizontal'],
-		perimeters: [moderatorFeatures, currentEditionParticipant, upcomingEditionParticipant],
-		computed: {
-			...mapGetters(['currentUser']),
-			signUpLink() {
-				return getUrl('payment/select-product')
-			},
+export default {
+	name: 'MainNav',
+	props: ['isHorizontal'],
+	perimeters: [moderatorFeatures, currentEditionParticipant, upcomingEditionParticipant],
+	computed: {
+		...mapGetters(['currentUser']),
+		signUpLink() {
+			return getUrl('payment/select-product');
 		},
-	}
+	},
+};
 </script>

@@ -10,12 +10,19 @@ use App\Http\Controllers\Api\ApiTransformer;
 class OrderTransformer extends ApiTransformer
 {
 
-	protected $availableIncludes = ['invoices', 'payments'];
+	protected $availableIncludes = ['invoices', 'payments', 'study_buddy'];
+	protected $parent;
+
+	public function __construct($parent = null)
+	{
+		$this->parent = $parent;
+	}
 
 	public function transform(Order $order)
 	{
 		$data = [
 			'id'          => $order->id,
+			'user_id'     => $order->user_id,
 			'paid'        => $order->paid,
 			'paid_amount' => $order->paid_amount,
 			'method'      => $order->method,
@@ -30,6 +37,7 @@ class OrderTransformer extends ApiTransformer
 				'price' => $order->product->price,
 				'signups_end' => $order->product->signups_end->timestamp ?? null
 			],
+			'shipping_status' => $order->shipping_status,
 		];
 
 		if ($order->coupon) {
@@ -43,18 +51,12 @@ class OrderTransformer extends ApiTransformer
 			];
 		}
 
-		if ($order->studyBuddy) [
-			$data['studyBuddy'] = [
-				'id'        => $order->studyBuddy->id,
-				'code'      => $order->studyBuddy->code,
-				'recipient' => $order->studyBuddy->recipient,
-				'refunded'  => $order->studyBuddy->refunded,
-				'status'    => $order->studyBuddy->status,
-			],
-		];
-
 		if (is_null($order->method) || $order->method === 'instalments') {
 			$data['instalments'] = $order->instalments;
+		}
+
+		if ($this->parent) {
+			$data = array_merge($data, $this->parent);
 		}
 
 		return $data;
@@ -78,5 +80,16 @@ class OrderTransformer extends ApiTransformer
 		];
 
 		return $this->collection($payments, new PaymentTransformer($meta), 'payments');
+	}
+
+	public function includeStudyBuddy(Order $order)
+	{
+		if ($order->studyBuddy) {
+			$meta = [
+				'order_id' => $order->id
+			];
+
+			return $this->item($order->studyBuddy, new StudyBuddyTransformer($meta), 'study_buddy');
+		}
 	}
 }

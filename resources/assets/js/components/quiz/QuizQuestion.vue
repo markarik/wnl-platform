@@ -129,7 +129,7 @@
 		width: 100%
 
 		header
-			color: $color-gray-dimmed
+			color: $color-gray
 			font-size: $font-size-minus-1
 			margin-bottom: $margin-base
 			margin-top: $margin-base
@@ -187,7 +187,7 @@
 	.quiz-question-meta
 		+flex-space-between()
 		align-items: flex-start
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-2
 		line-height: $line-height-minus
 		padding: $margin-base $margin-base 0
@@ -266,152 +266,154 @@
 
 </style>
 <script>
-	import { isNumber, trim } from 'lodash'
-	import { mapGetters, mapActions } from 'vuex'
-	import { getApiUrl } from 'js/utils/env'
+import { isNumber, trim } from 'lodash';
+import { mapGetters, mapActions } from 'vuex';
+import { getApiUrl } from 'js/utils/env';
 
-	import QuizAnswer from 'js/components/quiz/QuizAnswer'
-	import CommentsList from 'js/components/comments/CommentsList'
-	import Bookmark from 'js/components/global/reactions/Bookmark'
-	import SlideLink from 'js/components/global/SlideLink'
-	import SlidePreview from 'js/components/global/SlidePreview'
-	import emits_events from 'js/mixins/emits-events';
-	import feature_components from 'js/consts/events_map/feature_components.json';
+import QuizAnswer from 'js/components/quiz/QuizAnswer';
+import CommentsList from 'js/components/comments/CommentsList';
+import Bookmark from 'js/components/global/reactions/Bookmark';
+import SlideLink from 'js/components/global/SlideLink';
+import SlidePreview from 'js/components/global/SlidePreview';
+import emits_events from 'js/mixins/emits-events';
+import feature_components from 'js/consts/events_map/feature_components.json';
 
-	export default {
-		name: 'QuizQuestion',
-		components: {
-			'wnl-quiz-answer': QuizAnswer,
-			'wnl-comments-list': CommentsList,
-			'wnl-bookmark': Bookmark,
-			'wnl-slide-link': SlideLink,
-			'wnl-slide-preview': SlidePreview
+export default {
+	name: 'QuizQuestion',
+	components: {
+		'wnl-quiz-answer': QuizAnswer,
+		'wnl-comments-list': CommentsList,
+		'wnl-bookmark': Bookmark,
+		'wnl-slide-link': SlideLink,
+		'wnl-slide-preview': SlidePreview
+	},
+	mixins: [emits_events],
+	props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
+	data() {
+		return {
+			blankPage: '_blank',
+			reactableResource: 'quiz_questions',
+			slidesExpanded: false,
+			showExplanation: false,
+			show: false,
+			slideContent: '',
+			currentSlideIndex: -1,
+			alertError: {
+				text: this.$i18n.t('quiz.errorAlert'),
+				type: 'error',
+			}
+		};
+	},
+	computed: {
+		...mapGetters(['isMobile', 'isLargeDesktop', 'isAdmin']),
+		...mapGetters('course', ['getLesson', 'getSection']),
+		answers() {
+			return this.question.answers;
 		},
-		mixins: [emits_events],
-		props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
-		data() {
-			return {
-				blankPage: '_blank',
-				reactableResource: "quiz_questions",
-				slidesExpanded: false,
-				showExplanation: false,
-				show: false,
-				slideContent: '',
-				currentSlideIndex: -1,
-				alertError: {
-					text: this.$i18n.t('quiz.errorAlert'),
-					type: 'error',
+		displayResults() {
+			return this.readOnly || this.isQuizComplete || this.question.isResolved;
+		},
+		isCorrect() {
+			const selected = this.question.selectedAnswer;
+			return isNumber(selected) && this.answers[selected].is_correct;
+		},
+		isUnanswered() {
+			return !isNumber(this.question.selectedAnswer);
+		},
+		reactionState() {
+			return typeof this.getReaction === 'function' ?
+				this.getReaction(this.reactableResource, this.question.id, 'bookmark') :
+				null;
+		},
+		slides() {
+			return this.question.slides;
+		},
+		hasSlides() {
+			return (this.question.slides || []).length;
+		},
+		explanation() {
+			return this.question.explanation;
+		},
+		currentModalSlide() {
+			if (this.currentSlideIndex < 0) {
+				return {id: 0};
+			}
+			// return 0
+			return this.slides[this.currentSlideIndex];
+		},
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		hideSlidePreview() {
+			this.show = false;
+			this.slideContent = '';
+			this.currentSlideIndex = -1;
+		},
+		changeSlide(direction) {
+			let nextSlideIndex = this.currentSlideIndex + direction;
+			if (nextSlideIndex < 0) {
+				nextSlideIndex = this.slides.length -1;
+			} else if (nextSlideIndex >= this.slides.length) {
+				nextSlideIndex = 0;
+			}
+			this.currentSlideIndex = nextSlideIndex;
+		},
+		selectAnswer(answerIndex) {
+			const data = {id: this.question.id, answer: answerIndex};
+			const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked';
+
+			this.question.selectedAnswer !== answerIndex && this.emitUserEvent({
+				value:  Number(this.answers[answerIndex].is_correct),
+				target: this.question.id,
+				action: feature_components.quiz_question.actions.select_answer.value,
+				feature_component: feature_components.quiz_question.value
+			});
+
+			this.$emit(eventName, data);
+		},
+		trim(text) {
+			return trim(text);
+		},
+		toggleSlidesList() {
+			this.slidesExpanded = !this.slidesExpanded;
+		},
+		toggleExplanation() {
+			this.showExplanation = !this.showExplanation;
+		},
+		slideLink(slide) {
+			let linkText = '';
+
+			if (_.get(slide, 'context.lesson.id')) {
+				linkText += this.getLesson(slide.context.lesson.id).name;
+
+				if (_.get(slide, 'context.section.id')) {
+					linkText += ` / ${this.getSection(slide.context.section.id).name}`;
 				}
 			}
+			return linkText || this.$t('quiz.annotations.slides.defaultLink');
 		},
-		computed: {
-			...mapGetters(['isMobile', 'isLargeDesktop', 'isAdmin']),
-			...mapGetters('course', ['getLesson', 'getSection']),
-			answers() {
-				return this.question.answers
-			},
-			displayResults() {
-				return this.readOnly || this.isQuizComplete || this.question.isResolved
-			},
-			isCorrect() {
-				const selected = this.question.selectedAnswer
-				return isNumber(selected) && this.answers[selected].is_correct
-			},
-			isUnanswered() {
-				return !isNumber(this.question.selectedAnswer)
-			},
-			reactionState() {
-				if (typeof this.getReaction === 'function') {
-					return this.getReaction(this.reactableResource, this.question.id, "bookmark")
-				}
-			},
-			watchState() {
-				if (typeof this.getReaction === 'function') {
-					return this.getReaction(this.reactableResource, this.question.id, "watch")
-				}
-			},
-			slides() {
-				return this.question.slides
-			},
-			hasSlides() {
-				return (this.question.slides || []).length
-			},
-			explanation() {
-				return this.question.explanation
-			},
-			currentModalSlide() {
-				if (this.currentSlideIndex < 0) {
-					return {id: 0}
-				}
-				// return 0
-				return this.slides[this.currentSlideIndex]
-			},
-		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			hideSlidePreview() {
-				this.show = false
-				this.slideContent = ''
-				this.currentSlideIndex = -1
-			},
-			changeSlide(direction) {
-				let nextSlideIndex = this.currentSlideIndex + direction
-				if (nextSlideIndex < 0) {
-					nextSlideIndex = this.slides.length -1
-				} else if (nextSlideIndex >= this.slides.length) {
-					nextSlideIndex = 0
-				}
-				this.currentSlideIndex = nextSlideIndex
-			},
-			selectAnswer(answerIndex) {
-				const data = {id: this.question.id, answer: answerIndex}
-				const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked'
-
-				this.$emit(eventName, data)
-			},
-			trim(text) {
-				return trim(text)
-			},
-			toggleSlidesList() {
-				this.slidesExpanded = !this.slidesExpanded
-			},
-			toggleExplanation() {
-				this.showExplanation = !this.showExplanation
-			},
-			slideLink(slide) {
-				let linkText = ''
-
-				if (_.get(slide, 'context.lesson.id')) {
-					linkText += this.getLesson(slide.context.lesson.id).name
-
-					if (_.get(slide, 'context.section.id')) {
-						linkText += ` / ${this.getSection(slide.context.section.id).name}`
-					}
-				}
-				return linkText || this.$t('quiz.annotations.slides.defaultLink')
-			},
-			onRelatedSlideUserEvent(payload) {
-				this.emitUserEvent({
-					value: this.question.id,
-					target: this.currentModalSlide.id,
-					feature_component: feature_components.related_slides.value,
-					...payload,
-				})
-			}
-		},
-		watch: {
-			'currentModalSlide.id'(slideId) {
-				if (!slideId) return
-				axios.get(getApiUrl(`slideshow_builder/slide/${slideId}`))
+		onRelatedSlideUserEvent(payload) {
+			this.emitUserEvent({
+				value: this.question.id,
+				target: this.currentModalSlide.id,
+				feature_component: feature_components.related_slides.value,
+				...payload,
+			});
+		}
+	},
+	watch: {
+		'currentModalSlide.id'(slideId) {
+			if (!slideId) return;
+			axios.get(getApiUrl(`slideshow_builder/slide/${slideId}`))
 				.then(({data}) => {
-					this.slideContent = data
+					this.slideContent = data;
 				}).then(() => {
-					this.show = true
+					this.show = true;
 				}).catch(error => {
-					$wnl.logger.capture(error)
-					this.addAutoDismissableAlert(this.alertError)
-				})
-			}
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert(this.alertError);
+				});
 		}
 	}
+};
 </script>

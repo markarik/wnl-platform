@@ -32,77 +32,77 @@
 </style>
 
 <script>
-	import Flatpickr from 'flatpickr'
-	import {pl} from 'flatpickr/dist/l10n/pl.js'
+import Flatpickr from 'flatpickr';
+import {pl} from 'flatpickr/dist/l10n/pl.js';
 
-	export default {
-		name: 'Datepicker',
-		props: {
-			config: {
-				default: () => ({}),
-				type: Object,
+export default {
+	name: 'Datepicker',
+	props: {
+		config: {
+			default: () => ({}),
+			type: Object,
+		},
+		value: [String, Date],
+		withBorder: Boolean
+	},
+	data() {
+		return {
+			datepicker: null,
+			selectedDates: null,
+		};
+	},
+	computed: {
+		date: {
+			get() {
+				return this.selectedDates || this.value;
 			},
-			value: String|Date,
-			withBorder: Boolean
-		},
-		data() {
-			return {
-				datepicker: null,
-				selectedDates: null,
-			}
-		},
-		computed: {
-			date: {
-				get() {
-					return this.selectedDates || this.value
-				},
-				set(newValue) {
-					if (this.selectedDates !== newValue) {
-						this.selectedDates = newValue
-						this.$emit('input', new Date(newValue))
-					}
+			set(newValue) {
+				if (this.selectedDates !== newValue) {
+					this.selectedDates = newValue;
+					this.$emit('input', new Date(newValue));
 				}
-			},
-			placeholder() {
-				return this.$t('ui.placeholders.date')
-			},
-		},
-		methods: {
-			dateUpdated(selectedDates, dateStr) {
-				this.date = dateStr
-			},
-			onChange(payload) {
-				this.$emit('onChange', payload)
-			},
-			redraw(newConfig) {
-				this.datepicker.config = Object.assign(this.datepicker.config, newConfig)
-				this.datepicker.redraw()
-				this.datepicker.jumpToDate()
-			},
-			setDate(newDate, oldDate) {
-				newDate && this.datepicker.setDate(newDate)
-			},
-		},
-		mounted() {
-			if (!this.datepicker) {
-				this.config.onChange = this.onChange
-				this.config.onValueUpdate = this.dateUpdated
-				this.datepicker = new Flatpickr(this.$el, {
-					...this.config,
-					locale: {
-						...pl,
-						firstDayOfWeek: 1
-					}
-				})
-				this.setDate(this.value)
-			}
-			this.$watch('config', this.redraw)
-		},
-		beforeDestroy () {
-			if (this.datepicker) {
-				this.datepicker.destroy()
-				this.datepicker = null
 			}
 		},
-	}
+		placeholder() {
+			return this.$t('ui.placeholders.date');
+		},
+	},
+	methods: {
+		dateUpdated(selectedDates, dateStr) {
+			this.date = dateStr;
+		},
+		onChange(payload) {
+			this.$emit('onChange', payload);
+		},
+		redraw(newConfig) {
+			this.datepicker.config = Object.assign(this.datepicker.config, newConfig);
+			this.datepicker.redraw();
+			this.datepicker.jumpToDate();
+		},
+		setDate(newDate, oldDate) {
+			newDate && this.datepicker.setDate(newDate);
+		},
+	},
+	mounted() {
+		if (!this.datepicker) {
+			this.config.onChange = this.onChange;
+			this.config.onValueUpdate = this.dateUpdated;
+			this.datepicker = new Flatpickr(this.$el, {
+				...this.config,
+				locale: {
+					...pl,
+					firstDayOfWeek: 1
+				}
+			});
+			this.setDate(this.value);
+		}
+		this.$watch('config', this.redraw);
+	},
+	beforeDestroy () {
+		if (this.datepicker) {
+			this.datepicker.destroy();
+			this.datepicker = null;
+		}
+	},
+};
 </script>

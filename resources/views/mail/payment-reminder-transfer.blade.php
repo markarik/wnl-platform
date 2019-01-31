@@ -1,7 +1,7 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Witaj ponownie {{ $order->user->first_name or '{first_name}' }}!</h3>
+	<h3>Witaj ponownie {{ $order->user->first_name ?? '{first_name}' }}!</h3>
 
 	<p>Przypominamy o płatności za zamówienie nr {{ $order->id or '{order_no}' }} na kurs <strong>{{$order->product->name or '{product_name}'}}</strong>.</p>
 

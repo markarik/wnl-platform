@@ -18,12 +18,12 @@
 								({{howManyQuestions}})
 							</p>
 						</div>
-						<div class="tags" v-if="tags">
-							<span v-for="tag, key in tagsFiltered" class="tag is-light" v-text="tag.name"></span>
+						<div class="tags" v-if="contextTags">
+							<span v-for="tag in contextTags" :key="tag.id" class="tag is-light" v-text="tag.name"></span>
 						</div>
 					</div>
 				</div>
-				<div class="level-right" v-if="!readOnly && tags && tags.length">
+				<div class="level-right" v-if="!readOnly && contextTags && contextTags.length">
 					<a class="button is-small" @click="showForm = false" v-if="showForm">
 						<span>Ukryj</span>
 					</a>
@@ -36,8 +36,12 @@
 				</div>
 			</div>
 			<transition name="fade">
-				<div class="qna-new-question" v-if="showForm">
-					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"/>
+				<div class="qna-new-question" v-if="showForm && discussionId">
+					<wnl-new-question
+						:contextTags="contextTags"
+						@submitSuccess="showForm = false"
+						:discussionId="discussionId"
+					/>
 				</div>
 			</transition>
 			<wnl-qna-sorting v-if="sortingEnabled"/>
@@ -96,7 +100,7 @@
 
 	.qna-meta
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		display: flex
 		flex-wrap: wrap
 		font-size: $font-size-minus-1
@@ -113,7 +117,7 @@
 		display: flex
 
 	.qna-title
-		color: $color-gray-dimmed
+		color: $color-gray
 		margin-bottom: $margin-tiny
 		margin-top: $margin-base
 
@@ -128,96 +132,91 @@
 </style>
 
 <script>
-	import {join} from 'lodash'
-	import { mapActions, mapGetters } from 'vuex'
+import {mapActions, mapGetters} from 'vuex';
 
-	import QnaSorting from 'js/components/qna/QnaSorting'
-	import QnaQuestion from 'js/components/qna/QnaQuestion'
-	import NewQuestionForm from 'js/components/qna/NewQuestionForm'
+import QnaSorting from 'js/components/qna/QnaSorting';
+import QnaQuestion from 'js/components/qna/QnaQuestion';
+import NewQuestionForm from 'js/components/qna/NewQuestionForm';
+import {invisibleTags} from 'js/utils/config';
 
-	import * as types from 'js/store/mutations-types'
-	import {invisibleTags} from 'js/utils/config'
-
-	export default {
-		name: 'Qna',
-		components: {
-			'wnl-qna-question': QnaQuestion,
-			'wnl-new-question': NewQuestionForm,
-			'wnl-qna-sorting': QnaSorting
+export default {
+	name: 'Qna',
+	components: {
+		'wnl-qna-question': QnaQuestion,
+		'wnl-new-question': NewQuestionForm,
+		'wnl-qna-sorting': QnaSorting
+	},
+	props: {
+		hideTitle: {
+			type: Boolean,
+			default: false,
 		},
-		props: {
-			hideTitle: {
-				type: Boolean,
-				default: false,
-			},
-			icon: String,
-			isUserProfileClass: String,
-			tags: Array,
-			numbersDisabled: Boolean,
-			passedQuestions: Array,
-			reactionsDisabled: Boolean,
-			readOnly: Boolean,
-			title: [String, Boolean],
-			showContext: Boolean,
-			sortingEnabled: {
-				type: Boolean,
-				default: true
-			},
-			config: {
-				type: Object,
-				default: () => { return {
-					highlighted: {}
-				}}
-			},
+		icon: String,
+		isUserProfileClass: String,
+		contextTags: Array,
+		numbersDisabled: Boolean,
+		passedQuestions: Array,
+		reactionsDisabled: Boolean,
+		readOnly: Boolean,
+		title: [String, Boolean],
+		showContext: Boolean,
+		sortingEnabled: {
+			type: Boolean,
+			default: true
 		},
-		data() {
-			return {
-				ready: false,
-				showForm: false,
-				questionsList: [],
-				name: 'watch',
-			}
+		config: {
+			type: Object,
+			default: () => ({highlighted: {}})
 		},
-		computed: {
-			...mapGetters('qna', [
-				'loading',
-				'currentSorting',
-				'questions',
-				'getSortedQuestions'
-			]),
-			howManyQuestions() {
-				return Object.keys(this.questionsList).length || 0
-			},
-			tagsFiltered() {
-				if (!this.tags) return [];
-				return this.tags.filter(tag => invisibleTags.indexOf(tag.name) === -1)
-			},
-			displayedTitle() {
-				return this.title || this.$t('qna.title.titleToDisplay')
-			},
-		},
-		methods: {
-			...mapActions('qna', ['destroyQna']),
-		},
-		mounted() {
-			if (!this.sortingEnabled && this.passedQuestions) {
-				this.questionsList = this.passedQuestions
-			} else {
-				this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions)
-			}
-		},
-		watch: {
-			'currentSorting' (newValue) {
-				this.questionsList = this.getSortedQuestions(newValue, this.questions);
-			},
-			'questions' (newValue) {
-				if (this.sortingEnabled && !this.passedQuestions) {
-					this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
-				}
-			}
-		},
-		beforeDestroy() {
-		   this.destroyQna()
+		discussionId: {
+			type: Number,
+			default: 0
 		}
+	},
+	data() {
+		return {
+			ready: false,
+			showForm: false,
+			questionsList: [],
+			name: 'watch',
+		};
+	},
+	computed: {
+		...mapGetters('qna', [
+			'loading',
+			'currentSorting',
+			'questions',
+			'getSortedQuestions'
+		]),
+		howManyQuestions() {
+			return Object.keys(this.questionsList).length || 0;
+		},
+		displayedTitle() {
+			return this.title || this.$t('qna.title.titleToDisplay');
+		},
+	},
+	methods: {
+		...mapActions('qna', ['destroyQna']),
+	},
+	mounted() {
+		if (!this.sortingEnabled && this.passedQuestions) {
+			this.questionsList = this.passedQuestions;
+		} else {
+			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+		}
+	},
+	watch: {
+		'currentSorting' (newValue) {
+			this.questionsList = this.getSortedQuestions(newValue, this.questions);
+		},
+		'questions' (newValue) {
+			if (this.sortingEnabled && !this.passedQuestions) {
+				this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+			}
+		}
+	},
+	beforeDestroy() {
+		this.destroyQna();
 	}
+};
 </script>

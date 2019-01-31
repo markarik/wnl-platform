@@ -7,6 +7,7 @@
 		</div>
 		<div class="cta">
 			<router-link v-if="nextLessonAvailable"
+				@click.native="trackNextLessonClick"
 				class="button is-primary"
 				:class="{'is-outlined': status === 'in-progress'}"
 				:to="to"
@@ -49,81 +50,90 @@
 			font-size: $font-size-minus-2
 
 		.text
-			color: $color-gray-dimmed
+			color: $color-gray
 
 </style>
 
 <script>
-	import { truncate } from 'lodash'
-	import { mapGetters } from 'vuex'
+import {truncate} from 'lodash';
+import {mapGetters} from 'vuex';
+import {resource} from 'js/utils/config';
+import {timeFromDate} from 'js/utils/time';
+import context from 'js/consts/events_map/context.json';
+import emits_events from 'js/mixins/emits-events';
 
-	import { getUrl } from 'js/utils/env'
-	import { resource } from 'js/utils/config'
-	import { timeFromDate } from 'js/utils/time'
+const STATUS_NONE = 'none';
+const STATUS_IN_PROGRESS = 'in-progress';
+const STATUS_AVAILABLE = 'available';
 
-	const STATUS_NONE = 'none'
-	const STATUS_IN_PROGRESS = 'in-progress'
-	const STATUS_AVAILABLE = 'available'
-
-	export default {
-		name: 'NextLesson',
-		computed: {
-			...mapGetters('course', [
-				'getGroup',
-				'getLessons',
-				'getLesson',
-				'isLessonAvailable',
-				'nextLesson'
-			]),
-			...mapGetters('progress', [
-				'wasLessonStarted',
-				'getFirstLessonIdInProgress',
-				'isLessonComplete',
-			]),
-			buttonClass() {
-				return this.getParam('buttonClass')
-			},
-			callToAction() {
-				return this.$t(`dashboard.progress.${this.status}-CTA`)
-			},
-			courseId() {
-				return this.$route.params.courseId
-			},
-			groupName() {
-				return this.getGroup(this.nextLesson.groups).name
-			},
-			nextLessonAvailable() {
-				return this.nextLesson && this.status !== STATUS_NONE
-			},
-			lessonName() {
-				return truncate(this.nextLesson.name, {length: 30})
-			},
-			next() {
-				return this.$t(`dashboard.progress.${this.status}`)
-			},
-			nextLessonDate() {
-				if (this.nextLesson.startDate) {
-					return timeFromDate(new Date(this.nextLesson.startDate * 1000))
-				}
-				return false
-			},
-			status() {
-				return this.nextLesson.status
-			},
-			to() {
-				return {
-					name: resource('lessons'),
-					params: {
-						courseId: this.courseId,
-						lessonId: this.nextLesson.id,
-					}
-				}
-			},
+export default {
+	name: 'NextLesson',
+	mixins: [emits_events],
+	computed: {
+		...mapGetters('course', [
+			'getGroup',
+			'getLessons',
+			'getLesson',
+			'isLessonAvailable',
+			'nextLesson'
+		]),
+		...mapGetters('progress', [
+			'wasLessonStarted',
+			'getFirstLessonIdInProgress',
+			'isLessonComplete',
+		]),
+		buttonClass() {
+			return this.getParam('buttonClass');
 		},
-		methods: {
-			getParam(name) {
-				return statusParams[this.status][name]
+		callToAction() {
+			return this.$t(`dashboard.progress.${this.status}-CTA`);
+		},
+		courseId() {
+			return this.$route.params.courseId;
+		},
+		groupName() {
+			return this.getGroup(this.nextLesson.groups).name;
+		},
+		nextLessonAvailable() {
+			return this.nextLesson && this.status !== STATUS_NONE;
+		},
+		lessonName() {
+			return truncate(this.nextLesson.name, {length: 30});
+		},
+		next() {
+			return this.$t(`dashboard.progress.${this.status}`);
+		},
+		nextLessonDate() {
+			if (this.nextLesson.startDate) {
+				return timeFromDate(new Date(this.nextLesson.startDate * 1000));
 			}
+			return false;
 		},
-	}
+		status() {
+			return this.nextLesson.status;
+		},
+		to() {
+			return {
+				name: resource('lessons'),
+				params: {
+					courseId: this.courseId,
+					lessonId: this.nextLesson.id,
+				}
+			};
+		},
+	},
+	methods: {
+		getParam(name) {
+			return statusParams[this.status][name];
+		},
+		trackNextLessonClick() {
+			this.$trackUserEvent({
+				feature: context.dashboard.features.next_lesson.value,
+				action: context.dashboard.features.next_lesson.actions.click_link.value,
+				target: this.nextLesson.id,
+				context: context.dashboard.value,
+			});
+		}
+	},
+};
 </script>

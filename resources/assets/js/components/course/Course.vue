@@ -64,84 +64,79 @@
 </style>
 
 <script>
-	import axios from 'axios'
-	import store from 'store'
-	import { mapGetters, mapActions } from 'vuex'
-	import ActiveUsers from 'js/components/course/dashboard/ActiveUsers'
-	import Breadcrumbs from 'js/components/global/Breadcrumbs'
-	import PublicChat from 'js/components/chat/PublicChat.vue'
-	import Navigation from 'js/components/course/Navigation'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
-	import MainNav from 'js/components/MainNav'
-	import SplashScreen from 'js/components/global/SplashScreen.vue'
-	import { breadcrumb } from 'js/mixins/breadcrumb'
-	import { getApiUrl } from 'js/utils/env'
-	import withChat from 'js/mixins/with-chat'
-	import currentEditionParticipant from 'js/perimeters/currentEditionParticipant'
+import { mapGetters, mapActions } from 'vuex';
+import ActiveUsers from 'js/components/course/dashboard/ActiveUsers';
+import PublicChat from 'js/components/chat/PublicChat.vue';
+import Navigation from 'js/components/course/Navigation';
+import SidenavSlot from 'js/components/global/SidenavSlot';
+import MainNav from 'js/components/MainNav';
+import SplashScreen from 'js/components/global/SplashScreen.vue';
+import { breadcrumb } from 'js/mixins/breadcrumb';
+import withChat from 'js/mixins/with-chat';
+import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 
-	export default {
-		name: 'Course',
-		perimeters: [currentEditionParticipant],
-		components: {
-			'wnl-active-users': ActiveUsers,
-			'wnl-course-navigation': Navigation,
-			'wnl-public-chat': PublicChat,
-			'wnl-breadcrumbs': Breadcrumbs,
-			'wnl-sidenav-slot': SidenavSlot,
-			'wnl-main-nav': MainNav,
-			'wnl-splash-screen': SplashScreen,
+export default {
+	name: 'Course',
+	perimeters: [currentEditionParticipant],
+	components: {
+		'wnl-active-users': ActiveUsers,
+		'wnl-course-navigation': Navigation,
+		'wnl-public-chat': PublicChat,
+		'wnl-sidenav-slot': SidenavSlot,
+		'wnl-main-nav': MainNav,
+		'wnl-splash-screen': SplashScreen,
+	},
+	props: ['courseId', 'lessonId', 'screenId', 'slide'],
+	computed: {
+		...mapGetters('course', ['isLessonAvailable', 'ready']),
+		...mapGetters([
+			'currentUser',
+			'isSidenavVisible',
+			'isSidenavMounted',
+			'isChatMounted',
+			'isChatVisible',
+			'isChatToggleVisible',
+		]),
+		context() {
+			return {
+				courseId: this.courseId,
+				lessonId: this.lessonId,
+				screenId: this.screenId,
+				slide: this.slide,
+			};
 		},
-		props: ['courseId', 'lessonId', 'screenId', 'slide'],
-		computed: {
-			...mapGetters('course', ['isLessonAvailable', 'ready']),
-			...mapGetters([
-				'currentUser',
-				'isSidenavVisible',
-				'isSidenavMounted',
-				'isChatMounted',
-				'isChatVisible',
-				'isChatToggleVisible',
-			]),
-			context() {
-				return {
-					courseId: this.courseId,
-					lessonId: this.lessonId,
-					screenId: this.screenId,
-					slide: this.slide,
-				}
-			},
-			isLesson() {
-				return typeof this.lessonId !== 'undefined' && this.isLessonAvailable(this.lessonId)
-			},
-			chatRooms() {
-				let courseChatRoom = `courses-${this.courseId}`,
-				lessonChatRoom = courseChatRoom + `-lessons-${this.lessonId}`
-				if (this.isLesson) {
-					return [
-						{name: '#lekcja', channel: lessonChatRoom},
-						{name: '#aula', channel: courseChatRoom}
-					]
-				}
-
+		isLesson() {
+			return typeof this.lessonId !== 'undefined' && this.isLessonAvailable(this.lessonId);
+		},
+		chatRooms() {
+			let courseChatRoom = `courses-${this.courseId}`,
+				lessonChatRoom = courseChatRoom + `-lessons-${this.lessonId}`;
+			if (this.isLesson) {
 				return [
-					{name: '#aula', channel: courseChatRoom},
-				]
-			},
-			canRenderSidenav() {
-				return this.isSidenavVisible && this.ready
-			},
-			presenceChannel() {
-				return `lesson.${this.lessonId}`
-			},
-		},
-		mixins: [withChat, breadcrumb],
-		methods: {
-			...mapActions(['toggleChat']),
-		},
-		watch: {
-			'$route.query.chatChannel' (newVal) {
-				newVal && !this.isChatVisible && this.toggleChat();
+					{name: '#lekcja', channel: lessonChatRoom},
+					{name: '#aula', channel: courseChatRoom}
+				];
 			}
+
+			return [
+				{name: '#aula', channel: courseChatRoom},
+			];
+		},
+		canRenderSidenav() {
+			return this.isSidenavVisible && this.ready;
+		},
+		presenceChannel() {
+			return `lesson.${this.lessonId}`;
+		},
+	},
+	mixins: [withChat, breadcrumb],
+	methods: {
+		...mapActions(['toggleChat']),
+	},
+	watch: {
+		'$route.query.chatChannel' (newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
 		}
 	}
+};
 </script>

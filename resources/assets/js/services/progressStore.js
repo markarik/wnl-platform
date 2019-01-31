@@ -5,8 +5,6 @@ import {getApiUrl} from 'js/utils/env';
 export const STATUS_IN_PROGRESS = 'in-progress';
 export const STATUS_COMPLETE = 'complete';
 
-const CACHE_VERSION = 1;
-
 const setCourseProgress = ({courseId, lessonId, profileId, ...props}, value) => {
 	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}`), value);
 };
@@ -18,53 +16,49 @@ const setLessonProgress = ({courseId, lessonId, profileId}, value) => {
 };
 
 const completeSection = (lessonState, payload) => {
-	const {screenId, sectionId} = payload
-	const stateWithScreen = _getScreenProgress(lessonState, payload)
-	const stateWithSections = _getSectionProgress(stateWithScreen, payload)
+	const {screenId, sectionId} = payload;
+	const stateWithScreen = _getScreenProgress(lessonState, payload);
+	const stateWithSections = _getSectionProgress(stateWithScreen, payload);
 
-	setLessonProgress(payload, stateWithSections)
+	setLessonProgress(payload, stateWithSections);
 
 	return stateWithSections;
 };
 
 const completeSubsection = (lessonState, payload) => {
 	const {sectionId, screenId, subsectionId, route} = payload;
-	const stateWithScreen = _getScreenProgress(lessonState, payload)
-	const stateWithSections = _getSectionProgress(stateWithScreen, payload)
+	const stateWithScreen = _getScreenProgress(lessonState, payload);
+	const stateWithSections = _getSectionProgress(stateWithScreen, payload);
 
-	if (!stateWithSections.screens[screenId].sections[sectionId].subsections) {
-		stateWithSections.screens[screenId].sections[sectionId].subsections = {
+	if (!lessonState.screens[screenId].sections[sectionId].subsections) {
+		lessonState.screens[screenId].sections[sectionId].subsections = {
 			[subsectionId]: {
 				status: STATUS_COMPLETE
 			}
-		}
+		};
 	} else {
-		stateWithSections.screens[screenId].sections[sectionId].subsections = {
-			...stateWithSections.screens[screenId].sections[sectionId].subsections,
+		lessonState.screens[screenId].sections[sectionId].subsections = {
+			...lessonState.screens[screenId].sections[sectionId].subsections,
 			[subsectionId]: {
 				status: STATUS_COMPLETE
 			}
-		}
+		};
 	}
 
-	setLessonProgress(payload, stateWithSections)
+	setLessonProgress(payload, lessonState);
 
 	return stateWithSections;
 };
 
 const completeScreen = (lessonState, {screenId, route, ...payload}) => {
-	const updatedState = {...lessonState};
+	lessonState.route = route;
+	lessonState.screens = lessonState.screens || {};
+	lessonState.screens[screenId] = lessonState.screens[screenId] || {};
+	lessonState.screens[screenId].status = STATUS_COMPLETE;
 
-	updatedState.route = route;
+	setLessonProgress(payload, lessonState);
 
-	updatedState.screens = lessonState.screens || {};
-	updatedState.screens[screenId] = updatedState.screens[screenId] || {};
-	updatedState.screens[screenId].status = STATUS_COMPLETE;
-
-
-	setLessonProgress(payload, updatedState)
-
-	return updatedState;
+	return lessonState;
 };
 
 const completeLesson = (courseState, payload) => {
@@ -82,13 +76,13 @@ const completeLesson = (courseState, payload) => {
 				status: STATUS_COMPLETE
 			}
 		}
-	}
+	};
 
 
-	setLessonProgress(payload, updatedLessonState)
-	setCourseProgress(payload, updatedCourseState)
+	setLessonProgress(payload, updatedLessonState);
+	setCourseProgress(payload, updatedCourseState);
 
-	return updatedLessonState
+	return updatedLessonState;
 };
 
 const startLesson = (courseState, payload) => {
@@ -106,19 +100,19 @@ const startLesson = (courseState, payload) => {
 				status: STATUS_IN_PROGRESS
 			}
 		}
-	}
+	};
 
 
-	setLessonProgress(payload, updatedLessonState)
-	setCourseProgress(payload, updatedCourseState)
+	setLessonProgress(payload, updatedLessonState);
+	setCourseProgress(payload, updatedCourseState);
 
-	return updatedLessonState
+	return updatedLessonState;
 };
 
 const getCourseProgress = async ({courseId, profileId}) => {
-    const { data: { lessons } = {} } = await axios.get(getApiUrl(`users/${profileId}/state/course/${courseId}`));
+	const { data: { lessons } = {} } = await axios.get(getApiUrl(`users/${profileId}/state/course/${courseId}`));
 
-    return { lessons };
+	return { lessons };
 };
 
 const getLessonProgress = async ({courseId, lessonId, profileId}) => {
@@ -131,16 +125,16 @@ const _getScreenProgress = (lessonState = {}, {route, screenId}) => {
 		screens: {},
 		...lessonState,
 		route,
-	}
+	};
 
 	if (!updatedState.screens[screenId]) {
 		updatedState.screens[screenId] = {
 			status: STATUS_IN_PROGRESS
-		}
+		};
 	}
 
 	return updatedState;
-}
+};
 
 const _getSectionProgress = (lessonState = {}, {route, screenId, sectionId}) => {
 	const updatedState = {...lessonState};
@@ -150,7 +144,7 @@ const _getSectionProgress = (lessonState = {}, {route, screenId, sectionId}) => 
 			[sectionId]: {
 				status: STATUS_COMPLETE
 			}
-		}
+		};
 	} else {
 		updatedState.screens[screenId].sections = {
 			...updatedState.screens[screenId].sections,
@@ -158,11 +152,11 @@ const _getSectionProgress = (lessonState = {}, {route, screenId, sectionId}) => 
 				...updatedState.screens[screenId].sections[sectionId],
 				status: STATUS_COMPLETE
 			}
-		}
+		};
 	}
 
-	return updatedState
-}
+	return updatedState;
+};
 
 export default {
 	getCourseProgress,

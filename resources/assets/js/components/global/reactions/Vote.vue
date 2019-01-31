@@ -37,7 +37,7 @@
 		top: 50%
 
 		&.flash
-			animation: flash 1s ease-out
+			animation: flash 0.2s ease-out
 
 	@keyframes flash
 		0%
@@ -57,7 +57,7 @@
 <script>
 import {
 	reaction
-} from 'js/mixins/reaction'
+} from 'js/mixins/reaction';
 
 export default {
 	name: 'Vote',
@@ -67,15 +67,15 @@ export default {
 		return {
 			isLoading: false,
 			name: 'upvote',
-		}
+		};
 	},
 	computed: {
 		iconClass() {
-			return `vote-${this.type}`
+			return `vote-${this.type}`;
 		},
 		hasReactedClass() {
-			return this.hasReacted ? 'fa-thumbs-up' : 'fa-thumbs-o-up'
+			return this.hasReacted ? 'fa-thumbs-up' : 'fa-thumbs-o-up';
 		},
 	},
-}
+};
 </script>

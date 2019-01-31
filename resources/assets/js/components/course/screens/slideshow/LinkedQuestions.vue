@@ -9,67 +9,67 @@
 </style>
 
 <script>
-	import axios from 'axios'
-	import {getApiUrl} from 'js/utils/env'
-	import {debounce, isEmpty} from 'lodash'
+import axios from 'axios';
+import {getApiUrl} from 'js/utils/env';
+import {debounce, isEmpty} from 'lodash';
 
-	const defaultMessage = 'Szukam powiązanych pytań...'
+const defaultMessage = 'Szukam powiązanych pytań...';
 
-	export default {
-		name: 'LinkedQuestions',
-		props: {
-			slideId: {
-				type: Number,
-			},
+export default {
+	name: 'LinkedQuestions',
+	props: {
+		slideId: {
+			type: Number,
 		},
-		data() {
-			return {
-				linkedQuestions: defaultMessage,
-			}
+	},
+	data() {
+		return {
+			linkedQuestions: defaultMessage,
+		};
+	},
+	computed: {
+		slideApiUrl() {
+			return 'slides/' + this.slideId + '?include=quiz_questions';
 		},
-		computed: {
-			slideApiUrl() {
-				return 'slides/' + this.slideId + '?include=quiz_questions'
-			},
-		},
-		methods: {
-			debouncedGetLinkedQuestions: _.debounce(function (to, from) {
-				this.setLinkedQuestions()
-			}, 300, {leading: false, trailing: true}),
-			getLinkedQuestions() {
-				this.linkedQuestions = defaultMessage
-				return axios.get(getApiUrl(this.slideApiUrl))
-					.then((response) => {
-						let included = response.data.included,
-							questions
+	},
+	methods: {
+		debouncedGetLinkedQuestions: _.debounce(function (to, from) {
+			this.setLinkedQuestions();
+		}, 300, {leading: false, trailing: true}),
+		getLinkedQuestions() {
+			this.linkedQuestions = defaultMessage;
+			return axios.get(getApiUrl(this.slideApiUrl))
+				.then((response) => {
+					let included = response.data.included,
+						questions;
 
-						if (isEmpty(included) || isEmpty(included.quiz_questions)) {
-							return 'Brak powiązanych pytań'
-						}
-						questions = Object.keys(included.quiz_questions).join(', ')
+					if (isEmpty(included) || isEmpty(included.quiz_questions)) {
+						return 'Brak powiązanych pytań';
+					}
+					questions = Object.keys(included.quiz_questions).join(', ');
 
-						return 'Powiązane pytania: ' + questions
-					})
-			},
-			setLinkedQuestions() {
-				if (this.slideId == 0) return
+					return 'Powiązane pytania: ' + questions;
+				});
+		},
+		setLinkedQuestions() {
+			if (this.slideId == 0) return;
 
-				this.getLinkedQuestions()
-					.then((response) => {
-						this.linkedQuestions = response
-					})
-					.catch((e) => {
-						this.linkedQuestions = 'Nie powiodło się...'
-					})
-			},
+			this.getLinkedQuestions()
+				.then((response) => {
+					this.linkedQuestions = response;
+				})
+				.catch((e) => {
+					this.linkedQuestions = 'Nie powiodło się...';
+				});
 		},
-		mounted() {
-			this.setLinkedQuestions()
-		},
-		watch: {
-			'slideId' () {
-				this.debouncedGetLinkedQuestions()
-			}
+	},
+	mounted() {
+		this.setLinkedQuestions();
+	},
+	watch: {
+		'slideId' () {
+			this.debouncedGetLinkedQuestions();
 		}
 	}
+};
 </script>

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="scrollable-container" @scroll="pullConversations" >
 		<div class="rooms-header" v-if="withSearch">
 			<header>{{$t('messages.dashboard.privateMessages')}}</header>
@@ -20,7 +20,7 @@
 		</div>
 		<div v-else-if="roomsToShow.length" class="conversation-list scrollable-container">
 			<wnl-message-link
-				v-for="(room, index) in roomsToShow"
+				v-for="(room) in roomsToShow"
 				:key="room.id"
 				:userId="getOtherUser(room).user_id"
 				:roomId="room.id"
@@ -47,7 +47,7 @@
 		overflow-y: scroll
 
 	.rooms-header
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		display: flex
 		justify-content: space-between
@@ -106,70 +106,69 @@
 </style>
 
 <script>
-	import axios from 'axios'
-	import ConversationsSearch from 'js/components/messages/ConversationsSearch'
-	import MessageLink from "js/components/global/MessageLink"
-	import ConversationSnippet from "js/components/messages/ConversationSnippet"
-	import {mapGetters, mapActions} from 'vuex'
+import ConversationsSearch from 'js/components/messages/ConversationsSearch';
+import MessageLink from 'js/components/global/MessageLink';
+import ConversationSnippet from 'js/components/messages/ConversationSnippet';
+import {mapGetters, mapActions} from 'vuex';
 
-	export default {
-		name: 'ConversationsList',
-		components: {
-			'wnl-conversations-search': ConversationsSearch,
-			'wnl-message-link': MessageLink,
-			'wnl-conversation-snippet': ConversationSnippet
+export default {
+	name: 'ConversationsList',
+	components: {
+		'wnl-conversations-search': ConversationsSearch,
+		'wnl-message-link': MessageLink,
+		'wnl-conversation-snippet': ConversationSnippet
+	},
+	props: {
+		withSearch: {
+			required: false,
+			default: true
 		},
-		props: {
-			withSearch: {
-				required: false,
-				default: true
-			},
+	},
+	data() {
+		return  {
+			userSearchVisible: false,
+		};
+	},
+	computed: {
+		...mapGetters(['currentUser']),
+		...mapGetters('chatMessages', [
+			'sortedRooms',
+			'getRoomById',
+			'getInterlocutor',
+			'hasMoreRooms',
+			'currentPage'
+		]),
+		roomsToShow() {
+			return this.sortedRooms.map(roomId => {
+				return this.getRoomById(roomId);
+			});
 		},
-		data() {
-			return  {
-				userSearchVisible: false,
+	},
+	methods: {
+		...mapActions('chatMessages', ['fetchUserRoomsWithMessages']),
+		closeUserSearch() {
+			this.userSearchVisible = false;
+		},
+		toggleUserSearch() {
+			this.userSearchVisible = !this.userSearchVisible;
+		},
+		isActive(room) {
+			if (!this.userSearchVisible) {
+				return this.$route.query.roomId == room.id;
 			}
 		},
-		computed: {
-			...mapGetters(['currentUser']),
-			...mapGetters('chatMessages', [
-				'sortedRooms',
-				'getRoomById',
-				'getInterlocutor',
-				'hasMoreRooms',
-				'currentPage'
-			]),
-			roomsToShow() {
-				return this.sortedRooms.map(roomId => {
-					return this.getRoomById(roomId)
-				})
-			},
+		getOtherUser(room) {
+			const profile = this.getInterlocutor(room.profiles);
+			if (profile.id) return profile;
+			return this.currentUser;
 		},
-		methods: {
-			...mapActions('chatMessages', ['fetchUserRoomsWithMessages']),
-			closeUserSearch() {
-				this.userSearchVisible = false
-			},
-			toggleUserSearch() {
-				this.userSearchVisible = !this.userSearchVisible
-			},
-			isActive(room) {
-				if (!this.userSearchVisible) {
-					return this.$route.query.roomId == room.id
+		pullConversations: _.debounce(function(event) {
+			if (!this.userSearchVisible && this.hasMoreRooms) {
+				if (event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
+					return this.fetchUserRoomsWithMessages({page: this.currentPage + 1});
 				}
-			},
-			getOtherUser(room) {
-				const profile = this.getInterlocutor(room.profiles)
-				if (profile.id) return profile
-				return this.currentUser
-			},
-			pullConversations: _.debounce(function(event) {
-				if (!this.userSearchVisible && this.hasMoreRooms) {
-					if (event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
-						return this.fetchUserRoomsWithMessages({page: this.currentPage + 1})
-					}
-				}
-			}),
-		}
+			}
+		}),
 	}
+};
 </script>

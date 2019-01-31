@@ -1,5 +1,5 @@
-import * as types from 'js/store/mutations-types'
-import { mapActions } from 'vuex'
+import * as types from 'js/store/mutations-types';
+import { mapActions } from 'vuex';
 
 const withChat = {
 	methods: {
@@ -8,14 +8,14 @@ const withChat = {
 
 	beforeRouteEnter(to, from, next) {
 		next(vm => {
-			vm.initChat()
-		})
+			vm.initChat();
+		});
 	},
 
 	beforeRouteLeave(to, from, next) {
-		this.killChat()
+		this.killChat();
 		next();
 	}
-}
+};
 
 export default withChat;

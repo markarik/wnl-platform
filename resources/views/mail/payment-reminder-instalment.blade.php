@@ -1,11 +1,11 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Witaj ponownie {{ $order->user->first_name or '{first_name}' }}!</h3>
+	<h3>Witaj ponownie {{ $order->user->first_name ?? '{first_name}' }}!</h3>
 
 	<p>Przypominamy, że zbliża się termin płatności {{ $instalment->order_number or '{left_amount}' }}. raty za <strong>{{$order->product->name or '{product_name}'}}</strong>. 🙂</p>
 
-	<p>Pozostała kwota raty wynosi: <strong>{{ $instalment->left_amount or '{left_amount}' }}zł</strong></p>
+	<p>Pozostała kwota raty wynosi: <strong>{{ $instalment->left_amount ?? '{left_amount}' }}zł</strong></p>
 
 	<p>Ratę możesz opłacić w zakładce <a href="{{url('app/myself/orders')}}" target="_blank">KONTO > Twoje zamówienia</a>.</p>
 

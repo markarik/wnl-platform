@@ -7,12 +7,12 @@ use App\Models\Annotation;
 
 class AnnotationTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['tags','keywords'];
+	protected $availableIncludes = ['tags', 'taxonomy_terms', 'keywords'];
 	protected $parent;
 
 	public function __construct($parent = [])
 	{
-		$this->parent = collect($parent);
+		$this->parent = $parent;
 	}
 
 	public function transform(Annotation $annotation)
@@ -31,6 +31,15 @@ class AnnotationTransformer extends ApiTransformer
 		$tags = $annotation->tags;
 
 		return $this->collection($tags, new TagTransformer(['annotations' => $annotation->id]), 'tags');
+	}
+
+	public function includeTaxonomyTerms(Annotation $annotation)
+	{
+		return $this->collection(
+			$annotation->taxonomyTerms,
+			new TaxonomyTermTransformer(['annotations' => $annotation->id]),
+			'taxonomy_terms'
+		);
 	}
 
 	public function includeKeywords(Annotation $annotation)

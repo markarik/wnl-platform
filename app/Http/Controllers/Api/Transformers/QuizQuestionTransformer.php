@@ -9,7 +9,7 @@ use App\Models\QuizQuestion;
 
 class QuizQuestionTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['quiz_answers', 'comments', 'slides'];
+	protected $availableIncludes = ['quiz_answers', 'comments', 'slides', 'taxonomy_terms'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -25,6 +25,7 @@ class QuizQuestionTransformer extends ApiTransformer
 			'explanation'    => $quizQuestion->explanation,
 			'preserve_order' => $quizQuestion->preserve_order,
 			'tags'           => $quizQuestion->tags,
+			'deleted_at'     => $quizQuestion->deleted_at,
 		];
 
 		if ($this->parent) {
@@ -70,6 +71,15 @@ class QuizQuestionTransformer extends ApiTransformer
 				'quiz_questions' => $quizQuestion->id,
 			]),
 			'comments'
+		);
+	}
+
+	public function includeTaxonomyTerms(QuizQuestion $quizQuestion)
+	{
+		return $this->collection(
+			$quizQuestion->taxonomyTerms,
+			new TaxonomyTermTransformer(['quiz_questions' => $quizQuestion->id]),
+			'taxonomy_terms'
 		);
 	}
 }

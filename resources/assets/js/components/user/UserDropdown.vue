@@ -44,7 +44,7 @@
 
 	.user-toggle
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		cursor: pointer
 		display: flex
 		height: 100%
@@ -59,10 +59,10 @@
 
 		&.is-active
 			background-color: $color-background-light-gray
-			color: $color-gray
+			color: $color-darkest-gray
 
 			.username
-				color: $color-gray
+				color: $color-darkest-gray
 				font-weight: $font-weight-regular
 
 		.icon
@@ -83,7 +83,7 @@
 				white-space: nowrap
 
 				.user-email
-					color: $color-gray-dimmed
+					color: $color-gray
 					display: block
 					font-size: $font-size-minus-2
 					text-transform: initial
@@ -99,46 +99,46 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-	import Dropdown from 'js/components/global/Dropdown'
+import Dropdown from 'js/components/global/Dropdown';
 
-	export default {
-		name: 'UserDropdown',
-		components: {
-			'wnl-dropdown': Dropdown,
-		},
-		data() {
-			return {
-				isActive: false,
-			}
-		},
-		computed: {
-			...mapGetters([
-				'currentUserName',
-				'currentUserFullName',
-				'currentUserEmail',
-				'isTouchScreen',
-			]),
-			items() {
-				return [
-					{
-						'icon': 'fa-user-o',
-						'route': 'myself',
-						'text': this.$t('routes.myself.main'),
-					},
-					{
-						'icon': 'fa-sign-out',
-						'route': 'logout',
-						'text': this.$t('routes.auth.logout'),
-					},
-				]
-			}
-		},
-		methods: {
-			toggle(isActive) {
-				this.isActive = isActive
-			}
-		},
-	}
+export default {
+	name: 'UserDropdown',
+	components: {
+		'wnl-dropdown': Dropdown,
+	},
+	data() {
+		return {
+			isActive: false,
+		};
+	},
+	computed: {
+		...mapGetters([
+			'currentUserName',
+			'currentUserFullName',
+			'currentUserEmail',
+			'isTouchScreen',
+		]),
+		items() {
+			return [
+				{
+					'icon': 'fa-user-o',
+					'route': 'myself',
+					'text': this.$t('routes.myself.main'),
+				},
+				{
+					'icon': 'fa-sign-out',
+					'route': 'logout',
+					'text': this.$t('routes.auth.logout'),
+				},
+			];
+		}
+	},
+	methods: {
+		toggle(isActive) {
+			this.isActive = isActive;
+		}
+	},
+};
 </script>

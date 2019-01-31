@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="wnl-questions-search">
 		<div class="search-input">
 			<div class="control" :class="{'is-loading': loading}">
@@ -56,21 +56,21 @@
 </style>
 
 <script>
-	export default {
-		name: 'QuestionsSearch',
-		props: ['loading'],
-		data() {
-			return {
-				searchPhrase: '',
-			}
+export default {
+	name: 'QuestionsSearch',
+	props: ['loading'],
+	data() {
+		return {
+			searchPhrase: '',
+		};
+	},
+	methods: {
+		search() {
+			this.$emit('emitValueToFilter', this.searchPhrase);
 		},
-		methods: {
-			search() {
-				this.$emit('emitValueToFilter', this.searchPhrase)
-			},
-			onEnter() {
-				this.$emit('emitValueToFilter', this.searchPhrase)
-			}
+		onEnter() {
+			this.$emit('emitValueToFilter', this.searchPhrase);
 		}
 	}
+};
 </script>

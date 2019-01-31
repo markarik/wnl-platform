@@ -1,110 +1,66 @@
-import _ from 'lodash'
-import axios from 'axios'
-import * as types from '../mutations-types'
-import {getApiUrl} from 'js/utils/env'
-import { set, delete as destroy } from 'vue'
-import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions'
-import {commentsGetters, commentsMutations, commentsActions, commentsState} from 'js/store/modules/comments'
+import _ from 'lodash';
+import axios from 'axios';
+import * as types from '../mutations-types';
+import {getApiUrl} from 'js/utils/env';
+import { set, delete as destroy } from 'vue';
+import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions';
+import {commentsGetters, commentsMutations, commentsActions, commentsState} from 'js/store/modules/comments';
 
-// API
- function _getQuestions(query, limit, include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles') {
-	let data = {
-		include,
-		query,
-		order: {
-			id: 'desc',
-		},
-		limit
-	}
-
-	return axios.post(getApiUrl('qna_questions/.search'), data);
-}
+const include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles';
+const discussionsInclude = 'qna_questions,qna_questions.profiles,qna_questions.reactions,qna_questions.qna_answers.profiles,qna_questions.qna_answers.comments,qna_questions.qna_answers.comments.profiles';
 
 function _resolveQuestion(questionId, status = true) {
 	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
 		resolved: status
-	})
+	});
 }
 
-function _getQuestionsByTags(tags) {
-	if (tags.length === 0) {
-		return Promise.reject('No tags passed to search for Q&A questions.')
-	}
-
-	return _getQuestions({
-		hasIn: {
-			tags: ['tags.id', tags.map((tag) => tag.id)]
+function _getQuestionsLatest() {
+	return axios.get(getApiUrl('qna_questions/latest'), {
+		params: {
+			include: `tags,${include}`
 		}
 	});
 }
 
-function _getQuestionsByIds(ids) {
-	return _getQuestions({
-		whereIn: ['id', ids],
-	})
-}
-
-function _getQuestionsLatest(limit = 10) {
-	return _getQuestions({
-		whereDoesntHave: {
-			tags: {
-				where: [ ['tags.id', '=', 69] ],
-			},
-		},
-	}, [limit, 0], 'tags,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles');
-}
-
 function _getQuestionsByTagName(tagName, ids) {
-	return _getQuestions({
-		whereHas: {
-			tags: {
-				where: [['tags.name', '=', tagName]]
-			}
-		},
-		whereIn: ['id', ids],
-	})
+	return axios.post(getApiUrl('qna_questions/byTags'), {
+		tags_names: [tagName],
+		ids,
+		include
+	});
+}
+
+function _getQuestionsForDiscussion(discussionId) {
+	return axios.get(getApiUrl(`discussions/${discussionId}`), {
+		params: {
+			include: discussionsInclude
+		}
+	});
 }
 
 function _handleGetQuestionsSuccess({commit, dispatch}, {data}) {
-	commit(types.QNA_DESTROY)
+	commit(types.QNA_DESTROY);
 
 	if (!_.isUndefined(data.included)) {
-		commit(types.UPDATE_INCLUDED, data.included)
+		commit(types.UPDATE_INCLUDED, data.included);
 
-		data.included.comments && dispatch('comments/setComments', data.included.comments, {root:true})
+		data.included.comments && dispatch('comments/setComments', data.included.comments, {root:true});
 
-		destroy(data, 'included')
-		commit(types.QNA_SET_QUESTIONS, data)
+		destroy(data, 'included');
+		commit(types.QNA_SET_QUESTIONS, data);
 	}
 
-	commit(types.IS_LOADING, false)
+	commit(types.IS_LOADING, false);
 }
 
 function _handleGetQuestionsError(commit, error) {
-	$wnl.logger.error(error)
-	commit(types.IS_LOADING, false)
+	$wnl.logger.error(error);
+	commit(types.IS_LOADING, false);
 }
 
 function _getAnswers(questionId) {
-	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles,reactions`))
-}
-
-/**
- * @param answerId
- * @returns {Promise}
- * @private
- */
-function _getComments(answerId) {
-	return axios.get(getApiUrl(`qna_answers/${answerId}?include=comments.profiles`))
-}
-
-/**
- * @param answerId
- * @returns {Promise}
- * @private
- */
-function _getAnswer(answerId) {
-	return axios.get(getApiUrl(`answers/${answerId}?include=users`))
+	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles,reactions`));
 }
 
 function getInitialState() {
@@ -121,7 +77,7 @@ function getInitialState() {
 		config: {
 			highlighted: {}
 		},
-	}
+	};
 }
 
 function sortByTime(questionsList) {
@@ -130,7 +86,7 @@ function sortByTime(questionsList) {
 			_.values(questionsList),
 			(question) => question.upvote.created_at
 		)
-	)
+	);
 }
 
 function sortByVotes(questionsList) {
@@ -139,7 +95,7 @@ function sortByVotes(questionsList) {
 			_.values(questionsList),
 			(question) => question.upvote.count
 		)
-	)
+	);
 }
 
 function sortByNoAnswer(questionsList) {
@@ -147,32 +103,32 @@ function sortByNoAnswer(questionsList) {
 		_.sortBy(
 			_.values(
 				_.filter(questionsList, (question) => {
-					return typeof question.qna_answers === 'undefined'
+					return typeof question.qna_answers === 'undefined';
 				})
 			),
 			(question) => question.upvote.created_at
 		)
-	)
+	);
 }
 
 
-function getUsersQuestions(questionsList, userId) {
+function getUsersQuestions(questionsList, userProfileId) {
 	return _.reverse(
 		_.sortBy(
 			_.values(
 				_.filter(questionsList, (question) => {
-					return question.profiles[0] == userId
+					return question.profiles[0] === userProfileId;
 				})
 			),
 			(question) => question.upvote.created_at
 		)
-	)
+	);
 }
 
-const namespaced = true
+const namespaced = true;
 
 // Initial state
-const state = getInitialState()
+const state = getInitialState();
 
 // Getters
 const getters = {
@@ -183,14 +139,14 @@ const getters = {
 	questions: state => state.qna_questions,
 	getSortedQuestions: (state, getters, rootState, rootGetters) => (sorting, list) => {
 		switch (sorting) {
-			case 'latest':
-				return sortByTime(list)
-			case 'no-answer':
-				return sortByNoAnswer(list)
-			case 'my':
-				return getUsersQuestions(list, rootGetters.currentUserId)
-			default:
-				return sortByVotes(list)
+		case 'latest':
+			return sortByTime(list);
+		case 'no-answer':
+			return sortByNoAnswer(list);
+		case 'my':
+			return getUsersQuestions(list, rootGetters.currentUserProfileId);
+		default:
+			return sortByVotes(list);
 		}
 	},
 	// Resources
@@ -199,35 +155,26 @@ const getters = {
 	profile:     state => (id) => state.profiles[id] || {},
 
 	// Question
-	questionContent: state => (id) => state.qna_questions[id].text,
-	questionAuthor: (state, getters) => (id) => {
-		return getters.profile(state.qna_questions[id].profiles[0])
-	},
-	questionTimestamp: state => (id) => state.qna_questions[id].created_at,
 	questionAnswers: state => (id) => {
-		let answersIds = state.qna_questions[id].qna_answers
+		let answersIds = state.qna_questions[id].qna_answers;
 		if (_.isUndefined(answersIds)) {
-			return []
+			return [];
 		}
 
-		return answersIds.map((id) => state.qna_answers[id])
+		return answersIds.map((id) => state.qna_answers[id]);
 	},
 	questionTags: state => (id) => {
-		let tags = state.qna_questions[id].tags
+		let tags = state.qna_questions[id].tags;
 		if (_.isUndefined(tags)) {
-			return []
+			return [];
 		}
 
-		return tags.map((id) => state.tags[id])
+		return tags.map((id) => state.tags[id]);
 	},
 	questionAnswersFromHighestUpvoteCount: (state, getters) => (id) => {
-		return _.reverse(
-			_.sortBy(
-				getters.questionAnswers(id), (answer) => answer.upvote.count
-			)
-		)
+		return getters.questionAnswers(id).sort((answerA, answerB) => answerB.upvote.count - answerA.upvote.count);
 	},
-}
+};
 
 
 // Mutations
@@ -235,26 +182,25 @@ const mutations = {
 	...reactionsMutations,
 	...commentsMutations,
 	[types.IS_LOADING] (state, isLoading) {
-		const loadingStatus = state.loading
+		const loadingStatus = state.loading;
 		if (isLoading) {
-			set(state, 'loading', (new Array(loadingStatus.length + 1)).fill(true))
+			set(state, 'loading', (new Array(loadingStatus.length + 1)).fill(true));
 		} else {
-			set(state, 'loading', (new Array(loadingStatus.length - 1)).fill(true))
+			set(state, 'loading', (new Array(loadingStatus.length - 1)).fill(true));
 		}
 	},
 	[types.QNA_CHANGE_SORTING] (state, sorting) {
-		set(state, 'sorting', sorting)
+		set(state, 'sorting', sorting);
 	},
 	[types.QNA_SET_QUESTIONS] (state, data) {
 		Object.keys(data).forEach((key) => {
-			let question = data[key]
-			set(state.qna_questions, question.id, question)
-		})
-		// set(state, 'questionsIds', questionsIds)
+			let question = data[key];
+			set(state.qna_questions, question.id, question);
+		});
 	},
 	[types.QNA_UPDATE_QUESTION] (state, payload) {
 		let id = payload.questionId,
-			data = _.merge(state.qna_questions[id], payload.data)
+			data = _.merge(state.qna_questions[id], payload.data);
 
 		/**
 		 * In case you wonder why I destroy it first - please visit.
@@ -264,31 +210,31 @@ const mutations = {
 		 * is to destroy the target first using Vue's reactive method
 		 * destroy.
 		 */
-		destroy(state.qna_questions, id)
-		set(state.qna_questions, id, data)
+		destroy(state.qna_questions, id);
+		set(state.qna_questions, id, data);
 	},
 	[types.QNA_REMOVE_QUESTION] (state, payload) {
 		let id = payload.questionId,
-			questionsIds = _.pull(state.questionsIds, id)
+			questionsIds = _.pull(state.questionsIds, id);
 
-		destroy(state.qna_questions, id)
-		set(state, 'questionsIds', questionsIds)
+		destroy(state.qna_questions, id);
+		set(state, 'questionsIds', questionsIds);
 	},
 	[types.QNA_RESOLVE_QUESTION] (state, payload) {
 		let id = payload.questionId,
 			question = state.qna_questions[id];
 
-		set(state.qna_questions, id, {...question, resolved: true})
+		set(state.qna_questions, id, {...question, resolved: true});
 	},
 	[types.QNA_UNRESOLVE_QUESTION] (state, payload) {
 		let id = payload.questionId,
 			question = state.qna_questions[id];
 
-		set(state.qna_questions, id, {...question, resolved: false})
+		set(state.qna_questions, id, {...question, resolved: false});
 	},
 	[types.QNA_UPDATE_ANSWER] (state, payload) {
 		let id = payload.answerId,
-			data = _.merge(state.qna_answers[id], payload.data)
+			data = _.merge(state.qna_answers[id], payload.data);
 
 		/**
 		 * In case you wonder why I destroy it first - please visit.
@@ -298,92 +244,79 @@ const mutations = {
 		 * is to destroy the target first using Vue's reactive method
 		 * destroy.
 		 */
-		destroy(state.qna_answers, id)
-		set(state.qna_answers, id, _.merge(state.qna_answers[id], data))
+		destroy(state.qna_answers, id);
+		set(state.qna_answers, id, _.merge(state.qna_answers[id], data));
 	},
 	[types.QNA_REMOVE_ANSWER] (state, payload) {
 		let id = payload.answerId,
 			questionId = payload.questionId,
-			answers = _.pull(state.qna_questions[questionId].qna_answers, id)
+			answers = _.pull(state.qna_questions[questionId].qna_answers, id);
 
-		destroy(state.qna_answers, id)
-		set(state.qna_questions[questionId], 'qna_answers', answers)
+		destroy(state.qna_answers, id);
+		set(state.qna_questions[questionId], 'qna_answers', answers);
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
-			let resources = state[resource]
-			_.each(items, (item, index) => {
-				resources[index] = item
-			})
-			set(state, resource, resources)
-		})
+			const resources = { ...state[resource], ...items };
+			set(state, resource, resources);
+		});
 	},
 	[types.QNA_DESTROY] (state) {
-		let initialState = getInitialState()
+		let initialState = getInitialState();
 		Object.keys(initialState)
 			.filter((field) => field !== 'loading')
-			.forEach((field) => set(state, field, initialState[field]))
+			.forEach((field) => set(state, field, initialState[field]));
 	},
-}
+};
 
 // Actions
 const actions = {
 	...reactionsActions,
 	...commentsActions,
 	changeSorting({commit, dispatch}, sorting) {
-		commit(types.QNA_CHANGE_SORTING, sorting)
-	},
-	fetchQuestionsByTags({commit, dispatch}, {tags, sorting}) {
-		commit(types.IS_LOADING, true)
-		sorting && commit(types.QNA_CHANGE_SORTING, sorting)
-
-		return new Promise((resolve, reject) => {
-			_getQuestionsByTags(tags)
-				.then((response) => {
-					_handleGetQuestionsSuccess({commit, dispatch}, response)
-					resolve()
-				})
-				.catch((error) => {
-					_handleGetQuestionsError(commit, error)
-					reject()
-				})
-		})
-	},
-
-	fetchQuestionsByIds({commit, dispatch}, ids) {
-		commit(types.IS_LOADING, true)
-
-		return new Promise((resolve, reject) => {
-			_getQuestionsByIds(ids)
-				.then((response) => {
-					_handleGetQuestionsSuccess({commit, dispatch}, response)
-					resolve()
-				})
-				.catch((error) => {
-					_handleGetQuestionsError(commit, error)
-					reject()
-				})
-		})
+		commit(types.QNA_CHANGE_SORTING, sorting);
 	},
 
 	fetchLatestQuestions({commit, dispatch}, limit = 10) {
-		commit(types.IS_LOADING, true)
+		commit(types.IS_LOADING, true);
 
 		return new Promise((resolve, reject) => {
 			_getQuestionsLatest(limit)
 				.then((response) => {
-					_handleGetQuestionsSuccess({commit, dispatch}, response)
-					resolve()
+					_handleGetQuestionsSuccess({commit, dispatch}, response);
+					resolve();
 				})
 				.catch((error) => {
-					_handleGetQuestionsError(commit, error)
-					reject()
-				})
-		})
+					_handleGetQuestionsError(commit, error);
+					reject();
+				});
+		});
+	},
+
+	async fetchQuestionsForDiscussion({commit, dispatch}, discussionId) {
+		commit(types.IS_LOADING, true);
+
+		try {
+			const {data} = await _getQuestionsForDiscussion(discussionId);
+			commit(types.QNA_DESTROY);
+
+
+			if (!_.isUndefined(data.included)) {
+				const {qna_questions, ...included} = data.included;
+				commit(types.UPDATE_INCLUDED, included);
+				commit(types.QNA_SET_QUESTIONS, qna_questions);
+
+				included.comments && dispatch('comments/setComments', included.comments, {root:true});
+			}
+
+			commit(types.IS_LOADING, false);
+		} catch (e) {
+			_handleGetQuestionsError(commit, e);
+		}
 	},
 
 	fetchQuestionsByTagName({commit, dispatch}, {tagName, ids}) {
-		commit(types.IS_LOADING, true)
+		commit(types.IS_LOADING, true);
 
 		return new Promise((resolve, reject) => {
 			_getQuestionsByTagName(tagName, ids)
@@ -392,10 +325,10 @@ const actions = {
 					resolve();
 				})
 				.catch((error) => {
-					_handleGetQuestionsError(commit, error)
-					reject()
-				})
-		})
+					_handleGetQuestionsError(commit, error);
+					reject();
+				});
+		});
 	},
 
 	fetchQuestion({commit, dispatch}, questionId) {
@@ -403,51 +336,51 @@ const actions = {
 			_getAnswers(questionId)
 				.then((response) => {
 					let data = response.data,
-						included = data.included
+						included = data.included;
 
-					commit(types.UPDATE_INCLUDED, included)
-					delete(data.included)
-					commit(types.QNA_UPDATE_QUESTION, {questionId, data})
-					resolve()
+					commit(types.UPDATE_INCLUDED, included);
+					delete(data.included);
+					commit(types.QNA_UPDATE_QUESTION, {questionId, data});
+					resolve();
 				})
 				.catch((error) => {
-					$wnl.logger.error(error)
-					reject()
-				})
-		})
+					$wnl.logger.error(error);
+					reject();
+				});
+		});
 	},
 	removeQuestion({commit, dispatch}, questionId) {
 		return new Promise((resolve, reject) => {
-			commit(types.QNA_REMOVE_QUESTION, {questionId})
-			resolve()
-		})
+			commit(types.QNA_REMOVE_QUESTION, {questionId});
+			resolve();
+		});
 	},
 	resolveQuestion({commit, dispatch}, questionId) {
 		return _resolveQuestion(questionId)
-			.then(() => commit(types.QNA_RESOLVE_QUESTION, {questionId}))
+			.then(() => commit(types.QNA_RESOLVE_QUESTION, {questionId}));
 	},
 	unresolveQuestion({commit, dispatch}, questionId) {
 		return _resolveQuestion(questionId, false)
-			.then(() => commit(types.QNA_UNRESOLVE_QUESTION, {questionId}))
+			.then(() => commit(types.QNA_UNRESOLVE_QUESTION, {questionId}));
 	},
 	removeAnswer({commit, dispatch}, payload) {
 		return new Promise((resolve, reject) => {
 			commit(types.QNA_REMOVE_ANSWER, {
 				questionId: payload.questionId,
 				answerId: payload.answerId,
-			})
-			resolve()
-		})
+			});
+			resolve();
+		});
 	},
-	destroyQna({commit, dispatch}) {
-		commit(types.QNA_DESTROY)
+	destroyQna({commit}) {
+		commit(types.QNA_DESTROY);
 	},
 	setUserQnaQuestions({commit, dispatch}, {included, ...qnaQuestions}) {
-		commit(types.QNA_SET_QUESTIONS, qnaQuestions)
-		commit(types.UPDATE_INCLUDED, included)
-		included && included.comments && dispatch('comments/setComments', included.comments, {root:true})
+		commit(types.QNA_SET_QUESTIONS, qnaQuestions);
+		commit(types.UPDATE_INCLUDED, included);
+		included && included.comments && dispatch('comments/setComments', included.comments, {root:true});
 	},
-}
+};
 
 export default {
 	actions,
@@ -455,4 +388,4 @@ export default {
 	mutations,
 	namespaced,
 	state,
-}
+};

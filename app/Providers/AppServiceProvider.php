@@ -3,13 +3,13 @@ namespace App\Providers;
 
 use App;
 use App\Models;
-use App\Notifications\QueueJobFailed;
 use App\Observers;
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
 use Bschmitt\Amqp\AmqpServiceProvider;
 use Illuminate\Queue\Events\JobFailed;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
 use Laravel\Tinker\TinkerServiceProvider;
@@ -18,7 +18,6 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RavenHandler;
 use Monolog\Logger;
 use Validator;
-use Illuminate\Support\Facades\Queue;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
+		$this->forceHttpsLinks();
 		$this->registerModelObservers();
 		$this->registerSentryLogger();
 		$this->registerCustomValidators();
@@ -47,12 +47,14 @@ class AppServiceProvider extends ServiceProvider
 		}
 		if ($this->app->environment('dev', 'local')) {
 			$this->app->register(TinkerServiceProvider::class);
+			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 		}
 		if (env('DEBUG_BAR') === true) {
 			$this->app->register(DebugBarServiceProvider::class);
 		}
 		if($this->app->runningInConsole()) {
 			$this->app->register(AmqpServiceProvider::class);
+			$this->app->register(DiscussableServiceProvider::class);
 		}
 	}
 
@@ -63,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
 		$level = Logger::INFO;
 		$handler = new RavenHandler(new \Raven_Client(env('SENTRY_DSN')), $level);
 		$handler->setFormatter(new LineFormatter("%message% %context% %extra%\n"));
-		$monolog = Log::getMonolog();
+		$monolog = Log::getLogger();
 		$monolog->pushHandler($handler);
 		$monolog->pushProcessor(function ($record) {
 			// record app version
@@ -125,5 +127,12 @@ class AppServiceProvider extends ServiceProvider
 				'job' => $event->job->resolveName(),
 			]);
 		});
+	}
+
+	private function forceHttpsLinks() {
+		$url = app(UrlGenerator::class);
+		if (env('APP_ENV') !== 'dev') {
+			$url->forceScheme('https');
+		}
 	}
 }

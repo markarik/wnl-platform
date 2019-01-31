@@ -49,52 +49,49 @@
 </style>
 
 <script>
-	import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex';
 
-	import UserAbout from 'js/components/users/UserAbout'
-	import MainNav from 'js/components/MainNav'
-	import Sidenav from 'js/components/global/Sidenav'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
-	import { isProduction, getApiUrl } from 'js/utils/env'
-	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
+import UserAbout from 'js/components/users/UserAbout';
+import MainNav from 'js/components/MainNav';
+import SidenavSlot from 'js/components/global/SidenavSlot';
+import { isProduction } from 'js/utils/env';
 
-	export default {
-		name: 'MainUsers',
-		components: {
-			'wnl-user-about': UserAbout,
-			'wnl-main-nav': MainNav,
-			'wnl-sidenav': Sidenav,
-			'wnl-sidenav-slot': SidenavSlot
+export default {
+	name: 'MainUsers',
+	components: {
+		'wnl-user-about': UserAbout,
+		'wnl-main-nav': MainNav,
+		'wnl-sidenav-slot': SidenavSlot
+	},
+	props: ['view'],
+	data() {
+		return {
+			testMode: false,
+			profile: null,
+			filterByHelp: '',
+			filterByLocation: ''
+		};
+	},
+	computed: {
+		...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isChatMounted', 'isChatVisible', 'isMobileProfile', 'isChatToggleVisible', 'isLargeDesktop', 'isSmallDesktop']),
+		isProduction() {
+			return isProduction();
 		},
-		props: ['view'],
-		data() {
-			return {
-				testMode: false,
-				profile: null,
-				filterByHelp: '',
-				filterByLocation: ''
-			}
+		isMainRoute() {
+			return this.$route.name === 'all';
 		},
-		computed: {
-			...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isChatMounted', 'isChatVisible', 'isMobileProfile', 'isChatToggleVisible', 'isLargeDesktop', 'isSmallDesktop']),
-			isProduction() {
-				return isProduction()
-			},
-			isMainRoute() {
-				return this.$route.name === 'all'
-			},
+	},
+	methods: {
+		...mapActions(['killChat', 'toggleChat']),
+		helpFilterLoaded(filter) {
+			return this.filterByHelp = filter;
 		},
-		methods: {
-			...mapActions(['killChat', 'toggleChat']),
-			helpFilterLoaded(filter) {
-				return this.filterByHelp = filter
-			},
-			locationFilterLoaded(filter) {
-				return this.filterByLocation = filter
-			},
-			onDataLoaded({profile}) {
-				return this.profile = profile
-			},
-		}
+		locationFilterLoaded(filter) {
+			return this.filterByLocation = filter;
+		},
+		onDataLoaded({profile}) {
+			return this.profile = profile;
+		},
 	}
+};
 </script>

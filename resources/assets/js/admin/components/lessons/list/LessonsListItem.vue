@@ -9,18 +9,18 @@
 </style>
 
 <script>
-	export default {
-		name: 'LessonsListItem',
-		props: ['id', 'name'],
-		computed: {
-			to() {
-				return {
-					name: 'lessons',
-					params: {
-						lessonId: this.id,
-					},
-				}
-			},
+export default {
+	name: 'LessonsListItem',
+	props: ['id', 'name'],
+	computed: {
+		to() {
+			return {
+				name: 'lessons',
+				params: {
+					lessonId: this.id,
+				},
+			};
 		},
-	}
+	},
+};
 </script>

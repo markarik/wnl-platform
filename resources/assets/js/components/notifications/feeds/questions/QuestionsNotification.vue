@@ -33,7 +33,7 @@
 			</div>
 		</div>
 		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
-		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+		<wnl-modal @closeModal="closeModal" v-if="isVisible">
 			<wnl-user-profile-modal :author="message.actors"/>
 		</wnl-modal>
 	</div>
@@ -51,7 +51,7 @@
 		align-items: flex-start
 		background: $color-white
 		border-bottom: $border-light-gray
-		color: $color-gray
+		color: $color-darkest-gray
 		display: flex
 		font-size: $font-size-minus-1
 		justify-content: space-between
@@ -99,7 +99,7 @@
 				font-weight: $font-weight-bold
 
 		.object-text
-			color: $color-gray-dimmed
+			color: $color-gray
 			font-style: italic
 			line-height: $line-height-minus
 			margin-bottom: $margin-tiny
@@ -124,89 +124,89 @@
 </style>
 
 <script>
-	import { truncate } from 'lodash'
-	import { mapActions, mapGetters } from 'vuex'
+import { truncate } from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
 
-	import Avatar from 'js/components/global/Avatar'
-	import UserProfileModal from 'js/components/users/UserProfileModal'
-	import Modal from 'js/components/global/Modal'
-	import { notification } from 'js/components/notifications/notification'
-	import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time'
+import Avatar from 'js/components/global/Avatar';
+import UserProfileModal from 'js/components/users/UserProfileModal';
+import Modal from 'js/components/global/Modal';
+import { notification } from 'js/components/notifications/notification';
+import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time';
 
-	export default {
-		name: 'QuestionsNotification',
-		mixins: [notification],
-		components: {
-			'wnl-avatar': Avatar,
-			'wnl-modal': Modal,
-			'wnl-user-profile-modal': UserProfileModal
+export default {
+	name: 'QuestionsNotification',
+	mixins: [notification],
+	components: {
+		'wnl-avatar': Avatar,
+		'wnl-modal': Modal,
+		'wnl-user-profile-modal': UserProfileModal
+	},
+	props: {
+		icon: {
+			required: true,
+			type: String
 		},
-		props: {
-			icon: {
-				required: true,
-				type: String
-			},
+	},
+	data() {
+		return {
+			objectTextLength: 100,
+			subjectTextLength: 300,
+			isVisible: false
+		};
+	},
+	computed: {
+		...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
+		action() {
+			return this.$t(`notifications.events.${_.camelCase(this.message.event)}`);
 		},
-		data() {
-			return {
-				objectTextLength: 100,
-				subjectTextLength: 300,
-				isVisible: false
+		justDate() {
+			return justMonthAndDayFromS(this.message.timestamp);
+		},
+		justTime() {
+			return justTimeFromS(this.message.timestamp);
+		},
+		object() {
+			const objects = this.message.objects;
+			const subject = this.message.subject;
+			const type = !!objects ? objects.type : subject.type;
+			const choice = !!objects ? this.currentUserId === objects.author ? 2 : 1 : 1;
+
+			return this.$tc(`notifications.objects.${_.camelCase(type)}`, choice);
+		},
+	},
+	methods: {
+		...mapActions('notifications', ['markAsUnread']),
+		showModal() {
+			this.isVisible = true;
+		},
+		closeModal() {
+			this.isVisible = false;
+		},
+		toggleNotification() {
+			this.loading = true;
+
+			if (this.isRead) {
+				return this.markAsUnread({notification: this.message, channel: this.channel})
+					.then(() => this.loading = false);
+			}
+
+			return this.markAsRead({notification: this.message, channel: this.channel})
+				.then(() => this.loading = false);
+		},
+		dispatchMarkAsSeen() {
+			if(!this.hasContext) return false;
+
+			this.loading = true;
+
+			if (!this.isSeen) {
+				this.markAsSeen({notification: this.message, channel: this.channel})
+					.then(() => {
+						this.loading = false;
+					});
+			} else {
+				this.loading = false;
 			}
 		},
-		computed: {
-			...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
-			action() {
-				return this.$t(`notifications.events.${_.camelCase(this.message.event)}`)
-			},
-			justDate() {
-				return justMonthAndDayFromS(this.message.timestamp)
-			},
-			justTime() {
-				return justTimeFromS(this.message.timestamp)
-			},
-			object() {
-				const objects = this.message.objects
-				const subject = this.message.subject
-				const type = !!objects ? objects.type : subject.type
-				const choice = !!objects ? this.currentUserId === objects.author ? 2 : 1 : 1
-
-				return this.$tc(`notifications.objects.${_.camelCase(type)}`, choice)
-			},
-		},
-		methods: {
-			...mapActions('notifications', ['markAsUnread']),
-			showModal() {
-				this.isVisible = true
-			},
-			closeModal() {
-				this.isVisible = false
-			},
-			toggleNotification() {
-				this.loading = true
-
-				if (this.isRead) {
-					return this.markAsUnread({notification: this.message, channel: this.channel})
-						.then(() => this.loading = false)
-				}
-
-				return this.markAsRead({notification: this.message, channel: this.channel})
-					.then(() => this.loading = false)
-			},
-			dispatchMarkAsSeen() {
-				if(!this.hasContext) return false;
-
-				this.loading = true
-
-				if (!this.isSeen) {
-					this.markAsSeen({notification: this.message, channel: this.channel})
-						.then(() => {
-							this.loading = false
-						})
-				} else {
-					this.loading = false
-				}
-			},
-		},
-	}
+	},
+};
 </script>

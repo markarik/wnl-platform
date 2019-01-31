@@ -75,7 +75,7 @@
 							{{$t('questions.plan.headings.questions')}}
 						</div>
 						<div class="questions-plan-options">
-							<div v-for="filters, option in planOptions" :key="option">
+							<div v-for="(filters, option) in planOptions" :key="option">
 								<a
 									class="plan-option panel-toggle"
 									:class="{'is-active': selectedOption === option}"
@@ -163,7 +163,7 @@
 
 	.questions-breadcrumbs
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		display: flex
 		margin-right: $margin-base
@@ -215,7 +215,7 @@
 
 	.preserveProgress
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		display: flex
 		justify-content: center
 		font-size: $font-size-minus-2
@@ -280,247 +280,252 @@
 </style>
 
 <script>
-	import axios from 'axios'
-	import moment from 'moment'
-	import {pl} from 'flatpickr/dist/l10n/pl.js'
-	import {isEmpty, merge} from 'lodash'
-	import {mapActions, mapGetters} from 'vuex'
+import axios from 'axios';
+import moment from 'moment';
+import {pl} from 'flatpickr/dist/l10n/pl.js';
+import {isEmpty, merge} from 'lodash';
+import {mapActions, mapGetters} from 'vuex';
 
-	import Datepicker from 'js/components/global/Datepicker'
-	import QuestionsFilters from 'js/components/questions/QuestionsFilters'
-	import QuestionsNavigation from 'js/components/questions/QuestionsNavigation'
-	import QuestionsPlanProgress from 'js/components/questions/QuestionsPlanProgress'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
-	import {getApiUrl} from 'js/utils/env'
-	import features from 'js/consts/events_map/features.json';
-	import context from 'js/consts/events_map/context.json';
+import Datepicker from 'js/components/global/Datepicker';
+import QuestionsFilters from 'js/components/questions/QuestionsFilters';
+import QuestionsNavigation from 'js/components/questions/QuestionsNavigation';
+import QuestionsPlanProgress from 'js/components/questions/QuestionsPlanProgress';
+import SidenavSlot from 'js/components/global/SidenavSlot';
+import {getApiUrl} from 'js/utils/env';
+import features from 'js/consts/events_map/features.json';
+import context from 'js/consts/events_map/context.json';
 
-	export default {
-		name: 'QuestionsPlanner',
-		components: {
-			'wnl-datepicker': Datepicker,
-			'wnl-questions-filters': QuestionsFilters,
-			'wnl-questions-navigation': QuestionsNavigation,
-			'wnl-questions-plan-progress': QuestionsPlanProgress,
-			'wnl-sidenav-slot': SidenavSlot,
+export default {
+	name: 'QuestionsPlanner',
+	components: {
+		'wnl-datepicker': Datepicker,
+		'wnl-questions-filters': QuestionsFilters,
+		'wnl-questions-navigation': QuestionsNavigation,
+		'wnl-questions-plan-progress': QuestionsPlanProgress,
+		'wnl-sidenav-slot': SidenavSlot,
+	},
+	props: [],
+	data() {
+		return {
+			customCount: 0,
+			endDate: null,
+			fetchingQuestions: false,
+			plan: null,
+			saving: false,
+			selectedOption: 'unresolvedAndIncorrect',
+			showPlanner: false,
+			slackDays: 0,
+			startDate: new Date(),
+			unresolvedAndIncorrectCount: 0,
+			preserveProgress: true
+		};
+	},
+	computed: {
+		...mapGetters(['currentUserId', 'isChatMounted', 'isChatVisible', 'isLargeDesktop', 'isMobile']),
+		...mapGetters('questions', [
+			'activeFilters',
+			'activeFiltersObjects',
+			'allQuestionsCount',
+			'filters',
+		]),
+		activeFiltersNames() {
+			return this.activeFiltersObjects.map(filter => {
+				return filter.hasOwnProperty('name')
+					? filter.name
+					: filter.hasOwnProperty('message')
+						? this.$t(`questions.filters.items.${filter.message}`)
+						: this.$t(`questions.filters.items.${filter.value}`);
+			}).join(', ');
 		},
-		props: [],
-		data() {
+		averageClass() {
+			return this.currentPlan.average <= 100
+				? 'easy'
+				: this.currentPlan.average <= 200
+					? 'medium'
+					: 'hard';
+		},
+		counts() {
 			return {
-				customCount: 0,
-				endDate: null,
-				fetchingQuestions: false,
-				plan: null,
-				saving: false,
-				selectedOption: 'unresolvedAndIncorrect',
-				showPlanner: false,
-				slackDays: 0,
-				startDate: new Date(),
-				unresolvedAndIncorrectCount: 0,
-				preserveProgress: true
-			}
+				all: this.allQuestionsCount,
+				unresolvedAndIncorrect: this.unresolvedAndIncorrectCount,
+				custom: this.customCount,
+			};
 		},
-		computed: {
-			...mapGetters(['currentUserId', 'isChatMounted', 'isChatVisible', 'isLargeDesktop', 'isMobile']),
-			...mapGetters('questions', [
-				'activeFilters',
-				'activeFiltersObjects',
-				'allQuestionsCount',
-				'filters',
-			]),
-			activeFiltersNames() {
-				return this.activeFiltersObjects.map(filter => {
-					return filter.hasOwnProperty('name')
-						? filter.name
-						: filter.hasOwnProperty('message')
-							? this.$t(`questions.filters.items.${filter.message}`)
-							: this.$t(`questions.filters.items.${filter.value}`)
-				}).join(', ')
-			},
-			averageClass() {
-				return this.currentPlan.average <= 100
-					? 'easy'
-					: this.currentPlan.average <= 200
-						? 'medium'
-						: 'hard'
-			},
-			counts() {
-				return {
-					all: this.allQuestionsCount,
-					unresolvedAndIncorrect: this.unresolvedAndIncorrectCount,
-					custom: this.customCount,
-				}
-			},
-			currentPlan() {
-				const count = this.counts[this.selectedOption]
-				const days = this.datesRangeInDays + 1 - this.slackDays
+		currentPlan() {
+			const count = this.counts[this.selectedOption];
+			const days = this.datesRangeInDays + 1 - this.slackDays;
 
-				return {average: Math.ceil(count/days), count, days}
-			},
-			datesRangeInDays() {
-				return moment(this.endDate).diff(moment(this.startDate), 'days')
-			},
-			endDateConfig() {
-				return merge(this.defaultDateConfig(), {
-					minDate: this.startDate,
-				})
-			},
-			hasMissingDates() {
-				return this.startDate === null || this.endDate === null
-			},
-			hasPlan() {
-				return !isEmpty(this.plan)
-			},
-			maxSlack() {
-				return this.datesRangeInDays
-			},
-			plannerHeading() {
-				return this.hasPlan ? 'change' : 'create'
-			},
-			planOptions() {
-				return {
-					unresolvedAndIncorrect: [
-						'quiz-resolution.items[0]',
-						'quiz-resolution.items[1]',
-					],
-					all: [],
-					custom: [],
-				}
-			},
-			startDateConfig() {
-				return merge(this.defaultDateConfig(), {
-					minDate: 'today',
-				})
-			},
+			return {average: Math.ceil(count/days), count, days};
 		},
-		methods: {
-			...mapActions(['toggleChat']),
-			...mapActions('questions', [
-				'activeFiltersSet',
-				'activeFiltersToggle',
-				'buildPlan',
-				'fetchDynamicFilters',
-				'fetchQuestions',
-				'fetchQuestionsCount',
-			]),
-			createPlan() {
-				this.saving = true
-				this.buildPlan({
-					startDate: this.startDate,
-					endDate: this.endDate,
-					activeFilters: this.activeFilters,
-					slackDays: this.slackDays,
-					preserveProgress: this.preserveProgress
-				})
+		datesRangeInDays() {
+			return moment(this.endDate).diff(moment(this.startDate), 'days');
+		},
+		endDateConfig() {
+			return merge(this.defaultDateConfig(), {
+				minDate: this.startDate,
+			});
+		},
+		hasMissingDates() {
+			return this.startDate === null || this.endDate === null;
+		},
+		hasPlan() {
+			return !isEmpty(this.plan);
+		},
+		maxSlack() {
+			return this.datesRangeInDays;
+		},
+		plannerHeading() {
+			return this.hasPlan ? 'change' : 'create';
+		},
+		planOptions() {
+			return {
+				unresolvedAndIncorrect: [
+					'quiz-resolution.items[0]',
+					'quiz-resolution.items[1]',
+				],
+				all: [],
+				custom: [],
+			};
+		},
+		startDateConfig() {
+			return merge(this.defaultDateConfig(), {
+				minDate: 'today',
+			});
+		},
+	},
+	methods: {
+		...mapActions(['toggleChat']),
+		...mapActions('questions', [
+			'activeFiltersSet',
+			'activeFiltersToggle',
+			'buildPlan',
+			'fetchDynamicFilters',
+			'fetchQuestions',
+			'fetchQuestionsCount',
+		]),
+		createPlan() {
+			this.saving = true;
+			this.buildPlan({
+				startDate: this.startDate,
+				endDate: this.endDate,
+				activeFilters: this.activeFilters,
+				slackDays: this.slackDays,
+				preserveProgress: this.preserveProgress
+			})
 				.then(({status, data}) => this.plan = data)
 				.then(this.fetchDynamicFilters)
 				.then(() => {
-					this.saving = false
-					this.showPlanner = false
+					this.saving = false;
+					this.showPlanner = false;
 					this.$trackUserEvent({
 						context: context.questions_bank.value,
 						feature: features.quiz_planner.value,
 						action: features.quiz_planner.actions.save.value
-					})
-				})
-			},
-			defaultDateConfig() {
-				return {
-					altInput: true,
-					disableMobile: true,
-					locale: pl,
-				}
-			},
-			fetchMatchingQuestions(filters = []) {
-				this.fetchingQuestions = true
-				return this.fetchQuestions({
-					saveFilters: false,
-					useSavedFilters: false,
-					filters,
-				})
-					.catch(error => $wnl.logger.error(error))
-					.then(({data: {total}}) => {
-						this.customCount = total
-						this.fetchingQuestions = false
-					})
-			},
-			getPlan() {
-				return new Promise((resolve, reject) => {
-					return axios.get(getApiUrl(`user_plan/${this.currentUserId}`))
-						.then(({status, data}) => {
-							let plan = data
-							if (status === 204) {
-								plan = {}
-							}
-
-							this.plan = plan
-							return resolve(plan)
-						})
-						.catch((error) => reject(error))
-				})
-			},
-			onActiveFiltersChanged(payload) {
-				if (payload.refresh) {
-					return this.activeFiltersToggle(payload).then(() => {
-						this.fetchDynamicFilters()
-						return this.fetchMatchingQuestions(this.activeFilters)
-					})
-				}
-
-				this.activeFiltersToggle(payload)
-			},
-			onEndDateChange(payload) {
-				if (isEmpty(payload)) this.endDate = null
-			},
-			onStartDateChange(payload) {
-				if (isEmpty(payload)) this.startDate = null
-			},
-			selectOption(option, filters) {
-				this.selectedOption = option
-				this.activeFiltersSet(filters)
-				return this.fetchDynamicFilters()
-			},
-			setFilters(filters) {
-				return new Promise((resolve, reject) => {
-					if (!isEmpty(this.filters)) {
-						this.activeFiltersSet(filters)
-						return resolve()
-					}
-
-					this.fetchDynamicFilters().then(() => {
-						this.activeFiltersSet(filters)
-						return resolve()
-					})
-				})
-			},
-			setUnresolvedAndIncorrectCount() {
-				axios.get(getApiUrl('quiz_questions/stats')).then(({data: {correct, total}}) => {
-					this.unresolvedAndIncorrectCount = total - correct
-				})
-			},
-			setupPlanner() {
-				const presetFilters = this.planOptions[this.selectedOption]
-
-				this.showPlanner = true
-				this.setFilters(presetFilters).then(() => {
-					this.fetchDynamicFilters()
-					this.setUnresolvedAndIncorrectCount()
-					this.fetchQuestionsCount()
-				})
-			}
+					});
+				});
 		},
-		mounted() {
-			this.getPlan().then(plan => {
-				isEmpty(plan) ? this.setupPlanner() : this.fetchDynamicFilters()
+		defaultDateConfig() {
+			return {
+				altInput: true,
+				disableMobile: true,
+				locale: pl,
+			};
+		},
+		fetchMatchingQuestions(filters = []) {
+			this.fetchingQuestions = true;
+			return this.fetchQuestions({
+				saveFilters: false,
+				useSavedFilters: false,
+				filters,
 			})
+				.catch(error => $wnl.logger.error(error))
+				.then(({data: {total}}) => {
+					this.customCount = total;
+					this.fetchingQuestions = false;
+				});
 		},
-		watch: {
-			selectedOption(to) {
-				to === 'custom' && !this.counts.custom && this.fetchMatchingQuestions()
-			},
-			showPlanner(to) {
-				to && isEmpty(this.counts.all) && this.setupPlanner()
+		getPlan() {
+			return new Promise((resolve, reject) => {
+				return axios.get(getApiUrl(`user_plan/${this.currentUserId}`))
+					.then(({status, data}) => {
+						let plan = data;
+						if (status === 204) {
+							plan = {};
+						}
+
+						this.plan = plan;
+						return resolve(plan);
+					})
+					.catch((error) => reject(error));
+			});
+		},
+		onActiveFiltersChanged(payload) {
+			if (payload.refresh) {
+				return this.activeFiltersToggle(payload).then(() => {
+					this.fetchDynamicFilters();
+					return this.fetchMatchingQuestions(this.activeFilters);
+				});
 			}
+
+			this.activeFiltersToggle(payload);
 		},
-	}
+		onEndDateChange(payload) {
+			if (isEmpty(payload)) this.endDate = null;
+		},
+		onStartDateChange(payload) {
+			if (isEmpty(payload)) this.startDate = null;
+		},
+		selectOption(option, filters) {
+			this.selectedOption = option;
+			this.activeFiltersSet(filters);
+			return this.fetchDynamicFilters();
+		},
+		setFilters(filters) {
+			return new Promise((resolve, reject) => {
+				if (!isEmpty(this.filters)) {
+					this.activeFiltersSet(filters);
+					return resolve();
+				}
+
+				this.fetchDynamicFilters().then(() => {
+					this.activeFiltersSet(filters);
+					return resolve();
+				});
+			});
+		},
+		setUnresolvedAndIncorrectCount() {
+			axios.get(getApiUrl('quiz_questions/stats')).then(({data: {correct, total}}) => {
+				this.unresolvedAndIncorrectCount = total - correct;
+			});
+		},
+		setupPlanner() {
+			const presetFilters = this.planOptions[this.selectedOption];
+
+			this.showPlanner = true;
+			this.setFilters(presetFilters).then(() => {
+				this.fetchDynamicFilters();
+				this.setUnresolvedAndIncorrectCount();
+				this.fetchQuestionsCount();
+			});
+		}
+	},
+	mounted() {
+		this.$trackUserEvent({
+			feature: features.quiz_planner.value,
+			context: context.questions_bank.value,
+			action: features.quiz_planner.actions.open.value
+		});
+		this.getPlan().then(plan => {
+			isEmpty(plan) ? this.setupPlanner() : this.fetchDynamicFilters();
+		});
+	},
+	watch: {
+		selectedOption(to) {
+			to === 'custom' && !this.counts.custom && this.fetchMatchingQuestions();
+		},
+		showPlanner(to) {
+			to && isEmpty(this.counts.all) && this.setupPlanner();
+		}
+	},
+};
 </script>

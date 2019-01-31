@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _ from 'lodash';
 
 export function swalConfig(options = {}) {
 	const defaults = {
@@ -7,7 +7,7 @@ export function swalConfig(options = {}) {
 		confirmButtonClass: 'button is-primary',
 		cancelButtonClass: 'button is-outlined',
 		customClass: 'wnl-alert',
-	}
+	};
 
-	return _.merge(defaults, options)
+	return _.merge(defaults, options);
 }

@@ -19,22 +19,22 @@
 </style>
 
 <script>
-	import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
-	export default {
-		name: 'QuizStats',
-		computed: {
-			...mapGetters('quiz', ['getAttempts']),
-			attempts() {
-				return this.getAttempts.length
-			},
-			firstAttemptScore() {
-				if (this.attempts > 0) {
-					return `${this.getAttempts[0].score}%`
-				}
-
-				return 'Brak'
-			},
+export default {
+	name: 'QuizStats',
+	computed: {
+		...mapGetters('quiz', ['getAttempts']),
+		attempts() {
+			return this.getAttempts.length;
 		},
-	}
+		firstAttemptScore() {
+			if (this.attempts > 0) {
+				return `${this.getAttempts[0].score}%`;
+			}
+
+			return 'Brak';
+		},
+	},
+};
 </script>

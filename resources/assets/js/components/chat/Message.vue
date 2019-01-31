@@ -20,7 +20,7 @@
 				<p class="wnl-message-content" v-html="content"></p>
 			</div>
 		</div>
-		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+		<wnl-modal @closeModal="closeModal" v-if="isVisible">
 			<wnl-user-profile-modal :author="author"/>
 		</wnl-modal>
 	</article>
@@ -41,7 +41,7 @@
 			margin: 0 $margin-small 0 0
 			cursor: pointer
 			&.author-forgotten
-				color: $color-gray-dimmed
+				color: $color-gray
 				pointer-events: none
 
 		.media-left-placeholder
@@ -50,7 +50,7 @@
 
 		.media-content
 			.content
-				color: $color-gray-lighter
+				color: $color-darker-gray
 				word-wrap: break-word
 				word-break: break-word
 
@@ -62,7 +62,7 @@
 						cursor: pointer
 						color: $color-sky-blue
 						&.author-forgotten
-							color: $color-gray-dimmed
+							color: $color-gray
 							pointer-events: none
 
 				.wnl-message-time
@@ -72,40 +72,40 @@
 					margin: 0
 </style>
 <script>
-	import { mapActions } from 'vuex'
-	import { timeFromMs } from 'js/utils/time'
+import { mapActions } from 'vuex';
+import { timeFromMs } from 'js/utils/time';
 
-	import Modal from 'js/components/global/Modal.vue'
-	import UserProfileModal from 'js/components/users/UserProfileModal'
-	import Avatar from 'js/components/global/Avatar'
+import Modal from 'js/components/global/Modal.vue';
+import UserProfileModal from 'js/components/users/UserProfileModal';
+import Avatar from 'js/components/global/Avatar';
 
-	export default{
-		props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
-		components: {
-			'wnl-avatar': Avatar,
-			'wnl-user-profile-modal': UserProfileModal,
-			'wnl-modal': Modal
+export default{
+	props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
+	components: {
+		'wnl-avatar': Avatar,
+		'wnl-user-profile-modal': UserProfileModal,
+		'wnl-modal': Modal
+	},
+	data() {
+		return {
+			isVisible: false
+		};
+	},
+	computed: {
+		formattedTime () {
+			return timeFromMs(this.time);
 		},
-		data() {
-			return {
-				isVisible: false
-			}
+		nameToDisplay() {
+			return this.author.display_name || this.fullName;
+		}
+	},
+	methods: {
+		showModal() {
+			this.isVisible = true;
 		},
-		computed: {
-			formattedTime () {
-				return timeFromMs(this.time)
-			},
-			nameToDisplay() {
-				return this.author.display_name || this.fullName
-			}
-		},
-		methods: {
-			showModal() {
-				this.isVisible = true
-			},
-			closeModal() {
-				this.isVisible = false
-			}
+		closeModal() {
+			this.isVisible = false;
 		}
 	}
+};
 </script>

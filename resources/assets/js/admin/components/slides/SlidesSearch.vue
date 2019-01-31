@@ -46,7 +46,8 @@
 </template>
 
 <script>
-import {resource} from 'js/utils/config'
+import {resource} from 'js/utils/config';
+import {getApiUrl} from 'js/utils/env';
 
 export default {
 	name: 'SlidesSearch',
@@ -56,7 +57,7 @@ export default {
 			loading: false,
 			resourceUrl: '',
 			error: false
-		}
+		};
 	},
 	props: {
 		slideId: {
@@ -68,75 +69,70 @@ export default {
 	},
 	computed: {
 		slideNumber() {
-			return String(this.slideOrderNo - 1)
+			return String(this.slideOrderNo - 1);
 		}
 	},
 	methods: {
 		getSlide() {
-				this.loading = true
+			this.loading = true;
 
-				if (!this.slideId) {
-					this.getSlideshowId()
-						.then(slideshowId => {
-							return this.getSlideId(slideshowId)
-						})
-						.then(slideId => {
-							this.resourceUrl = `/papi/v1/slides/${slideId}`
-							this.loading = false
-							this.slideId = slideId
-
-							this.$emit('resourceUrlFetched', {
-								url: this.resourceUrl,
-								slideId: this.slideId,
-								screenId: this.screenId
-							})
-							this.error = false
-						})
-						.catch(exception => {
-							console.error(exception)
-							this.loading = false
-							this.error = true
-						})
-				} else {
-					this.resourceUrl = `/papi/v1/slides/${this.slideId}`
-					this.slideOrderNo = null
-					this.loading = false
-
-					this.$emit('resourceUrlFetched', {
-						url: this.resourceUrl,
-						slideId: this.slideId
+			if (!this.slideId) {
+				this.getSlideshowId()
+					.then(slideshowId => {
+						return this.getSlideId(slideshowId);
 					})
-				}
-			},
-			getSlideshowId() {
-				return axios.get(`/papi/v1/screens/${this.screenId}`)
-						.then(response => {
-							let resources    = response.data.meta.resources
-							let resourceName = resource('slideshows')
-							let slideshowId
-							Object.keys(resources).forEach((key) => {
-								if (resources[key].name === resourceName) {
-									slideshowId = resources[key].id
-								}
-							})
-							return slideshowId
-						})
-			},
-			getSlideId (slideshowId) {
-				const conditions = {
-					query: {
-						where: [
-							['presentable_type', '=', 'App\\Models\\Slideshow'],
-							['presentable_id', '=', slideshowId],
-							['order_number', '=', this.slideNumber],
-						]
-					}
-				}
-				return axios.post('/papi/v1/presentables/.search', conditions)
-						.then(response => {
-							return response.data[0].slide_id
-						})
-			},
+					.then(slideId => {
+						this.resourceUrl = getApiUrl(`slides/${slideId}`);
+						this.loading = false;
+						this.slideId = slideId;
+
+						this.$emit('resourceUrlFetched', {
+							url: this.resourceUrl,
+							slideId: this.slideId,
+							screenId: this.screenId
+						});
+						this.error = false;
+					})
+					.catch(exception => {
+						console.error(exception);
+						this.loading = false;
+						this.error = true;
+					});
+			} else {
+				this.resourceUrl = getApiUrl(`slides/${this.slideId}`);
+				this.slideOrderNo = null;
+				this.loading = false;
+
+				this.$emit('resourceUrlFetched', {
+					url: this.resourceUrl,
+					slideId: this.slideId
+				});
+			}
+		},
+		getSlideshowId() {
+			return axios.get(getApiUrl(`screens/${this.screenId}`))
+				.then(response => {
+					let resources    = response.data.meta.resources;
+					let resourceName = resource('slideshows');
+					let slideshowId;
+					Object.keys(resources).forEach((key) => {
+						if (resources[key].name === resourceName) {
+							slideshowId = resources[key].id;
+						}
+					});
+					return slideshowId;
+				});
+		},
+		getSlideId (slideshowId) {
+			return axios.post(getApiUrl('presentables/slides/byOrderNumber'), {
+				presentable_type: 'App\\Models\\Slideshow',
+				presentable_id: slideshowId,
+				order_number: this.slideNumber
+			})
+				.then(response => {
+					return response.data[0].slide_id;
+				});
+		},
 	},
-}
+};
 </script>

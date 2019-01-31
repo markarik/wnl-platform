@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<button class="wnl-text-button"
 			:disabled="disabled"
 			:type="type"
@@ -9,7 +9,7 @@
 	</button>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.wnl-text-button
@@ -28,7 +28,7 @@
 </style>
 
 <script>
-	export default {
-		props: ['icon', 'disabled', 'type'],
-	}
+export default {
+	props: ['icon', 'disabled', 'type'],
+};
 </script>

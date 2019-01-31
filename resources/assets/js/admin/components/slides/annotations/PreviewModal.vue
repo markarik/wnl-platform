@@ -51,17 +51,17 @@
 </style>
 
 <script>
-	export default {
-		props: {
-			content: {
-				type: String,
-				default: ''
-			}
-		},
-		data() {
-			return {
-				screenSize: 'desktop'
-			}
+export default {
+	props: {
+		content: {
+			type: String,
+			default: ''
 		}
+	},
+	data() {
+		return {
+			screenSize: 'desktop'
+		};
 	}
+};
 </script>

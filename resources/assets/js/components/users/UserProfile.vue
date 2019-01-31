@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 		<div class="wnl-user-profile" :class="{mobile: isMobileProfile}">
 			<div class="text-loader" v-if="isLoading">
 				<wnl-text-loader>
@@ -161,7 +161,7 @@
 						margin-bottom: $margin-small
 				.user-info-city
 					align-items: center
-					color: $color-gray-dimmed
+					color: $color-gray
 					display: flex
 					margin-bottom: $margin-base
 					overflow-wrap: break-word
@@ -209,7 +209,7 @@
 					color: $color-dark-blue-opacity
 					margin-right: $margin-base
 			.activity-title
-				color: $color-gray-dimmed
+				color: $color-gray
 				letter-spacing: 1px
 				text-align: center
 				text-transform: uppercase
@@ -239,17 +239,17 @@
 </style>
 
 <script>
-import _ from 'lodash'
+import _ from 'lodash';
 import {
 	mapActions,
 	mapGetters
-} from 'vuex'
+} from 'vuex';
 import {
 	getApiUrl
-} from 'js/utils/env'
-import Avatar from 'js/components/global/Avatar'
-import Qna from 'js/components/qna/Qna'
-import MessageLink from 'js/components/global/MessageLink'
+} from 'js/utils/env';
+import Avatar from 'js/components/global/Avatar';
+import Qna from 'js/components/qna/Qna';
+import MessageLink from 'js/components/global/MessageLink';
 
 export default {
 	name: 'UserProfile',
@@ -270,117 +270,111 @@ export default {
 			allQuestions: {},
 			allQuestionsForAnswers: {},
 			qnaConfig: {}
-		}
+		};
 	},
 	computed: {
 		...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isTouchScreen']),
 		...mapGetters(['currentUserId']),
 		...mapGetters('qna', ['getSortedQuestions']),
 		responseCondition() {
-			return !_.isEmpty(this.profile)
+			return !_.isEmpty(this.profile);
 		},
 		isMobile() {
-			return this.isMobileProfile ? 'is-mobile' : ''
+			return this.isMobileProfile ? 'is-mobile' : '';
 		},
 		isSinglePanelView() {
-			return this.isTouchScreen
+			return this.isTouchScreen;
 		},
 		avatarClass() {
-			return this.isMobileProfile ? 'is-mobile-avatar' : 'is-desktop-avatar'
+			return this.isMobileProfile ? 'is-mobile-avatar' : 'is-desktop-avatar';
 		},
 		currentUserProfile() {
-			return this.id == this.currentUserId
+			return this.id == this.currentUserId;
 		},
 		fullName() {
-			return this.profile.full_name
+			return this.profile.full_name;
 		},
 		displayNameToPrint() {
-			return this.profile.full_name === this.profile.display_name ? null : this.profile.display_name
+			return this.profile.full_name === this.profile.display_name ? null : this.profile.display_name;
 		},
 		helpToDisplay() {
-			return this.currentUserProfile ? this.profile.help || this.$t('user.userProfile.helpDefaultDescription') : this.profile.help || false
+			return this.currentUserProfile ? this.profile.help || this.$t('user.userProfile.helpDefaultDescription') : this.profile.help || false;
 		},
 		cityToDisplay() {
-			return this.currentUserProfile ? this.profile.city || this.$t('user.userProfile.cityDefaultDescription') : this.profile.city || false
+			return this.currentUserProfile ? this.profile.city || this.$t('user.userProfile.cityDefaultDescription') : this.profile.city || false;
 		},
 		howManyComments() {
-			return this.allComments.length
+			return this.allComments.length;
 		},
 		howManyQuestions() {
-			return Object.values(this.allQuestions).length
+			return Object.values(this.allQuestions).length;
 		},
 		howManyAnswers() {
-			return Object.values(this.allAnswers).length
+			return Object.values(this.allAnswers).length;
 		},
 		activityMeterArray() {
 			return [{
-					statistic: this.howManyComments,
-					name: 'Komentarze',
-					iconClassToUse: 'fa fa-comments-o'
-				},
-				{
-					statistic: this.howManyQuestions,
-					name: 'Pytania',
-					iconClassToUse: 'fa fa-question-circle-o'
-				},
-				{
-					statistic: this.howManyAnswers,
-					name: 'Odpowiedzi',
-					iconClassToUse: 'fa fa-comment-o'
-				}
-			]
+				statistic: this.howManyComments,
+				name: 'Komentarze',
+				iconClassToUse: 'fa fa-comments-o'
+			},
+			{
+				statistic: this.howManyQuestions,
+				name: 'Pytania',
+				iconClassToUse: 'fa fa-question-circle-o'
+			},
+			{
+				statistic: this.howManyAnswers,
+				name: 'Odpowiedzi',
+				iconClassToUse: 'fa fa-comment-o'
+			}
+			];
 		},
 		ifAnyQuestions() {
-			return this.howManyQuestions !== 0
+			return this.howManyQuestions !== 0;
 		},
 		ifAnyAnswers() {
-			return this.howManyAnswers !== 0
-		},
-		isQuestionsPanelVisible() {
-			return this.isPanelActive('questions')
-		},
-		isAnswersPanelVisible() {
-			return this.isPanelActive('answers')
+			return this.howManyAnswers !== 0;
 		},
 		sortedQuestionsForAnswers() {
-			const questionsIds = this.sortedAnswers.map((answer) => answer.qna_questions)
+			const questionsIds = this.sortedAnswers.map((answer) => answer.qna_questions);
 
-			const sortedQuestionsForAnswers = []
+			const sortedQuestionsForAnswers = [];
 
-			questionsIds.forEach((id, index) => {
+			questionsIds.forEach((id) => {
 				const value = Object.values(this.allQuestionsForAnswers).find((question) => {
-					return question.id === id
-				})
+					return question.id === id;
+				});
 				if (sortedQuestionsForAnswers.indexOf(value) === -1) {
-					sortedQuestionsForAnswers.push(value)
+					sortedQuestionsForAnswers.push(value);
 				}
-			})
-			return sortedQuestionsForAnswers
+			});
+			return sortedQuestionsForAnswers;
 		},
 		sortedAnswers() {
 			const sortedAnswers =  Object.values(this.allAnswers).sort((a, b) => {
-				return b.upvote.count - a.upvote.count
-			})
-			return sortedAnswers.slice(0,2)
+				return b.upvote.count - a.upvote.count;
+			});
+			return sortedAnswers.slice(0,2);
 		},
 		sortedQuestions() {
 			const sortedQuestions = Object.values(this.allQuestions).sort((a, b) => {
-				return b.upvote.count - a.upvote.count
-			})
-			const bestQuestions = sortedQuestions.slice(0,2)
-			return this.getSortedQuestions('votes', bestQuestions)
+				return b.upvote.count - a.upvote.count;
+			});
+			const bestQuestions = sortedQuestions.slice(0,2);
+			return this.getSortedQuestions('votes', bestQuestions);
 		},
 	},
 	methods: {
 		...mapActions('qna', ['setUserQnaQuestions', 'setConfig']),
 		togglePanel(panel) {
-			return this.activePanels = [panel]
+			return this.activePanels = [panel];
 		},
 		isPanelActive(panel) {
 			if (this.isSinglePanelView) {
-				return this.activePanels[0] === panel
+				return this.activePanels[0] === panel;
 			}
-			return this.activePanels.includes(panel)
+			return this.activePanels.includes(panel);
 		},
 		loadData() {
 			if (!this.$route.params.userId) {
@@ -390,97 +384,83 @@ export default {
 						...this.$route.params,
 						userId: this.currentUserId
 					}
-				})
+				});
 			}
-			const userId = this.$route.params.userId
-			const dataForComments = {
-				query: {
-					where: [
-						['user_id', userId]
-					]
-				}
-			}
+			const userId = this.$route.params.userId;
 			const dataForQnaQuestions = {
-				query: {
-					where: [
-						['user_id', userId]
-					]
-				},
-				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
-			}
+				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles',
+				user_id: userId
+			};
 			const dataForQnaAnswers = {
-				query: {
-					where: [
-						['user_id', userId]
-					]
-				},
-				include: 'reactions'
-			}
-			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`))
-			const promisedAllComments = axios.post(getApiUrl(`comments/.count`), dataForComments)
-			const promisedQnaQuestionsCompetency = axios.post(getApiUrl(`qna_questions/.search`), dataForQnaQuestions)
-			const promisedAllAnswers = axios.post(getApiUrl(`qna_answers/.search`), dataForQnaAnswers)
+				include: 'reactions',
+				user_id: userId
+			};
+			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`));
+			const promisedAllComments = axios.get(getApiUrl('comments/query'), {params: {
+				user_id: userId
+			}});
+			const promisedQnaQuestionsCompetency = axios.get(getApiUrl('qna_questions/query'), {
+				params: dataForQnaQuestions
+			});
+			const promisedAllAnswers = axios.get(getApiUrl('qna_answers/query'), {
+				params: dataForQnaAnswers
+			});
 
-			this.isLoading = true
+			this.isLoading = true;
 
 			return Promise.all([promisedProfile, promisedAllComments, promisedQnaQuestionsCompetency, promisedAllAnswers]).then(([profile, allComments, questionsWithIncludes, allAnswers]) => {
-				this.profile = profile.data
-				this.allComments = allComments.data
-				this.allAnswers = allAnswers.data
+				this.profile = profile.data;
+				this.allComments = allComments.data;
+				this.allAnswers = allAnswers.data;
 
-				const {included, ...allQuestions} = questionsWithIncludes.data
-				this.allQuestions = allQuestions
+				const {included, ...allQuestions} = questionsWithIncludes.data;
+				this.allQuestions = allQuestions;
 
-				this.setUserQnaQuestions(questionsWithIncludes.data)
+				this.setUserQnaQuestions(questionsWithIncludes.data);
 
-				const questionsIds = this.sortedAnswers.map((element) => {return element.qna_questions})
+				const questionsIds = this.sortedAnswers.map((element) => {return element.qna_questions;});
 
-				return this.loadQuestionsForAnswers(questionsIds)
+				return this.loadQuestionsForAnswers(questionsIds);
 			}).then((questionsForAnswersWithIncludes) => {
-				const {included, ...allQuestionsForAnswers} = questionsForAnswersWithIncludes.data
-				this.allQuestionsForAnswers = allQuestionsForAnswers
+				const {included, ...allQuestionsForAnswers} = questionsForAnswersWithIncludes.data;
+				this.allQuestionsForAnswers = allQuestionsForAnswers;
 
-				this.setUserQnaQuestions(questionsForAnswersWithIncludes.data)
+				this.setUserQnaQuestions(questionsForAnswersWithIncludes.data);
 
 				const config = {
 					highlighted: {}
-				}
+				};
 
-				const sortedAnswersCopy = [...this.sortedAnswers]
+				const sortedAnswersCopy = [...this.sortedAnswers];
 
 				sortedAnswersCopy.reverse().forEach((answer) => {
-					config.highlighted[answer.qna_questions] = answer.id
-				})
+					config.highlighted[answer.qna_questions] = answer.id;
+				});
 
-				this.qnaConfig = config
+				this.qnaConfig = config;
 
 				this.$emit('userDataLoaded', {
 					profile: this.profile
-				})
-				this.isLoading = false
-			}).catch(exception => $wnl.logger.capture(exception))
+				});
+				this.isLoading = false;
+			}).catch(exception => $wnl.logger.capture(exception));
 		},
 		loadQuestionsForAnswers(questionsIds) {
-			const userId = this.$route.params.userId
-			const data = {
-				query: {
-					whereIn:
-						['id', questionsIds]
-				},
+			return axios.post(getApiUrl('qna_questions/byIds'), {
+				ids: questionsIds,
 				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
-			}
-			return axios.post(getApiUrl(`qna_questions/.search`), data)
+			});
 		},
 	},
 	mounted() {
-		this.loadData()
+		this.loadData();
 	},
 	watch: {
 		'$route' (newRoute, oldRoute) {
 			if ( this.id !== this.$route.params.userId ) {
-				 this.loadData()
+				 this.loadData();
 			}
 		}
 	}
-}
+};
 </script>

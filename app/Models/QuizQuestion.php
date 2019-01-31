@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use ScoutEngines\Elasticsearch\Searchable;
 
 class QuizQuestion extends Model
 {
-	use Cached, Searchable;
+	use Cached, Searchable, SoftDeletes;
 
 	protected $fillable = ['text', 'explanation', 'preserve_order', 'updated_at'];
 
@@ -38,6 +39,11 @@ class QuizQuestion extends Model
 	public function tags()
 	{
 		return $this->morphToMany('App\Models\Tag', 'taggable');
+	}
+
+	public function taxonomyTerms()
+	{
+		return $this->morphToMany('App\Models\TaxonomyTerm', 'taxonomy_termable');
 	}
 
 	public function reactions()

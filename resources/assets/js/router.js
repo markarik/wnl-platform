@@ -1,38 +1,68 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import store from 'js/store/store'
-import {scrollToTop} from 'js/utils/animations'
-import {resource} from 'js/utils/config'
+import Vue from 'vue';
+import Router from 'vue-router';
+import store from 'js/store/store';
+import {scrollToTop} from 'js/utils/animations';
+import {resource} from 'js/utils/config';
 import moderatorFeatures from 'js/perimeters/moderator';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 import {createSandbox} from 'vue-kindergarten';
-import {getApiUrl} from 'js/utils/env'
+import {getApiUrl} from 'js/utils/env';
 
-Vue.use(Router)
+import Course from 'js/components/course/Course.vue';
+import Overview from 'js/components/course/dashboard/Overview.vue';
+import Lesson from 'js/components/course/Lesson.vue';
+import Screen from 'js/components/course/Screen.vue';
+import Myself from 'js/components/user/Myself.vue';
+import MyOrders from 'js/components/user/MyOrders.vue';
+import MyProfile from 'js/components/user/MyProfile';
+import PersonalData from 'js/components/user/PersonalData';
+import MyBillingData from 'js/components/user/MyBillingData';
+import MySettings from 'js/components/user/MySettings';
+import MyPassword from 'js/components/user/MyPassword';
+import UserStats from 'js/components/user/UserStats';
+import UserCertificates from 'js/components/user/UserCertificates';
+import PlanView from 'js/components/user/plan/PlanView';
+import ProgressReset from 'js/components/user/ProgressReset';
+import DeleteAccount from 'js/components/user/DeleteAccount';
+import Collections from 'js/components/collections/Collections';
+import Help from 'js/components/help/Help';
+import Page from 'js/components/global/Page';
+import Questions from 'js/components/questions/Questions';
+import QuestionsDashboard from 'js/components/questions/QuestionsDashboard';
+import SingleQuestionRedirect from 'js/components/quiz/SingleQuestionRedirect';
+import SingleQuestion from 'js/components/quiz/SingleQuestion';
+import QuestionsList from 'js/components/questions/QuestionsList';
+import QuestionsPlanner from 'js/components/questions/QuestionsPlanner';
+import MessagesDashboard from 'js/components/messages/MessagesDashboard';
+import ModeratorsDashboard from 'js/components/moderators/ModeratorsDashboard';
+import MainUsers from 'js/components/users/MainUsers';
+import UserProfile from 'js/components/users/UserProfile';
+
+Vue.use(Router);
 
 let routes = [
 	{
 		name: 'course',
 		path: '/app/courses/:courseId',
-		component: require('js/components/course/Course.vue'),
+		component: Course,
 		props: true,
 		children: [
 			{
 				name: resource('courses'),
 				path: '',
-				component: require('js/components/course/dashboard/Overview.vue'),
+				component: Overview,
 				props: true,
 			},
 			{
 				name: resource('lessons'),
 				path: '/app/courses/:courseId/lessons/:lessonId',
-				component: require('js/components/course/Lesson.vue'),
+				component: Lesson,
 				props: true,
 				children: [
 					{
 						name: resource('screens'),
 						path: 'screens/:screenId/:slide?',
-						component: require('js/components/course/Screen.vue'),
+						component: Screen,
 						props: true,
 					}
 				],
@@ -54,77 +84,77 @@ let routes = [
 	{
 		name: 'myself',
 		path: '/app/myself',
-		component: require('js/components/user/Myself.vue'),
+		component: Myself,
 		props: true,
 		children: [
 			{
 				name: 'my-orders',
 				path: 'orders',
-				component: require('js/components/user/MyOrders.vue')
+				component: MyOrders
 			},
 			{
 				name: 'my-profile',
 				path: 'profile',
-				component: require('js/components/user/MyProfile.vue')
+				component: MyProfile
 			},
 			{
 				name: 'personal-data',
 				path: 'personal-data',
-				component: require('js/components/user/PersonalData.vue')
+				component: PersonalData
 			},
 			{
 				name: 'my-billing-data',
 				path: 'billing',
-				component: require('js/components/user/MyBillingData.vue')
+				component: MyBillingData
 			},
 			{
 				name: 'my-settings',
 				path: 'settings',
-				component: require('js/components/user/MySettings.vue')
+				component: MySettings
 			},
 			{
 				name: 'my-password',
 				path: 'password',
-				component: require('js/components/user/MyPassword.vue')
+				component: MyPassword
 			},
 			{
 				name: 'stats',
 				path: 'stats',
-				component: require('js/components/user/UserStats.vue'),
+				component: UserStats
 			},
 			{
 				name: 'certificates',
 				path: 'certificates',
-				component: require('js/components/user/UserCertificates.vue'),
+				component: UserCertificates
 			},
 			{
 				name: 'lessons-availabilites',
 				path: 'availabilities',
-				component: require('js/components/user/plan/PlanView.vue'),
+				component: PlanView
 			},
 			{
 				name: 'progress-reset',
 				path: 'progress-reset',
-				component: require('js/components/user/ProgressReset'),
+				component: ProgressReset
 			},
 			{
 				name: 'delete-account',
 				path: 'delete-account',
-				component: require('js/components/user/DeleteAccount'),
+				component: DeleteAccount
 			}
 		]
 	},
 	{
 		name: 'collections',
 		path: '/app/collections',
-		component: require('js/components/collections/Collections.vue'),
+		component: Collections,
 		props: true,
 		children: [
 			{
 				props: true,
 				name: 'collections-categories',
 				path: ':rootCategoryName/:categoryName',
-				component: require('js/components/collections/Collections.vue')
+				component: Collections
 			},
 		],
 		beforeEnter: (to, from, next) => {
@@ -143,50 +173,50 @@ let routes = [
 	{
 		name: 'help',
 		path: '/app/help',
-		component: require('js/components/help/Help.vue'),
+		component: Help,
 		redirect: {name: 'help-new'},
 		children: [
 			{
 				name: 'help-learning',
 				path: 'learning',
-				component: require('js/components/global/Page.vue'),
+				component: Page,
 			},
 			{
 				name: 'help-tech',
 				path: 'tech',
-				component: require('js/components/global/Page.vue'),
+				component: Page,
 			},
 			{
 				name: 'help-new',
 				path: 'new',
-				component: require('js/components/global/Page.vue'),
+				component: Page,
 			},
 			{
 				name: 'help-service',
 				path: 'service',
-				component: require('js/components/global/Page.vue'),
+				component: Page,
 			},
 			{
 				name: 'satisfaction-guarantee',
 				path: 'guarantee',
-				component: require('js/components/global/Page.vue'),
+				component: Page,
 			}
 		]
 	},
 	{
 		path: '/app/questions',
-		component: require('js/components/questions/Questions.vue'),
+		component: Questions,
 		children: [
 			{
 				name: 'questions-dashboard',
 				path: '',
-				component: require('js/components/questions/QuestionsDashboard.vue'),
+				component: QuestionsDashboard,
 				props: true,
 				children: [
 					{
 						name: 'quizQuestion',
 						path: 'single/:id',
-						component: require('js/components/quiz/SingleQuestionRedirect.vue'),
+						component: SingleQuestionRedirect,
 					},
 				],
 			},
@@ -194,23 +224,23 @@ let routes = [
 				props: true,
 				name: 'quiz-question',
 				path: 'single/:quizQuestionId',
-				component: require('js/components/quiz/SingleQuestion.vue'),
+				component: SingleQuestion,
 			},
 			{
 				name: 'questions-list',
 				path: 'list',
-				component: require('js/components/questions/QuestionsList.vue'),
+				component: QuestionsList,
 				props: true,
 			},
 			{
 				name: 'questions-planner',
 				path: 'plan',
-				component: require('js/components/questions/QuestionsPlanner.vue'),
+				component: QuestionsPlanner,
 			},
 			{
 				name: 'messages',
 				path: '/app/messages',
-				component: require('js/components/messages/MessagesDashboard.vue'),
+				component: MessagesDashboard,
 			},
 
 		],
@@ -230,7 +260,7 @@ let routes = [
 	{
 		name: 'moderatorFeed',
 		path: '/app/moderators/feed',
-		component: require('js/components/moderators/ModeratorsDashboard.vue'),
+		component: ModeratorsDashboard,
 		beforeEnter: (to, from, next) => {
 			store.dispatch('setupCurrentUser').then(() => {
 				const sandbox = createSandbox(store.getters.currentUser, {
@@ -253,20 +283,20 @@ let routes = [
 		name: 'logout',
 		path: '/logout',
 		beforeEnter: () => {
-			document.getElementById('logout-form').submit()
+			document.getElementById('logout-form').submit();
 		}
 	},
 	{
 		path: '/app/users',
 		name: 'all-users',
-		component: require('js/components/users/MainUsers.vue'),
+		component: MainUsers,
 		props: true,
 		redirect: {name: 'user'},
 		children: [
 			{
 				name: 'user',
 				path: ':userId',
-				component: require('js/components/users/UserProfile.vue'),
+				component: UserProfile,
 			},
 		]
 	},
@@ -280,10 +310,10 @@ let routes = [
 				return next({
 					...data,
 					query: to.query
-				})
+				});
 			}).catch(err => {
-				return next(from)
-			})
+				return next(from);
+			});
 		}
 
 	},
@@ -291,8 +321,7 @@ let routes = [
 		path: '*',
 		redirect: '/app/'
 	}
-]
-
+];
 
 export default new Router({
 	mode: 'history',
@@ -305,9 +334,9 @@ export default new Router({
 		if (!from.params.hasOwnProperty('slide') || !to.params.hasOwnProperty('slide') ||
 			parseInt(from.params.screenId) !== parseInt(to.params.screenId))
 		{
-			scrollToTop()
-			return {x: 0, y: 0}
+			scrollToTop();
+			return {x: 0, y: 0};
 		}
 	},
 	routes
-})
+});

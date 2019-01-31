@@ -9,45 +9,45 @@
 	@import 'resources/assets/sass/variables'
 
 	.toggle-icon
-		color: $color-gray-dimmed
+		color: $color-gray
 		margin-left: $margin-small
 </style>
 
 <script>
-	import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex';
 
-	export default {
-		name: 'NotificationsToggle',
-		props: {
-			setting: {
-				required: true,
-				type: String,
-			},
-			icons: {
-				required: true,
-				type: Array,
-			}
+export default {
+	name: 'NotificationsToggle',
+	props: {
+		setting: {
+			required: true,
+			type: String,
 		},
-		computed: {
-			...mapGetters(['getSetting']),
-			isOn() {
-				return this.getSetting(this.setting)
-			},
-			toggleText() {
-				return this.isOn ? this.message('turnOff') : this.message('turnOn')
-			},
-			toggleIcon() {
-				return this.isOn ? this.icons[0] : this.icons[1]
-			},
+		icons: {
+			required: true,
+			type: Array,
+		}
+	},
+	computed: {
+		...mapGetters(['getSetting']),
+		isOn() {
+			return this.getSetting(this.setting);
 		},
-		methods: {
-			...mapActions(['changeUserSettingAndSync']),
-			message(key) {
-				return this.$t(`notifications.personal.${key}`)
-			},
-			toggleNotifications() {
-				this.changeUserSettingAndSync({setting: this.setting, value: !this.isOn})
-			},
+		toggleText() {
+			return this.isOn ? this.message('turnOff') : this.message('turnOn');
 		},
-	}
+		toggleIcon() {
+			return this.isOn ? this.icons[0] : this.icons[1];
+		},
+	},
+	methods: {
+		...mapActions(['changeUserSettingAndSync']),
+		message(key) {
+			return this.$t(`notifications.personal.${key}`);
+		},
+		toggleNotifications() {
+			this.changeUserSettingAndSync({setting: this.setting, value: !this.isOn});
+		},
+	},
+};
 </script>

@@ -1,8 +1,8 @@
 <template>
 	<div class="lessons">
 		<p class="title is-3">Edycja lekcji</p>
-		<div class="lessons-container" v-if="isReady">
-			<wnl-lesson-editor v-if="lessonId"></wnl-lesson-editor>
+		<div class="lessons-container">
+			<wnl-lesson-editor v-if="lessonId" :lessonId="lessonId"></wnl-lesson-editor>
 			<wnl-lessons-list v-else></wnl-lessons-list>
 		</div>
 	</div>
@@ -25,27 +25,19 @@
 </style>
 
 <script>
-	import LessonsList from 'js/admin/components/lessons/list/LessonsList.vue'
-	import LessonEditor from 'js/admin/components/lessons/edit/LessonEditor.vue'
-	import { mapGetters, mapActions } from 'vuex'
+import LessonsList from 'js/admin/components/lessons/list/LessonsList.vue';
+import LessonEditor from 'js/admin/components/lessons/edit/LessonEditor.vue';
 
-	export default {
-		name: 'Lessons',
-		components: {
-			'wnl-lessons-list': LessonsList,
-			'wnl-lesson-editor': LessonEditor,
+export default {
+	name: 'Lessons',
+	components: {
+		'wnl-lessons-list': LessonsList,
+		'wnl-lesson-editor': LessonEditor,
+	},
+	computed: {
+		lessonId() {
+			return this.$route.params.lessonId;
 		},
-		computed: {
-			...mapGetters('lessons', ['isReady']),
-			lessonId() {
-				return this.$route.params.lessonId
-			},
-		},
-		methods: {
-			...mapActions('lessons', ['setup']),
-		},
-		mounted() {
-			this.setup()
-		}
-	}
+	},
+};
 </script>

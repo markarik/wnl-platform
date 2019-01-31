@@ -111,125 +111,126 @@
 </style>
 
 <script>
-	import _ from 'lodash'
-	import {imageviewer} from 'vendor/imageviewer/imageviewer'
-	import { nextTick } from 'vue'
+import _ from 'lodash';
+import {imageviewer} from 'vendor/imageviewer/imageviewer';
+import { nextTick } from 'vue';
+import $ from 'jquery';
 
-	imageviewer($, window, document)
-	function showImage(src) {
-		ImageViewer($('.image-gallery-wrapper .image-container'), {snapViewPersist: false}).load(src);
-	}
+imageviewer($, window, document);
+function showImage(src) {
+	ImageViewer($('.image-gallery-wrapper .image-container'), {snapViewPersist: false}).load(src);
+}
 
 
-	export default {
-		name: 'Html',
-		props: ['screenData', 'showBacklink'],
-		data() {
-			return {
-				imagesLoaded: false,
-				imagesSelector: '.wnl-screen-html img',
-				isVisible: false,
-				images: [],
-				currentImageIndex: -1,
+export default {
+	name: 'Html',
+	props: ['screenData', 'showBacklink'],
+	data() {
+		return {
+			imagesLoaded: false,
+			imagesSelector: '.wnl-screen-html img',
+			isVisible: false,
+			images: [],
+			currentImageIndex: -1,
+		};
+	},
+	computed: {
+		content() {
+			return this.screenData.content;
+		},
+		isRepetitions() {
+			return this.screenData.name.indexOf('Powtórki') > -1;
+		},
+		previousImageIndex() {
+			return this.currentImageIndex > 0 ? this.currentImageIndex - 1 : this.images.length -1;
+		},
+		nextImageIndex() {
+			return this.currentImageIndex === this.images.length -1 ? 0 : this.currentImageIndex + 1;
+		},
+	},
+	methods: {
+		goToImage(index) {
+			if (index < 0 || !this.images.length) return;
+
+			nextTick(() => {
+				const image = this.images[index];
+				const idx = image ? index : 0;
+				showImage(this.images[idx].src);
+			});
+
+			this.currentImageIndex = index;
+		},
+		wrapEmbedded() {
+			let iframes = this.$el.getElementsByClassName('ql-video'),
+				wrapperClass = 'ratio-16-9-wrapper';
+
+			if (iframes.length > 0) {
+				_.each(iframes, (iframe) => {
+					let wrapper = document.createElement('div'),
+						parent = iframe.parentNode;
+
+					wrapper.className = wrapperClass;
+					parent.replaceChild(wrapper, iframe);
+					wrapper.appendChild(iframe);
+				});
 			}
 		},
-		computed: {
-			content() {
-				return this.screenData.content
-			},
-			isRepetitions() {
-				return this.screenData.name.indexOf('Powtórki') > -1
-			},
-			previousImageIndex() {
-				return this.currentImageIndex > 0 ? this.currentImageIndex - 1 : this.images.length -1
-			},
-			nextImageIndex() {
-				return this.currentImageIndex === this.images.length -1 ? 0 : this.currentImageIndex + 1
-			},
+		addFullscreen() {
+			this.images = document.querySelectorAll(this.imagesSelector);
+
+			if (this.images.length) {
+				this.imagesLoaded = true;
+			}
+
+			this.images.forEach((image, index) => {
+				image.addEventListener('click', (event) => {
+					this.isVisible = true;
+					this.goToImage(index);
+				});
+			});
 		},
-		methods: {
-			goToImage(index) {
-				if (index < 0 || !this.images.length) return
-
-				nextTick(() => {
-					const image = this.images[index]
-					const idx = image ? index : 0
-					showImage(this.images[idx].src)
-				})
-
-				this.currentImageIndex = index
-			},
-			wrapEmbedded() {
-				let iframes = this.$el.getElementsByClassName('ql-video'),
-					wrapperClass = 'ratio-16-9-wrapper'
-
-				if (iframes.length > 0) {
-					_.each(iframes, (iframe) => {
-						let wrapper = document.createElement('div'),
-							parent = iframe.parentNode
-
-						wrapper.className = wrapperClass
-						parent.replaceChild(wrapper, iframe)
-						wrapper.appendChild(iframe)
-					})
-				}
-			},
-			addFullscreen() {
-				this.images = document.querySelectorAll(this.imagesSelector)
-
-				if (this.images.length) {
-					this.imagesLoaded = true
-				}
-
+		onClick(event) {
+			if (!this.imagesLoaded) {
+				this.images = document.querySelectorAll(this.imagesSelector);
 				this.images.forEach((image, index) => {
 					image.addEventListener('click', (event) => {
-						this.isVisible = true
-						this.goToImage(index)
+						this.isVisible = true;
+						this.goToImage(index);
 					});
-				})
-			},
-			onClick(event) {
-				if (!this.imagesLoaded) {
-					this.images = document.querySelectorAll(this.imagesSelector)
-					this.images.forEach((image, index) => {
-						image.addEventListener('click', (event) => {
-							this.isVisible = true
-							this.goToImage(index)
-						});
-					})
+				});
 
-					if (event.target.matches(this.imagesSelector)) {
-						const index = this.images.findIndex((image) => image.src === event.target.src)
-						this.goToImage(index)
-						this.imagesLoaded = true
-						this.isVisible = true
-					}
-				}
-			},
-			onKeydown(e) {
-				switch(e.keyCode) {
-					case 37: // left arrow
-						this.goToImage(this.previousImageIndex)
-						break
-					case 39: // right arrow
-						this.goToImage(this.nextImageIndex)
-						break
-					case 27: // esc
-						this.isVisible = false
-						break
+				if (event.target.matches(this.imagesSelector)) {
+					const index = this.images.findIndex((image) => image.src === event.target.src);
+					this.goToImage(index);
+					this.imagesLoaded = true;
+					this.isVisible = true;
 				}
 			}
 		},
-		mounted() {
-			this.wrapEmbedded()
-			this.addFullscreen()
-			document.body.addEventListener('keydown', this.onKeydown)
-		},
-		watch: {
-			screenData() {
-				nextTick(() => this.wrapEmbedded());
+		onKeydown(e) {
+			switch(e.keyCode) {
+			case 37: // left arrow
+				this.goToImage(this.previousImageIndex);
+				break;
+			case 39: // right arrow
+				this.goToImage(this.nextImageIndex);
+				break;
+			case 27: // esc
+				this.isVisible = false;
+				break;
 			}
 		}
-
+	},
+	mounted() {
+		this.wrapEmbedded();
+		this.addFullscreen();
+		document.body.addEventListener('keydown', this.onKeydown);
+	},
+	watch: {
+		screenData() {
+			nextTick(() => this.wrapEmbedded());
+		}
 	}
+
+};
 </script>

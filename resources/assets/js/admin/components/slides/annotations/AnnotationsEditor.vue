@@ -126,7 +126,7 @@
 				</div>
 			</template>
 		</form>
-		<wnl-modal :isModalVisible="isVisible" @closeModal="isVisible = false" v-if="isVisible">
+		<wnl-modal @closeModal="isVisible = false" v-if="isVisible">
 			<wnl-preview-modal :content="annotation.description"/>
 		</wnl-modal>
 	</div>
@@ -187,131 +187,129 @@
 </style>
 
 <script>
-	import {mapActions} from 'vuex';
-	import {set} from 'vue';
-	import {getApiUrl} from 'js/utils/env'
-	import Code from 'js/admin/components/forms/Code'
-	import Form from 'js/classes/forms/Form'
-	import { Tags } from 'js/components/global/form/index'
-	import KeywordField from "./KeywordField";
-	import PreviewModal from "./PreviewModal";
-	import Quill from 'js/admin/components/forms/Quill.vue'
-	import Modal from 'js/components/global/Modal';
+import {mapActions} from 'vuex';
+import {set} from 'vue';
+import {getApiUrl} from 'js/utils/env';
+import Form from 'js/classes/forms/Form';
+import { Tags } from 'js/components/global/form/index';
+import KeywordField from './KeywordField';
+import PreviewModal from './PreviewModal';
+import Quill from 'js/admin/components/forms/Quill.vue';
+import Modal from 'js/components/global/Modal';
 
-	export default {
-		name: 'AnnotationsEditor',
-		components: {
-			'wnl-form-code': Code,
-			'wnl-tags': Tags,
-			'wnl-keyword-field': KeywordField,
-			'quill': Quill,
-			'wnl-modal': Modal,
-			'wnl-preview-modal': PreviewModal
+export default {
+	name: 'AnnotationsEditor',
+	components: {
+		'wnl-tags': Tags,
+		'wnl-keyword-field': KeywordField,
+		'quill': Quill,
+		'wnl-modal': Modal,
+		'wnl-preview-modal': PreviewModal
+	},
+	data() {
+		const ANNOTATIONS_TYPES = {
+			NEUTRAL: '1',
+			BASIC: '2',
+			EXPERT: '3',
+			IMAGE: '4',
+		};
+		return {
+			form: new Form({}),
+			isDirty: false,
+			keywordType: ANNOTATIONS_TYPES.NEUTRAL,
+			ANNOTATIONS_TYPES,
+			isVisible: false
+		};
+	},
+	props: {
+		annotation: {
+			type: Object,
+			default: () => ({})
+		}
+	},
+	computed: {
+		title() {
+			return this.annotation.id ?
+				`Edycja Przypisu #${this.annotation.id}` : 'Nowy Przypis';
 		},
-		data() {
-			const ANNOTATIONS_TYPES = {
-				NEUTRAL: '1',
-				BASIC: '2',
-				EXPERT: '3',
-				IMAGE: '4',
-			}
-			return {
-				form: new Form({}),
-				isDirty: false,
-				keywordType: ANNOTATIONS_TYPES.NEUTRAL,
-				ANNOTATIONS_TYPES,
-				isVisible: false
-			}
+		keywordsList() {
+			if (!this.annotation.keywords) return [];
+
+			return this.annotation.keywords.split(',');
 		},
-		props: {
-			annotation: {
-				type: Object,
-				default: () => ({})
-			}
+		hasKeywords() {
+			return this.keywordsList.length;
 		},
-		computed: {
-			title() {
-				return this.annotation.id ?
-					`Edycja Przypisu #${this.annotation.id}` : 'Nowy Przypis'
-			},
-			keywordsList() {
-				if (!this.annotation.keywords) return []
+		parserTags() {
+			if (!this.hasKeywords) return [`{a:${this.keywordType}:${this.annotation.id}}{a}`];
 
-				return this.annotation.keywords.split(',')
-			},
-			hasKeywords() {
-				return this.keywordsList.length
-			},
-			parserTags() {
-				if (!this.hasKeywords) return [`{a:${this.keywordType}:${this.annotation.id}}{a}`];
-
-				return this.keywordsList.map(keyword => {
-					return `{a:${this.keywordType}:${this.annotation.id}}${keyword}{a}`
-				})
-			},
-			htmlTags() {
-				if (!this.hasKeywords) return [
-					`<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}"/>`
-				];
-
-				return this.keywordsList.map(keyword => {
-					return `<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}">${keyword}</span>`
-				})
-			}
+			return this.keywordsList.map(keyword => {
+				return `{a:${this.keywordType}:${this.annotation.id}}${keyword}{a}`;
+			});
 		},
-		methods: {
-			...mapActions(['addAutoDismissableAlert']),
-			onFieldChange() {
-				this.$emit('hasChanges', this.annotation.id)
-			},
-			async onSubmit() {
-				const tags = this.$refs.tags.tags;
-				let event = 'addSuccess'
+		htmlTags() {
+			if (!this.hasKeywords) return [
+				`<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}"/>`
+			];
 
-				const annotation = {
-					...this.annotation,
-					keywords: this.annotation.keywords.split(',').map(keyword => keyword.trim()),
-					tags,
+			return this.keywordsList.map(keyword => {
+				return `<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}">${keyword}</span>`;
+			});
+		}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		onFieldChange() {
+			this.$emit('hasChanges', this.annotation.id);
+		},
+		async onSubmit() {
+			const tags = this.$refs.tags.tags;
+			let event = 'addSuccess';
+
+			const annotation = {
+				...this.annotation,
+				keywords: this.annotation.keywords.split(',').map(keyword => keyword.trim()),
+				tags,
+			};
+
+			try {
+				if (this.annotation.id) {
+					event = 'editSuccess';
+					await axios.put(getApiUrl(`annotations/${this.annotation.id}`), annotation);
+				} else {
+					const {data} = await axios.post(getApiUrl('annotations'), annotation);
+					annotation.id = data.id;
 				}
 
-				try {
-					if (this.annotation.id) {
-						event = 'editSuccess'
-						await axios.put(getApiUrl(`annotations/${this.annotation.id}`), annotation)
-					} else {
-						const {data} = await axios.post(getApiUrl('annotations'), annotation)
-						annotation.id = data.id
-					}
-
-					this.$emit(event, annotation)
-					this.$emit('hasChanges', 0)
-					this.addAutoDismissableAlert({
-						text: "Zapisano!",
-						type: 'success'
-					})
-				} catch (e) {
-					this.addAutoDismissableAlert({
-						text: "Nie udało się zapisać przypisu :( Spróbuj jeszcze raz.!",
-						type: 'error'
-					})
-				}
-			},
-			async onDelete() {
-				try {
-					await axios.delete(getApiUrl(`annotations/${this.annotation.id}`))
-					this.addAutoDismissableAlert({
-						text: "Usunięto!",
-						type: 'success'
-					})
-					this.$emit('deleteSuccess', this.annotation)
-					this.$emit('hasChanges', 0)
-				} catch (e) {
-					this.addAutoDismissableAlert({
-						text: "Nie udało się usunąć przypisu :( Spróbuj jeszcze raz.!",
-						type: 'error'
-					})
-				}
-			},
+				this.$emit(event, annotation);
+				this.$emit('hasChanges', 0);
+				this.addAutoDismissableAlert({
+					text: 'Zapisano!',
+					type: 'success'
+				});
+			} catch (e) {
+				this.addAutoDismissableAlert({
+					text: 'Nie udało się zapisać przypisu :( Spróbuj jeszcze raz.!',
+					type: 'error'
+				});
+			}
 		},
-	}
+		async onDelete() {
+			try {
+				await axios.delete(getApiUrl(`annotations/${this.annotation.id}`));
+				this.addAutoDismissableAlert({
+					text: 'Usunięto!',
+					type: 'success'
+				});
+				this.$emit('deleteSuccess', this.annotation);
+				this.$emit('hasChanges', 0);
+			} catch (e) {
+				this.addAutoDismissableAlert({
+					text: 'Nie udało się usunąć przypisu :( Spróbuj jeszcze raz.!',
+					type: 'error'
+				});
+			}
+		},
+	},
+};
 </script>

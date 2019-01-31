@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class Flashcard extends Model
 {
+	use Searchable;
+
 	protected $fillable = ['content'];
 
 	public function flashcardsSets()
@@ -27,5 +30,10 @@ class Flashcard extends Model
 	public function tags()
 	{
 		return $this->morphToMany('App\Models\Tag', 'taggable');
+	}
+
+	public function taxonomyTerms()
+	{
+		return $this->morphToMany('App\Models\TaxonomyTerm', 'taxonomy_termable');
 	}
 }

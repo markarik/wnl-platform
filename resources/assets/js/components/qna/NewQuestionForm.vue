@@ -49,41 +49,51 @@
 </style>
 
 <script>
-	import { mapActions } from 'vuex'
+import { mapActions } from 'vuex';
 
-	import { Form, Quill, Submit } from 'js/components/global/form'
-	import { fontColors } from 'js/utils/colors'
+import { Form, Quill, Submit } from 'js/components/global/form';
+import { fontColors } from 'js/utils/colors';
 
-	export default {
-		name: 'NewQuestionForm',
-		components: {
-			'wnl-form': Form,
-			'wnl-quill': Quill,
-			'wnl-submit': Submit,
+export default {
+	name: 'NewQuestionForm',
+	components: {
+		'wnl-form': Form,
+		'wnl-quill': Quill,
+		'wnl-submit': Submit,
+	},
+	props: {
+		contextTags: {
+			type: Array,
+			default: () => []
 		},
-		props: ['tags'],
-		computed: {
-			attachedData() {
-				return {
-					tags: this.tags.map((tag) => tag.id),
-					context: {
-						name: this.$route.name,
-						params: this.$route.params
-					}
-				}
-			},
+		discussionId: {
+			type: Number,
+			required: true
+		}
+	},
+	computed: {
+		attachedData() {
+			return {
+				tags: this.contextTags.map((tag) => tag.id),
+				context: {
+					name: this.$route.name,
+					params: this.$route.params
+				},
+				discussion_id: this.discussionId
+			};
 		},
-		methods: {
-			...mapActions('qna', ['fetchQuestionsByTags']),
-			onSubmitSuccess() {
-				this.$emit('submitSuccess')
-				this.fetchQuestionsByTags({tags: this.tags, sorting: 'latest'})
-			},
+	},
+	methods: {
+		...mapActions('qna', ['fetchQuestionsForDiscussion']),
+		onSubmitSuccess() {
+			this.$emit('submitSuccess');
+			this.fetchQuestionsForDiscussion(this.discussionId);
 		},
-		watch: {
-			'tags' (newValue) {
-				this.fetchQuestionsByTags({tags: newValue})
-			}
+	},
+	watch: {
+		discussionId() {
+			this.fetchQuestionsForDiscussion(this.discussionId);
 		}
 	}
+};
 </script>

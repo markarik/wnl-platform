@@ -49,7 +49,7 @@
         margin: $margin-base 0 0 $margin-base
 
     .about-title
-        color: $color-gray-dimmed
+        color: $color-gray
         font-size: $font-size-minus-2
         text-transform: uppercase
         margin-bottom: $margin-big
@@ -60,20 +60,20 @@
 </style>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-import UserInfo from 'js/components/users/UserInfo'
+import { mapActions, mapGetters } from 'vuex';
+import UserInfo from 'js/components/users/UserInfo';
 
 export default {
-    name: 'UserAbout',
-    props: ['profile'],
-    components: {
-        'wnl-user-info': UserInfo,
-    },
-    computed: {
-        ...mapGetters(['canShowCloseIconInChat']),
-    },
-    methods: {
-        ...mapActions(['toggleChat']),
-    },
-}
+	name: 'UserAbout',
+	props: ['profile'],
+	components: {
+		'wnl-user-info': UserInfo,
+	},
+	computed: {
+		...mapGetters(['canShowCloseIconInChat']),
+	},
+	methods: {
+		...mapActions(['toggleChat']),
+	},
+};
 </script>

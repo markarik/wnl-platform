@@ -10,7 +10,7 @@
 
 	<p class="has-text-centered" style="text-transform: uppercase;">Twój kod Study Group o wartości {{ $coupon->value_with_unit or '{value_with_unit}' }}, to:</p>
 
-	<h3 class="has-text-centered" style="text-transform: uppercase;">{{ $coupon->code or '{code}' }}</h3>
+	<h3 class="has-text-centered" style="text-transform: uppercase;">{{ $coupon->code ?? '{code}' }}</h3>
 
 	<p class="has-text-centered" style="margin: 20px 0;">
 		<a href="{!! isset($coupon) ? url( 'payment/voucher?code=' . $coupon->code ) : '{code}' !!}" class="button">

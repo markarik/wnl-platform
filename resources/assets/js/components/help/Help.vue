@@ -13,7 +13,7 @@
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
 				<router-view
-						:arguments="{currentUserName}"
+						:arguments="templateArguments"
 						:slug="$route.name"
 						:qna="true"
 						@userEvent="onUserEvent"
@@ -66,117 +66,124 @@
 </style>
 
 <script>
-	import {mapActions, mapGetters} from 'vuex'
+import {mapActions, mapGetters} from 'vuex';
 
-	import MainNav from 'js/components/MainNav'
-	import PublicChat from 'js/components/chat/PublicChat'
-	import Sidenav from 'js/components/global/Sidenav'
-	import SidenavSlot from 'js/components/global/SidenavSlot'
-	import withChat from 'js/mixins/with-chat'
-	import context from 'js/consts/events_map/context.json';
+import MainNav from 'js/components/MainNav';
+import PublicChat from 'js/components/chat/PublicChat';
+import Sidenav from 'js/components/global/Sidenav';
+import SidenavSlot from 'js/components/global/SidenavSlot';
+import withChat from 'js/mixins/with-chat';
+import context from 'js/consts/events_map/context.json';
 
-	export default {
-		name: 'Help',
-		components: {
-			'wnl-main-nav': MainNav,
-			'wnl-public-chat': PublicChat,
-			'wnl-sidenav': Sidenav,
-			'wnl-sidenav-slot': SidenavSlot,
+export default {
+	name: 'Help',
+	components: {
+		'wnl-main-nav': MainNav,
+		'wnl-public-chat': PublicChat,
+		'wnl-sidenav': Sidenav,
+		'wnl-sidenav-slot': SidenavSlot,
+	},
+	mixins: [withChat],
+	computed: {
+		...mapGetters([
+			'isSidenavVisible',
+			'isSidenavMounted',
+			'isChatMounted',
+			'isChatVisible',
+			'isChatToggleVisible',
+			'currentUserName'
+		]),
+		...mapGetters('course', ['ready']),
+		templateArguments() {
+			return {
+				currentUserName: {
+					value: this.currentUserName
+				}
+			};
 		},
-		mixins: [withChat],
-		computed: {
-			...mapGetters([
-				'isSidenavVisible',
-				'isSidenavMounted',
-				'isChatMounted',
-				'isChatVisible',
-				'isChatToggleVisible',
-				'currentUserName'
-			]),
-			...mapGetters('course', ['ready']),
-			sidenavItems() {
-				return [
-					{
-						text: 'Nad czym pracujemy?',
-						itemClass: 'has-icon',
-						to: {
-							name: 'help-new',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-gift',
-						iconTitle: 'Nad czym pracujemy?',
+		sidenavItems() {
+			return [
+				{
+					text: 'Nad czym pracujemy?',
+					itemClass: 'has-icon',
+					to: {
+						name: 'help-new',
+						params: {},
 					},
-					{
-						text: 'Pomoc w nauce',
-						itemClass: 'has-icon',
-						to: {
-							name: 'help-learning',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-mortar-board',
-						iconTitle: 'Pomoc w nauce',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-gift',
+					iconTitle: 'Nad czym pracujemy?',
+				},
+				{
+					text: 'Pomoc w nauce',
+					itemClass: 'has-icon',
+					to: {
+						name: 'help-learning',
+						params: {},
 					},
-					{
-						text: 'Pomoc techniczna',
-						itemClass: 'has-icon',
-						to: {
-							name: 'help-tech',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-magic',
-						iconTitle: 'Pomoc techniczna',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-mortar-board',
+					iconTitle: 'Pomoc w nauce',
+				},
+				{
+					text: 'Pomoc techniczna',
+					itemClass: 'has-icon',
+					to: {
+						name: 'help-tech',
+						params: {},
 					},
-					{
-						text: 'Obsługa platformy',
-						itemClass: 'has-icon',
-						to: {
-							name: 'help-service',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-cog',
-						iconTitle: 'Obsługa platformy',
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-magic',
+					iconTitle: 'Pomoc techniczna',
+				},
+				{
+					text: 'Obsługa platformy',
+					itemClass: 'has-icon',
+					to: {
+						name: 'help-service',
+						params: {},
 					},
-					{
-						text: 'Gwarancja satysfakcji',
-						itemClass: 'has-icon',
-						to: {
-							name: 'satisfaction-guarantee',
-							params: {},
-						},
-						isDisabled: false,
-						method: 'push',
-						iconClass: 'fa-diamond',
-						iconTitle: 'Gwarancja satysfakcji',
-					}
-				]
-			},
-			chatRooms() {
-				return [
-					{name: '#pomoc', channel: 'help-tech'},
-				]
-			},
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-cog',
+					iconTitle: 'Obsługa platformy',
+				},
+				{
+					text: 'Gwarancja satysfakcji',
+					itemClass: 'has-icon',
+					to: {
+						name: 'satisfaction-guarantee',
+						params: {},
+					},
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-diamond',
+					iconTitle: 'Gwarancja satysfakcji',
+				}
+			];
 		},
-		methods: {
-			...mapActions(['toggleChat']),
-			onUserEvent(payload) {
-				this.$trackUserEvent({
-					context: context.help.value,
-					...payload
-				})
-			}
+		chatRooms() {
+			return [
+				{name: '#pomoc', channel: 'help-tech'},
+			];
 		},
-		watch: {
-			'$route.query.chatChannel'(newVal) {
-				newVal && !this.isChatVisible && this.toggleChat();
-			}
+	},
+	methods: {
+		...mapActions(['toggleChat']),
+		onUserEvent(payload) {
+			this.$trackUserEvent({
+				context: context.help.value,
+				...payload
+			});
+		}
+	},
+	watch: {
+		'$route.query.chatChannel'(newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
 		}
 	}
+};
 </script>

@@ -235,4 +235,9 @@ export const nestedSetActions = {
 			node.id
 		]));
 	},
+	onNodeSearch({dispatch}, node) {
+		dispatch('collapseAll');
+		dispatch('select', [node.id]);
+		dispatch('expand', node.id);
+	}
 };

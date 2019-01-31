@@ -4,7 +4,7 @@
 			<div class="terms-editor__panel__header">
 				<h4 class="title is-5"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
 				<span class="control has-icons-right">
-					<wnl-taxonomy-term-autocomplete
+					<wnl-term-autocomplete
 						@change="onSearchTerm"
 						placeholder="Szukaj pojęcia"
 					/>
@@ -80,12 +80,9 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['setUpNestedSet', 'select', 'expand', 'collapseAll']),
-		async onSearchTerm(term) {
-			this.collapseAll();
-			this.select([term.id]);
-			this.expand(term.id);
-
+		...mapActions('taxonomyTerms', ['setUpNestedSet', 'onNodeSearch']),
+		async onSearch(term) {
+			this.onNodeSearch(term);
 			this.scrollToNode(term);
 		},
 	},

@@ -83,12 +83,9 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('courseStructure', ['setUpNestedSet', 'select', 'expand', 'expandAll', 'collapseAll']),
+		...mapActions('courseStructure', ['setUpNestedSet', 'expandAll', 'onNodeSearch']),
 		async onSearch(node) {
-			this.collapseAll();
-			this.select([node.id]);
-			this.expand(node.id);
-
+			this.onNodeSearch(node);
 			this.scrollToNode(node);
 		},
 	},

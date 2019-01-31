@@ -9,7 +9,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.toggle-icon
-		color: $color-gray-dimmed
+		color: $color-gray
 		margin-left: $margin-small
 </style>
 

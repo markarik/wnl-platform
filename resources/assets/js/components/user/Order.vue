@@ -296,7 +296,7 @@
 			color: $color-yellow
 
 		&.text-info
-			color: $color-gray-lighter
+			color: $color-darker-gray
 
 	.cancel-order
 		a,

@@ -75,7 +75,7 @@
 			&::after
 				content: ' »'
 		.object-text
-			color: $color-gray-dimmed
+			color: $color-gray
 		.subject
 			font-size: $font-size-base
 			line-height: $line-height-minus

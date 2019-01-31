@@ -37,5 +37,9 @@ export const SET_TAGS_LOADING = 'SET_TAGS_LOADING';
 export const SETUP_TAGS = 'SETUP_TAGS';
 export const ADD_TAG = 'ADD_TAG';
 
+// Tags
+export const SET_TAXONOMIES_LOADING = 'SET_TAXONOMIES_LOADING';
+export const SETUP_TAXONOMIES = 'SETUP_TAXONOMIES';
+
 // Structure nodes
 export const SETUP_COURSE_STRUCTURE = 'SETUP_COURSE_STRUCTURE';

@@ -50,7 +50,7 @@
 			font-size: $font-size-minus-2
 
 		.text
-			color: $color-gray-dimmed
+			color: $color-gray
 
 </style>
 

@@ -11,7 +11,7 @@ class SlideTransformer extends ApiTransformer
 {
 	protected $parent;
 	protected $withContext;
-	protected $availableIncludes = ['quiz_questions'];
+	protected $availableIncludes = ['quiz_questions', 'taxonomy_terms'];
 
 	public function __construct($parent = null, $withContext = false)
 	{
@@ -50,6 +50,15 @@ class SlideTransformer extends ApiTransformer
 				'slides' => $slide->id,
 			]),
 			'quiz_questions'
+		);
+	}
+
+	public function includeTaxonomyTerms(Slide $slide)
+	{
+		return $this->collection(
+			$slide->taxonomyTerms,
+			new TaxonomyTermTransformer(['slides' => $slide->id]),
+			'taxonomy_terms'
 		);
 	}
 }

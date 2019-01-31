@@ -84,7 +84,7 @@
 		margin-bottom: $margin-small
 
 	.user-info-city
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-base
 		font-weight: $font-weight-light
 		margin-bottom: $margin-small

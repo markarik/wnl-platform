@@ -64,7 +64,7 @@
 	.taxonomy-term-item
 		&--disabled
 			pointer-events: none
-			color: $color-gray-dimmed
+			color: $color-gray
 
 		&__content
 			align-items: center

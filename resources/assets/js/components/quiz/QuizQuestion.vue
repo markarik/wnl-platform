@@ -129,7 +129,7 @@
 		width: 100%
 
 		header
-			color: $color-gray-dimmed
+			color: $color-gray
 			font-size: $font-size-minus-1
 			margin-bottom: $margin-base
 			margin-top: $margin-base
@@ -187,7 +187,7 @@
 	.quiz-question-meta
 		+flex-space-between()
 		align-items: flex-start
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-2
 		line-height: $line-height-minus
 		padding: $margin-base $margin-base 0

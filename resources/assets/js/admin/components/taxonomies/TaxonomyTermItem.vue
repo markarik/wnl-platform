@@ -1,5 +1,5 @@
 <template>
-	<li :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']" :id="`term-${term.id}`">
+	<li :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']" :id="`node-${term.id}`">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<span class="icon-small taxonomy-term-item__action taxonomy-term-item__action--drag">
 				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>

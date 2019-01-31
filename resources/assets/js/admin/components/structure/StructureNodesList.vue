@@ -2,7 +2,7 @@
 	<ul>
 		<vue-draggable
 			:options="{handle: '.structure-node-item__action--drag'}"
-			@end="onnodeDrag"
+			@end="onNodeDrag"
 		>
 			<wnl-structure-node-item
 				v-for="node in nodes"
@@ -54,7 +54,7 @@ export default {
 				throw (e);
 			}
 		},
-		async onnodeDrag({newIndex, oldIndex}) {
+		async onNodeDrag({newIndex, oldIndex}) {
 			const direction = newIndex - oldIndex;
 			const node = this.nodes[oldIndex];
 			try {

@@ -1,6 +1,6 @@
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 import {nestedSetMutations, nestedSetGetters, nestedSetActions, initialState} from 'js/admin/store/modules/nestedSet';
-import axios from 'axios/index';
+import axios from 'axios';
 import { getApiUrl } from 'js/utils/env';
 
 // Namespace

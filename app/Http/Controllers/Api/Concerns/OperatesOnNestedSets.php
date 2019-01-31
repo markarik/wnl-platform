@@ -41,12 +41,13 @@ trait OperatesOnNestedSets
 
 	public function moveNode($request)
 	{
-		$target = (self::getResourceModel($this->resourceName))::find($request->get('id'));
 		$direction = $request->get('direction');
 
 		if ($direction === 0) {
 			return $this->respondOk();
 		}
+
+		$target = (self::getResourceModel($this->resourceName))::find($request->get('id'));
 
 		if ($direction > 0) {
 			$success = $target->down($direction);

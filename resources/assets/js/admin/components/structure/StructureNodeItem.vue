@@ -1,5 +1,5 @@
 <template>
-	<li :class="['structure-node-item', isSaving && 'structure-node-item--disabled']" :id="`Node-${node.id}`">
+	<li :class="['structure-node-item', isSaving && 'structure-node-item--disabled']" :id="`node-${node.id}`">
 		<div :class="['media', 'structure-node-item__content', {'is-selected': isSelected}]">
 			<span class="icon-small structure-node-item__action structure-node-item__action--drag">
 				<i title="drag" :class="['fa', itemClass]"></i>

@@ -78,10 +78,7 @@ export default {
 		},
 	},
 	computed: {
-		...mapState('courseStructure', {
-			isLoading: 'isLoading',
-			nodes: 'nodes',
-		}),
+		...mapState('courseStructure', ['isLoading', 'nodes']),
 		...mapGetters('courseStructure', ['getChildrenByParentId', 'getRootNodes']),
 	},
 	methods: {

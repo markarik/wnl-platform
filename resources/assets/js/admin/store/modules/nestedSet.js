@@ -108,7 +108,7 @@ export const nestedSetActions = {
 	async setUpNestedSet({commit, dispatch}, setId) {
 		commit(types.RESET_NESTED_SET_STATE);
 		commit(types.SET_NESTED_SET_LOADING, true);
-		let nodes = await dispatch('_fetch', setId);
+		const nodes = await dispatch('_fetch', setId);
 		try {
 			const orderNumbers = {};
 			const nodesWithOrderNumbers = nodes.map(node => {
@@ -131,7 +131,7 @@ export const nestedSetActions = {
 	async create({commit, state, getters, dispatch}, nodeData) {
 		commit(types.SET_NESTED_SET_SAVING, true);
 		try {
-			let node = await dispatch('_post', nodeData);
+			const node = await dispatch('_post', nodeData);
 			commit(types.ADD_NESTED_SET_NODE, node);
 			commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {
 				list: getters.getChildrenByParentId(node.parent_id)
@@ -146,7 +146,7 @@ export const nestedSetActions = {
 	async update({commit, state, getters, dispatch}, nodeData) {
 		commit(types.SET_NESTED_SET_SAVING, true);
 		try {
-			let node = await dispatch('_put', nodeData);
+			const node = await dispatch('_put', nodeData);
 			const {parent_id: originalParentId} = getters.nodeById(node.id);
 			const {parent_id: updatedParentId} = node;
 

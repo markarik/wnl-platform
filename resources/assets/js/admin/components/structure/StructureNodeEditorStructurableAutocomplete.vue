@@ -13,7 +13,11 @@
 			>
 				<template slot-scope="slotProps">
 					<div>
-						{{slotProps.item.name}} ({{slotProps.item.type}})
+						<span class="icon is-small">
+							<i :class="['fa', slotProps.item.icon]" aria-hidden="true"></i>
+						</span>
+
+						{{slotProps.item.name}}
 					</div>
 				</template>
 				<template slot="footer" v-if="autocompleteItems.length === 0 && search !== ''">
@@ -89,10 +93,12 @@ export default {
 			const items = [
 				...this.lessons.map(lesson => {
 					lesson.type = 'App\\Models\\Lesson';
+					lesson.icon = 'fa-book';
 					return lesson;
 				}),
 				...this.groups.map(group => {
 					group.type = 'App\\Models\\Group';
+					group.icon = 'fa-folder';
 					return group;
 				})];
 

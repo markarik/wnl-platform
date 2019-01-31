@@ -3,12 +3,12 @@ import {scrollToElement} from 'js/utils/animations';
 
 export default {
 	methods: {
-		async scrollToNode(term) {
+		async scrollToNode(node) {
 			await Vue.nextTick();
 			// wait for collapse animation to finish
 			setTimeout(
 				() => scrollToElement(
-					document.getElementById(`term-${term.id}`),
+					document.getElementById(`node-${node.id}`),
 					150,
 					500,
 					document.querySelector('.admin-right')

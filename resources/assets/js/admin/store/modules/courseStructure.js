@@ -1,7 +1,7 @@
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
 import {nestedSetMutations, nestedSetGetters, nestedSetActions, initialState} from 'js/admin/store/modules/nestedSet';
-import axios from 'axios/index';
+import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
 
 // Namespace
@@ -52,8 +52,8 @@ const actions = {
 	async _delete({}, node) {
 		await axios.delete(getApiUrl(`${resource}/${node.id}`));
 	},
-	async _move({}, {term, direction}) {
-		await axios.put(getApiUrl(`${resource}/move`), {id: term.id, direction});
+	async _move({}, {node, direction}) {
+		await axios.put(getApiUrl(`${resource}/move`), {id: node.id, direction});
 	},
 };
 

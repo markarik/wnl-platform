@@ -80,9 +80,9 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['setUpNestedSet', 'onNodeSearch']),
+		...mapActions('taxonomyTerms', ['setUpNestedSet', 'focus']),
 		async onSearch(term) {
-			this.onNodeSearch(term);
+			this.focus(term);
 			this.scrollToNode(term);
 		},
 	},

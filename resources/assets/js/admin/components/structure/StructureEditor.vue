@@ -83,9 +83,9 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('courseStructure', ['setUpNestedSet', 'expandAll', 'onNodeSearch']),
+		...mapActions('courseStructure', ['setUpNestedSet', 'expandAll', 'focus']),
 		async onSearch(node) {
-			this.onNodeSearch(node);
+			this.focus(node);
 			this.scrollToNode(node);
 		},
 	},

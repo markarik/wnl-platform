@@ -1,7 +1,7 @@
 <template>
 	<ul>
 		<vue-draggable
-			:options="{handle: '.structure-node-item__action--drag'}"
+			:options="{handle: '.structure-node-item__action__drag'}"
 			@end="onNodeDrag"
 		>
 			<wnl-structure-node-item

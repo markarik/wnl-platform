@@ -17,7 +17,13 @@
 				<template slot-scope="slotProps">
 					<div>
 						<div class="autocomplete-parent-node">{{getAncestorsById(slotProps.item.id).map(ancestor => ancestor.structurable.name).join(' > ')}}</div>
-						<div>{{slotProps.item.structurable.name}}</div>
+
+						<div>
+							<span class="icon is-small">
+								<i :class="['fa', getStructurableIcon(slotProps.item.structurable)]" aria-hidden="true"></i>
+							</span>
+							{{slotProps.item.structurable.name}}
+						</div>
 					</div>
 				</template>
 			</wnl-autocomplete>
@@ -35,6 +41,10 @@
 
 	.autocomplete-parent-node
 		color: $color-inactive-gray
+
+	.icon
+		margin: 0 $margin-tiny
+		padding: $margin-small-minus
 
 </style>
 
@@ -65,7 +75,7 @@ export default {
 	},
 	computed: {
 		...mapState('courseStructure', ['nodes']),
-		...mapGetters('courseStructure', ['getAncestorsById']),
+		...mapGetters('courseStructure', ['getAncestorsById', 'getStructurableIcon']),
 		autocompletenodes() {
 			if (!this.search) {
 				return [];

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {mapActions, mapState, mapGetters} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 import WnlStructureNodeEditorForm from 'js/admin/components/structure/StructureNodeEditorForm';
 import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';

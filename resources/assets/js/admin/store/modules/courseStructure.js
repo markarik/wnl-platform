@@ -26,7 +26,11 @@ const include = '?include=groups,lessons';
 
 // Getters
 const getters = {
-	...nestedSetGetters
+	...nestedSetGetters,
+	getStructurableIcon: state => structurable => {
+		if (structurable.type === COURSE_STRUCTURE_TYPES.LESSON) return 'fa-book';
+		if (structurable.type === COURSE_STRUCTURE_TYPES.GROUP) return 'fa-folder';
+	}
 };
 
 // Mutations

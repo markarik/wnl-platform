@@ -5,7 +5,7 @@
 				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
 			</span>
 			<span class="icon-small structure-node-item__icon">
-				<i :class="['fa', itemClass]"></i>
+				<i :class="['fa', getStructurableIcon(node.structurable)]"></i>
 			</span>
 			<div class="media-content v-central">
 				<span>{{node.structurable.name}}</span>
@@ -108,7 +108,7 @@ export default {
 	},
 	computed: {
 		...mapState('courseStructure', ['expandedNodes', 'selectedNodes', 'isSaving']),
-		...mapGetters('courseStructure', ['getChildrenByParentId']),
+		...mapGetters('courseStructure', ['getChildrenByParentId', 'getStructurableIcon']),
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},
@@ -121,10 +121,6 @@ export default {
 		isExpanded() {
 			return this.expandedNodes.includes(this.node.id)  && this.childNodes.length;
 		},
-		itemClass() {
-			if (this.node.structurable_type === COURSE_STRUCTURE_TYPES.LESSON) return 'fa-book';
-			return 'fa-folder';
-		}
 	},
 	methods: {
 		...mapActions('courseStructure', ['setEditorMode']),

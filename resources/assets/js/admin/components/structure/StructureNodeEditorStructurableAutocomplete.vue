@@ -14,7 +14,7 @@
 				<template slot-scope="slotProps">
 					<div>
 						<span class="icon is-small">
-							<i :class="['fa', slotProps.item.icon]" aria-hidden="true"></i>
+							<i :class="['fa', getStructurableIcon(slotProps.item)]" aria-hidden="true"></i>
 						</span>
 
 						{{slotProps.item.name}}
@@ -60,10 +60,14 @@
 		text-align: right
 		display: flex
 
+	.icon
+		margin: 0 $margin-tiny
+		padding: $margin-small-minus
+
 </style>
 
 <script>
-import {mapState, mapActions} from 'vuex';
+import {mapState, mapActions, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
@@ -84,6 +88,7 @@ export default {
 	computed: {
 		...mapState('lessons', ['lessons']),
 		...mapState('groups', ['groups']),
+		...mapGetters('courseStructure', ['getStructurableIcon']),
 		autocompleteItems() {
 			if (!this.search) {
 				return [];
@@ -93,12 +98,10 @@ export default {
 			const items = [
 				...this.lessons.map(lesson => {
 					lesson.type = 'App\\Models\\Lesson';
-					lesson.icon = 'fa-book';
 					return lesson;
 				}),
 				...this.groups.map(group => {
 					group.type = 'App\\Models\\Group';
-					group.icon = 'fa-folder';
 					return group;
 				})];
 

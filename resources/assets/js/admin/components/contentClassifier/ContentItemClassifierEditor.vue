@@ -1,11 +1,19 @@
 <template>
 	<div v-if="canAccess" class="content-item-classifier">
 		<div v-if="expanded" class="content-item-classifier__editor">
-			<span class="icon is-small clickable" @click="expanded=false"><i class="fa fa-chevron-up"></i></span>
+			<div class="content-item-classifier__editor__header">
+				<div>
+					<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
+					<strong>{{CONTENT_TYPE_NAMES[contentItem.type]}} #{{contentItem.id}}</strong>
+				</div>
+				<span class="content-item-classifier__collapse-icon icon is-small clickable" @click="expanded=false"><i class="fa fa-chevron-up"></i></span>
+			</div>
 			<wnl-content-item-classifier-editor :filtered-content="[contentItem]" />
 		</div>
-		<div v-else class="clickable" @click="expanded=true">
-			<span class="icon"><i class="fa fa-tags"></i></span> asd TODO
+		<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
+			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
+			<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
+			<span v-else>brak</span>
 		</div>
 	</div>
 </template>
@@ -17,16 +25,40 @@
 		width: 100%
 
 		&__editor
-			background-color: $color-background-light-gray
-			border: $border-dark-gray
+			background-color: $color-background-lighter-gray
+			border: $border-light-gray
+			padding: $margin-medium
+			&__header
+				display: flex
+				justify-content: space-between
+				margin-bottom: $margin-base
+
+		&__tag-names
+			color: $color-lighter-gray
+
+		&__tag-icon
+			color: $color-lighter-gray
+			margin-right: $margin-small
+
+		&__collapse-icon
+			color: $color-lighter-gray
+			padding: $margin-tiny
 
 </style>
 
 <script>
+// TODO handle updated item
 import {mapActions, mapGetters, mapState} from 'vuex';
 
 // TODO don't include admin components
 import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
+
+const CONTENT_TYPE_NAMES = {
+	flashcards: 'Pytanie otwarte',
+	slides: 'Slajd',
+	quiz_questions: 'Pytanie zamknięte',
+	annotations: 'Przypis'
+};
 
 export default {
 	components: {
@@ -35,6 +67,7 @@ export default {
 	data() {
 		return {
 			expanded: false,
+			CONTENT_TYPE_NAMES,
 		};
 	},
 	props: {
@@ -48,6 +81,9 @@ export default {
 		canAccess() {
 			return this.isAdmin || this.isModerator;
 		},
+		hasTaxonomyTerms() {
+			return this.contentItem.taxonomyTerms.length > 0;
+		}
 	},
 	methods: {
 

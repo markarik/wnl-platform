@@ -55,6 +55,12 @@
 
 			.search
 				width: 100%
+
+				/deep/ .autocomplete-box .icon
+					color: $color-darkest-gray
+					height: 1rem
+					position: relative
+					width: 1rem
 </style>
 
 <script>

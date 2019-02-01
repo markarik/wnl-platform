@@ -88,7 +88,7 @@ export default {
 	data() {
 		return {
 			requestParams: {
-				include: 'keywords,tags'
+				include: 'keywords,tags,taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags'
 			},
 			searchAvailableFields: [
 				{value: 'id', title: 'ID'},

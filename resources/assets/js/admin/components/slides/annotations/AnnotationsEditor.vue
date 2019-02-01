@@ -126,6 +126,7 @@
 				</div>
 			</template>
 		</form>
+		<wnl-content-item-classifier-editor :contentItem="annotation"/>
 		<wnl-modal @closeModal="isVisible = false" v-if="isVisible">
 			<wnl-preview-modal :content="annotation.description"/>
 		</wnl-modal>
@@ -196,6 +197,7 @@ import KeywordField from './KeywordField';
 import PreviewModal from './PreviewModal';
 import Quill from 'js/admin/components/forms/Quill.vue';
 import Modal from 'js/components/global/Modal';
+import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifier/ContentItemClassifierEditor';
 
 export default {
 	name: 'AnnotationsEditor',
@@ -204,7 +206,8 @@ export default {
 		'wnl-keyword-field': KeywordField,
 		'quill': Quill,
 		'wnl-modal': Modal,
-		'wnl-preview-modal': PreviewModal
+		'wnl-preview-modal': PreviewModal,
+		WnlContentItemClassifierEditor
 	},
 	data() {
 		const ANNOTATIONS_TYPES = {

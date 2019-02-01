@@ -99,6 +99,7 @@
 
 <script>
 import { getColourForStr } from 'js/utils/colors.js';
+import {parseTaxonomyTermsFromIncludes} from '../../../../utils/contentClassifier';
 
 export default {
 	data() {
@@ -149,7 +150,9 @@ export default {
 						id: tags[tagId].id,
 						name: tags[tagId].name,
 					})),
-					keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(',')
+					keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(','),
+					type: 'annotations',
+					taxonomyTerms: parseTaxonomyTermsFromIncludes(annotation.taxonomy_terms, included),
 				};
 			});
 		}

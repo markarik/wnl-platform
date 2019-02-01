@@ -300,7 +300,16 @@ const actions = {
 			if (data.included) {
 				let included = _.clone(data.included);
 				destroy(data, 'included');
-				included['quiz_questions'] = data;
+				included['quiz_questions'] = _.mapValues(data, quizQuestion => ({
+					...quizQuestion,
+					type: 'quizQuestions',
+					taxonomyTerms: parseTaxonomyTermsFromIncludes(quizQuestion.taxonomy_terms, included),
+				}));
+
+				delete included.tags;
+				delete included.taxonomy_terms;
+				delete included.taxonomies;
+				delete included.ancestors;
 
 				let questionsIds = _.map(data, (question) => question.id),
 					len = questionsIds.length;

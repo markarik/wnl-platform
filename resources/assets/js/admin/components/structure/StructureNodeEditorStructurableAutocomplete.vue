@@ -5,7 +5,7 @@
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
 		<div class="control" v-else>
-			<input class="input" v-model="search" placeholder="Wpisz nazwę lekcji/grupy, który chcesz dołączyć lub utworzyć" />
+			<input class="input" v-model="search" placeholder="Wpisz nazwę lekcji/grupy, którą chcesz dołączyć lub utworzyć" />
 			<wnl-autocomplete
 				:items="autocompleteItems"
 				:onItemChosen="onSelect"

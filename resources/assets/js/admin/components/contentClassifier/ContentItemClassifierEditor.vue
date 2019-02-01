@@ -48,7 +48,7 @@
 
 <script>
 // TODO handle updated item
-import {mapActions, mapGetters, mapState} from 'vuex';
+import {mapGetters} from 'vuex';
 
 // TODO don't include admin components
 import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
@@ -56,7 +56,7 @@ import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifie
 const CONTENT_TYPE_NAMES = {
 	flashcards: 'Pytanie otwarte',
 	slides: 'Slajd',
-	quiz_questions: 'Pytanie zamknięte',
+	quizQuestions: 'Pytanie z bazy pytań',
 	annotations: 'Przypis'
 };
 
@@ -82,7 +82,7 @@ export default {
 			return this.isAdmin || this.isModerator;
 		},
 		hasTaxonomyTerms() {
-			return this.contentItem.taxonomyTerms.length > 0;
+			return this.contentItem.taxonomyTerms && this.contentItem.taxonomyTerms.length > 0;
 		}
 	},
 	methods: {

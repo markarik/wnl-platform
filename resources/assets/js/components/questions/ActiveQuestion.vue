@@ -50,7 +50,6 @@
 
 	.active-question-button
 		margin-bottom: $margin-big * 6
-		margin-top: -$margin-big
 
 	.active-question-controls
 		display: flex

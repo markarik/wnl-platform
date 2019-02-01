@@ -6,12 +6,13 @@ import {commentsGetters, commentsMutations, commentsActions, commentsState} from
 import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions';
 import * as types from 'js/store/mutations-types';
 import quizStore from 'js/services/quizStore';
+import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 
 const _fetchQuestions = (requestParams) => {
 	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams);
 };
 
-const DEFAULT_INCLUDE = 'quiz_answers,comments.profiles,comments,reactions,slides';
+const DEFAULT_INCLUDE = 'quiz_answers,comments.profiles,comments,reactions,slides,taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags';
 
 function fetchQuizSet(id) {
 	return new Promise((resolve, reject) => {
@@ -255,8 +256,18 @@ const actions = {
 				quizQuestionsOldWay = {};
 
 			Object.values(quizQuestions).forEach((quizQuestion) => {
-				quizQuestionsOldWay[quizQuestion.id] = quizQuestion;
+				quizQuestionsOldWay[quizQuestion.id] = {
+					...quizQuestion,
+					// TODO constant
+					type: 'quizQuestions',
+					taxonomyTerms: parseTaxonomyTermsFromIncludes(quizQuestion.taxonomy_terms, included)
+				};
 			});
+
+			delete included.tags;
+			delete included.taxonomy_terms;
+			delete included.taxonomies;
+			delete included.ancestors;
 
 			const quizQuestionsIds = Object.keys(quizQuestionsOldWay),
 				len = quizQuestionsIds;

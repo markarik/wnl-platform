@@ -114,6 +114,7 @@
 				</div>
 			</div>
 		</div>
+		<wnl-content-item-classifier-editor :content-item="question" />
 	</div>
 </template>
 
@@ -200,8 +201,12 @@
 				display: inline-block
 				padding-right: $margin-tiny * 2
 
+	.wnl-quiz-question-container
+		margin-bottom: $margin-big
+
 	.wnl-quiz-question
-		margin-bottom: $margin-huge
+		@media #{$media-query-tablet}
+			margin: $margin-small 0
 
 		&.is-correct
 			box-shadow: 0 2px 3px $color-correct-shadow, 0 0 0 1px $color-correct-shadow
@@ -277,6 +282,7 @@ import SlideLink from 'js/components/global/SlideLink';
 import SlidePreview from 'js/components/global/SlidePreview';
 import emits_events from 'js/mixins/emits-events';
 import feature_components from 'js/consts/events_map/feature_components.json';
+import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifier/ContentItemClassifierEditor';
 
 export default {
 	name: 'QuizQuestion',
@@ -285,7 +291,8 @@ export default {
 		'wnl-comments-list': CommentsList,
 		'wnl-bookmark': Bookmark,
 		'wnl-slide-link': SlideLink,
-		'wnl-slide-preview': SlidePreview
+		'wnl-slide-preview': SlidePreview,
+		WnlContentItemClassifierEditor,
 	},
 	mixins: [emits_events],
 	props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],

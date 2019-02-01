@@ -199,7 +199,6 @@
 				font-weight: $font-weight-regular
 
 		.wnl-quiz-question-container
-			margin-bottom: -$margin-base
 			width: 100%
 
 			.wnl-quiz-question

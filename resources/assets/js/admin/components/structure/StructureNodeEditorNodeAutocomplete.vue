@@ -62,7 +62,7 @@ export default {
 		},
 		placeholder: {
 			type: String,
-			default: 'Wpisz nazwę nadrzędnej lekcji / grupy'
+			default: 'Wpisz nazwę nadrzędnej lekcji/grupy'
 		}
 	},
 	data() {

@@ -5,7 +5,7 @@
 		<div class="editor">
 			<div class="editor__panel is-left">
 				<div class="editor__panel__header">
-				<span class="control has-icons-right search">
+				<span class="control has-icons-right search margin bottom">
 					<wnl-node-autocomplete
 							@change="onSearch"
 							placeholder="Szukaj"
@@ -55,6 +55,12 @@
 
 			.search
 				width: 100%
+
+				/deep/ .autocomplete-box .icon
+					color: $color-darkest-gray
+					height: 1rem
+					position: relative
+					width: 1rem
 </style>
 
 <script>
@@ -83,9 +89,9 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('courseStructure', ['setUpNestedSet', 'expandAll', 'onNodeSearch']),
+		...mapActions('courseStructure', ['setUpNestedSet', 'expandAll', 'focus']),
 		async onSearch(node) {
-			this.onNodeSearch(node);
+			this.focus(node);
 			this.scrollToNode(node);
 		},
 	},

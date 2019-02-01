@@ -3,13 +3,13 @@
 		submit-label="Dodaj"
 		:on-save="onSave"
 		:courseId="courseId"
-		:node="currentNode"
+		:node="node"
 		@parentChange="onParentChange"
 	/>
 </template>
 
 <script>
-import {mapActions, mapState, mapGetters} from 'vuex';
+import {mapActions, mapGetters, mapState} from 'vuex';
 
 import WnlStructureNodeEditorForm from 'js/admin/components/structure/StructureNodeEditorForm';
 import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
@@ -28,7 +28,17 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters('courseStructure', ['nodeById', 'currentNode']),
+		...mapGetters('courseStructure', ['nodeById']),
+		...mapState('courseStructure', ['selectedNodes']),
+		node() {
+			if (this.selectedNodes.length === 0) {
+				return null;
+			}
+
+			return {
+				parent: this.nodeById(this.selectedNodes[0])
+			};
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

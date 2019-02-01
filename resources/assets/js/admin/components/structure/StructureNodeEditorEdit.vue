@@ -1,10 +1,10 @@
 <template>
 	<wnl-structure-node-editor-form
-		v-if="currentNode"
+		v-if="node"
 		submit-label="Zapisz"
 		:on-save="onSave"
 		:courseId="courseId"
-		:node="currentNode"
+		:node="node"
 	/>
 	<div v-else class="notification is-info">
 		<span class="icon">
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import {mapActions, mapGetters, mapState} from 'vuex';
 import WnlStructureNodeEditorForm from 'js/admin/components/structure/StructureNodeEditorForm';
 
 export default {
@@ -29,7 +29,20 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters('courseStructure', ['nodeById', 'currentNode']),
+		...mapGetters('courseStructure', ['nodeById', 'getAncestorsById']),
+		...mapState('courseStructure', ['selectedNodes']),
+		node() {
+			if (this.selectedNodes.length === 0) {
+				return null;
+			}
+
+			const node = this.nodeById(this.selectedNodes[0]);
+
+			return {
+				...node,
+				parent: this.getAncestorsById(node.id).slice(-1)[0],
+			};
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

@@ -5,7 +5,7 @@
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
 		<div class="control" v-else>
-			<input class="input" v-model="search" placeholder="Wpisz nazwę lekcji/grupy, który chcesz dołączyć lub utworzyć" />
+			<input class="input" v-model="search" placeholder="Wpisz nazwę lekcji/grupy, którą chcesz dołączyć lub utworzyć" />
 			<wnl-autocomplete
 				:items="autocompleteItems"
 				:onItemChosen="onSelect"
@@ -14,13 +14,13 @@
 				<template slot-scope="slotProps">
 					<div>
 						<span class="icon is-small">
-							<i :class="['fa', slotProps.item.icon]" aria-hidden="true"></i>
+							<i :class="['fa', getStructurableIcon(slotProps.item)]" aria-hidden="true"></i>
 						</span>
 
 						{{slotProps.item.name}}
 					</div>
 				</template>
-				<template slot="footer" v-if="autocompleteItems.length === 0 && search !== ''">
+				<template slot="footer" v-if="search !== ''">
 					<div>
 						<div class="margin">
 							Nie mamy lekcji ani grupy o nazwie <strong>{{search}}</strong>
@@ -60,14 +60,19 @@
 		text-align: right
 		display: flex
 
+	.icon
+		margin: 0 $margin-tiny
+		padding: $margin-small-minus
+
 </style>
 
 <script>
-import {mapState, mapActions} from 'vuex';
+import {mapState, mapActions, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import {ALERT_TYPES} from 'js/consts/alert';
+import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
 
 export default {
 	props: {
@@ -84,6 +89,7 @@ export default {
 	computed: {
 		...mapState('lessons', ['lessons']),
 		...mapState('groups', ['groups']),
+		...mapGetters('courseStructure', ['getStructurableIcon']),
 		autocompleteItems() {
 			if (!this.search) {
 				return [];
@@ -92,13 +98,11 @@ export default {
 
 			const items = [
 				...this.lessons.map(lesson => {
-					lesson.type = 'App\\Models\\Lesson';
-					lesson.icon = 'fa-book';
+					lesson.type = COURSE_STRUCTURE_TYPES.LESSON;
 					return lesson;
 				}),
 				...this.groups.map(group => {
-					group.type = 'App\\Models\\Group';
-					group.icon = 'fa-folder';
+					group.type = COURSE_STRUCTURE_TYPES.GROUP;
 					return group;
 				})];
 

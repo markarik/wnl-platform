@@ -1,7 +1,5 @@
-import axios from 'axios';
 import {uniq} from 'lodash';
 import {set} from 'vue';
-import {getApiUrl} from 'js/utils/env';
 import * as types from 'js/admin/store/mutations-types';
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 
@@ -39,13 +37,6 @@ export const nestedSetGetters = {
 			.sort((nodeA, nodeB) => nodeA.orderNumber - nodeB.orderNumber);
 	},
 	getRootNodes: (state, getters) => getters.getChildrenByParentId(null),
-	currentNode: (state, getters) => {
-		if (state.selectedNodes.length === 0) return null;
-		return getters.nodeById(state.selectedNodes[0]);
-	},
-	getParentNode: (state, getters) => node => {
-		return getters.getAncestorsById(node.id).slice(-1)[0];
-	}
 };
 
 // Mutations
@@ -235,7 +226,7 @@ export const nestedSetActions = {
 			node.id
 		]));
 	},
-	onNodeSearch({dispatch}, node) {
+	focus({dispatch}, node) {
 		dispatch('collapseAll');
 		dispatch('select', [node.id]);
 		dispatch('expand', node.id);

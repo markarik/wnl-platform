@@ -11,7 +11,7 @@
 
 		<div class="field">
 			<label class="label is-uppercase"><strong>Powiązana jednostka struktury</strong></label>
-			<span class="info">Wybierz lekcję / grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową.</span>
+			<span class="info">Wybierz lekcję/grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową.</span>
 			<wnl-structurable-autocomplete
 				@change="onSelectStructurable"
 				:selected="structurable"
@@ -116,8 +116,6 @@ export default {
 				node = {
 					...initialState
 				};
-			} else {
-				node.parent = this.getParentNode(node);
 			}
 
 			const {id, structurable, parent} = node;

@@ -1,8 +1,11 @@
 <template>
-	<li :class="['structure-node-item', isSaving && 'structure-node-item--disabled']" :id="`node-${node.id}`">
+	<li :class="['structure-node-item', isSaving && 'structure-node-item is-disabled']" :id="`node-${node.id}`">
 		<div :class="['media', 'structure-node-item__content', {'is-selected': isSelected}]">
-			<span class="icon-small structure-node-item__action structure-node-item__action--drag">
-				<i title="drag" :class="['fa', itemClass]"></i>
+			<span class="icon-small structure-node-item__icon structure-node-item__action__drag">
+				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
+			</span>
+			<span class="icon-small structure-node-item__icon">
+				<i :class="['fa', getStructurableIcon(node.structurable)]"></i>
 			</span>
 			<div class="media-content v-central">
 				<span>{{node.structurable.name}}</span>
@@ -33,19 +36,6 @@
 				>
 					<i title="Usuń" class="fa fa-trash"></i>
 				</span>
-				<span
-					:class="['icon-small', 'structure-node-item__action', {'structure-node-item__action--disabled': !canBeMovedUp}]"
-					@click="canBeMovedUp && onNodeMove(node, -1)"
-				>
-					<i title="Do góry" class="fa fa-arrow-up"></i>
-				</span>
-				<span
-					class="icon-small structure-node-item__action"
-					:class="['icon-small', 'structure-node-item__action', {'structure-node-item__action--disabled': !canBeMovedDown}]"
-					@click="canBeMovedDown && onNodeMove(node, 1)"
-				>
-					<i title="Na dół" class="fa fa-arrow-down"></i>
-				</span>
 			</div>
 		</div>
 		<transition name="fade">
@@ -62,7 +52,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.structure-node-item
-		&--disabled
+		.is-disabled
 			pointer-events: none
 			color: $color-darkest-gray
 
@@ -76,13 +66,16 @@
 
 		&__action
 			cursor: pointer
+
+		&__action, &__icon
 			margin: 0 $margin-tiny
 			padding: $margin-small-minus
 
-			&--drag
+			&__drag
 				cursor: move
+				color: $color-inactive-gray
 
-			&--disabled
+			.is-disabled
 				color: $color-inactive-gray
 				cursor: not-allowed
 
@@ -104,7 +97,6 @@
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
-import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
 
 export default {
 	props: {
@@ -115,13 +107,7 @@ export default {
 	},
 	computed: {
 		...mapState('courseStructure', ['expandedNodes', 'selectedNodes', 'isSaving']),
-		...mapGetters('courseStructure', ['getChildrenByParentId']),
-		canBeMovedUp() {
-			return this.node.orderNumber > 0;
-		},
-		canBeMovedDown() {
-			return this.node.orderNumber < this.getChildrenByParentId(this.node.parent_id).length - 1;
-		},
+		...mapGetters('courseStructure', ['getChildrenByParentId', 'getStructurableIcon']),
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},
@@ -134,11 +120,6 @@ export default {
 		isExpanded() {
 			return this.expandedNodes.includes(this.node.id)  && this.childNodes.length;
 		},
-		itemClass() {
-			if (this.isSaving) return 'fa-circle-o-notch fa-spin';
-			if (this.node.structurable_type === COURSE_STRUCTURE_TYPES.LESSON) return 'fa-book';
-			return 'fa-folder';
-		}
 	},
 	methods: {
 		...mapActions('courseStructure', ['setEditorMode']),
@@ -165,9 +146,6 @@ export default {
 			} else {
 				this.expandNode(this.node.id);
 			}
-		},
-		onNodeMove(node, direction) {
-			this.$emit('moveNode', {node, direction});
 		},
 	},
 	beforeCreate: function () {

@@ -2,7 +2,6 @@ import _ from 'lodash';
 import axios from 'axios';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
-import { resource } from 'js/utils/config';
 import * as types from 'js/admin/store/mutations-types';
 
 // Helper functions

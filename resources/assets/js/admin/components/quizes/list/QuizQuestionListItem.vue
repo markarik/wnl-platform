@@ -22,7 +22,7 @@ export default {
 	},
 	methods: {
 		stripHtml(text) {
-			let tmp = document.createElement('div');
+			const tmp = document.createElement('div');
 			tmp.innerHTML = text;
 			return tmp.innerText || tmp.innerHTML || '';
 		}

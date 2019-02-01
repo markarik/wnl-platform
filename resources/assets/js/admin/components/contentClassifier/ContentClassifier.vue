@@ -81,28 +81,7 @@ import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
 import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
-
-const parseIncludes = (item, included) => {
-	item.taxonomyTerms = item.taxonomy_terms ? item.taxonomy_terms.map(termId => {
-		const term = included.taxonomy_terms[termId];
-		term.tag = included.tags[term.tags[0]];
-		term.taxonomy = included.taxonomies[term.taxonomies[0]];
-		term.ancestors = [];
-
-		let currentTerm = term;
-		while (currentTerm.parent_id) {
-			const parentTerm = included.ancestors[currentTerm.parent_id];
-			parentTerm.tag = included.tags[parentTerm.tags[0]];
-			term.ancestors.unshift(parentTerm);
-
-			currentTerm = parentTerm;
-		}
-
-		return term;
-	}) : [];
-
-	return item;
-};
+import {parseTaxonomyTermsFromIncludes} from '../../../utils/contentClassifier';
 
 export default {
 	components: {
@@ -174,7 +153,8 @@ export default {
 
 			return Object.values(items).map(item => {
 				item.type = contentType;
-				return parseIncludes(item, included);
+				item.taxonomyTerms = parseTaxonomyTermsFromIncludes(item.taxonomy_terms, included);
+				return item;
 			});
 		},
 		async onSearch() {

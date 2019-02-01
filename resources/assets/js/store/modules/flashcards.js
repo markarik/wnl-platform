@@ -1,6 +1,7 @@
 import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
 import * as mutationsTypes from 'js/store/mutations-types';
+import {parseTaxonomyTermsFromIncludes} from '../../utils/contentClassifier';
 
 const state = () => {
 	return {
@@ -51,25 +52,8 @@ const actions = {
 					answer: _.get(userResponseData, `${flashcardId}.answer`, 'unsolved'),
 					note: flashcard.user_flashcard_notes ? included.user_flashcard_notes[flashcard.user_flashcard_notes[0]] : null,
 					// TODO contant
-					type:'flashcards',
-					// TODO extract includes parsing
-					taxonomyTerms: flashcard.taxonomy_terms ? flashcard.taxonomy_terms.map(taxonomyTermId => {
-						const taxonomyTerm = included.taxonomy_terms[taxonomyTermId];
-						taxonomyTerm.tag = included.tags[taxonomyTerm.tags[0]];
-						taxonomyTerm.taxonomy = included.taxonomies[taxonomyTerm.taxonomies[0]];
-						taxonomyTerm.ancestors = [];
-
-						let currentTerm = taxonomyTerm;
-						while (currentTerm.parent_id) {
-							const parentTerm = included.ancestors[currentTerm.parent_id];
-							parentTerm.tag = included.tags[parentTerm.tags[0]];
-							taxonomyTerm.ancestors.unshift(parentTerm);
-
-							currentTerm = parentTerm;
-						}
-
-						return taxonomyTerm;
-					}) : [],
+					type: 'flashcards',
+					taxonomyTerms: parseTaxonomyTermsFromIncludes(flashcard.taxonomy_terms, included),
 				};
 			});
 

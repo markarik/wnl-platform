@@ -1,7 +1,5 @@
-import axios from 'axios';
 import {uniq} from 'lodash';
 import {set} from 'vue';
-import {getApiUrl} from 'js/utils/env';
 import * as types from 'js/admin/store/mutations-types';
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 

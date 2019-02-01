@@ -1,8 +1,8 @@
-import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
 import {nestedSetMutations, nestedSetGetters, nestedSetActions, initialState} from 'js/admin/store/modules/nestedSet';
 import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
+import {COURSE_STRUCTURE_TYPE_ICONS} from 'js/consts/courseStructure';
 
 // Namespace
 const namespaced = true;
@@ -28,8 +28,7 @@ const include = '?include=groups,lessons';
 const getters = {
 	...nestedSetGetters,
 	getStructurableIcon: state => structurable => {
-		if (structurable.type === COURSE_STRUCTURE_TYPES.LESSON) return 'fa-book';
-		if (structurable.type === COURSE_STRUCTURE_TYPES.GROUP) return 'fa-folder';
+		return COURSE_STRUCTURE_TYPE_ICONS[structurable.type];
 	}
 };
 

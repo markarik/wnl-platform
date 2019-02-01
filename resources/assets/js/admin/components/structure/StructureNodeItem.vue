@@ -97,7 +97,6 @@
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
-import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
 
 export default {
 	props: {

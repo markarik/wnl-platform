@@ -72,6 +72,7 @@ import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import {ALERT_TYPES} from 'js/consts/alert';
+import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
 
 export default {
 	props: {
@@ -97,11 +98,11 @@ export default {
 
 			const items = [
 				...this.lessons.map(lesson => {
-					lesson.type = 'App\\Models\\Lesson';
+					lesson.type = COURSE_STRUCTURE_TYPES.LESSON;
 					return lesson;
 				}),
 				...this.groups.map(group => {
-					group.type = 'App\\Models\\Group';
+					group.type = COURSE_STRUCTURE_TYPES.GROUP;
 					return group;
 				})];
 

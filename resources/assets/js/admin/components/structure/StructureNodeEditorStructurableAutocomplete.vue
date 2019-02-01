@@ -20,7 +20,7 @@
 						{{slotProps.item.name}}
 					</div>
 				</template>
-				<template slot="footer" v-if="autocompleteItems.length === 0 && search !== ''">
+				<template slot="footer" v-if="search !== ''">
 					<div>
 						<div class="margin">
 							Nie mamy lekcji ani grupy o nazwie <strong>{{search}}</strong>

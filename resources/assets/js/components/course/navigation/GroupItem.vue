@@ -1,17 +1,17 @@
 <template>
-	<div class="wnl-navigation-group" :class="{'no-items': !hasChildren}">
-		<div class="wnl-navigation-group__toggle" @click="toggleNavigationGroup({groupIndex: item.id, isOpen: !isOpen})">
-			<div class="wnl-navigation-group__item">
+	<div class="navigation-group" :class="{'no-items': !hasChildren}">
+		<div class="navigation-group__toggle" @click="toggleNavigationGroup({groupIndex: item.id, isOpen: !isOpen})">
+			<div class="navigation-group__item">
 				<span class="icon is-small" v-if="hasChildren">
 					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
 				</span>
 				<span class="sidenav-item-content">
 					{{groupItem.text}}
-					<span class="wnl-navigation-group__count" v-if="hasChildren">({{children.length}})</span>
+					<span class="navigation-group__count" v-if="hasChildren">({{children.length}})</span>
 				</span>
 			</div>
 		</div>
-		<div class="wnl-sidenav-children" v-if="canRenderChildren">
+		<div class="sidenav-children" v-if="canRenderChildren">
 			<wnl-lesson-item
 				v-for="(subitem) in children"
 				:item="subitem"
@@ -24,7 +24,7 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.wnl-navigation-group
+	.navigation-group
 		margin-bottom: $margin-base
 
 		&__toggle
@@ -62,7 +62,7 @@
 		&.no-items
 			margin-bottom: 0
 
-			.wnl-navigation-group__toggle
+			.navigation-group__toggle
 				color: $color-background-gray
 				cursor: default
 

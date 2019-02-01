@@ -3,12 +3,12 @@ import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
 import {resources} from 'js/utils/constants';
 import * as types from 'js/store/mutations-types';
-import { modelToResourceMap, getModelByResource, resource } from 'js/utils/config';
+import { modelToResourceMap, getModelByResource } from 'js/utils/config';
 
 function _getCourseStructure(courseId = 1) {
 	return axios.get(getApiUrl(`course_structure_nodes/${courseId}`), {
 		params: {
-			include: 'groups,lessons'
+			include: 'groups,lessons,courses'
 		}
 	});
 }
@@ -192,6 +192,10 @@ const mutations = {
 			...subsections
 		});
 	},
+	[types.SET_COURSE](state, {name, id}) {
+		set(state, 'name', name);
+		set(state, 'id', id);
+	},
 };
 
 // Actions
@@ -199,7 +203,7 @@ const actions = {
 	setup({commit, dispatch, rootGetters}, courseId) {
 		return new Promise((resolve, reject) => {
 			Promise.all([
-				dispatch('setStructure'),
+				dispatch('setStructure', courseId),
 				dispatch('progress/setupCourse', courseId, {root: true}),
 			])
 				.then(() => {
@@ -235,6 +239,7 @@ const actions = {
 		const response = await _getCourseStructure(courseId);
 		const {data: {included, ...structureObj}} = response;
 		const structure = Object.values(structureObj);
+		const {courses} = included;
 
 		const withIncludes = structure.map(node => {
 			const include = modelToResourceMap[node.structurable_type];
@@ -245,7 +250,9 @@ const actions = {
 				model: value
 			};
 		});
+
 		commit(types.SET_STRUCTURE, withIncludes);
+		commit(types.SET_COURSE, courses[courseId]);
 	},
 };
 

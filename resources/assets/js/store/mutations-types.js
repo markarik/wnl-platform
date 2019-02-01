@@ -25,7 +25,7 @@ export const SITE_WIDE_MESSAGES_UPDATE_MESSAGE = 'SITE_WIDE_MESSAGES_UPDATE_MESS
 
 // Course
 export const SET_STRUCTURE                   = 'SET_STRUCTURE';
-export const SET_NEW_STRUCTURE               = 'SET_NEW_STRUCTURE';
+export const SET_COURSE                      = 'SET_COURSE';
 export const SET_SCREENS                     = 'SET_SCREENS';
 export const SET_SECTIONS                    = 'SET_SECTIONS';
 export const SET_SUBSECTIONS                 = 'SET_SUBSECTIONS';

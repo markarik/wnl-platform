@@ -82,6 +82,7 @@ class ApiJsonSerializer extends SerializerAbstract
 				foreach ($items as $item) {
 					if (!array_key_exists($resourceKey, $item)) continue;
 					$resourceId = $item[$resourceKey];
+					// make name for list of included resources plural
 					$pluralIncludedResourceName = Str::plural($includedResourceName);
 
 					if (!isset($this->relationships[$resourceKey][$resourceId][$pluralIncludedResourceName]) ||

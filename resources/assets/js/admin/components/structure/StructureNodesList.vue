@@ -8,7 +8,6 @@
 				v-for="node in nodes"
 				:node="node"
 				:key="node.id"
-				@moveNode="onChildnodeArrowMove"
 			/>
 		</vue-draggable>
 	</ul>
@@ -61,13 +60,6 @@ export default {
 				await this.submitMove({direction, node});
 			} catch (e) {
 				await this.reorderSiblings({direction: oldIndex - newIndex, node});
-			}
-		},
-		async onChildnodeArrowMove({node, direction}) {
-			try {
-				await this.submitMove({direction, node});
-			} catch (e) {
-				await this.reorderSiblings({direction: -direction, node});
 			}
 		},
 	}

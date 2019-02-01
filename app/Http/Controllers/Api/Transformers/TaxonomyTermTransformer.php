@@ -29,12 +29,12 @@ class TaxonomyTermTransformer extends ApiTransformer {
 
 	public function includeTag(TaxonomyTerm $taxonomyTerm)
 	{
-		return $this->item($taxonomyTerm->tag, new TagTransformer(['taxonomy_terms' => $taxonomyTerm->id]), 'tag');
+		return $this->item($taxonomyTerm->tag, new TagTransformer(['taxonomy_terms' => $taxonomyTerm->id]), 'tags');
 	}
 
 	public function includeTaxonomy(TaxonomyTerm $taxonomyTerm)
 	{
-		return $this->item($taxonomyTerm->taxonomy, new TaxonomyTransformer(['taxonomy_terms' => $taxonomyTerm->id]), 'taxonomy');
+		return $this->item($taxonomyTerm->taxonomy, new TaxonomyTransformer(['taxonomy_terms' => $taxonomyTerm->id]), 'taxonomies');
 	}
 
 	public function includeAncestors(TaxonomyTerm $taxonomyTerm)

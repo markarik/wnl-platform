@@ -84,15 +84,15 @@ import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/Co
 
 const parseIncludes = (item, included) => {
 	item.taxonomyTerms = item.taxonomy_terms ? item.taxonomy_terms.map(termId => {
-		const term = {...included.taxonomy_terms[termId]};
-		term.tag = included.tag[term.tag[0]];
-		term.taxonomy = included.taxonomy[term.taxonomy[0]];
+		const term = included.taxonomy_terms[termId];
+		term.tag = included.tags[term.tags[0]];
+		term.taxonomy = included.taxonomies[term.taxonomies[0]];
 		term.ancestors = [];
 
 		let currentTerm = term;
 		while (currentTerm.parent_id) {
-			const parentTerm = {...included.ancestors[currentTerm.parent_id]};
-			parentTerm.tag = included.tag[parentTerm.tag[0]];
+			const parentTerm = included.ancestors[currentTerm.parent_id];
+			parentTerm.tag = included.tags[parentTerm.tags[0]];
 			term.ancestors.unshift(parentTerm);
 
 			currentTerm = parentTerm;

@@ -70,7 +70,6 @@
 							:toolbar="[['bold', 'italic', 'underline', 'link'], [{ color: fontColors }], ['clean']]"
 							v-model="note"
 					/>
-
 					<div class="level">
 						<div class="level-item">
 							<wnl-submit cssClass="button is-small is-primary">
@@ -81,6 +80,7 @@
 				</wnl-form>
 			</div>
 		</div>
+		<wnl-content-item-classifier-editor :contentItem="flashcard"/>
 	</li>
 </template>
 
@@ -208,6 +208,7 @@ import {ANSWERS_MAP} from 'js/consts/flashcard';
 import { fontColors } from 'js/utils/colors';
 import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
+import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifier/ContentItemClassifierEditor';
 
 export default {
 	mixins: [emits_events],
@@ -230,6 +231,7 @@ export default {
 		WnlForm,
 		WnlTextButton,
 		WnlSubmit,
+		WnlContentItemClassifierEditor,
 	},
 	data() {
 		return {

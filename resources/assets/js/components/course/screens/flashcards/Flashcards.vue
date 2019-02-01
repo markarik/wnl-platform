@@ -252,7 +252,8 @@ export default {
 		await Promise.all(resources.map(({id}) => {
 			return this.setFlashcardsSet({
 				setId: id,
-				include: 'flashcards.user_flashcard_notes',
+				// TODO fix performance after PLAT-961 is merged
+				include: 'flashcards.user_flashcard_notes,flashcards.taxonomy_terms.tags,flashcards.taxonomy_terms.taxonomies,flashcards.taxonomy_terms.ancestors.tags',
 				context_type: this.context,
 				context_id: this.screenData.id
 			});

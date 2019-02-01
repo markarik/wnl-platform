@@ -27,6 +27,9 @@ import tasks from 'js/store/modules/tasks';
 import flashcards from 'js/store/modules/flashcards';
 import siteWideMessages from 'js/store/modules/siteWideMessages';
 import form from 'js/store/modules/form';
+// TODO don't import from admin
+import taxonomies from 'js/admin/store/modules/taxonomies';
+import taxonomyTerms from 'js/admin/store/modules/taxonomyTerms';
 
 Vue.use(Vuex);
 
@@ -58,6 +61,8 @@ export default new Vuex.Store({
 		alerts,
 		siteWideMessages,
 		form,
+		taxonomies,
+		taxonomyTerms,
 	},
 	strict: debug
 });

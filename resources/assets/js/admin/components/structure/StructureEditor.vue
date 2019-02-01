@@ -5,7 +5,7 @@
 		<div class="editor">
 			<div class="editor__panel is-left">
 				<div class="editor__panel__header">
-				<span class="control has-icons-right search">
+				<span class="control has-icons-right search margin bottom">
 					<wnl-node-autocomplete
 							@change="onSearch"
 							placeholder="Szukaj"

@@ -1,10 +1,10 @@
 <template>
 	<div
-		v-if="term"
+		v-if="node"
 		class="has-text-centered"
 	>
 		<p class="margin bottom">
-			Czy na pewno chcesz usunąć pojęcie <em><strong>{{term.tag.name}}</strong></em> wraz z potomkami?
+			Czy na pewno chcesz usunąć <em><strong>{{node.structurable.name}}</strong></em> wraz z potomkami?
 		</p>
 		<button
 			class="button is-danger"
@@ -12,14 +12,14 @@
 			@click="onDelete"
 		>
 			<span class="icon is-small"><i class="fa fa-trash" aria-hidden="true"></i></span>
-			<span>Usuń pojęcie</span>
+			<span>Usuń</span>
 		</button>
 	</div>
 	<div v-else class="notification is-info">
 		<span class="icon">
 			<i class="fa fa-info-circle"></i>
 		</span>
-		Najpierw wybierz pojęcie
+		Najpierw wybierz gałąź struktury
 	</div>
 </template>
 
@@ -28,33 +28,29 @@ import {mapActions, mapGetters, mapState} from 'vuex';
 
 export default {
 	computed: {
-		...mapGetters('taxonomyTerms', {termById: 'nodeById'}),
-		...mapState('taxonomyTerms', {
-			isSaving: 'isSaving',
-			selectedTerms: 'selectedNodes'
-		}),
-		term() {
-			if (this.selectedTerms.length === 0) {
+		...mapGetters('courseStructure', ['nodeById']),
+		...mapState('courseStructure', ['isSaving', 'selectedNodes']),
+		node() {
+			if (this.selectedNodes.length === 0) {
 				return null;
 			}
 
-			// TODO figure out multiple terms selected
-			return this.termById(this.selectedTerms[0]);
+			return this.nodeById(this.selectedNodes[0]);
 		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', {
-			'deleteTerm': 'delete',
-			'selectTerms': 'select'
+		...mapActions('courseStructure', {
+			'deleteNode': 'delete',
+			'selectNodes': 'select'
 		}),
 		async onDelete() {
 			try {
-				await this.deleteTerm(this.term);
-				this.selectTerms([]);
+				await this.deleteNode(this.node);
+				this.selectNodes([]);
 
 				this.addAutoDismissableAlert({
-					text: 'Usunięto pojęcie!',
+					text: 'Usunięto pomyślnie!',
 					type: 'success'
 				});
 			} catch (error) {

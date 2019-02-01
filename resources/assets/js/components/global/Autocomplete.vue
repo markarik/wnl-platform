@@ -11,10 +11,10 @@
 		>
 			<li
 				class="autocomplete-box__item"
-				v-for="item in items"
+				v-for="(item, index) in items"
 				@click="onItemChosen(item)"
 				v-bind:class="{ active: item.active }"
-				v-bind:key="item.id"
+				v-bind:key="index"
 			>
 				<slot v-bind:item="item"></slot>
 			</li>

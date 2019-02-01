@@ -1,12 +1,8 @@
 <template>
-	<div class="terms-editor-right">
+	<div class="nodes-editor-right">
 		<nav class="tabs is-uppercase small">
 			<ul>
-				<li
-					v-for="mode in modes"
-					:key="mode.key"
-					:class="{'is-active': mode.key === editorMode}"
-				>
+				<li v-for="mode in modes" :class="{'is-active': mode.key === editorMode}" :key="mode.key">
 					<a @click="setEditorMode(mode.key)">
 						<span class="icon is-small"><i :class="['fa', mode.icon]" aria-hidden="true"></i></span>
 						<span>{{mode.label}}</span>
@@ -15,14 +11,14 @@
 			</ul>
 		</nav>
 
-		<component :is="activeMode.componentName" :taxonomyId="taxonomyId" />
+		<component :is="activeMode.componentName" :courseId="courseId" />
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.terms-editor-right
+	.nodes-editor-right
 		padding-top: $margin-big
 		position: sticky
 		top: -30px
@@ -31,14 +27,14 @@
 <script>
 import {mapActions, mapState} from 'vuex';
 
-import WnlTaxonomyTermEditorAdd from 'js/admin/components/taxonomies/TaxonomyTermEditorAdd';
-import WnlTaxonomyTermEditorDelete from 'js/admin/components/taxonomies/TaxonomyTermEditorDelete';
-import WnlTaxonomyTermEditorEdit from 'js/admin/components/taxonomies/TaxonomyTermEditorEdit';
+import WnlStructureNodeEditorAdd from 'js/admin/components/structure/StructureNodeEditorAdd';
+import WnlStructureNodeEditorDelete from 'js/admin/components/structure/StructureNodeEditorDelete';
+import WnlStructureNodeEditorEdit from 'js/admin/components/structure/StructureNodeEditorEdit';
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 
 export default {
 	props: {
-		taxonomyId: {
+		courseId: {
 			type: [String, Number],
 			required: true,
 		}
@@ -50,40 +46,32 @@ export default {
 					icon: 'fa-plus',
 					key: NESTED_SET_EDITOR_MODES.ADD,
 					label: 'Dodaj',
-					componentName: WnlTaxonomyTermEditorAdd
+					componentName: WnlStructureNodeEditorAdd
 				},
 				{
 					icon: 'fa-pencil',
 					key: NESTED_SET_EDITOR_MODES.EDIT,
 					label: 'Edytuj',
-					componentName: WnlTaxonomyTermEditorEdit
+					componentName: WnlStructureNodeEditorEdit
 				},
-				// {
-				// 	icon: 'fa-compress',
-				// 	key: NESTED_SET_EDITOR_MODES.MERGE,
-				// 	label: 'Połącz'
-				// },
 				{
 					icon: 'fa-trash',
 					key: NESTED_SET_EDITOR_MODES.DELETE,
 					label: 'Usuń',
-					componentName: WnlTaxonomyTermEditorDelete
+					componentName: WnlStructureNodeEditorDelete
 				}
 			],
 		};
 	},
 	computed: {
-		...mapState('taxonomyTerms', {
-			editorMode: 'editorMode',
-			selectedTerms: 'selectedNodes',
-		}),
+		...mapState('courseStructure', ['editorMode', 'selectedNodes']),
 		activeMode() {
 			return this.modes.find(mode => mode.key === this.editorMode);
 		}
 	},
 	methods: {
-		...mapActions('taxonomyTerms', {
-			selectTerms: 'select',
+		...mapActions('courseStructure', {
+			selectNodes: 'select',
 			setEditorMode: 'setEditorMode',
 		}),
 	},

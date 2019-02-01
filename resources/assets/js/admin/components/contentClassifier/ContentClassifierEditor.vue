@@ -177,7 +177,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy']),
+		...mapActions('taxonomyTerms', ['setUpNestedSet']),
 		...mapActions('taxonomies', {
 			fetchTaxonomies: 'fetchAll',
 		}),
@@ -239,7 +239,7 @@ export default {
 		},
 		async onTaxonomyChange(taxonomyId) {
 			try {
-				await this.fetchTermsByTaxonomy(taxonomyId);
+				await this.setUpNestedSet(taxonomyId);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

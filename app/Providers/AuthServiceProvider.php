@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Annotation;
 use App\Models\ChatRoom;
 use App\Models\Comment;
+use App\Models\CourseStructureNode;
 use App\Models\Invoice;
 use App\Models\Notification;
 use App\Models\Order;
@@ -27,6 +28,7 @@ use App\Policies\AnnotationPolicy;
 use App\Policies\CommentPolicy;
 use App\Policies\Course\QuizQuestionPolicy;
 use App\Policies\Course\ScreensPolicy;
+use App\Policies\Course\CourseStructureNodePolicy;
 use App\Policies\NotificationPolicy;
 use App\Policies\InvoicePolicy;
 use App\Policies\OrderPolicy;
@@ -52,25 +54,26 @@ class AuthServiceProvider extends ServiceProvider
 	 * @var array
 	 */
 	protected $policies = [
-		User::class               => UserPolicy::class,
-		UserProfile::class        => UserProfilePolicy::class,
-		UserAddress::class        => UserAddressPolicy::class,
-		UserBillingData::class    => UserBillingPolicy::class,
-		UserSettings::class       => UserSettingsPolicy::class,
-		QnaAnswer::class          => QnaAnswerPolicy::class,
-		QnaQuestion::class        => QnaQuestionPolicy::class,
-		Comment::class            => CommentPolicy::class,
-		Screen::class             => ScreensPolicy::class,
-		QuizQuestion::class       => QuizQuestionPolicy::class,
-		ChatRoom::class           => ChatRoomPolicy::class,
-		Notification::class       => NotificationPolicy::class,
-		Task::class               => TaskPolicy::class,
-		UserCourseProgress::class => UserCourseProgressPolicy::class,
-		Order::class              => OrderPolicy::class,
-		Invoice::class            => InvoicePolicy::class,
-		Annotation::class         => AnnotationPolicy::class,
-		Taxonomy::class           => TaxonomyPolicy::class,
-		TaxonomyTerm::class       => TaxonomyTermPolicy::class,
+		User::class                   => UserPolicy::class,
+		UserProfile::class            => UserProfilePolicy::class,
+		UserAddress::class            => UserAddressPolicy::class,
+		UserBillingData::class        => UserBillingPolicy::class,
+		UserSettings::class           => UserSettingsPolicy::class,
+		QnaAnswer::class              => QnaAnswerPolicy::class,
+		QnaQuestion::class            => QnaQuestionPolicy::class,
+		Comment::class                => CommentPolicy::class,
+		Screen::class                 => ScreensPolicy::class,
+		QuizQuestion::class           => QuizQuestionPolicy::class,
+		ChatRoom::class               => ChatRoomPolicy::class,
+		Notification::class           => NotificationPolicy::class,
+		Task::class                   => TaskPolicy::class,
+		UserCourseProgress::class     => UserCourseProgressPolicy::class,
+		Order::class                  => OrderPolicy::class,
+		Invoice::class                => InvoicePolicy::class,
+		Annotation::class             => AnnotationPolicy::class,
+		Taxonomy::class               => TaxonomyPolicy::class,
+		TaxonomyTerm::class           => TaxonomyTermPolicy::class,
+		CourseStructureNode::class    => CourseStructureNodePolicy::class,
 		UserQuestionsBankState::class => UserQuestionsBankStatePolicy::class
 	];
 

@@ -31,7 +31,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.icon
-		color: $color-gray-dimmed
+		color: $color-gray
 		cursor: pointer
 
 	.media

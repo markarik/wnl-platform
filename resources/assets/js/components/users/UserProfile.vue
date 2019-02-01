@@ -161,7 +161,7 @@
 						margin-bottom: $margin-small
 				.user-info-city
 					align-items: center
-					color: $color-gray-dimmed
+					color: $color-gray
 					display: flex
 					margin-bottom: $margin-base
 					overflow-wrap: break-word
@@ -209,7 +209,7 @@
 					color: $color-dark-blue-opacity
 					margin-right: $margin-base
 			.activity-title
-				color: $color-gray-dimmed
+				color: $color-gray
 				letter-spacing: 1px
 				text-align: center
 				text-transform: uppercase

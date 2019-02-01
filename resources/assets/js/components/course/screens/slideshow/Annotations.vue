@@ -44,7 +44,7 @@
 			margin: 0 $margin-small
 
 	.loading-comments
-		color: $color-gray-dimmed
+		color: $color-gray
 		margin: $margin-base 0
 
 	.metadata

@@ -30,8 +30,11 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
-		...mapState('taxonomyTerms', ['selectedTerms']),
+		...mapGetters('taxonomyTerms', {
+			termById: 'nodeById',
+			getAncestorsById: 'getAncestorsById',
+		}),
+		...mapState('taxonomyTerms', {selectedTerms: 'selectedNodes'}),
 		term() {
 			if (this.selectedTerms.length === 0) {
 				return null;

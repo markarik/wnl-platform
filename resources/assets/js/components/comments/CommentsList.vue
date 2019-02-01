@@ -52,7 +52,7 @@
 		justify-content: space-between
 
 	.comments-controls
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		margin-bottom: $margin-base
 		margin-top: $margin-base

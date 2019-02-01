@@ -66,7 +66,7 @@
 		margin: $margin-base 0 0 $margin-base
 
 	.chat-title
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-2
 		text-transform: uppercase
 

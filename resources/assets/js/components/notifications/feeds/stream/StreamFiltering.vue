@@ -52,7 +52,7 @@
 			padding-right: $margin-tiny
 
 		.icon
-			color: $color-gray-dimmed
+			color: $color-gray
 
 	.is-active
 		font-weight: $font-weight-regular

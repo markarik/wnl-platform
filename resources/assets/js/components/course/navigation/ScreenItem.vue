@@ -1,12 +1,16 @@
 <template>
-	<wnl-lesson-navigation-item :navigationItem="screenItem">
+	<wnl-lesson-navigation-item
+		:to="to"
+		:is-completed="isCompleted"
+		:meta="meta"
+	>
+		<span slot="title">{{item.name}}</span>
 		<wnl-section-item v-for="section in screenSections" :key="section.id" :item="section" slot="children"/>
 	</wnl-lesson-navigation-item>
 </template>
 
 <script>
 import {mapGetters} from 'vuex';
-import navigation from 'js/services/navigation';
 import {STATUS_COMPLETE} from 'js/services/progressStore';
 import WnlSectionItem from 'js/components/course/navigation/SectionItem';
 import WnlLessonNavigationItem from 'js/components/course/navigation/LessonNavigationItem';
@@ -37,23 +41,26 @@ export default {
 		screenId() {
 			return this.item.id;
 		},
-		screenItem() {
-			const screen = this.item;
+		to() {
 			const params = {
 				courseId: this.courseId,
 				lessonId: this.lessonId,
 				screenId: this.screenId,
-			};
-			const screenProgress = this.getScreenProgress(this.courseId, this.lessonId, this.screenId) || {};
-			const itemProps = {
-				text: screen.name,
-				itemClass: 'todo',
-				routeName: 'screens',
-				routeParams: params,
-				completed: screenProgress.status === STATUS_COMPLETE
+				slide: this.item.slide,
 			};
 
-			return navigation.composeItem({...itemProps, ...screen.slides_count && {meta: `(${screen.slides_count})`}});
+			return {
+				name: 'screens',
+				params
+			};
+		},
+		isCompleted() {
+			const screenProgress = this.getScreenProgress(this.courseId, this.lessonId, this.screenId) || {};
+
+			return screenProgress.status === STATUS_COMPLETE;
+		},
+		meta() {
+			return this.item.slides_count && `(${this.item.slides_count})`;
 		},
 		screenSections() {
 			return this.getSectionsForScreen(this.screenId);

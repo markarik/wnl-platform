@@ -1,5 +1,12 @@
 <template>
-	<wnl-lesson-navigation-item :navigationItem="sectionItem" class="margin left">
+	<wnl-lesson-navigation-item
+		:to="to"
+		:is-completed="isCompleted"
+		:is-active="isActive"
+		:meta="meta"
+		class="margin left small"
+	>
+		<span slot="title">{{item.name}}</span>
 		<wnl-subsection-item
 			v-for="subsection in sectionSubsections"
 			:key="subsection.id"
@@ -11,7 +18,7 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import navigation from 'js/services/navigation';
+import {STATUS_COMPLETE} from 'js/services/progressStore';
 import WnlSubsectionItem from 'js/components/course/navigation/SubsectionItem';
 import WnlLessonNavigationItem from 'js/components/course/navigation/LessonNavigationItem';
 
@@ -42,27 +49,29 @@ export default {
 		screenId() {
 			return this.item.screens;
 		},
-		sectionItem() {
-			const section = this.item;
+		to() {
 			const params = {
 				courseId: this.courseId,
 				lessonId: this.lessonId,
 				screenId: this.screenId,
-				slide: section.slide,
+				slide: this.item.slide,
 			};
-			const isSectionActive = this.lessonState.activeSection === section.id;
-			return navigation.composeItem({
-				text: section.name,
-				itemClass: 'small subitem todo',
-				routeName: 'screens',
-				routeParams: params,
-				method: 'replace',
-				iconClass: 'fa-angle-right',
-				iconTitle: section.name,
-				completed: this.getSectionProgress(this.courseId, this.lessonId, this.screenId, section.id),
-				active: isSectionActive,
-				meta: `(${section.slidesCount})`
-			});
+
+			return {
+				name: 'screens',
+				params
+			};
+		},
+		isCompleted() {
+			const sectionProgress = this.getSectionProgress(this.courseId, this.lessonId, this.screenId, this.item.id);
+			return sectionProgress && sectionProgress.status === STATUS_COMPLETE;
+		},
+		isActive() {
+			console.log(this.lessonState.activeSection);
+			return this.lessonState.activeSection === this.item.id;
+		},
+		meta() {
+			return `(${this.item.slidesCount})`;
 		},
 		sectionSubsections() {
 			return this.getSubsectionsForSection(this.item.id);

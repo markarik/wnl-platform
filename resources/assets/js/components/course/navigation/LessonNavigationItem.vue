@@ -1,13 +1,13 @@
 <template>
-	<div class="item" :class="[itemClass, { disabled: navigationItem.isDisabled }]">
+	<div class="item todo">
 		<router-link
 				class="item-wrapper"
-				:class="{'router-link-exact-active': navigationItem.active, 'is-disabled': navigationItem.isDisabled, 'is-completed': navigationItem.completed}"
+				:class="{'is-active': isActive, 'is-completed': isCompleted}"
 				:to="to"
 		>
 			<span class="sidenav-item-content">
-				{{navigationItem.text}}
-				<span class="sidenav-item-meta" v-if="hasMeta">{{navigationItem.meta}}</span>
+				<slot name="title"></slot>
+				<span class="sidenav-item-meta" v-if="meta">{{meta}}</span>
 			</span>
 		</router-link>
 		<slot name="children">
@@ -39,13 +39,10 @@
 	a
 		transition: background-color $transition-length-base
 
-		&.router-link-exact-active
+		&.is-active
 			background: $color-background-lighter-gray
 			font-weight: $font-weight-regular
 			transition: background-color $transition-length-base
-
-		&.is-active
-			font-weight: $font-weight-regular
 
 	.todo
 		a:before
@@ -58,26 +55,25 @@
 </style>
 
 <script>
-import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
-
 export default {
 	name: 'LessonNavigationItem',
 	props: {
-		navigationItem: {
-			type: Object,
+		to: {
+			type: [Object, String],
 			required: true
 		},
-	},
-	computed: {
-		itemClass() {
-			return this.navigationItem.itemClass;
+		isActive: {
+			type: Boolean,
+			default: false
 		},
-		to() {
-			return this.navigationItem.to;
+		isCompleted: {
+			type: Boolean,
+			default: false
 		},
-		hasMeta() {
-			return this.navigationItem.meta && this.navigationItem.meta.length > 0;
-		},
+		meta: {
+			type: String,
+			default: ''
+		}
 	},
 };
 </script>

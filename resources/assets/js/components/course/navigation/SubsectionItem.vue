@@ -1,10 +1,17 @@
 <template>
-	<wnl-lesson-navigation-item :navigationItem="subsectionItem" class="margin left"></wnl-lesson-navigation-item>
+	<wnl-lesson-navigation-item
+		:to="to"
+		:is-completed="isCompleted"
+		:is-active="isActive"
+		:meta="meta"
+		class="margin left small"
+	>
+		<span slot="title">{{item.name}}</span>
+	</wnl-lesson-navigation-item>
 </template>
 
 <script>
 import {mapGetters} from 'vuex';
-import navigation from 'js/services/navigation';
 import {STATUS_COMPLETE} from 'js/services/progressStore';
 import WnlLessonNavigationItem from 'js/components/course/navigation/LessonNavigationItem';
 
@@ -34,33 +41,34 @@ export default {
 		screenId() {
 			return this.item.screens;
 		},
-		subsectionItem() {
-			const subsection = this.item;
+		to() {
 			const params = {
 				courseId: this.courseId,
 				lessonId: this.lessonId,
 				screenId: this.screenId,
-				slide: subsection.slide,
+				slide: this.item.slide,
 			};
-			const isSubsectionActive = this.lessonState.activeSubsection === subsection.id;
+
+			return {
+				name: 'screens',
+				params
+			};
+		},
+		isCompleted() {
 			const sectionProgress = this.getSectionProgress(
 				this.courseId, this.lessonId, this.screenId, this.sectionId
 			);
 			const subsectionsProgress = sectionProgress && sectionProgress.subsections;
-			const subsectionProgress = subsectionsProgress && subsectionsProgress[subsection.id];
-			return navigation.composeItem({
-				text: subsection.name,
-				itemClass: 'small subitem todo',
-				routeName: 'screens',
-				routeParams: params,
-				method: 'replace',
-				iconClass: 'fa-angle-right',
-				iconTitle: subsection.name,
-				completed: subsectionProgress && subsectionProgress.status === STATUS_COMPLETE,
-				active: isSubsectionActive,
-				meta: `(${subsection.slidesCount})`
-			});
+			const subsectionProgress = subsectionsProgress && subsectionsProgress[this.item.id];
+
+			return subsectionProgress && subsectionProgress.status === STATUS_COMPLETE;
 		},
+		isActive() {
+			return this.lessonState.activeSubsection === this.item.id;
+		},
+		meta() {
+			return `(${this.item.slidesCount})`;
+		}
 	},
 };
 </script>

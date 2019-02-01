@@ -1,34 +1,37 @@
 <template>
-	<li :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']" :id="`node-${term.id}`">
-		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
-			<span class="icon-small taxonomy-term-item__action taxonomy-term-item__action--drag">
+	<li :class="['structure-node-item', isSaving && 'structure-node-item is-disabled']" :id="`node-${node.id}`">
+		<div :class="['media', 'structure-node-item__content', {'is-selected': isSelected}]">
+			<span class="icon-small structure-node-item__icon structure-node-item__action__drag">
 				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
 			</span>
+			<span class="icon-small structure-node-item__icon">
+				<i :class="['fa', getStructurableIcon(node.structurable)]"></i>
+			</span>
 			<div class="media-content v-central">
-				<span>{{term.tag.name}}</span>
+				<span>{{node.structurable.name}}</span>
 			</div>
 			<div class="media-right central">
 				<span
-					class="icon-small taxonomy-term-item__action"
+					class="icon-small structure-node-item__action"
 					@click="toggle"
-					v-if="childTerms.length"
+					v-if="childNodes.length"
 				>
 					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]"></i>
 				</span>
 				<span
-					class="icon-small taxonomy-term-item__action"
+					class="icon-small structure-node-item__action"
 					@click="onAdd"
 				>
 					<i title="Dodaj" class="fa fa-plus"></i>
 				</span>
 				<span
-					class="icon-small taxonomy-term-item__action"
+					class="icon-small structure-node-item__action"
 					@click="onEdit"
 				>
 					<i title="Edytuj" class="fa fa-pencil"></i>
 				</span>
 				<span
-					class="icon-small taxonomy-term-item__action"
+					class="icon-small structure-node-item__action"
 					@click="onDelete"
 				>
 					<i title="Usuń" class="fa fa-trash"></i>
@@ -36,10 +39,10 @@
 			</div>
 		</div>
 		<transition name="fade">
-			<wnl-taxonomy-terms-list
+			<wnl-structure-nodes-list
 				v-if="isExpanded"
-				class="taxonomy-term-item__list"
-				:terms="childTerms"
+				class="structure-node-item__list"
+				:nodes="childNodes"
 			/>
 		</transition>
 	</li>
@@ -48,10 +51,10 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.taxonomy-term-item
-		&--disabled
+	.structure-node-item
+		.is-disabled
 			pointer-events: none
-			color: $color-gray
+			color: $color-darkest-gray
 
 		&__content
 			align-items: center
@@ -63,13 +66,16 @@
 
 		&__action
 			cursor: pointer
+
+		&__action, &__icon
 			margin: 0 $margin-tiny
 			padding: $margin-small-minus
 
-			&--drag
+			&__drag
 				cursor: move
+				color: $color-inactive-gray
 
-			&--disabled
+			.is-disabled
 				color: $color-inactive-gray
 				cursor: not-allowed
 
@@ -94,61 +100,57 @@ import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 
 export default {
 	props: {
-		term: {
+		node: {
 			type: Object,
 			required: true,
 		},
 	},
 	computed: {
-		...mapState('taxonomyTerms', {
-			expandedTerms: 'expandedNodes',
-			selectedTerms: 'selectedNodes',
-			isSaving: 'isSaving',
-		}),
-		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
+		...mapState('courseStructure', ['expandedNodes', 'selectedNodes', 'isSaving']),
+		...mapGetters('courseStructure', ['getChildrenByParentId', 'getStructurableIcon']),
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},
-		childTerms() {
-			return this.getChildrenByParentId(this.term.id);
+		childNodes() {
+			return this.getChildrenByParentId(this.node.id);
 		},
 		isSelected() {
-			return this.selectedTerms.includes(this.term.id);
+			return this.selectedNodes.includes(this.node.id);
 		},
 		isExpanded() {
-			return this.expandedTerms.includes(this.term.id)  && this.childTerms.length;
+			return this.expandedNodes.includes(this.node.id)  && this.childNodes.length;
 		},
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['setEditorMode']),
-		...mapActions('taxonomyTerms', {
-			'collapseTerm': 'collapse',
-			'expandTerm': 'expand',
-			'selectTerms': 'select',
+		...mapActions('courseStructure', ['setEditorMode']),
+		...mapActions('courseStructure', {
+			'collapseNode': 'collapse',
+			'expandNode': 'expand',
+			'selectNodes': 'select',
 		}),
 		onAdd() {
 			this.setEditorMode(NESTED_SET_EDITOR_MODES.ADD);
-			this.selectTerms([this.term.id]);
+			this.selectNodes([this.node.id]);
 		},
 		onDelete() {
 			this.setEditorMode(NESTED_SET_EDITOR_MODES.DELETE);
-			this.selectTerms([this.term.id]);
+			this.selectNodes([this.node.id]);
 		},
 		onEdit() {
 			this.setEditorMode(NESTED_SET_EDITOR_MODES.EDIT);
-			this.selectTerms([this.term.id]);
+			this.selectNodes([this.node.id]);
 		},
 		toggle() {
 			if (this.isExpanded) {
-				this.collapseTerm(this.term.id);
+				this.collapseNode(this.node.id);
 			} else {
-				this.expandTerm(this.term.id);
+				this.expandNode(this.node.id);
 			}
 		},
 	},
 	beforeCreate: function () {
 		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
-		this.$options.components.WnlTaxonomyTermsList = require('./TaxonomyTermsList.vue').default;
+		this.$options.components.WnlStructureNodesList = require('./StructureNodesList.vue').default;
 	}
 };
 </script>

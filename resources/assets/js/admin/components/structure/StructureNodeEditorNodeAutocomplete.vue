@@ -2,23 +2,29 @@
 	<div>
 		<div v-if="selected" class="autocomplete-selected">
 			<span>
-				<span v-if="ancestors.length">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
-				{{selected.tag.name}}
+				<span v-if="ancestors.length">{{ancestors.map(ancestor => ancestor.structurable.name).join(' > ')}} ></span>
+				{{selected.structurable.name}}
 			</span>
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
 		<div class="control" v-else>
 			<input class="input" v-model="search" :placeholder="placeholder" />
 			<wnl-autocomplete
-				:items="autocompleteTerms"
+				:items="autocompletenodes"
 				:onItemChosen="onSelect"
 				:isDown="true"
 			>
 				<template slot-scope="slotProps">
-					<wnl-taxonomy-term-with-ancestors
-						:term="slotProps.item"
-						:ancestors="getAncestorsById(slotProps.item.id)"
-					/>
+					<div>
+						<div class="autocomplete-parent-node">{{getAncestorsById(slotProps.item.id).map(ancestor => ancestor.structurable.name).join(' > ')}}</div>
+
+						<div>
+							<span class="icon is-small">
+								<i :class="['fa', getStructurableIcon(slotProps.item.structurable)]" aria-hidden="true"></i>
+							</span>
+							{{slotProps.item.structurable.name}}
+						</div>
+					</div>
 				</template>
 			</wnl-autocomplete>
 		</div>
@@ -33,8 +39,12 @@
 		justify-content: space-between
 		padding: $margin-small-minus
 
-	.autocomplete-parent-term
+	.autocomplete-parent-node
 		color: $color-inactive-gray
+
+	.icon
+		margin: 0 $margin-tiny
+		padding: $margin-small-minus
 
 </style>
 
@@ -43,7 +53,6 @@ import {mapState, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
-import WnlTaxonomyTermWithAncestors from 'js/admin/components/taxonomies/TaxonomyTermWithAncestors';
 
 export default {
 	props: {
@@ -53,7 +62,7 @@ export default {
 		},
 		placeholder: {
 			type: String,
-			default: 'Wpisz nazwę nadrzędnego pojęcia'
+			default: 'Wpisz nazwę nadrzędnej lekcji/grupy'
 		}
 	},
 	data() {
@@ -62,22 +71,21 @@ export default {
 		};
 	},
 	components: {
-		WnlAutocomplete,
-		WnlTaxonomyTermWithAncestors
+		WnlAutocomplete
 	},
 	computed: {
-		...mapState('taxonomyTerms', {terms: 'nodes'}),
-		...mapGetters('taxonomyTerms', ['getAncestorsById']),
-		autocompleteTerms() {
+		...mapState('courseStructure', ['nodes']),
+		...mapGetters('courseStructure', ['getAncestorsById', 'getStructurableIcon']),
+		autocompletenodes() {
 			if (!this.search) {
 				return [];
 			}
 			const lowerSearch = this.search.toLocaleLowerCase();
 
-			const terms = this.terms.filter(term => term.tag.name.toLocaleLowerCase().startsWith(lowerSearch));
-			terms.push(...this.terms.filter(term => term.tag.name.toLocaleLowerCase().includes(lowerSearch)));
+			const nodes = this.nodes.filter(node => node.structurable.name.toLocaleLowerCase().startsWith(lowerSearch));
+			nodes.push(...this.nodes.filter(node => node.structurable.name.toLocaleLowerCase().includes(lowerSearch)));
 
-			return uniqBy(terms, 'id').slice(0, 25);
+			return uniqBy(nodes, 'id').slice(0, 25);
 		},
 		ancestors() {
 			return this.getAncestorsById(this.selected.id);

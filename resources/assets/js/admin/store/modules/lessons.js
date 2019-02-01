@@ -2,7 +2,6 @@ import _ from 'lodash';
 import axios from 'axios';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
-import { resource } from 'js/utils/config';
 import * as types from 'js/admin/store/mutations-types';
 
 // Helper functions
@@ -34,6 +33,9 @@ const mutations = {
 	},
 	[types.SETUP_LESSONS] (state, payload) {
 		set(state, 'lessons', payload);
+	},
+	[types.ADD_LESSON] (state, lesson) {
+		state.lessons.push(lesson);
 	}
 };
 
@@ -57,6 +59,14 @@ const actions = {
 			$wnl.logger.error(reason);
 		});
 	},
+	async create({commit}, name) {
+		const {data: lesson} = await axios.post(getApiUrl('lessons'), {
+			name
+		});
+		commit(types.ADD_LESSON, lesson);
+
+		return lesson;
+	}
 };
 
 export default {

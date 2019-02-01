@@ -98,6 +98,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['taxonomy-terms']}/{id}/attach", 'TaxonomyTermsApiController@attach');
 		Route::post("{$r['taxonomy-terms']}/{id}/detach", 'TaxonomyTermsApiController@detach');
 
+		// Course structure
+		Route::post("{$r['course-structure-nodes']}", 'CourseStructureNodesApiController@post');
+		Route::put("{$r['course-structure-nodes']}/move", 'CourseStructureNodesApiController@move');
+		Route::put("{$r['course-structure-nodes']}/{id}", 'CourseStructureNodesApiController@put');
+		Route::delete("{$r['course-structure-nodes']}/{id}", 'CourseStructureNodesApiController@delete');
+
 		// Slides
 		Route::post("{$r['slides']}/.filter", 'SlidesApiController@filter');
 	});

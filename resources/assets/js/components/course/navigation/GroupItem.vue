@@ -11,7 +11,7 @@
 				</span>
 			</div>
 		</div>
-		<div class="sidenav-children" v-if="canRenderChildren">
+		<div v-if="canRenderChildren">
 			<wnl-lesson-item
 				v-for="(subitem) in children"
 				:item="subitem"

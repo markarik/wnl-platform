@@ -9,7 +9,7 @@
 				<wnl-sidenav :items="getNavigation()" :options="navigationOptions"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
-		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isTouchScreen}" v-if="!isLoading">
+		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isTouchScreen}" v-if="!isLoading">
 			<div class="scrollable-main-container" v-if="rootCategoryName && categoryName">
 				<div class="collections-header">
 					<div class="collections-breadcrumbs">

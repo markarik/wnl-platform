@@ -79,7 +79,7 @@ module.exports = {
 			'off'
 		],
 		'vue/html-quotes': [
-			'off'
+			'error'
 		],
 		'vue/v-bind-style': [
 			'off'

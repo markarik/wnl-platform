@@ -78,9 +78,6 @@ module.exports = {
 		'vue/name-property-casing': [
 			'off'
 		],
-		'vue/html-end-tags': [
-			'off'
-		],
 	},
 	globals: {
 		$: true,

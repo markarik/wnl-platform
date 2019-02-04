@@ -22,7 +22,7 @@ class ReorderSections extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Order screen sections.';
+	protected $description = 'Update order of sections attached to a screen. As a side effect it updates order of slides in slideshow';
 
 	/**
 	 * Execute the console command.

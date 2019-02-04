@@ -76,9 +76,6 @@ module.exports = {
 		'vue/no-template-shadow': [
 			'off'
 		],
-		'vue/name-property-casing': [
-			'off'
-		],
 	},
 	globals: {
 		$: true,

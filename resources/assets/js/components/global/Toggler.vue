@@ -74,7 +74,7 @@
 
 <script>
 export default {
-	name: 'wnl-toggler',
+	name: 'WnlToggler',
 	props: [
 		'disabled',
 		'type',

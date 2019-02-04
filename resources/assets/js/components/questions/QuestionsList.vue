@@ -614,7 +614,6 @@ export default {
 		},
 		async restoreExamState() {
 			const storedState = this.readPersistedState();
-			console.log(storedState, '....stored state');
 			if (!storedState.results) return;
 
 			const results = storedState.results;

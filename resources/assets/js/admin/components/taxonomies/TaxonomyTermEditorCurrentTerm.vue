@@ -13,7 +13,7 @@
 
 	.current-term
 		align-items: center
-		border-bottom: 1px solid $color-light-gray
+		border-bottom: $border-light-gray
 		display: flex
 		padding-bottom: $margin-base
 		text-align: left

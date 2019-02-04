@@ -78,9 +78,6 @@ module.exports = {
 		'vue/name-property-casing': [
 			'off'
 		],
-		'vue/html-quotes': [
-			'error'
-		],
 		'vue/v-bind-style': [
 			'off'
 		],

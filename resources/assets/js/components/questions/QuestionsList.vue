@@ -132,6 +132,7 @@ import features from 'js/consts/events_map/features.json';
 import context from 'js/consts/events_map/context.json';
 import feature_components from 'js/consts/events_map/feature_components.json';
 import {timeBaseOnQuestions} from 'js/services/testBuilder';
+import examStateStore from 'js/services/examStateStore';
 
 export default {
 	name: 'QuestionsList',
@@ -244,7 +245,7 @@ export default {
 
 			return filters;
 		},
-		localStorageKey() {
+		examStateStoreKey() {
 			return `wnl-exam-state-${this.currentUserId}`;
 		}
 	},
@@ -321,20 +322,21 @@ export default {
 
 			return new Promise((resolve, reject) => {
 				this.$swal(config)
-					.then(() => resolve(), (dismiss) => {
+					.then((dismiss) => {
 						if (dismiss === 'cancel') {
+							examStateStore.remove(this.examStateStoreKey);
 							return reject();
 						}
-					})
+					}, () => resolve())
 					.catch(() => {
-						localStorage.removeItem(this.localStorageKey);
+						examStateStore.remove(this.examStateStoreKey);
 						return reject();
 					});
 			});
 		},
 		endQuiz() {
 			this.testMode = this.testProcessing = false;
-			localStorage.removeItem(this.localStorageKey);
+			examStateStore.remove(this.examStateStoreKey);
 			this.testResults = {};
 			this.trackFinshTest();
 			this.resetTest();
@@ -394,17 +396,15 @@ export default {
 				this.onVerify(payload.id) || (payload.position && this.savePosition({position: payload.position}));
 			} else {
 				this.selectAnswer(payload);
-				this.testMode && useLocalStorage && this.persistStateInLocalStorage();
+				useLocalStorage && this.persistStateInExamStateStorage();
 			}
 		},
-		persistStateInLocalStorage() {
-			this.testMode && localStorage.setItem(this.localStorageKey, JSON.stringify({
-				results: this.testQuestions.map(question => {
-					return {
-						question_id: question.id,
-						answer_id: question.answers[question.selectedAnswer] && question.answers[question.selectedAnswer].id
-					};
-				})
+		persistStateInExamStateStorage() {
+			this.testMode && examStateStore.set(this.examStateStoreKey, JSON.stringify({
+				results: this.testQuestions.map(question => ({
+					question_id: question.id,
+					answer_id: question.answers[question.selectedAnswer] && question.answers[question.selectedAnswer].id
+				}))
 			}));
 		},
 		onVerify(questionId) {
@@ -595,8 +595,18 @@ export default {
 			});
 		},
 		async restoreExamState(persistedState) {
-			const questions = JSON.parse(persistedState).results;
-			const questionsIds = questions.map(response => response.question_id);
+			let storedState = {};
+
+			try {
+				storedState = JSON.parse(persistedState);
+			} catch (e) {
+				$wnl.logger.warning(e);
+			}
+
+			if (!storedState.results) return;
+
+			const results = storedState.results;
+			const questionsIds = results.map(response => response.question_id);
 			try {
 				await this.$swal(swalConfig({
 					title: 'Wznów Egzamin',
@@ -612,9 +622,9 @@ export default {
 					activeView: VIEWS.TEST_YOURSELF,
 					canChangeTime: false,
 					loadingText: 'mockExam',
-					sizesToChoose: [questions.length],
-					testQuestionsCount: questions.length,
-					time: timeBaseOnQuestions(questions.length),
+					sizesToChoose: [results.length],
+					testQuestionsCount: results.length,
+					time: timeBaseOnQuestions(results.length),
 					examMode: true,
 					examQuestions: questionsIds
 				};
@@ -623,14 +633,16 @@ export default {
 				this.testMode = true;
 				await this.fetchQuestionsByIds(questionsIds);
 
-				questions.forEach(response => {
-					const question = this.getQuestion(response.question_id);
-					const answerIndex = question.answers.findIndex(answer => answer.id === response.answer_id);
-					if (answerIndex === -1) return;
-					this.onSelectAnswer({id: response.question_id, answer: answerIndex}, false);
-				});
+				results
+					.filter(response => response.answer_id)
+					.forEach(response => {
+						const question = this.getQuestion(response.question_id);
+						const answerIndex = question.answers.findIndex(answer => answer.id === response.answer_id);
+						if (answerIndex === -1) return;
+						this.onSelectAnswer({id: response.question_id, answer: answerIndex}, false);
+					});
 			} catch (e) {
-				localStorage.removeItem(`wnl-exam-state-${this.currentUserId}`);
+				examStateStore.remove(`wnl-exam-state-${this.currentUserId}`);
 			} finally {
 				this.switchOverlay(false, 'testBuilding');
 			}
@@ -639,7 +651,7 @@ export default {
 	async mounted() {
 		try {
 			await this.setupQuestions();
-			const stateInLocalStorage = localStorage.getItem(this.localStorageKey);
+			const stateInLocalStorage = examStateStore.get(this.examStateStoreKey);
 			if (stateInLocalStorage) {
 				await this.restoreExamState(stateInLocalStorage);
 			}

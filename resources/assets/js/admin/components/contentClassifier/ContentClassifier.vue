@@ -33,7 +33,7 @@
 			</div>
 			<wnl-content-classifier-editor
 				v-show="!isLoading"
-				:filteredContent="filteredContent"
+				:items="filteredContent"
 				@onTaxonomyTermAttached="onTaxonomyTermAttached"
 				@onTaxonomyTermDetached="onTaxonomyTermDetached"
 			/>

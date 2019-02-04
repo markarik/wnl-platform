@@ -8,7 +8,9 @@
 				</div>
 				<span class="content-item-classifier__collapse-icon icon is-small clickable" @click="expanded=false"><i class="fa fa-chevron-up"></i></span>
 			</div>
-			<wnl-content-item-classifier-editor :filtered-content="[contentItem]" />
+			<wnl-content-classifier-editor
+				:items="[contentItem]"
+			/>
 		</div>
 		<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
 			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
@@ -51,7 +53,7 @@
 import {mapGetters} from 'vuex';
 
 // TODO don't include admin components
-import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
+import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
 
 const CONTENT_TYPE_NAMES = {
 	flashcards: 'Pytanie otwarte',
@@ -62,7 +64,7 @@ const CONTENT_TYPE_NAMES = {
 
 export default {
 	components: {
-		WnlContentItemClassifierEditor,
+		WnlContentClassifierEditor,
 	},
 	data() {
 		return {

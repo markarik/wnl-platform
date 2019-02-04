@@ -4,7 +4,7 @@
 		'is-loading': isLoading,
 	}">
 		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
-		<div v-if="this.filteredContent.length > 0">
+		<div v-if="this.items.length > 0">
 			<ul class="margin bottom">
 				<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">
 					<div class="content-classifier__panel-editor__taxonomy">
@@ -131,7 +131,7 @@ export default {
 		};
 	},
 	props: {
-		filteredContent: {
+		items: {
 			type: Array,
 			required: true,
 		}
@@ -141,10 +141,10 @@ export default {
 		...mapGetters('taxonomies', ['taxonomyById']),
 		...mapState('taxonomies', ['taxonomies']),
 		allItemsCount() {
-			return this.filteredContent.length;
+			return this.items.length;
 		},
 		groupedTaxonomyTerms() {
-			const taxonomyTerms = uniqBy([].concat(...this.filteredContent.map(item => item.taxonomyTerms)), 'id');
+			const taxonomyTerms = uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id');
 			const groupedTerms = taxonomyTerms.reduce(
 				(collector, term) => {
 					if (!collector[term.taxonomy.id]) {
@@ -182,10 +182,10 @@ export default {
 			fetchTaxonomies: 'fetchAll',
 		}),
 		getItemsCountByTermId(termId) {
-			return this.filteredContent.filter(item => item.taxonomyTerms.find(term => term.id === termId)).length;
+			return this.items.filter(item => item.taxonomyTerms.find(term => term.id === termId)).length;
 		},
 		getItemsByType(contentType) {
-			return this.filteredContent.filter(item => item.type === contentType);
+			return this.items.filter(item => item.type === contentType);
 		},
 		hasAllItemsAttached(term) {
 			return term.itemsCount === this.allItemsCount;

@@ -131,6 +131,7 @@ import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 import context from 'js/consts/events_map/context.json';
 import feature_components from 'js/consts/events_map/feature_components.json';
+import {timeBaseOnQuestions} from 'js/services/testBuilder';
 
 export default {
 	name: 'QuestionsList',
@@ -611,9 +612,9 @@ export default {
 					activeView: VIEWS.TEST_YOURSELF,
 					canChangeTime: false,
 					loadingText: 'mockExam',
-					sizesToChoose: [questionsIds.length],
-					testQuestionsCount: questionsIds.length,
-					time: 240, // TODO figure out what to do with the time?
+					sizesToChoose: [questions.length],
+					testQuestionsCount: questions.length,
+					time: timeBaseOnQuestions(questions.length),
 					examMode: true,
 					examQuestions: questionsIds
 				};

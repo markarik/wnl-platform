@@ -199,7 +199,7 @@ export default {
 			'testQuestions',
 			'testQuestionsUnanswered',
 			'getSafePage',
-			'getAnswer'
+			'getAnswer',
 		]),
 		...mapState('questions', {
 			'currentQuestionState': 'currentQuestion'
@@ -322,11 +322,15 @@ export default {
 							return reject();
 						}
 					})
-					.catch(e => reject());
+					.catch(() => {
+						localStorage.removeItem(`wnl-exam-state-${this.currentUserId}`);
+						return reject();
+					});
 			});
 		},
 		endQuiz() {
 			this.testMode = this.testProcessing = false;
+			localStorage.removeItem(`wnl-exam-state-${this.currentUserId}`);
 			this.testResults = {};
 			this.trackFinshTest();
 			this.resetTest();
@@ -381,16 +385,18 @@ export default {
 			scrollToTop();
 			this.changePage(page);
 		},
-		onSelectAnswer(payload) {
+		onSelectAnswer(payload, useLocalStorage = true) {
 			if (payload.answer === this.getQuestion(payload.id).selectedAnswer && !this.testMode) {
 				this.onVerify(payload.id) || (payload.position && this.savePosition({position: payload.position}));
 			} else {
 				this.selectAnswer(payload);
-				localStorage.setItem(`wnl-exam-state-${this.currentUserId}`, JSON.stringify({
-					questions: this.testQuestions.map(question => ({
-						id: question.id,
-						answer: question.selectedAnswer
-					}))
+				useLocalStorage && this.testMode && localStorage.setItem(`wnl-exam-state-${this.currentUserId}`, JSON.stringify({
+					questions: this.testQuestions.map(question => {
+						return {
+							question_id: question.id,
+							answer_id: question.answers[question.selectedAnswer] && question.answers[question.selectedAnswer].id
+						};
+					})
 				}));
 			}
 		},
@@ -587,7 +593,8 @@ export default {
 			.then(() => {
 				const stateInLocal = localStorage.getItem(`wnl-exam-state-${this.currentUserId}`);
 				if (localStorage.getItem(`wnl-exam-state-${this.currentUserId}`)) {
-					const questionsIds = JSON.parse(stateInLocal).questions.map(question => question.id);
+					const questions = JSON.parse(stateInLocal).questions;
+					const questionsIds = questions.map(response => response.question_id);
 					this.$swal(swalConfig({
 						title: 'Wznow Egzamin',
 						text: 'Masz nieskonczony egzamin, czy chcesz wrocic?',
@@ -598,7 +605,7 @@ export default {
 						confirmButtonClass: 'button is-primary',
 						reverseButtons: true
 					}))
-						.then(() => {
+						.then(async () => {
 							this.presetOptionsToPass = {
 								activeView: VIEWS.TEST_YOURSELF,
 								canChangeTime: false,
@@ -617,10 +624,19 @@ export default {
 							this.switchOverlay(true, 'testBuilding', text);
 							this.resetTest();
 							this.testMode = true;
-							this.fetchQuestionsByIds(questionsIds).then(() => this.switchOverlay(false, 'testBuilding'));
+							await this.fetchQuestionsByIds(questionsIds);
+
+							questions.forEach(response => {
+								const question = this.getQuestion(response.question_id);
+								const answerIndex = question.answers.findIndex(answer => {
+									return answer.id === response.answer_id;
+								});
+								if (answerIndex === -1) return;
+								this.onSelectAnswer({id: response.question_id, answer: answerIndex}, false);
+							});
+							this.switchOverlay(false, 'testBuilding');
 						})
 						.catch(() => {
-							console.log('inside catche');
 							localStorage.removeItem(`wnl-exam-state-${this.currentUserId}`);
 						});
 				}

@@ -20,7 +20,7 @@
 							:alt="$t('notifications.personal.zeroStateImage')"
 							:src="zeroStateImage"
 							:title="$t('notifications.personal.zeroStateImage')">
-						<p class="zero-state-text" v-t='"notifications.personal.zeroState"'/>
+						<p class="zero-state-text" v-t="'notifications.personal.zeroState'"/>
 					</div>
 					<div v-else class="feed-content">
 						<component :is="getEventComponent(message)"

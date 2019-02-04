@@ -22,7 +22,7 @@
 							</div>
 						</div>
 					</div>
-					<div  v-if="author.city" class="user-info-city">
+					<div v-if="author.city" class="user-info-city">
 						<span class="icon is-small">
 							<i class="fa fa-map-marker"></i>
 						</span>

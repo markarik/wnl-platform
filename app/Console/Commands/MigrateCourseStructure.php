@@ -29,7 +29,7 @@ class MigrateCourseStructure extends Command
 	 */
 	public function handle()
 	{
-		$groups = Group::all();
+		$groups = Group::orderBy('order_number')->get();
 
 		foreach ($groups as $group) {
 			$groupNode = CourseStructureNode::create([
@@ -37,7 +37,7 @@ class MigrateCourseStructure extends Command
 				'structurable_type' => 'App\\Models\\Group',
 				'structurable_id'   => $group->id,
 			]);
-			foreach ($group->lessons as $lesson) {
+			foreach ($group->lessons()->orderBy('order_number')->get() as $lesson) {
 				CourseStructureNode::create([
 					'course_id'         => 1,
 					'structurable_type' => 'App\\Models\\Lesson',

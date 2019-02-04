@@ -31,6 +31,10 @@ module.exports = {
 			'error',
 			'always'
 		],
+		'vue/component-name-in-template-casing': [
+			'error',
+			'kebab-case'
+		],
 		// TODO enable essential rules below
 		'vue/no-use-v-if-with-v-for': [
 			'off'
@@ -40,9 +44,6 @@ module.exports = {
 			'off'
 		],
 		'vue/require-prop-types': [
-			'off'
-		],
-		'vue/component-name-in-template-casing': [
 			'off'
 		],
 		'vue/singleline-html-element-content-newline': [

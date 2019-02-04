@@ -66,7 +66,7 @@
 		margin: $margin-base 0 0 $margin-base
 
 	.chat-title
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-2
 		text-transform: uppercase
 
@@ -85,7 +85,7 @@ import {
 
 
 export default {
-	name: 'wnl-public-chat',
+	name: 'WnlPublicChat',
 	components: {
 		'wnl-chat': MessagesList,
 		'wnl-message-form': MessageForm

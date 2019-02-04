@@ -1,50 +1,69 @@
-import {isEmpty} from 'lodash';
+import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
+import {nestedSetMutations, nestedSetGetters, nestedSetActions, initialState} from 'js/admin/store/modules/nestedSet';
 import axios from 'axios';
-import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
-import * as types from 'js/admin/store/mutations-types';
+import {COURSE_STRUCTURE_TYPE_ICONS} from 'js/consts/courseStructure';
 
 // Namespace
 const namespaced = true;
 
-// Initial state
-const state = {
-	isLoading: false,
-	nodes: [],
-};
-
-// Getters
-const getters = {};
-
-// Mutations
-const mutations = {
-	[types.SETUP_COURSE_STRUCTURE](state, payload) {
-		set(state, 'nodes', payload);
-	},
-};
-
-// Actions
-const actions = {
-	async fetchStructure({commit}, courseId) {
-		const response = await axios.get(getApiUrl(`course_structure_nodes/${courseId}?include=lessons,groups`));
-		const {data: {included, ...nodes}} = response;
-		commit(types.SETUP_COURSE_STRUCTURE, Object.values(nodes).map(node => _parseIncludes(node, included)));
-	},
-};
+const state = {...initialState};
 
 const _parseIncludes = (node, included) => {
 	if (node.hasOwnProperty('groups')) {
 		node.structurable = included.groups[node.groups[0]];
+		node.structurable.type = COURSE_STRUCTURE_TYPES.GROUP;
 	}
 	if (node.hasOwnProperty('lessons')) {
 		node.structurable = included.lessons[node.lessons[0]];
+		node.structurable.type = COURSE_STRUCTURE_TYPES.LESSON;
 	}
 	return node;
+};
+
+const resource = 'course_structure_nodes';
+const include = '?include=groups,lessons';
+
+// Getters
+const getters = {
+	...nestedSetGetters,
+	getStructurableIcon: state => structurable => {
+		return COURSE_STRUCTURE_TYPE_ICONS[structurable.type];
+	}
+};
+
+// Mutations
+const mutations = {
+	...nestedSetMutations
+};
+
+// Actions
+const actions = {
+	...nestedSetActions,
+	async _fetch({}, courseId) {
+		const {data: {included, ...nodes}} = await axios.get(getApiUrl(`${resource}/${courseId}${include}`));
+		return Object.values(nodes).map(node => _parseIncludes(node, included));
+	},
+	async _post({}, nodeData) {
+		const {data: {included, ...node}} = await axios.post(getApiUrl(`${resource}${include}`), nodeData);
+		return _parseIncludes(node, included);
+	},
+	async _put({}, nodeData) {
+		const {data: {included, ...node}} = await axios.put(getApiUrl(`${resource}/${nodeData.id}${include}`), nodeData);
+		return _parseIncludes(node, included);
+	},
+	async _delete({}, node) {
+		await axios.delete(getApiUrl(`${resource}/${node.id}`));
+	},
+	async _move({}, {node, direction}) {
+		await axios.put(getApiUrl(`${resource}/move`), {id: node.id, direction});
+	},
 };
 
 export default {
 	namespaced,
 	state,
 	mutations,
+	getters,
 	actions
 };

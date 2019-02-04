@@ -2,7 +2,7 @@
 	<div
 		class="wnl-sidenav-slot"
 		v-if="isVisible"
-		v-bind:class="{ 'wnl-sidenav-detached': isDetached, 'has-chat': hasChat, 'is-max-width': isMaxWidth }"
+		:class="{ 'wnl-sidenav-detached': isDetached, 'has-chat': hasChat, 'is-max-width': isMaxWidth }"
 		ref="slot"
 		@click="onClick"
 	>

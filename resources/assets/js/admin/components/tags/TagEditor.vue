@@ -94,7 +94,7 @@
 			width: auto
 
 	.table-cell--no-link
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-style: italic
 		font-size: 12px
 

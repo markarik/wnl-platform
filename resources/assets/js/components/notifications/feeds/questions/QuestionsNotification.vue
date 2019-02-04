@@ -51,7 +51,7 @@
 		align-items: flex-start
 		background: $color-white
 		border-bottom: $border-light-gray
-		color: $color-gray
+		color: $color-darkest-gray
 		display: flex
 		font-size: $font-size-minus-1
 		justify-content: space-between
@@ -99,7 +99,7 @@
 				font-weight: $font-weight-bold
 
 		.object-text
-			color: $color-gray-dimmed
+			color: $color-gray
 			font-style: italic
 			line-height: $line-height-minus
 			margin-bottom: $margin-tiny

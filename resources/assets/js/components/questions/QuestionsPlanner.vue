@@ -94,7 +94,7 @@
 							<label for="preserveProgress">{{$t('questions.filters.preserveProgress')}}</label>
 						</div>
 						<p class="tip has-text-centered">{{$t('questions.filters.preserveProgressTip')}}</p>
-						<div  v-if="!isLargeDesktop && selectedOption === 'custom'" class="questions-plan-toggle-filters">
+						<div v-if="!isLargeDesktop && selectedOption === 'custom'" class="questions-plan-toggle-filters">
 							<div class="active-filters tip">
 								<span>{{$t('questions.filters.activeHeading')}}:</span>
 								<span v-if="activeFiltersNames.length > 0">
@@ -163,7 +163,7 @@
 
 	.questions-breadcrumbs
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		display: flex
 		margin-right: $margin-base
@@ -215,7 +215,7 @@
 
 	.preserveProgress
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		display: flex
 		justify-content: center
 		font-size: $font-size-minus-2

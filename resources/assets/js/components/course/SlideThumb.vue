@@ -1,5 +1,11 @@
 <template>
-	<div class="slide-thumb" @click="onClick">
+	<div
+		:class="{
+			'slide-thumb': true,
+			'clickable': hasSlideClickListener
+		}"
+		@click="onClick"
+	>
 		<div class="thumb-meta">
 			<span class="thumb-top-left"><slot></slot></span>
 			<span class="icon is-tiny" v-if="media"><i class="fa" :class="media.icon"></i></span>
@@ -24,7 +30,6 @@
 
 	.slide-thumb
 		background-color: $color-white
-		cursor: pointer
 		flex: 1 0 $thumb-width
 		height: $thumb-height
 		margin: $margin-small $margin-small $margin-base
@@ -101,6 +106,9 @@ export default {
 		}
 	},
 	computed: {
+		hasSlideClickListener() {
+			return this.$listeners && this.$listeners.slideClick;
+		},
 		media() {
 			return this.slide.snippet.media !== null ? mediaMap[this.slide.snippet.media] : null;
 		}

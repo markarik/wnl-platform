@@ -21,7 +21,7 @@ class MoveTaxonomyTerm extends FormRequest {
 	 */
 	public function rules() {
 		return [
-			'term_id' => 'required|numeric|exists:taxonomy_terms,id',
+			'id' => 'required|numeric|exists:taxonomy_terms,id',
 			'direction' => 'required|numeric',
 		];
 	}

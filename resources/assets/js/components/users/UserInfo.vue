@@ -22,7 +22,7 @@ export default {
         padding-bottom: $margin-base
         width: 100%
         .label
-            color: $color-gray-dimmed
+            color: $color-gray
             font-size: $font-size-plus-1
             font-weight: $font-weight-regular
             text-transform: uppercase

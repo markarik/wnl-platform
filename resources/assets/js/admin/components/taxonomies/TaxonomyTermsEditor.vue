@@ -4,8 +4,8 @@
 			<div class="terms-editor__panel__header">
 				<h4 class="title is-5"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
 				<span class="control has-icons-right">
-					<wnl-term-autocomplete
-						@change="onSearchTerm"
+					<wnl-taxonomy-term-autocomplete
+						@change="onSearch"
 						placeholder="Szukaj pojęcia"
 					/>
 					<span class="icon is-small is-right">
@@ -13,7 +13,7 @@
 					</span>
 				</span>
 			</div>
-			<wnl-taxonomy-terms-list v-if="!isLoadingTerms" :terms="rootTerms"/>
+			<wnl-taxonomy-terms-list v-if="!isLoadingTerms" :terms="getRootNodes"/>
 			<wnl-text-loader v-else />
 		</div>
 		<div class="terms-editor__panel is-right">
@@ -56,14 +56,14 @@ import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTaxonomyTermsList from 'js/admin/components/taxonomies/TaxonomyTermsList';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
-import WnlTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTermAutocomplete';
-import scrollToTaxonomyTermMixin from 'js/admin/mixins/scroll-to-taxonomy-term';
+import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
+import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
 export default {
 	components: {
 		WnlTaxonomyTermsList,
 		WnlTaxonomyTermEditorRight,
-		WnlTermAutocomplete
+		WnlTaxonomyTermAutocomplete
 	},
 	props: {
 		taxonomyId: {
@@ -74,30 +74,24 @@ export default {
 	computed: {
 		...mapState('taxonomyTerms', {
 			isLoadingTerms: 'isLoading',
-			terms: 'terms',
+			terms: 'nodes',
 		}),
-		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
-		rootTerms() {
-			return this.getChildrenByParentId(null);
-		},
+		...mapGetters('taxonomyTerms', ['getChildrenByParentId', 'getRootNodes']),
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['fetchTermsByTaxonomy', 'select', 'expand', 'collapseAll']),
-		async onSearchTerm(term) {
-			this.collapseAll();
-			this.select([term.id]);
-			this.expand(term.id);
-
-			this.scrollToTaxonomyTerm(term);
+		...mapActions('taxonomyTerms', ['setUpNestedSet', 'focus']),
+		async onSearch(term) {
+			this.focus(term);
+			this.scrollToNode(term);
 		},
 	},
 	mixins: [
-		scrollToTaxonomyTermMixin,
+		scrollToNodeMixin,
 	],
 	async mounted() {
 		try {
-			this.fetchTermsByTaxonomy(this.taxonomyId);
+			this.setUpNestedSet(this.taxonomyId);
 		} catch (error) {
 			this.addAutoDismissableAlert({
 				text: 'Coś poszło nie tak przy pobieraniu struktury Taksonomii',

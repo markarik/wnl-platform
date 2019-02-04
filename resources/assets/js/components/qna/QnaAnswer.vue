@@ -78,7 +78,7 @@
 		align-items: center
 		color: $color-sky-blue
 		&.author-forgotten
-			color: $color-gray-dimmed
+			color: $color-gray
 			pointer-events: none
 
 	.qna-answer-comments

@@ -326,14 +326,14 @@ export default {
 						}
 					})
 					.catch(() => {
-						localStorage.removeItem(`wnl-exam-state-${this.currentUserId}`);
+						localStorage.removeItem(this.localStorageKey);
 						return reject();
 					});
 			});
 		},
 		endQuiz() {
 			this.testMode = this.testProcessing = false;
-			localStorage.removeItem(`wnl-exam-state-${this.currentUserId}`);
+			localStorage.removeItem(this.localStorageKey);
 			this.testResults = {};
 			this.trackFinshTest();
 			this.resetTest();

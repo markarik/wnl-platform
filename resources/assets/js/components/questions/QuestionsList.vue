@@ -118,6 +118,7 @@
 import {isEmpty, get} from 'lodash';
 import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
 import {QUESTIONS_SET_TOKEN as setToken} from 'js/store/mutations-types';
+import {VIEWS} from 'js/consts/questionsSolving';
 
 import QuestionsFilters from 'js/components/questions/QuestionsFilters';
 import QuestionsNavigation from 'js/components/questions/QuestionsNavigation';
@@ -181,6 +182,7 @@ export default {
 			'isLargeDesktop',
 			'isSidenavMounted',
 			'isSidenavVisible',
+			'currentUserId'
 		]),
 		...mapGetters('questions', [
 			'activeFilters',
@@ -253,6 +255,7 @@ export default {
 			'getPosition',
 			'fetchQuestionData',
 			'fetchQuestions',
+			'fetchQuestionsByIds',
 			'fetchPage',
 			'fetchTestQuestions',
 			'fetchDynamicFilters',
@@ -379,10 +382,17 @@ export default {
 			this.changePage(page);
 		},
 		onSelectAnswer(payload) {
-			payload.answer === this.getQuestion(payload.id).selectedAnswer
-				&& !this.testMode
-				? this.onVerify(payload.id) || (payload.position && this.savePosition({position: payload.position}))
-				: this.selectAnswer(payload);
+			if (payload.answer === this.getQuestion(payload.id).selectedAnswer && !this.testMode) {
+				this.onVerify(payload.id) || (payload.position && this.savePosition({position: payload.position}));
+			} else {
+				this.selectAnswer(payload);
+				localStorage.setItem(`wnl-exam-state-${this.currentUserId}`, JSON.stringify({
+					questions: this.testQuestions.map(question => ({
+						id: question.id,
+						answer: question.selectedAnswer
+					}))
+				}));
+			}
 		},
 		onVerify(questionId) {
 			const question = this.getQuestion(questionId);
@@ -521,61 +531,105 @@ export default {
 				context: this.context.value,
 				...payload,
 			});
+		},
+		setupQuestions() {
+			const hasPresetFilters = !isEmpty(this.presetFilters);
+
+			this.switchOverlay(true);
+			this.fetchingFilters = true;
+			return this.setupFilters().then(() => {
+				return new Promise(resolve => {
+					if (hasPresetFilters) {
+						this.activeFiltersSet(this.presetFilters);
+						resolve();
+					} else {
+						this.fetchActiveFilters().then(resolve);
+					}
+				})
+					.then(() => {
+						this.fetchingFilters = false;
+						this.resetCurrentQuestion();
+						this.resetPages();
+						this.setToken();
+					})
+					.then(this.fetchDynamicFilters)
+					.then(this.getPosition)
+					.then(({data = {}}) => {
+						return new Promise((resolve, reject) => {
+							this.fetchQuestions({
+								saveFilters: false,
+								useSavedFilters: false,
+								page: (data.position && data.position.page) || 1,
+								filters: this.initialFilters,
+							}).then(() => resolve(data));
+						});
+					})
+					.then(({position}) => {
+						!isEmpty(position) && this.changeCurrentQuestion(position);
+						this.switchOverlay(false);
+						this.$trackUserEvent({
+							subcontext: this.activeView,
+							feature: this.feature.value,
+							feature_component: this.featureComponent.value,
+							action: this.featureComponent.actions.open.value,
+							target: this.currentQuestion.id,
+							context: this.context.value
+						});
+					})
+					.then(() => this.fetchQuestionsReactions(this.getPage(1)))
+					.then(() => this.reactionsFetched = true)
+					.then(() => this.fetchQuestionData(this.currentQuestion.id));
+			});
 		}
 	},
 	mounted() {
-		const hasPresetFilters = !isEmpty(this.presetFilters);
+		this.setupQuestions()
+			.then(() => {
+				const stateInLocal = localStorage.getItem(`wnl-exam-state-${this.currentUserId}`);
+				if (localStorage.getItem(`wnl-exam-state-${this.currentUserId}`)) {
+					const questionsIds = JSON.parse(stateInLocal).questions.map(question => question.id);
+					this.$swal(swalConfig({
+						title: 'Wznow Egzamin',
+						text: 'Masz nieskonczony egzamin, czy chcesz wrocic?',
+						showCancelButton: true,
+						confirmButtonText: this.$t('ui.confirm.confirm'),
+						cancelButtonText: this.$t('ui.confirm.cancel'),
+						type: 'info',
+						confirmButtonClass: 'button is-primary',
+						reverseButtons: true
+					}))
+						.then(() => {
+							this.presetOptionsToPass = {
+								activeView: VIEWS.TEST_YOURSELF,
+								canChangeTime: false,
+								loadingText: 'mockExam',
+								sizesToChoose: [questionsIds.length],
+								testQuestionsCount: questionsIds.length,
+								time: 240,
+								examMode: true,
+								examQuestions: questionsIds
+							};
 
-		this.switchOverlay(true);
-		this.fetchingFilters = true;
-		this.setupFilters().then(() => {
-			return new Promise(resolve => {
-				if (hasPresetFilters) {
-					this.activeFiltersSet(this.presetFilters);
-					resolve();
-				} else {
-					this.fetchActiveFilters().then(resolve);
+							const text = this.presetOptionsToPass.hasOwnProperty('loadingText')
+								? this.presetOptionsToPass.loadingText
+								: 'testBuilding';
+
+							this.switchOverlay(true, 'testBuilding', text);
+							this.resetTest();
+							this.testMode = true;
+							this.fetchQuestionsByIds(questionsIds).then(() => this.switchOverlay(false, 'testBuilding'));
+						})
+						.catch(() => {
+							console.log('inside catche');
+							localStorage.removeItem(`wnl-exam-state-${this.currentUserId}`);
+						});
 				}
 			})
-				.then(() => {
-					this.fetchingFilters = false;
-					this.resetCurrentQuestion();
-					this.resetPages();
-					this.setToken();
-				})
-				.then(this.fetchDynamicFilters)
-				.then(this.getPosition)
-				.then(({data = {}}) => {
-					return new Promise((resolve, reject) => {
-						this.fetchQuestions({
-							saveFilters: false,
-							useSavedFilters: false,
-							page: (data.position && data.position.page) || 1,
-							filters: this.initialFilters,
-						}).then(() => resolve(data));
-					});
-				})
-				.then(({position}) => {
-					!isEmpty(position) && this.changeCurrentQuestion(position);
-					this.switchOverlay(false);
-					this.$trackUserEvent({
-						subcontext: this.activeView,
-						feature: this.feature.value,
-						feature_component: this.featureComponent.value,
-						action: this.featureComponent.actions.open.value,
-						target: this.currentQuestion.id,
-						context: this.context.value
-					});
-				})
-				.then(() => this.fetchQuestionsReactions(this.getPage(1)))
-				.then(() => this.reactionsFetched = true)
-				.then(() => this.fetchQuestionData(this.currentQuestion.id))
-				.catch(e => {
-					$wnl.logger.error(e);
-					this.fetchingFilters = false;
-					this.switchOverlay(false);
-				});
-		});
+			.catch(e => {
+				$wnl.logger.error(e);
+				this.fetchingFilters = false;
+				this.switchOverlay(false);
+			});
 	},
 	beforeRouteLeave(to, from, next) {
 		if (this.testMode) {
@@ -588,6 +642,9 @@ export default {
 		} else {
 			next();
 		}
+	},
+	created() {
+		this.testMode = !!this.presetOptionsToPass.examMode;
 	},
 	watch: {
 		testQuestionsCount() {

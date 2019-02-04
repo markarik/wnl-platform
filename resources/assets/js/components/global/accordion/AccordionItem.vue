@@ -29,7 +29,7 @@
 		</div>
 		<div v-if="hasChildren" v-show="expanded || flattened"
 			class="wnl-accordion-item-children" :class="[`level-${level}`]">
-			<AccordionItem
+			<accordion-item
 				v-for="(childItem, index) in item.items"
 				:config="config"
 				:item="childItem"

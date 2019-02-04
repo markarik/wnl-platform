@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="autocomplete-box"
-		v-bind:class="{'is-down': isDown}"
+		:class="{'is-down': isDown}"
 		v-show="hasItems || $slots.footer"
 	>
 		<ul
@@ -13,10 +13,10 @@
 				class="autocomplete-box__item"
 				v-for="(item, index) in items"
 				@click="onItemChosen(item)"
-				v-bind:class="{ active: item.active }"
-				v-bind:key="index"
+				:class="{ active: item.active }"
+				:key="index"
 			>
-				<slot v-bind:item="item"></slot>
+				<slot :item="item"></slot>
 			</li>
 		</ul>
 		<slot name="footer"></slot>

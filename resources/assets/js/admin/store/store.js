@@ -19,6 +19,7 @@ import flashcardsSets from 'js/admin/store/modules/flashcardsSets';
 import taxonomyTerms from 'js/admin/store/modules/taxonomyTerms';
 import tags from 'js/admin/store/modules/tags';
 import courseStructure from 'js/admin/store/modules/courseStructure';
+import groups from './modules/groups';
 import taxonomies from 'js/admin/store/modules/taxonomies';
 
 Vue.use(Vuex);
@@ -34,6 +35,7 @@ export default new Vuex.Store({
 		currentUser,
 		notifications,
 		lessons,
+		groups,
 		quiz,
 		autocomplete,
 		alerts,

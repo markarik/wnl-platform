@@ -66,7 +66,7 @@ export default {
 		WnlTaxonomyTermWithAncestors
 	},
 	computed: {
-		...mapState('taxonomyTerms', ['terms']),
+		...mapState('taxonomyTerms', {terms: 'nodes'}),
 		...mapGetters('taxonomyTerms', ['getAncestorsById']),
 		autocompleteTerms() {
 			if (!this.search) {

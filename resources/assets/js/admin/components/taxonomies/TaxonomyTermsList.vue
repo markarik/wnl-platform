@@ -8,7 +8,6 @@
 				v-for="term in terms"
 				:term="term"
 				:key="term.id"
-				@moveTerm="onChildTermArrowMove"
 			/>
 		</vue-draggable>
 	</ul>
@@ -32,7 +31,10 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('taxonomyTerms', ['moveTerm', 'reorderSiblings']),
+		...mapActions('taxonomyTerms', {
+			moveTerm: 'moveNode',
+			reorderSiblings: 'reorderSiblings',
+		}),
 		...mapActions(['addAutoDismissableAlert']),
 		async submitMove({direction, ...args}) {
 			if (direction === 0) {
@@ -48,7 +50,7 @@ export default {
 			} catch (e) {
 				this.addAutoDismissableAlert({
 					type: 'error',
-					text: 'Nie udało się zapisać zmiany. Odśwież stronę i spróbuj ponownie. Być może Twoje drzewo jest nieaktulane.'
+					text: 'Nie udało się zapisać zmiany. Odśwież stronę i spróbuj ponownie. Być może Twoje drzewo jest nieaktualne.'
 				});
 				$wnl.logger.error(e);
 				throw (e);
@@ -58,16 +60,9 @@ export default {
 			const direction = newIndex - oldIndex;
 			const term = this.terms[oldIndex];
 			try {
-				await this.submitMove({direction, term});
+				await this.submitMove({direction, node: term});
 			} catch (e) {
-				await this.reorderSiblings({direction: oldIndex - newIndex, term});
-			}
-		},
-		async onChildTermArrowMove({term, direction}) {
-			try {
-				await this.submitMove({direction, term});
-			} catch (e) {
-				await this.reorderSiblings({direction: -direction, term});
+				await this.reorderSiblings({direction: oldIndex - newIndex, node: term});
 			}
 		},
 	}

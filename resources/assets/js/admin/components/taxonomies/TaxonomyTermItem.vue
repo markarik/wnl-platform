@@ -1,5 +1,5 @@
 <template>
-	<li :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']" :id="`term-${term.id}`">
+	<li :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']" :id="`node-${term.id}`">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<span class="icon-small taxonomy-term-item__action taxonomy-term-item__action--drag">
 				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
@@ -32,19 +32,6 @@
 					@click="onDelete"
 				>
 					<i title="Usuń" class="fa fa-trash"></i>
-				</span>
-				<span
-					:class="['icon-small', 'taxonomy-term-item__action', {'taxonomy-term-item__action--disabled': !canBeMovedUp}]"
-					@click="canBeMovedUp && onTermMove(term, -1)"
-				>
-					<i title="Do góry" class="fa fa-arrow-up"></i>
-				</span>
-				<span
-					class="icon-small taxonomy-term-item__action"
-					:class="['icon-small', 'taxonomy-term-item__action', {'taxonomy-term-item__action--disabled': !canBeMovedDown}]"
-					@click="canBeMovedDown && onTermMove(term, 1)"
-				>
-					<i title="Na dół" class="fa fa-arrow-down"></i>
 				</span>
 			</div>
 		</div>
@@ -103,7 +90,7 @@
 
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
-import {TAXONOMY_EDITOR_MODES} from 'js/consts/taxonomyTerms';
+import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
 
 export default {
 	props: {
@@ -113,14 +100,12 @@ export default {
 		},
 	},
 	computed: {
-		...mapState('taxonomyTerms', ['expandedTerms', 'selectedTerms', 'isSaving']),
+		...mapState('taxonomyTerms', {
+			expandedTerms: 'expandedNodes',
+			selectedTerms: 'selectedNodes',
+			isSaving: 'isSaving',
+		}),
 		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
-		canBeMovedUp() {
-			return this.term.orderNumber > 0;
-		},
-		canBeMovedDown() {
-			return this.term.orderNumber < this.getChildrenByParentId(this.term.parent_id).length - 1;
-		},
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},
@@ -142,15 +127,15 @@ export default {
 			'selectTerms': 'select',
 		}),
 		onAdd() {
-			this.setEditorMode(TAXONOMY_EDITOR_MODES.ADD);
+			this.setEditorMode(NESTED_SET_EDITOR_MODES.ADD);
 			this.selectTerms([this.term.id]);
 		},
 		onDelete() {
-			this.setEditorMode(TAXONOMY_EDITOR_MODES.DELETE);
+			this.setEditorMode(NESTED_SET_EDITOR_MODES.DELETE);
 			this.selectTerms([this.term.id]);
 		},
 		onEdit() {
-			this.setEditorMode(TAXONOMY_EDITOR_MODES.EDIT);
+			this.setEditorMode(NESTED_SET_EDITOR_MODES.EDIT);
 			this.selectTerms([this.term.id]);
 		},
 		toggle() {
@@ -159,9 +144,6 @@ export default {
 			} else {
 				this.expandTerm(this.term.id);
 			}
-		},
-		onTermMove(term, direction) {
-			this.$emit('moveTerm', {term, direction});
 		},
 	},
 	beforeCreate: function () {

@@ -6,6 +6,7 @@ use App\Models;
 use App\Observers;
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
 use Bschmitt\Amqp\AmqpServiceProvider;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Auth;
@@ -116,6 +117,22 @@ class AppServiceProvider extends ServiceProvider
 		Validator::extend('alpha_comas', function ($attribute, $value) {
 			// Useful for textareas - accepts letters, comas, dots, spaces and hyphens
 			return preg_match('/^[\pL\s\d-,.:;()""]+$/u', $value);
+		});
+
+		Validator::extend('morph_exists', function ($attribute, $value, $parameters, $validator) {
+			if (!$type = array_get($validator->getData(), $parameters[0], false)) {
+				return false;
+			}
+
+			if (Relation::getMorphedModel($type)) {
+				$type = Relation::getMorphedModel($type);
+			}
+
+			if (!class_exists($type)) {
+				return false;
+			}
+
+			return resolve($type)->whereKey($value)->exists();
 		});
 	}
 

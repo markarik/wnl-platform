@@ -28,7 +28,7 @@ class ScreenTransformer extends ApiTransformer
 			'order_number' => $screen->order_number,
 			'tags'         => $screen->tags,
 			'lessons'      => $this->parent['lessonId'] ?? $screen->lesson_id,
-			'groups'       => $this->parent['groupId'] ?? $screen->lesson->group->id,
+			'groups'       => $this->parent['groupId'] ?? $screen->lesson->group->id ?? null,
 			'discussion_id' => $screen->discussion_id,
 			'is_discussable' => $screen->is_discussable
 		];

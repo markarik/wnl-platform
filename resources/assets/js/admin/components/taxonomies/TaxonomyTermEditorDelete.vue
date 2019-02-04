@@ -28,8 +28,11 @@ import {mapActions, mapGetters, mapState} from 'vuex';
 
 export default {
 	computed: {
-		...mapGetters('taxonomyTerms', ['termById']),
-		...mapState('taxonomyTerms', ['isSaving', 'selectedTerms']),
+		...mapGetters('taxonomyTerms', {termById: 'nodeById'}),
+		...mapState('taxonomyTerms', {
+			isSaving: 'isSaving',
+			selectedTerms: 'selectedNodes'
+		}),
 		term() {
 			if (this.selectedTerms.length === 0) {
 				return null;

@@ -91,7 +91,7 @@
 				class="field answer-field"
 				v-for="(answer, index) in questionAnswers"
 				:data-id="answer.id"
-				v-bind:key="answer.id"
+				:key="answer.id"
 			>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Odpowiedź {{index + 1}}</legend>

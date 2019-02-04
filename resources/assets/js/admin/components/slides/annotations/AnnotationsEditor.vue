@@ -104,7 +104,7 @@
 						<label class="label">Tagi do slides.com</label>
 					</div>
 					<div class="field-body">
-						<div class="field field--keyword"  v-for="tag in parserTags" :key="tag">
+						<div class="field field--keyword" v-for="tag in parserTags" :key="tag">
 							<div class="control">
 								<wnl-keyword-field :content="tag" :show="annotation.id"/>
 							</div>
@@ -117,7 +117,7 @@
 						<label class="label">Tagi do edytora</label>
 					</div>
 					<div class="field-body">
-						<div class="field field--keyword"  v-for="tag in htmlTags" :key="tag">
+						<div class="field field--keyword" v-for="tag in htmlTags" :key="tag">
 							<div class="control">
 								<wnl-keyword-field :content="tag" :show="annotation.id"/>
 							</div>

@@ -1,4 +1,4 @@
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import {set} from 'vue';
 import pagination from 'js/store/modules/shared/pagination';

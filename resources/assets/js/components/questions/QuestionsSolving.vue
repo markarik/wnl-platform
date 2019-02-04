@@ -125,6 +125,7 @@
 					@checkQuiz="(payload) => $emit('checkQuiz', payload)"
 					@endQuiz="$emit('endQuiz')"
 					@userEvent="proxyUserEvent"
+					@updateTime="(payload) => $emit('updateTime', payload)"
 				/>
 			</div>
 		</div>

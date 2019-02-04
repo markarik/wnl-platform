@@ -48,6 +48,7 @@
 						@verify="onVerify"
 						@userEvent="onUserEvent"
 						@activeViewChange="onActiveViewChange"
+						@updateTime="onUpdateTime"
 				/>
 				<div v-else class="text-loader">
 					<wnl-text-loader/>
@@ -322,12 +323,7 @@ export default {
 
 			return new Promise((resolve, reject) => {
 				this.$swal(config)
-					.then((dismiss) => {
-						if (dismiss === 'cancel') {
-							examStateStore.remove(this.examStateStoreKey);
-							return reject();
-						}
-					}, () => resolve())
+					.then(resolve)
 					.catch(() => {
 						examStateStore.remove(this.examStateStoreKey);
 						return reject();
@@ -400,12 +396,26 @@ export default {
 			}
 		},
 		persistStateInExamStateStorage() {
+			const persistedState = this.readPersistedState();
 			this.testMode && examStateStore.set(this.examStateStoreKey, JSON.stringify({
+				...persistedState,
 				results: this.testQuestions.map(question => ({
 					question_id: question.id,
 					answer_id: question.answers[question.selectedAnswer] && question.answers[question.selectedAnswer].id
 				}))
 			}));
+		},
+		readPersistedState() {
+			const persistedState = examStateStore.get(this.examStateStoreKey);
+			let storedState = {};
+
+			try {
+				storedState = JSON.parse(persistedState);
+			} catch (e) {
+				$wnl.logger.warning(e);
+			}
+
+			return storedState;
 		},
 		onVerify(questionId) {
 			const question = this.getQuestion(questionId);
@@ -545,6 +555,14 @@ export default {
 				...payload,
 			});
 		},
+		onUpdateTime(remainingTime) {
+			const persistedState = this.readPersistedState();
+
+			examStateStore.set(this.examStateStoreKey, JSON.stringify({
+				...persistedState,
+				time: Math.floor(remainingTime / 60)
+			}));
+		},
 		setupQuestions() {
 			const hasPresetFilters = !isEmpty(this.presetFilters);
 
@@ -594,15 +612,9 @@ export default {
 					.then(() => this.fetchQuestionData(this.currentQuestion.id));
 			});
 		},
-		async restoreExamState(persistedState) {
-			let storedState = {};
-
-			try {
-				storedState = JSON.parse(persistedState);
-			} catch (e) {
-				$wnl.logger.warning(e);
-			}
-
+		async restoreExamState() {
+			const storedState = this.readPersistedState();
+			console.log(storedState, '....stored state');
 			if (!storedState.results) return;
 
 			const results = storedState.results;
@@ -624,7 +636,7 @@ export default {
 					loadingText: 'mockExam',
 					sizesToChoose: [results.length],
 					testQuestionsCount: results.length,
-					time: timeBaseOnQuestions(results.length),
+					time: storedState.time || timeBaseOnQuestions(results.length),
 					examMode: true,
 					examQuestions: questionsIds
 				};
@@ -642,7 +654,7 @@ export default {
 						this.onSelectAnswer({id: response.question_id, answer: answerIndex}, false);
 					});
 			} catch (e) {
-				examStateStore.remove(`wnl-exam-state-${this.currentUserId}`);
+				examStateStore.remove(this.examStateStoreKey);
 			} finally {
 				this.switchOverlay(false, 'testBuilding');
 			}
@@ -651,10 +663,7 @@ export default {
 	async mounted() {
 		try {
 			await this.setupQuestions();
-			const stateInLocalStorage = examStateStore.get(this.examStateStoreKey);
-			if (stateInLocalStorage) {
-				await this.restoreExamState(stateInLocalStorage);
-			}
+			await this.restoreExamState();
 		} catch (e) {
 			$wnl.logger.error(e);
 			this.fetchingFilters = false;
@@ -672,9 +681,6 @@ export default {
 		} else {
 			next();
 		}
-	},
-	created() {
-		this.testMode = !!this.presetOptionsToPass.examMode;
 	},
 	watch: {
 		testQuestionsCount() {

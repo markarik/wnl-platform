@@ -17,7 +17,7 @@ import {
 	reactionsGetters,
 	reactionsMutations
 } from 'js/store/modules/reactions';
-import {parseTaxonomyTermsFromIncludes} from '../../utils/contentClassifier';
+import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 
 
 const namespaced = true;

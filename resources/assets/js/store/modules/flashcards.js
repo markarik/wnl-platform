@@ -1,7 +1,7 @@
 import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
 import * as mutationsTypes from 'js/store/mutations-types';
-import {parseTaxonomyTermsFromIncludes} from '../../utils/contentClassifier';
+import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 
 const state = () => {
 	return {

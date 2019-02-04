@@ -81,7 +81,7 @@ import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
 import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
-import {parseTaxonomyTermsFromIncludes} from '../../../utils/contentClassifier';
+import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 
 export default {
 	components: {

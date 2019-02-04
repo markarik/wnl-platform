@@ -99,7 +99,7 @@
 
 <script>
 import { getColourForStr } from 'js/utils/colors.js';
-import {parseTaxonomyTermsFromIncludes} from '../../../../utils/contentClassifier';
+import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 
 export default {
 	data() {

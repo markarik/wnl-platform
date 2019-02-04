@@ -107,7 +107,7 @@ import {mapGetters, mapActions} from 'vuex';
 import Event from 'js/components/user/notifications/Event';
 
 export default {
-	name: 'wnl-user-notifications',
+	name: 'WnlUserNotifications',
 	components: {
 		'wnl-newsfeed-event': Event,
 	},

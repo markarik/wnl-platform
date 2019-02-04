@@ -23,7 +23,7 @@
 
 <script>
 export default {
-	name: 'wnl-form-textarea',
+	name: 'WnlFormTextarea',
 	props: ['name', 'form'],
 };
 </script>

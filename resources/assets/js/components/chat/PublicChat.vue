@@ -85,7 +85,7 @@ import {
 
 
 export default {
-	name: 'wnl-public-chat',
+	name: 'WnlPublicChat',
 	components: {
 		'wnl-chat': MessagesList,
 		'wnl-message-form': MessageForm

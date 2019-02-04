@@ -1,4 +1,4 @@
-import * as types from '../../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {set} from 'vue';
 
 const pagination = {

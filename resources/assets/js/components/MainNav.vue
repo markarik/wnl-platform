@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-main-nav wnl-column" v-bind:class="{ 'horizontal': isHorizontal }">
+	<div class="wnl-main-nav wnl-column" :class="{ 'horizontal': isHorizontal }">
 		<router-link class="wnl-main-nav-item" :to="{ name: 'courses', params: { courseId: 1, keepsNavOpen: true }}">
 			<span class="icon is-medium">
 				<i class="fa fa-home"></i>

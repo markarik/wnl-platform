@@ -21,7 +21,7 @@
 							:alt="$t('notifications.personal.zeroStateImage')"
 							:src="zeroStateImage"
 							:title="$t('notifications.personal.zeroStateImage')">
-						<p class="zero-state-text" v-t='"notifications.chat.zeroState"'/>
+						<p class="zero-state-text" v-t="'notifications.chat.zeroState'"/>
 					</div>
 					<div class="feed-content" v-else>
 						<wnl-conversations-list :withSearch="false"/>

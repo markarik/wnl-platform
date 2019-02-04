@@ -22,7 +22,7 @@ class ReorderSections extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Order screen sections.';
+	protected $description = 'Update order of sections attached to a screen. As a side effect it updates order of slides in slideshow';
 
 	/**
 	 * Execute the console command.
@@ -46,7 +46,7 @@ class ReorderSections extends Command
 		foreach ($passedSections as $index => $sectionId) {
 			$section = Section::find($sectionId);
 			$sectionScreen = $section->screen;
-			$sectionSlides = $section->slides;
+			$sectionSlides = $section->slides()->orderBy('order_number')->get();
 			$sortedSlides = $sortedSlides->concat($sectionSlides);
 			$sectionsInstances[] = $section;
 

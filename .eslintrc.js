@@ -1,6 +1,7 @@
 module.exports = {
 	extends: [
 		// TODO use recommended rules
+		// 'eslint:recommended',
 		// 'plugin:vue/recommended'
 		'plugin:vue/strongly-recommended'
 	],

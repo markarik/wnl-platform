@@ -81,9 +81,6 @@ module.exports = {
 		'vue/v-bind-style': [
 			'off'
 		],
-		'vue/no-multi-spaces': [
-			'off'
-		],
 		'vue/html-end-tags': [
 			'off'
 		],

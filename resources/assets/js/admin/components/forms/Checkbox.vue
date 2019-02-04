@@ -24,7 +24,7 @@
 
 <script>
 export default {
-	name: 'wnl-form-checkbox',
+	name: 'WnlFormCheckbox',
 	props: ['type', 'name', 'form'],
 };
 </script>

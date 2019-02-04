@@ -22,7 +22,7 @@ import Toggler from 'js/components/global/Toggler';
 import {formInput} from 'js/mixins/form-input';
 
 export default {
-	name: 'wnl-form-check',
+	name: 'WnlFormCheck',
 	props: ['name', 'placeholder'],
 	mixins: [formInput],
 	components: {

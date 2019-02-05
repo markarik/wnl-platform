@@ -1,12 +1,17 @@
 <template>
 	<div v-if="canAccess" class="content-item-classifier">
-		<div v-if="expanded" class="content-item-classifier__editor">
+		<div v-show="expanded" class="content-item-classifier__editor">
 			<div class="content-item-classifier__editor__header">
 				<div>
 					<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
 					<strong>{{CONTENT_TYPE_NAMES[contentItem.type]}} #{{contentItem.id}}</strong>
 				</div>
-				<span class="content-item-classifier__collapse-icon icon is-small clickable" @click="expanded=false"><i class="fa fa-chevron-up"></i></span>
+				<span
+					class="content-item-classifier__collapse-icon icon is-small clickable"
+					@click="expanded=false"
+				>
+					<i class="fa fa-chevron-up"></i>
+				</span>
 			</div>
 			<wnl-content-classifier-editor
 				:items="[contentItem]"
@@ -14,7 +19,7 @@
 				@onTaxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 		</div>
-		<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
+		<div v-show="!expanded" class="clickable content-item-classifier__tag-names" @click="expanded=true">
 			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
 			<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
 			<span v-else>brak</span>

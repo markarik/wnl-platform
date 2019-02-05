@@ -130,7 +130,7 @@ const getters = {
 	isProcessing: (state) => state.processing,
 	hasQuestions: (state, getters) => getters.questionsLength !== 0,
 	questionsLength: (state) => state.questionsIds.length,
-	getAnswer: (state) => (id) => state.quiz_answers[id]
+	getAnswer: (state) => (id) => state.quiz_answers[id],
 };
 
 const mutations = {
@@ -237,6 +237,9 @@ const mutations = {
 	},
 	[types.QUIZ_SET_PAGINATION] (state, pagination) {
 		set(state, 'pagination', pagination);
+	},
+	[types.QUIZ_QUESTION_ADD_TERM] (state, {quizQuestion, term}) {
+		quizQuestion.taxonomyTerms.push(term);
 	}
 };
 

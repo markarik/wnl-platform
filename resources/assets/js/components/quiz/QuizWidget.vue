@@ -22,6 +22,7 @@
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleClick"
 			@userEvent="proxyUserEvent"
+			@taxonomyTermAttached="onTaxonomyTermAttached"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
 		<p class="has-text-centered">
@@ -133,6 +134,9 @@ export default {
 		}
 	},
 	methods: {
+		onTaxonomyTermAttached(term) {
+			this.$emit('taxonomyTermAttached', term);
+		},
 		verify() {
 			if (this.hasAnswer) {
 				this.$emit('verify', this.currentQuestion.id);

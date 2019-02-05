@@ -1,6 +1,19 @@
 import axios from 'axios';
-import { get } from 'lodash';
+import {get} from 'lodash';
+import {getApiUrl} from 'js/utils/env';
 import * as types from 'js/store/mutations-types';
+
+const getCsrfToken = () => {
+	return axios.get(getApiUrl('token'))
+		.then(response => {
+			const token = get(response, 'data.token');
+			if (!token) {
+				throw new Error('Failed to resolve a valid CSRF token from server.');
+			}
+			return token;
+		});
+
+};
 
 export default (Vue, {store, router}) => {
 	/**
@@ -29,8 +42,18 @@ export default (Vue, {store, router}) => {
 					return store.commit(types.USERS_SET_ACCOUNT_SUSPENDED, true);
 				}
 			}
+
 			if (error.response && error.response.status === 401) {
 				window.location.replace('/login');
+			}
+
+			if (error.config && error.response && error.response.status === 419) {
+				return getCsrfToken().then((token) => {
+					let config = error.config;
+					config.headers['X-CSRF-TOKEN'] = token;
+					window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+					return axios.request(config);
+				});
 			}
 
 			return Promise.reject(error);

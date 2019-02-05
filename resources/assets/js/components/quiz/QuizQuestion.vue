@@ -114,7 +114,10 @@
 				</div>
 			</div>
 		</div>
-		<wnl-content-item-classifier-editor :content-item="question" />
+		<wnl-content-item-classifier-editor
+			:content-item="question"
+			@onTaxonomyTermAttached="onTaxonomyTermAttached"
+		/>
 	</div>
 </template>
 
@@ -406,6 +409,9 @@ export default {
 				feature_component: feature_components.related_slides.value,
 				...payload,
 			});
+		},
+		onTaxonomyTermAttached(term) {
+			this.$emit('taxonomyTermAttached', term);
 		}
 	},
 	watch: {

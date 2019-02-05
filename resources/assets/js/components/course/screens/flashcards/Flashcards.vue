@@ -223,6 +223,7 @@ export default {
 		}
 	},
 	methods: {
+		...mapActions(['toggleOverlay']),
 		...mapActions('flashcards', ['setFlashcardsSet']),
 		...mapMutations('flashcards', {
 			'updateFlashcard': mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD
@@ -247,16 +248,23 @@ export default {
 		}
 	},
 	async mounted() {
+		this.toggleOverlay({source: 'flashcards', display: true});
 		const resources = get(this.screenData, 'meta.resources', []);
 
-		await Promise.all(resources.map(({id}) => {
-			return this.setFlashcardsSet({
-				setId: id,
-				include: 'flashcards.user_flashcard_notes',
-				context_type: this.context,
-				context_id: this.screenData.id
-			});
-		}));
+		try {
+			await Promise.all(resources.map(({id}) => {
+				return this.setFlashcardsSet({
+					setId: id,
+					include: 'flashcards.user_flashcard_notes',
+					context_type: this.context,
+					context_id: this.screenData.id
+				});
+			}));
+		} catch (e) {
+			$wnl.logger.error(e);
+		} finally {
+			this.toggleOverlay({source: 'flashcards', display: false});
+		}
 
 		this.applicableSetsIds = resources.map(({id}) => id);
 

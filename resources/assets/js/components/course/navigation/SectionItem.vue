@@ -67,7 +67,6 @@ export default {
 			return sectionProgress && sectionProgress.status === STATUS_COMPLETE;
 		},
 		isActive() {
-			console.log(this.lessonState.activeSection);
 			return this.lessonState.activeSection === this.item.id;
 		},
 		meta() {

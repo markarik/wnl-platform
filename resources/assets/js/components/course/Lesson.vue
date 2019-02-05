@@ -57,8 +57,9 @@
 
 <script>
 import _ from 'lodash';
-import PreviousNext from 'js/components/course/PreviousNext';
 import {mapGetters, mapActions} from 'vuex';
+
+import PreviousNext from 'js/components/course/PreviousNext';
 import {resource} from 'js/utils/config';
 import {breadcrumb} from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
@@ -181,6 +182,7 @@ export default {
 		},
 	},
 	methods: {
+
 		...mapActions('progress', [
 			'startLesson',
 			'completeLesson',
@@ -189,9 +191,7 @@ export default {
 			'completeSubsection',
 			'saveLessonProgress',
 		]),
-		...mapActions([
-			'updateLessonNav',
-		]),
+		...mapActions(['updateLessonNav', 'setupCurrentUser', 'toggleOverlay']),
 		...mapActions(['setupCurrentUser']),
 		...mapActions('users', ['setActiveUsers', 'userJoined', 'userLeft']),
 		...mapActions('course', ['setupLesson']),
@@ -311,8 +311,15 @@ export default {
 		},
 	},
 	async mounted () {
-		await this.setupLesson(this.lessonId);
-		this.launchLesson();
+		this.toggleOverlay({source: 'lesson', display: true});
+		try {
+			await this.setupLesson(this.lessonId);
+			this.launchLesson();
+		} catch (e) {
+			$wnl.logger.error(e);
+		} finally {
+			this.toggleOverlay({source: 'lesson', display: false});
+		}
 		window.addEventListener('resize', this.updateElementHeight);
 	},
 	beforeDestroy () {

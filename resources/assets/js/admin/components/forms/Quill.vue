@@ -50,7 +50,7 @@ export default {
 							['clean'],
 							[{'align': []}],
 							[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
-							['blockquote', 'image', 'video'],
+							['blockquote', 'video'],
 						]
 					},
 				};

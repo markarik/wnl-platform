@@ -49,6 +49,8 @@
 				@headerClicked="selectQuestionFromList(index)"
 				@selectAnswer="selectAnswer"
 				@answerDoubleclick="onAnswerDoubleClick"
+				@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
+				@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
 			></wnl-quiz-question>
 		</div>
 	</div>
@@ -135,9 +137,6 @@ export default {
 		}
 	},
 	methods: {
-		onTaxonomyTermAttached(term) {
-			this.$emit('taxonomyTermAttached', term);
-		},
 		verify() {
 			if (this.hasAnswer) {
 				this.$emit('verify', this.currentQuestion.id);

@@ -15,6 +15,8 @@
 				@verify="trackAndResolve"
 				@selectAnswer="onSelectAnswer"
 				@userEvent="onUserEvent"
+				@taxonomyTermAttached="onTaxonomyTermAttached"
+				@taxonomyTermDetached="onTaxonomyTermDetached"
 			></wnl-quiz-widget>
 			<div v-else class="notification has-text-centered">
 				W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań kontrolnych. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> przy wybranym pytaniu!
@@ -38,13 +40,14 @@
 </style>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex';
+import {mapActions, mapGetters, mapState, mapMutations} from 'vuex';
 
 import QuizWidget from 'js/components/quiz/QuizWidget';
 import Pagination from 'js/components/global/Pagination';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 import feature_components from 'js/consts/events_map/feature_components.json';
+import { QUIZ_QUESTION_ATTACH_TERM, QUIZ_QUESTION_DETACH_TERM } from 'js/store/mutations-types';
 
 export default {
 	name: 'QuizCollection',
@@ -69,6 +72,10 @@ export default {
 	},
 	methods: {
 		...mapActions('quiz', ['shuffleAnswers', 'changeQuestion', 'resolveQuestion', 'commitSelectAnswer']),
+		...mapMutations('quiz', {
+			attachTerm: QUIZ_QUESTION_ATTACH_TERM,
+			detachTerm: QUIZ_QUESTION_DETACH_TERM
+		}),
 		trackAndResolve(id) {
 			const question = this.getQuestion(id);
 			const answer = this.getAnswer(question.quiz_answers[question.selectedAnswer]);
@@ -97,6 +104,12 @@ export default {
 				feature: features.quiz_questions.value,
 				...payload,
 			});
+		},
+		onTaxonomyTermAttached(payload) {
+			this.attachTerm(payload);
+		},
+		onTaxonomyTermDetached(payload) {
+			this.detachTerm(payload);
 		}
 	}
 };

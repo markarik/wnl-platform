@@ -1,17 +1,26 @@
 <template>
-	<wnl-taxonomy-term-editor-form
-		submit-label="Dodaj pojęcie"
-		:on-save="onSave"
-		:taxonomy-id="taxonomyId"
-		:term="term"
-		@parentChange="onParentChange"
-	/>
+	<div>
+		<wnl-taxonomy-term-editor-current-term
+			v-if="term"
+			:term="term.parent"
+		>
+			Dodajesz pojęcie pod pojęciem:
+		</wnl-taxonomy-term-editor-current-term>
+		<wnl-taxonomy-term-editor-form
+			submit-label="Dodaj pojęcie"
+			:on-save="onSave"
+			:taxonomy-id="taxonomyId"
+			:term="term"
+			@parentChange="onParentChange"
+		/>
+	</div>
 </template>
 
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTaxonomyTermEditorForm from 'js/admin/components/taxonomies/TaxonomyTermEditorForm';
+import WnlTaxonomyTermEditorCurrentTerm from 'js/admin/components/taxonomies/TaxonomyTermEditorCurrentTerm';
 import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
 export default {
@@ -35,7 +44,8 @@ export default {
 		}
 	},
 	components: {
-		WnlTaxonomyTermEditorForm
+		WnlTaxonomyTermEditorForm,
+		WnlTaxonomyTermEditorCurrentTerm,
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

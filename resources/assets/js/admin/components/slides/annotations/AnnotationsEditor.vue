@@ -46,8 +46,8 @@
 			</fieldset>
 			<wnl-content-item-classifier-editor
 				:contentItem="annotation"
-				@onTaxonomyTermAttached="onTaxonomyTermAttached"
-				@onTaxonomyTermDetached="onTaxonomyTermDetached"
+				@taxonomyTermAttached="onTaxonomyTermAttached"
+				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 			<template v-if="annotation.id">
 				<div class="title is-4">Dane do edytora</div>

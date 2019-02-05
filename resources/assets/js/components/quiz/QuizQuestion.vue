@@ -116,7 +116,7 @@
 		</div>
 		<wnl-content-item-classifier-editor
 			:content-item="question"
-			@onTaxonomyTermAttached="onTaxonomyTermAttached"
+			@taxonomyTermAttached="onTaxonomyTermAttached"
 		/>
 	</div>
 </template>

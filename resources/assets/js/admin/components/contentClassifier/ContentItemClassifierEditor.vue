@@ -15,8 +15,8 @@
 			</div>
 			<wnl-content-classifier-editor
 				:items="[contentItem]"
-				@onTaxonomyTermAttached="onTaxonomyTermAttached"
-				@onTaxonomyTermDetached="onTaxonomyTermDetached"
+				@taxonomyTermAttached="onTaxonomyTermAttached"
+				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 		</div>
 		<div v-show="!expanded" class="clickable content-item-classifier__tag-names" @click="expanded=true">
@@ -96,10 +96,10 @@ export default {
 	},
 	methods: {
 		onTaxonomyTermAttached(term) {
-			this.$emit('onTaxonomyTermAttached', term);
+			this.$emit('taxonomyTermAttached', term);
 		},
 		onTaxonomyTermDetached(term) {
-			this.$emit('onTaxonomyTermDetached', term);
+			this.$emit('taxonomyTermDetached', term);
 		},
 	},
 };

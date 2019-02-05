@@ -34,8 +34,8 @@
 			<wnl-content-classifier-editor
 				v-show="!isLoading"
 				:items="filteredContent"
-				@onTaxonomyTermAttached="onTaxonomyTermAttached"
-				@onTaxonomyTermDetached="onTaxonomyTermDetached"
+				@taxonomyTermAttached="onTaxonomyTermAttached"
+				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 		</div>
 	</div>

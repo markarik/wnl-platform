@@ -200,7 +200,7 @@ export default {
 					slides: this.getItemsByType('slides').map(item => item.id),
 				});
 
-				this.$emit('onTaxonomyTermDetached', term);
+				this.$emit('taxonomyTermDetached', term);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
@@ -226,7 +226,7 @@ export default {
 					taxonomy: term.taxonomy || this.taxonomyById(this.taxonomyId),
 					ancestors: term.ancestors || this.getAncestorsById(term.id),
 				};
-				this.$emit('onTaxonomyTermAttached', termToAdd);
+				this.$emit('taxonomyTermAttached', termToAdd);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-course-navigation" v-bind:class="{ mobile: isMobileNavigation }">
+	<div class="wnl-course-navigation" :class="{ mobile: isMobileNavigation }">
 		<div class="items">
 			<wnl-group-item v-for="item in rootItems"
 				:item="item"

@@ -82,7 +82,7 @@
 			:isComplete="isComplete"
 			:isProcessing="testProcessing"
 			:plainList="true"
-			@selectAnswer="onSelectAnswer"
+			@selectAnswer="selectAnswer"
 			@userEvent="onUserEvent"
 		>
 			<div slot="question-number" slot-scope="quizList">
@@ -358,6 +358,10 @@ export default {
 				subcontext: context.questions_bank.subcontext.test_yourself.value,
 				...payload,
 			});
+		},
+		selectAnswer(payload) {
+			this.onSelectAnswer(payload);
+			this.$emit('updateTime', this.$refs.timer.remainingTime);
 		}
 	},
 	mounted() {

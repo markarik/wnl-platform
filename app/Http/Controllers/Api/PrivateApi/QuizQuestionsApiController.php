@@ -46,6 +46,7 @@ class QuizQuestionsApiController extends ApiController
 	}
 
 	public function query(Request $request) {
+		$limit = $request->get('limit') ?? 30;
 		$request->validate([
 			'ids' => 'array'
 		]);
@@ -70,7 +71,7 @@ class QuizQuestionsApiController extends ApiController
 		}
 		$page = $request->get('page');
 
-		return $this->respondOk($this->paginatedResponse($questions, 30, $page));
+		return $this->respondOk($this->paginatedResponse($questions, $limit, $page));
 	}
 
 	public function post(UpdateQuizQuestion $request)

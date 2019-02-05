@@ -55,7 +55,7 @@ class ExamsResults extends Command
 			$user = User::find($userId);
 
 			if (!empty($results)) {
-				$this->saveInDB($userId, $results);
+				$this->saveInDB($examTagId, $userId, $results);
 				$this->printResults([[$userId, $user->fullName, $results['correct_perc'], $results['resolved_perc']]]);
 			}
 

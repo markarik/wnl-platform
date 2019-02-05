@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {getApiUrl, envValue as env} from 'js/utils/env';
 import {set, delete as destroy} from 'vue';
 

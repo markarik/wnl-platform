@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import axios from 'axios';
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import { set, delete as destroy } from 'vue';
 import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions';

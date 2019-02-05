@@ -1,15 +1,16 @@
 <template>
 	<div v-if="canAccess" class="content-item-classifier">
 		<div v-if="alwaysExpanded || expanded" class="content-item-classifier__editor">
-			<div v-if="!alwaysExpanded" class="content-item-classifier__editor__header">
+			<div
+				v-if="!alwaysExpanded"
+				class="content-item-classifier__editor__header clickable"
+				@click="expanded=false"
+			>
 				<div>
 					<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
 					<strong>{{CONTENT_TYPE_NAMES[contentItem.type]}} #{{contentItem.id}}</strong>
 				</div>
-				<span
-					class="content-item-classifier__collapse-icon icon is-small clickable"
-					@click="expanded=false"
-				>
+				<span class="content-item-classifier__collapse-icon icon is-small">
 					<i class="fa fa-chevron-up"></i>
 				</span>
 			</div>

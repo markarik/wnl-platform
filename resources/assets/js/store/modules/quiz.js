@@ -252,28 +252,26 @@ const actions = {
 			fetchQuizSet(resource.id),
 			fetchQuizSetStats(resource.id)
 		]).then(([storedState, response, quizStats]) => {
-			const {included, ...quizQuestions} = response.data,
-				quizQuestionsOldWay = {};
+			const {included, ...quizQuestions} = response.data;
+			const quizQuestionsOldWay = {};
+			const {taxonomy_terms, tags, taxonomies, ancestors, ...remainingIncluded} = included;
 
 			Object.values(quizQuestions).forEach((quizQuestion) => {
 				quizQuestionsOldWay[quizQuestion.id] = {
 					...quizQuestion,
 					// TODO constant
 					type: 'quizQuestions',
-					taxonomyTerms: parseTaxonomyTermsFromIncludes(quizQuestion.taxonomy_terms, included)
+					taxonomyTerms: parseTaxonomyTermsFromIncludes(quizQuestion.taxonomy_terms, {
+						taxonomies, taxonomy_terms, tags, ancestors
+					})
 				};
 			});
 
-			delete included.tags;
-			delete included.taxonomy_terms;
-			delete included.taxonomies;
-			delete included.ancestors;
+			const quizQuestionsIds = Object.keys(quizQuestionsOldWay);
+			const len = quizQuestionsIds;
 
-			const quizQuestionsIds = Object.keys(quizQuestionsOldWay),
-				len = quizQuestionsIds;
-
-			included.comments && dispatch('comments/setComments', {...included.comments}, {root: true});
-			commit(types.UPDATE_INCLUDED, {...included, quiz_questions: quizQuestionsOldWay});
+			remainingIncluded.comments && dispatch('comments/setComments', {...remainingIncluded.comments}, {root: true});
+			commit(types.UPDATE_INCLUDED, {...remainingIncluded, quiz_questions: quizQuestionsOldWay});
 
 			if (!_.isEmpty(storedState)) {
 				commit(types.QUIZ_RESTORE_STATE, storedState);
@@ -344,14 +342,23 @@ const actions = {
 
 					const id = response.data.id;
 					included['quiz_questions'] = {};
-					included['quiz_questions'][id] = response.data;
+					included['quiz_questions'][id] = {
+						...response.data,
+						type: 'quizQuestions',
+						taxonomyTerms: parseTaxonomyTermsFromIncludes(response.data.taxonomy_terms, included),
+					};
+
+					delete included.tags;
+					delete included.taxonomy_terms;
+					delete included.taxonomies;
+					delete included.ancestors;
 
 					included.comments && dispatch('comments/setComments', included.comments, {root:true});
 					commit(types.UPDATE_INCLUDED, included);
 					commit(types.QUIZ_SET_QUESTIONS, {
 						setId: 0,
 						setName: `Pytanie numer ${id}`,
-						let: 1,
+						len: 1,
 						questionsIds: [id],
 					});
 					commit(types.QUIZ_RESET_PROGRESS);

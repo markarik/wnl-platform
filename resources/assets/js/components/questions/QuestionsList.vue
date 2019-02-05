@@ -409,10 +409,12 @@ export default {
 			const persistedState = examStateStore.get(this.examStateStoreKey);
 			let storedState = {};
 
-			try {
-				storedState = JSON.parse(persistedState);
-			} catch (e) {
-				$wnl.logger.warning(e);
+			if (persistedState) {
+				try {
+					storedState = JSON.parse(persistedState);
+				} catch (e) {
+					$wnl.logger.warning(e);
+				}
 			}
 
 			return storedState;
@@ -507,6 +509,7 @@ export default {
 				})).then(() => false)
 					.catch(() => this.performCheckQuestions());
 			} else {
+				examStateStore.remove(this.examStateStoreKey);
 				this.performCheckQuestions();
 			}
 		},

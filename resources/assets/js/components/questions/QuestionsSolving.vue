@@ -125,6 +125,7 @@
 					@checkQuiz="(payload) => $emit('checkQuiz', payload)"
 					@endQuiz="$emit('endQuiz')"
 					@userEvent="proxyUserEvent"
+					@updateTime="(payload) => $emit('updateTime', payload)"
 				/>
 			</div>
 		</div>
@@ -385,6 +386,12 @@ export default {
 
 			this.$emit('activeViewChange', this.activeView);
 		},
+		presetOptions() {
+			if (this.presetOptions.hasOwnProperty('activeView')) {
+				this.activeView = this.presetOptions.activeView;
+			}
+			this.$emit('activeViewChange', this.activeView);
+		}
 	}
 };
 </script>

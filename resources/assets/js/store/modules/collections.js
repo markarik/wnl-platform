@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import {modelToResourceMap} from 'js/utils/config';
 import {set} from 'vue';

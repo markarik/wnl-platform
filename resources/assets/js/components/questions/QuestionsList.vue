@@ -231,7 +231,7 @@ export default {
 			return !!this.presetOptionsToPass.examMode && this.testMode;
 		},
 		examTagId() {
-			return get(this.presetOptions, 'examTagId', 0);
+			return get(this.presetOptionsToPass, 'examTagId', 0);
 		},
 		initialFilters() {
 			let filters = !isEmpty(this.presetFilters) ? this.presetFilters : this.activeFilters;
@@ -399,6 +399,7 @@ export default {
 			const persistedState = this.readPersistedState();
 			this.testMode && examStateStore.set(this.examStateStoreKey, JSON.stringify({
 				...persistedState,
+				examTagId: this.examTagId,
 				results: this.testQuestions.map(question => ({
 					question_id: question.id,
 					answer_id: question.answers[question.selectedAnswer] && question.answers[question.selectedAnswer].id
@@ -623,11 +624,11 @@ export default {
 			const questionsIds = results.map(response => response.question_id);
 			try {
 				await this.$swal(swalConfig({
-					title: 'Wznów Egzamin',
-					text: 'Masz nieukończony egzamin, czy chcesz wrócić do rozwiązywania?',
+					title: 'Zapisaliśmy nieukończony test!',
+					html: '<p>Wygląda na to, że jesteś w trakcie rozwiązywania testu.</p><p>Czy chcesz do niego wrócić?</p>',
 					showCancelButton: true,
-					confirmButtonText: this.$t('ui.confirm.confirm'),
-					cancelButtonText: this.$t('ui.confirm.cancel'),
+					confirmButtonText: 'TAK, WRACAM DO TESTU',
+					cancelButtonText: 'NIE, PRZERYWAM TEST',
 					type: 'info',
 					confirmButtonClass: 'button is-primary',
 					reverseButtons: true
@@ -639,7 +640,8 @@ export default {
 					sizesToChoose: [results.length],
 					testQuestionsCount: results.length,
 					time: storedState.time || timeBaseOnQuestions(results.length),
-					examMode: true,
+					examTagId: storedState.examTagId || 0,
+					examMode: !!storedState.examTagId,
 					examQuestions: questionsIds
 				};
 				this.switchOverlay(true, 'testBuilding', 'testBuilding');

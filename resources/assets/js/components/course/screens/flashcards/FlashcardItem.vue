@@ -80,7 +80,11 @@
 				</wnl-form>
 			</div>
 		</div>
-		<wnl-content-item-classifier-editor :contentItem="flashcard"/>
+		<wnl-content-item-classifier-editor
+			:contentItem="flashcard"
+			@taxonomyTermAttached="onTaxonomyTermAttached"
+			@taxonomyTermDetached="onTaxonomyTermDetached"
+		/>
 	</li>
 </template>
 
@@ -304,7 +308,33 @@ export default {
 		},
 		toggleNoteEditor() {
 			this.isNoteEditorOpen = !this.isNoteEditorOpen;
-		}
+		},
+		onTaxonomyTermAttached(term) {
+			if (!this.flashcard.taxonomyTerms.find(({id}) => id === term.id)) {
+				const taxonomyTerms = [
+					...this.flashcard.taxonomyTerms,
+					term
+				];
+
+				this.updateFlashcard({
+					...this.flashcard,
+					taxonomyTerms
+				});
+			}
+		},
+		onTaxonomyTermDetached(term) {
+			const index = this.flashcard.taxonomyTerms.findIndex(({id}) => id === term.id);
+
+			if (index > -1) {
+				const taxonomyTerms = [...this.flashcard.taxonomyTerms];
+
+				taxonomyTerms.splice(index, 1);
+				this.updateFlashcard({
+					...this.flashcard,
+					taxonomyTerms
+				});
+			}
+		},
 	},
 };
 </script>

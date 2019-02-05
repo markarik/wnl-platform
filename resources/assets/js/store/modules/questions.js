@@ -404,6 +404,23 @@ const actions = {
 		}).then(response => {
 			const {answers, questions, slides, included} = _handleResponse(response, commit);
 			const comments = _.get(included, 'comments');
+			comments && dispatch('comments/setComments', comments, {root:true});
+
+			commit(types.QUESTIONS_SET_TEST, {answers, questions, slides});
+			commit(types.UPDATE_INCLUDED, included);
+
+			return response;
+		});
+	},
+	fetchQuestionsByIds({commit, state, dispatch, rootGetters}, ids) {
+		return axios.post(getApiUrl('quiz_questions/query'), {
+			ids,
+			include: 'quiz_answers,reactions,comments.profiles,slides',
+			cachedPagination: false,
+			limit: ids.length
+		}).then(response => {
+			const {answers, questions, slides, included} = _handleResponse(response, commit);
+			const comments = _.get(included, 'comments');
 
 			const parsedQuestions = questions.map(question => ({
 				...question,

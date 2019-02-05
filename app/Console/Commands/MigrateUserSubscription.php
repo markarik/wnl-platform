@@ -69,8 +69,6 @@ class MigrateUserSubscription extends Command
 					['access_start' => $dates->min, 'access_end' => $dates->max]
 				);
 			}
-
-			CoursesApiController::clearUserCache($user->id);
 		}
 	}
 }

@@ -283,7 +283,6 @@ export default {
 	computed: {
 		...mapGetters(['currentUserId', 'currentUserSubscriptionDates']),
 		...mapGetters('course', [
-			'name',
 			'getRequiredLessons',
 		]),
 		...mapGetters('progress', [

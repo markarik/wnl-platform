@@ -53,6 +53,7 @@
 			text-transform: uppercase
 
 			.icon
+				flex: 0 0 auto;
 				margin-right: $margin-small
 
 			.toggle

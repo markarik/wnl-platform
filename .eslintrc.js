@@ -5,6 +5,9 @@ module.exports = {
 		// 'plugin:vue/recommended'
 		'plugin:vue/strongly-recommended'
 	],
+	plugins: [
+		'import'
+	],
 	env: {
 		browser: true,
 		node: true,
@@ -32,6 +35,7 @@ module.exports = {
 			'error',
 			'always'
 		],
+		'import/no-relative-parent-imports': 'error',
 		'vue/component-name-in-template-casing': [
 			'error',
 			'kebab-case'

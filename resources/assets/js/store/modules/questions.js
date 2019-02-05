@@ -1,6 +1,6 @@
 import {set} from 'vue';
 import {get, isEmpty, isNumber, size} from 'lodash';
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import {parseFilters} from 'js/services/apiFiltering';
 import axios from 'axios';

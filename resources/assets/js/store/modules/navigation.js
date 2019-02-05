@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import { set, delete as destroy } from 'vue';
 
 // Initial state

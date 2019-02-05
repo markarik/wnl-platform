@@ -1,6 +1,6 @@
 <template>
 	<div v-if="canAccess" class="content-item-classifier">
-		<div v-show="expanded" class="content-item-classifier__editor">
+		<div v-if="expanded" class="content-item-classifier__editor">
 			<div class="content-item-classifier__editor__header">
 				<div>
 					<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
@@ -19,7 +19,7 @@
 				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 		</div>
-		<div v-show="!expanded" class="clickable content-item-classifier__tag-names" @click="expanded=true">
+		<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
 			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
 			<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
 			<span v-else>brak</span>

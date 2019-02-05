@@ -1,6 +1,6 @@
 <template>
 	<!-- Breadcrumbs -->
-	<div class="wnl-sidenav" v-bind:class="{ mobile: isMobileNavigation }">
+	<div class="wnl-sidenav" :class="{ mobile: isMobileNavigation }">
 		<!-- Items -->
 		<ul class="items" v-if="items">
 			<li class="item heading small" v-if="itemsHeading">

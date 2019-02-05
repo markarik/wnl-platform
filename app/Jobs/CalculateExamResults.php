@@ -120,5 +120,7 @@ class CalculateExamResults implements ShouldQueue
 			'total' => count($examQuestions),
 			'details' => json_encode(['subjects' => $subjects])
 		]);
+
+		\Log::notice("Successfully Calculated Exam Results");
 	}
 }

@@ -1,6 +1,6 @@
 import {set} from 'vue';
 
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import {modelToResourceMap} from 'js/utils/config';
 import {commentsGetters, commentsMutations, commentsActions, commentsState} from 'js/store/modules/comments';

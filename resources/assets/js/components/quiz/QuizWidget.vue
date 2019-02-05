@@ -22,7 +22,8 @@
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleClick"
 			@userEvent="proxyUserEvent"
-			@taxonomyTermAttached="onTaxonomyTermAttached"
+			@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
+			@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
 		<p class="has-text-centered">

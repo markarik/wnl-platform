@@ -117,6 +117,7 @@
 		<wnl-content-item-classifier-editor
 			:content-item="question"
 			@taxonomyTermAttached="onTaxonomyTermAttached"
+			@taxonomyTermDetached="onTaxonomyTermDetached"
 		/>
 	</div>
 </template>
@@ -411,7 +412,10 @@ export default {
 			});
 		},
 		onTaxonomyTermAttached(term) {
-			this.$emit('taxonomyTermAttached', term);
+			this.$emit('taxonomyTermAttached', {term, question: this.question});
+		},
+		onTaxonomyTermDetached(term) {
+			this.$emit('taxonomyTermDetached', {term, question: this.question});
 		}
 	},
 	watch: {

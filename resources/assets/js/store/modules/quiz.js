@@ -238,8 +238,17 @@ const mutations = {
 	[types.QUIZ_SET_PAGINATION] (state, pagination) {
 		set(state, 'pagination', pagination);
 	},
-	[types.QUIZ_QUESTION_ADD_TERM] (state, {quizQuestion, term}) {
-		quizQuestion.taxonomyTerms.push(term);
+	[types.QUIZ_QUESTION_ATTACH_TERM] (state, {question, term}) {
+		const hasTerm = question.taxonomyTerms.find(questionTerm => questionTerm.id === term.id) > -1;
+		if (!hasTerm) {
+			question.taxonomyTerms.push(term);
+		}
+	},
+	[types.QUIZ_QUESTION_DETACH_TERM] (state, {question, term}) {
+		const index = question.taxonomyTerms.findIndex(quetionTerm => quetionTerm.id === term.id);
+		if (index > -1) {
+			question.taxonomyTerms.splice(index, 1);
+		}
 	}
 };
 

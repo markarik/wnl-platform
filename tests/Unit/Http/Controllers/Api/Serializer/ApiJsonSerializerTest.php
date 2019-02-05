@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kvas
- * Date: 05.02.19
- * Time: 13:49
- */
 
 namespace Tests\Unit\Http\Controllers\Api\Serializer;
 

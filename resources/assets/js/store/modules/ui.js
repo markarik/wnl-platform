@@ -1,4 +1,4 @@
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import { set, delete as destroy } from 'vue';
 import { isString, pickBy, values } from 'lodash';
 

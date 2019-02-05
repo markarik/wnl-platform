@@ -32,6 +32,7 @@
 								class="content-classifier__panel-editor__term__name"
 							/>
 							<span
+								v-if="allItemsCount > 1"
 								:class="{
 									'margin': true,
 									'left': true,

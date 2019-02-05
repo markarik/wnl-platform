@@ -44,6 +44,11 @@
 				<legend class="annotation-tags__legend">Tagi</legend>
 				<wnl-tags :defaultTags="annotation.tags || []" ref="tags" @insertTag="onFieldChange"></wnl-tags>
 			</fieldset>
+			<wnl-content-item-classifier-editor
+				:contentItem="annotation"
+				@onTaxonomyTermAttached="onTaxonomyTermAttached"
+				@onTaxonomyTermDetached="onTaxonomyTermDetached"
+			/>
 			<div class="level-item">
 				<a class="button is-danger"
 					 :disabled="!annotation.id"
@@ -126,7 +131,6 @@
 				</div>
 			</template>
 		</form>
-		<wnl-content-item-classifier-editor :contentItem="annotation"/>
 		<wnl-modal @closeModal="isVisible = false" v-if="isVisible">
 			<wnl-preview-modal :content="annotation.description"/>
 		</wnl-modal>
@@ -311,6 +315,18 @@ export default {
 					text: 'Nie udało się usunąć przypisu :( Spróbuj jeszcze raz.!',
 					type: 'error'
 				});
+			}
+		},
+		onTaxonomyTermAttached(term) {
+			if (!this.annotation.taxonomyTerms.find(({id}) => id === term.id)) {
+				this.annotation.taxonomyTerms.push(term);
+			}
+		},
+		onTaxonomyTermDetached(term) {
+			const index = this.annotation.taxonomyTerms.findIndex(({id}) => id === term.id);
+
+			if (index > -1) {
+				this.annotation.taxonomyTerms.splice(index, 1);
 			}
 		},
 	},

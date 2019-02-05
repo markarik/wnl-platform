@@ -1,7 +1,7 @@
 <template>
 	<div v-if="canAccess" class="content-item-classifier">
-		<div v-if="expanded" class="content-item-classifier__editor">
-			<div class="content-item-classifier__editor__header">
+		<div v-if="alwaysExpanded || expanded" class="content-item-classifier__editor">
+			<div v-if="!alwaysExpanded" class="content-item-classifier__editor__header">
 				<div>
 					<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
 					<strong>{{CONTENT_TYPE_NAMES[contentItem.type]}} #{{contentItem.id}}</strong>
@@ -80,6 +80,10 @@ export default {
 		};
 	},
 	props: {
+		alwaysExpanded: {
+			type: Boolean,
+			default: false,
+		},
 		contentItem: {
 			type: Object,
 			required: true,

@@ -45,6 +45,8 @@
 				<wnl-tags :defaultTags="annotation.tags || []" ref="tags" @insertTag="onFieldChange"></wnl-tags>
 			</fieldset>
 			<wnl-content-item-classifier-editor
+				class="margin bottom"
+				:alwaysExpanded="true"
 				:contentItem="annotation"
 				@taxonomyTermAttached="onTaxonomyTermAttached"
 				@taxonomyTermDetached="onTaxonomyTermDetached"

@@ -14,4 +14,8 @@ class Course extends Model
 	public function groups() {
 		return $this->hasMany('\App\Models\Group');
 	}
+
+	public function courseStructureNodes() {
+		return $this->hasMany('\App\Models\CourseStructureNode');
+	}
 }

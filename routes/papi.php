@@ -122,7 +122,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::group(['middleware' => ['account-status', 'subscription']], function () use ($r) {
 		// Courses
-		Route::get("{$r['courses']}/{id}/structure", 'CoursesApiController@getStructure');
+		Route::get("{$r['courses']}/{id}/structure", 'CoursesApiController@get');
 		Route::get("{$r['course-structure-nodes']}/{courseId}", 'CourseStructureNodesApiController@getByCourseId');
 
 		// Groups

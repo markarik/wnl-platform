@@ -63,8 +63,6 @@ import context from 'js/consts/events_map/context.json';
 import emits_events from 'js/mixins/emits-events';
 
 const STATUS_NONE = 'none';
-const STATUS_IN_PROGRESS = 'in-progress';
-const STATUS_AVAILABLE = 'available';
 
 export default {
 	name: 'NextLesson',
@@ -92,10 +90,10 @@ export default {
 			return this.$route.params.courseId;
 		},
 		groupName() {
-			return this.getGroup(this.nextLesson.groups).name;
+			return this.nextLesson.groups && this.getGroup(this.nextLesson.groups).name;
 		},
 		nextLessonAvailable() {
-			return this.nextLesson && this.status !== STATUS_NONE;
+			return this.status !== STATUS_NONE;
 		},
 		lessonName() {
 			return truncate(this.nextLesson.name, {length: 30});

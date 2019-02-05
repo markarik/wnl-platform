@@ -1,6 +1,6 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
-		<div class="wnl-lesson" v-if="isLessonAvailable(lesson.id)">
+		<div class="wnl-lesson" v-if="isLessonAvailable(lessonId)">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
 					<div class="level-left">
@@ -57,8 +57,9 @@
 
 <script>
 import _ from 'lodash';
-import PreviousNext from 'js/components/course/PreviousNext';
 import {mapGetters, mapActions} from 'vuex';
+
+import PreviousNext from 'js/components/course/PreviousNext';
 import {resource} from 'js/utils/config';
 import {breadcrumb} from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
@@ -80,15 +81,15 @@ export default {
 				 * (which btw is defined as 100% of its parent element),
 				 * all browsers are able to beautifully scroll the content.
 				 */
-			elementHeight: _.get(this.$parent, '$el.offsetHeight') || '100%'
+			elementHeight: _.get(this.$parent, '$el.offsetHeight') || '100%',
 		};
 	},
 	computed: {
 		...mapGetters('course', [
-			'getScreens',
+			'getScreensForLesson',
 			'getLesson',
-			'getSections',
-			'getSubsections',
+			'getSectionsForScreen',
+			'getSubsectionsForSection',
 			'getScreen',
 			'getScreenSectionsCheckpoints',
 			'getSectionSubsectionsCheckpoints',
@@ -125,27 +126,33 @@ export default {
 			return this.lesson.order_number;
 		},
 		screens() {
-			return this.getScreens(this.lessonId);
+			return this.getScreensForLesson(this.lessonId);
 		},
 		currentScreen() {
 			return this.getScreen(this.screenId);
 		},
 		currentSection() {
+			if (!this.sectionsReversed) return;
+
 			return this.sectionsReversed.find((section) => this.slide >= section.slide);
 		},
 		currentSubsection() {
+			if (!this.subsectionsReversed) return;
+
 			return this.subsectionsReversed.find((subsection) => this.slide >= subsection.slide);
 		},
 		sectionsReversed() {
-			const sectionsIds = _.get(this.currentScreen, 'sections', []);
-			const sections = this.getSections(sectionsIds);
+			if (!(this.currentScreen && this.currentScreen.id)) return;
+
+			const sections = this.getSectionsForScreen(this.currentScreen.id);
 
 			// map needed because reverse modifies intial array
 			return sections.map(el => el).reverse();
 		},
 		subsectionsReversed() {
-			const subsectionsIds = _.get(this.currentSection, 'subsections', []);
-			const subsections = this.getSubsections(subsectionsIds);
+			if (!this.currentSection) return;
+
+			const subsections = this.getSubsectionsForSection(this.currentSection.id);
 
 			// map needed because reverse modifies intial array
 			return subsections.map(el => el).reverse();
@@ -175,6 +182,7 @@ export default {
 		},
 	},
 	methods: {
+
 		...mapActions('progress', [
 			'startLesson',
 			'completeLesson',
@@ -183,11 +191,10 @@ export default {
 			'completeSubsection',
 			'saveLessonProgress',
 		]),
-		...mapActions([
-			'updateLessonNav',
-		]),
+		...mapActions(['updateLessonNav', 'setupCurrentUser', 'toggleOverlay']),
 		...mapActions(['setupCurrentUser']),
 		...mapActions('users', ['setActiveUsers', 'userJoined', 'userLeft']),
+		...mapActions('course', ['setupLesson']),
 		onUserEvent(payload) {
 			this.$trackUserEvent({
 				...payload,
@@ -303,8 +310,16 @@ export default {
 			this.elementHeight = this.$parent.$el.offsetHeight;
 		},
 	},
-	mounted () {
-		this.launchLesson();
+	async mounted () {
+		this.toggleOverlay({source: 'lesson', display: true});
+		try {
+			await this.setupLesson(this.lessonId);
+			this.launchLesson();
+		} catch (e) {
+			$wnl.logger.error(e);
+		} finally {
+			this.toggleOverlay({source: 'lesson', display: false});
+		}
 		window.addEventListener('resize', this.updateElementHeight);
 	},
 	beforeDestroy () {

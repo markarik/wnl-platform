@@ -26,6 +26,8 @@
 </style>
 
 <script>
+import {mapActions, mapGetters} from 'vuex';
+
 import End from 'js/components/course/screens/End';
 import Html from 'js/components/course/screens/Html';
 import MockExam from 'js/components/course/screens/MockExam';
@@ -35,7 +37,6 @@ import Quiz from 'js/components/quiz/Quiz';
 import Slideshow from 'js/components/course/screens/slideshow/Slideshow';
 import Widget from 'js/components/course/screens/Widget';
 import emits_events from 'js/mixins/emits-events';
-import {mapActions, mapGetters} from 'vuex';
 import features from 'js/consts/events_map/features.json';
 
 const TYPES_MAP = {
@@ -105,31 +106,21 @@ export default {
 			return this.screenData.tags;
 		},
 		component() {
+			if (!this.type) return;
+
 			return TYPES_MAP[this.type].component;
 		},
 		showQna() {
 			return this.screenData.is_discussable;
 		},
 		eventFeatureComponent() {
+			if (!this.type) return;
+
 			return TYPES_MAP[this.type].feature_component;
 		}
 	},
 	methods: {
 		...mapActions('qna', ['fetchQuestionsForDiscussion']),
-		...mapActions('course', ['fetchScreenContent']),
-		...mapActions(['toggleOverlay']),
-
-		fetchContent() {
-			if (this.screenData.hasOwnProperty('content')) return;
-
-			this.toggleOverlay({source: 'screens', display: true});
-			this.fetchScreenContent(this.screenId)
-				.then(() => this.toggleOverlay({source: 'screens', display: false}))
-				.catch((error) => {
-					this.toggleOverlay({source: 'screens', display: false});
-					$wnl.logger.capture(error);
-				});
-		},
 		trackScreenOpen() {
 			this.emitUserEvent({
 				feature: features.screen.value,
@@ -140,13 +131,11 @@ export default {
 		}
 	},
 	mounted() {
-		this.fetchContent();
 		this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
 		this.trackScreenOpen();
 	},
 	watch: {
 		screenId() {
-			this.fetchContent();
 			this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
 			this.trackScreenOpen();
 		}

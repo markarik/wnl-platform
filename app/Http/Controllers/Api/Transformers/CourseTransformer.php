@@ -10,13 +10,25 @@ use App\Http\Controllers\Api\ApiTransformer;
 class CourseTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['groups'];
+	protected $parent;
+
+	public function __construct($parent = null)
+	{
+		$this->parent = $parent;
+	}
 
 	public function transform(Course $course)
 	{
-		return [
+		$data = [
 			'id'   => $course->id,
 			'name' => $course->name,
 		];
+
+		if ($this->parent) {
+			$data = array_merge($data, $this->parent);
+		}
+
+		return $data;
 	}
 
 	public function includeGroups(Course $course)

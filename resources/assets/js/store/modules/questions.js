@@ -248,13 +248,13 @@ const mutations = {
 	[types.QUESTIONS_SET_TOKEN] (state) {
 		state.token = uuidv1();
 	},
-	[types.QUIZ_QUESTION_ATTACH_TERM] (state, {question, term}) {
+	[types.QUESTIONS_ATTACH_TERM] (state, {question, term}) {
 		const hasTerm = question.taxonomyTerms.find(questionTerm => questionTerm.id === term.id) > -1;
 		if (!hasTerm) {
 			question.taxonomyTerms.push(term);
 		}
 	},
-	[types.QUIZ_QUESTION_DETACH_TERM] (state, {question, term}) {
+	[types.QUESTIONS_DETACH_TERM] (state, {question, term}) {
 		const index = question.taxonomyTerms.findIndex(questionTerm => questionTerm.id === term.id);
 		if (index > -1) {
 			question.taxonomyTerms.splice(index, 1);
@@ -418,7 +418,18 @@ const actions = {
 			const comments = _.get(included, 'comments');
 			comments && dispatch('comments/setComments', comments, {root:true});
 
-			commit(types.QUESTIONS_SET_TEST, {answers, questions, slides});
+			const parsedQuestions = questions.map(question => ({
+				...question,
+				// TODO constant
+				type: 'quizQuestions',
+				taxonomyTerms: parseTaxonomyTermsFromIncludes(question.taxonomy_terms, included),
+			}));
+			delete included.tags;
+			delete included.taxonomy_terms;
+			delete included.taxonomies;
+			delete included.ancestors;
+
+			commit(types.QUESTIONS_SET_TEST, {answers, questions: parsedQuestions, slides});
 			commit(types.UPDATE_INCLUDED, included);
 
 			return response;

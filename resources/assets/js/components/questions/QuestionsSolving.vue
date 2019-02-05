@@ -126,6 +126,8 @@
 					@endQuiz="$emit('endQuiz')"
 					@userEvent="proxyUserEvent"
 					@updateTime="(payload) => $emit('updateTime', payload)"
+					@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
+					@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
 				/>
 			</div>
 		</div>

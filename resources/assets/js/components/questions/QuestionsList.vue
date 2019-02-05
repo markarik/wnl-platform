@@ -49,6 +49,8 @@
 						@userEvent="onUserEvent"
 						@activeViewChange="onActiveViewChange"
 						@updateTime="onUpdateTime"
+						@taxonomyTermAttached="onTaxonomyTermAttached"
+						@taxonomyTermDetached="onTaxonomyTermDetached"
 				/>
 				<div v-else class="text-loader">
 					<wnl-text-loader/>
@@ -118,7 +120,7 @@
 <script>
 import {isEmpty, get} from 'lodash';
 import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
-import {QUESTIONS_SET_TOKEN as setToken} from 'js/store/mutations-types';
+import {QUESTIONS_SET_TOKEN as setToken, QUESTIONS_ATTACH_TERM, QUESTIONS_DETACH_TERM} from 'js/store/mutations-types';
 import {VIEWS} from 'js/consts/questionsSolving';
 
 import QuestionsFilters from 'js/components/questions/QuestionsFilters';
@@ -276,7 +278,11 @@ export default {
 			'setPage',
 			'fetchActiveFilters',
 		]),
-		...mapMutations('questions', {setToken}),
+		...mapMutations('questions', {
+			setToken,
+			attachTerm: QUESTIONS_ATTACH_TERM,
+			detachTerm: QUESTIONS_DETACH_TERM
+		}),
 		buildTest({count}) {
 			const text = this.presetOptionsToPass.hasOwnProperty('loadingText')
 				? this.presetOptionsToPass.loadingText
@@ -566,6 +572,12 @@ export default {
 				...persistedState,
 				time: Math.floor(remainingTime / 60)
 			}));
+		},
+		onTaxonomyTermAttached(payload) {
+			this.attachTerm(payload);
+		},
+		onTaxonomyTermDetached(payload) {
+			this.detachTerm(payload);
 		},
 		setupQuestions() {
 			const hasPresetFilters = !isEmpty(this.presetFilters);

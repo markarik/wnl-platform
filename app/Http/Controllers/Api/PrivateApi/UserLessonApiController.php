@@ -48,8 +48,6 @@ class UserLessonApiController extends ApiController
 			'start_date' => Carbon::parse($request->input('date')),
 		]);
 
-		CoursesApiController::clearUserCache($userId);
-
 		return $this->respondOk();
 	}
 
@@ -70,7 +68,6 @@ class UserLessonApiController extends ApiController
 
 		$plan = dispatch_now(new CalculateCoursePlan($user, $options));
 
-		CoursesApiController::clearUserCache($user->id);
 		$lessons = $user->lessonsAvailability()->get();
 		$controller = new LessonsApiController($request);
 
@@ -100,8 +97,6 @@ class UserLessonApiController extends ApiController
 				['start_date' => Carbon::parse($lesson['startDate'])]
 			);
 		}
-
-		CoursesApiController::clearUserCache($userId);
 
 		return $this->respondOk();
 	}

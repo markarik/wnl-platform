@@ -91,9 +91,6 @@ class SlideshowsRemove extends Command
 
 			$bar->finish();
 
-			// TODO: https://bethink.atlassian.net/browse/PLAT-506 !!
-			CoursesApiController::clearCache();
-
 			$this->info("\n\nThe end! Now go, and see what you broke.\n");
 		}
 	}

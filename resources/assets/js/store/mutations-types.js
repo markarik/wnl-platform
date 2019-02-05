@@ -25,10 +25,11 @@ export const SITE_WIDE_MESSAGES_UPDATE_MESSAGE = 'SITE_WIDE_MESSAGES_UPDATE_MESS
 
 // Course
 export const SET_STRUCTURE                   = 'SET_STRUCTURE';
+export const SET_COURSE                      = 'SET_COURSE';
+export const SET_SCREENS                     = 'SET_SCREENS';
+export const SET_SECTIONS                    = 'SET_SECTIONS';
+export const SET_SUBSECTIONS                 = 'SET_SUBSECTIONS';
 export const COURSE_READY                    = 'COURSE_READY';
-export const COURSE_REMOVE_GROUP             = 'COURSE_REMOVE_GROUP';
-export const COURSE_SET_LESSON_AVAILABILITY  = 'COURSE_SET_LESSON_AVAILABILITY';
-export const COURSE_UPDATE_LESSON_START_DATE = 'COURSE_UPDATE_LESSON_START_DATE';
 export const SET_SCREEN_CONTENT              = 'SET_SCREEN_CONTENT';
 
 // Sidenav

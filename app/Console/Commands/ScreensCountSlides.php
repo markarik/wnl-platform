@@ -60,9 +60,6 @@ class ScreensCountSlides extends Command
 			$this->countForSections($screen, $screenPresentables);
 		}
 
-		// TODO: https://bethink.atlassian.net/browse/PLAT-506 !!
-		CoursesApiController::clearCache();
-
 		return;
 	}
 

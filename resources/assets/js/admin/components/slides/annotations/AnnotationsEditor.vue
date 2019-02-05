@@ -93,7 +93,7 @@
 						<label class="label">Tagi do slides.com</label>
 					</div>
 					<div class="field-body">
-						<div class="field field--keyword"  v-for="tag in parserTags" :key="tag">
+						<div class="field field--keyword" v-for="tag in parserTags" :key="tag">
 							<div class="control">
 								<wnl-keyword-field :content="tag" :show="annotation.id"/>
 							</div>
@@ -106,7 +106,7 @@
 						<label class="label">Tagi do edytora</label>
 					</div>
 					<div class="field-body">
-						<div class="field field--keyword"  v-for="tag in htmlTags" :key="tag">
+						<div class="field field--keyword" v-for="tag in htmlTags" :key="tag">
 							<div class="control">
 								<wnl-keyword-field :content="tag" :show="annotation.id"/>
 							</div>
@@ -126,7 +126,7 @@
 				</a>
 			</div>
 		</form>
-		<wnl-modal :isModalVisible="isVisible" @closeModal="isVisible = false" v-if="isVisible">
+		<wnl-modal @closeModal="isVisible = false" v-if="isVisible">
 			<wnl-preview-modal :content="annotation.description"/>
 		</wnl-modal>
 	</div>
@@ -190,7 +190,6 @@
 import {mapActions} from 'vuex';
 import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
-import Code from 'js/admin/components/forms/Code';
 import Form from 'js/classes/forms/Form';
 import { Tags } from 'js/components/global/form/index';
 import KeywordField from './KeywordField';
@@ -201,7 +200,6 @@ import Modal from 'js/components/global/Modal';
 export default {
 	name: 'AnnotationsEditor',
 	components: {
-		'wnl-form-code': Code,
 		'wnl-tags': Tags,
 		'wnl-keyword-field': KeywordField,
 		'quill': Quill,

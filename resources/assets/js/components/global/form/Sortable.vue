@@ -5,8 +5,9 @@
 				<li
 						class="item"
 						v-for="item in inputValue"
+						:key="item"
 				>
-					<slot v-bind:item="formData.included[name][item]" />
+					<slot :item="formData.included[name][item]" />
 				</li>
 			</draggable>
 		</ol>

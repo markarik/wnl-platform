@@ -1,11 +1,11 @@
-<template lang="html">
+<template>
 	<div class="wnl-public-chat">
 		<div class="chat-title">
 			{{title || chatTitle}}
 		</div>
 		<div class="tabs">
 			<ul>
-				<li  v-for="room, key in rooms" :key="key" :class="{'is-active': isActive(room)}">
+				<li v-for="(room, key) in rooms" :key="key" :class="{'is-active': isActive(room)}">
 					<a @click="changeRoom(room)">{{ room.name }}</a>
 				</li>
 			</ul>
@@ -66,7 +66,7 @@
 		margin: $margin-base 0 0 $margin-base
 
 	.chat-title
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-2
 		text-transform: uppercase
 
@@ -85,7 +85,7 @@ import {
 
 
 export default {
-	name: 'wnl-public-chat',
+	name: 'WnlPublicChat',
 	components: {
 		'wnl-chat': MessagesList,
 		'wnl-message-form': MessageForm

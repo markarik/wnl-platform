@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="scrollable-main-container">
 		<div class="level wnl-screen-title">
 			<div class="level-left">
@@ -73,7 +73,7 @@ export default {
 	},
 	methods: {
 		getOrders() {
-			axios.get(getApiUrl('orders/all?include=invoices,payments'))
+			axios.get(getApiUrl('orders/all?include=invoices,payments,study_buddy'))
 				.then((response) => {
 					if (_.isEmpty(response.data)) {
 						this.orders = [];
@@ -88,6 +88,7 @@ export default {
 							return {
 								...order,
 								invoices: (order.invoices || []).map(invoiceId => invoices[invoiceId]),
+								studyBuddy: order.study_buddy ? included.study_buddy[order.study_buddy[0]] : {},
 								payments: (order.payments || []).map(paymentId => payments[paymentId])
 							};
 						});

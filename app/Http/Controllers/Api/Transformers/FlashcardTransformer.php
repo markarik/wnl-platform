@@ -9,7 +9,7 @@ use App\Models\Flashcard;
 
 class FlashcardTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['tags', 'user_flashcard_notes'];
+	protected $availableIncludes = ['tags', 'taxonomy_terms', 'user_flashcard_notes'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -45,5 +45,14 @@ class FlashcardTransformer extends ApiTransformer
 		$tags = $flashcard->tags;
 
 		return $this->collection($tags, new TagTransformer(['flashcards' => $flashcard->id]), 'tags');
+	}
+
+	public function includeTaxonomyTerms(Flashcard $flashcard)
+	{
+		return $this->collection(
+			$flashcard->taxonomyTerms,
+			new TaxonomyTermTransformer(['flashcards' => $flashcard->id]),
+			'taxonomy_terms'
+		);
 	}
 }

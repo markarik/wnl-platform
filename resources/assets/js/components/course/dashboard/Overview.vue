@@ -40,7 +40,7 @@
 			</span>
 		</div>
 		<div class="current-view-controls">
-			<a v-for="panel, index in panels" class="panel-toggle"
+			<a v-for="(panel, index) in panels" class="panel-toggle"
 				:class="{'is-active': overviewView === panel.slug}"
 				:key="index"
 				@click="changeOverviewView(panel.slug)"
@@ -52,7 +52,13 @@
 			</a>
 		</div>
 		<wnl-stream-feed v-show="overviewView === 'stream'"/>
-		<wnl-qna :sortingEnabled="true" :numbersDisabled="true" v-show="overviewView === 'qna'" :hideTitle="true" class="wnl-overview-qna"/>
+		<wnl-qna
+			:sortingEnabled="true"
+			:numbersDisabled="true"
+			v-show="overviewView === 'qna'"
+			:hideTitle="true"
+			class="wnl-overview-qna"
+		/>
 	</div>
 </template>
 

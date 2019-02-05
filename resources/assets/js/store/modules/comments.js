@@ -22,7 +22,7 @@ function _fetchComments({...commentsQuery}) {
 	};
 
 	if (commentsQuery.hasOwnProperty('comment_id')) {
-		requestParams.comment_id = commentsQuery.comment_id;
+		requestParams.id = commentsQuery.comment_id;
 	}
 	return axios.get(getApiUrl('comments/query'), {params: requestParams})
 		.then((data) => {
@@ -72,9 +72,18 @@ export const commentsMutations = {
 
 		set(state.comments, comment.id, comment);
 		if (!state[resource][resourceId].hasOwnProperty('comments')) {
-			set(state[resource][resourceId], 'comments', []);
+			set(state, resource, {
+				...state[resource],
+				[resourceId]: {
+					...state[resource][resourceId],
+					comments: [
+						comment.id
+					]
+				}
+			});
+		} else {
+			state[resource][resourceId].comments.push(comment.id);
 		}
-		state[resource][resourceId].comments.push(comment.id);
 	},
 	[types.REMOVE_COMMENT] (state, payload) {
 		let resource = payload.commentableResource,
@@ -127,7 +136,10 @@ export const commentsMutations = {
 		Object.keys(commentsResourceObj).forEach(resource => {
 			Object.keys(commentsResourceObj[resource]).forEach(resourceId => {
 				const oldComments = state[resource][resourceId].comments || [];
-				const commentsIds = _.uniq(oldComments.concat(Object.keys(commentsResourceObj[resource][resourceId])));
+				const commentsIds = _.uniqBy(
+					oldComments.concat(Object.keys(commentsResourceObj[resource][resourceId])),
+					commentId => commentId.toString()
+				);
 				set(state[resource][resourceId], 'comments', commentsIds);
 			});
 		});

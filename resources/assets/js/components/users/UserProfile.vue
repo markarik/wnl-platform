@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 		<div class="wnl-user-profile" :class="{mobile: isMobileProfile}">
 			<div class="text-loader" v-if="isLoading">
 				<wnl-text-loader>
@@ -13,7 +13,7 @@
 			</div>
 
 			<div v-else>
-				<div class="user-profile" :class="isMobile"  v-if="!isLoading && responseCondition">
+				<div class="user-profile" :class="isMobile" v-if="!isLoading && responseCondition">
 					<div class="user-content" :class="avatarClass">
 						<wnl-avatar class="user-avatar image" size="extraextralarge"
 						:fullName="fullName"
@@ -161,7 +161,7 @@
 						margin-bottom: $margin-small
 				.user-info-city
 					align-items: center
-					color: $color-gray-dimmed
+					color: $color-gray
 					display: flex
 					margin-bottom: $margin-base
 					overflow-wrap: break-word
@@ -209,7 +209,7 @@
 					color: $color-dark-blue-opacity
 					margin-right: $margin-base
 			.activity-title
-				color: $color-gray-dimmed
+				color: $color-gray
 				letter-spacing: 1px
 				text-align: center
 				text-transform: uppercase
@@ -336,18 +336,12 @@ export default {
 		ifAnyAnswers() {
 			return this.howManyAnswers !== 0;
 		},
-		isQuestionsPanelVisible() {
-			return this.isPanelActive('questions');
-		},
-		isAnswersPanelVisible() {
-			return this.isPanelActive('answers');
-		},
 		sortedQuestionsForAnswers() {
 			const questionsIds = this.sortedAnswers.map((answer) => answer.qna_questions);
 
 			const sortedQuestionsForAnswers = [];
 
-			questionsIds.forEach((id, index) => {
+			questionsIds.forEach((id) => {
 				const value = Object.values(this.allQuestionsForAnswers).find((question) => {
 					return question.id === id;
 				});

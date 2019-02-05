@@ -3,7 +3,7 @@
 		<div class="wnl-navbar-item wnl-navbar-sidenav-toggle" v-if="canShowSidenavTrigger">
 			<a class="wnl-navbar-sidenav-trigger" @click="toggleSidenav">
 				<span class="icon">
-					<i class="fa" v-bind:class="sidenavIconClass"></i>
+					<i class="fa" :class="sidenavIconClass"></i>
 				</span>
 			</a>
 		</div>
@@ -42,7 +42,7 @@
 			<wnl-user-dropdown/>
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-chat-toggle" v-if="canShowChatToggleInNavbar">
-			<span class="icon is-big"><i class="fa" v-bind:class="chatIconClass" @click="toggleChat"></i></span>
+			<span class="icon is-big"><i class="fa" :class="chatIconClass" @click="toggleChat"></i></span>
 		</div>
 	</nav>
 </template>
@@ -111,7 +111,7 @@
 		width: $navbar-height - 2 * $margin-small
 
 		.icon
-			color: $color-gray-dimmed
+			color: $color-gray
 
 	.wnl-navbar-sidenav-toggle
 		padding-left: 0
@@ -143,7 +143,6 @@
 <script>
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 
-import Breadcrumbs from 'js/components/global/Breadcrumbs';
 import Search from 'js/components/global/search/Search';
 import UserDropdown from 'js/components/user/UserDropdown.vue';
 import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed';
@@ -155,7 +154,6 @@ export default {
 	name: 'Navbar',
 	perimeters: [currentEditionParticipant],
 	components: {
-		'wnl-breadcrumbs': Breadcrumbs,
 		'wnl-user-dropdown': UserDropdown,
 		'wnl-personal-feed': PersonalFeed,
 		'wnl-search': Search,

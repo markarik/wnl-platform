@@ -22,7 +22,7 @@
 							</div>
 						</div>
 					</div>
-					<div  v-if="author.city" class="user-info-city">
+					<div v-if="author.city" class="user-info-city">
 						<span class="icon is-small">
 							<i class="fa fa-map-marker"></i>
 						</span>
@@ -84,7 +84,7 @@
 		margin-bottom: $margin-small
 
 	.user-info-city
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-base
 		font-weight: $font-weight-light
 		margin-bottom: $margin-small

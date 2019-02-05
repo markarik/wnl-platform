@@ -20,11 +20,11 @@
 
 	.breadcrumb-link,
 	.breadcrumb-link:visited
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-2
 
 	.breadcrumb-link:hover
-		color: $color-gray
+		color: $color-darkest-gray
 </style>
 
 <script>

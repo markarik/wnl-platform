@@ -6,6 +6,7 @@ use App\Models;
 use App\Observers;
 use Barryvdh\Debugbar\ServiceProvider as DebugBarServiceProvider;
 use Bschmitt\Amqp\AmqpServiceProvider;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Auth;
@@ -47,12 +48,14 @@ class AppServiceProvider extends ServiceProvider
 		}
 		if ($this->app->environment('dev', 'local')) {
 			$this->app->register(TinkerServiceProvider::class);
+			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 		}
 		if (env('DEBUG_BAR') === true) {
 			$this->app->register(DebugBarServiceProvider::class);
 		}
 		if($this->app->runningInConsole()) {
 			$this->app->register(AmqpServiceProvider::class);
+			$this->app->register(DiscussableServiceProvider::class);
 		}
 	}
 
@@ -63,7 +66,7 @@ class AppServiceProvider extends ServiceProvider
 		$level = Logger::INFO;
 		$handler = new RavenHandler(new \Raven_Client(env('SENTRY_DSN')), $level);
 		$handler->setFormatter(new LineFormatter("%message% %context% %extra%\n"));
-		$monolog = Log::getMonolog();
+		$monolog = Log::getLogger();
 		$monolog->pushHandler($handler);
 		$monolog->pushProcessor(function ($record) {
 			// record app version
@@ -114,6 +117,22 @@ class AppServiceProvider extends ServiceProvider
 		Validator::extend('alpha_comas', function ($attribute, $value) {
 			// Useful for textareas - accepts letters, comas, dots, spaces and hyphens
 			return preg_match('/^[\pL\s\d-,.:;()""]+$/u', $value);
+		});
+
+		Validator::extend('morph_exists', function ($attribute, $value, $parameters, $validator) {
+			if (!$type = array_get($validator->getData(), $parameters[0], false)) {
+				return false;
+			}
+
+			if (Relation::getMorphedModel($type)) {
+				$type = Relation::getMorphedModel($type);
+			}
+
+			if (!class_exists($type)) {
+				return false;
+			}
+
+			return resolve($type)->whereKey($value)->exists();
 		});
 	}
 

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div>
 		<div v-if="hasHits" class="wnl-slides-search" :class="{'is-mobile': isMobile}">
 			<wnl-slide-thumbnail
@@ -26,7 +26,7 @@
 			justify-content: center
 
 	.slides-zero-state
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: 3vh
 		font-weight: bold
 		line-height: $line-height-base

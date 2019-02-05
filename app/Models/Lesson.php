@@ -6,10 +6,11 @@ use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DB;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class Lesson extends Model
 {
-	use Cached;
+	use Cached, Searchable;
 
 	protected $fillable = ['name', 'group_id', 'is_required'];
 

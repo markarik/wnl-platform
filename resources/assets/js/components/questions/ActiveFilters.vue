@@ -62,7 +62,7 @@
 
 		.autorefresh
 			align-items: center
-			color: $color-gray-dimmed
+			color: $color-gray
 			display: flex
 			justify-content: flex-end
 			font-size: $font-size-minus-2
@@ -83,7 +83,7 @@
 			font-weight: $font-weight-bold
 
 		.total-count
-			color: $color-gray-dimmed
+			color: $color-gray
 
 	.active-filters-heading
 		align-items: center

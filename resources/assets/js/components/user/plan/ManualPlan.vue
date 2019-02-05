@@ -152,7 +152,7 @@
 					margin-bottom: $margin-small
 					width: 100%
 					.icon
-						color: $color-gray
+						color: $color-darkest-gray
 					.subitems-count
 						color: $color-background-gray
 						font-size: $font-size-minus-2
@@ -172,16 +172,16 @@
 							background-color: $color-background-lightest-gray
 						.subitem-name
 							align-self: flex-end
-							color: $color-gray
+							color: $color-darkest-gray
 							width: 65%
 							&.is-grayed-out
-								color: $color-gray-dimmed
+								color: $color-gray
 						.subitem-left-side
 							align-items: center
 							display: flex
 							margin-right: $margin-small
 							.not-accesible
-								color: $color-gray-dimmed
+								color: $color-gray
 								font-size: $font-size-plus-1
 								text-align: center
 								cursor: not-allowed
@@ -256,11 +256,13 @@ export default {
 			});
 		},
 		sortedManualStartDates() {
-			return this.manualStartDates.sort((a, b) => {
-				const dateA = new Date(a.startDate);
-				const dateB = new Date(b.startDate);
-				return dateA - dateB;
-			});
+			return this.manualStartDates
+				.slice()
+				.sort((a, b) => {
+					const dateA = new Date(a.startDate);
+					const dateB = new Date(b.startDate);
+					return dateA - dateB;
+				});
 		},
 	},
 	methods: {

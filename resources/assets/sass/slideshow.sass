@@ -135,7 +135,7 @@ $border-color: $color-inactive-gray
 	.annotations-new-comment
 		border: 1px solid $border-color
 		border-radius: 5px
-		color: $color-gray
+		color: $color-darkest-gray
 		cursor: pointer
 		display: block
 		font-size: $font-size-minus-2
@@ -158,7 +158,7 @@ $border-color: $color-inactive-gray
 			font-weight: $font-weight-bold
 
 		.time
-			color: $color-gray-dimmed
+			color: $color-gray
 			font-size: $font-size-minus-2
 
 	.annotation-content
@@ -281,6 +281,9 @@ $border-color: $color-inactive-gray
 	display: none !important
 
 @keyframes highlight
-	0%	{opacity: 1}
-	50%  {opacity: 0.5}
-	100% {opacity: 1}
+	0%
+		opacity: 1
+	50%
+		opacity: 0.5
+	100%
+		opacity: 1

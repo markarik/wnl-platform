@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div>
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 				   :alert="alert"

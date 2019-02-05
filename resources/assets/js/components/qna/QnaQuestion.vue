@@ -1,8 +1,5 @@
 <template>
 	<div class="qna-thread" :class="{'is-mobile': isMobile}">
-		<div class="question-loader" v-if="loading">
-			<wnl-text-loader></wnl-text-loader>
-		</div>
 		<div class="qna-question" ref="highlight">
 			<wnl-vote
 				type="up"
@@ -29,7 +26,7 @@
 					</span>
 				</div>
 				<div class="qna-question-meta qna-meta">
-					<div class="modal-activator"  :class="{'author-forgotten': author.deleted_at}" @click="showModal">
+					<div class="modal-activator" :class="{'author-forgotten': author.deleted_at}" @click="showModal">
 						<wnl-avatar class="avatar"
 								:fullName="author.full_name"
 								:url="author.avatar"
@@ -85,7 +82,13 @@
 					@submitSuccess="onSubmitSuccess">
 				</wnl-qna-new-answer-form>
 			</transition>
-			<wnl-qna-answer v-if="hasAnswers && !showAllAnswers" :answer="latestAnswer" :questionId="questionId" :readOnly="readOnly" :refresh="refreshQuestionAndShowAnswers"></wnl-qna-answer>
+			<wnl-qna-answer
+				v-if="hasAnswers && !showAllAnswers"
+				:answer="latestAnswer"
+				:questionId="questionId"
+				:readOnly="readOnly"
+				:refresh="refreshQuestionAndShowAnswers"
+			></wnl-qna-answer>
 			<wnl-qna-answer v-else-if="showAllAnswers"
 				v-for="answer in allAnswers"
 				:answer="answer"
@@ -100,7 +103,7 @@
 				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
-		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+		<wnl-modal @closeModal="closeModal" v-if="isVisible">
 			<wnl-user-profile-modal :author="author"/>
 		</wnl-modal>
 	</div>
@@ -117,11 +120,6 @@
 		margin-left: $margin-small
 		margin-right: $margin-tiny
 
-	.question-loader
-		border-top: $border-light-gray
-		margin: $margin-big
-		padding: $margin-big
-
 	.qna-question
 		background: $color-background-lighter-gray
 		border-bottom: $border-light-gray
@@ -134,7 +132,7 @@
 		align-items: center
 		color: $color-sky-blue
 		&.author-forgotten
-			color: $color-gray-dimmed
+			color: $color-gray
 			pointer-events: none
 
 	.qna-question-content
@@ -149,7 +147,7 @@
 			font-weight: $font-weight-black
 
 	.qna-answers-heading
-		color: $color-gray-dimmed
+		color: $color-gray
 
 	.qna-answers
 		margin: $margin-base $margin-huge $margin-huge $margin-huge
@@ -172,7 +170,7 @@
 
 	.qna-answers-show-all
 		display: block
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		margin-top: $margin-base
 		text-align: center
@@ -180,10 +178,10 @@
 
 		&:active,
 		&:visited
-			color: $color-gray-dimmed
+			color: $color-gray
 
 		&:hover
-			color: $color-gray
+			color: $color-darkest-gray
 
 	.qna-wrapper
 		display: flex
@@ -215,7 +213,6 @@ import moderatorFeatures from 'js/perimeters/moderator';
 import { timeFromS } from 'js/utils/time';
 
 export default {
-	name: 'QnaQuestion',
 	mixins: [ highlight ],
 	perimeters: [moderatorFeatures],
 	components: {
@@ -233,7 +230,6 @@ export default {
 	data() {
 		return {
 			showAllAnswers: false,
-			loading: false,
 			showAnswerForm: false,
 			reactableResource: 'qna_questions',
 			highlightableResources: ['qna_question', 'reaction'],
@@ -261,15 +257,7 @@ export default {
 			return this.question.text;
 		},
 		author() {
-			if (this.question.hasOwnProperty('profiles')) {
-				return this.profile(this.question.profiles[0]);
-			} else {
-				this.loading = true;
-				this.dispatchFetchQuestion()
-					.then(() => {
-						return this.profile(this.question.profiles[0]);
-					});
-			}
+			return this.profile(this.question.profiles[0]);
 		},
 		isCurrentUserAuthor() {
 			return this.currentUserId === this.author.user_id;
@@ -329,7 +317,7 @@ export default {
 		isNotFetchedAnswerInUrl() {
 			const questionId = _.get(this.$route, 'query.qna_question');
 
-			if (questionId == this.questionId && this.answerInUrl) return true;
+			return questionId == this.questionId && this.answerInUrl;
 		},
 	},
 	methods: {
@@ -342,12 +330,8 @@ export default {
 		},
 		dispatchFetchQuestion() {
 			return this.fetchQuestion(this.id)
-				.then(() => {
-					this.loading = false;
-				})
 				.catch((error) => {
 					$wnl.logger.error(error);
-					this.loading = false;
 				});
 		},
 		getAnswer(id) {

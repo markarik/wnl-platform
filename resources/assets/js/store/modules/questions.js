@@ -1,6 +1,6 @@
 import {set} from 'vue';
 import {get, isEmpty, isNumber, size} from 'lodash';
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import {parseFilters} from 'js/services/apiFiltering';
 import axios from 'axios';
@@ -323,7 +323,7 @@ const actions = {
 		{filters, page, saveFilters, useSavedFilters}
 	) {
 		const parsedFilters = parseFilters(filters, state.filters, rootGetters.currentUserId);
-		
+
 		return _fetchQuestions({
 			active: filters,
 			filters: parsedFilters,
@@ -369,14 +369,8 @@ const actions = {
 			});
 	},
 	fetchQuestionsReactions({commit}, questionsIds) {
-		return _fetchQuestions({
-			filters: [
-				{
-					query: {
-						whereIn: ['id', questionsIds || []],
-					}
-				}
-			],
+		return axios.post(getApiUrl('quiz_questions/query'), {
+			ids: questionsIds,
 			include: 'reactions'
 		}).then(({data}) => commit(types.QUESTIONS_UPDATE, data));
 	},
@@ -393,7 +387,8 @@ const actions = {
 			filters,
 			limit,
 			randomize,
-			include: 'quiz_answers,reactions,comments.profiles,slides'
+			include: 'quiz_answers,reactions,comments.profiles,slides',
+			cachedPagination: false
 		}).then(response => {
 			const {answers, questions, slides, included} = _handleResponse(response, commit);
 			const comments = _.get(included, 'comments');
@@ -481,7 +476,10 @@ const actions = {
 
 
 const _fetchQuestions = (requestParams) => {
-	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams);
+	// Cached pagination was developed to address a specific issue within quiz questions bank.
+	// Therefore it should be used in that single place only.
+	// To be refactored, see https://bethink.atlassian.net/browse/PLAT-868
+	return axios.post(getApiUrl('quiz_questions/.filter'),  {cachedPagination: true, ...requestParams});
 };
 
 const _fetchQuestionsData = (id) => {

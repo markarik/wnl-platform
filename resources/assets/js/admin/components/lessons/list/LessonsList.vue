@@ -1,44 +1,32 @@
 <template>
 	<div class="lessons-list">
-		<p class="title is-4">
-			Lista lekcji
-			<router-link class="button is-success" :to="{name: 'lessons', params: { lessonId: 'new' } }">+ Dodaj lekcję</router-link>
-		</p>
-		<wnl-lesson-list-item v-for="lesson in lessons"
-			:key="lesson.id"
-			:name="lesson.name"
-			:id="lesson.id">
-		</wnl-lesson-list-item>
+		<wnl-paginated-list
+			:resource-name="'lessons/.filter'"
+		>
+			<p class="title is-4" slot="header">
+				Lista lekcji
+				<router-link class="button is-success" :to="{name: 'lessons', params: { lessonId: 'new' } }">+ Dodaj lekcję</router-link>
+			</p>
+			<template slot="list" slot-scope="slotParams">
+				<wnl-lesson-list-item v-for="lesson in slotParams.list"
+					:key="lesson.id"
+					:name="lesson.name"
+					:id="lesson.id">
+				</wnl-lesson-list-item>
+			</template>
+		</wnl-paginated-list>
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-
-</style>
-
 <script>
-import axios from 'axios';
-import {mapGetters} from 'vuex';
-
-import LessonsListItem from 'js/admin/components/lessons/list/LessonsListItem.vue';
-
-import { getApiUrl } from 'js/utils/env';
+import WnlLessonListItem from 'js/admin/components/lessons/list/LessonsListItem.vue';
+import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
 export default {
 	name: 'LessonsList',
 	components: {
-		'wnl-lesson-list-item': LessonsListItem,
+		WnlLessonListItem,
+		WnlPaginatedList
 	},
-	data() {
-		return {
-			lessons: [],
-		};
-	},
-	mounted() {
-		axios.get(getApiUrl('lessons/all'))
-			.then((response) => {
-				this.lessons = response.data;
-			});
-	}
 };
 </script>

@@ -67,7 +67,7 @@
 			width: 25%
 
 		.zero-state-text
-			color: $color-gray-dimmed
+			color: $color-gray
 			font-size: $font-size-minus-1
 			margin-top: $margin-big
 			text-align: center

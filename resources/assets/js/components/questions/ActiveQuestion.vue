@@ -44,7 +44,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.tip
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-2
 		margin-bottom: $margin-base
 
@@ -100,7 +100,7 @@ export default {
 		},
 		question: {
 			type: Object,
-			default: {},
+			default: () => {},
 		},
 		questionNumber: {
 			type: Number,

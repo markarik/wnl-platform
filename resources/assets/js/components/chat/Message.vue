@@ -20,7 +20,7 @@
 				<p class="wnl-message-content" v-html="content"></p>
 			</div>
 		</div>
-		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+		<wnl-modal @closeModal="closeModal" v-if="isVisible">
 			<wnl-user-profile-modal :author="author"/>
 		</wnl-modal>
 	</article>
@@ -41,7 +41,7 @@
 			margin: 0 $margin-small 0 0
 			cursor: pointer
 			&.author-forgotten
-				color: $color-gray-dimmed
+				color: $color-gray
 				pointer-events: none
 
 		.media-left-placeholder
@@ -50,7 +50,7 @@
 
 		.media-content
 			.content
-				color: $color-gray-lighter
+				color: $color-darker-gray
 				word-wrap: break-word
 				word-break: break-word
 
@@ -62,7 +62,7 @@
 						cursor: pointer
 						color: $color-sky-blue
 						&.author-forgotten
-							color: $color-gray-dimmed
+							color: $color-gray
 							pointer-events: none
 
 				.wnl-message-time

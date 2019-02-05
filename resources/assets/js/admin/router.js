@@ -1,123 +1,190 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
+import Lessons from 'js/admin/components/lessons/Lessons';
+import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor';
+import CourseEditor from 'js/admin/components/courses/CourseEditor';
+import StructureEditor from 'js/admin/components/structure/StructureEditor';
+import Groups from 'js/admin/components/groups/Groups';
+import GroupEditor from 'js/admin/components/groups/GroupEditor';
+import EditSlide from 'js/admin/components/slides/EditSlide';
+import AddSlide from 'js/admin/components/slides/AddSlide';
+import Charts from 'js/admin/components/slides/Charts';
+import Annotations from 'js/admin/components/slides/annotations/Annotations';
+import QuizQuestions from 'js/admin/components/quizes/QuizQuestions';
+import QuizQuestionEdit from 'js/admin/components/quizes/QuizQuestionEdit';
+import QuizQuestionCreate from 'js/admin/components/quizes/QuizQuestionCreate';
+import FlashcardsSetsList from 'js/admin/components/flashcards/list/FlashcardsSetsList';
+import FlashcardsSetEditor from 'js/admin/components/flashcards/edit/FlashcardsSetEditor';
+import FlashcardsList from 'js/admin/components/flashcards/list/FlashcardsList';
+import FlashcardEditor from 'js/admin/components/flashcards/edit/FlashcardEditor';
+import Users from 'js/admin/components/users/Users';
+import UserAdd from 'js/admin/components/users/UserAdd';
+import UserDetails from 'js/admin/components/users/UserDetails';
+import DashboardNews from 'js/admin/components/dashboardNews/DashboardNews';
+import DashboardNewsEdit from 'js/admin/components/dashboardNews/DashboardNewsEdit';
+import OrdersList from 'js/admin/components/orders/OrdersList';
+import TagsList from 'js/admin/components/tags/TagsList';
+import TagEditor from 'js/admin/components/tags/TagEditor';
+import ContentClassifier from 'js/admin/components/contentClassifier/ContentClassifier';
+import TaxonomiesList from 'js/admin/components/taxonomies/TaxonomiesList';
+import TaxonomyEditor from 'js/admin/components/taxonomies/TaxonomyEditor';
+
 Vue.use(Router);
 
 let routes = [
 	{
 		name: 'lessons',
 		path: '/admin/app/lessons/:lessonId?',
-		component: require('js/admin/components/lessons/Lessons.vue'),
+		component: Lessons,
 		props: true,
 		children: [
 			{
 				name: 'screen-edit',
 				path: 'screens/:screenId?',
-				component: require('js/admin/components/lessons/edit/ScreensEditor.vue')
+				component: ScreensEditor
 			},
 		]
 	},
 	{
+		name: 'structure-edit',
+		path: '/admin/app/course-structure/:courseId',
+		component: StructureEditor,
+		props: true,
+	},
+	{
 		name: 'course-edit',
 		path: '/admin/app/courses/:id',
-		component: require('js/admin/components/courses/CourseEditor'),
+		component: CourseEditor,
 		props: true,
 	},
 	{
 		name: 'groups',
 		path: '/admin/app/groups',
-		component: require('js/admin/components/groups/Groups.vue'),
+		component: Groups,
 		props: true,
 	},
 	{
 		name: 'group-edit',
 		path: '/admin/app/groups/:id',
-		component: require('js/admin/components/groups/GroupEditor'),
+		component: GroupEditor,
 		props: true,
 	},
 	{
 		name: 'slides',
 		path: '/admin/app/slides/edit/:lessonId?/:screenId?',
-		component: require('js/admin/components/slides/EditSlide.vue'),
+		component: EditSlide,
 	},
 	{
 		name: 'add-slide',
 		path: '/admin/app/slides/add/:lessonId?/:screenId?',
-		component: require('js/admin/components/slides/AddSlide.vue'),
+		component: AddSlide,
 	},
 	{
 		name: 'charts',
 		path: '/admin/app/charts',
-		component: require('js/admin/components/slides/Charts.vue'),
+		component: Charts,
 	},
 	{
 		name: 'annotations',
 		path: '/admin/app/annotations',
-		component: require('js/admin/components/slides/annotations/Annotations.vue'),
+		component: Annotations,
 	},
 	{
 		name: 'quizes',
 		path: '/admin/app/quizes',
-		component: require('js/admin/components/quizes/QuizQuestions.vue'),
+		component: QuizQuestions,
 		children: [
 			{
 				name: 'quiz-editor',
 				path: 'edit/:quizId',
-				component: require('js/admin/components/quizes/QuizQuestionEdit.vue')
+				component: QuizQuestionEdit
 			},
 			{
 				name: 'quiz-creator',
 				path: 'new',
-				component: require('js/admin/components/quizes/QuizQuestionCreate.vue')
+				component: QuizQuestionCreate
 			}
 		],
 	},
 	{
 		name: 'flashcards-sets',
 		path: '/admin/app/flashcards-sets',
-		component: require('js/admin/components/flashcards/list/FlashcardsSetsList.vue'),
+		component: FlashcardsSetsList,
 	},
 	{
 		name: 'flashcards-sets-edit',
 		path: '/admin/app/flashcards-sets/:flashcardsSetId',
-		component: require('js/admin/components/flashcards/edit/FlashcardsSetEditor'),
+		component: FlashcardsSetEditor,
 		props: true,
 	},
 	{
 		name: 'flashcards',
 		path: '/admin/app/flashcards',
-		component: require('js/admin/components/flashcards/list/FlashcardsList'),
+		component: FlashcardsList,
 	},
 	{
 		name: 'flashcards-edit',
 		path: '/admin/app/flashcards/:flashcardId',
-		component: require('js/admin/components/flashcards/edit/FlashcardEditor'),
+		component: FlashcardEditor,
 		props: true,
 	},
 	{
 		name: 'users',
 		path: '/admin/app/users',
-		component: require('js/admin/components/users/Users.vue'),
+		component: Users,
 	},
 	{
 		name: 'users-add',
 		path: '/admin/app/users/add',
-		component: require('js/admin/components/users/UserAdd.vue'),
+		component: UserAdd,
 	},
 	{
 		name: 'user-details',
 		path: '/admin/app/users/:userId',
-		component: require('js/admin/components/users/UserDetails.vue'),
+		component: UserDetails,
 	},
 	{
 		name: 'dashboard-news',
 		path: '/admin/app/dashboard-news',
-		component: require('js/admin/components/dashboardNews/DashboardNews.vue'),
+		component: DashboardNews,
 	},
 	{
 		name: 'dashboard-news-edit',
 		path: '/admin/app/dashboard-news/:id',
-		component: require('js/admin/components/dashboardNews/DashboardNewsEdit.vue'),
+		component: DashboardNewsEdit,
+		props: true,
+	},
+	{
+		name: 'orders',
+		path: '/admin/app/orders',
+		component: OrdersList,
+	},
+	{
+		name: 'tags',
+		path: '/admin/app/tags',
+		component: TagsList,
+	},
+	{
+		name: 'tag-edit',
+		path: '/admin/app/tags/:id',
+		component: TagEditor,
+		props: true,
+	},
+	{
+		name: 'content-classifier',
+		path: '/admin/app/content-classifier',
+		component: ContentClassifier,
+	},
+	{
+		name: 'taxonomies',
+		path: '/admin/app/taxonomies',
+		component: TaxonomiesList,
+	},
+	{
+		name: 'taxonomy-edit',
+		path: '/admin/app/taxonomies/:id',
+		component: TaxonomyEditor,
 		props: true,
 	},
 	{

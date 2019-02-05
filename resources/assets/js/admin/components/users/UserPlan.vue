@@ -52,7 +52,7 @@
 					</template>
 				</wnl-autocomplete>
 			</div>
-			<div  v-if="selectedLessons.length">
+			<div v-if="selectedLessons.length">
 				<table class="table user-plan__add-lesson">
 					<thead>
 						<tr>

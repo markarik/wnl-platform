@@ -124,9 +124,6 @@ import { get, isEmpty } from 'lodash';
 
 export default {
 	name: 'IdentityNumber',
-	components: {
-		'wnl-form-text': Text,
-	},
 	data() {
 		return {
 			identity: {

@@ -98,7 +98,7 @@
 
 	.questions-breadcrumbs
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		display: flex
 		margin-right: $margin-base
@@ -116,16 +116,12 @@
 
 <script>
 import {isEmpty, get} from 'lodash';
-import {mapGetters, mapActions, mapMutations} from 'vuex';
+import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
 import {QUESTIONS_SET_TOKEN as setToken} from 'js/store/mutations-types';
 
-import ActiveFilters from 'js/components/questions/ActiveFilters';
-import QuizWidget from 'js/components/quiz/QuizWidget';
 import QuestionsFilters from 'js/components/questions/QuestionsFilters';
 import QuestionsNavigation from 'js/components/questions/QuestionsNavigation';
 import QuestionsSolving from 'js/components/questions/QuestionsSolving';
-import QuestionsTest from 'js/components/questions/QuestionsTest';
-import QuestionsSearch from 'js/components/questions/QuestionsSearch';
 import SidenavSlot from 'js/components/global/SidenavSlot';
 
 import {scrollToTop} from 'js/utils/animations';
@@ -149,14 +145,10 @@ export default {
 	},
 	mixins: [emits_events],
 	components: {
-		'wnl-active-filters': ActiveFilters,
 		'wnl-questions-navigation': QuestionsNavigation,
-		'wnl-quiz-widget': QuizWidget,
 		'wnl-questions-filters': QuestionsFilters,
 		'wnl-sidenav-slot': SidenavSlot,
-		'wnl-questions-test': QuestionsTest,
 		'wnl-questions-solving': QuestionsSolving,
-		'wnl-questions-search': QuestionsSearch
 	},
 	data() {
 		const currentContext = context.questions_bank;
@@ -207,6 +199,9 @@ export default {
 			'getSafePage',
 			'getAnswer'
 		]),
+		...mapState('questions', {
+			'currentQuestionState': 'currentQuestion'
+		}),
 		activeFiltersNames() {
 			return this.activeFiltersObjects.map(filter => {
 				if (!filter) return;
@@ -343,10 +338,11 @@ export default {
 				.then(() => {
 					if (!payload.refresh) return false;
 
-					this.resetCurrentQuestion();
 					this.setToken();
 					this.resetPages();
+					this.resetCurrentQuestion();
 					this.fetchDynamicFilters();
+					this.setQuestion(this.currentQuestionState);
 					return this.fetchMatchingQuestions();
 				})
 				.then(() => {
@@ -560,7 +556,7 @@ export default {
 					});
 				})
 				.then(({position}) => {
-					position && this.changeCurrentQuestion(position);
+					!isEmpty(position) && this.changeCurrentQuestion(position);
 					this.switchOverlay(false);
 					this.$trackUserEvent({
 						subcontext: this.activeView,

@@ -18,7 +18,7 @@
 		text-align: center
 
 	.progress-message
-		color: $color-gray-lighter
+		color: $color-darker-gray
 		font-size: $font-size-minus-1
 		text-align: center
 </style>

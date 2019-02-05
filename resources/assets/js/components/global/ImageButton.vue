@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="wnl-image-button-container" :class="{ 'is-reverse': isReverse, 'loading': loading }">
 		<button class="button wnl-image-button without-image"
 			:class="[iconClass, iconSizeClass]"

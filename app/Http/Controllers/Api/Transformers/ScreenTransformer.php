@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Api\Transformers;
 
 
 use App\Http\Controllers\Api\ApiController;
-use DB;
-use App\Models\Screen;
 use App\Http\Controllers\Api\ApiTransformer;
+use App\Models\Screen;
 
 class ScreenTransformer extends ApiTransformer
 {
@@ -29,7 +28,9 @@ class ScreenTransformer extends ApiTransformer
 			'order_number' => $screen->order_number,
 			'tags'         => $screen->tags,
 			'lessons'      => $this->parent['lessonId'] ?? $screen->lesson_id,
-			'groups'       => $this->parent['groupId'] ?? $screen->lesson->group->id,
+			'groups'       => $this->parent['groupId'] ?? $screen->lesson->group->id ?? null,
+			'discussion_id' => $screen->discussion_id,
+			'is_discussable' => $screen->is_discussable
 		];
 
 		if (!empty($screen->meta['slides_count'])) {

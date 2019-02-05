@@ -3,13 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class Taxonomy extends Model
 {
-	protected $fillable = ['name'];
+	use Searchable;
+
+	protected $fillable = ['name', 'description'];
 
 	public function tagsTaxonomy() {
 		return $this->hasMany('App\Models\TagsTaxonomy');
+	}
+
+	public function taxonomyTerms() {
+		return $this->hasMany('App\Models\TaxonomyTerm');
 	}
 
 	public function rootTagsFromTaxonomy() {
@@ -17,5 +24,12 @@ class Taxonomy extends Model
 			->with('tag')
 			->where('parent_tag_id', 0)
 			->get();
+	}
+
+	public function delete() {
+		\DB::transaction(function() {
+			$this->taxonomyTerms()->delete();
+			parent::delete();
+		});
 	}
 }

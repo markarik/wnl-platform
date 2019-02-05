@@ -91,7 +91,7 @@
 		text-transform: uppercase
 
 	.plan-progress-explain
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 
 	.plan-progress-bar

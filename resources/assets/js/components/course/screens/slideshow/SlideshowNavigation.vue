@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="nav-container">
 		<label class="label" for="wnl-slideshow-navigation-">
 			Idź do slajdu
@@ -21,7 +21,7 @@
 		border-bottom: 1px solid $color-ocean-blue
 		border-radius: 0
 		box-shadow: none
-		color: $color-gray
+		color: $color-darkest-gray
 		font-size: $font-size-minus-1
 		line-height: 1em
 		text-align: center

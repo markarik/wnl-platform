@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="card">
 		<div class="card-content">
 			<div class="media">
@@ -123,7 +123,7 @@
 									<th>Termin płatności</th>
 									<th>Zapłacone / Do&nbsp;zapłaty</th>
 								</tr>
-								<tr v-for="(instalment, index) in order.instalments.instalments">
+								<tr v-for="(instalment, index) in order.instalments.instalments" :key="index">
 									<td>{{index + 1}}</td>
 									<td>
 										{{ instalmentDate(instalment.date) }}
@@ -296,7 +296,7 @@
 			color: $color-yellow
 
 		&.text-info
-			color: $color-gray-lighter
+			color: $color-darker-gray
 
 	.cancel-order
 		a,

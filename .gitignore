@@ -11,7 +11,6 @@ public/js/*
 public/fonts/*
 public/mix-manifest.json
 storage/debugbar
-_ide_helper.php
 .DS_Store
 yarn-error.log
 npm-debug.log

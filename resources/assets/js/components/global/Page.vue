@@ -1,7 +1,11 @@
-<template lang="html">
+<template>
 	<div class="content">
 		<div class="page content" v-html="content"></div>
-		<wnl-qna :tags="tags" :reactionsDisabled="true" v-if="qna"></wnl-qna>
+		<wnl-qna
+			:context-tags="tags"
+			:reactionsDisabled="true"
+			:discussionId="discussion_id"
+			v-if="qna"/>
 	</div>
 </template>
 
@@ -30,7 +34,7 @@ export default {
 			type: String,
 		},
 		arguments: {
-			default: () => {},
+			default: () => ({}),
 			type: Object,
 		},
 		qna: {
@@ -46,6 +50,7 @@ export default {
 			created_at: null,
 			updated_at: null,
 			tags: null,
+			discussion_id: 0
 		};
 	},
 	methods: {
@@ -81,7 +86,7 @@ export default {
 				subcontext: this.slug
 			});
 		},
-		...mapActions('qna', ['fetchQuestionsByTags']),
+		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 	},
 	mounted() {
 		this.fetch();
@@ -90,8 +95,8 @@ export default {
 		content(newValue) {
 			this.content = injectArguments(newValue, this.arguments);
 		},
-		tags(newValue) {
-			this.fetchQuestionsByTags({tags: newValue});
+		discussion_id() {
+			this.discussion_id && this.fetchQuestionsForDiscussion(this.discussion_id);
 		},
 		slug() {this.fetch();}
 	}

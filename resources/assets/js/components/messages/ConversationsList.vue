@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="scrollable-container" @scroll="pullConversations" >
 		<div class="rooms-header" v-if="withSearch">
 			<header>{{$t('messages.dashboard.privateMessages')}}</header>
@@ -20,7 +20,7 @@
 		</div>
 		<div v-else-if="roomsToShow.length" class="conversation-list scrollable-container">
 			<wnl-message-link
-				v-for="(room, index) in roomsToShow"
+				v-for="(room) in roomsToShow"
 				:key="room.id"
 				:userId="getOtherUser(room).user_id"
 				:roomId="room.id"
@@ -47,7 +47,7 @@
 		overflow-y: scroll
 
 	.rooms-header
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		display: flex
 		justify-content: space-between
@@ -106,7 +106,6 @@
 </style>
 
 <script>
-import axios from 'axios';
 import ConversationsSearch from 'js/components/messages/ConversationsSearch';
 import MessageLink from 'js/components/global/MessageLink';
 import ConversationSnippet from 'js/components/messages/ConversationSnippet';

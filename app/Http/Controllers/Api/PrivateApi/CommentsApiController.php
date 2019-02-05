@@ -80,8 +80,8 @@ class CommentsApiController extends ApiController
 			$commentsQuery->where('commentable_type', $commentableType);
 		}
 
-		if ($request->has('comment_id')) {
-			$commentsQuery->where('comment_id', $request->get('comment_id'));
+		if ($request->has('id')) {
+			$commentsQuery->where('id', $request->get('id'));
 		}
 
 		if ($request->has('user_id')) {

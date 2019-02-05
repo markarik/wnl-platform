@@ -59,14 +59,53 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::put("{$r['quiz-questions']}/{id}/restore", 'QuizQuestionsApiController@restore');
 		Route::get("{$r['quiz-questions']}/trashed/{id}", 'QuizQuestionsApiController@getWithTrashed');
 
+		// Orders
+		Route::post("{$r['orders']}/.filter", 'OrdersApiController@filter');
+
 		// Groups
 		Route::post("{$r['groups']}/.filter", 'GroupsApiController@filter');
 		Route::post("{$r['groups']}", 'GroupsApiController@post');
 		Route::put("{$r['groups']}/{id}", 'GroupsApiController@put');
 
 		// Lessons
+		Route::post("{$r['lessons']}/.filter", 'LessonsApiController@filter');
 		Route::post("{$r['lessons']}", 'LessonsApiController@post');
 		Route::put("{$r['lessons']}/{id}", 'LessonsApiController@put');
+
+		// Tags
+		Route::post("{$r['tags']}", 'TagsApiController@post');
+		Route::put("{$r['tags']}/{id}", 'TagsApiController@put');
+		Route::delete("{$r['tags']}/{id}", 'TagsApiController@delete');
+		Route::post("{$r['tags']}/.filter", 'TagsApiController@filter');
+
+		// Taggables
+		Route::post("{$r['taggables']}/batch_move/{source_tag_id}", 'TaggablesApiController@batchMove');
+		Route::post("{$r['taggables']}/.filter", 'TaggablesApiController@filter');
+
+		// Taxonomies
+		Route::post("{$r['taxonomies']}", 'TaxonomiesApiController@post');
+		Route::put("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@put');
+		Route::get("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@get');
+		Route::delete("{$r['taxonomies']}/{id}", 'TaxonomiesApiController@delete');
+		Route::post("{$r['taxonomies']}/.filter", 'TaxonomiesApiController@filter');
+
+		// TaxonomyTerms
+		Route::post("{$r['taxonomy-terms']}", 'TaxonomyTermsApiController@post');
+		Route::put("{$r['taxonomy-terms']}/move", 'TaxonomyTermsApiController@move');
+		Route::put("{$r['taxonomy-terms']}/{id}", 'TaxonomyTermsApiController@put');
+		Route::delete("{$r['taxonomy-terms']}/{id}", 'TaxonomyTermsApiController@delete');
+		Route::get("{$r['taxonomy-terms']}/byTaxonomy/{taxonomyId}", 'TaxonomyTermsApiController@getByTaxonomy');
+		Route::post("{$r['taxonomy-terms']}/{id}/attach", 'TaxonomyTermsApiController@attach');
+		Route::post("{$r['taxonomy-terms']}/{id}/detach", 'TaxonomyTermsApiController@detach');
+
+		// Course structure
+		Route::post("{$r['course-structure-nodes']}", 'CourseStructureNodesApiController@post');
+		Route::put("{$r['course-structure-nodes']}/move", 'CourseStructureNodesApiController@move');
+		Route::put("{$r['course-structure-nodes']}/{id}", 'CourseStructureNodesApiController@put');
+		Route::delete("{$r['course-structure-nodes']}/{id}", 'CourseStructureNodesApiController@delete');
+
+		// Slides
+		Route::post("{$r['slides']}/.filter", 'SlidesApiController@filter');
 	});
 
 	// Count
@@ -84,6 +123,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::group(['middleware' => ['account-status', 'subscription']], function () use ($r) {
 		// Courses
 		Route::get("{$r['courses']}/{id}/structure", 'CoursesApiController@getStructure');
+		Route::get("{$r['course-structure-nodes']}/{courseId}", 'CourseStructureNodesApiController@getByCourseId');
 
 		// Groups
 		Route::get("{$r['groups']}/{id}", 'GroupsApiController@get');
@@ -107,8 +147,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['slides']}/{id}/.detach", 'SlidesApiController@detach');
 		Route::post("{$r['slides']}", 'SlidesApiController@post');
 		Route::post(
-			"{$r['slides']}/category/{tagName}",
-			'SlidesApiController@getFromCategoryByTagName'
+			"{$r['slides']}/category",
+			'SlidesApiController@getFromCategory'
 		);
 
 		// Presentables
@@ -187,7 +227,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Quiz Questions
 		Route::post("{$r['quiz-questions']}/.filter", 'QuizQuestionsApiController@filter');
 		Route::get("{$r['quiz-questions']}/{id}", 'QuizQuestionsApiController@get');
-		Route::post("{$r['quiz-questions']}/byTagName", 'QuizQuestionsApiController@getByTagName');
+		Route::post("{$r['quiz-questions']}/query", 'QuizQuestionsApiController@query');
 
 		// Flashcards
 		Route::get("{$r['flashcards-sets']}/{id}", 'FlashcardsSetsApiController@get');
@@ -213,6 +253,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['user-lesson']}/{userId}/batch", 'UserLessonApiController@putBatch');
 	Route::put("{$r['user-lesson']}/{userId}", 'UserLessonApiController@putPlan');
 	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
+	Route::get("{$r['user-lesson']}/{userId}/exportPlan", 'UserLessonApiController@exportPlan');
 
 	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
@@ -253,7 +294,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/time", 'UserStateApiController@incrementTime');
 
-	Route::post("{$r['users']}/{user}/{$r['user-state']}/quizPosition", 'UserStateApiController@getQuizPosition');
+	Route::post("{$r['users']}/{id}/{$r['user-state']}/quizPosition", 'UserStateApiController@getQuizPosition');
 	Route::put("{$r['users']}/{id}/{$r['user-state']}/quizPosition", 'UserStateApiController@saveQuizPosition');
 
 	Route::get("{$r['users']}/{id}/{$r['user-state']}/stats", 'UserStateApiController@getStats');
@@ -325,4 +366,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Pages
 	Route::get("{$r['pages']}/{slug}", 'PagesApiController@get');
+
+	// Discussions
+	Route::get("{$r['discussions']}/{id}", 'DiscussionsApiController@get');
 });

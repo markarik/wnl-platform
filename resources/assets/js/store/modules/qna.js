@@ -1,34 +1,17 @@
 import _ from 'lodash';
 import axios from 'axios';
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import { set, delete as destroy } from 'vue';
 import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions';
 import {commentsGetters, commentsMutations, commentsActions, commentsState} from 'js/store/modules/comments';
 
 const include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles';
+const discussionsInclude = 'qna_questions,qna_questions.profiles,qna_questions.reactions,qna_questions.qna_answers.profiles,qna_questions.qna_answers.comments,qna_questions.qna_answers.comments.profiles';
 
 function _resolveQuestion(questionId, status = true) {
 	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
 		resolved: status
-	});
-}
-
-function _getQuestionsByTags(tags) {
-	if (tags.length === 0) {
-		return Promise.reject('No tags passed to search for Q&A questions.');
-	}
-
-	return axios.post(getApiUrl('qna_questions/byTags'), {
-		tags_ids: tags.map((tag) => tag.id),
-		include
-	});
-}
-
-function _getQuestionsByIds(ids) {
-	return axios.post(getApiUrl('qna_questions/byIds'), {
-		ids,
-		include
 	});
 }
 
@@ -45,6 +28,14 @@ function _getQuestionsByTagName(tagName, ids) {
 		tags_names: [tagName],
 		ids,
 		include
+	});
+}
+
+function _getQuestionsForDiscussion(discussionId) {
+	return axios.get(getApiUrl(`discussions/${discussionId}`), {
+		params: {
+			include: discussionsInclude
+		}
 	});
 }
 
@@ -70,24 +61,6 @@ function _handleGetQuestionsError(commit, error) {
 
 function _getAnswers(questionId) {
 	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles,reactions`));
-}
-
-/**
- * @param answerId
- * @returns {Promise}
- * @private
- */
-function _getComments(answerId) {
-	return axios.get(getApiUrl(`qna_answers/${answerId}?include=comments.profiles`));
-}
-
-/**
- * @param answerId
- * @returns {Promise}
- * @private
- */
-function _getAnswer(answerId) {
-	return axios.get(getApiUrl(`answers/${answerId}?include=users`));
 }
 
 function getInitialState() {
@@ -139,12 +112,12 @@ function sortByNoAnswer(questionsList) {
 }
 
 
-function getUsersQuestions(questionsList, userId) {
+function getUsersQuestions(questionsList, userProfileId) {
 	return _.reverse(
 		_.sortBy(
 			_.values(
 				_.filter(questionsList, (question) => {
-					return question.profiles[0] == userId;
+					return question.profiles[0] === userProfileId;
 				})
 			),
 			(question) => question.upvote.created_at
@@ -171,7 +144,7 @@ const getters = {
 		case 'no-answer':
 			return sortByNoAnswer(list);
 		case 'my':
-			return getUsersQuestions(list, rootGetters.currentUserId);
+			return getUsersQuestions(list, rootGetters.currentUserProfileId);
 		default:
 			return sortByVotes(list);
 		}
@@ -182,11 +155,6 @@ const getters = {
 	profile:     state => (id) => state.profiles[id] || {},
 
 	// Question
-	questionContent: state => (id) => state.qna_questions[id].text,
-	questionAuthor: (state, getters) => (id) => {
-		return getters.profile(state.qna_questions[id].profiles[0]);
-	},
-	questionTimestamp: state => (id) => state.qna_questions[id].created_at,
 	questionAnswers: state => (id) => {
 		let answersIds = state.qna_questions[id].qna_answers;
 		if (_.isUndefined(answersIds)) {
@@ -204,11 +172,7 @@ const getters = {
 		return tags.map((id) => state.tags[id]);
 	},
 	questionAnswersFromHighestUpvoteCount: (state, getters) => (id) => {
-		return _.reverse(
-			_.sortBy(
-				getters.questionAnswers(id), (answer) => answer.upvote.count
-			)
-		);
+		return getters.questionAnswers(id).sort((answerA, answerB) => answerB.upvote.count - answerA.upvote.count);
 	},
 };
 
@@ -233,7 +197,6 @@ const mutations = {
 			let question = data[key];
 			set(state.qna_questions, question.id, question);
 		});
-		// set(state, 'questionsIds', questionsIds)
 	},
 	[types.QNA_UPDATE_QUESTION] (state, payload) {
 		let id = payload.questionId,
@@ -294,10 +257,7 @@ const mutations = {
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
-			let resources = state[resource];
-			_.each(items, (item, index) => {
-				resources[index] = item;
-			});
+			const resources = { ...state[resource], ...items };
 			set(state, resource, resources);
 		});
 	},
@@ -316,38 +276,6 @@ const actions = {
 	changeSorting({commit, dispatch}, sorting) {
 		commit(types.QNA_CHANGE_SORTING, sorting);
 	},
-	fetchQuestionsByTags({commit, dispatch}, {tags, sorting}) {
-		commit(types.IS_LOADING, true);
-		sorting && commit(types.QNA_CHANGE_SORTING, sorting);
-
-		return new Promise((resolve, reject) => {
-			_getQuestionsByTags(tags)
-				.then((response) => {
-					_handleGetQuestionsSuccess({commit, dispatch}, response);
-					resolve();
-				})
-				.catch((error) => {
-					_handleGetQuestionsError(commit, error);
-					reject();
-				});
-		});
-	},
-
-	fetchQuestionsByIds({commit, dispatch}, ids) {
-		commit(types.IS_LOADING, true);
-
-		return new Promise((resolve, reject) => {
-			_getQuestionsByIds(ids)
-				.then((response) => {
-					_handleGetQuestionsSuccess({commit, dispatch}, response);
-					resolve();
-				})
-				.catch((error) => {
-					_handleGetQuestionsError(commit, error);
-					reject();
-				});
-		});
-	},
 
 	fetchLatestQuestions({commit, dispatch}, limit = 10) {
 		commit(types.IS_LOADING, true);
@@ -363,6 +291,28 @@ const actions = {
 					reject();
 				});
 		});
+	},
+
+	async fetchQuestionsForDiscussion({commit, dispatch}, discussionId) {
+		commit(types.IS_LOADING, true);
+
+		try {
+			const {data} = await _getQuestionsForDiscussion(discussionId);
+			commit(types.QNA_DESTROY);
+
+
+			if (!_.isUndefined(data.included)) {
+				const {qna_questions, ...included} = data.included;
+				commit(types.UPDATE_INCLUDED, included);
+				commit(types.QNA_SET_QUESTIONS, qna_questions);
+
+				included.comments && dispatch('comments/setComments', included.comments, {root:true});
+			}
+
+			commit(types.IS_LOADING, false);
+		} catch (e) {
+			_handleGetQuestionsError(commit, e);
+		}
 	},
 
 	fetchQuestionsByTagName({commit, dispatch}, {tagName, ids}) {
@@ -422,7 +372,7 @@ const actions = {
 			resolve();
 		});
 	},
-	destroyQna({commit, dispatch}) {
+	destroyQna({commit}) {
 		commit(types.QNA_DESTROY);
 	},
 	setUserQnaQuestions({commit, dispatch}, {included, ...qnaQuestions}) {

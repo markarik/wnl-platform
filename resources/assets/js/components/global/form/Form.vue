@@ -27,20 +27,52 @@ export default {
 		'wnl-submit': Submit,
 	},
 	mixins: [ alerts ],
-	// TODO: Introduce an options prop for better readability
-	props: [
-		'name',
-		'method',
-		'resourceRoute',
-		'attach',
-		'populate',
-		'hideDefaultSubmit',
-		'suppressEnter',
-		'resetAfterSubmit',
-		'loading',
-		'submitError',
-		'value'
-	],
+	props: {
+		name: {
+			type: String,
+			required: true,
+		},
+		method: {
+			type: String,
+			required: true,
+		},
+		resourceRoute: {
+			type: String,
+			required: true,
+		},
+		attach: {
+			type: Object,
+			default: () => ({}),
+		},
+		value: {
+			type: [Object, String],
+			default: () => ({}),
+		},
+		populate: {
+			// TODO make type consistent
+			default: false,
+		},
+		hideDefaultSubmit: {
+			// TODO make type consistent
+			default: false,
+		},
+		suppressEnter: {
+			// TODO make type consistent
+			default: false,
+		},
+		resetAfterSubmit: {
+			// TODO make type consistent
+			default: false,
+		},
+		submitError: {
+			type: Boolean,
+			default: false,
+		},
+		beforeSubmit: {
+			type: Function,
+			default: () => true,
+		},
+	},
 	computed: {
 		anyErrors() {
 			return this.getter('anyErrors');
@@ -80,11 +112,16 @@ export default {
 			}
 			event.stopPropagation();
 		},
-		onSubmitForm() {
+		async onSubmitForm() {
 			const hasAttachChanged = this.hasAttachChanged();
 
 			if (!this.canSave(this.hasChanges, hasAttachChanged)) {
 				return false;
+			}
+
+			if (await !this.beforeSubmit()) {
+				$wnl.logger.info('Form submit was cancelled');
+				return;
 			}
 
 			this.action('submitForm', {
@@ -149,7 +186,7 @@ export default {
 		_.each(this.$children, (child) => {
 			let options = child.$options;
 
-			if (!_.isUndefined(options.computed.fillable)) {
+			if (!_.isUndefined(_.get(options, 'computed.fillable'))) {
 				let name = options.propsData.name,
 					defaultValue = options.computed.default() || '';
 

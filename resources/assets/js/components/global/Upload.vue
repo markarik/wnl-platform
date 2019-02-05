@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div @click="click" class="wnl-upload">
 		<slot></slot>
 		<form @submit.prevent>

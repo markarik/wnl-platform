@@ -23,7 +23,7 @@ import Sidenav from 'js/components/global/Sidenav.vue';
 
 import * as mutations from 'js/store/mutations-types';
 import { resource } from 'js/utils/config';
-import {STATUS_COMPLETE} from '../../services/progressStore';
+import {STATUS_COMPLETE} from 'js/services/progressStore';
 import navigation from 'js/services/navigation';
 
 export default {
@@ -69,9 +69,7 @@ export default {
 			return breadcrumbs;
 		},
 		itemsHeading() {
-			if (this.isLesson) {
-				return this.getLesson(this.context.lessonId).name;
-			}
+			return this.isLesson ? this.getLesson(this.context.lessonId).name : null;
 		},
 		items() {
 			if (this.isLesson) {

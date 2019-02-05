@@ -61,28 +61,38 @@ export default {
 		'wnl-quill': Quill,
 		'wnl-submit': Submit,
 	},
-	props: ['tags'],
+	props: {
+		contextTags: {
+			type: Array,
+			default: () => []
+		},
+		discussionId: {
+			type: Number,
+			required: true
+		}
+	},
 	computed: {
 		attachedData() {
 			return {
-				tags: this.tags.map((tag) => tag.id),
+				tags: this.contextTags.map((tag) => tag.id),
 				context: {
 					name: this.$route.name,
 					params: this.$route.params
-				}
+				},
+				discussion_id: this.discussionId
 			};
 		},
 	},
 	methods: {
-		...mapActions('qna', ['fetchQuestionsByTags']),
+		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 		onSubmitSuccess() {
 			this.$emit('submitSuccess');
-			this.fetchQuestionsByTags({tags: this.tags, sorting: 'latest'});
+			this.fetchQuestionsForDiscussion(this.discussionId);
 		},
 	},
 	watch: {
-		'tags' (newValue) {
-			this.fetchQuestionsByTags({tags: newValue});
+		discussionId() {
+			this.fetchQuestionsForDiscussion(this.discussionId);
 		}
 	}
 };

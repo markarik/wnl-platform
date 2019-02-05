@@ -37,7 +37,7 @@
 						<div class="questions-plan-create" v-else>
 							<p class="questions-plan-create-heading">
 								{{$t('questions.dashboard.plan.create.heading')}}
-							<p>
+							</p>
 							<p class="questions-plan-create-tip">
 								{{$t('questions.dashboard.plan.create.tip')}}
 							</p>
@@ -171,7 +171,7 @@
 
 	.questions-breadcrumbs
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-1
 		display: flex
 		margin-right: $margin-base
@@ -310,7 +310,7 @@
 
 		&__date
 			font-size: $font-size-minus-1
-			color: $color-gray-dimmed
+			color: $color-gray
 
 	.score.is-danger
 		color: $color-red
@@ -347,7 +347,7 @@ export default {
 	props: {
 		id: {
 			default: 0,
-			type: Number|String,
+			type: [String, Number],
 		}
 	},
 	data() {

@@ -50,6 +50,7 @@
 				</div>
 				<div class="work-load-control">
 					<a v-for="workLoad in availableWorkLoads"
+						 :key="workLoad.workLoad"
 						 @click="chooseWorkload(workLoad.workLoad)"
 						 class="panel-toggle work-load-button"
 						 :class="{'is-active': isWorkLoadActive(workLoad.workLoad)}"

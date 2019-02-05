@@ -129,7 +129,7 @@
 		width: 100%
 
 		header
-			color: $color-gray-dimmed
+			color: $color-gray
 			font-size: $font-size-minus-1
 			margin-bottom: $margin-base
 			margin-top: $margin-base
@@ -187,7 +187,7 @@
 	.quiz-question-meta
 		+flex-space-between()
 		align-items: flex-start
-		color: $color-gray-dimmed
+		color: $color-gray
 		font-size: $font-size-minus-2
 		line-height: $line-height-minus
 		padding: $margin-base $margin-base 0
@@ -321,14 +321,9 @@ export default {
 			return !isNumber(this.question.selectedAnswer);
 		},
 		reactionState() {
-			if (typeof this.getReaction === 'function') {
-				return this.getReaction(this.reactableResource, this.question.id, 'bookmark');
-			}
-		},
-		watchState() {
-			if (typeof this.getReaction === 'function') {
-				return this.getReaction(this.reactableResource, this.question.id, 'watch');
-			}
+			return typeof this.getReaction === 'function' ?
+				this.getReaction(this.reactableResource, this.question.id, 'bookmark') :
+				null;
 		},
 		slides() {
 			return this.question.slides;

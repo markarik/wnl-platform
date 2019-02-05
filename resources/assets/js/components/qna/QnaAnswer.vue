@@ -42,13 +42,13 @@
 				urlParam="qna_answer"
 				module="qna"
 				:readOnly="readOnly"
-				:commentableId="this.id"
+				:commentableId="id"
 				:hideWatchlist="true"
 				:isUnique="false"
 			>
 			</wnl-comments-list>
 		</div>
-		<wnl-modal :isModalVisible="isVisible" @closeModal="closeModal" v-if="isVisible">
+		<wnl-modal @closeModal="closeModal" v-if="isVisible">
 			<wnl-user-profile-modal :author="author"/>
 		</wnl-modal>
 	</div>
@@ -78,7 +78,7 @@
 		align-items: center
 		color: $color-sky-blue
 		&.author-forgotten
-			color: $color-gray-dimmed
+			color: $color-gray
 			pointer-events: none
 
 	.qna-answer-comments

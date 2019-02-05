@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
 	<div class="field wnl-form-checkbox">
 
 		<input type="checkbox"
@@ -24,7 +24,7 @@
 
 <script>
 export default {
-	name: 'wnl-form-checkbox',
+	name: 'WnlFormCheckbox',
 	props: ['type', 'name', 'form'],
 };
 </script>

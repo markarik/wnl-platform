@@ -18,12 +18,12 @@
 								({{howManyQuestions}})
 							</p>
 						</div>
-						<div class="tags" v-if="tags">
-							<span v-for="tag, key in tagsFiltered" class="tag is-light" v-text="tag.name"></span>
+						<div class="tags" v-if="contextTags">
+							<span v-for="tag in contextTags" :key="tag.id" class="tag is-light" v-text="tag.name"></span>
 						</div>
 					</div>
 				</div>
-				<div class="level-right" v-if="!readOnly && tags && tags.length">
+				<div class="level-right" v-if="!readOnly && contextTags && contextTags.length">
 					<a class="button is-small" @click="showForm = false" v-if="showForm">
 						<span>Ukryj</span>
 					</a>
@@ -36,8 +36,12 @@
 				</div>
 			</div>
 			<transition name="fade">
-				<div class="qna-new-question" v-if="showForm">
-					<wnl-new-question :tags="tags" @submitSuccess="showForm = false"/>
+				<div class="qna-new-question" v-if="showForm && discussionId">
+					<wnl-new-question
+						:contextTags="contextTags"
+						@submitSuccess="showForm = false"
+						:discussionId="discussionId"
+					/>
 				</div>
 			</transition>
 			<wnl-qna-sorting v-if="sortingEnabled"/>
@@ -96,7 +100,7 @@
 
 	.qna-meta
 		align-items: center
-		color: $color-gray-dimmed
+		color: $color-gray
 		display: flex
 		flex-wrap: wrap
 		font-size: $font-size-minus-1
@@ -113,7 +117,7 @@
 		display: flex
 
 	.qna-title
-		color: $color-gray-dimmed
+		color: $color-gray
 		margin-bottom: $margin-tiny
 		margin-top: $margin-base
 
@@ -128,14 +132,11 @@
 </style>
 
 <script>
-import {join} from 'lodash';
-import { mapActions, mapGetters } from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 
 import QnaSorting from 'js/components/qna/QnaSorting';
 import QnaQuestion from 'js/components/qna/QnaQuestion';
 import NewQuestionForm from 'js/components/qna/NewQuestionForm';
-
-import * as types from 'js/store/mutations-types';
 import {invisibleTags} from 'js/utils/config';
 
 export default {
@@ -152,7 +153,7 @@ export default {
 		},
 		icon: String,
 		isUserProfileClass: String,
-		tags: Array,
+		contextTags: Array,
 		numbersDisabled: Boolean,
 		passedQuestions: Array,
 		reactionsDisabled: Boolean,
@@ -165,10 +166,12 @@ export default {
 		},
 		config: {
 			type: Object,
-			default: () => { return {
-				highlighted: {}
-			};}
+			default: () => ({highlighted: {}})
 		},
+		discussionId: {
+			type: Number,
+			default: 0
+		}
 	},
 	data() {
 		return {
@@ -187,10 +190,6 @@ export default {
 		]),
 		howManyQuestions() {
 			return Object.keys(this.questionsList).length || 0;
-		},
-		tagsFiltered() {
-			if (!this.tags) return [];
-			return this.tags.filter(tag => invisibleTags.indexOf(tag.name) === -1);
 		},
 		displayedTitle() {
 			return this.title || this.$t('qna.title.titleToDisplay');
@@ -217,7 +216,7 @@ export default {
 		}
 	},
 	beforeDestroy() {
-		   this.destroyQna();
+		this.destroyQna();
 	}
 };
 </script>

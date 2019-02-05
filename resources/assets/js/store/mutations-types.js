@@ -173,6 +173,9 @@ export const QUESTIONS_SET_TEST                 = 'QUESTIONS_SET_TEST';
 export const QUESTIONS_SET_WITH_ANSWERS         = 'QUESTIONS_SET_WITH_ANSWERS';
 export const QUESTIONS_UPDATE                   = 'QUESTIONS_UPDATE';
 export const QUESTIONS_SET_TOKEN                = 'QUESTIONS_SET_TOKEN';
+export const QUESTIONS_ATTACH_TERM              = 'QUESTIONS_ATTACH_TERM';
+export const QUESTIONS_DETACH_TERM              = 'QUESTIONS_DETACH_TERM';
+
 
 // Filters
 export const ADD_FILTER = 'ADD_FILTER';

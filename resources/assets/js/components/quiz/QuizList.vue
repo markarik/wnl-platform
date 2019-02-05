@@ -22,6 +22,8 @@
 				:getReaction="getReaction"
 				@selectAnswer="onSelectAnswer"
 				@userEvent="proxyUserEvent"
+				@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
+				@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
 			></wnl-quiz-question>
 		</div>
 		<p v-if="!plainList && !displayResults" class="has-text-centered">

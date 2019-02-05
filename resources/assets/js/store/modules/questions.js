@@ -247,6 +247,18 @@ const mutations = {
 	},
 	[types.QUESTIONS_SET_TOKEN] (state) {
 		state.token = uuidv1();
+	},
+	[types.QUIZ_QUESTION_ATTACH_TERM] (state, {question, term}) {
+		const hasTerm = question.taxonomyTerms.find(questionTerm => questionTerm.id === term.id) > -1;
+		if (!hasTerm) {
+			question.taxonomyTerms.push(term);
+		}
+	},
+	[types.QUIZ_QUESTION_DETACH_TERM] (state, {question, term}) {
+		const index = question.taxonomyTerms.findIndex(questionTerm => questionTerm.id === term.id);
+		if (index > -1) {
+			question.taxonomyTerms.splice(index, 1);
+		}
 	}
 };
 

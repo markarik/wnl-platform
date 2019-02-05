@@ -13,7 +13,7 @@
 			</div>
 
 			<div v-else>
-				<div class="user-profile" :class="isMobile"  v-if="!isLoading && responseCondition">
+				<div class="user-profile" :class="isMobile" v-if="!isLoading && responseCondition">
 					<div class="user-content" :class="avatarClass">
 						<wnl-avatar class="user-avatar image" size="extraextralarge"
 						:fullName="fullName"

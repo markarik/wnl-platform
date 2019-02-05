@@ -1,11 +1,15 @@
 <template>
-	<wnl-taxonomy-term-editor-form
-		v-if="term"
-		submit-label="Zapisz"
-		:on-save="onSave"
-		:taxonomy-id="taxonomyId"
-		:term="term"
-	/>
+	<div v-if="term">
+		<wnl-taxonomy-term-editor-current-term :term="term">
+			Edytujesz pojęcie:
+		</wnl-taxonomy-term-editor-current-term>
+		<wnl-taxonomy-term-editor-form
+			submit-label="Zapisz"
+			:on-save="onSave"
+			:taxonomy-id="taxonomyId"
+			:term="term"
+		/>
+	</div>
 	<div v-else class="notification is-info">
 		<span class="icon">
 			<i class="fa fa-info-circle"></i>
@@ -18,10 +22,12 @@
 import {mapActions, mapGetters, mapState} from 'vuex';
 
 import WnlTaxonomyTermEditorForm from 'js/admin/components/taxonomies/TaxonomyTermEditorForm';
+import WnlTaxonomyTermEditorCurrentTerm from 'js/admin/components/taxonomies/TaxonomyTermEditorCurrentTerm';
 
 export default {
 	components: {
-		WnlTaxonomyTermEditorForm
+		WnlTaxonomyTermEditorForm,
+		WnlTaxonomyTermEditorCurrentTerm,
 	},
 	props: {
 		taxonomyId: {

@@ -100,6 +100,7 @@
 						@userEvent="proxyUserEvent"
 					/>
 					<wnl-content-item-classifier-editor
+						class="quiz-question__content-item-classifier-editor"
 						:key="`cc-editor-${question.id}`"
 						:content-item-id="question.id"
 						:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
@@ -209,10 +210,15 @@
 
 			.wnl-quiz-question
 				margin: 0
+
+	.quiz-question__content-item-classifier-editor
+		margin-top: -$margin-big
+		margin-bottom: $margin-base
 </style>
 
 <script>
 import {isEmpty, isNumber} from 'lodash';
+import {mapActions} from 'vuex';
 
 import ActiveQuestion from 'js/components/questions/ActiveQuestion';
 import QuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder';
@@ -350,6 +356,7 @@ export default {
 		}
 	},
 	methods: {
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		buildTest(payload) {
 			this.$emit('buildTest', payload);
 		},

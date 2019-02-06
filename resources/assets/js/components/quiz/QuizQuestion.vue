@@ -266,7 +266,7 @@
 
 </style>
 <script>
-import { isNumber, trim } from 'lodash';
+import { isNumber, trim, get } from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 import { getApiUrl } from 'js/utils/env';
 
@@ -387,7 +387,7 @@ export default {
 				linkText += this.getLesson(slide.context.lesson.id).name;
 
 				if (_.get(slide, 'context.section.id')) {
-					linkText += ` / ${this.getSection(slide.context.section.id).name}`;
+					linkText += ` / ${get(slide, 'context.section.name')}`;
 				}
 			}
 			return linkText || this.$t('quiz.annotations.slides.defaultLink');

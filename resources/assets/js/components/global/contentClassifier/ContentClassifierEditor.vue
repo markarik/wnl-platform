@@ -127,7 +127,7 @@ import WnlTaxonomyTermWithAncestors from 'js/admin/components/taxonomies/Taxonom
 import WnlContentClassifierEditorRecentTerms from 'js/components/global/contentClassifier/ContentClassifierEditorRecentTerms';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import contentClassifierStore from 'js/services/contentClassifierStore';
-import {CONTENT_CLASSIFIER_KEYS} from 'js/services/contentClassifierStore';
+import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
 
 export default {
 	components: {
@@ -242,8 +242,8 @@ export default {
 					ancestors: term.ancestors || this.getAncestorsById(term.id),
 				};
 				this.$emit('taxonomyTermAttached', termToAdd);
-				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.LAST_TERM, termToAdd);
-				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.ALL_TERMS, this.allTaxonomyTerms);
+				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM, termToAdd);
+				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS, this.allTaxonomyTerms);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

@@ -40,7 +40,7 @@
 
 	.recent-terms
 		display: flex
-		margin-bottom: $margin-base
+		margin: 0 $margin-base $margin-base
 		&__option
 			flex-basis: 50%
 			margin-right: $margin-base
@@ -55,15 +55,15 @@
 
 <script>
 import contentClassifierStore from 'js/services/contentClassifierStore';
-import {CONTENT_CLASSIFIER_KEYS} from 'js/services/contentClassifierStore';
+import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
 
 export default {
 	components: {
 	},
 	data() {
 		return {
-			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_KEYS.LAST_TERM),
-			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_KEYS.ALL_TERMS),
+			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM),
+			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS),
 		};
 	},
 	props: {

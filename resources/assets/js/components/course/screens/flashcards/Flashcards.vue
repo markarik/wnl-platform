@@ -55,11 +55,10 @@
 							slot="content"
 							@userEvent="trackUserEvent"
 					/>
-					<wnl-activate-with-shortcut-key :key="flashcard.id">
+					<wnl-activate-with-shortcut-key :key="`cc-editor-${flashcard.id}`">
 						<template slot-scope="activateWithShortcutKey">
 							<wnl-content-item-classifier-editor
 								:activateWithShortcutKey="activateWithShortcutKey"
-								:key="`cc-editor-${flashcard.id}`"
 								:content-item-id="flashcard.id"
 								:content-item-type="CONTENT_TYPES.FLASHCARD"
 							/>

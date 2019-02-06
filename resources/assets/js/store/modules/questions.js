@@ -250,7 +250,7 @@ const mutations = {
 		state.token = uuidv1();
 	},
 	[types.QUESTIONS_ATTACH_TERM] (state, {question, term}) {
-		const hasTerm = question.taxonomyTerms.find(questionTerm => questionTerm.id === term.id) > -1;
+		const hasTerm = question.taxonomyTerms.findIndex(questionTerm => questionTerm.id === term.id) > -1;
 		if (!hasTerm) {
 			question.taxonomyTerms.push(term);
 		}
@@ -320,7 +320,7 @@ const actions = {
 
 		dispatch('saveQuestionsResults', {questions: questionsToStore, meta});
 
-		// I'm not updating store on puropose - not sure if we want to keep results in VUEX store
+		// I'm not updating store on propose - not sure if we want to keep results in VUEX store
 		// if we decide to keep them here we need to remember about clearing them when exiting the "TEST MODE"
 		// commit(types.QUESTIONS_SET_RESULTS, results)
 

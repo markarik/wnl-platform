@@ -4,7 +4,7 @@
 		'is-loading': isLoading,
 	}">
 		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
-		<div v-if="this.items.length > 0">
+		<div v-if="items.length > 0">
 			<ul class="margin bottom">
 				<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">
 					<div class="content-classifier__panel-editor__taxonomy">
@@ -122,9 +122,9 @@ import {getApiUrl} from 'js/utils/env';
 import {ALERT_TYPES} from 'js/consts/alert';
 
 import WnlSelect from 'js/admin/components/forms/Select';
-import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
-import WnlTaxonomyTermWithAncestors from 'js/admin/components/taxonomies/TaxonomyTermWithAncestors';
 import WnlContentClassifierEditorRecentTerms from 'js/components/global/contentClassifier/ContentClassifierEditorRecentTerms';
+import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
+import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import contentClassifierStore from 'js/services/contentClassifierStore';
 import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
@@ -181,8 +181,11 @@ export default {
 
 			return groupedTerms;
 		},
+		taxonomiesSet() {
+			return this.taxonomies && this.taxonomies.length;
+		},
 		taxonomiesOptions() {
-			if (!this.taxonomies) {
+			if (!this.taxonomiesSet) {
 				return [];
 			}
 
@@ -267,6 +270,8 @@ export default {
 		}
 	},
 	async mounted() {
+		if (this.taxonomiesSet) return;
+
 		try {
 			await this.fetchTaxonomies();
 		} catch (error) {

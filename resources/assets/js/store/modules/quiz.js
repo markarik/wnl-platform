@@ -13,7 +13,7 @@ const _fetchQuestions = (requestParams) => {
 	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams);
 };
 
-const DEFAULT_INCLUDE = 'quiz_answers,comments.profiles,comments,reactions,slides,taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags';
+const DEFAULT_INCLUDE = 'quiz_answers,comments.profiles,comments,reactions,slides';
 
 function fetchQuizSet(id) {
 	return new Promise((resolve, reject) => {
@@ -240,7 +240,7 @@ const mutations = {
 		set(state, 'pagination', pagination);
 	},
 	[types.QUIZ_QUESTION_ATTACH_TERM] (state, {question, term}) {
-		const hasTerm = question.taxonomyTerms.find(questionTerm => questionTerm.id === term.id) > -1;
+		const hasTerm = question.taxonomyTerms.findIndex(questionTerm => questionTerm.id === term.id) > -1;
 		if (!hasTerm) {
 			question.taxonomyTerms.push(term);
 		}

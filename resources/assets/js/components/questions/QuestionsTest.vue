@@ -84,8 +84,8 @@
 			:plainList="true"
 			@selectAnswer="selectAnswer"
 			@userEvent="onUserEvent"
-			@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
-			@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
+			@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
+			@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 		>
 			<div slot="question-number" slot-scope="quizList">
 				{{((currentPage - 1) * perPage) + quizList.index + 1}}/{{questions.length}}

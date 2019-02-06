@@ -412,7 +412,7 @@ const actions = {
 
 			comments && dispatch('comments/setComments', comments, {root:true});
 
-			commit(types.QUESTIONS_SET_TEST, {answers, questions: questions, slides});
+			commit(types.QUESTIONS_SET_TEST, {answers, questions, slides});
 			commit(types.UPDATE_INCLUDED, included);
 
 			return response;

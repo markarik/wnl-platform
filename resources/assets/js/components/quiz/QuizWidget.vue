@@ -13,7 +13,6 @@
 			</div>
 		</div>
 		<wnl-quiz-question
-			slot="content"
 			:class="`quiz-question-${currentQuestion.id}`"
 			:id="currentQuestion.id"
 			:question="currentQuestion"
@@ -23,8 +22,6 @@
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleClick"
 			@userEvent="proxyUserEvent"
-			@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-			@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
 		<wnl-content-item-classifier-editor
@@ -56,8 +53,6 @@
 					@headerClicked="selectQuestionFromList(index)"
 					@selectAnswer="selectAnswer"
 					@answerDoubleclick="onAnswerDoubleClick"
-					@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-					@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 				></wnl-quiz-question>
 				<wnl-content-item-classifier-editor
 					:key="`cc-editor-${question.id}`"

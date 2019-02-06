@@ -28,6 +28,8 @@
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleclick"
 			@userEvent="proxyUserEvent"
+			@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
+			@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
 		/>
 		<p class="active-question-button has-text-centered">
 			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">

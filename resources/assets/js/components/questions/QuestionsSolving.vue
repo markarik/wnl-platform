@@ -61,6 +61,8 @@
 					@selectAnswer="selectAnswer"
 					@verify="onVerify"
 					@userEvent="proxyUserEvent"
+					@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
+					@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
 				/>
 			</div>
 
@@ -98,6 +100,8 @@
 						:hideComments="true"
 						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
 						@userEvent="proxyUserEvent"
+						@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
+						@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
 					/>
 				</div>
 

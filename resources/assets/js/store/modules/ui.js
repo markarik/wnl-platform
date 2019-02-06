@@ -48,7 +48,7 @@ const getters = {
 	canShowChat: state => state.canShowChat,
 	isOverlayVisible: state => _.size(state.overlays) > 0,
 	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0,
-	isNavigationGroupExpanded: state => groupIndex => state.navigationToggleState[groupIndex],
+	isNavigationGroupExpanded: state => groupId => state.navigationToggleState[groupId],
 	overviewView: state => state.overviewView,
 	overlayTexts: state => values(pickBy(state.overlays, isString)),
 	modalVisible: state => state.modalVisible

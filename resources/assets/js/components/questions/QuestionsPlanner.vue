@@ -381,7 +381,7 @@ export default {
 			return {
 				unresolvedAndIncorrect: [
 					'quiz-resolution.items[0]',
-					'quiz-resolution.items[1]',
+					'quiz-resolution.items[3]',
 				],
 				all: [],
 				custom: [],

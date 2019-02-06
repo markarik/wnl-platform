@@ -40,10 +40,9 @@
 
 	.recent-terms
 		display: flex
-		margin: 0 $margin-base $margin-base
 		&__option
-			flex-basis: 50%
-			margin-right: $margin-base
+			flex: 1
+			margin: 0 $margin-medium
 
 			&.disabled
 				opacity: .3
@@ -58,8 +57,6 @@ import contentClassifierStore from 'js/services/contentClassifierStore';
 import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
 
 export default {
-	components: {
-	},
 	data() {
 		return {
 			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM),
@@ -80,8 +77,5 @@ export default {
 			return this.lastUsedTermsSet && !this.lastUsedTermsSet.every(lastUsedTerm => this.items.every(item => item.taxonomyTerms.find(term => term.id === lastUsedTerm.id)));
 		},
 	},
-	methods: {
-
-	}
 };
 </script>

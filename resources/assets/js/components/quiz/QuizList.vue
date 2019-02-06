@@ -22,9 +22,13 @@
 				:getReaction="getReaction"
 				@selectAnswer="onSelectAnswer"
 				@userEvent="proxyUserEvent"
-				@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-				@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 			></wnl-quiz-question>
+			<wnl-content-item-classifier-editor
+				class="quiz-question__content-item-classifier-editor"
+				:key="`cc-editor-${question.id}`"
+				:content-item-id="question.id"
+				:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+			/>
 		</div>
 		<p v-if="!plainList && !displayResults" class="has-text-centered">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
@@ -51,25 +55,36 @@
 			.question-number
 				text-align: center
 
+	.quiz-question__content-item-classifier-editor
+		margin-top: -$margin-big
+		margin-bottom: $margin-base
+
 </style>
 
 <script>
 import _ from 'lodash';
+import {mapActions} from 'vuex';
+
 import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 import { scrollToElement } from 'js/utils/animations';
 import { swalConfig } from 'js/utils/swal';
 import emits_events from 'js/mixins/emits-events';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+
 
 export default {
 	name: 'QuizList',
 	components: {
 		'wnl-quiz-question': QuizQuestion,
+		WnlContentItemClassifierEditor
 	},
 	mixins: [emits_events],
 	props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'plainList', 'canEndQuiz', 'hideCount'],
 	data() {
 		return {
 			hasErrors: false,
+			CONTENT_TYPES
 		};
 	},
 	computed: {
@@ -79,6 +94,9 @@ export default {
 			}
 
 			return this.questionsUnresolved;
+		},
+		questionsIds() {
+			return this.questions.map(question => question.id);
 		},
 		questionsUnresolved() {
 			return this.allQuestions.filter((question) => !question.isResolved);
@@ -96,6 +114,7 @@ export default {
 		},
 	},
 	methods: {
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		confirmQuizEnd(unanswered) {
 			const config = swalConfig({
 				confirmButtonText: this.$t('questions.solving.confirm.yes'),
@@ -144,5 +163,8 @@ export default {
 			scrollToElement(document.querySelector(`.quiz-question-${id}`));
 		},
 	},
+	mounted() {
+		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
+	}
 };
 </script>

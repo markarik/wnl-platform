@@ -7,8 +7,6 @@
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
 			<wnl-quiz-summary
 				@userEvent="onUserEvent"
-				@taxonomyTermAttached="onTaxonomyTermAttached"
-				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 		</div>
 		<div v-else-if="emptyQuizSet" class="has-text-centered">
@@ -37,8 +35,6 @@
 				@resetState="resetState"
 				@checkQuiz="onCheckQuiz"
 				@userEvent="onUserEvent"
-				@taxonomyTermAttached="onTaxonomyTermAttached"
-				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 			<wnl-text-loader class="margin vertical" v-else></wnl-text-loader>
 		</div>
@@ -54,7 +50,7 @@
 
 <script>
 import _ from 'lodash';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import QuizList from 'js/components/quiz/QuizList';
 import QuizSummary from 'js/components/quiz/QuizSummary';
@@ -62,7 +58,6 @@ import {scrollToTop, scrollToElement} from 'js/utils/animations';
 import { swalConfig } from 'js/utils/swal';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
-import { QUIZ_QUESTION_ATTACH_TERM, QUIZ_QUESTION_DETACH_TERM } from 'js/store/mutations-types';
 
 export default {
 	name: 'Quiz',
@@ -113,10 +108,6 @@ export default {
 	},
 	methods: {
 		...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve', 'commitSelectAnswer', 'resetState', 'checkQuiz']),
-		...mapMutations('quiz', {
-			attachTerm: QUIZ_QUESTION_ATTACH_TERM,
-			detachTerm: QUIZ_QUESTION_DETACH_TERM
-		}),
 		setup() {
 			let meta = this.screenData.meta;
 			if (!_.isObject(meta)) {
@@ -179,12 +170,6 @@ export default {
 
 			return swalConfig(_.merge(defaults, options));
 		},
-		onTaxonomyTermAttached(payload) {
-			this.attachTerm(payload);
-		},
-		onTaxonomyTermDetached(payload) {
-			this.detachTerm(payload);
-		}
 	},
 	mounted() {
 		this.setup();

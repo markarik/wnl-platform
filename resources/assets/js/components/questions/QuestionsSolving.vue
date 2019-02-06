@@ -61,8 +61,6 @@
 					@selectAnswer="selectAnswer"
 					@verify="onVerify"
 					@userEvent="proxyUserEvent"
-					@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-					@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 				/>
 			</div>
 
@@ -100,8 +98,11 @@
 						:hideComments="true"
 						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
 						@userEvent="proxyUserEvent"
-						@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-						@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
+					/>
+					<wnl-content-item-classifier-editor
+						:key="`cc-editor-${question.id}`"
+						:content-item-id="question.id"
+						:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
 					/>
 				</div>
 
@@ -130,8 +131,6 @@
 					@endQuiz="$emit('endQuiz')"
 					@userEvent="proxyUserEvent"
 					@updateTime="(payload) => $emit('updateTime', payload)"
-					@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-					@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 				/>
 			</div>
 		</div>
@@ -222,6 +221,9 @@ import Pagination from 'js/components/global/Pagination';
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import {VIEWS} from 'js/consts/questionsSolving';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+
 
 const views = [
 	{
@@ -247,6 +249,7 @@ export default {
 		'wnl-questions-test-builder': QuestionsTestBuilder,
 		'wnl-quiz-question': QuizQuestion,
 		'wnl-pagination': Pagination,
+		WnlContentItemClassifierEditor
 	},
 	mixins: [emits_events],
 	props: {
@@ -316,6 +319,7 @@ export default {
 			activeView: VIEWS.CURRENT_QUESTION,
 			showListResults: false,
 			VIEWS,
+			CONTENT_TYPES
 		};
 	},
 	computed: {
@@ -341,6 +345,9 @@ export default {
 		views() {
 			return views;
 		},
+		questionsIds() {
+			return this.questionsCurrentPage.map(question => question.id);
+		}
 	},
 	methods: {
 		buildTest(payload) {
@@ -379,6 +386,7 @@ export default {
 			this.activeView = this.presetOptions.activeView;
 		}
 		this.$emit('activeViewChange', this.activeView);
+		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
 	},
 	watch: {
 		activeFilters() {
@@ -396,6 +404,9 @@ export default {
 				this.activeView = this.presetOptions.activeView;
 			}
 			this.$emit('activeViewChange', this.activeView);
+		},
+		questionsIds() {
+			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
 		}
 	}
 };

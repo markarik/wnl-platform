@@ -404,12 +404,6 @@ export default {
 				...payload,
 			});
 		},
-		onTaxonomyTermAttached(term) {
-			this.$emit('taxonomyTermAttached', {term, question: this.question});
-		},
-		onTaxonomyTermDetached(term) {
-			this.$emit('taxonomyTermDetached', {term, question: this.question});
-		}
 	},
 	watch: {
 		'currentModalSlide.id'(slideId) {

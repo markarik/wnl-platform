@@ -43,7 +43,7 @@ export default {
 		},
 	},
 	methods: {
-		async loadTerms(slideId) {
+		loadTerms: _.debounce(async function (slideId) {
 			this.slideWithTerms = null;
 			try {
 				const {data} = await axios.get(getApiUrl(`slides/${slideId}?include=taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags`));
@@ -56,7 +56,7 @@ export default {
 			} catch (error) {
 				$wnl.logger.capture(error);
 			}
-		},
+		}, 300, {leading: false, trailing: true}),
 		onTermAttached(term) {
 			this.slideWithTerms.taxonomyTerms.push(term);
 		},

@@ -5,11 +5,7 @@ import * as types from 'js/store/mutations-types';
 
 const getCsrfToken = async () => {
 	const response = await axios.get(getApiUrl('token'));
-	const token = get(response, 'data.token');
-	if (!token) {
-		throw new Error('Failed to resolve a valid CSRF token from server.');
-	}
-	return token;
+	return get(response, 'data.token');
 };
 
 export default (Vue, {store, router}) => {
@@ -45,15 +41,19 @@ export default (Vue, {store, router}) => {
 				$wnl.logger.warning('XHR resulted in 401', error.response);
 			}
 
-			if (error.config.url !== getApiUrl('token') &&
-				error.config && error.response &&
+			if (error.config && error.response &&
+				error.config.url !== getApiUrl('token') &&
 				error.response.status === 419
 			) {
 				const token = await getCsrfToken();
 				const config = error.config;
-				config.headers['X-CSRF-TOKEN'] = token;
-				window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
-				return axios.request(config);
+				if (token) {
+					config.headers['X-CSRF-TOKEN'] = token;
+					window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+					return axios.request(config);
+				} else {
+					$wnl.logger.error('Failed to resolve a valid CSRF token from server.');
+				}
 			}
 
 			return Promise.reject(error);

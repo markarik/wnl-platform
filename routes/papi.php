@@ -24,9 +24,6 @@ if (!function_exists('api_action')) {
 Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], function () {
 	$r = config('papi.resources');
 
-	// CSRF token
-	Route::get("token", 'TokenApiController@getToken');
-
 	Route::group(['middleware' => ['admin']], function () use ($r) {
 
 		// Courses
@@ -373,4 +370,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Discussions
 	Route::get("{$r['discussions']}/{id}", 'DiscussionsApiController@get');
+
+	// CSRF token
+	Route::get("token", 'TokenApiController@getToken');
 });

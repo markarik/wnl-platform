@@ -12,10 +12,6 @@
 				</a>
 			</div>
 		</div>
-		<wnl-content-item-classifier-editor
-			:content-item-id="currentQuestion.id"
-			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-		>
 			<wnl-quiz-question
 				slot="content"
 				:class="`quiz-question-${currentQuestion.id}`"
@@ -31,7 +27,10 @@
 				@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 				v-if="currentQuestion"
 			></wnl-quiz-question>
-		</wnl-content-item-classifier-editor>
+			<wnl-content-item-classifier-editor
+				:content-item-id="currentQuestion.id"
+				:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+			/>
 		<p class="has-text-centered">
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
@@ -44,13 +43,11 @@
 			<p class="notification small">
 				Możesz wybrać dowolne pytanie z listy klikając na jego tytuł
 			</p>
-			<wnl-content-item-classifier-editor
+			<template
 				v-for="question in otherQuestions"
-				:key="question.id"
-				:content-item-id="question.id"
-				:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
 			>
 				<wnl-quiz-question
+					:key="question.id"
 					:headerOnly="true"
 					:question="question"
 					:class="`clickable quiz-question-${question.id}`"
@@ -62,7 +59,12 @@
 					@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
 					@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 				></wnl-quiz-question>
-			</wnl-content-item-classifier-editor>
+				<wnl-content-item-classifier-editor
+					:key="`cc-editor-${question.id}`"
+					:content-item-id="question.id"
+					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+				/>
+			</template>
 		</div>
 	</div>
 </template>

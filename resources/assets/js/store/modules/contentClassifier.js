@@ -20,7 +20,8 @@ const state = {
 };
 
 const getters = {
-	getContentItem: state => ({contentItemType, contentItemId}) => state[contentItemType][contentItemId]
+	getContentItem: state => ({contentItemType, contentItemId}) => state[contentItemType][contentItemId],
+	canAccess: (state, getters, rootState, rootGetters) => rootGetters.isAdmin || rootGetters.isModerator
 };
 
 const mutations = {
@@ -49,7 +50,9 @@ const mutations = {
 };
 
 const actions = {
-	async fetchTaxonomyTerms({commit}, {contentType, contentIds}) {
+	async fetchTaxonomyTerms({commit, getters}, {contentType, contentIds}) {
+		if (!getters.canAccess) return;
+
 		const url = getApiUrl(`${CONTENT_TYPE_TO_RESOURCE_ROUTE[contentType]}/.filter`);
 		const {data} = await axios.post(url, {
 			include: INCLUDE,

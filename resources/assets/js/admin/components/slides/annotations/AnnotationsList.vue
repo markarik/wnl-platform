@@ -152,8 +152,6 @@ export default {
 						name: tags[tagId].name,
 					})),
 					keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(','),
-					type: CONTENT_TYPES.ANNOTATION,
-					taxonomyTerms: parseTaxonomyTermsFromIncludes(annotation.taxonomy_terms, included),
 				};
 			});
 		}

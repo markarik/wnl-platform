@@ -1,32 +1,30 @@
 <template>
-	<div>
-		<slot name="content"></slot>
-		<div v-if="canAccess" class="content-item-classifier">
-			<div v-if="alwaysExpanded || expanded" class="content-item-classifier__editor">
-				<div
-					v-if="!alwaysExpanded"
-					class="content-item-classifier__editor__header clickable"
-					@click="expanded=false"
-				>
-					<div>
-						<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
-						<strong>{{CONTENT_TYPE_NAMES[contentItem.type]}} #{{contentItem.id}}</strong>
-					</div>
-					<span class="content-item-classifier__collapse-icon icon is-small">
-						<i class="fa fa-chevron-up"></i>
-					</span>
+	<div v-if="canAccess" class="content-item-classifier">
+		<div v-if="alwaysExpanded || expanded" class="content-item-classifier__editor">
+			<div
+				v-if="!alwaysExpanded"
+				class="content-item-classifier__editor__header clickable"
+				@click="expanded=false"
+			>
+				<div>
+					<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
+					<strong>{{CONTENT_TYPE_NAMES[contentItem.type]}} #{{contentItem.id}}</strong>
 				</div>
-				<wnl-content-classifier-editor
-					:items="[contentItem]"
-					@taxonomyTermAttached="onTaxonomyTermAttached"
-					@taxonomyTermDetached="onTaxonomyTermDetached"
-				/>
+				<span class="content-item-classifier__collapse-icon icon is-small">
+					<i class="fa fa-chevron-up"></i>
+				</span>
 			</div>
-			<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
-				<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
-				<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
-				<span v-else>brak</span>
-			</div>
+			<wnl-content-classifier-editor
+				v-if="hasContentItem"
+				:items="[contentItem]"
+				@taxonomyTermAttached="onTaxonomyTermAttached"
+				@taxonomyTermDetached="onTaxonomyTermDetached"
+			/>
+		</div>
+		<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
+			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
+			<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
+			<span v-else>brak</span>
 		</div>
 	</div>
 </template>
@@ -97,16 +95,15 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['isAdmin', 'isModerator']),
-		...mapGetters('contentClassifier', ['getContentItem']),
-		canAccess() {
-			return this.isAdmin || this.isModerator;
-		},
+		...mapGetters('contentClassifier', ['getContentItem', 'canAccess']),
 		hasTaxonomyTerms() {
 			return this.contentItem.taxonomyTerms && this.contentItem.taxonomyTerms.length > 0;
 		},
 		contentItem() {
 			return this.getContentItem({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) || {};
+		},
+		hasContentItem() {
+			return this.contentItem.id;
 		},
 	},
 	methods: {

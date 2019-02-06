@@ -46,20 +46,21 @@
 				</button>
 			</div>
 			<ol class="flashcards-set__list">
-				<wnl-content-item-classifier-editor
-					v-for="(flashcard, index) in set.flashcards"
-					:key="flashcard.id"
-					:content-item-id="flashcard.id"
-					:content-item-type="CONTENT_TYPES.FLASHCARD"
-				>
+				<template v-for="(flashcard, index) in set.flashcards">
 					<wnl-flashcard-item
+							:key="flashcard.id"
 							:flashcard="flashcard"
 							:index="index + 1"
 							:context="{type: context, id: screenData.id}"
 							slot="content"
 							@userEvent="trackUserEvent"
 					/>
-				</wnl-content-item-classifier-editor>
+					<wnl-content-item-classifier-editor
+						:key="`cc-editor-${flashcard.id}`"
+						:content-item-id="flashcard.id"
+						:content-item-type="CONTENT_TYPES.FLASHCARD"
+					/>
+				</template>
 			</ol>
 		</div>
 		<div class="flashcards-scroll" @click="scrollTop">
@@ -271,8 +272,7 @@ export default {
 			await Promise.all(resources.map(({id}) => {
 				return this.setFlashcardsSet({
 					setId: id,
-					// TODO fix performance after PLAT-961 is merged
-					include: 'flashcards.user_flashcard_notes,flashcards.taxonomy_terms.tags,flashcards.taxonomy_terms.taxonomies,flashcards.taxonomy_terms.ancestors.tags',
+					include: 'flashcards.user_flashcard_notes',
 					context_type: this.context,
 					context_id: this.screenData.id
 				});

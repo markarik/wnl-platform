@@ -25,6 +25,7 @@
 			v-if="currentQuestion"
 		></wnl-quiz-question>
 		<wnl-content-item-classifier-editor
+			class="quiz-question__content-item-classifier-editor"
 			:content-item-id="currentQuestion.id"
 			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
 		/>
@@ -55,6 +56,7 @@
 					@answerDoubleclick="onAnswerDoubleClick"
 				></wnl-quiz-question>
 				<wnl-content-item-classifier-editor
+					class="quiz-question__content-item-classifier-editor"
 					:key="`cc-editor-${question.id}`"
 					:content-item-id="question.id"
 					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
@@ -75,6 +77,10 @@
 	.quiz-widget-controls
 		display: flex
 		justify-content: space-between
+
+	.quiz-question__content-item-classifier-editor
+		margin-top: -$margin-big
+		margin-bottom: $margin-base
 </style>
 
 <script>

@@ -30,6 +30,7 @@
 			@userEvent="proxyUserEvent"
 		/>
 		<wnl-content-item-classifier-editor
+			class="quiz-question__content-item-classifier-editor"
 			:content-item-id="question.id"
 			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
 		/>
@@ -63,6 +64,10 @@
 
 	.matched-count
 		color: $color-green
+
+	.quiz-question__content-item-classifier-editor
+		margin-top: -$margin-big
+		margin-bottom: $margin-base
 </style>
 
 <script>

@@ -1,6 +1,6 @@
 export const CONTENT_TYPES = {
 	ANNOTATION: 'annotation',
 	FLASHCARD: 'flashcard',
-	QUIZ_QUESTION: 'quizQuestions',
+	QUIZ_QUESTION: 'quizQuestion',
 	SLIDE: 'slide',
 };

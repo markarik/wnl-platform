@@ -6,10 +6,10 @@ export default (Vue, {store}) => {
 		case 't':
 			store.dispatch(`${module}/setFirstInstanceAsActive`);
 			break;
-		case 'k':
+		case ']':
 			store.dispatch(`${module}/setNextInstanceAsActive`);
 			break;
-		case 'j':
+		case '[':
 			store.dispatch(`${module}/setPreviousInstanceAsActive`);
 			break;
 		}

@@ -51,6 +51,12 @@
 					</ul>
 				</li>
 			</ul>
+
+			<wnl-content-classifier-editor-recent-terms
+				:items="items"
+				@attachTaxonomyTerm="onAttachTaxonomyTerm"
+			/>
+
 			<div class="field">
 				<label class="label is-uppercase"><strong>Przypisz pojęcie</strong></label>
 				<div class="content-classifier__panel-editor__term-select">
@@ -118,13 +124,17 @@ import {ALERT_TYPES} from 'js/consts/alert';
 import WnlSelect from 'js/admin/components/forms/Select';
 import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
 import WnlTaxonomyTermWithAncestors from 'js/admin/components/taxonomies/TaxonomyTermWithAncestors';
+import WnlContentClassifierEditorRecentTerms from 'js/components/global/contentClassifier/ContentClassifierEditorRecentTerms';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import contentClassifierStore from 'js/services/contentClassifierStore';
+import {CONTENT_CLASSIFIER_KEYS} from 'js/services/contentClassifierStore';
 
 export default {
 	components: {
 		WnlSelect,
 		WnlTaxonomyTermAutocomplete,
 		WnlTaxonomyTermWithAncestors,
+		WnlContentClassifierEditorRecentTerms,
 	},
 	data() {
 		return {
@@ -145,9 +155,11 @@ export default {
 		allItemsCount() {
 			return this.items.length;
 		},
+		allTaxonomyTerms() {
+			return uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id');
+		},
 		groupedTaxonomyTerms() {
-			const taxonomyTerms = uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id');
-			const groupedTerms = taxonomyTerms.reduce(
+			const groupedTerms = this.allTaxonomyTerms.reduce(
 				(collector, term) => {
 					if (!collector[term.taxonomy.id]) {
 						collector[term.taxonomy.id] = {
@@ -175,7 +187,25 @@ export default {
 			}
 
 			return this.taxonomies.map(taxonomy => ({value: taxonomy.id, text: taxonomy.name}));
-		}
+		},
+		// TODO remove unused
+		lastUsedTerm: {
+			get() {
+				return contentClassifierStore.get(CONTENT_CLASSIFIER_KEYS.LAST_TERM);
+			},
+			set(term) {
+				// TODO fix reactivity
+				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.LAST_TERM, term);
+			}
+		},
+		lastUsedTermsSet: {
+			get() {
+				return contentClassifierStore.get(CONTENT_CLASSIFIER_KEYS.ALL_TERMS);
+			},
+			set(terms) {
+				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.ALL_TERMS, terms);
+			},
+		},
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -203,6 +233,7 @@ export default {
 				});
 
 				this.$emit('taxonomyTermDetached', term);
+				this.lastUsedTermsSet = this.allTaxonomyTerms;
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
@@ -229,6 +260,8 @@ export default {
 					ancestors: term.ancestors || this.getAncestorsById(term.id),
 				};
 				this.$emit('taxonomyTermAttached', termToAdd);
+				this.lastUsedTerm = termToAdd;
+				this.lastUsedTermsSet = this.allTaxonomyTerms;
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

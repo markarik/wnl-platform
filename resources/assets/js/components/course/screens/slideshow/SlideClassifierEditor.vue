@@ -19,6 +19,7 @@ import {mapGetters} from 'vuex';
 import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifier/ContentItemClassifierEditor';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 import {getApiUrl} from 'js/utils/env';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	components: {
@@ -49,7 +50,7 @@ export default {
 				const {included, ...slide} = data;
 				this.slideWithTerms = {
 					...slide,
-					type: 'slides',
+					type: CONTENT_TYPES.SLIDE,
 					taxonomyTerms: parseTaxonomyTermsFromIncludes(slide.taxonomy_terms, included),
 				};
 			} catch (error) {

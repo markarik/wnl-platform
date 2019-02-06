@@ -82,6 +82,7 @@ import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardR
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
 import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	components: {
@@ -89,22 +90,22 @@ export default {
 	},
 	data() {
 		const contentTypes = {
-			annotations: {
+			[CONTENT_TYPES.ANNOTATION]: {
 				resourceName: 'annotations/.filter',
 				name: 'Przypisy',
 				component: WnlAnnotationResult,
 			},
-			quizQuestions: {
+			[CONTENT_TYPES.QUIZ_QUESTION]: {
 				resourceName: 'quiz_questions/.filter',
 				name: 'Pytania z bazy pytań',
 				component: WnlHtmlResult,
 			},
-			flashcards: {
+			[CONTENT_TYPES.FLASHCARD]: {
 				resourceName: 'flashcards/.filter',
 				name: 'Pytania otwarte',
 				component: WnlFlashcardResult,
 			},
-			slides: {
+			[CONTENT_TYPES.SLIDE]: {
 				resourceName: 'slides/.filter',
 				name: 'Slajdy',
 				component: WnlSlideResult,

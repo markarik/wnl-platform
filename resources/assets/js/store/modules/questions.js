@@ -18,6 +18,7 @@ import {
 	reactionsMutations
 } from 'js/store/modules/reactions';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 
 const namespaced = true;
@@ -350,8 +351,7 @@ const actions = {
 
 			const parsedQuestions = questions.map(question => ({
 				...question,
-				// TODO constant
-				type: 'quizQuestions',
+				type: CONTENT_TYPES.QUIZ_QUESTION,
 				taxonomyTerms: parseTaxonomyTermsFromIncludes(question.taxonomy_terms, included),
 			}));
 			delete included.tags;
@@ -420,8 +420,7 @@ const actions = {
 
 			const parsedQuestions = questions.map(question => ({
 				...question,
-				// TODO constant
-				type: 'quizQuestions',
+				type: CONTENT_TYPES.QUIZ_QUESTION,
 				taxonomyTerms: parseTaxonomyTermsFromIncludes(question.taxonomy_terms, included),
 			}));
 			delete included.tags;
@@ -447,8 +446,7 @@ const actions = {
 
 			const parsedQuestions = questions.map(question => ({
 				...question,
-				// TODO constant
-				type: 'quizQuestions',
+				type: CONTENT_TYPES.QUIZ_QUESTION,
 				taxonomyTerms: parseTaxonomyTermsFromIncludes(question.taxonomy_terms, included),
 			}));
 			delete included.tags;

@@ -118,6 +118,7 @@ import {ALERT_TYPES} from 'js/consts/alert';
 import WnlSelect from 'js/admin/components/forms/Select';
 import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
 import WnlTaxonomyTermWithAncestors from 'js/admin/components/taxonomies/TaxonomyTermWithAncestors';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	components: {
@@ -195,10 +196,10 @@ export default {
 			this.isLoading = true;
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/detach`), {
-					annotations: this.getItemsByType('annotations').map(item => item.id),
-					flashcards: this.getItemsByType('flashcards').map(item => item.id),
-					quiz_questions: this.getItemsByType('quizQuestions').map(item => item.id),
-					slides: this.getItemsByType('slides').map(item => item.id),
+					annotations: this.getItemsByType(CONTENT_TYPES.ANNOTATION).map(item => item.id),
+					flashcards: this.getItemsByType(CONTENT_TYPES.FLASHCARD).map(item => item.id),
+					quiz_questions: this.getItemsByType(CONTENT_TYPES.QUIZ_QUESTION).map(item => item.id),
+					slides: this.getItemsByType(CONTENT_TYPES.SLIDE).map(item => item.id),
 				});
 
 				this.$emit('taxonomyTermDetached', term);
@@ -216,10 +217,10 @@ export default {
 			this.isLoading = true;
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/attach`), {
-					annotations: this.getItemsByType('annotations').map(item => item.id),
-					flashcards: this.getItemsByType('flashcards').map(item => item.id),
-					quiz_questions: this.getItemsByType('quizQuestions').map(item => item.id),
-					slides: this.getItemsByType('slides').map(item => item.id),
+					annotations: this.getItemsByType(CONTENT_TYPES.ANNOTATION).map(item => item.id),
+					flashcards: this.getItemsByType(CONTENT_TYPES.FLASHCARD).map(item => item.id),
+					quiz_questions: this.getItemsByType(CONTENT_TYPES.QUIZ_QUESTION).map(item => item.id),
+					slides: this.getItemsByType(CONTENT_TYPES.SLIDE).map(item => item.id),
 				});
 
 				const termToAdd = {

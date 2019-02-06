@@ -100,6 +100,7 @@
 <script>
 import { getColourForStr } from 'js/utils/colors.js';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	data() {
@@ -151,7 +152,7 @@ export default {
 						name: tags[tagId].name,
 					})),
 					keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(','),
-					type: 'annotations',
+					type: CONTENT_TYPES.ANNOTATION,
 					taxonomyTerms: parseTaxonomyTermsFromIncludes(annotation.taxonomy_terms, included),
 				};
 			});

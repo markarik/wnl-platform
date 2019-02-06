@@ -2,6 +2,7 @@ import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
 import * as mutationsTypes from 'js/store/mutations-types';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 const state = () => {
 	return {
@@ -51,8 +52,7 @@ const actions = {
 					...flashcard,
 					answer: _.get(userResponseData, `${flashcardId}.answer`, 'unsolved'),
 					note: flashcard.user_flashcard_notes ? included.user_flashcard_notes[flashcard.user_flashcard_notes[0]] : null,
-					// TODO contant
-					type: 'flashcards',
+					type: CONTENT_TYPES.FLASHCARD,
 					taxonomyTerms: parseTaxonomyTermsFromIncludes(flashcard.taxonomy_terms, included),
 				};
 			});

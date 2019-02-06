@@ -7,6 +7,7 @@ import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/m
 import * as types from 'js/store/mutations-types';
 import quizStore from 'js/services/quizStore';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 const _fetchQuestions = (requestParams) => {
 	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams);
@@ -271,8 +272,7 @@ const actions = {
 			Object.values(quizQuestions).forEach((quizQuestion) => {
 				quizQuestionsOldWay[quizQuestion.id] = {
 					...quizQuestion,
-					// TODO constant
-					type: 'quizQuestions',
+					type: CONTENT_TYPES.QUIZ_QUESTION,
 					taxonomyTerms: parseTaxonomyTermsFromIncludes(quizQuestion.taxonomy_terms, {
 						taxonomies, taxonomy_terms, tags, ancestors
 					})
@@ -312,7 +312,7 @@ const actions = {
 				destroy(data, 'included');
 				included['quiz_questions'] = _.mapValues(data, quizQuestion => ({
 					...quizQuestion,
-					type: 'quizQuestions',
+					type: CONTENT_TYPES.QUIZ_QUESTION,
 					taxonomyTerms: parseTaxonomyTermsFromIncludes(quizQuestion.taxonomy_terms, included),
 				}));
 
@@ -356,7 +356,7 @@ const actions = {
 					included['quiz_questions'] = {};
 					included['quiz_questions'][id] = {
 						...response.data,
-						type: 'quizQuestions',
+						type: CONTENT_TYPES.QUIZ_QUESTION,
 						taxonomyTerms: parseTaxonomyTermsFromIncludes(response.data.taxonomy_terms, included),
 					};
 

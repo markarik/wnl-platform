@@ -114,12 +114,6 @@
 				</div>
 			</div>
 		</div>
-		<wnl-content-item-classifier-editor
-			:content-item="question"
-			:content-type="CONTENT_TYPES.QUIZ_QUESTION"
-			@taxonomyTermAttached="onTaxonomyTermAttached"
-			@taxonomyTermDetached="onTaxonomyTermDetached"
-		/>
 	</div>
 </template>
 
@@ -287,8 +281,6 @@ import SlideLink from 'js/components/global/SlideLink';
 import SlidePreview from 'js/components/global/SlidePreview';
 import emits_events from 'js/mixins/emits-events';
 import feature_components from 'js/consts/events_map/feature_components.json';
-import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	name: 'QuizQuestion',
@@ -298,7 +290,6 @@ export default {
 		'wnl-bookmark': Bookmark,
 		'wnl-slide-link': SlideLink,
 		'wnl-slide-preview': SlidePreview,
-		WnlContentItemClassifierEditor,
 	},
 	mixins: [emits_events],
 	props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
@@ -315,7 +306,6 @@ export default {
 				text: this.$i18n.t('quiz.errorAlert'),
 				type: 'error',
 			},
-			CONTENT_TYPES
 		};
 	},
 	computed: {

@@ -80,11 +80,6 @@
 				</wnl-form>
 			</div>
 		</div>
-		<wnl-content-item-classifier-editor
-			:contentItem="flashcard"
-			@taxonomyTermAttached="onTaxonomyTermAttached"
-			@taxonomyTermDetached="onTaxonomyTermDetached"
-		/>
 	</li>
 </template>
 
@@ -204,7 +199,6 @@
 <script>
 import {mapActions, mapMutations} from 'vuex';
 import {nextTick} from 'vue';
-import {get} from 'lodash';
 import * as mutationsTypes from 'js/store/mutations-types';
 import {Quill as WnlQuill, Form as WnlForm, Submit as WnlSubmit} from 'js/components/global/form/index';
 import WnlTextButton from 'js/components/global/TextButton';
@@ -212,7 +206,6 @@ import {ANSWERS_MAP} from 'js/consts/flashcard';
 import { fontColors } from 'js/utils/colors';
 import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
-import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
 export default {
 	mixins: [emits_events],
@@ -235,7 +228,6 @@ export default {
 		WnlForm,
 		WnlTextButton,
 		WnlSubmit,
-		WnlContentItemClassifierEditor,
 	},
 	data() {
 		return {
@@ -308,32 +300,6 @@ export default {
 		},
 		toggleNoteEditor() {
 			this.isNoteEditorOpen = !this.isNoteEditorOpen;
-		},
-		onTaxonomyTermAttached(term) {
-			if (!this.flashcard.taxonomyTerms.find(({id}) => id === term.id)) {
-				const taxonomyTerms = [
-					...this.flashcard.taxonomyTerms,
-					term
-				];
-
-				this.updateFlashcard({
-					...this.flashcard,
-					taxonomyTerms
-				});
-			}
-		},
-		onTaxonomyTermDetached(term) {
-			const index = this.flashcard.taxonomyTerms.findIndex(({id}) => id === term.id);
-
-			if (index > -1) {
-				const taxonomyTerms = [...this.flashcard.taxonomyTerms];
-
-				taxonomyTerms.splice(index, 1);
-				this.updateFlashcard({
-					...this.flashcard,
-					taxonomyTerms
-				});
-			}
 		},
 	},
 };

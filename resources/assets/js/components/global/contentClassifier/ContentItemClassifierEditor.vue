@@ -1,29 +1,32 @@
 <template>
-	<div v-if="canAccess" class="content-item-classifier">
-		<div v-if="alwaysExpanded || expanded" class="content-item-classifier__editor">
-			<div
-				v-if="!alwaysExpanded"
-				class="content-item-classifier__editor__header clickable"
-				@click="expanded=false"
-			>
-				<div>
-					<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
-					<strong>{{CONTENT_TYPE_NAMES[contentItem.type]}} #{{contentItem.id}}</strong>
+	<div>
+		<slot name="content"></slot>
+		<div v-if="canAccess" class="content-item-classifier">
+			<div v-if="alwaysExpanded || expanded" class="content-item-classifier__editor">
+				<div
+					v-if="!alwaysExpanded"
+					class="content-item-classifier__editor__header clickable"
+					@click="expanded=false"
+				>
+					<div>
+						<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
+						<strong>{{CONTENT_TYPE_NAMES[contentItem.type]}} #{{contentItem.id}}</strong>
+					</div>
+					<span class="content-item-classifier__collapse-icon icon is-small">
+						<i class="fa fa-chevron-up"></i>
+					</span>
 				</div>
-				<span class="content-item-classifier__collapse-icon icon is-small">
-					<i class="fa fa-chevron-up"></i>
-				</span>
+				<wnl-content-classifier-editor
+					:items="[contentItem]"
+					@taxonomyTermAttached="onTaxonomyTermAttached"
+					@taxonomyTermDetached="onTaxonomyTermDetached"
+				/>
 			</div>
-			<wnl-content-classifier-editor
-				:items="[contentItemWithTerms]"
-				@taxonomyTermAttached="onTaxonomyTermAttached"
-				@taxonomyTermDetached="onTaxonomyTermDetached"
-			/>
-		</div>
-		<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
-			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
-			<span v-if="hasTaxonomyTerms">{{contentItemWithTerms.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
-			<span v-else>brak</span>
+			<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
+				<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
+				<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
+				<span v-else>brak</span>
+			</div>
 		</div>
 	</div>
 </template>
@@ -57,9 +60,10 @@
 </style>
 
 <script>
-import {mapGetters, mapActions} from 'vuex';
+import {mapGetters, mapActions, mapMutations} from 'vuex';
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import {CONTENT_CLASSIFIER_ATTACH_TERM, CONTENT_CLASSIFIER_DETACH_TERM} from 'js/store/mutations-types';
 
 const CONTENT_TYPE_NAMES = {
 	[CONTENT_TYPES.FLASHCARD]: 'Pytanie otwarte',
@@ -76,9 +80,6 @@ export default {
 		return {
 			expanded: false,
 			CONTENT_TYPE_NAMES,
-			contentItemWithTerms: {
-				taxonomyTerms: []
-			}
 		};
 	},
 	props: {
@@ -86,38 +87,46 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		contentItem: {
-			type: Object,
+		contentItemId: {
+			type: [Number, String],
 			required: true,
 		},
-		contentType: {
+		contentItemType: {
 			type: String,
 			required: true
 		}
 	},
 	computed: {
 		...mapGetters(['isAdmin', 'isModerator']),
+		...mapGetters('contentClassifier', ['getContentItem']),
 		canAccess() {
 			return this.isAdmin || this.isModerator;
 		},
 		hasTaxonomyTerms() {
 			return this.contentItem.taxonomyTerms && this.contentItem.taxonomyTerms.length > 0;
-		}
+		},
+		contentItem() {
+			return this.getContentItem({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) || {};
+		},
 	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
+		...mapMutations('contentClassifier', {
+			attachTerm: CONTENT_CLASSIFIER_ATTACH_TERM,
+			detachTerm: CONTENT_CLASSIFIER_DETACH_TERM
+		}),
 		onTaxonomyTermAttached(term) {
-			this.contentItemWithTerms.taxonomyTerms.push(term);
+			this.attachTerm({
+				term,
+				contentItem: this.contentItem
+			});
 		},
 		onTaxonomyTermDetached(term) {
-			const index = this.contentItemWithTerms.taxonomyTerms.findIndex(taxonomyTerm => taxonomyTerm.id === term.id);
-			this.contentItemWithTerms.taxonomyTerms.splice(index, 1);
+			this.detachTerm({
+				term,
+				contentItem: this.contentItem
+			});
 		},
 	},
-	async mounted() {
-		if (!this.canAccess) return;
-
-		this.contentItemWithTerms = await this.fetchTaxonomyTerms({contentType: this.contentType, contentId: this.contentItem.id});
-	}
 };
 </script>

@@ -12,20 +12,26 @@
 				</a>
 			</div>
 		</div>
-		<wnl-quiz-question
-			:class="`quiz-question-${currentQuestion.id}`"
-			:id="currentQuestion.id"
-			:question="currentQuestion"
-			:showComments="true"
-			:getReaction="getReaction"
-			:module="module"
-			@selectAnswer="selectAnswer"
-			@answerDoubleclick="onAnswerDoubleClick"
-			@userEvent="proxyUserEvent"
-			@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-			@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
-			v-if="currentQuestion"
-		></wnl-quiz-question>
+		<wnl-content-item-classifier-editor
+			:content-item-id="currentQuestion.id"
+			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+		>
+			<wnl-quiz-question
+				slot="content"
+				:class="`quiz-question-${currentQuestion.id}`"
+				:id="currentQuestion.id"
+				:question="currentQuestion"
+				:showComments="true"
+				:getReaction="getReaction"
+				:module="module"
+				@selectAnswer="selectAnswer"
+				@answerDoubleclick="onAnswerDoubleClick"
+				@userEvent="proxyUserEvent"
+				@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
+				@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
+				v-if="currentQuestion"
+			></wnl-quiz-question>
+		</wnl-content-item-classifier-editor>
 		<p class="has-text-centered">
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
@@ -38,20 +44,25 @@
 			<p class="notification small">
 				Możesz wybrać dowolne pytanie z listy klikając na jego tytuł
 			</p>
-			<wnl-quiz-question
-				v-for="(question, index) in otherQuestions"
-				:headerOnly="true"
-				:question="question"
-				:class="`clickable quiz-question-${question.id}`"
-				:key="index"
-				:getReaction="getReaction"
-				:module="module"
-				@headerClicked="selectQuestionFromList(index)"
-				@selectAnswer="selectAnswer"
-				@answerDoubleclick="onAnswerDoubleClick"
-				@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-				@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
-			></wnl-quiz-question>
+			<wnl-content-item-classifier-editor
+				v-for="question in otherQuestions"
+				:key="question.id"
+				:content-item-id="question.id"
+				:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+			>
+				<wnl-quiz-question
+					:headerOnly="true"
+					:question="question"
+					:class="`clickable quiz-question-${question.id}`"
+					:getReaction="getReaction"
+					:module="module"
+					@headerClicked="selectQuestionFromList(index)"
+					@selectAnswer="selectAnswer"
+					@answerDoubleclick="onAnswerDoubleClick"
+					@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
+					@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
+				></wnl-quiz-question>
+			</wnl-content-item-classifier-editor>
 		</div>
 	</div>
 </template>
@@ -71,16 +82,20 @@
 
 <script>
 import _ from 'lodash';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import feature_components from 'js/consts/events_map/feature_components.json';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+
 
 export default {
 	name: 'QuizWidget',
 	components: {
+		WnlContentItemClassifierEditor,
 		'wnl-quiz-question': QuizQuestion,
 	},
 	mixins: [emits_events],
@@ -109,7 +124,8 @@ export default {
 	data() {
 		return {
 			hasErrors: false,
-			allowDoubleclick: true
+			allowDoubleclick: true,
+			CONTENT_TYPES
 		};
 	},
 	computed: {
@@ -134,9 +150,13 @@ export default {
 		},
 		hasOtherQuestions() {
 			return this.otherQuestions.length > 0;
+		},
+		questionsIds() {
+			return this.questions.map(({id}) => id);
 		}
 	},
 	methods: {
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		verify() {
 			if (this.hasAnswer) {
 				this.$emit('verify', this.currentQuestion.id);
@@ -178,6 +198,7 @@ export default {
 	},
 	created() {
 		this.trackQuizQuestionChanged();
+		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
 	},
 	watch: {
 		'currentQuestion.id'() {

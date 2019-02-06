@@ -80,7 +80,7 @@ import WnlHtmlResult from 'js/admin/components/contentClassifier/HtmlResult';
 import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
-import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
+import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 

@@ -57,11 +57,8 @@
 </style>
 
 <script>
-// TODO handle updated item
 import {mapGetters} from 'vuex';
-
-// TODO don't include admin components
-import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
+import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 
 const CONTENT_TYPE_NAMES = {
 	flashcards: 'Pytanie otwarte',

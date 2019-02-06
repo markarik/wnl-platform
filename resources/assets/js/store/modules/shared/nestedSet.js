@@ -1,10 +1,7 @@
 import {uniq} from 'lodash';
 import {set} from 'vue';
-import * as types from 'js/admin/store/mutations-types';
+import * as types from 'js/store/mutations-types';
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
-
-// Namespace
-const namespaced = true;
 
 export const initialState = {
 	editorMode: NESTED_SET_EDITOR_MODES.ADD,

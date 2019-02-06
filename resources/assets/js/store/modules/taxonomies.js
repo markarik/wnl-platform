@@ -1,8 +1,7 @@
-import { isEmpty } from 'lodash';
 import axios from 'axios';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
-import * as types from 'js/admin/store/mutations-types';
+import * as types from 'js/store/mutations-types';
 
 // Namespace
 const namespaced = true;

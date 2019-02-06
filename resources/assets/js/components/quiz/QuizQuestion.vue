@@ -286,7 +286,7 @@ import SlideLink from 'js/components/global/SlideLink';
 import SlidePreview from 'js/components/global/SlidePreview';
 import emits_events from 'js/mixins/emits-events';
 import feature_components from 'js/consts/events_map/feature_components.json';
-import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifier/ContentItemClassifierEditor';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
 export default {
 	name: 'QuizQuestion',

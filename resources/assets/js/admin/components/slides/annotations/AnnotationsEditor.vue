@@ -203,7 +203,7 @@ import KeywordField from './KeywordField';
 import PreviewModal from './PreviewModal';
 import Quill from 'js/admin/components/forms/Quill.vue';
 import Modal from 'js/components/global/Modal';
-import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifier/ContentItemClassifierEditor';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
 export default {
 	name: 'AnnotationsEditor',

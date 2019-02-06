@@ -16,7 +16,7 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifier/ContentItemClassifierEditor';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 import {getApiUrl} from 'js/utils/env';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';

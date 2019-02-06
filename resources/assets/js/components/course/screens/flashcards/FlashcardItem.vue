@@ -212,7 +212,7 @@ import {ANSWERS_MAP} from 'js/consts/flashcard';
 import { fontColors } from 'js/utils/colors';
 import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
-import WnlContentItemClassifierEditor from 'js/admin/components/contentClassifier/ContentItemClassifierEditor';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
 export default {
 	mixins: [emits_events],

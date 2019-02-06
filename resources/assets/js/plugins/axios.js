@@ -45,9 +45,13 @@ export default (Vue, {store, router}) => {
 
 			if (error.response && error.response.status === 401) {
 				window.location.replace('/login');
+				$wnl.logger.warning('XHR resulted in 401', error.response);
 			}
 
-			if (error.config && error.response && error.response.status === 419) {
+			if (error.config.url !== getApiUrl('token') &&
+				error.config && error.response &&
+				error.response.status === 419
+			) {
 				return getCsrfToken().then((token) => {
 					let config = error.config;
 					config.headers['X-CSRF-TOKEN'] = token;

@@ -15,14 +15,14 @@
 				</span>
 			</div>
 			<wnl-content-classifier-editor
-				:items="[contentItem]"
+				:items="[contentItemWithTerms]"
 				@taxonomyTermAttached="onTaxonomyTermAttached"
 				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 		</div>
 		<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
 			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
-			<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
+			<span v-if="hasTaxonomyTerms">{{contentItemWithTerms.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
 			<span v-else>brak</span>
 		</div>
 	</div>
@@ -57,7 +57,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
@@ -76,6 +76,9 @@ export default {
 		return {
 			expanded: false,
 			CONTENT_TYPE_NAMES,
+			contentItemWithTerms: {
+				taxonomyTerms: []
+			}
 		};
 	},
 	props: {
@@ -86,6 +89,10 @@ export default {
 		contentItem: {
 			type: Object,
 			required: true,
+		},
+		contentType: {
+			type: String,
+			required: true
 		}
 	},
 	computed: {
@@ -98,12 +105,19 @@ export default {
 		}
 	},
 	methods: {
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		onTaxonomyTermAttached(term) {
-			this.$emit('taxonomyTermAttached', term);
+			this.contentItemWithTerms.taxonomyTerms.push(term);
 		},
 		onTaxonomyTermDetached(term) {
-			this.$emit('taxonomyTermDetached', term);
+			const index = this.contentItemWithTerms.taxonomyTerms.findIndex(taxonomyTerm => taxonomyTerm.id === term.id);
+			this.contentItemWithTerms.taxonomyTerms.splice(index, 1);
 		},
 	},
+	async mounted() {
+		if (!this.canAccess) return;
+
+		this.contentItemWithTerms = await this.fetchTaxonomyTerms({contentType: this.contentType, contentId: this.contentItem.id});
+	}
 };
 </script>

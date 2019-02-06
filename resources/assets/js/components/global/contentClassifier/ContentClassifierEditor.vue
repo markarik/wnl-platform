@@ -169,8 +169,11 @@ export default {
 
 			return groupedTerms;
 		},
+		taxonomiesSet() {
+			return this.taxonomies && this.taxonomies.length;
+		},
 		taxonomiesOptions() {
-			if (!this.taxonomies) {
+			if (!this.taxonomiesSet) {
 				return [];
 			}
 
@@ -252,6 +255,8 @@ export default {
 		}
 	},
 	async mounted() {
+		if (this.taxonomiesSet) return;
+
 		try {
 			await this.fetchTaxonomies();
 		} catch (error) {

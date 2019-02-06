@@ -42,7 +42,7 @@
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 
-import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
+import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
 import WnlTagAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTagAutocomplete';
 import {ALERT_TYPES} from 'js/consts/alert';
 

@@ -188,24 +188,6 @@ export default {
 
 			return this.taxonomies.map(taxonomy => ({value: taxonomy.id, text: taxonomy.name}));
 		},
-		// TODO remove unused
-		lastUsedTerm: {
-			get() {
-				return contentClassifierStore.get(CONTENT_CLASSIFIER_KEYS.LAST_TERM);
-			},
-			set(term) {
-				// TODO fix reactivity
-				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.LAST_TERM, term);
-			}
-		},
-		lastUsedTermsSet: {
-			get() {
-				return contentClassifierStore.get(CONTENT_CLASSIFIER_KEYS.ALL_TERMS);
-			},
-			set(terms) {
-				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.ALL_TERMS, terms);
-			},
-		},
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -233,7 +215,7 @@ export default {
 				});
 
 				this.$emit('taxonomyTermDetached', term);
-				this.lastUsedTermsSet = this.allTaxonomyTerms;
+				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.ALL_TERMS, this.allTaxonomyTerms);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
@@ -260,8 +242,8 @@ export default {
 					ancestors: term.ancestors || this.getAncestorsById(term.id),
 				};
 				this.$emit('taxonomyTermAttached', termToAdd);
-				this.lastUsedTerm = termToAdd;
-				this.lastUsedTermsSet = this.allTaxonomyTerms;
+				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.LAST_TERM, termToAdd);
+				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.ALL_TERMS, this.allTaxonomyTerms);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

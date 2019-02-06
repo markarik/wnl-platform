@@ -50,6 +50,7 @@
 
 			.icon
 				color: $color-lighter-gray
+				margin-right: $margin-small
 </style>
 
 <script>
@@ -60,32 +61,18 @@ export default {
 	components: {
 	},
 	data() {
-		return {};
+		return {
+			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_KEYS.LAST_TERM),
+			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_KEYS.ALL_TERMS),
+		};
 	},
 	props: {
 		items: {
 			type: Array,
 			required: true,
-		}
+		},
 	},
 	computed: {
-		lastUsedTerm: {
-			get() {
-				return contentClassifierStore.get(CONTENT_CLASSIFIER_KEYS.LAST_TERM);
-			},
-			set(term) {
-				// TODO fix reactivity
-				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.LAST_TERM, term);
-			}
-		},
-		lastUsedTermsSet: {
-			get() {
-				return contentClassifierStore.get(CONTENT_CLASSIFIER_KEYS.ALL_TERMS);
-			},
-			set(terms) {
-				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.ALL_TERMS, terms);
-			},
-		},
 		canAddLastUsedTerm() {
 			return this.lastUsedTerm && !this.items.every(item => item.taxonomyTerms.find(term => term.id === this.lastUsedTerm.id));
 		},

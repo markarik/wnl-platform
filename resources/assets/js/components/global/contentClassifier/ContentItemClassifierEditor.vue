@@ -1,5 +1,5 @@
 <template>
-	<div v-if="canAccess" class="content-item-classifier">
+	<div v-if="canAccess && hasContentItem" class="content-item-classifier">
 		<div v-if="alwaysExpanded || expanded" class="content-item-classifier__editor">
 			<div
 				v-if="!alwaysExpanded"
@@ -27,6 +27,7 @@
 			<span v-else>brak</span>
 		</div>
 	</div>
+	<wnl-text-loader v-else-if="canAccess && !hasContentItem"></wnl-text-loader>
 </template>
 
 <style lang="sass">

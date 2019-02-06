@@ -59,12 +59,13 @@
 <script>
 import {mapGetters} from 'vuex';
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 const CONTENT_TYPE_NAMES = {
-	flashcards: 'Pytanie otwarte',
-	slides: 'Slajd',
-	quizQuestions: 'Pytanie z bazy pytań',
-	annotations: 'Przypis'
+	[CONTENT_TYPES.FLASHCARD]: 'Pytanie otwarte',
+	[CONTENT_TYPES.SLIDE]: 'Slajd',
+	[CONTENT_TYPES.QUIZ_QUESTION]: 'Pytanie z bazy pytań',
+	[CONTENT_TYPES.ANNOTATION]: 'Przypis'
 };
 
 export default {

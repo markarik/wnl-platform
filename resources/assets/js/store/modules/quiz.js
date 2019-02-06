@@ -240,7 +240,7 @@ const mutations = {
 		set(state, 'pagination', pagination);
 	},
 	[types.QUIZ_QUESTION_ATTACH_TERM] (state, {question, term}) {
-		const hasTerm = question.taxonomyTerms.find(questionTerm => questionTerm.id === term.id) > -1;
+		const hasTerm = question.taxonomyTerms.findIndex(questionTerm => questionTerm.id === term.id) > -1;
 		if (!hasTerm) {
 			question.taxonomyTerms.push(term);
 		}

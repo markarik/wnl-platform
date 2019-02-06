@@ -9,8 +9,8 @@
 			module="quiz"
 			@resetState="resetState"
 			@userEvent="proxyUserEvent"
-			@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
-			@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
+			@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
+			@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 		/>
 	</div>
 </template>

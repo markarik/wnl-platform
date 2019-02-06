@@ -61,8 +61,8 @@
 					@selectAnswer="selectAnswer"
 					@verify="onVerify"
 					@userEvent="proxyUserEvent"
-					@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
-					@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
+					@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
+					@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 				/>
 			</div>
 
@@ -100,8 +100,8 @@
 						:hideComments="true"
 						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
 						@userEvent="proxyUserEvent"
-						@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
-						@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
+						@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
+						@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 					/>
 				</div>
 
@@ -130,8 +130,8 @@
 					@endQuiz="$emit('endQuiz')"
 					@userEvent="proxyUserEvent"
 					@updateTime="(payload) => $emit('updateTime', payload)"
-					@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
-					@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
+					@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
+					@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 				/>
 			</div>
 		</div>

@@ -22,8 +22,8 @@
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleClick"
 			@userEvent="proxyUserEvent"
-			@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
-			@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
+			@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
+			@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
 		<p class="has-text-centered">
@@ -49,8 +49,8 @@
 				@headerClicked="selectQuestionFromList(index)"
 				@selectAnswer="selectAnswer"
 				@answerDoubleclick="onAnswerDoubleClick"
-				@taxonomyTermAttached="(payload) => $emit('taxonomyTermAttached', payload)"
-				@taxonomyTermDetached="(payload) => $emit('taxonomyTermDetached', payload)"
+				@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
+				@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 			></wnl-quiz-question>
 		</div>
 	</div>

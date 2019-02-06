@@ -82,6 +82,10 @@ export default {
 		};
 	},
 	props: {
+		activateWithShortcutKey: {
+			type: Object,
+			default: null,
+		},
 		alwaysExpanded: {
 			type: Boolean,
 			default: false,
@@ -126,5 +130,10 @@ export default {
 			});
 		},
 	},
+	watch: {
+		'activateWithShortcutKey.isActive'(isActive) {
+			this.expanded = isActive;
+		}
+	}
 };
 </script>

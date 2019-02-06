@@ -55,11 +55,16 @@
 							slot="content"
 							@userEvent="trackUserEvent"
 					/>
-					<wnl-content-item-classifier-editor
-						:key="`cc-editor-${flashcard.id}`"
-						:content-item-id="flashcard.id"
-						:content-item-type="CONTENT_TYPES.FLASHCARD"
-					/>
+					<wnl-activate-with-shortcut-key :key="flashcard.id">
+						<template slot-scope="activateWithShortcutKey">
+							<wnl-content-item-classifier-editor
+								:activateWithShortcutKey="activateWithShortcutKey"
+								:key="`cc-editor-${flashcard.id}`"
+								:content-item-id="flashcard.id"
+								:content-item-type="CONTENT_TYPES.FLASHCARD"
+							/>
+						</template>
+					</wnl-activate-with-shortcut-key>
 				</template>
 			</ol>
 		</div>
@@ -191,6 +196,7 @@ import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
 
 export default {
 	mixins: [emits_events],
@@ -206,7 +212,8 @@ export default {
 	},
 	components: {
 		WnlFlashcardItem,
-		WnlContentItemClassifierEditor
+		WnlContentItemClassifierEditor,
+		WnlActivateWithShortcutKey,
 	},
 	data() {
 		return {

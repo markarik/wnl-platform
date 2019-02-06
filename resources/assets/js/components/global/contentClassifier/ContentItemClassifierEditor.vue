@@ -59,7 +59,7 @@
 </style>
 
 <script>
-import {mapGetters, mapActions, mapMutations} from 'vuex';
+import {mapGetters, mapMutations} from 'vuex';
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import {CONTENT_CLASSIFIER_ATTACH_TERM, CONTENT_CLASSIFIER_DETACH_TERM} from 'js/store/mutations-types';
@@ -108,7 +108,6 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		...mapMutations('contentClassifier', {
 			attachTerm: CONTENT_CLASSIFIER_ATTACH_TERM,
 			detachTerm: CONTENT_CLASSIFIER_DETACH_TERM

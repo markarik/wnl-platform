@@ -6,8 +6,6 @@ import {commentsGetters, commentsMutations, commentsActions, commentsState} from
 import {reactionsGetters, reactionsMutations, reactionsActions} from 'js/store/modules/reactions';
 import * as types from 'js/store/mutations-types';
 import quizStore from 'js/services/quizStore';
-import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 const _fetchQuestions = (requestParams) => {
 	return axios.post(getApiUrl('quiz_questions/.filter'), requestParams);
@@ -239,18 +237,6 @@ const mutations = {
 	[types.QUIZ_SET_PAGINATION] (state, pagination) {
 		set(state, 'pagination', pagination);
 	},
-	[types.QUIZ_QUESTION_ATTACH_TERM] (state, {question, term}) {
-		const hasTerm = question.taxonomyTerms.findIndex(questionTerm => questionTerm.id === term.id) > -1;
-		if (!hasTerm) {
-			question.taxonomyTerms.push(term);
-		}
-	},
-	[types.QUIZ_QUESTION_DETACH_TERM] (state, {question, term}) {
-		const index = question.taxonomyTerms.findIndex(quetionTerm => quetionTerm.id === term.id);
-		if (index > -1) {
-			question.taxonomyTerms.splice(index, 1);
-		}
-	}
 };
 
 const actions = {
@@ -267,23 +253,16 @@ const actions = {
 		]).then(([storedState, response, quizStats]) => {
 			const {included, ...quizQuestions} = response.data;
 			const quizQuestionsOldWay = {};
-			const {taxonomy_terms, tags, taxonomies, ancestors, ...remainingIncluded} = included;
 
 			Object.values(quizQuestions).forEach((quizQuestion) => {
-				quizQuestionsOldWay[quizQuestion.id] = {
-					...quizQuestion,
-					type: CONTENT_TYPES.QUIZ_QUESTION,
-					taxonomyTerms: parseTaxonomyTermsFromIncludes(quizQuestion.taxonomy_terms, {
-						taxonomies, taxonomy_terms, tags, ancestors
-					})
-				};
+				quizQuestionsOldWay[quizQuestion.id] = quizQuestion;
 			});
 
 			const quizQuestionsIds = Object.keys(quizQuestionsOldWay);
 			const len = quizQuestionsIds;
 
-			remainingIncluded.comments && dispatch('comments/setComments', {...remainingIncluded.comments}, {root: true});
-			commit(types.UPDATE_INCLUDED, {...remainingIncluded, quiz_questions: quizQuestionsOldWay});
+			included.comments && dispatch('comments/setComments', {...included.comments}, {root: true});
+			commit(types.UPDATE_INCLUDED, {...included, quiz_questions: quizQuestionsOldWay});
 
 			if (!_.isEmpty(storedState)) {
 				commit(types.QUIZ_RESTORE_STATE, storedState);
@@ -310,16 +289,7 @@ const actions = {
 			if (data.included) {
 				let included = _.clone(data.included);
 				destroy(data, 'included');
-				included['quiz_questions'] = _.mapValues(data, quizQuestion => ({
-					...quizQuestion,
-					type: CONTENT_TYPES.QUIZ_QUESTION,
-					taxonomyTerms: parseTaxonomyTermsFromIncludes(quizQuestion.taxonomy_terms, included),
-				}));
-
-				delete included.tags;
-				delete included.taxonomy_terms;
-				delete included.taxonomies;
-				delete included.ancestors;
+				included['quiz_questions'] = data;
 
 				let questionsIds = _.map(data, (question) => question.id),
 					len = questionsIds.length;
@@ -354,16 +324,7 @@ const actions = {
 
 					const id = response.data.id;
 					included['quiz_questions'] = {};
-					included['quiz_questions'][id] = {
-						...response.data,
-						type: CONTENT_TYPES.QUIZ_QUESTION,
-						taxonomyTerms: parseTaxonomyTermsFromIncludes(response.data.taxonomy_terms, included),
-					};
-
-					delete included.tags;
-					delete included.taxonomy_terms;
-					delete included.taxonomies;
-					delete included.ancestors;
+					included['quiz_questions'][id] = response.data;
 
 					included.comments && dispatch('comments/setComments', included.comments, {root:true});
 					commit(types.UPDATE_INCLUDED, included);

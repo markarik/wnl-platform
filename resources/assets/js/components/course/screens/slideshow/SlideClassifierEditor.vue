@@ -5,10 +5,6 @@
 		/>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-	@import 'resources/assets/sass/variables'
-</style>
-
 <script>
 import {mapActions} from 'vuex';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';

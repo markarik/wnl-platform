@@ -23,8 +23,6 @@
 						:getReaction="getReaction"
 						@selectAnswer="commitSelectAnswer"
 						@verify="resolveQuestion"
-						@taxonomyTermAttached="onTaxonomyTermAttached"
-						@taxonomyTermDetached="onTaxonomyTermDetached"
 					/>
 				</div>
 				<wnl-text-loader v-else/>
@@ -68,12 +66,11 @@
 </style>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import WnlQuestionsNavigation from 'js/components/questions/QuestionsNavigation';
 import WnlQuizWidget from 'js/components/quiz/QuizWidget';
 import emits_events from 'js/mixins/emits-events';
-import { QUIZ_QUESTION_ATTACH_TERM, QUIZ_QUESTION_DETACH_TERM } from 'js/store/mutations-types';
 
 export default {
 	name: 'SingleQuestion',
@@ -102,10 +99,6 @@ export default {
 	},
 	methods: {
 		...mapActions('quiz', ['destroyQuiz', 'fetchSingleQuestion', 'commitSelectAnswer', 'resolveQuestion']),
-		...mapMutations('quiz', {
-			attachTerm: QUIZ_QUESTION_ATTACH_TERM,
-			detachTerm: QUIZ_QUESTION_DETACH_TERM
-		}),
 		goBack() {
 			this.$router.go(-1);
 		},
@@ -122,12 +115,6 @@ export default {
 					this.hasError = true;
 				});
 		},
-		onTaxonomyTermAttached(payload) {
-			this.attachTerm(payload);
-		},
-		onTaxonomyTermDetached(payload) {
-			this.detachTerm(payload);
-		}
 	},
 	created() {
 		this.destroyQuiz();

@@ -276,9 +276,7 @@ export default {
 			'setPage',
 			'fetchActiveFilters',
 		]),
-		...mapMutations('questions', {
-			setToken,
-		}),
+		...mapMutations('questions', {setToken}),
 		buildTest({count}) {
 			const text = this.presetOptionsToPass.hasOwnProperty('loadingText')
 				? this.presetOptionsToPass.loadingText

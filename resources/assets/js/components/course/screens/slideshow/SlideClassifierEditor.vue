@@ -1,19 +1,28 @@
 <template>
-	<wnl-content-item-classifier-editor
-		class="margin top"
-		:content-item-id="currentSlideId"
-		:content-item-type="CONTENT_TYPES.SLIDE"
-	/>
+	<wnl-activate-with-shortcut-key>
+		<template slot-scope="activateWithShortcutKey">
+			<wnl-content-item-classifier-editor
+				class="margin top"
+				:is-active="activateWithShortcutKey.isActive"
+				:content-item-id="currentSlideId"
+				:content-item-type="CONTENT_TYPES.SLIDE"
+			/>
+		</template>
+	</wnl-activate-with-shortcut-key>
 </template>
 
 <script>
 import {mapActions} from 'vuex';
+
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
+
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	components: {
-		WnlContentItemClassifierEditor
+		WnlContentItemClassifierEditor,
+		WnlActivateWithShortcutKey,
 	},
 	props: {
 		currentSlideId: {

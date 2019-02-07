@@ -30,7 +30,6 @@
 						:content-item-id="question.id"
 						:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
 						:is-active="activateWithShortcutKey.isActive"
-						@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
 					/>
 				</template>
 			</wnl-activate-with-shortcut-key>

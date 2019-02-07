@@ -24,13 +24,15 @@ export default {
 			'setActiveInstance',
 			'unregister'
 		]),
-		onUpdateIsActive(isActive) {
+	},
+	created() {
+		this.$on('updateIsActive', (isActive) => {
 			if (isActive) {
 				this.setActiveInstance(this._uid);
 			} else {
 				this.resetActiveInstance();
 			}
-		}
+		});
 	},
 	mounted() {
 		this.register(this._uid);

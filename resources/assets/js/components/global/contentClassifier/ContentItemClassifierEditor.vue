@@ -126,7 +126,7 @@ export default {
 			detachTerm: CONTENT_CLASSIFIER_DETACH_TERM
 		}),
 		updateIsActive(isActive) {
-			this.$emit('updateIsActive', isActive);
+			this.$parent.$emit('updateIsActive', isActive);
 		},
 		onTaxonomyTermAttached(term) {
 			this.attachTerm({

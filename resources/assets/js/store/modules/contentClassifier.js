@@ -21,21 +21,25 @@ const state = {
 };
 
 const getters = {
-	getContentItem: state => ({contentItemType, contentItemId}) => state[contentItemType][contentItemId] && state[contentItemType][contentItemId].data,
-	getContentItemState: state => ({contentItemType, contentItemId}) => state[contentItemType][contentItemId] && state[contentItemType][contentItemId].state,
+	getContentItem: state => ({contentItemType, contentItemId}) => state[contentItemType][contentItemId] &&
+		state[contentItemType][contentItemId].data,
+	getContentItemState: state => ({contentItemType, contentItemId}) => state[contentItemType][contentItemId] &&
+		state[contentItemType][contentItemId].state,
 	canAccess: (state, getters, rootState, rootGetters) => rootGetters.isAdmin || rootGetters.isModerator
 };
 
 const mutations = {
 	[mutationsTypes.CONTENT_CLASSIFIER_ATTACH_TERM](state, {term, contentItem}) {
-		if (contentItem.taxonomyTerms.findIndex(taxonomyTerm => taxonomyTerm.id === term.id) < 0) {
-			contentItem.taxonomyTerms.push(term);
+		const stateTerms = state[contentItem.type][contentItem.id].data.taxonomyTerms;
+		if (stateTerms.findIndex(taxonomyTerm => taxonomyTerm.id === term.id) < 0) {
+			stateTerms.push(term);
 		}
 	},
 	[mutationsTypes.CONTENT_CLASSIFIER_DETACH_TERM](state, {term, contentItem}) {
-		const index = contentItem.taxonomyTerms.findIndex(taxonomyTerm => taxonomyTerm.id === term.id);
+		const stateTerms = state[contentItem.type][contentItem.id].data.taxonomyTerms;
+		const index = stateTerms.findIndex(taxonomyTerm => taxonomyTerm.id === term.id);
 		if (index > -1) {
-			contentItem.taxonomyTerms.splice(index, 1);
+			stateTerms.splice(index, 1);
 		}
 	},
 	[mutationsTypes.CONTENT_CLASSIFIER_SET_LOADING](state, {contentItemIds, contentType}) {
@@ -67,8 +71,17 @@ const mutations = {
 		});
 	},
 	[mutationsTypes.CONTENT_CLASSIFIER_SET_ERROR](state, {contentItemIds, contentType}) {
-		contentItemIds.forEach(id => {
-			set(state[contentType][id], 'state', REQUEST_STATES.ERROR);
+		const reducedState = contentItemIds.reduce((items, id) => {
+			items[id] = {
+				state: REQUEST_STATES.ERROR,
+				data: null,
+			};
+			return items;
+		}, {});
+
+		set(state, contentType, {
+			...state[contentType],
+			...reducedState
 		});
 	},
 };
@@ -76,6 +89,7 @@ const mutations = {
 const actions = {
 	async fetchTaxonomyTerms({commit, getters}, {contentType, contentIds}) {
 		if (!getters.canAccess) return;
+		if (!contentIds.length) return;
 
 		commit(mutationsTypes.CONTENT_CLASSIFIER_SET_LOADING, {contentItemIds: contentIds, contentType});
 

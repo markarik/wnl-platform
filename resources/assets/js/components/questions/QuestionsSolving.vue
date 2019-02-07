@@ -419,7 +419,9 @@ export default {
 			}
 			this.$emit('activeViewChange', this.activeView);
 		},
-		questionsIds() {
+		questionsIds(newValue, oldValue) {
+			if (_.isEqual(newValue, oldValue)) return;
+
 			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
 		}
 	}

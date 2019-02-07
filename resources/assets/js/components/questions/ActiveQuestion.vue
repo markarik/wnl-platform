@@ -219,10 +219,6 @@ export default {
 			}
 		},
 	},
-	mounted() {
-		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [this.question.id]});
-		window.addEventListener('keydown', this.keyDown);
-	},
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.keyDown);
 	}

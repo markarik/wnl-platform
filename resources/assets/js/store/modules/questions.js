@@ -17,8 +17,6 @@ import {
 	reactionsGetters,
 	reactionsMutations
 } from 'js/store/modules/reactions';
-import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 
 const namespaced = true;
@@ -249,18 +247,6 @@ const mutations = {
 	[types.QUESTIONS_SET_TOKEN] (state) {
 		state.token = uuidv1();
 	},
-	[types.QUESTIONS_ATTACH_TERM] (state, {question, term}) {
-		const hasTerm = question.taxonomyTerms.findIndex(questionTerm => questionTerm.id === term.id) > -1;
-		if (!hasTerm) {
-			question.taxonomyTerms.push(term);
-		}
-	},
-	[types.QUESTIONS_DETACH_TERM] (state, {question, term}) {
-		const index = question.taxonomyTerms.findIndex(questionTerm => questionTerm.id === term.id);
-		if (index > -1) {
-			question.taxonomyTerms.splice(index, 1);
-		}
-	}
 };
 
 // Actions
@@ -341,7 +327,7 @@ const actions = {
 		return _fetchQuestions({
 			active: filters,
 			filters: parsedFilters,
-			include: 'quiz_answers,taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags',
+			include: 'quiz_answers',
 			page,
 			saveFilters: typeof saveFilters !== 'undefined' ? saveFilters : true,
 			useSavedFilters: typeof useSavedFilters !== 'undefined' ? useSavedFilters : true,
@@ -349,19 +335,9 @@ const actions = {
 		}).then(function (response) {
 			const {answers, questions, meta, included} = _handleResponse(response, commit);
 
-			const parsedQuestions = questions.map(question => ({
-				...question,
-				type: CONTENT_TYPES.QUIZ_QUESTION,
-				taxonomyTerms: parseTaxonomyTermsFromIncludes(question.taxonomy_terms, included),
-			}));
-			delete included.tags;
-			delete included.taxonomy_terms;
-			delete included.taxonomies;
-			delete included.ancestors;
-
 			commit(types.QUESTIONS_SET_WITH_ANSWERS, {
 				answers,
-				questions: parsedQuestions,
+				questions,
 				page: meta.current_page,
 			});
 			commit(types.QUESTIONS_SET_META, meta);
@@ -411,24 +387,14 @@ const actions = {
 			filters,
 			limit,
 			randomize,
-			include: 'quiz_answers,reactions,comments.profiles,slides,taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags',
+			include: 'quiz_answers,reactions,comments.profiles,slides',
 			cachedPagination: false
 		}).then(response => {
 			const {answers, questions, slides, included} = _handleResponse(response, commit);
 			const comments = _.get(included, 'comments');
 			comments && dispatch('comments/setComments', comments, {root:true});
 
-			const parsedQuestions = questions.map(question => ({
-				...question,
-				type: CONTENT_TYPES.QUIZ_QUESTION,
-				taxonomyTerms: parseTaxonomyTermsFromIncludes(question.taxonomy_terms, included),
-			}));
-			delete included.tags;
-			delete included.taxonomy_terms;
-			delete included.taxonomies;
-			delete included.ancestors;
-
-			commit(types.QUESTIONS_SET_TEST, {answers, questions: parsedQuestions, slides});
+			commit(types.QUESTIONS_SET_TEST, {answers, questions, slides});
 			commit(types.UPDATE_INCLUDED, included);
 
 			return response;
@@ -444,19 +410,9 @@ const actions = {
 			const {answers, questions, slides, included} = _handleResponse(response, commit);
 			const comments = _.get(included, 'comments');
 
-			const parsedQuestions = questions.map(question => ({
-				...question,
-				type: CONTENT_TYPES.QUIZ_QUESTION,
-				taxonomyTerms: parseTaxonomyTermsFromIncludes(question.taxonomy_terms, included),
-			}));
-			delete included.tags;
-			delete included.taxonomy_terms;
-			delete included.taxonomies;
-			delete included.ancestors;
-
 			comments && dispatch('comments/setComments', comments, {root:true});
 
-			commit(types.QUESTIONS_SET_TEST, {answers, questions: parsedQuestions, slides});
+			commit(types.QUESTIONS_SET_TEST, {answers, questions, slides});
 			commit(types.UPDATE_INCLUDED, included);
 
 			return response;

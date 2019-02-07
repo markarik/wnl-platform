@@ -61,7 +61,7 @@ export default {
 			const {included = {}, ...list} = data;
 
 			return Object.values(list).map(item => {
-				item.taggables_count = get(included, `taggables_count.${item.id}.taggables_count`);
+				item.taggables_count = get(included, `taggables_counts.${item.id}.taggables_count`);
 				return item;
 			});
 		}

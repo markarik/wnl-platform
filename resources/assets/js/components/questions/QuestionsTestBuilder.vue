@@ -12,8 +12,6 @@
 			@userEvent="proxyUserEvent"
 			@testStart="onTestStart"
 			@updateTime="(payload) => $emit('updateTime', payload)"
-			@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-			@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 		/>
 		<div v-else>
 			<p class="test-builder-title">

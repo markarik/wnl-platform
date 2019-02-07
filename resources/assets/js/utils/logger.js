@@ -32,7 +32,7 @@ export default class Logger {
 		this.level     = envValue('APP_LOG_LEVEL');
 		this.levelCode = Logger.LEVELS[this.level];
 
-		if (this.useExternal(this.levelCode)) {
+		if (!isDev()) {
 			Raven
 				.config(envValue('SENTRY_DSN_VUE_PUB'))
 				.setTagsContext({

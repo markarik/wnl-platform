@@ -28,8 +28,11 @@
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleclick"
 			@userEvent="proxyUserEvent"
-			@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-			@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
+		/>
+		<wnl-content-item-classifier-editor
+			class="quiz-question__content-item-classifier-editor"
+			:content-item-id="question.id"
+			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
 		/>
 		<p class="active-question-button has-text-centered">
 			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
@@ -61,6 +64,10 @@
 
 	.matched-count
 		color: $color-green
+
+	.quiz-question__content-item-classifier-editor
+		margin-top: -$margin-base
+		margin-bottom: $margin-big
 </style>
 
 <script>
@@ -69,8 +76,10 @@ import { mapGetters, mapActions } from 'vuex';
 
 import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 import { scrollToElement } from 'js/utils/animations';
-import { swalConfig } from 'js/utils/swal';
 import emits_events from 'js/mixins/emits-events';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+
 
 const KEYS = {
 	leftArrow: 37,
@@ -84,6 +93,7 @@ export default {
 	name: 'ActiveQuestion',
 	components: {
 		'wnl-quiz-question': QuizQuestion,
+		WnlContentItemClassifierEditor
 	},
 	mixins: [emits_events],
 	props: {
@@ -113,6 +123,7 @@ export default {
 			hasErrors: false,
 			allowDoubleclick: true,
 			timeout: 0,
+			CONTENT_TYPES
 		};
 	},
 	computed: {
@@ -136,6 +147,7 @@ export default {
 		},
 	},
 	methods: {
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		nextQuestion() {
 			this.$emit('changeQuestion', 1);
 			scrollToElement(this.$el, 63);
@@ -198,9 +210,6 @@ export default {
 				}
 			}
 		},
-	},
-	mounted() {
-		window.addEventListener('keydown', this.keyDown);
 	},
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.keyDown);

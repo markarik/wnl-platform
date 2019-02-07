@@ -30,7 +30,7 @@
 		<wnl-annotations-editor
 			v-show="activeView === 'editor'"
 			:annotation="activeAnnotation"
-			@addSuccess="dirty = true"
+			@addSuccess="onAddSuccess"
 			@editSuccess="dirty = true"
 			@deleteSuccess="dirty = true"
 			@hasChanges="onEditorChange"
@@ -87,7 +87,7 @@ export default {
 	data() {
 		return {
 			requestParams: {
-				include: 'keywords,tags,taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags'
+				include: 'keywords,tags'
 			},
 			searchAvailableFields: [
 				{value: 'id', title: 'ID'},
@@ -151,6 +151,16 @@ export default {
 				this.modifiedAnnotationId = 0;
 			}
 		},
+		onAddSuccess(annotation) {
+			this.dirty = true;
+			this.activeAnnotation = this.serializeAnnotation(annotation);
+		},
+		serializeAnnotation(annotation) {
+			return {
+				...annotation,
+				keywords: annotation.keywords.join(','),
+			};
+		}
 	},
 	beforeRouteLeave(to, from, next) {
 		if (this.modifiedAnnotationId) {

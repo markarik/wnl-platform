@@ -88,10 +88,6 @@ export default {
 		};
 	},
 	props: {
-		activateWithShortcutKey: {
-			type: Object,
-			default: null,
-		},
 		contentItemId: {
 			type: [Number, String],
 			required: true,

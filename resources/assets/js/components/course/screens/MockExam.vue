@@ -5,9 +5,9 @@
 			{{this.$t('annotations.mockExamAnnotation')}}
 		</div>
 		<p class="margin vertical has-text-centered">
-			<router-link :to="routeParams" class="button is-primary">
+			<button @click="redirectToExam" class="button is-primary">
 				{{this.$t('questions.nav.mockExam')}}!
-			</router-link>
+			</button>
 		</p>
 	</div>
 </template>
@@ -58,6 +58,9 @@ export default {
 		},
 	},
 	methods: {
+		redirectToExam() {
+			this.$router.push(this.routeParams);
+		},
 		wrapEmbedded() {
 			let iframes = this.$el.getElementsByClassName('ql-video'),
 				wrapperClass = 'ratio-16-9-wrapper';

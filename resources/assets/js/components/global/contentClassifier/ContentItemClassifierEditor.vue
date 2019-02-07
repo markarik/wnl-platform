@@ -1,10 +1,10 @@
 <template>
 	<div v-if="canAccess && hasContentItem" class="content-item-classifier">
-		<div v-if="alwaysExpanded || expanded" class="content-item-classifier__editor">
+		<div v-if="isAlwaysActive || isActive" class="content-item-classifier__editor">
 			<div
-				v-if="!alwaysExpanded"
+				v-if="!isAlwaysActive"
 				class="content-item-classifier__editor__header clickable"
-				@click="expanded=false"
+				@click="collapse"
 			>
 				<div>
 					<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
@@ -21,7 +21,7 @@
 				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 		</div>
-		<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
+		<div v-else class="clickable content-item-classifier__tag-names" @click="expand">
 			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
 			<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
 			<span v-else>brak</span>
@@ -77,7 +77,6 @@ export default {
 	},
 	data() {
 		return {
-			expanded: false,
 			CONTENT_TYPE_NAMES,
 		};
 	},
@@ -86,10 +85,6 @@ export default {
 			type: Object,
 			default: null,
 		},
-		alwaysExpanded: {
-			type: Boolean,
-			default: false,
-		},
 		contentItemId: {
 			type: [Number, String],
 			required: true,
@@ -97,18 +92,26 @@ export default {
 		contentItemType: {
 			type: String,
 			required: true
-		}
+		},
+		isActive: {
+			type: Boolean,
+			required: true,
+		},
+		isAlwaysActive: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	computed: {
 		...mapGetters('contentClassifier', ['getContentItem', 'canAccess']),
-		hasTaxonomyTerms() {
-			return this.contentItem.taxonomyTerms && this.contentItem.taxonomyTerms.length > 0;
-		},
 		contentItem() {
 			return this.getContentItem({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) || {};
 		},
 		hasContentItem() {
 			return this.contentItem.id;
+		},
+		hasTaxonomyTerms() {
+			return this.contentItem.taxonomyTerms && this.contentItem.taxonomyTerms.length > 0;
 		},
 	},
 	methods: {
@@ -117,6 +120,12 @@ export default {
 			attachTerm: CONTENT_CLASSIFIER_ATTACH_TERM,
 			detachTerm: CONTENT_CLASSIFIER_DETACH_TERM
 		}),
+		collapse() {
+			this.$parent.$emit('updateIsActive', false);
+		},
+		expand() {
+			this.$parent.$emit('updateIsActive', true);
+		},
 		onTaxonomyTermAttached(term) {
 			this.attachTerm({
 				term,
@@ -130,10 +139,5 @@ export default {
 			});
 		},
 	},
-	watch: {
-		'activateWithShortcutKey.isActive'(isActive) {
-			this.expanded = isActive;
-		}
-	}
 };
 </script>

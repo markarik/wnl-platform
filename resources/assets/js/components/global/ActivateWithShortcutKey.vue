@@ -18,7 +18,21 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('activateWithShortcutKey', ['register', 'unregister']),
+		...mapActions('activateWithShortcutKey', [
+			'register',
+			'resetActiveInstance',
+			'setActiveInstance',
+			'unregister'
+		]),
+	},
+	created() {
+		this.$on('updateIsActive', (isActive) => {
+			if (isActive) {
+				this.setActiveInstance(this._uid);
+			} else {
+				this.resetActiveInstance();
+			}
+		});
 	},
 	mounted() {
 		this.register(this._uid);

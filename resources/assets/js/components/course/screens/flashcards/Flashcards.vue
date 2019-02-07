@@ -58,7 +58,7 @@
 					<wnl-activate-with-shortcut-key :key="`cc-editor-${flashcard.id}`">
 						<template slot-scope="activateWithShortcutKey">
 							<wnl-content-item-classifier-editor
-								:activateWithShortcutKey="activateWithShortcutKey"
+								:is-active="activateWithShortcutKey.isActive"
 								:content-item-id="flashcard.id"
 								:content-item-type="CONTENT_TYPES.FLASHCARD"
 							/>

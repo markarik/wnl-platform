@@ -115,7 +115,7 @@
 				</div>
 				<wnl-content-item-classifier-editor
 					class="margin bottom"
-					:alwaysExpanded="true"
+					:is-always-active="true"
 					:content-item-id="annotation.id"
 					:content-item-type="CONTENT_TYPES.ANNOTATION"
 				/>

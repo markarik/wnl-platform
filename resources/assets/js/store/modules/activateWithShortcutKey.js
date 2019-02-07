@@ -27,11 +27,7 @@ export const mutations = {
 		}
 	},
 	[types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE] (state, index) {
-		if (index > -1) {
-			set(state, 'activeInstanceIndex', index);
-		} else {
-			$wnl.logger.warning('Tried to set unexisting instance as active');
-		}
+		set(state, 'activeInstanceIndex', index);
 	},
 };
 
@@ -68,6 +64,9 @@ export const actions = {
 		}
 
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE, index);
+	},
+	resetActiveInstance({commit}) {
+		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE, -1);
 	},
 };
 

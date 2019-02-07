@@ -99,12 +99,16 @@
 						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
 						@userEvent="proxyUserEvent"
 					/>
-					<wnl-content-item-classifier-editor
-						class="quiz-question__content-item-classifier-editor"
-						:key="`cc-editor-${question.id}`"
-						:content-item-id="question.id"
-						:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-					/>
+					<wnl-activate-with-shortcut-key :key="`cc-editor-${question.id}`">
+						<template slot-scope="activateWithShortcutKey">
+							<wnl-content-item-classifier-editor
+								class="quiz-question__content-item-classifier-editor"
+								:content-item-id="question.id"
+								:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+								:is-active="activateWithShortcutKey.isActive"
+							/>
+						</template>
+					</wnl-activate-with-shortcut-key>
 				</div>
 
 				<div v-if="questionsCurrentPage.length > 5" class="pagination-container">
@@ -220,14 +224,16 @@
 import {isEmpty, isNumber} from 'lodash';
 import {mapActions} from 'vuex';
 
-import ActiveQuestion from 'js/components/questions/ActiveQuestion';
-import QuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder';
-import QuizQuestion from 'js/components/quiz/QuizQuestion';
-import Pagination from 'js/components/global/Pagination';
+import WnlActiveQuestion from 'js/components/questions/ActiveQuestion';
+import WnlQuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder';
+import WnlQuizQuestion from 'js/components/quiz/QuizQuestion';
+import WnlPagination from 'js/components/global/Pagination';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
+
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import {VIEWS} from 'js/consts/questionsSolving';
-import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 
@@ -251,11 +257,12 @@ const limit = 30;
 export default {
 	name: 'QuestionsSolving',
 	components: {
-		'wnl-active-question': ActiveQuestion,
-		'wnl-questions-test-builder': QuestionsTestBuilder,
-		'wnl-quiz-question': QuizQuestion,
-		'wnl-pagination': Pagination,
-		WnlContentItemClassifierEditor
+		WnlActiveQuestion,
+		WnlQuestionsTestBuilder,
+		WnlQuizQuestion,
+		WnlPagination,
+		WnlContentItemClassifierEditor,
+		WnlActivateWithShortcutKey
 	},
 	mixins: [emits_events],
 	props: {

@@ -24,11 +24,16 @@
 			@userEvent="proxyUserEvent"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
-		<wnl-content-item-classifier-editor
-			class="quiz-question__content-item-classifier-editor"
-			:content-item-id="currentQuestion.id"
-			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-		/>
+		<wnl-activate-with-shortcut-key>
+			<template slot-scope="activateWithShortcutKey">
+				<wnl-content-item-classifier-editor
+					class="quiz-question__content-item-classifier-editor"
+					:content-item-id="currentQuestion.id"
+					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+					:is-active="activateWithShortcutKey.isActive"
+				/>
+			</template>
+		</wnl-activate-with-shortcut-key>
 		<p class="has-text-centered">
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
@@ -55,12 +60,16 @@
 					@selectAnswer="selectAnswer"
 					@answerDoubleclick="onAnswerDoubleClick"
 				></wnl-quiz-question>
-				<wnl-content-item-classifier-editor
-					class="quiz-question__content-item-classifier-editor"
-					:key="`cc-editor-${question.id}`"
-					:content-item-id="question.id"
-					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-				/>
+				<wnl-activate-with-shortcut-key :key="`cc-editor-${question.id}`">
+					<template slot-scope="activateWithShortcutKey">
+						<wnl-content-item-classifier-editor
+							class="quiz-question__content-item-classifier-editor"
+							:content-item-id="question.id"
+							:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+							:is-active="activateWithShortcutKey.isActive"
+						/>
+					</template>
+				</wnl-activate-with-shortcut-key>
 			</template>
 		</div>
 	</div>
@@ -87,11 +96,13 @@
 import _ from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
-import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
+import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
+
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import feature_components from 'js/consts/events_map/feature_components.json';
-import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 
@@ -99,7 +110,8 @@ export default {
 	name: 'QuizWidget',
 	components: {
 		WnlContentItemClassifierEditor,
-		'wnl-quiz-question': QuizQuestion,
+		WnlQuizQuestion,
+		WnlActivateWithShortcutKey,
 	},
 	mixins: [emits_events],
 	props: {

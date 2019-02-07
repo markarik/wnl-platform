@@ -71,11 +71,16 @@ export default {
 	},
 	computed: {
 		canAddLastUsedTerm() {
-			return this.lastUsedTerm && !this.items.every(item => item.taxonomyTerms.find(term => term.id === this.lastUsedTerm.id));
+			return this.lastUsedTerm && !this.isTermAttached(this.lastUsedTerm);
 		},
 		canAddLastUsedTermsSet() {
-			return this.lastUsedTermsSet && !this.lastUsedTermsSet.every(lastUsedTerm => this.items.every(item => item.taxonomyTerms.find(term => term.id === lastUsedTerm.id)));
+			return this.lastUsedTermsSet && !this.lastUsedTermsSet.every(this.isTermAttached);
 		},
 	},
+	methods: {
+		isTermAttached(term) {
+			return this.items.every(item => item.taxonomyTerms.find(({id}) => id === term.id));
+		}
+	}
 };
 </script>

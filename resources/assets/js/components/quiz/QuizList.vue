@@ -56,8 +56,8 @@
 				text-align: center
 
 	.quiz-question__content-item-classifier-editor
-		margin-top: -$margin-big
-		margin-bottom: $margin-base
+		margin-top: -$margin-base
+		margin-bottom: $margin-big
 
 </style>
 
@@ -96,7 +96,7 @@ export default {
 			return this.questionsUnresolved;
 		},
 		questionsIds() {
-			return this.questions.map(question => question.id);
+			return this.allQuestions.map(question => question.id);
 		},
 		questionsUnresolved() {
 			return this.allQuestions.filter((question) => !question.isResolved);
@@ -165,6 +165,11 @@ export default {
 	},
 	mounted() {
 		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
-	}
+	},
+	watch: {
+		questionsIds() {
+			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
+		}
+	},
 };
 </script>

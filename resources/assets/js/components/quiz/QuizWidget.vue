@@ -12,25 +12,23 @@
 				</a>
 			</div>
 		</div>
-			<wnl-quiz-question
-				slot="content"
-				:class="`quiz-question-${currentQuestion.id}`"
-				:id="currentQuestion.id"
-				:question="currentQuestion"
-				:showComments="true"
-				:getReaction="getReaction"
-				:module="module"
-				@selectAnswer="selectAnswer"
-				@answerDoubleclick="onAnswerDoubleClick"
-				@userEvent="proxyUserEvent"
-				@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-				@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
-				v-if="currentQuestion"
-			></wnl-quiz-question>
-			<wnl-content-item-classifier-editor
-				:content-item-id="currentQuestion.id"
-				:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-			/>
+		<wnl-quiz-question
+			:class="`quiz-question-${currentQuestion.id}`"
+			:id="currentQuestion.id"
+			:question="currentQuestion"
+			:showComments="true"
+			:getReaction="getReaction"
+			:module="module"
+			@selectAnswer="selectAnswer"
+			@answerDoubleclick="onAnswerDoubleClick"
+			@userEvent="proxyUserEvent"
+			v-if="currentQuestion"
+		></wnl-quiz-question>
+		<wnl-content-item-classifier-editor
+			class="quiz-question__content-item-classifier-editor"
+			:content-item-id="currentQuestion.id"
+			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+		/>
 		<p class="has-text-centered">
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
@@ -56,10 +54,9 @@
 					@headerClicked="selectQuestionFromList(index)"
 					@selectAnswer="selectAnswer"
 					@answerDoubleclick="onAnswerDoubleClick"
-					@taxonomyTermAttached="$emit('taxonomyTermAttached', $event)"
-					@taxonomyTermDetached="$emit('taxonomyTermDetached', $event)"
 				></wnl-quiz-question>
 				<wnl-content-item-classifier-editor
+					class="quiz-question__content-item-classifier-editor"
 					:key="`cc-editor-${question.id}`"
 					:content-item-id="question.id"
 					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
@@ -80,6 +77,10 @@
 	.quiz-widget-controls
 		display: flex
 		justify-content: space-between
+
+	.quiz-question__content-item-classifier-editor
+		margin-top: -$margin-base
+		margin-bottom: $margin-big
 </style>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-	<div v-if="canAccess" class="content-item-classifier">
+	<div v-if="canAccess" class="content-item-classifier" tabindex="-1">
 		<template v-if="hasContentItem">
 			<div v-if="isAlwaysActive || isActive" class="content-item-classifier__editor">
 				<div
@@ -140,6 +140,13 @@ export default {
 				contentItem: this.contentItem
 			});
 		},
+	},
+	watch: {
+		isActive(isActive) {
+			if (!this.isAlwaysActive && isActive) {
+				this.$el.focus();
+			}
+		}
 	},
 };
 </script>

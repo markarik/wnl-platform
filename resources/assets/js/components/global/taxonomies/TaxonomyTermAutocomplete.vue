@@ -8,7 +8,13 @@
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
 		<div class="control" v-else>
-			<input class="input" v-model="search" :placeholder="placeholder" />
+			<input
+				class="input"
+				ref="input"
+				v-model="search"
+				:placeholder="placeholder"
+				@keyup.esc="onEscape"
+			/>
 			<wnl-autocomplete
 				:items="autocompleteTerms"
 				:onItemChosen="onSelect"
@@ -47,14 +53,18 @@ import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/Taxono
 
 export default {
 	props: {
+		isFocused: {
+			type: Boolean,
+			default: false,
+		},
+		placeholder: {
+			type: String,
+			default: 'Wpisz nazwę nadrzędnego pojęcia',
+		},
 		selected: {
 			type: Object,
 			default: null,
 		},
-		placeholder: {
-			type: String,
-			default: 'Wpisz nazwę nadrzędnego pojęcia'
-		}
 	},
 	data() {
 		return {
@@ -84,9 +94,20 @@ export default {
 		}
 	},
 	methods: {
+		onEscape() {
+			this.$refs.input.blur();
+		},
 		onSelect(item) {
 			this.search = '';
 			this.$emit('change', item);
+		},
+	},
+	watch: {
+		isFocused(isFocused) {
+			if (isFocused) {
+				this.$refs.input.focus();
+				this.$emit('focused');
+			}
 		},
 	},
 };

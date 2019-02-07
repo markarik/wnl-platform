@@ -62,8 +62,10 @@
 					/>
 					<wnl-taxonomy-term-autocomplete
 						placeholder="Zacznij pisać, aby wyszukać pojęcie"
-						@change="onAttachTaxonomyTerm"
 						class="margin left content-classifier__panel-editor__term-select__autocomplete"
+						:isFocused="isTaxonomyTermAutocompleteFocused"
+						@change="onAttachTaxonomyTerm"
+						@focused="onTaxonomyTermAutocompleteFocused"
 					/>
 				</div>
 			</div>
@@ -130,6 +132,7 @@ export default {
 		return {
 			taxonomyId: null,
 			isLoading: false,
+			isTaxonomyTermAutocompleteFocused: false,
 		};
 	},
 	props: {
@@ -233,6 +236,7 @@ export default {
 				});
 			} finally {
 				this.isLoading = false;
+				this.isTaxonomyTermAutocompleteFocused = true;
 			}
 		},
 		async onTaxonomyChange(taxonomyId) {
@@ -245,7 +249,10 @@ export default {
 					type: ALERT_TYPES.ERROR
 				});
 			}
-		}
+		},
+		onTaxonomyTermAutocompleteFocused() {
+			this.isTaxonomyTermAutocompleteFocused = false;
+		},
 	},
 	async mounted() {
 		try {

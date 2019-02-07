@@ -5,7 +5,7 @@
 				<div
 					v-if="!isAlwaysActive"
 					class="content-item-classifier__editor__header clickable"
-					@click="collapse"
+					@click="updateIsActive(!isActive)"
 				>
 					<div>
 						<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
@@ -22,7 +22,7 @@
 					@taxonomyTermDetached="onTaxonomyTermDetached"
 				/>
 			</div>
-			<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
+			<div v-else class="clickable content-item-classifier__tag-names" @click="updateIsActive(true)">
 				<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
 				<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
 				<span v-else>brak</span>
@@ -125,11 +125,8 @@ export default {
 			attachTerm: CONTENT_CLASSIFIER_ATTACH_TERM,
 			detachTerm: CONTENT_CLASSIFIER_DETACH_TERM
 		}),
-		collapse() {
-			this.$parent.$emit('updateIsActive', false);
-		},
-		expand() {
-			this.$parent.$emit('updateIsActive', true);
+		updateIsActive(isActive) {
+			this.$parent.$emit('updateIsActive', isActive);
 		},
 		onTaxonomyTermAttached(term) {
 			this.attachTerm({

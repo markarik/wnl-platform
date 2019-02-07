@@ -28,14 +28,16 @@ const getters = {
 
 const mutations = {
 	[mutationsTypes.CONTENT_CLASSIFIER_ATTACH_TERM](state, {term, contentItem}) {
-		if (contentItem.taxonomyTerms.findIndex(taxonomyTerm => taxonomyTerm.id === term.id) < 0) {
-			contentItem.taxonomyTerms.push(term);
+		const stateTerms = state[contentItem.type][contentItem.id].data.taxonomyTerms;
+		if (stateTerms.findIndex(taxonomyTerm => taxonomyTerm.id === term.id) < 0) {
+			stateTerms.push(term);
 		}
 	},
 	[mutationsTypes.CONTENT_CLASSIFIER_DETACH_TERM](state, {term, contentItem}) {
-		const index = contentItem.taxonomyTerms.findIndex(taxonomyTerm => taxonomyTerm.id === term.id);
+		const stateTerms = state[contentItem.type][contentItem.id].data.taxonomyTerms;
+		const index = stateTerms.findIndex(taxonomyTerm => taxonomyTerm.id === term.id);
 		if (index > -1) {
-			contentItem.taxonomyTerms.splice(index, 1);
+			stateTerms.splice(index, 1);
 		}
 	},
 	[mutationsTypes.CONTENT_CLASSIFIER_SET_LOADING](state, {contentItemIds, contentType}) {

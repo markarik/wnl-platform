@@ -30,7 +30,7 @@
 		</template>
 		<div v-else-if="isError">
 			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-exclamation"></i></span>
-			Ups, nie udalo się załadować przypisanych pojęć. Odśwież strone, aby spróbować ponownie.
+			Ups, nie udalo się załadować przypisanych pojęć. Odśwież stronę, aby spróbować ponownie.
 		</div>
 		<wnl-text-loader v-else></wnl-text-loader>
 	</div>

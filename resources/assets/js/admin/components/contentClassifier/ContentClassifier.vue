@@ -84,15 +84,15 @@ import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/Co
 
 const parseIncludes = (item, included) => {
 	item.taxonomyTerms = item.taxonomy_terms ? item.taxonomy_terms.map(termId => {
-		const term = included.taxonomy_terms[termId];
-		term.tag = included.tags[term.tags[0]];
-		term.taxonomy = included.taxonomies[term.taxonomies[0]];
+		const term = {...included.taxonomy_terms[termId]};
+		term.tag = included.tags[term.tag[0]];
+		term.taxonomy = included.taxonomies[term.taxonomy[0]];
 		term.ancestors = [];
 
 		let currentTerm = term;
 		while (currentTerm.parent_id) {
-			const parentTerm = included.ancestors[currentTerm.parent_id];
-			parentTerm.tag = included.tags[parentTerm.tags[0]];
+			const parentTerm = {...included.ancestors[currentTerm.parent_id]};
+			parentTerm.tag = included.tags[parentTerm.tag[0]];
 			term.ancestors.unshift(parentTerm);
 
 			currentTerm = parentTerm;
@@ -165,7 +165,7 @@ export default {
 						by_ids: {ids: this.filters[contentType].split(',')},
 					},
 				],
-				include: 'taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags',
+				include: 'taxonomy_terms.tag,taxonomy_terms.taxonomy,taxonomy_terms.ancestors.tag',
 				// TODO use wnl-paginated-list instead
 				limit: 10000,
 			});

@@ -219,9 +219,9 @@ export default {
 		normalizeFormData(formData) {
 			return {
 				...formData,
-				taggables_count: get(formData, `included.taggables_count.${formData.id}.taggables_count`),
-				is_delete_allowed: get(formData, `included.meta.${formData.id}.is_delete_allowed`, false),
-				is_rename_allowed: get(formData, `included.meta.${formData.id}.is_rename_allowed`, true),
+				taggables_count: get(formData, `included.taggables_counts.${formData.id}.taggables_count`),
+				is_delete_allowed: get(formData, `included.metas.${formData.id}.is_delete_allowed`, false),
+				is_rename_allowed: get(formData, `included.metas.${formData.id}.is_rename_allowed`, true),
 			};
 		},
 		getTaggableLink({taggable_type, taggable_id}) {

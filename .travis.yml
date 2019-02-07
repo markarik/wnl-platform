@@ -27,6 +27,7 @@ before_script:
 
 script:
   - phpunit --filter=Api
+  - phpunit --filter=Http
   - yarn run test
   - yarn run lint
 

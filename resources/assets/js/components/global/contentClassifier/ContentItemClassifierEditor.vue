@@ -104,6 +104,9 @@ export default {
 	},
 	computed: {
 		...mapGetters('contentClassifier', ['getContentItem', 'canAccess', 'getContentItemState']),
+		contentItem() {
+			return this.getContentItem({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) || null;
+		},
 		hasContentItem() {
 			return this.contentItem;
 		},
@@ -112,9 +115,6 @@ export default {
 		},
 		hasTaxonomyTerms() {
 			return this.contentItem.taxonomyTerms && this.contentItem.taxonomyTerms.length > 0;
-		},
-		contentItem() {
-			return this.getContentItem({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) || null;
 		},
 	},
 	methods: {

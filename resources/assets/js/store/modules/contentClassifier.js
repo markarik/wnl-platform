@@ -21,8 +21,10 @@ const state = {
 };
 
 const getters = {
-	getContentItem: state => ({contentItemType, contentItemId}) => state[contentItemType][contentItemId] && state[contentItemType][contentItemId].data,
-	getContentItemState: state => ({contentItemType, contentItemId}) => state[contentItemType][contentItemId] && state[contentItemType][contentItemId].state,
+	getContentItem: state => ({contentItemType, contentItemId}) => state[contentItemType][contentItemId] &&
+		state[contentItemType][contentItemId].data,
+	getContentItemState: state => ({contentItemType, contentItemId}) => state[contentItemType][contentItemId] &&
+		state[contentItemType][contentItemId].state,
 	canAccess: (state, getters, rootState, rootGetters) => rootGetters.isAdmin || rootGetters.isModerator
 };
 
@@ -78,6 +80,7 @@ const mutations = {
 const actions = {
 	async fetchTaxonomyTerms({commit, getters}, {contentType, contentIds}) {
 		if (!getters.canAccess) return;
+		if (!contentIds.length) return;
 
 		commit(mutationsTypes.CONTENT_CLASSIFIER_SET_LOADING, {contentItemIds: contentIds, contentType});
 

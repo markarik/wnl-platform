@@ -98,7 +98,7 @@ export default {
 		},
 		isActive: {
 			type: Boolean,
-			required: true,
+			default: false,
 		},
 		isAlwaysActive: {
 			type: Boolean,

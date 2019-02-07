@@ -56,8 +56,8 @@
 				text-align: center
 
 	.quiz-question__content-item-classifier-editor
-		margin-top: -$margin-big
-		margin-bottom: $margin-base
+		margin-top: -$margin-base
+		margin-bottom: $margin-big
 
 </style>
 

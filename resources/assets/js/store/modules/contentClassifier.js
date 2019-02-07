@@ -7,7 +7,7 @@ import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 import * as mutationsTypes from 'js/store/mutations-types';
 import {REQUEST_STATES} from 'js/consts/state';
 
-const INCLUDE = 'taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags';
+const INCLUDE = 'taxonomy_terms.tag,taxonomy_terms.taxonomy,taxonomy_terms.ancestors.tag';
 
 const initialState = {
 	[CONTENT_TYPES.ANNOTATION]: {},

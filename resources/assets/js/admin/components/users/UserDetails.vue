@@ -141,17 +141,17 @@ export default {
 					return {
 						...order,
 						invoices: (order.invoices || []).map(invoiceId => included.invoices[invoiceId]),
-						studyBuddy: order.study_buddy ? included.study_buddy[order.study_buddy[0]] : null,
+						studyBuddy: order.study_buddy ? included.study_buddies[order.study_buddy[0]] : null,
 						payments: (order.payments || []).map(paymentId => included.payments[paymentId])
 					};
 				});
 			this.user.roles = (this.user.roles || []).map(roleId => included.roles[roleId]);
 			this.user.coupons = (this.user.coupons || []).map(couponId => included.coupons[couponId]);
-			this.user.profile = this.user.profile && included.profile[this.user.profile[0]];
-			this.user.user_address = this.user.user_address && included.user_address[this.user.user_address[0]];
-			this.user.billing = this.user.billing && included.billing[this.user.billing[0]];
+			this.user.profile = this.user.profile && included.profiles[this.user.profile[0]];
+			this.user.user_address = this.user.user_address && included.user_addresses[this.user.user_address[0]];
+			this.user.billing = this.user.billing && included.billings[this.user.billing[0]];
 			this.user.settings = this.user.settings &&  included.settings[this.user.settings[0]];
-			this.user.subscription = this.user.subscription && included.subscription[this.user.subscription[0]];
+			this.user.subscription = this.user.subscription && included.subscriptions[this.user.subscription[0]];
 		},
 	},
 	async mounted() {

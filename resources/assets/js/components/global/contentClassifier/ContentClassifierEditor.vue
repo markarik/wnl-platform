@@ -145,6 +145,7 @@ export default {
 		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
 		...mapGetters('taxonomies', ['taxonomyById']),
 		...mapState('taxonomies', ['taxonomies']),
+		...mapState('contentClassifier', ['recentTaxonomyId']),
 		allItemsCount() {
 			return this.items.length;
 		},
@@ -178,6 +179,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('contentClassifier', ['setRecentTaxonomyId']),
 		...mapActions('taxonomyTerms', ['setUpNestedSet']),
 		...mapActions('taxonomies', {
 			fetchTaxonomies: 'fetchAll',
@@ -242,6 +244,7 @@ export default {
 		async onTaxonomyChange(taxonomyId) {
 			try {
 				await this.setUpNestedSet(taxonomyId);
+				this.setRecentTaxonomyId(taxonomyId);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
@@ -257,6 +260,10 @@ export default {
 	async mounted() {
 		try {
 			await this.fetchTaxonomies();
+
+			if (this.recentTaxonomyId) {
+				this.taxonomyId = this.recentTaxonomyId;
+			}
 		} catch (error) {
 			$wnl.logger.capture(error);
 			this.addAutoDismissableAlert({

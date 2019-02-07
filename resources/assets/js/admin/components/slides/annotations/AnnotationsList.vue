@@ -99,8 +99,6 @@
 
 <script>
 import { getColourForStr } from 'js/utils/colors.js';
-import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	data() {

@@ -31,7 +31,11 @@ const mutations = {
 
 // Actions
 const actions = {
-	async fetchAll({commit}) {
+	async fetchAll({commit, state}) {
+		if (state.taxonomies.length > 0){
+			return;
+		}
+
 		commit(types.SETUP_TAXONOMIES, []);
 		commit(types.SET_TAXONOMIES_LOADING, true);
 		try {
@@ -43,6 +47,9 @@ const actions = {
 			commit(types.SET_TAXONOMIES_LOADING, false);
 		}
 	},
+	resetTaxonomies({commit}) {
+		commit(types.SETUP_TAXONOMIES, []);
+	}
 };
 
 export default {

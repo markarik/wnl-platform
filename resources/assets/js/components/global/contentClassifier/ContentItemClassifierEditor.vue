@@ -97,14 +97,14 @@ export default {
 	},
 	computed: {
 		...mapGetters('contentClassifier', ['getContentItem', 'canAccess']),
+		hasContentItem() {
+			return this.contentItem;
+		},
 		hasTaxonomyTerms() {
 			return this.contentItem.taxonomyTerms && this.contentItem.taxonomyTerms.length > 0;
 		},
 		contentItem() {
-			return this.getContentItem({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) || {};
-		},
-		hasContentItem() {
-			return this.contentItem.id;
+			return this.getContentItem({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) || null;
 		},
 	},
 	methods: {

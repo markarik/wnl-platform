@@ -1,8 +1,9 @@
 <template>
-		<wnl-content-item-classifier-editor
-			:content-item-id="currentSlideId"
-			:content-item-type="CONTENT_TYPES.SLIDE"
-		/>
+	<wnl-content-item-classifier-editor
+		class="margin top"
+		:content-item-id="currentSlideId"
+		:content-item-type="CONTENT_TYPES.SLIDE"
+	/>
 </template>
 
 <script>

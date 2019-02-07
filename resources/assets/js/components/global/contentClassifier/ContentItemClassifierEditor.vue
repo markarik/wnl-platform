@@ -1,33 +1,39 @@
 <template>
-	<div v-if="canAccess && hasContentItem" class="content-item-classifier">
-		<div v-if="alwaysExpanded || expanded" class="content-item-classifier__editor">
-			<div
-				v-if="!alwaysExpanded"
-				class="content-item-classifier__editor__header clickable"
-				@click="expanded=false"
-			>
-				<div>
-					<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
-					<strong>{{CONTENT_TYPE_NAMES[contentItem.type]}} #{{contentItem.id}}</strong>
+	<div v-if="canAccess" class="content-item-classifier">
+		<template v-if="hasContentItem">
+			<div v-if="alwaysExpanded || expanded" class="content-item-classifier__editor">
+				<div
+					v-if="!alwaysExpanded"
+					class="content-item-classifier__editor__header clickable"
+					@click="expanded=false"
+				>
+					<div>
+						<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
+						<strong>{{CONTENT_TYPE_NAMES[contentItem.type]}} #{{contentItem.id}}</strong>
+					</div>
+					<span class="content-item-classifier__collapse-icon icon is-small">
+						<i class="fa fa-chevron-up"></i>
+					</span>
 				</div>
-				<span class="content-item-classifier__collapse-icon icon is-small">
-					<i class="fa fa-chevron-up"></i>
-				</span>
+				<wnl-content-classifier-editor
+					v-if="hasContentItem"
+					:items="[contentItem]"
+					@taxonomyTermAttached="onTaxonomyTermAttached"
+					@taxonomyTermDetached="onTaxonomyTermDetached"
+				/>
 			</div>
-			<wnl-content-classifier-editor
-				v-if="hasContentItem"
-				:items="[contentItem]"
-				@taxonomyTermAttached="onTaxonomyTermAttached"
-				@taxonomyTermDetached="onTaxonomyTermDetached"
-			/>
+			<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
+				<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
+				<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
+				<span v-else>brak</span>
+			</div>
+		</template>
+		<div v-else-if="isError">
+			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-exclamation"></i></span>
+			Ups, nie udalo się załadować przypisanych pojęć. Odśwież strone, aby spróbować ponownie.
 		</div>
-		<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
-			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
-			<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
-			<span v-else>brak</span>
-		</div>
+		<wnl-text-loader v-else></wnl-text-loader>
 	</div>
-	<wnl-text-loader v-else-if="canAccess && !hasContentItem"></wnl-text-loader>
 </template>
 
 <style lang="sass">
@@ -63,6 +69,7 @@ import {mapGetters, mapMutations} from 'vuex';
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import {CONTENT_CLASSIFIER_ATTACH_TERM, CONTENT_CLASSIFIER_DETACH_TERM} from 'js/store/mutations-types';
+import {REQUEST_STATES} from 'js/consts/state';
 
 const CONTENT_TYPE_NAMES = {
 	[CONTENT_TYPES.FLASHCARD]: 'Pytanie otwarte',
@@ -96,9 +103,12 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters('contentClassifier', ['getContentItem', 'canAccess']),
+		...mapGetters('contentClassifier', ['getContentItem', 'canAccess', 'getContentItemState']),
 		hasContentItem() {
 			return this.contentItem;
+		},
+		isError() {
+			return this.getContentItemState({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) === REQUEST_STATES.ERROR;
 		},
 		hasTaxonomyTerms() {
 			return this.contentItem.taxonomyTerms && this.contentItem.taxonomyTerms.length > 0;

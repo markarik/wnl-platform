@@ -71,8 +71,17 @@ const mutations = {
 		});
 	},
 	[mutationsTypes.CONTENT_CLASSIFIER_SET_ERROR](state, {contentItemIds, contentType}) {
-		contentItemIds.forEach(id => {
-			set(state[contentType][id], 'state', REQUEST_STATES.ERROR);
+		const reducedState = contentItemIds.reduce((items, id) => {
+			items[id] = {
+				state: REQUEST_STATES.ERROR,
+				data: null,
+			};
+			return items;
+		}, {});
+
+		set(state, contentType, {
+			...state[contentType],
+			...reducedState
 		});
 	},
 };

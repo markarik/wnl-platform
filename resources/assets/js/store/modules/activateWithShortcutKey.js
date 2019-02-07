@@ -49,6 +49,11 @@ export const actions = {
 	},
 	setNextInstanceAsActive({commit, state}) {
 		const length = state.instances.length;
+
+		if (length === 0) {
+			return;
+		}
+
 		let index = state.instances.indexOf(state.activeInstanceUid) + 1;
 
 		if (index >= length) {
@@ -59,6 +64,11 @@ export const actions = {
 	},
 	setPreviousInstanceAsActive({commit, state}) {
 		const length = state.instances.length;
+
+		if (length === 0) {
+			return;
+		}
+
 		let index = state.instances.indexOf(state.activeInstanceUid) - 1;
 
 		if (index < 0) {

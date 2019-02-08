@@ -217,6 +217,7 @@ export default {
 				return;
 			}
 
+			// TODO fix enter sending a message
 			this.$refs.autocomplete.onKeyDown(evt);
 			this.killEvent(evt);
 

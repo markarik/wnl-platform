@@ -70,7 +70,6 @@
 							:toolbar="[['bold', 'italic', 'underline', 'link'], [{ color: fontColors }], ['clean']]"
 							v-model="note"
 					/>
-
 					<div class="level">
 						<div class="level-item">
 							<wnl-submit cssClass="button is-small is-primary">
@@ -200,7 +199,6 @@
 <script>
 import {mapActions, mapMutations} from 'vuex';
 import {nextTick} from 'vue';
-import {get} from 'lodash';
 import * as mutationsTypes from 'js/store/mutations-types';
 import {Quill as WnlQuill, Form as WnlForm, Submit as WnlSubmit} from 'js/components/global/form/index';
 import WnlTextButton from 'js/components/global/TextButton';
@@ -302,7 +300,7 @@ export default {
 		},
 		toggleNoteEditor() {
 			this.isNoteEditorOpen = !this.isNoteEditorOpen;
-		}
+		},
 	},
 };
 </script>

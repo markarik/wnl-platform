@@ -161,7 +161,7 @@ export default {
 
 		return {
 			fetchingFilters: false,
-			fetchingQuestions: false,
+			fetchingQuestions: true,
 			orderedQuestionsList: [],
 			showBuilder: false,
 			testMode: false,

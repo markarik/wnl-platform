@@ -49,7 +49,7 @@ const actions = {
 				return {
 					...flashcard,
 					answer: _.get(userResponseData, `${flashcardId}.answer`, 'unsolved'),
-					note: flashcard.user_flashcard_notes ? included.user_flashcard_notes[flashcard.user_flashcard_notes[0]] : null
+					note: flashcard.user_flashcard_notes ? included.user_flashcard_notes[flashcard.user_flashcard_notes[0]] : null,
 				};
 			});
 

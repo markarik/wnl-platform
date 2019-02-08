@@ -200,8 +200,12 @@
 				display: inline-block
 				padding-right: $margin-tiny * 2
 
+	.wnl-quiz-question-container
+		margin-bottom: $margin-big
+
 	.wnl-quiz-question
-		margin-bottom: $margin-huge
+		@media #{$media-query-tablet}
+			margin: $margin-small 0
 
 		&.is-correct
 			box-shadow: 0 2px 3px $color-correct-shadow, 0 0 0 1px $color-correct-shadow
@@ -285,7 +289,7 @@ export default {
 		'wnl-comments-list': CommentsList,
 		'wnl-bookmark': Bookmark,
 		'wnl-slide-link': SlideLink,
-		'wnl-slide-preview': SlidePreview
+		'wnl-slide-preview': SlidePreview,
 	},
 	mixins: [emits_events],
 	props: ['index', 'readOnly', 'headerOnly', 'hideComments', 'showComments', 'question', 'getReaction', 'isQuizComplete', 'module'],
@@ -301,7 +305,7 @@ export default {
 			alertError: {
 				text: this.$i18n.t('quiz.errorAlert'),
 				type: 'error',
-			}
+			},
 		};
 	},
 	computed: {
@@ -399,7 +403,7 @@ export default {
 				feature_component: feature_components.related_slides.value,
 				...payload,
 			});
-		}
+		},
 	},
 	watch: {
 		'currentModalSlide.id'(slideId) {

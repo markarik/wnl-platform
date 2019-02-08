@@ -43,7 +43,7 @@
 		width: 100%
 
 		&__editor
-			background-color: $color-background-lighter-gray
+			background-color: $color-background-lightest-gray
 			border: $border-light-gray
 			padding: $margin-medium
 			&__header

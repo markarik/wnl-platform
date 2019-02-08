@@ -167,7 +167,9 @@ export default {
 		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
 	},
 	watch: {
-		questionsIds() {
+		questionsIds(newValue, oldValue) {
+			if (_.isEqual(newValue, oldValue)) return;
+
 			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
 		}
 	},

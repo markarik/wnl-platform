@@ -42,7 +42,7 @@
 				Możesz wybrać dowolne pytanie z listy klikając na jego tytuł
 			</p>
 			<template
-				v-for="question in otherQuestions"
+				v-for="(question, index) in otherQuestions"
 			>
 				<wnl-quiz-question
 					:key="question.id"

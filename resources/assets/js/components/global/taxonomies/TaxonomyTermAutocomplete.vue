@@ -8,7 +8,7 @@
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
 		<div class="control" v-else>
-			<input class="input" v-model="search" :placeholder="placeholder" />
+			<input class="input" v-model="search" :placeholder="placeholder" :disabled="disabled"/>
 			<wnl-autocomplete
 				:items="autocompleteTerms"
 				:onItemChosen="onSelect"
@@ -54,7 +54,11 @@ export default {
 		placeholder: {
 			type: String,
 			default: 'Wpisz nazwę nadrzędnego pojęcia'
-		}
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {

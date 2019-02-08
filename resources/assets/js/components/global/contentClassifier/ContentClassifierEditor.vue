@@ -146,9 +146,11 @@ export default {
 		allItemsCount() {
 			return this.items.length;
 		},
+		allTaxonomyTerms() {
+			return uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id');
+		},
 		groupedTaxonomyTerms() {
-			const taxonomyTerms = uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id');
-			const groupedTerms = taxonomyTerms.reduce(
+			const groupedTerms = this.allTaxonomyTerms.reduce(
 				(collector, term) => {
 					if (!collector[term.taxonomy.id]) {
 						collector[term.taxonomy.id] = {

@@ -35,6 +35,7 @@ import { fontColors } from 'js/utils/colors';
 import { mentionBlot } from 'js/classes/mentionblot';
 import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
+import {KEYS} from 'js/consts/keys';
 
 const defaults = {
 	theme: 'snow',
@@ -45,12 +46,6 @@ const defaults = {
 const firstAndLastNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+) {1}([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i;
 const firstNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i;
 const autocompleteChar = '@';
-const keys = {
-	enter: 13,
-	esc: 27,
-	arrowUp: 38,
-	arrowDown: 40
-};
 
 export default {
 	name: 'Quill',
@@ -207,7 +202,7 @@ export default {
 		},
 
 		onKeyDown(evt) {
-			const { enter, esc, arrowUp, arrowDown } = keys;
+			const { enter, esc, arrowUp, arrowDown } = KEYS;
 
 			if (this.autocompleteItems.length === 0 || !this.allowMentions) {
 				return;

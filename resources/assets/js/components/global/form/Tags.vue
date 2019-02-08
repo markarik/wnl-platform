@@ -50,13 +50,6 @@ import WnlTagAutocompleteItem from 'js/components/global/TagAutocompleteItem';
 import _ from 'lodash';
 import {mapActions} from 'vuex';
 
-const keys = {
-	enter: 13,
-	esc: 27,
-	arrowUp: 38,
-	arrowDown: 40
-};
-
 export default {
 	name: 'Tags',
 	components: {

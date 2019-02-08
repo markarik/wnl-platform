@@ -1,11 +1,19 @@
 <template>
 	<div class="control">
 		<label v-if="label" class="label">{{label}}</label>
-		<input class="input" :value="value" @input="$emit('input', $event.target.value)" :placeholder="placeholder" />
+		<input
+			class="input"
+			:value="value"
+			:placeholder="placeholder"
+			@input="$emit('input', $event.target.value)"
+			@keydown="onKeyDown"
+		/>
 		<wnl-autocomplete-list
 			:items="items"
 			@change="$emit('change', $event)"
+			@close="$emit('input', '')"
 			:isDown="isDown"
+			ref="autocomplete"
 		>
 			<template slot-scope="slotProps">
 				<slot :item="slotProps.item"></slot>
@@ -19,6 +27,7 @@
 
 <script>
 import WnlAutocompleteList from 'js/components/global/AutocompleteList';
+import {KEYS} from 'js/consts/keys';
 
 export default {
 	props: {
@@ -45,6 +54,16 @@ export default {
 	},
 	components: {
 		WnlAutocompleteList,
+	},
+	methods: {
+		onKeyDown(evt) {
+			if ([KEYS.arrowUp, KEYS.arrowDown, KEYS.esc, KEYS.enter].includes(evt.keyCode)) {
+				evt.preventDefault();
+				evt.stopPropagation();
+			}
+
+			this.$refs.autocomplete.onKeyDown(evt);
+		},
 	}
 };
 </script>

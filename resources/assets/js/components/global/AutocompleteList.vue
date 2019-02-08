@@ -13,7 +13,7 @@
 				class="autocomplete-box__item"
 				v-for="(item, index) in items"
 				@click="$emit('change', item)"
-				:class="{ active: item.active }"
+				:class="{ active: index === activeIndex }"
 				:key="index"
 			>
 				<slot :item="item"></slot>

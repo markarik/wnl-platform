@@ -55,12 +55,7 @@
 </style>
 
 <script>
-const keys = {
-	enter: 13,
-	esc: 27,
-	arrowUp: 38,
-	arrowDown: 40,
-};
+import {KEYS} from 'js/consts/keys';
 
 import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
@@ -107,7 +102,7 @@ export default {
 	},
 	methods: {
 		onKeyDown(evt) {
-			const { enter, arrowUp, arrowDown, esc } = keys;
+			const { enter, arrowUp, arrowDown, esc } = KEYS;
 
 			if (this.usersList.length === 0) {
 				this.$emit('close');

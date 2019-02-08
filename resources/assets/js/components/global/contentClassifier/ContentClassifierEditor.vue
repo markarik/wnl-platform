@@ -4,6 +4,7 @@
 		'is-loading': isLoading,
 	}">
 		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
+		<div v-if="allTaxonomyTerms ==0">Brak przypisanych pojęć</div>
 		<div v-if="items.length > 0">
 			<ul class="margin bottom">
 				<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">

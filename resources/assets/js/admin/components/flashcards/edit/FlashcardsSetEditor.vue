@@ -62,7 +62,7 @@
 				<wnl-autocomplete
 					v-model="flashcardInput"
 					:items="flashcardAutocompleteItems"
-					:onItemChosen="addFlashcard"
+					@change="addFlashcard"
 					placeholder="Id lub treść aby wyszukać"
 					label="Wybierz pytanie"
 				>

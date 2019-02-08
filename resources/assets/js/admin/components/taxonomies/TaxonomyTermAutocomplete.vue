@@ -12,7 +12,7 @@
 			v-model="search"
 			:placeholder="placeholder"
 			:items="autocompleteTerms"
-			:onItemChosen="onSelect"
+			@change="onSelect"
 		>
 			<template slot-scope="slotProps">
 				<wnl-taxonomy-term-with-ancestors

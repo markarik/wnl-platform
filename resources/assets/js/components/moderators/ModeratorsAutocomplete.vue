@@ -11,7 +11,7 @@
 		<wnl-autocomplete-list
 			v-if="show"
 			:items="usersListFiltered"
-			:onItemChosen="onItemChosenProxy"
+			@change="onItemChosenProxy"
 			@close="onClose"
 			class="wnl-autocomplete-dropdown"
 			ref="autocomplete"

@@ -2,7 +2,7 @@
 	<div class="quill-container" @keydown="onKeyDown">
 		<wnl-autocomplete-list
 			:items="autocompleteItems"
-			:onItemChosen="insertMention"
+			@change="insertMention"
 			ref="autocomplete"
 		>
 			<template slot-scope="slotProps">

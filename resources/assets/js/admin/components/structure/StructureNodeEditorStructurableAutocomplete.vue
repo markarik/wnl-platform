@@ -8,7 +8,7 @@
 			v-else
 			placeholder="Wpisz nazwę lekcji/grupy, którą chcesz dołączyć lub utworzyć"
 			:items="autocompleteItems"
-			:onItemChosen="onSelect"
+			@change="onSelect"
 			v-model="search"
 		>
 			<template slot-scope="slotProps">

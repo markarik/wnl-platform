@@ -12,7 +12,7 @@
 			<li
 				class="autocomplete-box__item"
 				v-for="(item, index) in items"
-				@click="onItemChosen(item)"
+				@click="$emit('change', item)"
 				:class="{ active: item.active }"
 				:key="index"
 			>

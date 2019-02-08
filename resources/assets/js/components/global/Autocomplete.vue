@@ -4,7 +4,7 @@
 		<input class="input" :value="value" @input="$emit('input', $event.target.value)" :placeholder="placeholder" />
 		<wnl-autocomplete-list
 			:items="items"
-			:onItemChosen="onItemChosen"
+			@change="$emit('change', $event)"
 			:isDown="isDown"
 		>
 			<template slot-scope="slotProps">
@@ -29,10 +29,6 @@ export default {
 		items: {
 			type: Array,
 			default: () => [],
-		},
-		onItemChosen: {
-			type: Function,
-			// TODO convert to an event
 		},
 		isDown: {
 			type: Boolean,

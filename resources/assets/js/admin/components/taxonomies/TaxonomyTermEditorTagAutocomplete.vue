@@ -8,7 +8,7 @@
 			v-else
 			v-model="search"
 			:items="autocompleteTags"
-			:onItemChosen="onSelect"
+			@change="onSelect"
 			placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć"
 		>
 			<template slot-scope="slotProps">

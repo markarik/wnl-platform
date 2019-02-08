@@ -11,7 +11,7 @@
 			<wnl-autocomplete
 				v-model="tagInput"
 				:items="autocompleteItems"
-				:onItemChosen="insertTag"
+				@change="insertTag"
 				placeholder="Dodaj tag"
 			>
 				<template slot-scope="slotProps">

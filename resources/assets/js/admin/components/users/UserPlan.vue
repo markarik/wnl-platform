@@ -44,7 +44,7 @@
 				placeholder="wpisz nazwę aby wyszukać..."
 				label="Wyszukaj Lekcję"
 				:items="autocompleteLessonsItems"
-				:onItemChosen="addLesson"
+				@change="addLesson"
 			>
 				<template slot-scope="row">
 					<span class="lesson-autocomplete-item">{{row.item.id}}. {{row.item.name}}</span>

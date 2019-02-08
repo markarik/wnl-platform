@@ -12,7 +12,7 @@
 			v-model="search"
 			:placeholder="placeholder"
 			:items="autocompletenodes"
-			:onItemChosen="onSelect"
+			@change="onSelect"
 		>
 			<template slot-scope="slotProps">
 				<div>

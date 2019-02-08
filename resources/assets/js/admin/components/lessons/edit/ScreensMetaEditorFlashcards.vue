@@ -27,7 +27,7 @@
 				class="flashcards-set-add"
 				v-model="flashcardsSetInput"
 				:items="flashcardsSetsAutocompleteItems"
-				:onItemChosen="addFlashcardsSet"
+				@change="addFlashcardsSet"
 				label="Wybierz zestaw pytań"
 				placeholder="Id lub treść aby wyszukać"
 			>

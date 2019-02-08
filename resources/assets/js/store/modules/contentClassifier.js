@@ -25,7 +25,7 @@ const getters = {
 		state[contentItemType][contentItemId].data,
 	getContentItemState: state => ({contentItemType, contentItemId}) => state[contentItemType][contentItemId] &&
 		state[contentItemType][contentItemId].state,
-	canAccess: (state, getters, rootState, rootGetters) => rootGetters.isAdmin || rootGetters.isModerator
+	canAccess: (state, getters, rootState, rootGetters) => rootGetters.isAdmin
 };
 
 const mutations = {

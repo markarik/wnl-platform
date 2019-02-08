@@ -211,6 +211,9 @@ export default {
 			}
 		},
 	},
+	mounted() {
+		window.addEventListener('keydown', this.keyDown);
+	},
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.keyDown);
 	}

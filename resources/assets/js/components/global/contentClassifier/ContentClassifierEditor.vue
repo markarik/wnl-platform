@@ -4,6 +4,7 @@
 		'is-loading': isLoading,
 	}">
 		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
+		<div v-if="allTaxonomyTerms.length===0">Brak przypisanych pojęć</div>
 		<div v-if="items.length > 0">
 			<ul class="margin bottom">
 				<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">
@@ -63,6 +64,7 @@
 					<wnl-taxonomy-term-autocomplete
 						placeholder="Zacznij pisać, aby wyszukać pojęcie"
 						class="margin left content-classifier__panel-editor__term-select__autocomplete"
+						:disabled="!taxonomyId"
 						:isFocused="isTaxonomyTermAutocompleteFocused"
 						@change="onAttachTaxonomyTerm"
 						@focused="onTaxonomyTermAutocompleteFocused"
@@ -149,9 +151,11 @@ export default {
 		allItemsCount() {
 			return this.items.length;
 		},
+		allTaxonomyTerms() {
+			return uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id');
+		},
 		groupedTaxonomyTerms() {
-			const taxonomyTerms = uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id');
-			const groupedTerms = taxonomyTerms.reduce(
+			const groupedTerms = this.allTaxonomyTerms.reduce(
 				(collector, term) => {
 					if (!collector[term.taxonomy.id]) {
 						collector[term.taxonomy.id] = {

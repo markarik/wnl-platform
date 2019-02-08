@@ -12,6 +12,7 @@
 				class="input"
 				ref="input"
 				v-model="search"
+				:disabled="disabled"
 				:placeholder="placeholder"
 				@keyup.esc="onEscape"
 			/>
@@ -53,6 +54,10 @@ import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/Taxono
 
 export default {
 	props: {
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
 		isFocused: {
 			type: Boolean,
 			default: false,

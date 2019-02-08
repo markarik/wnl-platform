@@ -63,6 +63,7 @@
 					/>
 					<wnl-taxonomy-term-autocomplete
 						placeholder="Zacznij pisać, aby wyszukać pojęcie"
+						:disabled="!taxonomyId"
 						@change="onAttachTaxonomyTerm"
 						class="margin left content-classifier__panel-editor__term-select__autocomplete"
 					/>

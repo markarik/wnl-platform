@@ -8,7 +8,7 @@
 			@input="onInput"
 			@keydown="onKeyDown"
 		/>
-		<wnl-autocomplete
+		<wnl-autocomplete-list
 			v-if="show"
 			:items="usersListFiltered"
 			:onItemChosen="onItemChosenProxy"
@@ -19,7 +19,7 @@
 			<template slot-scope="slotProps">
 				<wnl-user-autocomplete-item :item="slotProps.item" />
 			</template>
-		</wnl-autocomplete>
+		</wnl-autocomplete-list>
 		 <a class="button is-primary is-outlined" @click="$emit('clear')">
 			<span class="icon is-small">
 			<i class="fa fa-times"></i>
@@ -62,7 +62,7 @@ const keys = {
 	arrowDown: 40,
 };
 
-import Autocomplete from 'js/components/global/Autocomplete';
+import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
 
 export default {
@@ -91,7 +91,7 @@ export default {
 		}
 	},
 	components: {
-		'wnl-autocomplete': Autocomplete,
+		WnlAutocompleteList,
 		WnlUserAutocompleteItem,
 	},
 	computed: {

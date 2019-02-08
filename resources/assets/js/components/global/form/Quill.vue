@@ -1,6 +1,6 @@
 <template>
 	<div class="quill-container" @keydown="onKeyDown">
-		<wnl-autocomplete
+		<wnl-autocomplete-list
 			:items="autocompleteItems"
 			:onItemChosen="insertMention"
 			ref="autocomplete"
@@ -8,7 +8,7 @@
 			<template slot-scope="slotProps">
 				<wnl-user-autocomplete-item :item="slotProps.item" />
 			</template>
-		</wnl-autocomplete>
+		</wnl-autocomplete-list>
 		<div ref="quill">
 			<slot></slot>
 		</div>
@@ -33,7 +33,7 @@ import { mapActions } from 'vuex';
 import { formInput } from 'js/mixins/form-input';
 import { fontColors } from 'js/utils/colors';
 import { mentionBlot } from 'js/classes/mentionblot';
-import Autocomplete from 'js/components/global/Autocomplete';
+import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
 
 const defaults = {
@@ -56,7 +56,7 @@ export default {
 	name: 'Quill',
 	mixins: [formInput],
 	components: {
-		'wnl-autocomplete': Autocomplete,
+		WnlAutocompleteList,
 		WnlUserAutocompleteItem
 	},
 	props: {

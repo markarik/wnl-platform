@@ -4,45 +4,44 @@
 			{{selected.name}}
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
-		<div class="control" v-else>
-			<input class="input" v-model="search" placeholder="Wpisz nazwę lekcji/grupy, którą chcesz dołączyć lub utworzyć" />
-			<wnl-autocomplete
-				:items="autocompleteItems"
-				:onItemChosen="onSelect"
-				:isDown="true"
-			>
-				<template slot-scope="slotProps">
-					<div>
-						<span class="icon is-small">
-							<i :class="['fa', getStructurableIcon(slotProps.item)]" aria-hidden="true"></i>
-						</span>
+		<wnl-autocomplete
+			v-else
+			placeholder="Wpisz nazwę lekcji/grupy, którą chcesz dołączyć lub utworzyć"
+			:items="autocompleteItems"
+			:onItemChosen="onSelect"
+			v-model="search"
+		>
+			<template slot-scope="slotProps">
+				<div>
+					<span class="icon is-small">
+						<i :class="['fa', getStructurableIcon(slotProps.item)]" aria-hidden="true"></i>
+					</span>
 
-						{{slotProps.item.name}}
+					{{slotProps.item.name}}
+				</div>
+			</template>
+			<template slot="footer" v-if="search !== ''">
+				<div>
+					<div class="margin">
+						Nie mamy lekcji ani grupy o nazwie <strong>{{search}}</strong>
 					</div>
-				</template>
-				<template slot="footer" v-if="search !== ''">
-					<div>
-						<div class="margin">
-							Nie mamy lekcji ani grupy o nazwie <strong>{{search}}</strong>
-						</div>
-						<div class="autocomplete-footer-button-container">
-							<button class="button" @click="onLessonAdd">
-								<span class="icon is-small">
-									<i class="fa fa-plus" aria-hidden="true"></i>
-								</span>
-								<span>Nowa lekcja</span>
-							</button>
-							<button class="button" @click="onGroupAdd">
-								<span class="icon is-small">
-									<i class="fa fa-plus" aria-hidden="true"></i>
-								</span>
-								<span>Nowa grupa</span>
-							</button>
-						</div>
+					<div class="autocomplete-footer-button-container">
+						<button class="button" @click="onLessonAdd">
+							<span class="icon is-small">
+								<i class="fa fa-plus" aria-hidden="true"></i>
+							</span>
+							<span>Nowa lekcja</span>
+						</button>
+						<button class="button" @click="onGroupAdd">
+							<span class="icon is-small">
+								<i class="fa fa-plus" aria-hidden="true"></i>
+							</span>
+							<span>Nowa grupa</span>
+						</button>
 					</div>
-				</template>
-			</wnl-autocomplete>
-		</div>
+				</div>
+			</template>
+		</wnl-autocomplete>
 	</div>
 </template>
 

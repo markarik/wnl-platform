@@ -7,27 +7,26 @@
 			</span>
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
-		<div class="control" v-else>
-			<input class="input" v-model="search" :placeholder="placeholder" />
-			<wnl-autocomplete
-				:items="autocompletenodes"
-				:onItemChosen="onSelect"
-				:isDown="true"
-			>
-				<template slot-scope="slotProps">
-					<div>
-						<div class="autocomplete-parent-node">{{getAncestorsById(slotProps.item.id).map(ancestor => ancestor.structurable.name).join(' > ')}}</div>
+		<wnl-autocomplete
+			v-else
+			v-model="search"
+			:placeholder="placeholder"
+			:items="autocompletenodes"
+			:onItemChosen="onSelect"
+		>
+			<template slot-scope="slotProps">
+				<div>
+					<div class="autocomplete-parent-node">{{getAncestorsById(slotProps.item.id).map(ancestor => ancestor.structurable.name).join(' > ')}}</div>
 
-						<div>
-							<span class="icon is-small">
-								<i :class="['fa', getStructurableIcon(slotProps.item.structurable)]" aria-hidden="true"></i>
-							</span>
-							{{slotProps.item.structurable.name}}
-						</div>
+					<div>
+						<span class="icon is-small">
+							<i :class="['fa', getStructurableIcon(slotProps.item.structurable)]" aria-hidden="true"></i>
+						</span>
+						{{slotProps.item.structurable.name}}
 					</div>
-				</template>
-			</wnl-autocomplete>
-		</div>
+				</div>
+			</template>
+		</wnl-autocomplete>
 	</div>
 </template>
 

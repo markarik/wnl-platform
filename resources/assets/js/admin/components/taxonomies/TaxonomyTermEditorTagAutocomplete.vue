@@ -4,35 +4,34 @@
 			{{selected.name}}
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
-		<div class="control" v-else>
-			<input class="input" v-model="search" placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć" />
-			<wnl-autocomplete
-				:items="autocompleteTags"
-				:onItemChosen="onSelect"
-				:isDown="true"
-			>
-				<template slot-scope="slotProps">
-					<div>
-						{{slotProps.item.name}}
+		<wnl-autocomplete
+			v-else
+			v-model="search"
+			:items="autocompleteTags"
+			:onItemChosen="onSelect"
+			placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć"
+		>
+			<template slot-scope="slotProps">
+				<div>
+					{{slotProps.item.name}}
+				</div>
+			</template>
+			<template slot="footer" v-if="autocompleteTags.length === 0 && search !== ''">
+				<div>
+					<div class="margin">
+						Nie mamy taga <strong>{{search}}</strong>
 					</div>
-				</template>
-				<template slot="footer" v-if="autocompleteTags.length === 0 && search !== ''">
-					<div>
-						<div class="margin">
-							Nie mamy taga <strong>{{search}}</strong>
-						</div>
-						<div class="autocomplete-footer-button-container">
-							<button class="button" @click="onTagAdd">
-								<span class="icon is-small">
-									<i class="fa fa-plus" aria-hidden="true"></i>
-								</span>
-								<span>Dodaj nowy tag</span>
-							</button>
-						</div>
+					<div class="autocomplete-footer-button-container">
+						<button class="button" @click="onTagAdd">
+							<span class="icon is-small">
+								<i class="fa fa-plus" aria-hidden="true"></i>
+							</span>
+							<span>Dodaj nowy tag</span>
+						</button>
 					</div>
-				</template>
-			</wnl-autocomplete>
-		</div>
+				</div>
+			</template>
+		</wnl-autocomplete>
 	</div>
 </template>
 

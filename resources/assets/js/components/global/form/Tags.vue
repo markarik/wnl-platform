@@ -7,19 +7,12 @@
 					<i class="fa fa-times"></i>
 				</span>
 			</div>
-			<input
-				v-model="tagInput"
-				class="input"
-				type="text"
-				placeholder="Dodaj tag"
-				ref="input"
-				@input="onInput"
-				@keydown="onKeyDown"
-			>
+			<!--TODO ref to focus input-->
 			<wnl-autocomplete
+				v-model="tagInput"
 				:items="autocompleteItems"
 				:onItemChosen="insertTag"
-				ref="autocomplete"
+				placeholder="Dodaj tag"
 			>
 				<template slot-scope="slotProps">
 					<wnl-tag-autocomplete-item :item="slotProps.item" />
@@ -90,41 +83,6 @@ export default {
 	},
 	methods: {
 		...mapActions(['requestTagsAutocomplete']),
-		onKeyDown(evt) {
-			const { enter, esc, arrowUp, arrowDown } = keys;
-
-			if (this.autocompleteItems.length === 0) {
-				return;
-			}
-
-			if (evt.keyCode === esc) {
-				this.onEsc(evt);
-				return;
-			}
-
-			if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-				return;
-			}
-
-			if (evt.keyCode === enter && !this.$refs.autocomplete.hasItems) {
-				return;
-			}
-
-			this.$refs.autocomplete.onKeyDown(evt);
-			this.killEvent(evt);
-
-			//for some of the old browsers, returning false is the true way to kill propagation
-			return false;
-		},
-
-		onEsc(evt) {
-			this.autocompleteItems = [];
-		},
-
-		killEvent(evt) {
-			evt.preventDefault();
-			evt.stopPropagation();
-		},
 
 		insertTag(tag) {
 			if (_.map(this.tags, (tag) => tag.id).indexOf(tag.id) === -1) {
@@ -146,7 +104,20 @@ export default {
 			this.$emit('tagsChanged', this.tags);
 		},
 
-		onInput(evt) {
+		haveTagsChanged() {
+			if (this.tags.length !== this.defaultTags.length) return true;
+
+			return !!this.tags.some(tag => !_.find(this.defaultTags, defTag => defTag.id === tag.id));
+		}
+	},
+	created() {
+		this.tags = this.defaultTags.slice();
+	},
+	watch: {
+		defaultTags() {
+			this.tags = this.defaultTags.slice();
+		},
+		tagInput() {
 			const name = this.tagInput;
 			const data = { name, tags: this.tags };
 
@@ -160,19 +131,6 @@ export default {
 					this.autocompleteItems = data.data;
 				}
 			);
-		},
-		haveTagsChanged() {
-			if (this.tags.length !== this.defaultTags.length) return true;
-
-			return !!this.tags.some(tag => !_.find(this.defaultTags, defTag => defTag.id === tag.id));
-		}
-	},
-	created() {
-		this.tags = this.defaultTags.slice();
-	},
-	watch: {
-		defaultTags() {
-			this.tags = this.defaultTags.slice();
 		}
 	}
 };

@@ -1,81 +1,54 @@
 <template>
-	<div
-		class="autocomplete-box"
-		:class="{'is-down': isDown}"
-		v-show="hasItems || $slots.footer"
-	>
-		<ul
-			class="autocomplete-box__list"
-			tabindex="-1"
-			@keydown="onKeyDown"
+	<div class="control">
+		<label v-if="label" class="label">{{label}}</label>
+		<input class="input" :value="value" @input="$emit('input', $event.target.value)" :placeholder="placeholder" />
+		<wnl-autocomplete-list
+			:items="items"
+			:onItemChosen="onItemChosen"
+			:isDown="isDown"
 		>
-			<li
-				class="autocomplete-box__item"
-				v-for="(item, index) in items"
-				@click="onItemChosen(item)"
-				:class="{ active: item.active }"
-				:key="index"
-			>
-				<slot :item="item"></slot>
-			</li>
-		</ul>
-		<slot name="footer"></slot>
+			<template slot-scope="slotProps">
+				<slot :item="slotProps.item"></slot>
+			</template>
+			<template slot="footer">
+				<slot name="footer"></slot>
+			</template>
+		</wnl-autocomplete-list>
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-	@import 'resources/assets/sass/variables'
-
-	.autocomplete-box
-		background: $autocomplete-box-background
-		border: $autocomplete-box-border
-		bottom: 44px
-		box-shadow: $autocomplete-box-shadow
-		color: $autocomplete-text-color
-		left: 0
-		max-width: 300px
-		position: absolute
-		width: 100%
-		z-index: $z-index-autocomplete
-
-		&__text
-			padding: 5px 10px
-
-		&.is-down
-			bottom: auto
-			top: 100%
-
-		&:focus
-			outline: none
-
-		&__list
-			max-height: 50vh
-			overflow-y: auto
-
-		&__item
-			align-items: center
-			cursor: pointer
-			display: flex
-			font-size: 12px
-			font-weight: 900
-			padding: 8px 10px
-			text-align: left
-
-			&:hover,
-			&.active
-				background: $autocomplete-active-item-background
-				color: $autocomplete-active-item-text-color
-
-		&__text
-			padding: 5px 10px
-</style>
-
 <script>
-import autocompleteNav from 'js/mixins/autocomplete-nav';
+import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 
 export default {
-	name: 'Autocomplete',
-	props: ['items', 'onItemChosen', 'isDown'],
-	mixins: [autocompleteNav],
+	props: {
+		value: {
+			type: String,
+			default: '',
+		},
+		items: {
+			type: Array,
+			default: () => [],
+		},
+		onItemChosen: {
+			type: Function,
+			// TODO convert to an event
+		},
+		isDown: {
+			type: Boolean,
+			default: true,
+		},
+		placeholder: {
+			type: String,
+			default: 'Zacznij pisać aby zobaczyć podpowiedzi',
+		},
+		label: {
+			type: String,
+			default: '',
+		}
+	},
+	components: {
+		WnlAutocompleteList,
+	}
 };
 </script>

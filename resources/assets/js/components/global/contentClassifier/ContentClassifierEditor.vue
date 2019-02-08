@@ -211,7 +211,7 @@ export default {
 				});
 
 				this.$emit('taxonomyTermDetached', term);
-				contentClassifierStore.set(CONTENT_CLASSIFIER_KEYS.ALL_TERMS, this.allTaxonomyTerms);
+				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS, this.allTaxonomyTerms);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

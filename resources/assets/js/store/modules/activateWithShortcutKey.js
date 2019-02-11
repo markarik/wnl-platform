@@ -33,7 +33,10 @@ export const mutations = {
 		}
 
 		state.instances.splice(index, 1);
-		// TODO update active index if needed
+
+		if (state.activeInstanceIndex > index) {
+			set(state, 'activeInstanceIndex', state.activeInstanceIndex - 1);
+		}
 	},
 	[types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX] (state, index) {
 		set(state, 'activeInstanceIndex', index);

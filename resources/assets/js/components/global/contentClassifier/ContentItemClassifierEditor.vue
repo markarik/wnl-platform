@@ -167,6 +167,11 @@ export default {
 				this.$el.blur();
 			}
 		},
+		isActive() {
+			if (!this.isActive) {
+				this.$el.blur();
+			}
+		}
 	},
 };
 </script>

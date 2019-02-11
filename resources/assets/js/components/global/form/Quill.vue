@@ -29,6 +29,7 @@
 import Quill from 'quill';
 import { set } from 'vue';
 import { mapActions } from 'vuex';
+import { cloneDeep } from 'lodash';
 
 import { formInput } from 'js/mixins/form-input';
 import { fontColors } from 'js/utils/colors';
@@ -105,18 +106,30 @@ export default {
 			return '';
 		},
 		quillOptions() {
-			const options = {
+			const keyboardModule = cloneDeep(this.keyboard);
+
+			if (keyboardModule.bindings && keyboardModule.bindings.handleEnter) {
+				keyboardModule.bindings.handleEnter.handler = (event) => {
+					if (this.autocompleteItems.length) {
+						// Prevent enter handler when autocomplete is open
+						return;
+					}
+
+					this.keyboard.bindings.handleEnter.handler(event);
+				};
+			}
+
+
+			return {
 				...defaults,
 				...this.options,
 				...{
 					modules: {
-						keyboard: this.keyboard,
+						keyboard: keyboardModule,
 						toolbar: this.toolbar
 					}
 				}
 			};
-
-			return options;
 		},
 	},
 	methods: {
@@ -217,7 +230,6 @@ export default {
 				return;
 			}
 
-			// TODO fix enter sending a message
 			this.$refs.autocomplete.onKeyDown(evt);
 			this.killEvent(evt);
 

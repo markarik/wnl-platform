@@ -7,7 +7,6 @@
 					<i class="fa fa-times"></i>
 				</span>
 			</div>
-			<!--TODO ref to focus input-->
 			<wnl-autocomplete
 				v-model="tagInput"
 				:items="autocompleteItems"

@@ -149,7 +149,7 @@ export default {
 						id: tags[tagId].id,
 						name: tags[tagId].name,
 					})),
-					keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(',')
+					keywords: (annotation.keywords || []).map(keywordId => keywords[keywordId].text).join(','),
 				};
 			});
 		}

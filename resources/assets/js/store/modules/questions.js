@@ -246,7 +246,7 @@ const mutations = {
 	},
 	[types.QUESTIONS_SET_TOKEN] (state) {
 		state.token = uuidv1();
-	}
+	},
 };
 
 // Actions
@@ -306,7 +306,7 @@ const actions = {
 
 		dispatch('saveQuestionsResults', {questions: questionsToStore, meta});
 
-		// I'm not updating store on puropose - not sure if we want to keep results in VUEX store
+		// I'm not updating store on propose - not sure if we want to keep results in VUEX store
 		// if we decide to keep them here we need to remember about clearing them when exiting the "TEST MODE"
 		// commit(types.QUESTIONS_SET_RESULTS, results)
 

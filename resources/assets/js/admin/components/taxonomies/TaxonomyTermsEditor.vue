@@ -56,7 +56,7 @@ import {mapActions, mapState, mapGetters} from 'vuex';
 
 import WnlTaxonomyTermsList from 'js/admin/components/taxonomies/TaxonomyTermsList';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
-import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
+import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
 import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
 export default {

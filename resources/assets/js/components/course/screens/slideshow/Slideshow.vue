@@ -33,6 +33,7 @@
 				></wnl-annotations>
 			</div>
 		</div>
+		<wnl-slide-classifier-editor :current-slide-id="currentSlideId" />
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass">
@@ -124,6 +125,7 @@ import LinkedQuestions from './LinkedQuestions.vue';
 import SlideshowNavigation from './SlideshowNavigation';
 import {isDebug, getApiUrl} from 'js/utils/env';
 import moderatorFeatures from 'js/perimeters/moderator';
+import WnlSlideClassifierEditor from 'js/components/course/screens/slideshow/SlideClassifierEditor';
 
 export default {
 	name: 'Slideshow',
@@ -131,6 +133,7 @@ export default {
 		'wnl-annotations': Annotations,
 		'wnl-linked-questions': LinkedQuestions,
 		'wnl-slideshow-navigation': SlideshowNavigation,
+		WnlSlideClassifierEditor,
 	},
 	perimeters: [moderatorFeatures],
 	mixins: [emits_events],
@@ -551,7 +554,7 @@ export default {
 		},
 		debouncedChangeSlideWatcher: _.debounce(function(...args) {
 			this.changeSlideWatcher(...args);
-		}, 300, {leading: false, trailing: true})
+		}, 300, {leading: false, trailing: true}),
 	},
 	mounted() {
 		Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)

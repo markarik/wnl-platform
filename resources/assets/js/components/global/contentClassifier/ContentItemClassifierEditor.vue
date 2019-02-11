@@ -104,6 +104,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		isFocused: {
+			type: Boolean,
+			default: false
+		},
 		isAlwaysActive: {
 			type: Boolean,
 			default: false,
@@ -138,7 +142,7 @@ export default {
 			detachTerm: CONTENT_CLASSIFIER_DETACH_TERM
 		}),
 		updateIsActive(isActive) {
-			this.$parent.$emit('updateIsActive', isActive);
+			this.$emit('updateIsActive', isActive);
 		},
 		onTaxonomyTermAttached(term) {
 			this.attachTerm({
@@ -154,20 +158,13 @@ export default {
 		},
 	},
 	watch: {
-		triggerBlur(triggerBlur) {
-			if (triggerBlur) {
-				this.$el.blur();
-				// Make it reactive again
-				this.$parent.$emit('resetTriggerBlur');
-			}
-		},
-		async triggerFocus(triggerFocus) {
-			if (triggerFocus) {
+		async isFocused() {
+			if (this.isFocused) {
 				this.$el.focus();
 				await Vue.nextTick();
 				scrollToElement(this.$el, 150, 500);
-				// Make it reactive again
-				this.$parent.$emit('resetTriggerFocus');
+			} else {
+				this.$el.blur();
 			}
 		},
 	},

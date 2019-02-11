@@ -2,8 +2,8 @@
 	<div>
 		<slot
 			:is-active="isActive"
-			:trigger-blur="triggerBlur"
-			:trigger-focus="triggerFocus"
+			:is-focused="isFocused"
+			:on-update-is-active="onUpdateIsActive"
 		></slot>
 	</div>
 </template>
@@ -17,27 +17,18 @@ export default {
 	data() {
 		return {
 			isActive: false,
-			triggerBlur: false,
-			triggerFocus: false,
+			isFocused: false,
 		};
 	},
-	created() {
-		this.$on('updateIsActive', (isActive) => {
+	methods: {
+		onUpdateIsActive(isActive) {
 			if (isActive) {
 				this.$setActiveInstanceFixName(`activate-with-shortcut-key-${this._uid}`);
 				this.isActive = true;
 			} else {
 				this.$resetActiveInstanceFixName();
 			}
-		});
-
-		this.$on('resetTriggerBlur', () => {
-			this.triggerBlur = false;
-		});
-
-		this.$on('resetTriggerFocus', () => {
-			this.triggerFocus = false;
-		});
+		}
 	},
 	mounted() {
 		this.$registerFixName({
@@ -50,10 +41,10 @@ export default {
 			},
 			onDeactivate: () => {
 				this.isActive = false;
-				this.triggerBlur = true;
+				this.isFocused = false;
 			},
 			onFocus: () => {
-				this.triggerFocus = true;
+				this.isFocused = true;
 			},
 		});
 	},

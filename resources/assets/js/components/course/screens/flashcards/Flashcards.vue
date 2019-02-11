@@ -47,18 +47,19 @@
 			</div>
 			<ol class="flashcards-set__list">
 				<template v-for="(flashcard, index) in set.flashcards">
-					<wnl-flashcard-item
-							:key="flashcard.id"
-							:flashcard="flashcard"
-							:index="index + 1"
-							:context="{type: context, id: screenData.id}"
-							slot="content"
-							@userEvent="trackUserEvent"
-					/>
-					<wnl-activate-with-shortcut-key :key="`cc-editor-${flashcard.id}`">
+					<wnl-activate-with-shortcut-key :key="flashcard.id">
 						<template slot-scope="activateWithShortcutKey">
+							<wnl-flashcard-item
+								:flashcard="flashcard"
+								:index="index + 1"
+								:context="{type: context, id: screenData.id}"
+								slot="content"
+								@userEvent="trackUserEvent"
+							/>
 							<wnl-content-item-classifier-editor
 								:is-active="activateWithShortcutKey.isActive"
+								:trigger-blur="activateWithShortcutKey.triggerBlur"
+								:trigger-focus="activateWithShortcutKey.triggerFocus"
 								:content-item-id="flashcard.id"
 								:content-item-type="CONTENT_TYPES.FLASHCARD"
 							/>

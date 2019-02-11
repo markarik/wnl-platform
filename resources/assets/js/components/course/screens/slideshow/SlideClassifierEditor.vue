@@ -4,6 +4,8 @@
 			<wnl-content-item-classifier-editor
 				class="margin top"
 				:is-active="activateWithShortcutKey.isActive"
+				:trigger-blur="activateWithShortcutKey.triggerBlur"
+				:trigger-focus="activateWithShortcutKey.triggerFocus"
 				:content-item-id="currentSlideId"
 				:content-item-type="CONTENT_TYPES.SLIDE"
 			/>

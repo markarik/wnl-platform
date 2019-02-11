@@ -5,24 +5,42 @@ const isEditable = (element) => {
 		element.isContentEditable;
 };
 
-export default (Vue, {store}) => {
-	const module = 'activateWithShortcutKey';
+export default {
+	install(Vue, {store}) {
+		const module = 'activateWithShortcutKey';
 
-	document.addEventListener('keydown', (event) => {
-		if (isEditable(event.target)) {
-			return;
-		}
+		Vue.prototype.$registerFixName = (options) => {
+			store.dispatch(`${module}/register`, options);
+		};
 
-		switch (event.key) {
-		case 't':
-			store.dispatch(`${module}/setFirstInstanceAsActive`);
-			break;
-		case ']':
-			store.dispatch(`${module}/setNextInstanceAsActive`);
-			break;
-		case '[':
-			store.dispatch(`${module}/setPreviousInstanceAsActive`);
-			break;
-		}
-	});
+		Vue.prototype.$deregisterFixName = (uid) => {
+			store.dispatch(`${module}/deregister`, uid);
+		};
+
+		Vue.prototype.$setActiveInstanceFixName = (uid) => {
+			store.dispatch(`${module}/setActiveInstance`, uid);
+		};
+
+		Vue.prototype.$resetActiveInstanceFixName = () => {
+			store.dispatch(`${module}/resetActiveInstance`);
+		};
+
+		document.addEventListener('keydown', (event) => {
+			if (isEditable(event.target)) {
+				return;
+			}
+
+			switch (event.key) {
+			case 't':
+				store.dispatch(`${module}/focusActiveInstance`);
+				break;
+			case ']':
+				store.dispatch(`${module}/setNextInstanceAsActive`);
+				break;
+			case '[':
+				store.dispatch(`${module}/setPreviousInstanceAsActive`);
+				break;
+			}
+		});
+	}
 };

@@ -5,7 +5,7 @@
 				<div
 					v-if="!isAlwaysActive"
 					class="content-item-classifier__editor__header clickable"
-					@click="updateIsActive(!isActive)"
+					@click="updateIsActive(false)"
 				>
 					<div>
 						<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
@@ -65,11 +65,15 @@
 </style>
 
 <script>
+import Vue from 'vue';
 import {mapGetters, mapMutations} from 'vuex';
+
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
+
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import {CONTENT_CLASSIFIER_ATTACH_TERM, CONTENT_CLASSIFIER_DETACH_TERM} from 'js/store/mutations-types';
 import {REQUEST_STATES} from 'js/consts/state';
+import {scrollToElement} from 'js/utils/animations';
 
 const CONTENT_TYPE_NAMES = {
 	[CONTENT_TYPES.FLASHCARD]: 'Pytanie otwarte',
@@ -101,6 +105,14 @@ export default {
 			default: false,
 		},
 		isAlwaysActive: {
+			type: Boolean,
+			default: false,
+		},
+		triggerBlur: {
+			type: Boolean,
+			default: false,
+		},
+		triggerFocus: {
 			type: Boolean,
 			default: false,
 		},
@@ -142,11 +154,22 @@ export default {
 		},
 	},
 	watch: {
-		isActive(isActive) {
-			if (!this.isAlwaysActive && isActive) {
-				this.$el.focus();
+		triggerBlur(triggerBlur) {
+			if (triggerBlur) {
+				this.$el.blur();
+				// Make it reactive again
+				this.$parent.$emit('resetTriggerBlur');
 			}
-		}
+		},
+		async triggerFocus(triggerFocus) {
+			if (triggerFocus) {
+				this.$el.focus();
+				await Vue.nextTick();
+				scrollToElement(this.$el, 150, 500);
+				// Make it reactive again
+				this.$parent.$emit('resetTriggerFocus');
+			}
+		},
 	},
 };
 </script>

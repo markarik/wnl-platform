@@ -88,24 +88,26 @@
 						</span>
 						<span class="question-id">#{{question.id}}</span>
 					</div>
-					<wnl-quiz-question
-						:class="`quiz-question-${question.id}`"
-						:getReaction="getReaction"
-						:id="question.id"
-						:module="module"
-						:question="question"
-						:readOnly="showListResults"
-						:hideComments="true"
-						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
-						@userEvent="proxyUserEvent"
-					/>
-					<wnl-activate-with-shortcut-key :key="`cc-editor-${question.id}`">
+					<wnl-activate-with-shortcut-key :key="question.id">
 						<template slot-scope="activateWithShortcutKey">
+							<wnl-quiz-question
+								:class="`quiz-question-${question.id}`"
+								:getReaction="getReaction"
+								:id="question.id"
+								:module="module"
+								:question="question"
+								:readOnly="showListResults"
+								:hideComments="true"
+								@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
+								@userEvent="proxyUserEvent"
+							/>
 							<wnl-content-item-classifier-editor
-								class="quiz-question__content-item-classifier-editor"
+								class="questions-list__content-item-classifier-editor"
+								:is-active="activateWithShortcutKey.isActive"
+								:trigger-blur="activateWithShortcutKey.triggerBlur"
+								:trigger-focus="activateWithShortcutKey.triggerFocus"
 								:content-item-id="question.id"
 								:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-								:is-active="activateWithShortcutKey.isActive"
 							/>
 						</template>
 					</wnl-activate-with-shortcut-key>
@@ -215,7 +217,7 @@
 			.wnl-quiz-question
 				margin: 0
 
-	.quiz-question__content-item-classifier-editor
+	.questions-list__content-item-classifier-editor
 		margin-top: -$margin-base
 		margin-bottom: $margin-big
 </style>
@@ -262,7 +264,7 @@ export default {
 		WnlQuizQuestion,
 		WnlPagination,
 		WnlContentItemClassifierEditor,
-		WnlActivateWithShortcutKey
+		WnlActivateWithShortcutKey,
 	},
 	mixins: [emits_events],
 	props: {

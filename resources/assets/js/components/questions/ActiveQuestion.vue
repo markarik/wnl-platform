@@ -17,23 +17,25 @@
 				</a>
 			</div>
 		</div>
-		<wnl-quiz-question
-			v-if="question"
-			:class="`quiz-question-${question.id}`"
-			:id="question.id"
-			:question="question"
-			:showComments="displayResults"
-			:getReaction="getReaction"
-			:module="module"
-			@selectAnswer="selectAnswer"
-			@answerDoubleclick="onAnswerDoubleclick"
-			@userEvent="proxyUserEvent"
-		/>
 		<wnl-activate-with-shortcut-key>
 			<template slot-scope="activateWithShortcutKey">
+				<wnl-quiz-question
+					v-if="question"
+					:class="`quiz-question-${question.id}`"
+					:id="question.id"
+					:question="question"
+					:showComments="displayResults"
+					:getReaction="getReaction"
+					:module="module"
+					@selectAnswer="selectAnswer"
+					@answerDoubleclick="onAnswerDoubleclick"
+					@userEvent="proxyUserEvent"
+				/>
 				<wnl-content-item-classifier-editor
 					class="quiz-question__content-item-classifier-editor"
 					:is-active="activateWithShortcutKey.isActive"
+					:trigger-blur="activateWithShortcutKey.triggerBlur"
+					:trigger-focus="activateWithShortcutKey.triggerFocus"
 					:content-item-id="question.id"
 					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
 				/>

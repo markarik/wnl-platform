@@ -24,16 +24,6 @@
 			@userEvent="proxyUserEvent"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
-		<wnl-activate-with-shortcut-key>
-			<template slot-scope="activateWithShortcutKey">
-				<wnl-content-item-classifier-editor
-					class="quiz-question__content-item-classifier-editor"
-					:content-item-id="currentQuestion.id"
-					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-					:is-active="activateWithShortcutKey.isActive"
-				/>
-			</template>
-		</wnl-activate-with-shortcut-key>
 		<p class="has-text-centered">
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
@@ -60,16 +50,6 @@
 					@selectAnswer="selectAnswer"
 					@answerDoubleclick="onAnswerDoubleClick"
 				></wnl-quiz-question>
-				<wnl-activate-with-shortcut-key :key="`cc-editor-${question.id}`">
-					<template slot-scope="activateWithShortcutKey">
-						<wnl-content-item-classifier-editor
-							class="quiz-question__content-item-classifier-editor"
-							:content-item-id="question.id"
-							:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-							:is-active="activateWithShortcutKey.isActive"
-						/>
-					</template>
-				</wnl-activate-with-shortcut-key>
 			</template>
 		</div>
 	</div>

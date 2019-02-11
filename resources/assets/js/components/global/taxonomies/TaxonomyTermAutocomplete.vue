@@ -58,7 +58,7 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		isFocused: {
+		triggerFocus: {
 			type: Boolean,
 			default: false,
 		},
@@ -108,7 +108,7 @@ export default {
 		},
 	},
 	watch: {
-		isFocused(isFocused) {
+		triggerFocus(isFocused) {
 			if (isFocused) {
 				this.$refs.input.focus();
 				this.$emit('focused');

@@ -11,25 +11,26 @@
 					{{index+1}}/{{questions.length}}
 				</slot>
 			</span>
-			<wnl-quiz-question
-				:module="module"
-				:class="`quiz-question-${question.id}`"
-				:question="question"
-				:index="index"
-				:isQuizComplete="isComplete"
-				:key="question.id"
-				:readOnly="readOnly"
-				:getReaction="getReaction"
-				@selectAnswer="onSelectAnswer"
-				@userEvent="proxyUserEvent"
-			></wnl-quiz-question>
-			<wnl-activate-with-shortcut-key :key="`cc-editor-${question.id}`">
+			<wnl-activate-with-shortcut-key :key="question.id">
 				<template slot-scope="activateWithShortcutKey">
+					<wnl-quiz-question
+						:module="module"
+						:class="`quiz-question-${question.id}`"
+						:question="question"
+						:index="index"
+						:isQuizComplete="isComplete"
+						:readOnly="readOnly"
+						:getReaction="getReaction"
+						@selectAnswer="onSelectAnswer"
+						@userEvent="proxyUserEvent"
+					></wnl-quiz-question>
 					<wnl-content-item-classifier-editor
 						class="quiz-question__content-item-classifier-editor"
+						:is-active="activateWithShortcutKey.isActive"
+						:trigger-blur="activateWithShortcutKey.triggerBlur"
+						:trigger-focus="activateWithShortcutKey.triggerFocus"
 						:content-item-id="question.id"
 						:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-						:is-active="activateWithShortcutKey.isActive"
 					/>
 				</template>
 			</wnl-activate-with-shortcut-key>

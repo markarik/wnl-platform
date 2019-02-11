@@ -1,5 +1,5 @@
 <template>
-	<div v-if="canAccess" class="content-item-classifier" tabindex="-1">
+	<div v-if="canAccess" class="content-item-classifier" tabindex="-1" @keydown="onKeyDown">
 		<template v-if="hasContentItem">
 			<div v-if="isAlwaysActive || isActive" class="content-item-classifier__editor">
 				<div
@@ -18,8 +18,10 @@
 				<wnl-content-classifier-editor
 					v-if="hasContentItem"
 					:items="[contentItem]"
+					:is-taxonomy-term-autocomplete-focused-by-shortcut="isTaxonomyTermAutocompleteFocused"
 					@taxonomyTermAttached="onTaxonomyTermAttached"
 					@taxonomyTermDetached="onTaxonomyTermDetached"
+					@taxonomyTermAutocompleteFocused="onTaxonomyTermAutocompleteFocused"
 				/>
 			</div>
 			<div v-else class="clickable content-item-classifier__tag-names" @click="updateIsActive(true)">
@@ -65,7 +67,7 @@
 </style>
 
 <script>
-import Vue from 'vue';
+import {nextTick} from 'vue';
 import {mapGetters, mapMutations} from 'vuex';
 
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
@@ -88,6 +90,7 @@ export default {
 	},
 	data() {
 		return {
+			isTaxonomyTermAutocompleteFocused: false,
 			CONTENT_TYPE_NAMES,
 		};
 	},
@@ -104,21 +107,13 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		isFocused: {
-			type: Boolean,
-			default: false
-		},
 		isAlwaysActive: {
 			type: Boolean,
 			default: false,
 		},
-		triggerBlur: {
+		isFocused: {
 			type: Boolean,
-			default: false,
-		},
-		triggerFocus: {
-			type: Boolean,
-			default: false,
+			default: false
 		},
 	},
 	computed: {
@@ -141,8 +136,11 @@ export default {
 			attachTerm: CONTENT_CLASSIFIER_ATTACH_TERM,
 			detachTerm: CONTENT_CLASSIFIER_DETACH_TERM
 		}),
-		updateIsActive(isActive) {
-			this.$emit('updateIsActive', isActive);
+		onKeyDown(event) {
+			if (event.key === 't' && this.isFocused) {
+				event.stopImmediatePropagation();
+				this.isTaxonomyTermAutocompleteFocused = true;
+			}
 		},
 		onTaxonomyTermAttached(term) {
 			this.attachTerm({
@@ -156,12 +154,18 @@ export default {
 				contentItem: this.contentItem
 			});
 		},
+		onTaxonomyTermAutocompleteFocused() {
+			this.isTaxonomyTermAutocompleteFocused = false;
+		},
+		updateIsActive(isActive) {
+			this.$emit('updateIsActive', isActive);
+		},
 	},
 	watch: {
 		async isFocused() {
 			if (this.isFocused) {
 				this.$el.focus();
-				await Vue.nextTick();
+				await nextTick();
 				scrollToElement(this.$el, 150, 500);
 			} else {
 				this.$el.blur();

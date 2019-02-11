@@ -148,6 +148,10 @@ export default {
 		};
 	},
 	props: {
+		isTaxonomyTermAutocompleteFocusedByShortcut: {
+			type: Boolean,
+			default: false,
+		},
 		items: {
 			type: Array,
 			required: true,
@@ -272,7 +276,13 @@ export default {
 		},
 		onTaxonomyTermAutocompleteFocused() {
 			this.isTaxonomyTermAutocompleteFocused = false;
+			this.$emit('taxonomyTermAutocompleteFocused');
 		},
+	},
+	watch: {
+		isTaxonomyTermAutocompleteFocusedByShortcut(isTaxonomyTermAutocompleteFocusedByShortcut) {
+			this.isTaxonomyTermAutocompleteFocused = isTaxonomyTermAutocompleteFocusedByShortcut;
+		}
 	},
 	async mounted() {
 		try {

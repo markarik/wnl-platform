@@ -46,6 +46,7 @@
 </style>
 
 <script>
+import {nextTick} from 'vue';
 import {mapState, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 
@@ -58,7 +59,7 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		triggerFocus: {
+		isFocused: {
 			type: Boolean,
 			default: false,
 		},
@@ -108,9 +109,12 @@ export default {
 		},
 	},
 	watch: {
-		triggerFocus(isFocused) {
+		async isFocused(isFocused) {
 			if (isFocused) {
 				this.$refs.input.focus();
+
+				// Wait to avoid isFocused being set back to false before we focus the input
+				await nextTick();
 				this.$emit('focused');
 			}
 		},

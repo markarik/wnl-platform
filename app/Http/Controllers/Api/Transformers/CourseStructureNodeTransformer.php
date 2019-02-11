@@ -11,7 +11,7 @@ use App\Models\Lesson;
 
 class CourseStructureNodeTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['lessons', 'groups', 'courses'];
+	protected $availableIncludes = ['lessons', 'groups', 'course'];
 
 	public function __construct($parent = null)
 	{
@@ -52,7 +52,7 @@ class CourseStructureNodeTransformer extends ApiTransformer
 		}
 	}
 
-	public function includeCourses(CourseStructureNode $node)
+	public function includeCourse(CourseStructureNode $node)
 	{
 		return $this->item($node->course, new CourseTransformer([
 			'course_structure_nodes' => $node->id

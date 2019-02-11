@@ -1,15 +1,14 @@
 <template>
 	<wnl-activate-with-shortcut-key>
-		<template slot-scope="activateWithShortcutKey">
-			<wnl-content-item-classifier-editor
-				class="margin top"
-				:is-active="activateWithShortcutKey.isActive"
-				:trigger-blur="activateWithShortcutKey.triggerBlur"
-				:trigger-focus="activateWithShortcutKey.triggerFocus"
-				:content-item-id="currentSlideId"
-				:content-item-type="CONTENT_TYPES.SLIDE"
-			/>
-		</template>
+		<wnl-content-item-classifier-editor
+			slot-scope="activateWithShortcutKey"
+			class="margin top"
+			:is-active="activateWithShortcutKey.isActive"
+			:is-focused="activateWithShortcutKey.isFocused"
+			:content-item-id="currentSlideId"
+			:content-item-type="CONTENT_TYPES.SLIDE"
+			@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+		/>
 	</wnl-activate-with-shortcut-key>
 </template>
 

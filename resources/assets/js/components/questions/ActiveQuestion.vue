@@ -17,28 +17,29 @@
 				</a>
 			</div>
 		</div>
-		<wnl-quiz-question
-			v-if="question"
-			:class="`quiz-question-${question.id}`"
-			:id="question.id"
-			:question="question"
-			:showComments="displayResults"
-			:getReaction="getReaction"
-			:module="module"
-			@selectAnswer="selectAnswer"
-			@answerDoubleclick="onAnswerDoubleclick"
-			@userEvent="proxyUserEvent"
-		/>
 		<wnl-activate-with-shortcut-key>
-			<wnl-content-item-classifier-editor
-				slot-scope="activateWithShortcutKey"
-				class="quiz-question__content-item-classifier-editor"
-				:is-active="activateWithShortcutKey.isActive"
-				:is-focused="activateWithShortcutKey.isFocused"
-				:content-item-id="question.id"
-				:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-				@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
-			/>
+			<template slot-scope="activateWithShortcutKey">
+				<wnl-quiz-question
+					v-if="question"
+					:class="`quiz-question-${question.id}`"
+					:id="question.id"
+					:question="question"
+					:showComments="displayResults"
+					:getReaction="getReaction"
+					:module="module"
+					@selectAnswer="selectAnswer"
+					@answerDoubleclick="onAnswerDoubleclick"
+					@userEvent="proxyUserEvent"
+				/>
+				<wnl-content-item-classifier-editor
+					class="quiz-question__content-item-classifier-editor"
+					:is-active="activateWithShortcutKey.isActive"
+					:is-focused="activateWithShortcutKey.isFocused"
+					:content-item-id="question.id"
+					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+					@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+				/>
+			</template>
 		</wnl-activate-with-shortcut-key>
 		<p class="active-question-button has-text-centered">
 			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">

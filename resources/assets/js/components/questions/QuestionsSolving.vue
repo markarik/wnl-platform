@@ -88,28 +88,29 @@
 						</span>
 						<span class="question-id">#{{question.id}}</span>
 					</div>
-					<wnl-quiz-question
-						:class="`quiz-question-${question.id}`"
-						:getReaction="getReaction"
-						:id="question.id"
-						:module="module"
-						:question="question"
-						:readOnly="showListResults"
-						:hideComments="true"
-						:key="`question-${question.id}`"
-						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
-						@userEvent="proxyUserEvent"
-					/>
 					<wnl-activate-with-shortcut-key :key="`question-cce-${question.id}`">
-						<wnl-content-item-classifier-editor
-							slot-scope="activateWithShortcutKey"
-							class="questions-list__content-item-classifier-editor"
-							:is-active="activateWithShortcutKey.isActive"
-							:is-focused="activateWithShortcutKey.isFocused"
-							:content-item-id="question.id"
-							:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-							@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
-						/>
+						<template slot-scope="activateWithShortcutKey">
+							<wnl-quiz-question
+								:class="`quiz-question-${question.id}`"
+								:getReaction="getReaction"
+								:id="question.id"
+								:module="module"
+								:question="question"
+								:readOnly="showListResults"
+								:hideComments="true"
+								:key="`question-${question.id}`"
+								@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
+								@userEvent="proxyUserEvent"
+							/>
+							<wnl-content-item-classifier-editor
+								class="questions-list__content-item-classifier-editor"
+								:is-active="activateWithShortcutKey.isActive"
+								:is-focused="activateWithShortcutKey.isFocused"
+								:content-item-id="question.id"
+								:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+								@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+							/>
+						</template>
 					</wnl-activate-with-shortcut-key>
 				</div>
 

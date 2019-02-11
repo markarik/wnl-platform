@@ -4,7 +4,8 @@
 		'is-loading': isLoading,
 	}">
 		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
-		<div v-if="this.filteredContent.length > 0">
+		<div v-if="allTaxonomyTerms.length===0">Brak przypisanych pojęć</div>
+		<div v-if="items.length > 0">
 			<ul class="margin bottom">
 				<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">
 					<div class="content-classifier__panel-editor__taxonomy">
@@ -32,6 +33,7 @@
 								class="content-classifier__panel-editor__term__name"
 							/>
 							<span
+								v-if="allItemsCount > 1"
 								:class="{
 									'margin': true,
 									'left': true,
@@ -61,6 +63,7 @@
 					/>
 					<wnl-taxonomy-term-autocomplete
 						placeholder="Zacznij pisać, aby wyszukać pojęcie"
+						:disabled="!taxonomyId"
 						@change="onAttachTaxonomyTerm"
 						class="margin left content-classifier__panel-editor__term-select__autocomplete"
 					/>
@@ -115,8 +118,9 @@ import {getApiUrl} from 'js/utils/env';
 import {ALERT_TYPES} from 'js/consts/alert';
 
 import WnlSelect from 'js/admin/components/forms/Select';
-import WnlTaxonomyTermAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermAutocomplete';
-import WnlTaxonomyTermWithAncestors from 'js/admin/components/taxonomies/TaxonomyTermWithAncestors';
+import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
+import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	components: {
@@ -131,7 +135,7 @@ export default {
 		};
 	},
 	props: {
-		filteredContent: {
+		items: {
 			type: Array,
 			required: true,
 		}
@@ -141,11 +145,13 @@ export default {
 		...mapGetters('taxonomies', ['taxonomyById']),
 		...mapState('taxonomies', ['taxonomies']),
 		allItemsCount() {
-			return this.filteredContent.length;
+			return this.items.length;
+		},
+		allTaxonomyTerms() {
+			return uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id');
 		},
 		groupedTaxonomyTerms() {
-			const taxonomyTerms = uniqBy([].concat(...this.filteredContent.map(item => item.taxonomyTerms)), 'id');
-			const groupedTerms = taxonomyTerms.reduce(
+			const groupedTerms = this.allTaxonomyTerms.reduce(
 				(collector, term) => {
 					if (!collector[term.taxonomy.id]) {
 						collector[term.taxonomy.id] = {
@@ -168,10 +174,6 @@ export default {
 			return groupedTerms;
 		},
 		taxonomiesOptions() {
-			if (!this.taxonomies) {
-				return [];
-			}
-
 			return this.taxonomies.map(taxonomy => ({value: taxonomy.id, text: taxonomy.name}));
 		}
 	},
@@ -182,10 +184,10 @@ export default {
 			fetchTaxonomies: 'fetchAll',
 		}),
 		getItemsCountByTermId(termId) {
-			return this.filteredContent.filter(item => item.taxonomyTerms.find(term => term.id === termId)).length;
+			return this.items.filter(item => item.taxonomyTerms.find(term => term.id === termId)).length;
 		},
 		getItemsByType(contentType) {
-			return this.filteredContent.filter(item => item.type === contentType);
+			return this.items.filter(item => item.type === contentType);
 		},
 		hasAllItemsAttached(term) {
 			return term.itemsCount === this.allItemsCount;
@@ -194,13 +196,13 @@ export default {
 			this.isLoading = true;
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/detach`), {
-					annotations: this.getItemsByType('annotations').map(item => item.id),
-					flashcards: this.getItemsByType('flashcards').map(item => item.id),
-					quiz_questions: this.getItemsByType('quizQuestions').map(item => item.id),
-					slides: this.getItemsByType('slides').map(item => item.id),
+					annotations: this.getItemsByType(CONTENT_TYPES.ANNOTATION).map(item => item.id),
+					flashcards: this.getItemsByType(CONTENT_TYPES.FLASHCARD).map(item => item.id),
+					quiz_questions: this.getItemsByType(CONTENT_TYPES.QUIZ_QUESTION).map(item => item.id),
+					slides: this.getItemsByType(CONTENT_TYPES.SLIDE).map(item => item.id),
 				});
 
-				this.$emit('onTaxonomyTermDetached', term);
+				this.$emit('taxonomyTermDetached', term);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
@@ -215,10 +217,10 @@ export default {
 			this.isLoading = true;
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/attach`), {
-					annotations: this.getItemsByType('annotations').map(item => item.id),
-					flashcards: this.getItemsByType('flashcards').map(item => item.id),
-					quiz_questions: this.getItemsByType('quizQuestions').map(item => item.id),
-					slides: this.getItemsByType('slides').map(item => item.id),
+					annotations: this.getItemsByType(CONTENT_TYPES.ANNOTATION).map(item => item.id),
+					flashcards: this.getItemsByType(CONTENT_TYPES.FLASHCARD).map(item => item.id),
+					quiz_questions: this.getItemsByType(CONTENT_TYPES.QUIZ_QUESTION).map(item => item.id),
+					slides: this.getItemsByType(CONTENT_TYPES.SLIDE).map(item => item.id),
 				});
 
 				const termToAdd = {
@@ -226,7 +228,7 @@ export default {
 					taxonomy: term.taxonomy || this.taxonomyById(this.taxonomyId),
 					ancestors: term.ancestors || this.getAncestorsById(term.id),
 				};
-				this.$emit('onTaxonomyTermAttached', termToAdd);
+				this.$emit('taxonomyTermAttached', termToAdd);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

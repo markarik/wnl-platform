@@ -24,6 +24,11 @@
 			@userEvent="proxyUserEvent"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
+		<wnl-content-item-classifier-editor
+			class="quiz-question__content-item-classifier-editor"
+			:content-item-id="currentQuestion.id"
+			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+		/>
 		<p class="has-text-centered">
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
@@ -36,18 +41,27 @@
 			<p class="notification small">
 				Możesz wybrać dowolne pytanie z listy klikając na jego tytuł
 			</p>
-			<wnl-quiz-question
+			<template
 				v-for="(question, index) in otherQuestions"
-				:headerOnly="true"
-				:question="question"
-				:class="`clickable quiz-question-${question.id}`"
-				:key="index"
-				:getReaction="getReaction"
-				:module="module"
-				@headerClicked="selectQuestionFromList(index)"
-				@selectAnswer="selectAnswer"
-				@answerDoubleclick="onAnswerDoubleClick"
-			></wnl-quiz-question>
+			>
+				<wnl-quiz-question
+					:key="question.id"
+					:headerOnly="true"
+					:question="question"
+					:class="`clickable quiz-question-${question.id}`"
+					:getReaction="getReaction"
+					:module="module"
+					@headerClicked="selectQuestionFromList(index)"
+					@selectAnswer="selectAnswer"
+					@answerDoubleclick="onAnswerDoubleClick"
+				></wnl-quiz-question>
+				<wnl-content-item-classifier-editor
+					class="quiz-question__content-item-classifier-editor"
+					:key="`cc-editor-${question.id}`"
+					:content-item-id="question.id"
+					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+				/>
+			</template>
 		</div>
 	</div>
 </template>
@@ -63,20 +77,28 @@
 	.quiz-widget-controls
 		display: flex
 		justify-content: space-between
+
+	.quiz-question__content-item-classifier-editor
+		margin-top: -$margin-base
+		margin-bottom: $margin-big
 </style>
 
 <script>
 import _ from 'lodash';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import feature_components from 'js/consts/events_map/feature_components.json';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+
 
 export default {
 	name: 'QuizWidget',
 	components: {
+		WnlContentItemClassifierEditor,
 		'wnl-quiz-question': QuizQuestion,
 	},
 	mixins: [emits_events],
@@ -105,7 +127,8 @@ export default {
 	data() {
 		return {
 			hasErrors: false,
-			allowDoubleclick: true
+			allowDoubleclick: true,
+			CONTENT_TYPES
 		};
 	},
 	computed: {
@@ -130,9 +153,13 @@ export default {
 		},
 		hasOtherQuestions() {
 			return this.otherQuestions.length > 0;
+		},
+		questionsIds() {
+			return this.questions.map(({id}) => id);
 		}
 	},
 	methods: {
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		verify() {
 			if (this.hasAnswer) {
 				this.$emit('verify', this.currentQuestion.id);
@@ -174,6 +201,7 @@ export default {
 	},
 	created() {
 		this.trackQuizQuestionChanged();
+		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
 	},
 	watch: {
 		'currentQuestion.id'() {

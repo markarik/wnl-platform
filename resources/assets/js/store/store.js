@@ -27,6 +27,9 @@ import tasks from 'js/store/modules/tasks';
 import flashcards from 'js/store/modules/flashcards';
 import siteWideMessages from 'js/store/modules/siteWideMessages';
 import form from 'js/store/modules/form';
+import taxonomies from 'js/store/modules/taxonomies';
+import taxonomyTerms from 'js/store/modules/taxonomyTerms';
+import contentClassifier from 'js/store/modules/contentClassifier';
 
 Vue.use(Vuex);
 
@@ -58,6 +61,9 @@ export default new Vuex.Store({
 		alerts,
 		siteWideMessages,
 		form,
+		taxonomies,
+		taxonomyTerms,
+		contentClassifier
 	},
 	strict: debug
 });

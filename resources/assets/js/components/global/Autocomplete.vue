@@ -5,6 +5,7 @@
 			class="input"
 			:value="value"
 			:placeholder="placeholder"
+			:disable="disabled"
 			@input="$emit('input', $event.target.value)"
 			@keydown="onKeyDown"
 		/>
@@ -42,6 +43,10 @@ export default {
 		isDown: {
 			type: Boolean,
 			default: true,
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
 		},
 		placeholder: {
 			type: String,

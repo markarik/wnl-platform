@@ -90,7 +90,9 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('taxonomies', ['resetTaxonomies']),
 		onSubmitSuccess(data) {
+			this.resetTaxonomies();
 			if (!this.isEdit) {
 				this.$router.push({ name: 'taxonomy-edit', params: { id: data.id } });
 			}
@@ -112,6 +114,7 @@ export default {
 
 			try {
 				await axios.delete(getApiUrl(this.resourceRoute));
+				this.resetTaxonomies();
 				this.addAutoDismissableAlert({
 					text: 'Taksonomia została usunięta',
 					type: ALERT_TYPES.SUCCESS

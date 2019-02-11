@@ -113,6 +113,12 @@
 						</div>
 					</div>
 				</div>
+				<wnl-content-item-classifier-editor
+					class="margin bottom"
+					:alwaysExpanded="true"
+					:content-item-id="annotation.id"
+					:content-item-type="CONTENT_TYPES.ANNOTATION"
+				/>
 			</template>
 			<div class="level-item">
 				<a class="button is-danger"
@@ -196,6 +202,8 @@ import KeywordField from './KeywordField';
 import PreviewModal from './PreviewModal';
 import Quill from 'js/admin/components/forms/Quill.vue';
 import Modal from 'js/components/global/Modal';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	name: 'AnnotationsEditor',
@@ -204,7 +212,8 @@ export default {
 		'wnl-keyword-field': KeywordField,
 		'quill': Quill,
 		'wnl-modal': Modal,
-		'wnl-preview-modal': PreviewModal
+		'wnl-preview-modal': PreviewModal,
+		WnlContentItemClassifierEditor
 	},
 	data() {
 		const ANNOTATIONS_TYPES = {
@@ -218,6 +227,7 @@ export default {
 			isDirty: false,
 			keywordType: ANNOTATIONS_TYPES.NEUTRAL,
 			ANNOTATIONS_TYPES,
+			CONTENT_TYPES,
 			isVisible: false
 		};
 	},
@@ -259,6 +269,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		onFieldChange() {
 			this.$emit('hasChanges', this.annotation.id);
 		},
@@ -311,5 +322,15 @@ export default {
 			}
 		},
 	},
+	async mounted() {
+		if (!this.annotation.id) return;
+
+		await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id]});
+	},
+	watch: {
+		async 'annotation.id'() {
+			await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id]});
+		}
+	}
 };
 </script>

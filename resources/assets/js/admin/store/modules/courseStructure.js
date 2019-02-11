@@ -1,5 +1,5 @@
 import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
-import {nestedSetMutations, nestedSetGetters, nestedSetActions, initialState} from 'js/admin/store/modules/nestedSet';
+import {nestedSetMutations, nestedSetGetters, nestedSetActions, initialState} from 'js/store/modules/shared/nestedSet';
 import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
 import {COURSE_STRUCTURE_TYPE_ICONS} from 'js/consts/courseStructure';

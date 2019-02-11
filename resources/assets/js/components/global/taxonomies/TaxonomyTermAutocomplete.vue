@@ -12,6 +12,7 @@
 			v-model="search"
 			:placeholder="placeholder"
 			:items="autocompleteTerms"
+			:disabled="disabled"
 			@change="onSelect"
 		>
 			<template slot-scope="slotProps">
@@ -42,7 +43,7 @@ import {mapState, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
-import WnlTaxonomyTermWithAncestors from 'js/admin/components/taxonomies/TaxonomyTermWithAncestors';
+import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 
 export default {
 	props: {
@@ -53,7 +54,11 @@ export default {
 		placeholder: {
 			type: String,
 			default: 'Wpisz nazwę nadrzędnego pojęcia'
-		}
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {

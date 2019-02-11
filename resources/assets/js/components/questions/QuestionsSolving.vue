@@ -99,6 +99,12 @@
 						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
 						@userEvent="proxyUserEvent"
 					/>
+					<wnl-content-item-classifier-editor
+						class="quiz-question__content-item-classifier-editor"
+						:key="`cc-editor-${question.id}`"
+						:content-item-id="question.id"
+						:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+					/>
 				</div>
 
 				<div v-if="questionsCurrentPage.length > 5" class="pagination-container">
@@ -200,15 +206,19 @@
 				font-weight: $font-weight-regular
 
 		.wnl-quiz-question-container
-			margin-bottom: -$margin-base
 			width: 100%
 
 			.wnl-quiz-question
 				margin: 0
+
+	.quiz-question__content-item-classifier-editor
+		margin-top: -$margin-base
+		margin-bottom: $margin-big
 </style>
 
 <script>
 import {isEmpty, isNumber} from 'lodash';
+import {mapActions} from 'vuex';
 
 import ActiveQuestion from 'js/components/questions/ActiveQuestion';
 import QuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder';
@@ -217,6 +227,9 @@ import Pagination from 'js/components/global/Pagination';
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import {VIEWS} from 'js/consts/questionsSolving';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+
 
 const views = [
 	{
@@ -242,6 +255,7 @@ export default {
 		'wnl-questions-test-builder': QuestionsTestBuilder,
 		'wnl-quiz-question': QuizQuestion,
 		'wnl-pagination': Pagination,
+		WnlContentItemClassifierEditor
 	},
 	mixins: [emits_events],
 	props: {
@@ -311,6 +325,7 @@ export default {
 			activeView: VIEWS.CURRENT_QUESTION,
 			showListResults: false,
 			VIEWS,
+			CONTENT_TYPES
 		};
 	},
 	computed: {
@@ -336,8 +351,12 @@ export default {
 		views() {
 			return views;
 		},
+		questionsIds() {
+			return this.questionsCurrentPage.map(question => question.id);
+		}
 	},
 	methods: {
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		buildTest(payload) {
 			this.$emit('buildTest', payload);
 		},
@@ -374,6 +393,7 @@ export default {
 			this.activeView = this.presetOptions.activeView;
 		}
 		this.$emit('activeViewChange', this.activeView);
+		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
 	},
 	watch: {
 		activeFilters() {
@@ -391,6 +411,11 @@ export default {
 				this.activeView = this.presetOptions.activeView;
 			}
 			this.$emit('activeViewChange', this.activeView);
+		},
+		questionsIds(newValue, oldValue) {
+			if (_.isEqual(newValue, oldValue)) return;
+
+			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
 		}
 	}
 };

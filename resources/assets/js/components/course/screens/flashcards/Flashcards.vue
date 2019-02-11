@@ -64,7 +64,7 @@
 							:content-item-type="CONTENT_TYPES.FLASHCARD"
 							@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
 						/>
-					</template>]
+					</template>
 				</wnl-activate-with-shortcut-key>
 			</ol>
 		</div>

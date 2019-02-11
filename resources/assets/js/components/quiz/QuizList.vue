@@ -11,28 +11,28 @@
 					{{index+1}}/{{questions.length}}
 				</slot>
 			</span>
-			<wnl-activate-with-shortcut-key :key="question.id">
-				<template slot-scope="activateWithShortcutKey">
-					<wnl-quiz-question
-						:module="module"
-						:class="`quiz-question-${question.id}`"
-						:question="question"
-						:index="index"
-						:isQuizComplete="isComplete"
-						:readOnly="readOnly"
-						:getReaction="getReaction"
-						@selectAnswer="onSelectAnswer"
-						@userEvent="proxyUserEvent"
-					></wnl-quiz-question>
-					<wnl-content-item-classifier-editor
-						class="quiz-question__content-item-classifier-editor"
-						:is-active="activateWithShortcutKey.isActive"
-						:trigger-blur="activateWithShortcutKey.triggerBlur"
-						:trigger-focus="activateWithShortcutKey.triggerFocus"
-						:content-item-id="question.id"
-						:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-					/>
-				</template>
+			<wnl-quiz-question
+				:module="module"
+				:class="`quiz-question-${question.id}`"
+				:question="question"
+				:index="index"
+				:isQuizComplete="isComplete"
+				:readOnly="readOnly"
+				:getReaction="getReaction"
+				:key="`question-${question.id}`"
+				@selectAnswer="onSelectAnswer"
+				@userEvent="proxyUserEvent"
+			></wnl-quiz-question>
+			<wnl-activate-with-shortcut-key :key="`question-cce-${question.id}`">
+				<wnl-content-item-classifier-editor
+					slot-scope="activateWithShortcutKey"
+					class="quiz-question__content-item-classifier-editor"
+					:content-item-id="question.id"
+					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+					:is-active="activateWithShortcutKey.isActive"
+					:is-focused="activateWithShortcutKey.isFocused"
+					@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+				/>
 			</wnl-activate-with-shortcut-key>
 		</div>
 		<p v-if="!plainList && !displayResults" class="has-text-centered">

@@ -108,7 +108,7 @@ export default {
 		quillOptions() {
 			const keyboardModule = cloneDeep(this.keyboard);
 
-			if (keyboardModule.bindings && keyboardModule.bindings.handleEnter) {
+			if (keyboardModule && keyboardModule.bindings && keyboardModule.bindings.handleEnter) {
 				keyboardModule.bindings.handleEnter.handler = (event) => {
 					if (this.autocompleteItems.length) {
 						// Prevent enter handler when autocomplete is open

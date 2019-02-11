@@ -45,6 +45,7 @@
 				label="Wyszukaj Lekcję"
 				:items="autocompleteLessonsItems"
 				@change="addLesson"
+				:is-down="false"
 			>
 				<template slot-scope="row">
 					<span class="lesson-autocomplete-item">{{row.item.id}}. {{row.item.name}}</span>

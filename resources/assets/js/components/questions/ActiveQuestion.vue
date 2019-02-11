@@ -72,7 +72,7 @@
 
 <script>
 import _ from 'lodash';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 import { scrollToElement } from 'js/utils/animations';

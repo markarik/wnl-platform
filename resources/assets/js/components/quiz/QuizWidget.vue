@@ -77,8 +77,6 @@ import _ from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
 import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
-import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
-import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
 
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
@@ -89,9 +87,7 @@ import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 export default {
 	name: 'QuizWidget',
 	components: {
-		WnlContentItemClassifierEditor,
 		WnlQuizQuestion,
-		WnlActivateWithShortcutKey,
 	},
 	mixins: [emits_events],
 	props: {

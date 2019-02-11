@@ -46,26 +46,26 @@
 				</button>
 			</div>
 			<ol class="flashcards-set__list">
-				<template v-for="(flashcard, index) in set.flashcards">
-							<wnl-flashcard-item
-								:flashcard="flashcard"
-								:index="index + 1"
-								:context="{type: context, id: screenData.id}"
-								slot="content"
-								@userEvent="trackUserEvent"
-								:key="`flashcard-${flashcard.id}`"
-							/>
-							<wnl-activate-with-shortcut-key :key="`flashcard-cce-${flashcard.id}`">
-								<wnl-content-item-classifier-editor
-									slot-scope="activateWithShortcutKey"
-									:is-active="activateWithShortcutKey.isActive"
-									:is-focused="activateWithShortcutKey.isFocused"
-									:content-item-id="flashcard.id"
-									:content-item-type="CONTENT_TYPES.FLASHCARD"
-									@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
-								/>
-							</wnl-activate-with-shortcut-key>
-				</template>
+				<wnl-activate-with-shortcut-key
+					v-for="(flashcard, index) in set.flashcards"
+					:key="`flashcard-cce-${flashcard.id}`"
+				>
+					<template slot-scope="activateWithShortcutKey">
+						<wnl-flashcard-item
+							:flashcard="flashcard"
+							:index="index + 1"
+							:context="{type: context, id: screenData.id}"
+							@userEvent="trackUserEvent"
+						/>
+						<wnl-content-item-classifier-editor
+							:is-active="activateWithShortcutKey.isActive"
+							:is-focused="activateWithShortcutKey.isFocused"
+							:content-item-id="flashcard.id"
+							:content-item-type="CONTENT_TYPES.FLASHCARD"
+							@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+						/>
+					</template>]
+				</wnl-activate-with-shortcut-key>
 			</ol>
 		</div>
 		<div class="flashcards-scroll" @click="scrollTop">

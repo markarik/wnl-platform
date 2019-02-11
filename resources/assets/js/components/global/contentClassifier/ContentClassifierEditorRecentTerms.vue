@@ -2,11 +2,11 @@
 	<div class="recent-terms">
 		<div
 			v-if="lastUsedTerm"
-			@click="canAddLastUsedTerm && $emit('attachTaxonomyTerm', lastUsedTerm)"
+			@click="attachLastUsedTerm"
 			:class="{
-				clickable: canAddLastUsedTerm,
+				clickable: canAttachLastUsedTerm,
 				'recent-terms__option': true,
-				disabled: !canAddLastUsedTerm,
+				disabled: !canAttachLastUsedTerm,
 			}"
 		>
 			<span class="icon is-small">
@@ -16,18 +16,18 @@
 		</div>
 		<div
 			v-if="lastUsedTermsSet"
-			@click="canAddLastUsedTermsSet && lastUsedTermsSet.map(term => $emit('attachTaxonomyTerm', term))"
+			@click="attachLastUsedTermsSet"
 			:class="{
-				clickable: canAddLastUsedTermsSet,
+				clickable: canAttachLastUsedTermsSet,
 				'recent-terms__option': true,
 				content: true,
-				disabled: !canAddLastUsedTermsSet,
+				disabled: !canAttachLastUsedTermsSet,
 			}"
 		>
 			<span class="icon is-small">
 				<i class="fa fa-tags"></i>
 			</span>
-			Dodaj wszystkie pojęcia ostatnio edytownego elementu:
+			Dodaj wszystkie pojęcia ostatnio edytowanego elementu:
 			<ul>
 				<li v-for="term in lastUsedTermsSet" :key="term.id"><strong>{{term.tag.name}}</strong></li>
 			</ul>
@@ -68,19 +68,51 @@ export default {
 			type: Array,
 			required: true,
 		},
+		triggerAttachLastUsedTerm: {
+			type: Boolean,
+			default: false,
+		},
+		triggerAttachLastUsedTermsSet: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	computed: {
-		canAddLastUsedTerm() {
+		canAttachLastUsedTerm() {
 			return this.lastUsedTerm && !this.isTermAttached(this.lastUsedTerm);
 		},
-		canAddLastUsedTermsSet() {
+		canAttachLastUsedTermsSet() {
 			return this.lastUsedTermsSet && !this.lastUsedTermsSet.every(this.isTermAttached);
 		},
 	},
 	methods: {
+		attachLastUsedTerm() {
+			if (this.canAttachLastUsedTerm) {
+				this.$emit('attachTaxonomyTerm', this.lastUsedTerm);
+			}
+		},
+		attachLastUsedTermsSet() {
+			if (this.canAttachLastUsedTermsSet) {
+				this.lastUsedTermsSet.map(term => this.$emit('attachTaxonomyTerm', term));
+			}
+		},
 		isTermAttached(term) {
 			return this.items.every(item => item.taxonomyTerms.find(({id}) => id === term.id));
 		}
-	}
+	},
+	watch: {
+		async triggerAttachLastUsedTerm(triggerAttachLastUsedTerm) {
+			if (triggerAttachLastUsedTerm) {
+				this.attachLastUsedTerm();
+				this.$emit('attachLastUsedTermTriggered');
+			}
+		},
+		triggerAttachLastUsedTermsSet(triggerAttachLastUsedTermsSet) {
+			if (triggerAttachLastUsedTermsSet) {
+				this.attachLastUsedTermsSet();
+				this.$emit('attachLastUsedTermsSetTriggered');
+			}
+		},
+	},
 };
 </script>

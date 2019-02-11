@@ -54,8 +54,12 @@
 			</ul>
 
 			<wnl-content-classifier-editor-recent-terms
+				:trigger-attach-last-used-term="triggerAttachLastUsedTerm"
+				:trigger-attach-last-used-terms-set="triggerAttachLastUsedTermsSet"
 				:items="items"
 				@attachTaxonomyTerm="onAttachTaxonomyTerm"
+				@attachLastUsedTermTriggered="onAttachLastUsedTermTriggered"
+				@attachLastUsedTermsSetTriggered="onAttachLastUsedTermsSetTriggered"
 			/>
 
 			<div class="field">
@@ -142,9 +146,9 @@ export default {
 	},
 	data() {
 		return {
-			taxonomyId: null,
 			isLoading: false,
 			isTaxonomyTermAutocompleteFocused: false,
+			taxonomyId: null,
 		};
 	},
 	props: {
@@ -155,7 +159,23 @@ export default {
 		items: {
 			type: Array,
 			required: true,
-		}
+		},
+		onAttachLastUsedTermTriggered: {
+			type: Function,
+			default: () => {},
+		},
+		onAttachLastUsedTermsSetTriggered: {
+			type: Function,
+			default: () => {},
+		},
+		triggerAttachLastUsedTerm: {
+			type: Boolean,
+			default: false,
+		},
+		triggerAttachLastUsedTermsSet: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),

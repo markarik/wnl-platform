@@ -71,7 +71,6 @@
 </style>
 
 <script>
-import {nextTick} from 'vue';
 import {mapGetters, mapMutations} from 'vuex';
 
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
@@ -79,7 +78,6 @@ import WnlContentClassifierEditor from 'js/components/global/contentClassifier/C
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import {CONTENT_CLASSIFIER_ATTACH_TERM, CONTENT_CLASSIFIER_DETACH_TERM} from 'js/store/mutations-types';
 import {REQUEST_STATES} from 'js/consts/state';
-import {scrollToElement} from 'js/utils/animations';
 
 const CONTENT_TYPE_NAMES = {
 	[CONTENT_TYPES.FLASHCARD]: 'Pytanie otwarte',
@@ -197,8 +195,6 @@ export default {
 		async isFocused() {
 			if (this.isFocused) {
 				this.$el.focus();
-				await nextTick();
-				scrollToElement(this.$el, 150, 500);
 			} else {
 				this.$el.blur();
 			}

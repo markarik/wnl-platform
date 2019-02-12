@@ -57,6 +57,7 @@ class CommentsTest extends ApiTestCase
 			'user_id' => $user->id
 		]);
 
+		// TODO: Performance issue. Problem here is we iterate over each user in DB. Not sure what to do about it yet.
 		$response = $this
 			->actingAs($user)
 			->json('DELETE', $this->url("/comments/{$comment->id}"));

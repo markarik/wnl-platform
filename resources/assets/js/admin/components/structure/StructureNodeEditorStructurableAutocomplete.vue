@@ -11,36 +11,32 @@
 			@change="onSelect"
 			v-model="search"
 		>
-			<template slot-scope="slotProps">
-				<div>
-					<span class="icon is-small">
-						<i :class="['fa', getStructurableIcon(slotProps.item)]" aria-hidden="true"></i>
-					</span>
+			<div slot-scope="slotProps">
+				<span class="icon is-small">
+					<i :class="['fa', getStructurableIcon(slotProps.item)]" aria-hidden="true"></i>
+				</span>
 
-					{{slotProps.item.name}}
+				{{slotProps.item.name}}
+			</div>
+			<div slot="footer" v-if="search !== ''">
+				<div class="margin">
+					Nie mamy lekcji ani grupy o nazwie <strong>{{search}}</strong>
 				</div>
-			</template>
-			<template slot="footer" v-if="search !== ''">
-				<div>
-					<div class="margin">
-						Nie mamy lekcji ani grupy o nazwie <strong>{{search}}</strong>
-					</div>
-					<div class="autocomplete-footer-button-container">
-						<button class="button" @click="onLessonAdd">
-							<span class="icon is-small">
-								<i class="fa fa-plus" aria-hidden="true"></i>
-							</span>
-							<span>Nowa lekcja</span>
-						</button>
-						<button class="button" @click="onGroupAdd">
-							<span class="icon is-small">
-								<i class="fa fa-plus" aria-hidden="true"></i>
-							</span>
-							<span>Nowa grupa</span>
-						</button>
-					</div>
+				<div class="autocomplete-footer-button-container">
+					<button class="button" @click="onLessonAdd">
+						<span class="icon is-small">
+							<i class="fa fa-plus" aria-hidden="true"></i>
+						</span>
+						<span>Nowa lekcja</span>
+					</button>
+					<button class="button" @click="onGroupAdd">
+						<span class="icon is-small">
+							<i class="fa fa-plus" aria-hidden="true"></i>
+						</span>
+						<span>Nowa grupa</span>
+					</button>
 				</div>
-			</template>
+			</div>
 		</wnl-autocomplete>
 	</div>
 </template>

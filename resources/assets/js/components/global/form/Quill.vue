@@ -5,9 +5,7 @@
 			:active-index="activeIndex"
 			@change="insertMention"
 		>
-			<template slot-scope="slotProps">
-				<wnl-user-autocomplete-item :item="slotProps.item" />
-			</template>
+			<wnl-user-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
 		</wnl-autocomplete-list>
 		<div ref="quill">
 			<slot></slot>

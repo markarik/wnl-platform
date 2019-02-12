@@ -14,18 +14,16 @@
 			:items="autocompletenodes"
 			@change="onSelect"
 		>
-			<template slot-scope="slotProps">
-				<div>
-					<div class="autocomplete-parent-node">{{getAncestorsById(slotProps.item.id).map(ancestor => ancestor.structurable.name).join(' > ')}}</div>
+			<div slot-scope="slotProps">
+				<div class="autocomplete-parent-node">{{getAncestorsById(slotProps.item.id).map(ancestor => ancestor.structurable.name).join(' > ')}}</div>
 
-					<div>
-						<span class="icon is-small">
-							<i :class="['fa', getStructurableIcon(slotProps.item.structurable)]" aria-hidden="true"></i>
-						</span>
-						{{slotProps.item.structurable.name}}
-					</div>
+				<div>
+					<span class="icon is-small">
+						<i :class="['fa', getStructurableIcon(slotProps.item.structurable)]" aria-hidden="true"></i>
+					</span>
+					{{slotProps.item.structurable.name}}
 				</div>
-			</template>
+			</div>
 		</wnl-autocomplete>
 	</div>
 </template>

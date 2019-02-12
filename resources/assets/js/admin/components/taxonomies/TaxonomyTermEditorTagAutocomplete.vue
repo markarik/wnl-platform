@@ -11,26 +11,22 @@
 			@change="onSelect"
 			placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć"
 		>
-			<template slot-scope="slotProps">
-				<div>
-					{{slotProps.item.name}}
+			<div slot-scope="slotProps">
+				{{slotProps.item.name}}
+			</div>
+			<div slot="footer" v-if="autocompleteTags.length === 0 && search !== ''">
+				<div class="margin">
+					Nie mamy taga <strong>{{search}}</strong>
 				</div>
-			</template>
-			<template slot="footer" v-if="autocompleteTags.length === 0 && search !== ''">
-				<div>
-					<div class="margin">
-						Nie mamy taga <strong>{{search}}</strong>
-					</div>
-					<div class="autocomplete-footer-button-container">
-						<button class="button" @click="onTagAdd">
-							<span class="icon is-small">
-								<i class="fa fa-plus" aria-hidden="true"></i>
-							</span>
-							<span>Dodaj nowy tag</span>
-						</button>
-					</div>
+				<div class="autocomplete-footer-button-container">
+					<button class="button" @click="onTagAdd">
+						<span class="icon is-small">
+							<i class="fa fa-plus" aria-hidden="true"></i>
+						</span>
+						<span>Dodaj nowy tag</span>
+					</button>
 				</div>
-			</template>
+			</div>
 		</wnl-autocomplete>
 	</div>
 </template>

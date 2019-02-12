@@ -31,9 +31,7 @@
 				label="Wybierz zestaw pytań"
 				placeholder="Id lub treść aby wyszukać"
 			>
-				<template slot-scope="slotProps">
-					<wnl-flashcards-set-autocomplete-item :item="slotProps.item" />
-				</template>
+				<wnl-flashcards-set-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
 			</wnl-autocomplete>
 		</div>
 	</div>

@@ -13,9 +13,7 @@
 			:items="usersListFiltered"
 			@change="onChange"
 		>
-			<template slot-scope="slotProps">
-				<wnl-user-autocomplete-item :item="slotProps.item" />
-			</template>
+			<wnl-user-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
 		</wnl-autocomplete>
 
 	</div>
@@ -51,7 +49,7 @@ export default {
 		},
 		selected: {
 			type: Object,
-			default: () => {},
+			default: () => ({}),
 		}
 	},
 	components: {

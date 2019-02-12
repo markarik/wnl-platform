@@ -47,9 +47,7 @@
 				@change="addLesson"
 				:is-down="false"
 			>
-				<template slot-scope="row">
-					<span class="lesson-autocomplete-item">{{row.item.id}}. {{row.item.name}}</span>
-				</template>
+				<span class="lesson-autocomplete-item" slot-scope="row">{{row.item.id}}. {{row.item.name}}</span>
 			</wnl-autocomplete>
 			<div v-if="selectedLessons.length">
 				<table class="table user-plan__add-lesson">

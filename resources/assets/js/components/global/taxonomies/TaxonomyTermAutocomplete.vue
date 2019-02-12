@@ -15,12 +15,11 @@
 			:disabled="disabled"
 			@change="onSelect"
 		>
-			<template slot-scope="slotProps">
-				<wnl-taxonomy-term-with-ancestors
-					:term="slotProps.item"
-					:ancestors="getAncestorsById(slotProps.item.id)"
-				/>
-			</template>
+			<wnl-taxonomy-term-with-ancestors
+				:term="slotProps.item"
+				:ancestors="getAncestorsById(slotProps.item.id)"
+				slot-scope="slotProps"
+			/>
 		</wnl-autocomplete>
 	</div>
 </template>

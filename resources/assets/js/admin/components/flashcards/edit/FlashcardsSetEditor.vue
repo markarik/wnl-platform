@@ -66,9 +66,7 @@
 					placeholder="Id lub treść aby wyszukać"
 					label="Wybierz pytanie"
 				>
-					<template slot-scope="slotProps">
-						<wnl-flashcard-autocomplete-item :item="slotProps.item" />
-					</template>
+					<wnl-flashcard-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
 				</wnl-autocomplete>
 			</div>
 		</form>

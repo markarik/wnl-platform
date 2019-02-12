@@ -403,8 +403,8 @@ export default {
 				name: 'questions-list',
 				params: {
 					presetFilters: [
-						'quiz-planned.items["planned"]',
-						'quiz-resolution.items["unresolved"]',
+						'quiz-planned.items[0]',
+						'quiz-resolution.items[0]',
 					],
 				},
 			};

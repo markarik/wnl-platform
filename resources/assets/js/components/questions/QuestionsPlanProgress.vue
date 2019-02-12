@@ -209,7 +209,7 @@ export default {
 				name: 'questions-list',
 				params: {
 					presetFilters: [
-						'quiz-planned.items["planned"]',
+						'quiz-planned.items[0]',
 					],
 				},
 			};

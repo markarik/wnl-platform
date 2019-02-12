@@ -95,7 +95,7 @@
 
 			&.is-active
 				border: 2px solid $color-correct-shadow
-				border-radius: 3px
+				border-radius: $border-radius-small
 
 	@keyframes fadein
 		from

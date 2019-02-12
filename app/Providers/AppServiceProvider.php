@@ -65,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
 
 		$level = Logger::INFO;
 		$handler = new RavenHandler(new \Raven_Client(env('SENTRY_DSN')), $level);
-		$handler->setFormatter(new LineFormatter("%message% %context% %extra%\n"));
+		$handler->setFormatter(new LineFormatter("%message% %context%\n"));
 		$monolog = Log::getLogger();
 		$monolog->pushHandler($handler);
 		$monolog->pushProcessor(function ($record) {

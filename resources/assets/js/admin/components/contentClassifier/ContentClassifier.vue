@@ -29,10 +29,7 @@
 								@click="toggleSelected(item)"
 							>
 								<component :is="meta.component" :item="item"/>
-								<span
-									v-if="selectedItemIds.includes(item.id)"
-									class="icon content-classifier__result-item__icon"
-								>
+								<span class="icon content-classifier__result-item__icon">
 									<i class="fa fa-check-circle"></i>
 								</span>
 							</li>
@@ -89,9 +86,13 @@
 			&__icon
 				animation: fadein .3s
 				color: $color-correct-shadow
+				display: none
 				position: absolute
 				right: 5px
 				top: 5px
+
+				.is-active &
+					display: block
 
 			&.is-active
 				border: 2px solid $color-correct-shadow

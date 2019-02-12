@@ -1,7 +1,8 @@
 <template>
-	<div class="quill-container" @keydown="onKeyDown">
+	<div class="quill-container" @keydown="allowMentions && onKeyDown($event)">
 		<wnl-autocomplete-list
-			:items="autocompleteItems"
+			:items="items"
+			:active-index="activeIndex"
 			@change="insertMention"
 			ref="autocomplete"
 		>
@@ -36,7 +37,7 @@ import { fontColors } from 'js/utils/colors';
 import { mentionBlot } from 'js/classes/mentionblot';
 import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
-import {KEYS} from 'js/consts/keys';
+import WnlAutocompleteNav from 'js/mixins/autocomplete-nav';
 
 const defaults = {
 	theme: 'snow',
@@ -50,7 +51,7 @@ const autocompleteChar = '@';
 
 export default {
 	name: 'Quill',
-	mixins: [formInput],
+	mixins: [formInput, WnlAutocompleteNav],
 	components: {
 		WnlAutocompleteList,
 		WnlUserAutocompleteItem
@@ -96,7 +97,7 @@ export default {
 			quill: null,
 			autocomplete: null,
 			editor: null,
-			autocompleteItems: [],
+			items: [],
 			lastAutocompleteQuery: null,
 			lastRange: null
 		};
@@ -110,7 +111,7 @@ export default {
 
 			if (keyboardModule && keyboardModule.bindings && keyboardModule.bindings.handleEnter) {
 				keyboardModule.bindings.handleEnter.handler = (event) => {
-					if (this.autocompleteItems.length) {
+					if (this.items.length) {
 						// Prevent enter handler when autocomplete is open
 						return;
 					}
@@ -150,7 +151,7 @@ export default {
 			}
 		},
 		insertMention(data) {
-			this.autocompleteItems = [];
+			this.items = [];
 			const lastMentionQueryLength = this.lastAutocompleteQuery.length;
 			const mentionStartIndex = this.lastRange.index - lastMentionQueryLength;
 
@@ -204,57 +205,29 @@ export default {
 			}
 
 			if (!currentMentionMatch) {
-				this.autocompleteItems = [];
+				this.items = [];
 			}
 
 			return currentMentionMatch;
 		},
 
 		onMentionsFetched(response) {
-			this.autocompleteItems = response.data;
-		},
-
-		onKeyDown(evt) {
-			const { enter, esc, arrowUp, arrowDown } = KEYS;
-
-			if (this.autocompleteItems.length === 0 || !this.allowMentions) {
-				return;
-			}
-
-			if (evt.keyCode === esc) {
-				this.onEsc(evt);
-				return;
-			}
-
-			if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-				return;
-			}
-
-			this.$refs.autocomplete.onKeyDown(evt);
-			this.killEvent(evt);
-
-			//for some of the old browsers, returning false is the true way to kill propagation
-			return false;
+			this.items = response.data;
 		},
 
 		onEsc(evt) {
-			this.autocompleteItems = [];
+			this.items = [];
 			this.editor.focus();
-		},
-
-		killEvent(evt) {
-			evt.preventDefault();
-			evt.stopPropagation();
 		},
 
 		clickHandler({ target }) {
 			if (this.$el !== target && !this.$el.contains(target)) {
-				this.autocompleteItems = [];
+				this.items = [];
 			}
 		},
 
 		clear() {
-			this.autocompleteItems = [];
+			this.items = [];
 			this.quill.deleteText(0, this.editor.innerHTML.length);
 		}
 	},

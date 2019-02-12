@@ -11,10 +11,9 @@
 		/>
 		<wnl-autocomplete-list
 			:items="items"
+			:active-index="activeIndex"
 			@change="$emit('change', $event)"
-			@close="$emit('input', '')"
 			:isDown="isDown"
-			ref="autocomplete"
 		>
 			<template slot-scope="slotProps">
 				<slot :item="slotProps.item"></slot>
@@ -28,7 +27,7 @@
 
 <script>
 import WnlAutocompleteList from 'js/components/global/AutocompleteList';
-import {KEYS} from 'js/consts/keys';
+import WnlAutocompleteNav from 'js/mixins/autocomplete-nav';
 
 export default {
 	props: {
@@ -55,20 +54,11 @@ export default {
 		label: {
 			type: String,
 			default: '',
-		}
+		},
 	},
 	components: {
 		WnlAutocompleteList,
 	},
-	methods: {
-		onKeyDown(evt) {
-			if ([KEYS.arrowUp, KEYS.arrowDown, KEYS.esc, KEYS.enter].includes(evt.keyCode)) {
-				evt.preventDefault();
-				evt.stopPropagation();
-			}
-
-			this.$refs.autocomplete.onKeyDown(evt);
-		},
-	}
+	mixins: [WnlAutocompleteNav],
 };
 </script>

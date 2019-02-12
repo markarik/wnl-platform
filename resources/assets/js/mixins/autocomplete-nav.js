@@ -15,10 +15,12 @@ export default {
 		onKeyDown(evt) {
 			switch (evt.keyCode) {
 			case KEYS.arrowUp:
+				evt.preventDefault();
 				evt.stopPropagation();
 				this.onArrowUp(evt);
 				break;
 			case KEYS.arrowDown:
+				evt.preventDefault();
 				evt.stopPropagation();
 				this.onArrowDown(evt);
 				break;
@@ -26,6 +28,8 @@ export default {
 				this.onEnter(evt);
 				break;
 			case KEYS.esc:
+				this.onEsc(evt);
+				// TODO handle close
 				this.$emit('close');
 				break;
 			}
@@ -65,6 +69,16 @@ export default {
 			if (activeIndex < 0) return;
 
 			this.$emit('change', this.items[activeIndex]);
+			// TODO select in Quill
+
+			evt.preventDefault();
+			evt.stopPropagation();
+			return false;
+		},
+
+		onEsc(evt) {
+			this.$emit('close');
+			this.$emit('input', '')
 
 			evt.preventDefault();
 			evt.stopPropagation();

@@ -2,12 +2,12 @@
 	<div
 		class="autocomplete-box"
 		:class="{'is-down': isDown}"
-		v-show="hasItems || $slots.footer"
+		v-show="items.length || $slots.footer"
 	>
 		<ul
 			class="autocomplete-box__list"
 			tabindex="-1"
-			@keydown="onKeyDown"
+			ref="autocompleteList"
 		>
 			<li
 				class="autocomplete-box__item"
@@ -71,10 +71,30 @@
 </style>
 
 <script>
-import autocompleteNav from 'js/mixins/autocomplete-nav';
+import {scrollToElement} from 'js/utils/animations';
 
 export default {
-	props: ['items', 'onItemChosen', 'isDown'],
-	mixins: [autocompleteNav],
+	props: {
+		items: {
+			type: Array,
+			default: () => [],
+		},
+		isDown: {
+			type: Boolean,
+			default: false,
+		},
+		activeIndex: {
+			type: Number,
+			default: -1,
+		},
+	},
+	watch: {
+		activeIndex() {
+			this.$nextTick(() => {
+				const autocompleteList = this.$refs.autocompleteList;
+				scrollToElement(autocompleteList.querySelector('.active'), 150, 500, autocompleteList);
+			});
+		}
+	}
 };
 </script>

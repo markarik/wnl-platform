@@ -64,9 +64,7 @@ export default {
 			const activeIndex = this.activeIndex;
 
 			if (activeIndex < 0) return;
-
 			this.$emit('change', this.items[activeIndex]);
-			// TODO select in Quill
 
 			this.killEvent(evt);
 			return false;

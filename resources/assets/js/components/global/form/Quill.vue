@@ -214,6 +214,17 @@ export default {
 			this.items = response.data;
 		},
 
+		onEnter(evt) {
+			const activeIndex = this.activeIndex;
+
+			if (activeIndex < 0) return;
+
+			this.insertMention(this.items[activeIndex]);
+
+			this.killEvent(evt);
+			return false;
+		},
+
 		onEsc(evt) {
 			this.items = [];
 			this.editor.focus();

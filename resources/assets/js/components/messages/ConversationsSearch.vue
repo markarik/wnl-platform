@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import autocomplete from 'js/mixins/autocomplete-nav';
+import WnlAutocompleteKeyboardNavigation from 'js/mixins/autocomplete-keyboard-navigation';
 import ConversationSnippet from 'js/components/messages/ConversationSnippet';
 import FindUsers from 'js/components/messages/FindUsers';
 import MessageLink from 'js/components/global/MessageLink';
@@ -48,7 +48,7 @@ export default {
 		'wnl-find-users': FindUsers,
 		'wnl-message-link': MessageLink
 	},
-	mixins: [autocomplete],
+	mixins: [WnlAutocompleteKeyboardNavigation],
 	data() {
 		return {
 			items: [],

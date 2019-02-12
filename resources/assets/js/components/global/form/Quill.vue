@@ -4,7 +4,6 @@
 			:items="items"
 			:active-index="activeIndex"
 			@change="insertMention"
-			ref="autocomplete"
 		>
 			<template slot-scope="slotProps">
 				<wnl-user-autocomplete-item :item="slotProps.item" />
@@ -37,7 +36,7 @@ import { fontColors } from 'js/utils/colors';
 import { mentionBlot } from 'js/classes/mentionblot';
 import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
-import WnlAutocompleteNav from 'js/mixins/autocomplete-nav';
+import WnlAutocompleteKeyboardNavigation from 'js/mixins/autocomplete-keyboard-navigation';
 
 const defaults = {
 	theme: 'snow',
@@ -51,7 +50,7 @@ const autocompleteChar = '@';
 
 export default {
 	name: 'Quill',
-	mixins: [formInput, WnlAutocompleteNav],
+	mixins: [formInput, WnlAutocompleteKeyboardNavigation],
 	components: {
 		WnlAutocompleteList,
 		WnlUserAutocompleteItem
@@ -225,11 +224,6 @@ export default {
 				this.items = [];
 			}
 		},
-
-		clear() {
-			this.items = [];
-			this.quill.deleteText(0, this.editor.innerHTML.length);
-		}
 	},
 	mounted () {
 		this.quill = new Quill(this.$refs.quill, this.quillOptions);
@@ -248,11 +242,6 @@ export default {
 		focused (val) {
 			this.editor[val ? 'focus' : 'blur']();
 		},
-		inputValue (newValue) {
-			if (newValue !== this.editor.innerHTML) {
-				this.editor.innerHTML = newValue;
-			}
-		}
 	}
 };
 </script>

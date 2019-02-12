@@ -71,7 +71,7 @@
 </style>
 
 <script>
-import {scrollToElement} from 'js/utils/animations';
+import {scrollToY} from 'js/utils/animations';
 
 export default {
 	props: {
@@ -92,7 +92,11 @@ export default {
 		activeIndex() {
 			this.$nextTick(() => {
 				const autocompleteList = this.$refs.autocompleteList;
-				scrollToElement(autocompleteList.querySelector('.active'), 150, 500, autocompleteList);
+				const activeItem = autocompleteList.querySelector('.active');
+
+				if (activeItem) {
+					scrollToY(activeItem.offsetTop - 150, 500, autocompleteList);
+				}
 			});
 		}
 	}

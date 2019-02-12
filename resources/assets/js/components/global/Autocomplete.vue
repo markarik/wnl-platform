@@ -27,7 +27,7 @@
 
 <script>
 import WnlAutocompleteList from 'js/components/global/AutocompleteList';
-import WnlAutocompleteNav from 'js/mixins/autocomplete-nav';
+import WnlAutocompleteKeyboardNavigation from 'js/mixins/autocomplete-keyboard-navigation';
 
 export default {
 	props: {
@@ -59,6 +59,6 @@ export default {
 	components: {
 		WnlAutocompleteList,
 	},
-	mixins: [WnlAutocompleteNav],
+	mixins: [WnlAutocompleteKeyboardNavigation],
 };
 </script>

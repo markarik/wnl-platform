@@ -15,13 +15,9 @@ export default {
 		onKeyDown(evt) {
 			switch (evt.keyCode) {
 			case KEYS.arrowUp:
-				evt.preventDefault();
-				evt.stopPropagation();
 				this.onArrowUp(evt);
 				break;
 			case KEYS.arrowDown:
-				evt.preventDefault();
-				evt.stopPropagation();
 				this.onArrowDown(evt);
 				break;
 			case KEYS.enter:
@@ -29,12 +25,10 @@ export default {
 				break;
 			case KEYS.esc:
 				this.onEsc(evt);
-				// TODO handle close
-				this.$emit('close');
 				break;
 			}
 		},
-		onArrowUp() {
+		onArrowUp(evt) {
 			if (!this.hasItems) return;
 
 			this.activeIndex--;
@@ -47,8 +41,10 @@ export default {
 			this.$nextTick(() => {
 				this.$el.focus();
 			});
+
+			this.killEvent(evt);
 		},
-		onArrowDown() {
+		onArrowDown(evt) {
 			if (!this.hasItems) return;
 
 			this.activeIndex++;
@@ -60,10 +56,11 @@ export default {
 			this.$nextTick(() => {
 				this.$el.focus();
 			});
+
+			this.killEvent(evt);
 		},
 
 		onEnter(evt) {
-			this.$emit('close');
 			const activeIndex = this.activeIndex;
 
 			if (activeIndex < 0) return;
@@ -71,19 +68,21 @@ export default {
 			this.$emit('change', this.items[activeIndex]);
 			// TODO select in Quill
 
-			evt.preventDefault();
-			evt.stopPropagation();
+			this.killEvent(evt);
 			return false;
 		},
 
 		onEsc(evt) {
-			this.$emit('close');
-			this.$emit('input', '')
+			this.$emit('input', '');
 
-			evt.preventDefault();
-			evt.stopPropagation();
+			this.killEvent(evt);
 			return false;
 		},
+
+		killEvent(evt) {
+			evt.preventDefault();
+			evt.stopPropagation();
+		}
 	},
 	watch: {
 		items() {

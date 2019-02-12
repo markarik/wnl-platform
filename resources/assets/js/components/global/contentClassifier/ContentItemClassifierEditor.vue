@@ -149,7 +149,7 @@ export default {
 			this.triggerAttachLastUsedTermsSet = false;
 		},
 		onKeyDown(event) {
-			if (this.isFocused) {
+			if (this.isFocused && !this.$shortcutKeyIsEditable(event.target)) {
 				switch (event.key) {
 				case 't':
 					// Disable global shortcut

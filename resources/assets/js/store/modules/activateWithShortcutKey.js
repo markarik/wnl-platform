@@ -60,13 +60,13 @@ export const actions = {
 			}
 
 			commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, index);
-			state.instances[index].onActivate();
+			state.instances[index].onActivate(state.instances[index].uid);
 		}
 	},
 	setFirstInstanceAsActive({commit, state}) {
 		if (state.instances.length > 0) {
 			commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, 0);
-			state.instances[0].onActivate();
+			state.instances[0].onActivate(state.instances[0].uid);
 		}
 	},
 	setNextInstanceAsActive({commit, state}) {
@@ -87,7 +87,7 @@ export const actions = {
 		}
 
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, index);
-		state.instances[index].onActivate();
+		state.instances[index].onActivate(state.instances[index].uid);
 	},
 	setPreviousInstanceAsActive({commit, state}) {
 		const length = state.instances.length;
@@ -107,7 +107,7 @@ export const actions = {
 		}
 
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, index);
-		state.instances[index].onActivate();
+		state.instances[index].onActivate(state.instances[index].uid);
 	},
 	resetActiveInstance({commit}) {
 		if (state.activeInstanceIndex > -1) {
@@ -122,7 +122,6 @@ export const actions = {
 		} else {
 			state.instances[state.activeInstanceIndex].onFocus();
 		}
-
 	}
 };
 

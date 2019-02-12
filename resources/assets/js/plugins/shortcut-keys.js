@@ -9,19 +9,19 @@ export default {
 	install(Vue, {store}) {
 		const module = 'activateWithShortcutKey';
 
-		Vue.prototype.$registerFixName = (options) => {
+		Vue.prototype.$shortcutKeyRegister = (options) => {
 			store.dispatch(`${module}/register`, options);
 		};
 
-		Vue.prototype.$deregisterFixName = (uid) => {
+		Vue.prototype.$shortcutKeyDeregister = (uid) => {
 			store.dispatch(`${module}/deregister`, uid);
 		};
 
-		Vue.prototype.$setActiveInstanceFixName = (uid) => {
+		Vue.prototype.$shortcutKeySetActiveInstance = (uid) => {
 			store.dispatch(`${module}/setActiveInstance`, uid);
 		};
 
-		Vue.prototype.$resetActiveInstanceFixName = () => {
+		Vue.prototype.$shortcutKeyResetActiveInstance = () => {
 			store.dispatch(`${module}/resetActiveInstance`);
 		};
 

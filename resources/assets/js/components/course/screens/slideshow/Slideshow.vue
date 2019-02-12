@@ -33,7 +33,11 @@
 				></wnl-annotations>
 			</div>
 		</div>
-		<wnl-slide-classifier-editor :current-slide-id="currentSlideId" />
+		<wnl-slide-classifier-editor
+			:current-slide-id="currentSlideId"
+			:slides-ids="presentableSortedSlidesIds"
+			@navigateToSlide="navigateToSlide"
+		/>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass">
@@ -434,6 +438,10 @@ export default {
 					this.modifiedSlides = {};
 				} else if (event.data.value.name === 'navigate') {
 					window.open(event.data.value.data);
+				} else if (event.data.value.name === 'global-shortcut-key') {
+					document.dispatchEvent(
+						new KeyboardEvent('keydown', {key: event.data.value.data})
+					);
 				}
 			}
 		},

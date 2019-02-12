@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import {nextTick} from 'vue';
 
 import {scrollToElement} from 'js/utils/animations';
 
@@ -25,19 +25,19 @@ export default {
 	methods: {
 		onUpdateIsActive(isActive) {
 			if (isActive) {
-				this.$setActiveInstanceFixName(`activate-with-shortcut-key-${this._uid}`);
+				this.$shortcutKeySetActiveInstance(`activate-with-shortcut-key-${this._uid}`);
 				this.isActive = true;
 			} else {
-				this.$resetActiveInstanceFixName();
+				this.$shortcutKeyResetActiveInstance();
 			}
 		},
 		onComponentCreated() {
-			this.$registerFixName({
+			this.$shortcutKeyRegister({
 				uid: `activate-with-shortcut-key-${this._uid}`,
 				onActivate: async () => {
 					this.isActive = true;
 
-					await Vue.nextTick();
+					await nextTick();
 					scrollToElement(this.$el, 150, 500);
 				},
 				onDeactivate: () => {
@@ -50,7 +50,7 @@ export default {
 			});
 		},
 		onComponentDestroyed() {
-			this.$deregisterFixName(`activate-with-shortcut-key-${this._uid}`);
+			this.$shortcutKeyDeregister(`activate-with-shortcut-key-${this._uid}`);
 		}
 	},
 };

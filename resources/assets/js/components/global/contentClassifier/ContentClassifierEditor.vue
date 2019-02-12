@@ -152,10 +152,6 @@ export default {
 		};
 	},
 	props: {
-		isTaxonomyTermAutocompleteFocusedByShortcut: {
-			type: Boolean,
-			default: false,
-		},
 		items: {
 			type: Array,
 			required: true,
@@ -173,6 +169,10 @@ export default {
 			default: false,
 		},
 		triggerAttachLastUsedTermsSet: {
+			type: Boolean,
+			default: false,
+		},
+		triggerFocusTaxonomyTermAutocomplete: {
 			type: Boolean,
 			default: false,
 		},
@@ -294,14 +294,14 @@ export default {
 				});
 			}
 		},
-		onTaxonomyTermAutocompleteFocused() {
+		async onTaxonomyTermAutocompleteFocused() {
 			this.isTaxonomyTermAutocompleteFocused = false;
 			this.$emit('taxonomyTermAutocompleteFocused');
 		},
 	},
 	watch: {
-		isTaxonomyTermAutocompleteFocusedByShortcut(isTaxonomyTermAutocompleteFocusedByShortcut) {
-			this.isTaxonomyTermAutocompleteFocused = isTaxonomyTermAutocompleteFocusedByShortcut;
+		triggerFocusTaxonomyTermAutocomplete(triggerFocusTaxonomyTermAutocomplete) {
+			this.isTaxonomyTermAutocompleteFocused = triggerFocusTaxonomyTermAutocomplete;
 		}
 	},
 	async mounted() {

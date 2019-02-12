@@ -17,12 +17,12 @@
 				</div>
 				<wnl-content-classifier-editor
 					v-if="hasContentItem"
-					:trigger-attach-last-used-term="triggerAttachLastUsedTerm"
-					:trigger-attach-last-used-terms-set="triggerAttachLastUsedTermsSet"
 					:items="[contentItem]"
-					:is-taxonomy-term-autocomplete-focused-by-shortcut="isTaxonomyTermAutocompleteFocused"
 					:on-attach-last-used-term-triggered="onAttachLastUsedTermTriggered"
 					:on-attach-last-used-terms-set-triggered="onAttachLastUsedTermsSetTriggered"
+					:trigger-attach-last-used-term="triggerAttachLastUsedTerm"
+					:trigger-attach-last-used-terms-set="triggerAttachLastUsedTermsSet"
+					:trigger-focus-taxonomy-term-autocomplete="triggerFocusTaxonomyTermAutocomplete"
 					@taxonomyTermAttached="onTaxonomyTermAttached"
 					@taxonomyTermDetached="onTaxonomyTermDetached"
 					@taxonomyTermAutocompleteFocused="onTaxonomyTermAutocompleteFocused"
@@ -94,9 +94,9 @@ export default {
 	},
 	data() {
 		return {
-			isTaxonomyTermAutocompleteFocused: false,
 			triggerAttachLastUsedTerm: false,
 			triggerAttachLastUsedTermsSet: false,
+			triggerFocusTaxonomyTermAutocomplete: false,
 			CONTENT_TYPE_NAMES,
 		};
 	},
@@ -154,7 +154,7 @@ export default {
 				case 't':
 					// Disable global shortcut
 					event.stopImmediatePropagation();
-					this.isTaxonomyTermAutocompleteFocused = true;
+					this.triggerFocusTaxonomyTermAutocomplete = true;
 					break;
 
 				case 'r':
@@ -181,7 +181,7 @@ export default {
 			});
 		},
 		onTaxonomyTermAutocompleteFocused() {
-			this.isTaxonomyTermAutocompleteFocused = false;
+			this.triggerFocusTaxonomyTermAutocomplete = false;
 		},
 		updateIsActive(isActive) {
 			this.$emit('updateIsActive', isActive);

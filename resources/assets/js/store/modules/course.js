@@ -8,7 +8,7 @@ import { modelToResourceMap, getModelByResource } from 'js/utils/config';
 function _getCourseStructure(courseId = 1) {
 	return axios.get(getApiUrl(`course_structure_nodes/${courseId}`), {
 		params: {
-			include: 'groups,lessons,courses'
+			include: 'groups,lessons,course,structurable'
 		}
 	});
 }

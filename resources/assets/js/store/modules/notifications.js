@@ -190,7 +190,7 @@ function _getNotifications(channel, userId, options) {
 	}
 
 	if (options.hasOwnProperty('olderThan') && options.olderThan) {
-		options.older_than = options.olderThan;
+		conditions.older_than = options.olderThan;
 	}
 
 	return axios.post(getApiUrl(`users/${userId}/notifications/query`), conditions);

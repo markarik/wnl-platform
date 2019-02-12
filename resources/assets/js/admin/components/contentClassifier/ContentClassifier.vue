@@ -22,6 +22,8 @@
 								v-for="item in groupedFilteredContent[contentType]"
 								:key="item.id"
 								class="content-classifier__result-item"
+								:class="{'is-active': selectedItemIds.includes(item.id)}"
+								@click="toggleSelected(item)"
 							>
 								<component :is="meta.component" :item="item"/>
 							</li>
@@ -33,7 +35,7 @@
 			</div>
 			<wnl-content-classifier-editor
 				v-show="!isLoading"
-				:items="filteredContent"
+				:items="selectedItems"
 				@taxonomyTermAttached="onTaxonomyTermAttached"
 				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
@@ -57,6 +59,7 @@
 
 		&__result-item
 			border: $border-light-gray
+			cursor: pointer
 			display: flex
 			font-size: $font-size-minus-1
 			line-height: $line-height-minus
@@ -65,7 +68,12 @@
 			min-height: 90px
 			overflow: auto
 			padding: $margin-small
+			transition: border-width .3s ease-in-out, border-color .3s ease-in-out
 			width: 160 + 4 * $margin-small
+
+			&.is-active
+				border: 2px solid $color-correct-shadow
+				border-radius: 3px
 </style>
 
 <script>
@@ -124,12 +132,16 @@ export default {
 			contentTypes,
 			filters,
 			filteredContent: [],
+			selectedItemIds: [],
 			isLoading: false,
 		};
 	},
 	computed: {
 		groupedFilteredContent() {
 			return groupBy(this.filteredContent, 'type');
+		},
+		selectedItems() {
+			return this.filteredContent.filter(item => this.selectedItemIds.includes(item.id));
 		}
 	},
 	methods: {
@@ -194,6 +206,14 @@ export default {
 					item.taxonomyTerms.splice(index, 1);
 				}
 			});
+		},
+		toggleSelected(item) {
+			const index = this.selectedItemIds.findIndex(itemId => itemId === item.id);
+			if (index === -1) {
+				this.selectedItemIds.push(item.id);
+			} else {
+				this.selectedItemIds.splice(index, 1);
+			}
 		},
 	},
 };

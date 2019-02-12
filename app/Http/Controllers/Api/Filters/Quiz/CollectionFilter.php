@@ -23,10 +23,11 @@ class CollectionFilter extends ApiFilter
 
 		return [
 			'items'   => [
-				[
-					'value' => 'collection',
-					'count' => $count,
-				],
+				'collection' =>
+					[
+						'value' => 'collection',
+						'count' => $count,
+					],
 			],
 			'message' => 'collection',
 			'type'    => 'list',

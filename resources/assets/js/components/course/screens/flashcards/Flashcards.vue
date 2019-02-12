@@ -63,6 +63,8 @@
 							:content-item-id="flashcard.id"
 							:content-item-type="CONTENT_TYPES.FLASHCARD"
 							@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+							@editorCreated="activateWithShortcutKey.onComponentCreated"
+							@editorDestroyed="activateWithShortcutKey.onComponentDestroyed"
 						/>
 					</template>
 				</wnl-activate-with-shortcut-key>

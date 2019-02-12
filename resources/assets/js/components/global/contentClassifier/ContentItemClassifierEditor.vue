@@ -187,6 +187,12 @@ export default {
 			this.$emit('updateIsActive', isActive);
 		},
 	},
+	mounted() {
+		if (this.canAccess) this.$emit('editorCreated');
+	},
+	beforeDestroy() {
+		this.$emit('editorDestroyed');
+	},
 	watch: {
 		async isFocused() {
 			if (this.isFocused) {

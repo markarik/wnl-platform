@@ -38,6 +38,8 @@
 					:content-item-id="question.id"
 					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
 					@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+					@editorCreated="activateWithShortcutKey.onComponentCreated"
+					@editorDestroyed="activateWithShortcutKey.onComponentDestroyed"
 				/>
 			</template>
 		</wnl-activate-with-shortcut-key>

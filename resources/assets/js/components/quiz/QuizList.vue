@@ -31,6 +31,8 @@
 						:is-active="activateWithShortcutKey.isActive"
 						:is-focused="activateWithShortcutKey.isFocused"
 						@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+						@editorCreated="activateWithShortcutKey.onComponentCreated"
+						@editorDestroyed="activateWithShortcutKey.onComponentDestroyed"
 					/>
 				</template>
 			</wnl-activate-with-shortcut-key>

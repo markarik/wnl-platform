@@ -8,6 +8,8 @@
 			:content-item-id="currentSlideId"
 			:content-item-type="CONTENT_TYPES.SLIDE"
 			@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+			@editorCreated="activateWithShortcutKey.onComponentCreated"
+			@editorDestroyed="activateWithShortcutKey.onComponentDestroyed"
 		/>
 	</wnl-activate-with-shortcut-key>
 </template>

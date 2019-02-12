@@ -4,6 +4,8 @@
 			:is-active="isActive"
 			:is-focused="isFocused"
 			:on-update-is-active="onUpdateIsActive"
+			:on-component-created="onComponentCreated"
+			:on-component-destroyed="onComponentDestroyed"
 		></slot>
 	</div>
 </template>
@@ -28,28 +30,28 @@ export default {
 			} else {
 				this.$resetActiveInstanceFixName();
 			}
-		}
-	},
-	mounted() {
-		this.$registerFixName({
-			uid: `activate-with-shortcut-key-${this._uid}`,
-			onActivate: async () => {
-				this.isActive = true;
+		},
+		onComponentCreated() {
+			this.$registerFixName({
+				uid: `activate-with-shortcut-key-${this._uid}`,
+				onActivate: async () => {
+					this.isActive = true;
 
-				await Vue.nextTick();
-				scrollToElement(this.$el, 150, 500);
-			},
-			onDeactivate: () => {
-				this.isActive = false;
-				this.isFocused = false;
-			},
-			onFocus: () => {
-				this.isFocused = true;
-			},
-		});
-	},
-	beforeDestroy() {
-		this.$deregisterFixName(`activate-with-shortcut-key-${this._uid}`);
+					await Vue.nextTick();
+					scrollToElement(this.$el, 150, 500);
+				},
+				onDeactivate: () => {
+					this.isActive = false;
+					this.isFocused = false;
+				},
+				onFocus: () => {
+					this.isFocused = true;
+				},
+			});
+		},
+		onComponentDestroyed() {
+			this.$deregisterFixName(`activate-with-shortcut-key-${this._uid}`);
+		}
 	},
 };
 </script>

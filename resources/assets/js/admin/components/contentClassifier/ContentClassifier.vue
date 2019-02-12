@@ -10,7 +10,10 @@
 		</form>
 		<div class="content-classifier__panels">
 			<div class="content-classifier__panel-results">
-				<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
+				<div class="content-classifier__panel-results__header">
+					<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
+					<a @click="selectAll">Zaznacz wszystkie</a>
+				</div>
 				<div v-if="!isLoading">
 					<div v-for="(meta, contentType) in contentTypes" :key="contentType">
 						<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
@@ -26,6 +29,12 @@
 								@click="toggleSelected(item)"
 							>
 								<component :is="meta.component" :item="item"/>
+								<span
+									v-if="selectedItemIds.includes(item.id)"
+									class="icon content-classifier__result-item__icon"
+								>
+									<i class="fa fa-check-circle"></i>
+								</span>
 							</li>
 						</ul>
 						<p class="margin bottom" v-else>Brak wyników</p>
@@ -52,6 +61,11 @@
 
 		&__panel-results
 			flex: 50%
+			margin-right: $margin-big
+
+			&__header
+				display: flex
+				justify-content: space-between
 
 		&__result-list
 			display: flex
@@ -68,12 +82,26 @@
 			min-height: 90px
 			overflow: auto
 			padding: $margin-small
+			position: relative
 			transition: border-width .3s ease-in-out, border-color .3s ease-in-out
 			width: 160 + 4 * $margin-small
+
+			&__icon
+				animation: fadein .3s
+				color: $color-correct-shadow
+				position: absolute
+				right: 5px
+				top: 5px
 
 			&.is-active
 				border: 2px solid $color-correct-shadow
 				border-radius: 3px
+
+	@keyframes fadein
+		from
+			opacity: 0
+		to
+			opacity: 1
 </style>
 
 <script>
@@ -172,6 +200,7 @@ export default {
 		},
 		async onSearch() {
 			this.isLoading = true;
+			this.selectedItemIds = [];
 
 			const promises = Object.entries(this.contentTypes).map(this.fetchContent);
 
@@ -215,6 +244,9 @@ export default {
 				this.selectedItemIds.splice(index, 1);
 			}
 		},
+		selectAll() {
+			this.selectedItemIds = this.filteredContent.map(item => item.id);
+		}
 	},
 };
 </script>

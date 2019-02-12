@@ -25,7 +25,7 @@ export default {
 			store.dispatch(`${module}/resetActiveInstance`);
 		};
 
-		Vue.prototype.$shortcutKeyIsEditable = () => isEditable;
+		Vue.prototype.$shortcutKeyIsEditable = isEditable;
 
 		document.addEventListener('keydown', (event) => {
 			if (isEditable(event.target)) {

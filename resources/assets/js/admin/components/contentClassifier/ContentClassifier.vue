@@ -74,11 +74,11 @@
 			display: flex
 			font-size: $font-size-minus-1
 			line-height: $line-height-minus
-			margin: $margin-small
+			margin: $margin-tiny
 			max-height: 200px
 			min-height: 90px
 			overflow: auto
-			padding: $margin-small
+			padding: $margin-base
 			position: relative
 			transition: border-width .3s ease-in-out, border-color .3s ease-in-out
 			width: 160 + 4 * $margin-small

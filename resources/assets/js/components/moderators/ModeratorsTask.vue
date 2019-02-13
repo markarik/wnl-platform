@@ -31,13 +31,10 @@
 			<div class="tags field has-addons is-relative">
 				<span class="tag is-light is-medium" v-t="'tasks.task.fields.assignee'"/>
 				<wnl-moderators-autocomplete
-					:show="showAutocomplete"
-					:initialValue="task.assignee && task.assignee.full_name"
+					class="margin horizontal"
+					:selected="task.assignee"
 					:usersList="availableModerators"
-					:onItemChosen="assign"
-					@close="showAutocomplete = false"
-					@show="showAutocomplete = true"
-					@clear="assign"
+					@change="assign"
 				/>
 			</div>
 			<div class="tags field has-addons is-relative">
@@ -90,10 +87,9 @@
 <script>
 import {mapGetters} from 'vuex';
 
-import Dropdown from 'js/components/global/Dropdown';
-import Autocomplete from 'js/components/global/Autocomplete';
-import TaskEvents from 'js/components/moderators/ModeratorsTaskEvents';
-import ModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutocomplete';
+import WnlDropdown from 'js/components/global/Dropdown';
+import WnlTaskEvents from 'js/components/moderators/ModeratorsTaskEvents';
+import WnlModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutocomplete';
 
 import { timeFromS } from 'js/utils/time';
 
@@ -113,9 +109,9 @@ export default {
 		}
 	},
 	components: {
-		'wnl-dropdown': Dropdown,
-		'wnl-moderators-autocomplete': ModeratorsAutocomplete,
-		'wnl-task-events': TaskEvents
+		WnlDropdown,
+		WnlModeratorsAutocomplete,
+		WnlTaskEvents,
 	},
 	data() {
 		return {
@@ -125,7 +121,6 @@ export default {
 				DONE: 'done',
 				REOPEN: 'reopen'
 			},
-			showAutocomplete: false,
 		};
 	},
 	computed: {
@@ -200,16 +195,8 @@ export default {
 	},
 	methods: {
 		assign(user = {}) {
-			this.$emit('assign', {assignee_id: user.user_id || null, id: this.task.id});
-			this.showAutocomplete = false;
+			this.$emit('assign', {assignee_id: user && user.user_id || null, id: this.task.id});
 		},
 	},
-	watch: {
-		closeDropdown(newValue) {
-			if (!newValue) return;
-
-			this.showAutocomplete = false;
-		}
-	}
 };
 </script>

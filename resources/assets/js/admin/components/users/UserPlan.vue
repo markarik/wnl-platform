@@ -38,20 +38,17 @@
 					</div>
 				</div>
 			</div>
-			<div class="control">
-				<label class="label">Wyszukaj Lekcję</label>
-				<input class="input" placeholder="wpisz nazwę aby wyszukać..." v-model="lessonInput"/>
-			</div>
-			<div class="control margin bottom big">
-				<wnl-autocomplete
-					:items="autocompleteLessonsItems"
-					:onItemChosen="addLesson"
-				>
-					<template slot-scope="row">
-						<span class="lesson-autocomplete-item">{{row.item.id}}. {{row.item.name}}</span>
-					</template>
-				</wnl-autocomplete>
-			</div>
+			<wnl-autocomplete
+				class="margin bottom big"
+				v-model="lessonInput"
+				placeholder="wpisz nazwę aby wyszukać..."
+				label="Wyszukaj Lekcję"
+				:items="autocompleteLessonsItems"
+				@change="addLesson"
+				:is-down="false"
+			>
+				<span class="lesson-autocomplete-item" slot-scope="row">{{row.item.id}}. {{row.item.name}}</span>
+			</wnl-autocomplete>
 			<div v-if="selectedLessons.length">
 				<table class="table user-plan__add-lesson">
 					<thead>

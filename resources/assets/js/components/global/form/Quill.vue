@@ -256,6 +256,11 @@ export default {
 		focused (val) {
 			this.editor[val ? 'focus' : 'blur']();
 		},
+		inputValue (newValue) {
+			if (newValue !== this.editor.innerHTML) {
+				this.editor.innerHTML = newValue;
+			}
+		}
 	}
 };
 </script>

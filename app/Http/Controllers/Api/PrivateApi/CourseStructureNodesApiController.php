@@ -21,7 +21,8 @@ class CourseStructureNodesApiController extends ApiController
 
 	public function getByCourseId($courseId)
 	{
-		$nodes = CourseStructureNode::where('course_id', $courseId)->defaultOrder()->get()->toFlatTree();
+		$model = $this->eagerLoadIncludes(CourseStructureNode::class);
+		$nodes = $model->where('course_id', $courseId)->defaultOrder()->get()->toFlatTree();
 
 		return $this->transformAndRespond($nodes);
 	}

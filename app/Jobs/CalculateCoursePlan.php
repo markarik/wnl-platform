@@ -65,8 +65,6 @@ class CalculateCoursePlan
 
 		DB::commit();
 
-		CoursesApiController::clearUserCache($this->user->id);
-
 		return $plan;
 	}
 

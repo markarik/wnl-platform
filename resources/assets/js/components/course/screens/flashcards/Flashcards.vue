@@ -46,14 +46,21 @@
 				</button>
 			</div>
 			<ol class="flashcards-set__list">
-				<wnl-flashcard-item
-						v-for="(flashcard, index) in set.flashcards"
-						:key="flashcard.id"
-						:flashcard="flashcard"
-						:index="index + 1"
-						:context="{type: context, id: screenData.id}"
-						@userEvent="trackUserEvent"
-				/>
+				<template v-for="(flashcard, index) in set.flashcards">
+					<wnl-flashcard-item
+							:key="flashcard.id"
+							:flashcard="flashcard"
+							:index="index + 1"
+							:context="{type: context, id: screenData.id}"
+							slot="content"
+							@userEvent="trackUserEvent"
+					/>
+					<wnl-content-item-classifier-editor
+						:key="`cc-editor-${flashcard.id}`"
+						:content-item-id="flashcard.id"
+						:content-item-type="CONTENT_TYPES.FLASHCARD"
+					/>
+				</template>
 			</ol>
 		</div>
 		<div class="flashcards-scroll" @click="scrollTop">
@@ -182,6 +189,8 @@ import WnlFlashcardItem from 'js/components/course/screens/flashcards/FlashcardI
 import {ANSWERS_MAP} from 'js/consts/flashcard';
 import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
 export default {
 	mixins: [emits_events],
@@ -197,10 +206,12 @@ export default {
 	},
 	components: {
 		WnlFlashcardItem,
+		WnlContentItemClassifierEditor
 	},
 	data() {
 		return {
 			ANSWERS_MAP,
+			CONTENT_TYPES,
 			applicableSetsIds: [],
 		};
 	},
@@ -208,6 +219,11 @@ export default {
 		...mapGetters('flashcards', ['getSetById']),
 		sets() {
 			return this.applicableSetsIds.map(id => this.getSetById(id));
+		},
+		flashcardsIds() {
+			return [].concat(...this.sets.map(set => {
+				return set.flashcards.map(({id}) => id);
+			}));
 		},
 		getUnsolvedForSet() {
 			return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'unsolved').length;
@@ -223,6 +239,8 @@ export default {
 		}
 	},
 	methods: {
+		...mapActions(['toggleOverlay']),
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		...mapActions('flashcards', ['setFlashcardsSet']),
 		...mapMutations('flashcards', {
 			'updateFlashcard': mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD
@@ -247,18 +265,26 @@ export default {
 		}
 	},
 	async mounted() {
+		this.toggleOverlay({source: 'flashcards', display: true});
 		const resources = get(this.screenData, 'meta.resources', []);
 
-		await Promise.all(resources.map(({id}) => {
-			return this.setFlashcardsSet({
-				setId: id,
-				include: 'flashcards.user_flashcard_notes',
-				context_type: this.context,
-				context_id: this.screenData.id
-			});
-		}));
+		try {
+			await Promise.all(resources.map(({id}) => {
+				return this.setFlashcardsSet({
+					setId: id,
+					include: 'flashcards.user_flashcard_notes',
+					context_type: this.context,
+					context_id: this.screenData.id
+				});
+			}));
+		} catch (e) {
+			$wnl.logger.error(e);
+		} finally {
+			this.toggleOverlay({source: 'flashcards', display: false});
+		}
 
 		this.applicableSetsIds = resources.map(({id}) => id);
+		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.FLASHCARD, contentIds: this.flashcardsIds});
 
 		resources.forEach(({id}) => {
 			this.trackUserEvent({

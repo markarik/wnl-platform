@@ -19,8 +19,6 @@ class GroupsApiController extends ApiController {
 			'course_id' => 1,
 		]);
 
-		CoursesApiController::clearCache();
-
 		return $this->transformAndRespond($group);
 	}
 
@@ -38,8 +36,6 @@ class GroupsApiController extends ApiController {
 				$lesson->save();
 			}
 		});
-
-		CoursesApiController::clearCache();
 
 		return $this->transformAndRespond($group);
 	}

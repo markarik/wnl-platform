@@ -33,9 +33,9 @@
 			</div>
 			<wnl-content-classifier-editor
 				v-show="!isLoading"
-				:filteredContent="filteredContent"
-				@onTaxonomyTermAttached="onTaxonomyTermAttached"
-				@onTaxonomyTermDetached="onTaxonomyTermDetached"
+				:items="filteredContent"
+				@taxonomyTermAttached="onTaxonomyTermAttached"
+				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 		</div>
 	</div>
@@ -80,29 +80,9 @@ import WnlHtmlResult from 'js/admin/components/contentClassifier/HtmlResult';
 import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
-import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
-
-const parseIncludes = (item, included) => {
-	item.taxonomyTerms = item.taxonomy_terms ? item.taxonomy_terms.map(termId => {
-		const term = included.taxonomy_terms[termId];
-		term.tag = included.tags[term.tags[0]];
-		term.taxonomy = included.taxonomies[term.taxonomies[0]];
-		term.ancestors = [];
-
-		let currentTerm = term;
-		while (currentTerm.parent_id) {
-			const parentTerm = included.ancestors[currentTerm.parent_id];
-			parentTerm.tag = included.tags[parentTerm.tags[0]];
-			term.ancestors.unshift(parentTerm);
-
-			currentTerm = parentTerm;
-		}
-
-		return term;
-	}) : [];
-
-	return item;
-};
+import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
+import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	components: {
@@ -110,22 +90,22 @@ export default {
 	},
 	data() {
 		const contentTypes = {
-			annotations: {
+			[CONTENT_TYPES.ANNOTATION]: {
 				resourceName: 'annotations/.filter',
 				name: 'Przypisy',
 				component: WnlAnnotationResult,
 			},
-			quizQuestions: {
+			[CONTENT_TYPES.QUIZ_QUESTION]: {
 				resourceName: 'quiz_questions/.filter',
 				name: 'Pytania z bazy pytań',
 				component: WnlHtmlResult,
 			},
-			flashcards: {
+			[CONTENT_TYPES.FLASHCARD]: {
 				resourceName: 'flashcards/.filter',
 				name: 'Pytania otwarte',
 				component: WnlFlashcardResult,
 			},
-			slides: {
+			[CONTENT_TYPES.SLIDE]: {
 				resourceName: 'slides/.filter',
 				name: 'Slajdy',
 				component: WnlSlideResult,
@@ -165,7 +145,7 @@ export default {
 						by_ids: {ids: this.filters[contentType].split(',')},
 					},
 				],
-				include: 'taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags',
+				include: 'taxonomy_terms.tag,taxonomy_terms.taxonomy,taxonomy_terms.ancestors.tag',
 				// TODO use wnl-paginated-list instead
 				limit: 10000,
 			});
@@ -174,7 +154,8 @@ export default {
 
 			return Object.values(items).map(item => {
 				item.type = contentType;
-				return parseIncludes(item, included);
+				item.taxonomyTerms = parseTaxonomyTermsFromIncludes(item.taxonomy_terms, included);
+				return item;
 			});
 		},
 		async onSearch() {

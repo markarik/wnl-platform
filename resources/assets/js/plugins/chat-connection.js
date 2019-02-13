@@ -1,6 +1,6 @@
 import * as io from 'socket.io-client';
 import {envValue} from 'js/utils/env';
-import { SOCKET_CONNECTION_ERROR, SOCKET_CONNECTION_RECONNECTED } from '../store/mutations-types';
+import { SOCKET_CONNECTION_ERROR, SOCKET_CONNECTION_RECONNECTED } from 'js/store/mutations-types';
 
 export const SOCKET_EVENT_SEND_MESSAGE = 'sendMessage';
 export const SOCKET_EVENT_MESSAGE_PROCESSED = 'messageProcessed';

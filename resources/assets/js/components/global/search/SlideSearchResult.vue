@@ -141,7 +141,7 @@ export default {
 		'wnl-slide-link': SlideLink,
 	},
 	computed: {
-		...mapGetters('course', ['getGroup', 'getLesson', 'getSection']),
+		...mapGetters('course', ['getGroup', 'getLesson']),
 		context() {
 			return this.hit._source.context;
 		},
@@ -167,7 +167,7 @@ export default {
 			return this.hit._source.snippet.page;
 		},
 		sectionName() {
-			return this.getSection(this.context.section.id).name;
+			return this.context.section.name;
 		},
 		slideNumber() {
 			return this.context.orderNumber + 1;

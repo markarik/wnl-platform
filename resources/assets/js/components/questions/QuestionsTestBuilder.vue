@@ -11,6 +11,7 @@
 			@endQuiz="$emit('endQuiz')"
 			@userEvent="proxyUserEvent"
 			@testStart="onTestStart"
+			@updateTime="(payload) => $emit('updateTime', payload)"
 		/>
 		<div v-else>
 			<p class="test-builder-title">
@@ -233,7 +234,9 @@ export default {
 	},
 	watch: {
 		testQuestionsCount() {
-			this.time = timeBaseOnQuestions(this.testQuestionsCount);
+			if (this.canChangeTime || !this.time) {
+				this.time = timeBaseOnQuestions(this.testQuestionsCount);
+			}
 		},
 	}
 };

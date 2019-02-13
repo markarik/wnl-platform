@@ -7,21 +7,20 @@
 			</span>
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
-		<div class="control" v-else>
-			<input class="input" v-model="search" :placeholder="placeholder" />
-			<wnl-autocomplete
-				:items="autocompleteTerms"
-				:onItemChosen="onSelect"
-				:isDown="true"
-			>
-				<template slot-scope="slotProps">
-					<wnl-taxonomy-term-with-ancestors
-						:term="slotProps.item"
-						:ancestors="getAncestorsById(slotProps.item.id)"
-					/>
-				</template>
-			</wnl-autocomplete>
-		</div>
+		<wnl-autocomplete
+			v-else
+			v-model="search"
+			:placeholder="placeholder"
+			:items="autocompleteTerms"
+			:disabled="disabled"
+			@change="onSelect"
+		>
+			<wnl-taxonomy-term-with-ancestors
+				:term="slotProps.item"
+				:ancestors="getAncestorsById(slotProps.item.id)"
+				slot-scope="slotProps"
+			/>
+		</wnl-autocomplete>
 	</div>
 </template>
 
@@ -43,7 +42,7 @@ import {mapState, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
-import WnlTaxonomyTermWithAncestors from 'js/admin/components/taxonomies/TaxonomyTermWithAncestors';
+import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 
 export default {
 	props: {
@@ -54,7 +53,11 @@ export default {
 		placeholder: {
 			type: String,
 			default: 'Wpisz nazwę nadrzędnego pojęcia'
-		}
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {

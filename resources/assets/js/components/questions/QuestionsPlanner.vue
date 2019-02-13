@@ -380,8 +380,8 @@ export default {
 		planOptions() {
 			return {
 				unresolvedAndIncorrect: [
-					'quiz-resolution.items[0]',
-					'quiz-resolution.items[1]',
+					'quiz-resolution.items["unresolved"]',
+					'quiz-resolution.items["incorrect"]',
 				],
 				all: [],
 				custom: [],

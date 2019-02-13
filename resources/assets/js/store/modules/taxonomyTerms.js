@@ -1,5 +1,4 @@
-import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
-import {nestedSetMutations, nestedSetGetters, nestedSetActions, initialState} from 'js/admin/store/modules/nestedSet';
+import {nestedSetMutations, nestedSetGetters, nestedSetActions, initialState} from 'js/store/modules/shared/nestedSet';
 import axios from 'axios';
 import { getApiUrl } from 'js/utils/env';
 
@@ -9,12 +8,12 @@ const namespaced = true;
 const state = {...initialState};
 
 const includeTag = (term, {tags}) => {
-	term.tag = tags[term.tags[0]];
+	term.tag = {...tags[term.tag[0]]};
 	return term;
 };
 
 const resource = 'taxonomy_terms';
-const include = '?include=tags';
+const include = '?include=tag';
 
 // Getters
 const getters = {

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {getApiUrl, envValue as env} from 'js/utils/env';
 import {set, delete as destroy} from 'vue';
 
@@ -190,7 +190,7 @@ function _getNotifications(channel, userId, options) {
 	}
 
 	if (options.hasOwnProperty('olderThan') && options.olderThan) {
-		options.older_than = options.olderThan;
+		conditions.older_than = options.olderThan;
 	}
 
 	return axios.post(getApiUrl(`users/${userId}/notifications/query`), conditions);

@@ -59,9 +59,10 @@ class Handler extends ExceptionHandler
 
 		if ($exception instanceof TokenMismatchException) {
 			if ($request->expectsJson()) {
-				return response()->json(['error' => 'Unauthenticated.'], 401);
+				return response()->json(['error' => 'Token mismatch.'], 419);
 			}
 
+			// TODO: We need better handling of this exception for static pages (PLAT-970).
 			return redirect()->guest('login');
 		}
 

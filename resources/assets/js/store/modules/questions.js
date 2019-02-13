@@ -1,6 +1,6 @@
 import {set} from 'vue';
 import {get, isEmpty, isNumber, size} from 'lodash';
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import {parseFilters} from 'js/services/apiFiltering';
 import axios from 'axios';
@@ -246,7 +246,7 @@ const mutations = {
 	},
 	[types.QUESTIONS_SET_TOKEN] (state) {
 		state.token = uuidv1();
-	}
+	},
 };
 
 // Actions
@@ -306,7 +306,7 @@ const actions = {
 
 		dispatch('saveQuestionsResults', {questions: questionsToStore, meta});
 
-		// I'm not updating store on puropose - not sure if we want to keep results in VUEX store
+		// I'm not updating store on propose - not sure if we want to keep results in VUEX store
 		// if we decide to keep them here we need to remember about clearing them when exiting the "TEST MODE"
 		// commit(types.QUESTIONS_SET_RESULTS, results)
 
@@ -389,6 +389,23 @@ const actions = {
 			randomize,
 			include: 'quiz_answers,reactions,comments.profiles,slides',
 			cachedPagination: false
+		}).then(response => {
+			const {answers, questions, slides, included} = _handleResponse(response, commit);
+			const comments = _.get(included, 'comments');
+			comments && dispatch('comments/setComments', comments, {root:true});
+
+			commit(types.QUESTIONS_SET_TEST, {answers, questions, slides});
+			commit(types.UPDATE_INCLUDED, included);
+
+			return response;
+		});
+	},
+	fetchQuestionsByIds({commit, state, dispatch, rootGetters}, ids) {
+		return axios.post(getApiUrl('quiz_questions/query'), {
+			ids,
+			include: 'quiz_answers,reactions,comments.profiles,slides',
+			cachedPagination: false,
+			limit: ids.length
 		}).then(response => {
 			const {answers, questions, slides, included} = _handleResponse(response, commit);
 			const comments = _.get(included, 'comments');

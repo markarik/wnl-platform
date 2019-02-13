@@ -30,8 +30,7 @@
 		<wnl-annotations-editor
 			v-show="activeView === 'editor'"
 			:annotation="activeAnnotation"
-			@annotationSelect="onAnnotationSelect"
-			@addSuccess="dirty = true"
+			@addSuccess="onAddSuccess"
 			@editSuccess="dirty = true"
 			@deleteSuccess="dirty = true"
 			@hasChanges="onEditorChange"
@@ -146,12 +145,22 @@ export default {
 			}
 		},
 		onEditorActivate(annotation) {
-			this.activeAnnotation = annotation;
 			this.activeView = 'editor';
 			if (annotation.id !== this.modifiedAnnotationId) {
+				this.activeAnnotation = annotation;
 				this.modifiedAnnotationId = 0;
 			}
 		},
+		onAddSuccess(annotation) {
+			this.dirty = true;
+			this.activeAnnotation = this.serializeAnnotation(annotation);
+		},
+		serializeAnnotation(annotation) {
+			return {
+				...annotation,
+				keywords: annotation.keywords.join(','),
+			};
+		}
 	},
 	beforeRouteLeave(to, from, next) {
 		if (this.modifiedAnnotationId) {

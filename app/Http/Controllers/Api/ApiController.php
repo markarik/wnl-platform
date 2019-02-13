@@ -232,7 +232,7 @@ class ApiController extends Controller
 		if (empty($this->include)) return $model::select();
 		$relationships = [];
 
-		foreach (explode(',', $this->include) as $chain) {
+		foreach (explode(',', Str::camel($this->include)) as $chain) {
 			$confirmedChain = $this->processChain($chain, $model);
 			if ($confirmedChain) {
 				array_push($relationships, $confirmedChain);
@@ -260,7 +260,8 @@ class ApiController extends Controller
 
 	protected function modelHasMethod(string $model, string $method)
 	{
-		return method_exists((new $model), $method);
+		// TODO PLAT-960 remove the hardcoded class and solve the problem of loading includes that arend defined by a simple relation to another class
+		return $model === 'App\\Models\\Ancestor' || method_exists((new $model), $method);
 	}
 
 	protected function processChain(string $chain, string $parentModel)

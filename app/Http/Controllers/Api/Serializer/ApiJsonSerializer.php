@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Serializer;
 
+use Illuminate\Support\Str;
 use League\Fractal\Pagination\CursorInterface;
 use League\Fractal\Pagination\PaginatorInterface;
 use League\Fractal\Resource\ResourceInterface;
@@ -77,12 +78,20 @@ class ApiJsonSerializer extends SerializerAbstract
 			if (empty ($includedResources)) continue;
 
 			foreach ($includedResources as $includedResourceName => $items) {
+				// TODO PLAT-971 don't convert to array, we want to have single item
 				if (array_key_exists('id', $items)) $items = [$items];
 				foreach ($items as $item) {
 					if (!array_key_exists($resourceKey, $item)) continue;
 					$resourceId = $item[$resourceKey];
-					$this->relationships[$resourceKey][$resourceId][$includedResourceName][] = $item['id'];
-					$this->includes[$includedResourceName][$item['id']] = $item;
+
+					if (!isset($this->relationships[$resourceKey][$resourceId][$includedResourceName]) ||
+						!in_array($item['id'], $this->relationships[$resourceKey][$resourceId][$includedResourceName], true)) {
+						// Don't duplicate relation id when parent resource was included multiple times
+						$this->relationships[$resourceKey][$resourceId][$includedResourceName][] = $item['id'];
+					}
+
+					// make name for list of included resources plural
+					$this->includes[Str::plural($includedResourceName)][$item['id']] = $item;
 				}
 			}
 		}

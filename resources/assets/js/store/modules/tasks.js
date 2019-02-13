@@ -1,4 +1,4 @@
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import {set} from 'vue';
 import pagination from 'js/store/modules/shared/pagination';
@@ -59,7 +59,7 @@ const actions = {
 			.then(({data: {included: allIncluded, ...task}}) => {
 				const {assigneeProfiles = {}, ...included} = allIncluded;
 				const taskProfile = task.assigneeProfiles || [];
-				const assignee = {assignee: assigneeProfiles[taskProfile[0]] || {}};
+				const assignee = {assignee: assigneeProfiles[taskProfile[0]] || null};
 
 				Object.assign(task, _parseIncludes(included, task), assignee);
 
@@ -128,7 +128,7 @@ function _handleResponse({commit, dispatch}, response, resolve) {
 		serializedTasks[task.id] = _parseIncludes(included, task);
 		serializedTasks[task.id].assignee = Object.values(assigneeProfiles).find(assigneeProfile => {
 			return assigneeProfile.user_id === task.assignee_id;
-		}) || {};
+		}) || null;
 	});
 
 	commit(types.SET_TASKS, serializedTasks);

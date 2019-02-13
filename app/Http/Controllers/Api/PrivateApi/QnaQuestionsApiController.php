@@ -42,8 +42,6 @@ class QnaQuestionsApiController extends ApiController
 			);
 		}
 
-		event(new QnaQuestionPosted($question, $tags));
-
 		$resource = new Item($question, new QnaQuestionTransformer, $this->resourceName);
 		$data = $this->fractal->createData($resource)->toArray();
 

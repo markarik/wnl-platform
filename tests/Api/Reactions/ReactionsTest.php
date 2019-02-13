@@ -17,6 +17,7 @@ class ReactionsTest extends ApiTestCase
 	/** @test */
 	public function post_reaction_with_context()
 	{
+		QnaAnswer::flushEventListeners();
 		$user = User::find(1);
 		$qnaAnswer = factory(QnaAnswer::class)->create();
 
@@ -62,6 +63,7 @@ class ReactionsTest extends ApiTestCase
 	/** @test * */
 	public function delete_reaction()
 	{
+		QnaAnswer::flushEventListeners();
 		$user = User::find(1);
 		$qnaAnswer = factory(QnaAnswer::class)->create();
 

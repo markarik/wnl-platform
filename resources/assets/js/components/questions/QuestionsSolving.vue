@@ -88,32 +88,18 @@
 						</span>
 						<span class="question-id">#{{question.id}}</span>
 					</div>
-					<wnl-activate-with-shortcut-key :key="`question-cce-${question.id}`">
-						<template slot-scope="activateWithShortcutKey">
-							<wnl-quiz-question
-								:class="`quiz-question-${question.id}`"
-								:getReaction="getReaction"
-								:id="question.id"
-								:module="module"
-								:question="question"
-								:readOnly="showListResults"
-								:hideComments="true"
-								:key="`question-${question.id}`"
-								@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
-								@userEvent="proxyUserEvent"
-							/>
-							<wnl-content-item-classifier-editor
-								class="questions-list__content-item-classifier-editor"
-								:is-active="activateWithShortcutKey.isActive"
-								:is-focused="activateWithShortcutKey.isFocused"
-								:content-item-id="question.id"
-								:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-								@updateIsActive="activateWithShortcutKey.onContentItemClassifierEditorUpdateIsActive"
-								@editorCreated="activateWithShortcutKey.onComponentCreated"
-								@editorDestroyed="activateWithShortcutKey.onComponentDestroyed"
-							/>
-						</template>
-					</wnl-activate-with-shortcut-key>
+					<wnl-quiz-question
+						:class="`quiz-question-${question.id}`"
+						:getReaction="getReaction"
+						:id="question.id"
+						:module="module"
+						:question="question"
+						:readOnly="showListResults"
+						:hideComments="true"
+						:key="`question-${question.id}`"
+						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
+						@userEvent="proxyUserEvent"
+					/>
 				</div>
 
 				<div v-if="questionsCurrentPage.length > 5" class="pagination-container">
@@ -233,8 +219,6 @@ import WnlActiveQuestion from 'js/components/questions/ActiveQuestion';
 import WnlQuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder';
 import WnlQuizQuestion from 'js/components/quiz/QuizQuestion';
 import WnlPagination from 'js/components/global/Pagination';
-import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
-import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
 
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
@@ -266,8 +250,6 @@ export default {
 		WnlQuestionsTestBuilder,
 		WnlQuizQuestion,
 		WnlPagination,
-		WnlContentItemClassifierEditor,
-		WnlActivateWithShortcutKey,
 	},
 	mixins: [emits_events],
 	props: {

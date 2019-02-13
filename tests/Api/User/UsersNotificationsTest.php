@@ -33,7 +33,6 @@ class UserNotificationsTest extends ApiTestCase
 
 	public function test_get_notifications_for_user()
 	{
-		Mail::fake(); // No registration confirmation = 2s saved.
 		$user = factory(User::class)->create();
 		$userChannel = "channel-user-{$user->id}";
 
@@ -72,7 +71,6 @@ class UserNotificationsTest extends ApiTestCase
 			'notifiable_type' => User::class
 		]);
 
-
 		$response = $this
 			->actingAs($user)
 			->json('POST', $this->url("/users/{$user->id}/notifications/query"), [
@@ -83,16 +81,13 @@ class UserNotificationsTest extends ApiTestCase
 
 		$expectedResponse = $notificationsUnread
 			->concat($notificationsMonthOld)
-			->sortByDesc('created_at')
-			->map(function ($notification) {
-				return [
+			->each(function ($notification) use ($response) {
+				$response->assertJsonFragment([
 					'id'      => $notification->id,
 					'read_at' => $notification->read_at->timestamp ?? null,
 					'seen_at' => $notification->seen_at->timestamp ?? null,
 					'channel' => $notification->channel,
-				];
+				]);
 			});
-
-		$response->assertJson($expectedResponse->toArray());
 	}
 }

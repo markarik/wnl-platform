@@ -108,7 +108,7 @@
 								:is-focused="activateWithShortcutKey.isFocused"
 								:content-item-id="question.id"
 								:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-								@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+								@updateIsActive="activateWithShortcutKey.onContentItemClassifierEditorUpdateIsActive"
 								@editorCreated="activateWithShortcutKey.onComponentCreated"
 								@editorDestroyed="activateWithShortcutKey.onComponentDestroyed"
 							/>

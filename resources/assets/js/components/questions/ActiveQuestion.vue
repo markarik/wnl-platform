@@ -17,32 +17,28 @@
 				</a>
 			</div>
 		</div>
-		<wnl-activate-with-shortcut-key>
-			<template slot-scope="activateWithShortcutKey">
-				<wnl-quiz-question
-					v-if="question"
-					:class="`quiz-question-${question.id}`"
-					:id="question.id"
-					:question="question"
-					:showComments="displayResults"
-					:getReaction="getReaction"
-					:module="module"
-					@selectAnswer="selectAnswer"
-					@answerDoubleclick="onAnswerDoubleclick"
-					@userEvent="proxyUserEvent"
-				/>
-				<wnl-content-item-classifier-editor
-					class="quiz-question__content-item-classifier-editor"
-					:is-active="activateWithShortcutKey.isActive"
-					:is-focused="activateWithShortcutKey.isFocused"
-					:content-item-id="question.id"
-					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-					@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
-					@editorCreated="activateWithShortcutKey.onComponentCreated"
-					@editorDestroyed="activateWithShortcutKey.onComponentDestroyed"
-				/>
-			</template>
-		</wnl-activate-with-shortcut-key>
+		<wnl-quiz-question
+			v-if="question"
+			:class="`quiz-question-${question.id}`"
+			:id="question.id"
+			:question="question"
+			:showComments="displayResults"
+			:getReaction="getReaction"
+			:module="module"
+			@selectAnswer="selectAnswer"
+			@answerDoubleclick="onAnswerDoubleclick"
+			@userEvent="proxyUserEvent"
+		/>
+		<wnl-content-item-classifier-editor
+			class="quiz-question__content-item-classifier-editor"
+			:is-active="isContentItemClassifierEditorActive"
+			:is-focused="isContentItemClassifierEditorFocused"
+			:content-item-id="question.id"
+			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+			@updateIsActive="onContentItemClassifierEditorUpdateIsActive"
+			@editorCreated="onContentItemClassifierEditorCreated"
+			@editorDestroyed="onContentItemClassifierEditorDestroyed"
+		/>
 		<p class="active-question-button has-text-centered">
 			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
 				Sprawdź odpowiedź
@@ -85,7 +81,6 @@ import { mapGetters, mapActions } from 'vuex';
 
 import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
-import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
 
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
@@ -105,7 +100,6 @@ export default {
 	components: {
 		WnlQuizQuestion,
 		WnlContentItemClassifierEditor,
-		WnlActivateWithShortcutKey,
 	},
 	mixins: [emits_events],
 	props: {
@@ -132,8 +126,10 @@ export default {
 	},
 	data() {
 		return {
-			hasErrors: false,
 			allowDoubleclick: true,
+			hasErrors: false,
+			isContentItemClassifierEditorActive: false,
+			isContentItemClassifierEditorFocused: false,
 			timeout: 0,
 			CONTENT_TYPES
 		};
@@ -182,7 +178,7 @@ export default {
 			this.hasAnswer && this.$emit('verify', this.question.id);
 		},
 		keyDown(e) {
-			if (e.keyCode === KEYS.leftArrow) {
+			if (e.keyCode === KEYS.leftArrow || e.key === '[') {
 				this.previousQuestion();
 			}
 
@@ -198,7 +194,7 @@ export default {
 				return false;
 			}
 
-			if (e.keyCode === KEYS.rightArrow) {
+			if (e.keyCode === KEYS.rightArrow || e.key === ']') {
 				this.nextQuestion();
 			}
 
@@ -221,6 +217,31 @@ export default {
 					this.verify();
 				}
 			}
+		},
+		onContentItemClassifierEditorUpdateIsActive(isActive) {
+			if (isActive) {
+				this.$shortcutKeySetActiveInstance('active-question');
+				this.isContentItemClassifierEditorActive = true;
+			} else {
+				this.$shortcutKeyResetActiveInstance();
+			}
+		},
+		onContentItemClassifierEditorCreated() {
+			this.$shortcutKeyRegister({
+				uid: 'active-question',
+				onActivate: () => {
+					this.isContentItemClassifierEditorActive = true;
+				},
+				onDeactivate: () => {
+					this.isContentItemClassifierEditorFocused = false;
+				},
+				onFocus: () => {
+					this.isContentItemClassifierEditorFocused = true;
+				},
+			});
+		},
+		onContentItemClassifierEditorDestroyed() {
+			this.$shortcutKeyDeregister('active-question');
 		},
 	},
 	mounted() {

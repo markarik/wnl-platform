@@ -1,25 +1,23 @@
 <template>
-	<div>
-		<wnl-nested-set-editor :is-loading="isLoadingTerms">
-			<template slot="header">
-				<h4 class="title is-5 is-marginless"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
-				<span class="terms-editor__search control has-icons-right">
-						<wnl-taxonomy-term-autocomplete
-							@change="onSearch"
-							placeholder="Szukaj pojęcia"
-						/>
-						<span class="icon is-small is-right">
-							<i class="fa fa-search"></i>
-						</span>
+	<wnl-nested-set-editor :is-loading="isLoadingTerms">
+		<template slot="header">
+			<h4 class="title is-5 is-marginless"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
+			<span class="terms-editor__search control has-icons-right">
+					<wnl-taxonomy-term-autocomplete
+						@change="onSearch"
+						placeholder="Szukaj pojęcia"
+					/>
+					<span class="icon is-small is-right">
+						<i class="fa fa-search"></i>
 					</span>
-			</template>
-			<wnl-taxonomy-terms-list slot="nodesList" :terms="getRootNodes"/>
-			<wnl-taxonomy-term-editor-right
-				slot="panelRight"
-				:taxonomyId="taxonomyId"
-			/>
-		</wnl-nested-set-editor>
-	</div>
+				</span>
+		</template>
+		<wnl-taxonomy-terms-list slot="nodesList" :terms="getRootNodes"/>
+		<wnl-taxonomy-term-editor-right
+			slot="panelRight"
+			:taxonomyId="taxonomyId"
+		/>
+	</wnl-nested-set-editor>
 </template>
 
 <style lang="sass" scoped>

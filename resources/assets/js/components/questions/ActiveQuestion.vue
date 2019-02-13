@@ -77,17 +77,9 @@ import { mapGetters, mapActions } from 'vuex';
 import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
+import {KEYS} from 'js/consts/keys';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
-
-
-const KEYS = {
-	leftArrow: 37,
-	upArrow: 38,
-	rightArrow: 39,
-	downArrow: 40,
-	enter: 13
-};
 
 export default {
 	name: 'ActiveQuestion',
@@ -170,11 +162,11 @@ export default {
 			this.hasAnswer && this.$emit('verify', this.question.id);
 		},
 		keyDown(e) {
-			if (e.keyCode === KEYS.leftArrow) {
+			if (e.keyCode === KEYS.arrowLeft) {
 				this.previousQuestion();
 			}
 
-			if (e.keyCode === KEYS.upArrow) {
+			if (e.keyCode === KEYS.arrowUp) {
 				if(this.question.isResolved) {
 					return false;
 				}
@@ -186,11 +178,11 @@ export default {
 				return false;
 			}
 
-			if (e.keyCode === KEYS.rightArrow) {
+			if (e.keyCode === KEYS.arrowRight) {
 				this.nextQuestion();
 			}
 
-			if (e.keyCode === KEYS.downArrow) {
+			if (e.keyCode === KEYS.arrowDown) {
 				if(this.question.isResolved) {
 					return false;
 				}

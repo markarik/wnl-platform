@@ -1,14 +1,12 @@
 <template>
-	<div class="quill-container" @keydown="onKeyDown">
-		<wnl-autocomplete
-			:items="autocompleteItems"
-			:onItemChosen="insertMention"
-			ref="autocomplete"
+	<div class="quill-container" @keydown="allowMentions && onKeyDown($event)">
+		<wnl-autocomplete-list
+			:items="items"
+			:active-index="activeIndex"
+			@change="insertMention"
 		>
-			<template slot-scope="slotProps">
-				<wnl-user-autocomplete-item :item="slotProps.item" />
-			</template>
-		</wnl-autocomplete>
+			<wnl-user-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
+		</wnl-autocomplete-list>
 		<div ref="quill">
 			<slot></slot>
 		</div>
@@ -29,12 +27,14 @@
 import Quill from 'quill';
 import { set } from 'vue';
 import { mapActions } from 'vuex';
+import { cloneDeep } from 'lodash';
 
 import { formInput } from 'js/mixins/form-input';
 import { fontColors } from 'js/utils/colors';
 import { mentionBlot } from 'js/classes/mentionblot';
-import Autocomplete from 'js/components/global/Autocomplete';
+import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
+import WnlAutocompleteKeyboardNavigation from 'js/mixins/autocomplete-keyboard-navigation';
 
 const defaults = {
 	theme: 'snow',
@@ -45,18 +45,12 @@ const defaults = {
 const firstAndLastNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+) {1}([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i;
 const firstNameMatcher = /@([\w\da-pr-uwy-zA-PR-UWY-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)$/i;
 const autocompleteChar = '@';
-const keys = {
-	enter: 13,
-	esc: 27,
-	arrowUp: 38,
-	arrowDown: 40
-};
 
 export default {
 	name: 'Quill',
-	mixins: [formInput],
+	mixins: [formInput, WnlAutocompleteKeyboardNavigation],
 	components: {
-		'wnl-autocomplete': Autocomplete,
+		WnlAutocompleteList,
 		WnlUserAutocompleteItem
 	},
 	props: {
@@ -100,7 +94,7 @@ export default {
 			quill: null,
 			autocomplete: null,
 			editor: null,
-			autocompleteItems: [],
+			items: [],
 			lastAutocompleteQuery: null,
 			lastRange: null
 		};
@@ -110,18 +104,30 @@ export default {
 			return '';
 		},
 		quillOptions() {
-			const options = {
+			const keyboardModule = cloneDeep(this.keyboard);
+
+			if (keyboardModule && keyboardModule.bindings && keyboardModule.bindings.handleEnter) {
+				keyboardModule.bindings.handleEnter.handler = (event) => {
+					if (this.items.length) {
+						// Prevent enter handler when autocomplete is open
+						return;
+					}
+
+					this.keyboard.bindings.handleEnter.handler(event);
+				};
+			}
+
+
+			return {
 				...defaults,
 				...this.options,
 				...{
 					modules: {
-						keyboard: this.keyboard,
+						keyboard: keyboardModule,
 						toolbar: this.toolbar
 					}
 				}
 			};
-
-			return options;
 		},
 	},
 	methods: {
@@ -142,7 +148,7 @@ export default {
 			}
 		},
 		insertMention(data) {
-			this.autocompleteItems = [];
+			this.items = [];
 			const lastMentionQueryLength = this.lastAutocompleteQuery.length;
 			const mentionStartIndex = this.lastRange.index - lastMentionQueryLength;
 
@@ -196,57 +202,40 @@ export default {
 			}
 
 			if (!currentMentionMatch) {
-				this.autocompleteItems = [];
+				this.items = [];
 			}
 
 			return currentMentionMatch;
 		},
 
 		onMentionsFetched(response) {
-			this.autocompleteItems = response.data;
+			this.items = response.data;
 		},
 
-		onKeyDown(evt) {
-			const { enter, esc, arrowUp, arrowDown } = keys;
+		onEnter(evt) {
+			const activeIndex = this.activeIndex;
 
-			if (this.autocompleteItems.length === 0 || !this.allowMentions) {
-				return;
-			}
+			if (activeIndex < 0) return;
 
-			if (evt.keyCode === esc) {
-				this.onEsc(evt);
-				return;
-			}
+			this.insertMention(this.items[activeIndex]);
 
-			if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-				return;
-			}
-
-			this.$refs.autocomplete.onKeyDown(evt);
 			this.killEvent(evt);
-
-			//for some of the old browsers, returning false is the true way to kill propagation
 			return false;
 		},
 
 		onEsc(evt) {
-			this.autocompleteItems = [];
+			this.items = [];
 			this.editor.focus();
-		},
-
-		killEvent(evt) {
-			evt.preventDefault();
-			evt.stopPropagation();
 		},
 
 		clickHandler({ target }) {
 			if (this.$el !== target && !this.$el.contains(target)) {
-				this.autocompleteItems = [];
+				this.items = [];
 			}
 		},
-
+		// DON'T REMOVE ME, I'M USED VIA $REFS
 		clear() {
-			this.autocompleteItems = [];
+			this.items = [];
 			this.quill.deleteText(0, this.editor.innerHTML.length);
 		}
 	},

@@ -10,7 +10,10 @@
 		</form>
 		<div class="content-classifier__panels">
 			<div class="content-classifier__panel-results">
-				<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
+				<div class="content-classifier__panel-results__header">
+					<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
+					<a @click="selectAll">Zaznacz wszystkie</a>
+				</div>
 				<div v-if="!isLoading">
 					<div v-for="(meta, contentType) in contentTypes" :key="contentType">
 						<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
@@ -22,8 +25,13 @@
 								v-for="item in groupedFilteredContent[contentType]"
 								:key="item.id"
 								class="content-classifier__result-item"
+								:class="{'is-active': selectedItemIds.includes(item.id)}"
+								@click="toggleSelected(item)"
 							>
 								<component :is="meta.component" :item="item"/>
+								<span class="icon content-classifier__result-item__icon">
+									<i class="fa fa-check-circle"></i>
+								</span>
 							</li>
 						</ul>
 						<p class="margin bottom" v-else>Brak wyników</p>
@@ -33,7 +41,7 @@
 			</div>
 			<wnl-content-classifier-editor
 				v-show="!isLoading"
-				:items="filteredContent"
+				:items="selectedItems"
 				@taxonomyTermAttached="onTaxonomyTermAttached"
 				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
@@ -50,6 +58,11 @@
 
 		&__panel-results
 			flex: 50%
+			margin-right: $margin-big
+
+			&__header
+				display: flex
+				justify-content: space-between
 
 		&__result-list
 			display: flex
@@ -57,15 +70,39 @@
 
 		&__result-item
 			border: $border-light-gray
+			cursor: pointer
 			display: flex
 			font-size: $font-size-minus-1
 			line-height: $line-height-minus
-			margin: $margin-small
+			margin: $margin-tiny
 			max-height: 200px
 			min-height: 90px
 			overflow: auto
-			padding: $margin-small
+			padding: $margin-base
+			position: relative
+			transition: border-width .3s ease-in-out, border-color .3s ease-in-out
 			width: 160 + 4 * $margin-small
+
+			&__icon
+				animation: fadein .3s
+				color: $color-correct-shadow
+				display: none
+				position: absolute
+				right: 5px
+				top: 5px
+
+				.is-active &
+					display: block
+
+			&.is-active
+				border: 2px solid $color-correct-shadow
+				border-radius: $border-radius-small
+
+	@keyframes fadein
+		from
+			opacity: 0
+		to
+			opacity: 1
 </style>
 
 <script>
@@ -124,12 +161,16 @@ export default {
 			contentTypes,
 			filters,
 			filteredContent: [],
+			selectedItemIds: [],
 			isLoading: false,
 		};
 	},
 	computed: {
 		groupedFilteredContent() {
 			return groupBy(this.filteredContent, 'type');
+		},
+		selectedItems() {
+			return this.filteredContent.filter(item => this.selectedItemIds.includes(item.id));
 		}
 	},
 	methods: {
@@ -160,6 +201,7 @@ export default {
 		},
 		async onSearch() {
 			this.isLoading = true;
+			this.selectedItemIds = [];
 
 			const promises = Object.entries(this.contentTypes).map(this.fetchContent);
 
@@ -195,6 +237,17 @@ export default {
 				}
 			});
 		},
+		toggleSelected(item) {
+			const index = this.selectedItemIds.findIndex(itemId => itemId === item.id);
+			if (index === -1) {
+				this.selectedItemIds.push(item.id);
+			} else {
+				this.selectedItemIds.splice(index, 1);
+			}
+		},
+		selectAll() {
+			this.selectedItemIds = this.filteredContent.map(item => item.id);
+		}
 	},
 };
 </script>

@@ -16,6 +16,7 @@ class AnswerTest extends ApiTestCase
 	public function post_qna_answer()
 	{
 		QnaAnswer::flushEventListeners();
+		QnaQuestion::flushEventListeners();
 		$user = User::find(1);
 		$question = factory(QnaQuestion::class)->create();
 
@@ -36,6 +37,7 @@ class AnswerTest extends ApiTestCase
 	public function update_answer()
 	{
 		QnaAnswer::flushEventListeners();
+		QnaQuestion::flushEventListeners();
 		$user = User::find(1);
 		$qnaAnswer = factory(QnaAnswer::class)->create();
 

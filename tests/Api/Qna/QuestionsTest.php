@@ -42,6 +42,7 @@ class QuestionsTest extends ApiTestCase
 
 	public function get_qna_question_lesson_context()
 	{
+		QnaQuestion::flushEventListeners();
 		$user = factory(User::class)->create();
 		$question = factory(QnaQuestion::class)->create();
 		$lesson = factory(Lesson::class)->create();
@@ -75,6 +76,7 @@ class QuestionsTest extends ApiTestCase
 	/** @test */
 	public function get_qna_question_page_context()
 	{
+		QnaQuestion::flushEventListeners();
 		$user = factory(User::class)->create();
 		$question = factory(QnaQuestion::class)->create();
 		$page = factory(Page::class)->create();

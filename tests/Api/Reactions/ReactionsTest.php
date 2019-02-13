@@ -3,6 +3,7 @@
 namespace Tests\Api\Qna;
 
 use App\Models\QnaAnswer;
+use App\Models\QnaQuestion;
 use App\Models\Slide;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -18,6 +19,7 @@ class ReactionsTest extends ApiTestCase
 	public function post_reaction_with_context()
 	{
 		QnaAnswer::flushEventListeners();
+		QnaQuestion::flushEventListeners();
 		$user = User::find(1);
 		$qnaAnswer = factory(QnaAnswer::class)->create();
 
@@ -64,6 +66,7 @@ class ReactionsTest extends ApiTestCase
 	public function delete_reaction()
 	{
 		QnaAnswer::flushEventListeners();
+		QnaQuestion::flushEventListeners();
 		$user = User::find(1);
 		$qnaAnswer = factory(QnaAnswer::class)->create();
 

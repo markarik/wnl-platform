@@ -51,6 +51,8 @@ class CommentsTest extends ApiTestCase
 	public function delete_comment()
 	{
 		Comment::flushEventListeners();
+		QnaQuestion::flushEventListeners();
+		QnaAnswer::flushEventListeners();
 
 		$user = User::find(1);
 		$comment = factory(Comment::class)->create([

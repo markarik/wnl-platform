@@ -224,6 +224,7 @@ export default {
 				this.isContentItemClassifierEditorActive = true;
 			} else {
 				this.$shortcutKeyResetActiveInstance();
+				this.isContentItemClassifierEditorActive = false;
 			}
 		},
 		onContentItemClassifierEditorCreated() {

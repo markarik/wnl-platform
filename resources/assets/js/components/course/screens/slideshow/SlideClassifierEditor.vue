@@ -73,6 +73,7 @@ export default {
 				this.isActive = true;
 			} else {
 				this.$shortcutKeyResetActiveInstance();
+				this.isActive = false;
 			}
 		},
 		onEditorCreated() {

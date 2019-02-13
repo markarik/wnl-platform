@@ -1,50 +1,26 @@
 <template>
-	<div class="is-relative input-container">
-		<input
-			:value="valueComputed"
-			:class="{'is-empty': valueComputed.length === 0}"
-			class="full-height autocomplete-input"
-			@focus="onOpen"
-			@input="onInput"
-			@keydown="onKeyDown"
-		/>
-		<wnl-autocomplete
-			v-if="show"
-			:items="usersListFiltered"
-			:onItemChosen="onItemChosenProxy"
-			@close="onClose"
-			class="wnl-autocomplete-dropdown"
-			ref="autocomplete"
-		>
-			<template slot-scope="slotProps">
-				<wnl-user-autocomplete-item :item="slotProps.item" />
-			</template>
-		</wnl-autocomplete>
-		 <a class="button is-primary is-outlined" @click="$emit('clear')">
+	<div>
+		<div v-if="selected" class="selected-container">
+			<span>{{selected.full_name}}</span>
+			<a class="button is-primary is-outlined" @click="onChange(null)">
 			<span class="icon is-small">
 			<i class="fa fa-times"></i>
 			</span>
-		</a>
+		</a></div>
+		<wnl-autocomplete
+			v-else
+			v-model="textInputValue"
+			:items="usersListFiltered"
+			@change="onChange"
+		>
+			<wnl-user-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
+		</wnl-autocomplete>
+
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
-	.full-height
-		height: 100%
-
-	.wnl-autocomplete-dropdown
-		top: 100%
-		height: 250px
-		overflow-y: auto
-
-	.autocomplete-input
-		margin-right: $margin-tiny
-
-	.is-empty
-		border: 2px solid $color-yellow
-		border-radius: 5px
-
-	.input-container
+	.selected-container
 		display: flex
 		align-items: center
 
@@ -55,21 +31,15 @@
 </style>
 
 <script>
-const keys = {
-	enter: 13,
-	esc: 27,
-	arrowUp: 38,
-	arrowDown: 40,
-};
+import {KEYS} from 'js/consts/keys';
 
-import Autocomplete from 'js/components/global/Autocomplete';
+import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
 
 export default {
 	data() {
 		return {
-			focused: false,
-			textInputValue: ''
+			textInputValue: '',
 		};
 	},
 	props: {
@@ -77,28 +47,21 @@ export default {
 			type: Array,
 			required: true
 		},
-		onItemChosen: {
-			type: Function,
-			required: true
-		},
-		show: {
-			type: Boolean,
-			default: false
-		},
-		initialValue: {
-			type: String,
-			default: ''
+		selected: {
+			type: Object,
+			default: () => ({}),
 		}
 	},
 	components: {
-		'wnl-autocomplete': Autocomplete,
+		WnlAutocomplete,
 		WnlUserAutocompleteItem,
 	},
 	computed: {
-		valueComputed() {
-			return this.focused ? this.textInputValue : this.initialValue;
-		},
 		usersListFiltered() {
+			if (this.textInputValue.length === 0) {
+				return [];
+			}
+
 			return this.usersList.filter(moderator => {
 				const name = moderator.display_name ? moderator.display_name : moderator.full_name;
 				return name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1;
@@ -106,52 +69,10 @@ export default {
 		},
 	},
 	methods: {
-		onKeyDown(evt) {
-			const { enter, arrowUp, arrowDown, esc } = keys;
-
-			if (this.usersList.length === 0) {
-				this.$emit('close');
-				return;
-			}
-
-			if (evt.keyCode === esc) {
-				this.onClose();
-				return;
-			}
-			if ([enter, arrowUp, arrowDown].indexOf(evt.keyCode) === -1) {
-				this.onOpen();
-				return;
-			}
-
-			this.$refs.autocomplete.onKeyDown(evt);
-			this.killEvent(evt);
-
-			//for some of the old browsers, returning false is the true way to kill propagation
-			return false;
-		},
-		killEvent(evt) {
-			evt.preventDefault();
-			evt.stopPropagation();
-		},
-		onClose() {
+		onChange(selectedUser) {
 			this.textInputValue = '';
-			this.$emit('close');
-		},
-		onOpen() {
-			this.$emit('show');
-		},
-		onInput(event) {
-			this.textInputValue = event.target.value;
-		},
-		onItemChosenProxy(...args) {
-			this.textInputValue = '';
-			this.onItemChosen(...args);
+			this.$emit('change', selectedUser);
 		}
 	},
-	watch: {
-		show(newValue) {
-			this.focused = newValue;
-		}
-	}
 };
 </script>

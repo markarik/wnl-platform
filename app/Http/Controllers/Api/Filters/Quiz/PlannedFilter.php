@@ -40,14 +40,16 @@ class PlannedFilter extends ApiFilter
 
 		return [
 			'items'   => [
-				[
-					'value' => 'planned',
-					'count' => $today,
-				],
-				[
-					'value' => 'all',
-					'count' => $all,
-				],
+				'planned' =>
+					[
+						'value' => 'planned',
+						'count' => $today,
+					],
+				'all'     =>
+					[
+						'value' => 'all',
+						'count' => $all,
+					],
 			],
 			'message' => 'planned',
 			'type'    => 'list',

@@ -2,70 +2,33 @@
 	<div>
 		<h2 class="title is-2">Edycja struktury kursu</h2>
 
-		<div class="editor">
-			<div class="editor__panel is-left">
-				<div class="editor__panel__header">
-				<span class="control has-icons-right search margin bottom">
+		<wnl-nested-set-editor :is-loading="isLoading">
+			<template slot="header">
+				<span class="control has-icons-right structure-editor__search margin bottom">
 					<wnl-node-autocomplete
-							@change="onSearch"
-							placeholder="Szukaj"
+						@change="onSearch"
+						placeholder="Szukaj"
 					/>
 					<span class="icon is-small is-right">
 						<i class="fa fa-search"></i>
 					</span>
 				</span>
-				</div>
-				<wnl-structure-nodes-list v-if="!isLoading" :nodes="getRootNodes"/>
-				<wnl-text-loader v-else />
-			</div>
-			<div class="editor__panel is-right">
-				<wnl-structure-node-editor-right
-						:courseId="courseId"
-				/>
-			</div>
-		</div>
+			</template>
+			<wnl-structure-nodes-list slot="nodesList" :nodes="getRootNodes"/>
+			<wnl-structure-node-editor-right slot="panelRight" :courseId="courseId"/>
+		</wnl-nested-set-editor>
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-	@import 'resources/assets/sass/variables'
-
-	.editor
-		border-top: 1px solid $color-lightest-gray
-		display: flex
-
-		&__panel
-			flex: 50%
-
-			&.is-left
-				border-right: 1px solid $color-lightest-gray
-				padding-right: $margin-big
-
-			&.is-right
-				padding-left: $margin-big
-
-			&__header
-				background-color: $color-white
-				display: flex
-				justify-content: stretch
-				padding-top: $margin-big
-				position: sticky
-				top: -30px
-				z-index: 1
-
-			.search
-				width: 100%
-
-				/deep/ .autocomplete-box .icon
-					color: $color-darkest-gray
-					height: 1rem
-					position: relative
-					width: 1rem
+<style lang="sass" scoped>
+	.structure-editor__search
+		flex: 1 0 auto
 </style>
 
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 
+import WnlNestedSetEditor from 'js/admin/components/nestedSet/NestedSetEditor';
 import WnlStructureNodesList from 'js/admin/components/structure/StructureNodesList';
 import WnlStructureNodeEditorRight from 'js/admin/components/structure/StructureNodeEditorRight';
 import WnlNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
@@ -75,7 +38,8 @@ export default {
 	components: {
 		WnlStructureNodesList,
 		WnlStructureNodeEditorRight,
-		WnlNodeAutocomplete
+		WnlNodeAutocomplete,
+		WnlNestedSetEditor
 	},
 	props: {
 		courseId: {

@@ -38,7 +38,7 @@ class ResolutionFilter extends ApiFilter
 					$this->$value($query);
 				})->count();
 
-			$items[] = [
+			$items[$value] = [
 				'count' => $count,
 				'value' => $value,
 			];

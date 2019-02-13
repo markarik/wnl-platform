@@ -233,6 +233,11 @@ export default {
 				this.items = [];
 			}
 		},
+		// DON'T REMOVE ME, I'M USED VIA $REFS
+		clear() {
+			this.items = [];
+			this.quill.deleteText(0, this.editor.innerHTML.length);
+		}
 	},
 	mounted () {
 		this.quill = new Quill(this.$refs.quill, this.quillOptions);

@@ -271,14 +271,14 @@ class ApiController extends Controller
 		for ($i = 0; $i < $depth; $i++) {
 			if ($i === 0) {
 				if (!$this->modelHasMethod($parentModel, $resources[$i])) {
-					\Log::warning("Relationship {$resources[$i]} does not exist in model {$parentModel}");
+					\Log::debug("Relationship {$resources[$i]} does not exist in model {$parentModel}");
 
 					return false;
 				}
 			} else {
 				$model = self::getResourceModel($resources[$i - 1]);
 				if (!$this->modelHasMethod($model, $resources[$i])) {
-					\Log::warning("Relationship {$resources[$i]} does not exist in model {$model}");
+					\Log::debug("Relationship {$resources[$i]} does not exist in model {$model}");
 
 					return false;
 				}

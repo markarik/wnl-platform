@@ -14,6 +14,7 @@
 			:items="autocompleteTerms"
 			:disabled="disabled"
 			@change="onSelect"
+			ref="autocomplete"
 		>
 			<wnl-taxonomy-term-with-ancestors
 				:term="slotProps.item"
@@ -92,9 +93,6 @@ export default {
 		}
 	},
 	methods: {
-		onEscape() {
-			this.$refs.input.blur();
-		},
 		onSelect(item) {
 			this.search = '';
 			this.$emit('change', item);
@@ -103,7 +101,7 @@ export default {
 	watch: {
 		async isFocused(isFocused) {
 			if (isFocused) {
-				this.$refs.input.focus();
+				this.$refs.autocomplete.$refs.input.focus();
 
 				// Wait to avoid isFocused being set back to false before we focus the input
 				await nextTick();

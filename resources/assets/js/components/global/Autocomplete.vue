@@ -8,6 +8,7 @@
 			:disable="disabled"
 			@input="$emit('input', $event.target.value)"
 			@keydown="onKeyDown"
+			ref="input"
 		/>
 		<wnl-autocomplete-list
 			:items="items"

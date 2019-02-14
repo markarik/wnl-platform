@@ -1,5 +1,5 @@
 <template>
-	<wnl-slide-link class="slide-router-link unselectable" :context="context">
+	<wnl-slide-link class="slide-router-link unselectable" :context="context" blank-page="_blank">
 		<div class="slide-context">
 			<div class="group-and-lesson">
 				 <span class="group-name" :title="groupName">{{truncate(groupName, 15)}}</span>

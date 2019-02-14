@@ -60,20 +60,9 @@
 
 			<div class="field">
 				<label class="label is-uppercase"><strong>Przypisz pojęcie</strong></label>
-				<div class="content-classifier__panel-editor__term-select">
-					<wnl-select
-						:options="taxonomiesOptions"
-						class="is-marginless"
-						v-model="taxonomyId"
-						@input="onTaxonomyChange"
-					/>
-					<wnl-taxonomy-term-autocomplete
-						placeholder="Zacznij pisać, aby wyszukać pojęcie"
-						:disabled="!taxonomyId"
-						@change="onAttachTaxonomyTerm"
-						class="margin left content-classifier__panel-editor__term-select__autocomplete"
-					/>
-				</div>
+				<wnl-taxonomy-term-selector
+					@change="onAttachTaxonomyTerm"
+				/>
 			</div>
 		</div>
 		<div v-else class="notification is-info">
@@ -117,30 +106,27 @@
 
 <script>
 import axios from 'axios';
-import {mapActions, mapGetters, mapState} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 import {uniqBy, cloneDeep} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
 import {ALERT_TYPES} from 'js/consts/alert';
 
-import WnlSelect from 'js/admin/components/forms/Select';
 import WnlContentClassifierEditorRecentTerms from 'js/components/global/contentClassifier/ContentClassifierEditorRecentTerms';
-import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
 import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
+import WnlTaxonomyTermSelector from 'js/components/global/taxonomies/TaxonomyTermSelector';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import contentClassifierStore from 'js/services/contentClassifierStore';
 import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
 
 export default {
 	components: {
-		WnlSelect,
-		WnlTaxonomyTermAutocomplete,
+		WnlTaxonomyTermSelector,
 		WnlTaxonomyTermWithAncestors,
 		WnlContentClassifierEditorRecentTerms,
 	},
 	data() {
 		return {
-			taxonomyId: null,
 			isLoading: false,
 		};
 	},
@@ -153,7 +139,6 @@ export default {
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
 		...mapGetters('taxonomies', ['taxonomyById']),
-		...mapState('taxonomies', ['taxonomies']),
 		allItemsCount() {
 			return this.items.length;
 		},
@@ -183,16 +168,9 @@ export default {
 
 			return groupedTerms;
 		},
-		taxonomiesOptions() {
-			return this.taxonomies.map(taxonomy => ({value: taxonomy.id, text: taxonomy.name}));
-		},
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['setUpNestedSet']),
-		...mapActions('taxonomies', {
-			fetchTaxonomies: 'fetchAll',
-		}),
 		getItemsCountByTermId(termId) {
 			return this.items.filter(item => item.taxonomyTerms.find(term => term.id === termId)).length;
 		},
@@ -224,7 +202,7 @@ export default {
 				this.isLoading = false;
 			}
 		},
-		async onAttachTaxonomyTerm(term) {
+		async onAttachTaxonomyTerm(term, taxonomyId) {
 			this.isLoading = true;
 			try {
 				await axios.post(getApiUrl(`taxonomy_terms/${term.id}/attach`), {
@@ -236,7 +214,7 @@ export default {
 
 				const termToAdd = {
 					...term,
-					taxonomy: term.taxonomy || this.taxonomyById(this.taxonomyId),
+					taxonomy: term.taxonomy || this.taxonomyById(taxonomyId),
 					ancestors: term.ancestors || this.getAncestorsById(term.id),
 				};
 				this.$emit('taxonomyTermAttached', termToAdd);
@@ -252,28 +230,6 @@ export default {
 				this.isLoading = false;
 			}
 		},
-		async onTaxonomyChange(taxonomyId) {
-			try {
-				await this.setUpNestedSet(taxonomyId);
-			} catch (error) {
-				$wnl.logger.capture(error);
-				this.addAutoDismissableAlert({
-					text: 'Coś poszło nie tak przy pobieraniu struktury Taksonomii',
-					type: ALERT_TYPES.ERROR
-				});
-			}
-		}
-	},
-	async mounted() {
-		try {
-			await this.fetchTaxonomies();
-		} catch (error) {
-			$wnl.logger.capture(error);
-			this.addAutoDismissableAlert({
-				text: 'Coś poszło nie tak przy pobieraniu listy Taksonomii',
-				type: ALERT_TYPES.ERROR
-			});
-		}
 	},
 };
 </script>

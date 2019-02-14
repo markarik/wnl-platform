@@ -8,9 +8,15 @@
 			</ul>
 		</div>
 		<form @submit.prevent="onByTagSearch">
+			<label class="label">Wybierz tag</label>
 			<wnl-tag-autocomplete
 				placeholder="Zacznij pisać aby wyszukać tag"
 				@change="onTagSelect"
+			/>
+
+			<label class="label">Wybierz pojęcia</label>
+			<wnl-taxonomy-term-selector
+				@change="onTermSelect"
 			/>
 
 			<div>
@@ -167,6 +173,7 @@ import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardR
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 import WnlTagAutocomplete from 'js/admin/components/global/TagAutocomplete';
+import WnlTaxonomyTermSelector from 'js/components/global/taxonomies/TaxonomyTermSelector';
 import WnlTag from 'js/admin/components/global/Tag';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
@@ -176,6 +183,7 @@ export default {
 		WnlContentClassifierEditor,
 		WnlTagAutocomplete,
 		WnlTag,
+		WnlTaxonomyTermSelector,
 	},
 	data() {
 		const contentTypes = {
@@ -313,6 +321,9 @@ export default {
 			if (!this.filterTags.find(({id}) => id === tag.id)) {
 				this.filterTags.push(tag);
 			}
+		},
+		onTermSelect(term) {
+			console.log(term);
 		},
 		onTagDelete(tag) {
 			const index = this.filterTags.findIndex(({id}) => id === tag.id);

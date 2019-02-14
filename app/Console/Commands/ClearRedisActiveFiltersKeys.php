@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 
-class MigrateRedisKeys extends Command
+class ClearRedisActiveFiltersKeys extends Command
 {
 	/**
 	 * The name and signature of the console command.
 	 *
 	 * @var string
 	 */
-	protected $signature = 'data-migration:redis-active-filters';
+	protected $signature = 'clear-redis:active-filters';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = "PLAT-984 - Clean up redis active filters.";
+	protected $description = "PLAT-984 - Remove all cached filters in questions bank for each user.";
 
 	/**
 	 * Execute the console command.

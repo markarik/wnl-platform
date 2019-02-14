@@ -18,11 +18,9 @@ class PlannedFilter extends ApiFilter
 
 		$builder = $builder->where(function ($query) use ($plan){
 			foreach ($this->params['list'] as $state) {
-				if (!empty($state)) {
-					$query->orWhere(function ($query) use ($state, $plan) {
-						$this->{$state}($plan, $query);
-					});
-				}
+				$query->orWhere(function ($query) use ($state, $plan) {
+					$this->{$state}($plan, $query);
+				});
 			}
 		});
 

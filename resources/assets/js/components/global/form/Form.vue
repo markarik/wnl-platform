@@ -203,14 +203,11 @@ export default {
 
 		if (this.populate) {
 			await this.action('populateFormFromApi');
-			this.mutation(types.FORM_IS_LOADED);
 		} else if (this.value) {
 			this.action('populateFormFromValue', this.value);
-			this.mutation(types.FORM_IS_LOADED);
-		} else {
-			this.mutation(types.FORM_IS_LOADED);
 		}
 
+		this.mutation(types.FORM_IS_LOADED);
 		this.$emit('formIsLoaded', dataModel);
 
 		this.cacheAttach();

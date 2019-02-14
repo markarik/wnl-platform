@@ -5,12 +5,16 @@
 			:resource-route="resourceRoute"
 			:populate="isEdit"
 			:hideDefaultSubmit="true"
-			:name="formName"
+			@formIsLoaded="onFormIsLoaded"
 			@submitSuccess="onSubmitSuccess"
+			name="TaxonomyEditor"
 		>
 			<div class="header">
 				<h2 class="title is-2">
-					<span v-if="isEdit">Taksonomia: {{formData.name}}</span>
+					<span v-if="isEdit">Taksonomia:
+						<span v-if="name">{{name}}</span>
+						<span v-else>...</span>
+					</span>
 					<span v-else>Dodaj taksonomię</span>
 				</h2>
 				<div class="field is-grouped">
@@ -79,8 +83,8 @@ export default {
 	},
 	data() {
 		return {
-			formName: 'TaxonomyEditor',
 			isEditFormVisible: false,
+			name: null,
 		};
 	},
 	computed: {
@@ -89,9 +93,6 @@ export default {
 		},
 		method() {
 			return this.isEdit ? 'put' : 'post';
-		},
-		formData() {
-			return this.$store.getters['form/getData'](this.formName);
 		},
 		resourceRoute() {
 			return this.isEdit ? `taxonomies/${this.id}` : 'taxonomies';
@@ -107,12 +108,17 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('taxonomies', ['resetTaxonomies']),
-		onSubmitSuccess(data) {
+		onFormIsLoaded({name}) {
+			this.name = name;
+		},
+		onSubmitSuccess({id, name}) {
 			this.resetTaxonomies();
+			this.name = name;
+
 			if (this.isEdit) {
 				this.isEditFormVisible = false;
 			} else {
-				this.$router.push({name: 'taxonomy-edit', params: {id: data.id}});
+				this.$router.push({name: 'taxonomy-edit', params: {id}});
 			}
 		},
 		async onDelete() {

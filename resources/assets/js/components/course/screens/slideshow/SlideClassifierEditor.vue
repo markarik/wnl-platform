@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
 
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
@@ -28,21 +28,25 @@ export default {
 			type: Number,
 			required: true,
 		},
-		slidesIds: {
-			type: Array,
-			required: true,
-		},
 	},
 	data() {
 		return {
-			isActive: false,
-			isFocused: false,
-			userHasAccess: false,
+			activateWithShortcutKeyId: 'slideClassfier',
 			CONTENT_TYPES,
 		};
 	},
+	computed: {
+		...mapGetters('activateWithShortcutKey', ['isActiveByUid', 'isFocusedByUid']),
+		isActive() {
+			return this.isActiveByUid(this.activateWithShortcutKeyId);
+		},
+		isFocused() {
+			return this.isFocusedByUid(this.activateWithShortcutKeyId);
+		},
+	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
+		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),
 		getUidForShortcutKey(id) {
 			return `slide-classifier-editor--${id}`;
 		},
@@ -61,53 +65,23 @@ export default {
 				scrollToElement(document.getElementsByClassName('wnl-slideshow-container')[0], 0, 500);
 			}
 		},
-		onDeactivate() {
-			this.isFocused = false;
-		},
-		onFocus() {
-			this.isFocused = true;
-		},
 		onUpdateIsActive(isActive) {
 			if (isActive) {
-				this.$shortcutKeySetActiveInstance(this.getUidForShortcutKey(this.currentSlideId));
-				this.isActive = true;
+				this.setActiveInstance(this.activateWithShortcutKeyId);
 			} else {
-				this.$shortcutKeyResetActiveInstance();
-				this.isActive = false;
+				this.resetActiveInstance();
 			}
 		},
 		onEditorCreated() {
-			this.userHasAccess = true;
-			this.registerSlidesForShortcutKeys(this.slidesIds);
+			this.register(this.activateWithShortcutKeyId);
 		},
 		onEditorDestroyed() {
-			this.slidesIds.forEach((id) => {
-				this.$shortcutKeyDeregister(this.getUidForShortcutKey(id));
-			});
-		},
-		registerSlidesForShortcutKeys(slidesIds) {
-			slidesIds.forEach((id) => {
-				this.$shortcutKeyRegister({
-					uid: this.getUidForShortcutKey(id),
-					onActivate: this.onActivate,
-					onDeactivate: this.onDeactivate,
-					onFocus: this.onFocus,
-				});
-			});
+			this.deregister(this.activateWithShortcutKeyId);
 		},
 	},
 	watch: {
 		currentSlideId(currentSlideId) {
 			this.loadTerms(currentSlideId);
-		},
-		slidesIds(newIds, oldIds) {
-			oldIds.forEach((id) => {
-				this.$shortcutKeyDeregister(this.getUidForShortcutKey(id));
-			});
-
-			if (this.userHasAccess) {
-				this.registerSlidesForShortcutKeys(newIds);
-			}
 		},
 	},
 	mounted() {

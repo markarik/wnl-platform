@@ -35,8 +35,6 @@
 		</div>
 		<wnl-slide-classifier-editor
 			:current-slide-id="currentSlideId"
-			:slides-ids="presentableSortedSlidesIds"
-			@navigateToSlide="navigateToSlide"
 		/>
 	</div>
 </template>
@@ -448,6 +446,16 @@ export default {
 		fullscreenChangeHandler(event) {
 			this.child.call('toggleFullscreen', screenfull.isFullscreen);
 		},
+		keydownNavigationHandler(event) {
+			switch (event.key) {
+			case ']':
+				this.navigateToSlide(this.currentSlideNumber + 1);
+				break;
+			case '[':
+				this.navigateToSlide(this.currentSlideNumber - 1);
+				break;
+			}
+		},
 		debouncedMessageListener: _.debounce(function(event) {this.messageEventListener(event);}, {
 			trailing: true,
 		}),
@@ -463,6 +471,7 @@ export default {
 			addEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
 			addEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
 			addEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
+			document.addEventListener('keydown', this.keydownNavigationHandler, false);
 
 			addEventListener('message', this.debouncedMessageListener);
 			addEventListener('blur', this.checkFocus);
@@ -473,6 +482,7 @@ export default {
 			removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
 			removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
 			removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
+			document.removeEventListener('keydown', this.keydownNavigationHandler, false);
 
 			removeEventListener('blur', this.checkFocus);
 			removeEventListener('focus', this.checkFocus);

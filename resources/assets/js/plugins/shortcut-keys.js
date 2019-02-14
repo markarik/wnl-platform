@@ -9,23 +9,6 @@ export default {
 	install(Vue, {store}) {
 		const module = 'activateWithShortcutKey';
 
-		// TODO remove there methods
-		Vue.prototype.$shortcutKeyRegister = (uid) => {
-			store.dispatch(`${module}/register`, uid);
-		};
-
-		Vue.prototype.$shortcutKeyDeregister = (uid) => {
-			store.dispatch(`${module}/deregister`, uid);
-		};
-
-		Vue.prototype.$shortcutKeySetActiveInstance = (uid) => {
-			store.dispatch(`${module}/setActiveInstance`, uid);
-		};
-
-		Vue.prototype.$shortcutKeyResetActiveInstance = () => {
-			store.dispatch(`${module}/resetActiveInstance`);
-		};
-
 		Vue.prototype.$shortcutKeyIsEditable = isEditable;
 
 		document.addEventListener('keydown', (event) => {

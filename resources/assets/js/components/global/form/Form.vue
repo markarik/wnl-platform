@@ -200,17 +200,19 @@ export default {
 			defaults,
 			resourceUrl: getApiUrl(this.resourceRoute),
 		});
-		this.$emit('formIsLoaded');
 
 		if (this.populate) {
 			this.action('populateFormFromApi').then(() => {
 				this.mutation(types.FORM_IS_LOADED);
+				this.$emit('formIsLoaded', dataModel);
 			});
 		} else if (this.value) {
 			this.action('populateFormFromValue', this.value);
 			this.mutation(types.FORM_IS_LOADED);
+			this.$emit('formIsLoaded', dataModel);
 		} else {
 			this.mutation(types.FORM_IS_LOADED);
+			this.$emit('formIsLoaded', dataModel);
 		}
 
 		this.cacheAttach();

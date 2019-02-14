@@ -180,7 +180,7 @@ export default {
 	created() {
 		this.mutation(types.FORM_INITIAL_SETUP);
 	},
-	mounted() {
+	async mounted() {
 		let dataModel = {}, defaults = {};
 
 		_.each(this.$children, (child) => {
@@ -202,18 +202,16 @@ export default {
 		});
 
 		if (this.populate) {
-			this.action('populateFormFromApi').then(() => {
-				this.mutation(types.FORM_IS_LOADED);
-				this.$emit('formIsLoaded', dataModel);
-			});
+			await this.action('populateFormFromApi');
+			this.mutation(types.FORM_IS_LOADED);
 		} else if (this.value) {
 			this.action('populateFormFromValue', this.value);
 			this.mutation(types.FORM_IS_LOADED);
-			this.$emit('formIsLoaded', dataModel);
 		} else {
 			this.mutation(types.FORM_IS_LOADED);
-			this.$emit('formIsLoaded', dataModel);
 		}
+
+		this.$emit('formIsLoaded', dataModel);
 
 		this.cacheAttach();
 

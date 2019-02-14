@@ -9,8 +9,9 @@ export default {
 	install(Vue, {store}) {
 		const module = 'activateWithShortcutKey';
 
-		Vue.prototype.$shortcutKeyRegister = (options) => {
-			store.dispatch(`${module}/register`, options);
+		// TODO remove there methods
+		Vue.prototype.$shortcutKeyRegister = (uid) => {
+			store.dispatch(`${module}/register`, uid);
 		};
 
 		Vue.prototype.$shortcutKeyDeregister = (uid) => {

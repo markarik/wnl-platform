@@ -12,46 +12,48 @@
 
 <script>
 import {nextTick} from 'vue';
+import {mapGetters, mapActions} from 'vuex';
 
 import {scrollToElement} from 'js/utils/animations';
 
 export default {
 	data() {
 		return {
-			isActive: false,
-			isFocused: false,
+			activateWithShortcutKeyId: `activate-with-shortcut-key-${this._uid}`
 		};
 	},
+	computed: {
+		...mapGetters('activateWithShortcutKey', ['isActiveByUid', 'isFocusedByUid']),
+		isActive() {
+			return this.isActiveByUid(this.activateWithShortcutKeyId);
+		},
+		isFocused() {
+			return this.isFocusedByUid(this.activateWithShortcutKeyId);
+		}
+	},
 	methods: {
+		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),
 		onUpdateIsActive(isActive) {
 			if (isActive) {
-				this.$shortcutKeySetActiveInstance(`activate-with-shortcut-key-${this._uid}`);
-				this.isActive = true;
+				this.setActiveInstance(this.activateWithShortcutKeyId);
 			} else {
-				this.$shortcutKeyResetActiveInstance();
+				this.resetActiveInstance();
 			}
 		},
 		onComponentCreated() {
-			this.$shortcutKeyRegister({
-				uid: `activate-with-shortcut-key-${this._uid}`,
-				onActivate: async () => {
-					this.isActive = true;
-
-					await nextTick();
-					scrollToElement(this.$el, 150, 500);
-				},
-				onDeactivate: () => {
-					this.isActive = false;
-					this.isFocused = false;
-				},
-				onFocus: () => {
-					this.isFocused = true;
-				},
-			});
+			this.register(this.activateWithShortcutKeyId);
 		},
 		onComponentDestroyed() {
-			this.$shortcutKeyDeregister(`activate-with-shortcut-key-${this._uid}`);
+			this.deregister(this.activateWithShortcutKeyId);
 		}
 	},
+	watch: {
+		async isActive() {
+			if (this.isActive) {
+				await nextTick();
+				scrollToElement(this.$el);
+			}
+		}
+	}
 };
 </script>

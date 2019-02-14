@@ -4,27 +4,22 @@ import * as types from 'js/store/mutations-types';
 // Initial state
 const state = {
 	activeInstanceIndex: -1,
+	isFocused: false,
 	instances: [],
 };
 
 // Getters
 const getters = {
-	indexByUid: state => uid => state.instances.findIndex(instance => instance.uid === uid)
+	indexByUid: state => uid => state.instances.findIndex(instance => instance.uid === uid),
+	isActiveByUid: (state, getters) => uid => state.activeInstanceIndex !== -1 && state.activeInstanceIndex === getters.indexByUid(uid),
+	isFocusedByUid: (state, getters) => uid => state.isFocused && getters.isActiveByUid(uid),
 };
 
 // Mutations
 export const mutations = {
-	[types.ACTIVATE_WITH_SHORTCUT_KEY_REGISTER_INSTANCE] (state, {
-		uid,
-		onActivate = () => {},
-		onDeactivate = () => {},
-		onFocus = () => {},
-	}) {
+	[types.ACTIVATE_WITH_SHORTCUT_KEY_REGISTER_INSTANCE] (state, uid) {
 		state.instances.push({
 			uid,
-			onActivate,
-			onDeactivate,
-			onFocus,
 		});
 	},
 	[types.ACTIVATE_WITH_SHORTCUT_KEY_DEREGISTER_INSTANCE] (state, index) {
@@ -40,6 +35,10 @@ export const mutations = {
 	},
 	[types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX] (state, index) {
 		set(state, 'activeInstanceIndex', index);
+		set(state, 'isFocused', false);
+	},
+	[types.ACTIVATE_WITH_SHORTCUT_KEY_SET_FOCUSED] (state) {
+		set(state, 'isFocused', true);
 	},
 };
 
@@ -55,18 +54,7 @@ export const actions = {
 		const index = getters.indexByUid(uid);
 
 		if (index > -1) {
-			if (state.activeInstanceIndex > -1) {
-				state.instances[state.activeInstanceIndex].onDeactivate();
-			}
-
 			commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, index);
-			state.instances[index].onActivate(state.instances[index].uid);
-		}
-	},
-	setFirstInstanceAsActive({commit, state}) {
-		if (state.instances.length > 0) {
-			commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, 0);
-			state.instances[0].onActivate(state.instances[0].uid);
 		}
 	},
 	setNextInstanceAsActive({commit, state}) {
@@ -76,18 +64,9 @@ export const actions = {
 			return;
 		}
 
-		let index = state.activeInstanceIndex + 1;
-
-		if (index >= length) {
-			index = 0;
-		}
-
-		if (state.activeInstanceIndex > -1) {
-			state.instances[state.activeInstanceIndex].onDeactivate();
-		}
+		const  index = state.activeInstanceIndex >= length - 1 ? 0 : state.activeInstanceIndex + 1;
 
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, index);
-		state.instances[index].onActivate(state.instances[index].uid);
 	},
 	setPreviousInstanceAsActive({commit, state}) {
 		const length = state.instances.length;
@@ -96,31 +75,22 @@ export const actions = {
 			return;
 		}
 
-		let index = state.activeInstanceIndex - 1;
-
-		if (index < 0) {
-			index = length - 1;
-		}
-
-		if (state.activeInstanceIndex > -1) {
-			state.instances[state.activeInstanceIndex].onDeactivate();
-		}
+		const index = state.activeInstanceIndex <= 0 ? length - 1 : state.activeInstanceIndex - 1;
 
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, index);
-		state.instances[index].onActivate(state.instances[index].uid);
 	},
 	resetActiveInstance({commit}) {
-		if (state.activeInstanceIndex > -1) {
-			state.instances[state.activeInstanceIndex].onDeactivate();
-		}
-
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, -1);
 	},
-	focusActiveInstance({dispatch, state}) {
+	focusActiveInstance({commit, state}) {
+		if (state.instances.length === 0) {
+			return;
+		}
+
 		if (state.activeInstanceIndex === -1) {
-			dispatch('setFirstInstanceAsActive');
+			commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, 0);
 		} else {
-			state.instances[state.activeInstanceIndex].onFocus();
+			commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_FOCUSED);
 		}
 	}
 };

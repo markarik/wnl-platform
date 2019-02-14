@@ -62,7 +62,7 @@ const getters = {
 	activeFiltersValues: state => {
 		return isEmpty(state.filters)
 			? []
-			: state.activeFilters.map(path => get(state.filters, path).value);
+			: state.activeFilters.map(path => get(state.filters, path, {}).value);
 	},
 	allQuestionsCount: state => state.allCount,
 	currentQuestion: state => {

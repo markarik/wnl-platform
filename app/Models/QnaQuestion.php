@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\Qna\QnaQuestionPosted;
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +16,10 @@ class QnaQuestion extends Model
 
 	protected $casts = [
 		'meta' => 'array',
+	];
+
+	protected $dispatchesEvents = [
+		'created' => QnaQuestionPosted::class,
 	];
 
 	protected $dates = ['deleted_at'];

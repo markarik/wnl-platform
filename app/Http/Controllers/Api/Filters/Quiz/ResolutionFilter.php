@@ -13,6 +13,10 @@ class ResolutionFilter extends ApiFilter
 	{
 		$builder = $builder->where(function ($query) {
 			foreach ($this->params['list'] as $state) {
+				if (empty($state)) {
+					throw new \Exception('Filter method not specified.', 400);
+				}
+
 				$query->orWhere(function ($query) use ($state) {
 					$this->{$state}($query);
 				});
@@ -38,7 +42,7 @@ class ResolutionFilter extends ApiFilter
 					$this->$value($query);
 				})->count();
 
-			$items[] = [
+			$items[$value] = [
 				'count' => $count,
 				'value' => $value,
 			];

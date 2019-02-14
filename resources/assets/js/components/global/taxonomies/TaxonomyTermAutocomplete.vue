@@ -7,28 +7,20 @@
 			</span>
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
-		<div class="control" v-else>
-			<input
-				class="input"
-				ref="input"
-				v-model="search"
-				:disabled="disabled"
-				:placeholder="placeholder"
-				@keyup.esc="onEscape"
+		<wnl-autocomplete
+			v-else
+			v-model="search"
+			:placeholder="placeholder"
+			:items="autocompleteTerms"
+			:disabled="disabled"
+			@change="onSelect"
+		>
+			<wnl-taxonomy-term-with-ancestors
+				:term="slotProps.item"
+				:ancestors="getAncestorsById(slotProps.item.id)"
+				slot-scope="slotProps"
 			/>
-			<wnl-autocomplete
-				:items="autocompleteTerms"
-				:onItemChosen="onSelect"
-				:isDown="true"
-			>
-				<template slot-scope="slotProps">
-					<wnl-taxonomy-term-with-ancestors
-						:term="slotProps.item"
-						:ancestors="getAncestorsById(slotProps.item.id)"
-					/>
-				</template>
-			</wnl-autocomplete>
-		</div>
+		</wnl-autocomplete>
 	</div>
 </template>
 

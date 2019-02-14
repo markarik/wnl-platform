@@ -124,7 +124,7 @@
 <script>
 import axios from 'axios';
 import {mapActions, mapGetters, mapState} from 'vuex';
-import {uniqBy} from 'lodash';
+import {uniqBy, cloneDeep} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
 import {ALERT_TYPES} from 'js/consts/alert';
@@ -186,7 +186,7 @@ export default {
 			return this.items.length;
 		},
 		allTaxonomyTerms() {
-			return uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id');
+			return cloneDeep(uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id'));
 		},
 		groupedTaxonomyTerms() {
 			const groupedTerms = this.allTaxonomyTerms.reduce(

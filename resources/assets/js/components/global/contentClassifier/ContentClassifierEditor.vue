@@ -52,6 +52,12 @@
 					</ul>
 				</li>
 			</ul>
+
+			<wnl-content-classifier-editor-recent-terms
+				:items="items"
+				@attachTaxonomyTerm="onAttachTaxonomyTerm"
+			/>
+
 			<div class="field">
 				<label class="label is-uppercase"><strong>Przypisz pojęcie</strong></label>
 				<div class="content-classifier__panel-editor__term-select">
@@ -112,21 +118,25 @@
 <script>
 import axios from 'axios';
 import {mapActions, mapGetters, mapState} from 'vuex';
-import {uniqBy} from 'lodash';
+import {uniqBy, cloneDeep} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
 import {ALERT_TYPES} from 'js/consts/alert';
 
 import WnlSelect from 'js/admin/components/forms/Select';
+import WnlContentClassifierEditorRecentTerms from 'js/components/global/contentClassifier/ContentClassifierEditorRecentTerms';
 import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
 import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import contentClassifierStore from 'js/services/contentClassifierStore';
+import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
 
 export default {
 	components: {
 		WnlSelect,
 		WnlTaxonomyTermAutocomplete,
 		WnlTaxonomyTermWithAncestors,
+		WnlContentClassifierEditorRecentTerms,
 	},
 	data() {
 		return {
@@ -148,7 +158,7 @@ export default {
 			return this.items.length;
 		},
 		allTaxonomyTerms() {
-			return uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id');
+			return cloneDeep(uniqBy([].concat(...this.items.map(item => item.taxonomyTerms)), 'id'));
 		},
 		groupedTaxonomyTerms() {
 			const groupedTerms = this.allTaxonomyTerms.reduce(
@@ -175,7 +185,7 @@ export default {
 		},
 		taxonomiesOptions() {
 			return this.taxonomies.map(taxonomy => ({value: taxonomy.id, text: taxonomy.name}));
-		}
+		},
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -203,6 +213,7 @@ export default {
 				});
 
 				this.$emit('taxonomyTermDetached', term);
+				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS, this.allTaxonomyTerms);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
@@ -229,6 +240,8 @@ export default {
 					ancestors: term.ancestors || this.getAncestorsById(term.id),
 				};
 				this.$emit('taxonomyTermAttached', termToAdd);
+				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM, termToAdd);
+				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS, this.allTaxonomyTerms);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

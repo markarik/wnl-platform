@@ -54,13 +54,7 @@
 import _ from 'lodash';
 import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
-
-const KEYS = {
-	enter: 13,
-	esc: 27,
-	arrowUp: 38,
-	arrowDown: 40,
-};
+import {KEYS} from 'js/consts/keys';
 
 export default {
 	name: 'FindUsers',

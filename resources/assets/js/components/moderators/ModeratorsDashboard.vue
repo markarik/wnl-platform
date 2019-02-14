@@ -16,13 +16,10 @@
 					<span class="text">Filtrowanie Po Ogarniaczu</span>
 				</div>
 				<wnl-moderators-autocomplete
-					:show="showAutocomplete"
+					class="margin"
 					:usersList="moderators"
-					:onItemChosen="search"
-					:initialValue="autocompleteUser.full_name"
-					@close="showAutocomplete = false"
-					@show="showAutocomplete = true"
-					@clear="search"
+					@change="search"
+					:selected="autocompleteUser"
 				/>
 				<wnl-accordion
 					:dataSource="labelFilters"
@@ -174,8 +171,7 @@ export default {
 			labelFilters: {},
 			selectedByLabelFilters: {},
 			moderators: [],
-			showAutocomplete: false,
-			autocompleteUser: {},
+			autocompleteUser: null,
 			bodyClicked: false
 		};
 	},
@@ -216,7 +212,6 @@ export default {
 			return {
 				disableEmpty: false,
 				isMobile: false,
-				showCounts: false,
 				selectedElements: this.activeFiltersByLesson
 			};
 		},
@@ -249,7 +244,7 @@ export default {
 			parsedFilters.push(...parseFilters(this.activeFiltersByType, this.subjectTypeFilters, this.currentUserId));
 			parsedFilters.push(...parseFilters(this.activeFiltersByLesson, this.labelFilters, this.currentUserId));
 
-			if (this.autocompleteUser.user_id) {
+			if (this.autocompleteUser) {
 				parsedFilters.push({
 					'task-assignee': {user_id: this.autocompleteUser.user_id}
 				});
@@ -351,13 +346,11 @@ export default {
 
 			this.pullTasks(this.buildRequestParams())
 				.catch(() => {
-					this.autocompleteUser = {};
+					this.autocompleteUser = null;
 				});
-			this.showAutocomplete = false;
 		},
 		clickHandler() {
 			this.bodyClicked = true;
-			this.showAutocomplete = false;
 			nextTick(() => {
 				this.bodyClicked = false;
 			});

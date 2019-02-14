@@ -23,24 +23,16 @@
 					</draggable>
 				</ul>
 			</div>
-			<div class="flashcards-set-add">
-				<div class="control">
-					<label class="label">Wybierz zestaw pytań</label>
-					<input class="input" placeholder="Id lub treść aby wyszukać" v-model="flashcardsSetInput"/>
-				</div>
-				<div class="control">
-					<wnl-autocomplete
-							:isDown="true"
-							:items="flashcardsSetsAutocompleteItems"
-							:onItemChosen="addFlashcardsSet"
-							ref="autocomplete"
-					>
-						<template slot-scope="slotProps">
-							<wnl-flashcards-set-autocomplete-item :item="slotProps.item" />
-						</template>
-					</wnl-autocomplete>
-				</div>
-			</div>
+			<wnl-autocomplete
+				class="flashcards-set-add"
+				v-model="flashcardsSetInput"
+				:items="flashcardsSetsAutocompleteItems"
+				@change="addFlashcardsSet"
+				label="Wybierz zestaw pytań"
+				placeholder="Id lub treść aby wyszukać"
+			>
+				<wnl-flashcards-set-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
+			</wnl-autocomplete>
 		</div>
 	</div>
 </template>
@@ -50,6 +42,7 @@
 
 	.meta-flashcards
 		display: flex
+		align-items: flex-start
 
 	.flashcards-set
 		border-bottom: $border-light-gray

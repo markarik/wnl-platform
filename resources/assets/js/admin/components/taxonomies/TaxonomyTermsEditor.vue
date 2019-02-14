@@ -2,8 +2,8 @@
 	<div class="terms-editor">
 		<div class="terms-editor__panel is-left">
 			<div class="terms-editor__panel__header">
-				<h4 class="title is-5"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
-				<span class="control has-icons-right">
+				<h4 class="title is-5 is-marginless"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
+				<span class="terms-editor__panel__header__search control has-icons-right">
 					<wnl-taxonomy-term-autocomplete
 						@change="onSearch"
 						placeholder="Szukaj pojęcia"
@@ -42,13 +42,18 @@
 				padding-left: $margin-big
 
 			&__header
+				align-items: center
 				background-color: $color-white
 				display: flex
 				justify-content: space-between
-				padding-top: $margin-big
+				padding: $margin-big 0 $margin-base
 				position: sticky
 				top: -30px
 				z-index: 1
+
+				&__search
+					flex-grow: 1
+					margin-left: $margin-big
 </style>
 
 <script>

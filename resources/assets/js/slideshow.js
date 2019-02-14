@@ -304,7 +304,7 @@ function keyDown(e, parent) {
 		break;
 	}
 
-	if (['t', '[', ']'].indexOf(e.key) > -1) {
+	if (['t', '[', ']'].includes(e.key)) {
 		parent.emit('global-shortcut-key', e.key);
 	}
 }

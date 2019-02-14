@@ -205,10 +205,6 @@
 
 			.wnl-quiz-question
 				margin: 0
-
-	.questions-list__content-item-classifier-editor
-		margin-top: -$margin-base
-		margin-bottom: $margin-big
 </style>
 
 <script>

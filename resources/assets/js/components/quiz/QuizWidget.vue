@@ -66,10 +66,6 @@
 	.quiz-widget-controls
 		display: flex
 		justify-content: space-between
-
-	.quiz-question__content-item-classifier-editor
-		margin-top: -$margin-base
-		margin-bottom: $margin-big
 </style>
 
 <script>

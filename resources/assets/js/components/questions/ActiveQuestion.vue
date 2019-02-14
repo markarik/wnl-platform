@@ -76,7 +76,8 @@
 </style>
 
 <script>
-import _ from 'lodash';
+import {nextTick} from 'vue';
+import {isNumber} from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
 import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
@@ -128,8 +129,7 @@ export default {
 		return {
 			allowDoubleclick: true,
 			hasErrors: false,
-			isContentItemClassifierEditorActive: false,
-			isContentItemClassifierEditorFocused: false,
+			activateWithShortcutKeyId: 'activate-question',
 			timeout: 0,
 			CONTENT_TYPES
 		};
@@ -137,8 +137,15 @@ export default {
 	computed: {
 		...mapGetters(['isMobile']),
 		...mapGetters('questions', ['getQuestion']),
+		...mapGetters('activateWithShortcutKey', ['isActiveByUid', 'isFocusedByUid']),
+		isContentItemClassifierEditorActive() {
+			return this.isActiveByUid(this.activateWithShortcutKeyId);
+		},
+		isContentItemClassifierEditorFocused() {
+			return this.isFocusedByUid(this.activateWithShortcutKeyId);
+		},
 		hasAnswer() {
-			return _.isNumber(this.question.selectedAnswer);
+			return isNumber(this.question.selectedAnswer);
 		},
 		selectedAnswerIndex () {
 			if (this.hasAnswer) {
@@ -156,6 +163,7 @@ export default {
 	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
+		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),
 		nextQuestion() {
 			this.$emit('changeQuestion', 1);
 			scrollToElement(this.$el, 63);
@@ -220,29 +228,16 @@ export default {
 		},
 		onContentItemClassifierEditorUpdateIsActive(isActive) {
 			if (isActive) {
-				this.$shortcutKeySetActiveInstance('active-question');
-				this.isContentItemClassifierEditorActive = true;
+				this.setActiveInstance(this.activateWithShortcutKeyId);
 			} else {
-				this.$shortcutKeyResetActiveInstance();
-				this.isContentItemClassifierEditorActive = false;
+				this.resetActiveInstance();
 			}
 		},
 		onContentItemClassifierEditorCreated() {
-			this.$shortcutKeyRegister({
-				uid: 'active-question',
-				onActivate: () => {
-					this.isContentItemClassifierEditorActive = true;
-				},
-				onDeactivate: () => {
-					this.isContentItemClassifierEditorFocused = false;
-				},
-				onFocus: () => {
-					this.isContentItemClassifierEditorFocused = true;
-				},
-			});
+			this.register(this.activateWithShortcutKeyId);
 		},
 		onContentItemClassifierEditorDestroyed() {
-			this.$shortcutKeyDeregister('active-question');
+			this.deregister(this.activateWithShortcutKeyId);
 		},
 	},
 	mounted() {
@@ -250,6 +245,14 @@ export default {
 	},
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.keyDown);
+	},
+	watch: {
+		async isContentItemClassifierEditorActive() {
+			if (this.isContentItemClassifierEditorActive) {
+				await nextTick();
+				scrollToElement(this.$el);
+			}
+		},
 	}
 };
 </script>

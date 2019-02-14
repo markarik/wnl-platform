@@ -29,7 +29,7 @@ export default {
 		},
 		isFocused() {
 			return this.isFocusedByUid(this.activateWithShortcutKeyId);
-		}
+		},
 	},
 	methods: {
 		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),

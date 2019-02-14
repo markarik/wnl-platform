@@ -47,24 +47,9 @@ export default {
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),
-		getUidForShortcutKey(id) {
-			return `slide-classifier-editor--${id}`;
-		},
 		loadTerms: _.debounce(async function (slideId) {
 			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId]});
 		}, 300, {leading: false, trailing: true}),
-		async onActivate(uid) {
-			const slideId = Number(uid.split('--')[1]);
-			const index = this.slidesIds.indexOf(slideId);
-
-			this.isActive = true;
-
-			if (index > -1) {
-				this.$emit('navigateToSlide', index + 1);
-				// TODO replace hardcoded classname with something dynamic
-				scrollToElement(document.getElementsByClassName('wnl-slideshow-container')[0], 0, 500);
-			}
-		},
 		onUpdateIsActive(isActive) {
 			if (isActive) {
 				this.setActiveInstance(this.activateWithShortcutKeyId);

@@ -58,7 +58,9 @@ class ProcessChatQueue extends Command
 				default:
 					$this->dropPayload($payload, $resolver, 'Invalid event!');
 			}
-		});
+		}, [
+			'persistent' => true
+		]);
 
 		$this->info('Exiting.');
 

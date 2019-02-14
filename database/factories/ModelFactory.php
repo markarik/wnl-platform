@@ -16,7 +16,7 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 		'first_name' => $faker->firstName,
 		'last_name'  => $faker->lastName,
 		'email'      => $faker->unique()->safeEmail,
-		'password'   => bcrypt('secret'),
+		'password'   => '$2y$10$Tgb./N8yIzsn14lr.xf8.eOzFombqQoBYjMPDFGj/EmmBY9AaNSuO', // faster without bcrypt()
 		'phone'      => $faker->phoneNumber,
 		'address'    => $faker->address,
 		'zip'        => $faker->postcode,
@@ -253,12 +253,10 @@ $factory->define(App\Models\Slideshow::class, function (Faker\Generator $faker) 
 });
 
 $factory->define(App\Models\Notification::class, function (Faker\Generator $faker) {
-	$notifiable = factory(App\Models\User::class)->create();
 	return [
 		'id' => $faker->uuid,
 		'type' => \App\Notifications\EventNotification::class,
 		'event_id' => $faker->uuid,
-		'notifiable_id' => $notifiable->id,
 		'notifiable_type' => \App\Models\User::class,
 		'data' => []
 	];

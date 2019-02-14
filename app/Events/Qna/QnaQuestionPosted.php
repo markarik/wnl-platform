@@ -19,7 +19,6 @@ class QnaQuestionPosted extends Event
 		EventContextTrait;
 
 	public $model;
-	public $tags;
 
 	const TEXT_LIMIT = 160;
 
@@ -28,11 +27,10 @@ class QnaQuestionPosted extends Event
 	 *
 	 * @param QnaQuestion $qnaQuestion
 	 */
-	public function __construct(QnaQuestion $qnaQuestion, $tags)
+	public function __construct(QnaQuestion $qnaQuestion)
 	{
 		parent::__construct();
 		$this->model = $qnaQuestion;
-		$this->tags = $tags;
 	}
 
 	public function transform()

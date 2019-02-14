@@ -156,14 +156,6 @@ export default {
 			type: Array,
 			required: true,
 		},
-		onAttachLastUsedTermTriggered: {
-			type: Function,
-			default: () => {},
-		},
-		onAttachLastUsedTermsSetTriggered: {
-			type: Function,
-			default: () => {},
-		},
 		triggerAttachLastUsedTerm: {
 			type: Boolean,
 			default: false,

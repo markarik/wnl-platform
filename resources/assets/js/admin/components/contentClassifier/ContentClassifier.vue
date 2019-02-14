@@ -1,6 +1,42 @@
 <template>
 	<div class="content-classifier">
 		<h3 class="title is-3">Klasyfikacja treści</h3>
+		<div class="tabs">
+			<ul>
+				<li class="is-active"><a>Po klasyfikacji</a></li>
+				<li><a>Po id</a></li>
+			</ul>
+		</div>
+		<form @submit.prevent="onByTagSearch">
+			<wnl-tag-autocomplete
+				placeholder="Zacznij pisać aby wyszukać tag"
+				@change="onTagSelect"
+			/>
+
+			<div>
+				<wnl-tag
+					v-for="tag in filterTags"
+					:key="tag.id"
+					:tag="tag"
+					@click="onTagDelete(tag)"
+					class="clickable"
+				>
+					<span class="icon is-small">
+						<i class="fa fa-times"></i>
+					</span>
+				</wnl-tag>
+			</div>
+
+			<div class="content-classifier__type-filters">
+				<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier__type-filters__item">
+					<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="meta.isActive"/>
+					<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
+				</div>
+			</div>
+			<button class="button submit is-primary" type="submit">Szukaj</button>
+		</form>
+
+
 		<form @submit.prevent="onSearch">
 			<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field">
 				<label class="label">{{meta.name}}</label>
@@ -8,6 +44,8 @@
 			</div>
 			<button class="button submit is-primary" type="submit">Szukaj</button>
 		</form>
+
+
 		<div class="content-classifier__panels">
 			<div class="content-classifier__panel-results">
 				<div class="content-classifier__panel-results__header">
@@ -53,6 +91,16 @@
 	@import 'resources/assets/sass/variables'
 
 	.content-classifier
+		&__type-filters
+			display: flex
+			&__item
+				align-items: center
+				display: flex
+				margin-bottom: 0!important
+				margin-right: $margin-huge
+				.label
+					padding-left: $margin-medium
+
 		&__panels
 			display: flex
 
@@ -118,12 +166,16 @@ import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
+import WnlTagAutocomplete from 'js/admin/components/global/TagAutocomplete';
+import WnlTag from 'js/admin/components/global/Tag';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	components: {
-		WnlContentClassifierEditor
+		WnlContentClassifierEditor,
+		WnlTagAutocomplete,
+		WnlTag,
 	},
 	data() {
 		const contentTypes = {
@@ -131,21 +183,25 @@ export default {
 				resourceName: 'annotations/.filter',
 				name: 'Przypisy',
 				component: WnlAnnotationResult,
+				isActive: true,
 			},
 			[CONTENT_TYPES.QUIZ_QUESTION]: {
 				resourceName: 'quiz_questions/.filter',
 				name: 'Pytania z bazy pytań',
 				component: WnlHtmlResult,
+				isActive: true,
 			},
 			[CONTENT_TYPES.FLASHCARD]: {
 				resourceName: 'flashcards/.filter',
 				name: 'Pytania otwarte',
 				component: WnlFlashcardResult,
+				isActive: true,
 			},
 			[CONTENT_TYPES.SLIDE]: {
 				resourceName: 'slides/.filter',
 				name: 'Slajdy',
 				component: WnlSlideResult,
+				isActive: true,
 			},
 		};
 
@@ -160,6 +216,7 @@ export default {
 		return {
 			contentTypes,
 			filters,
+			filterTags: [],
 			filteredContent: [],
 			selectedItemIds: [],
 			isLoading: false,
@@ -221,6 +278,10 @@ export default {
 				this.isLoading = false;
 			}
 		},
+		async onByTagSearch() {
+			console.log(this.contentTypes);
+		},
+
 		onTaxonomyTermAttached(term) {
 			this.filteredContent.forEach((item) => {
 				if (!item.taxonomyTerms.find(({id}) => id === term.id)) {
@@ -247,6 +308,15 @@ export default {
 		},
 		selectAll() {
 			this.selectedItemIds = this.filteredContent.map(item => item.id);
+		},
+		onTagSelect(tag) {
+			if (!this.filterTags.find(({id}) => id === tag.id)) {
+				this.filterTags.push(tag);
+			}
+		},
+		onTagDelete(tag) {
+			const index = this.filterTags.findIndex(({id}) => id === tag.id);
+			this.filterTags.splice(index, 1);
 		}
 	},
 };

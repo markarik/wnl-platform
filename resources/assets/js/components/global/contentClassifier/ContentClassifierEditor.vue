@@ -181,7 +181,6 @@ export default {
 		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
 		...mapGetters('taxonomies', ['taxonomyById']),
 		...mapState('taxonomies', ['taxonomies']),
-		...mapState('contentClassifier', ['recentTaxonomyId']),
 		allItemsCount() {
 			return this.items.length;
 		},
@@ -217,7 +216,6 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('contentClassifier', ['setRecentTaxonomyId']),
 		...mapActions('taxonomyTerms', ['setUpNestedSet']),
 		...mapActions('taxonomies', {
 			fetchTaxonomies: 'fetchAll',
@@ -285,7 +283,7 @@ export default {
 		async onTaxonomyChange(taxonomyId) {
 			try {
 				await this.setUpNestedSet(taxonomyId);
-				this.setRecentTaxonomyId(taxonomyId);
+				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TAXONOMY_ID, taxonomyId);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
@@ -308,8 +306,10 @@ export default {
 		try {
 			await this.fetchTaxonomies();
 
-			if (this.recentTaxonomyId) {
-				this.taxonomyId = this.recentTaxonomyId;
+			const lastTaxonomyId = contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TAXONOMY_ID);
+
+			if (lastTaxonomyId) {
+				this.taxonomyId = lastTaxonomyId;
 			}
 		} catch (error) {
 			$wnl.logger.capture(error);

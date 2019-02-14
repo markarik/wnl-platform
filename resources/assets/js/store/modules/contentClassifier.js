@@ -14,7 +14,6 @@ const initialState = {
 	[CONTENT_TYPES.QUIZ_QUESTION]: {},
 	[CONTENT_TYPES.SLIDE]: {},
 	[CONTENT_TYPES.FLASHCARD]: {},
-	recentTaxonomyId: null,
 };
 
 const state = {
@@ -85,9 +84,6 @@ const mutations = {
 			...reducedState
 		});
 	},
-	[mutationsTypes.CONTENT_CLASSIFIER_SET_RECENT_TAXONOMY_ID](state, taxonomyId) {
-		set(state, 'recentTaxonomyId', taxonomyId);
-	},
 };
 
 const actions = {
@@ -121,9 +117,6 @@ const actions = {
 			$wnl.logger.capture(error);
 			commit(mutationsTypes.CONTENT_CLASSIFIER_SET_ERROR, {contentItemIds: contentIds, contentType});
 		}
-	},
-	setRecentTaxonomyId({commit}, id) {
-		commit(mutationsTypes.CONTENT_CLASSIFIER_SET_RECENT_TAXONOMY_ID, id);
 	},
 };
 

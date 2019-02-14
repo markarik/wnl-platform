@@ -58,8 +58,8 @@
 				:trigger-attach-last-used-terms-set="triggerAttachLastUsedTermsSet"
 				:items="items"
 				@attachTaxonomyTerm="onAttachTaxonomyTerm"
-				@attachLastUsedTermTriggered="onAttachLastUsedTermTriggered"
-				@attachLastUsedTermsSetTriggered="onAttachLastUsedTermsSetTriggered"
+				@attachLastUsedTermTriggered="$emit('attachLastUsedTermTriggered', $event)"
+				@attachLastUsedTermsSetTriggered="$emit('attachLastUsedTermsSetTriggered', $event)"
 			/>
 
 			<div class="field">

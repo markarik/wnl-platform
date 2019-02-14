@@ -18,8 +18,8 @@
 				<wnl-content-classifier-editor
 					v-if="hasContentItem"
 					:items="[contentItem]"
-					:on-attach-last-used-term-triggered="onAttachLastUsedTermTriggered"
-					:on-attach-last-used-terms-set-triggered="onAttachLastUsedTermsSetTriggered"
+					@attachLastUsedTermTriggered="onAttachLastUsedTermTriggered"
+					@attachLastUsedTermsSetTriggered="onAttachLastUsedTermsSetTriggered"
 					:trigger-attach-last-used-term="triggerAttachLastUsedTerm"
 					:trigger-attach-last-used-terms-set="triggerAttachLastUsedTermsSet"
 					:trigger-focus-taxonomy-term-autocomplete="triggerFocusTaxonomyTermAutocomplete"
@@ -156,12 +156,10 @@ export default {
 					break;
 
 				case 'r':
+					this.triggerAttachLastUsedTerm = true;
+					break;
 				case 'R':
-					if (event.shiftKey) {
-						this.triggerAttachLastUsedTermsSet = true;
-					} else {
-						this.triggerAttachLastUsedTerm = true;
-					}
+					this.triggerAttachLastUsedTermsSet = true;
 					break;
 				}
 			}

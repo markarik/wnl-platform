@@ -1,7 +1,13 @@
 <template>
 	<div class="field select">
-		<select v-model="selected">
-			<option v-for="(option, key) in options" :key="key"
+		<select
+			v-model="selected"
+			ref="select"
+			@keyup.esc="onEscape"
+		>
+			<option
+				v-for="(option, key) in options"
+				:key="key"
 				:value="option.value"
 				v-text="option.text">
 			</option>
@@ -12,11 +18,25 @@
 <script>
 export default {
 	name: 'Select',
-	props: ['options', 'value'],
+	props: {
+		options: {
+			type: Array,
+			required: true,
+		},
+		value: {
+			value: [Number, String],
+			default: null,
+		},
+	},
 	data() {
 		return {
 			selected: this.value,
 		};
+	},
+	methods: {
+		onEscape() {
+			this.$refs.select.blur();
+		},
 	},
 	watch: {
 		selected(newValue) {
@@ -25,6 +45,6 @@ export default {
 		value(newValue) {
 			this.selected = newValue;
 		},
-	}
+	},
 };
 </script>

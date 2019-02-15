@@ -44,6 +44,12 @@
 				<legend class="annotation-tags__legend">Tagi</legend>
 				<wnl-tags :defaultTags="annotation.tags || []" ref="tags" @insertTag="onFieldChange"></wnl-tags>
 			</fieldset>
+			<wnl-content-item-classifier-editor
+				class="margin bottom"
+				:is-always-active="true"
+				:content-item-id="annotation.id"
+				:content-item-type="CONTENT_TYPES.ANNOTATION"
+			/>
 			<template v-if="annotation.id">
 				<div class="title is-4">Dane do edytora</div>
 				<div class="title is-5 annotations-editor__title">Typ przypisu</div>
@@ -113,12 +119,6 @@
 						</div>
 					</div>
 				</div>
-				<wnl-content-item-classifier-editor
-					class="margin bottom"
-					:alwaysExpanded="true"
-					:content-item-id="annotation.id"
-					:content-item-type="CONTENT_TYPES.ANNOTATION"
-				/>
 			</template>
 			<div class="level-item">
 				<a class="button is-danger"

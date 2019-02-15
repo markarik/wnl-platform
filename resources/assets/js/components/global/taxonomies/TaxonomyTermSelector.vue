@@ -7,10 +7,12 @@
 			@input="onTaxonomyChange"
 		/>
 		<wnl-taxonomy-term-autocomplete
+			class="margin left term-select__autocomplete"
 			placeholder="Zacznij pisać, aby wyszukać pojęcie"
+			:isFocused="isFocused"
 			:disabled="!taxonomyId"
 			@change="onChange"
-			class="margin left term-select__autocomplete"
+			@blur="$emit('blur', $event)"
 		/>
 	</div>
 </template>
@@ -32,11 +34,19 @@ import {ALERT_TYPES} from 'js/consts/alert';
 
 import WnlSelect from 'js/admin/components/forms/Select';
 import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
+import contentClassifierStore from 'js/services/contentClassifierStore';
+import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
 
 export default {
 	components: {
 		WnlSelect,
 		WnlTaxonomyTermAutocomplete,
+	},
+	props: {
+		isFocused: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data() {
 		return {
@@ -75,6 +85,12 @@ export default {
 	async mounted() {
 		try {
 			await this.fetchTaxonomies();
+
+			const lastTaxonomyId = contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TAXONOMY_ID);
+
+			if (lastTaxonomyId) {
+				this.taxonomyId = lastTaxonomyId;
+			}
 		} catch (error) {
 			$wnl.logger.capture(error);
 			this.addAutoDismissableAlert({

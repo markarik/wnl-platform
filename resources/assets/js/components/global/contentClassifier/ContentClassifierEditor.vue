@@ -1,8 +1,13 @@
 <template>
-	<div :class="{
-		'content-classifier__panel-editor': true,
-		'is-loading': isLoading,
-	}">
+	<div
+		:class="{
+			'content-classifier__panel-editor': true,
+			'is-loading': isLoading,
+		}"
+		tabindex="-1"
+		@keydown="onKeyDown"
+		@blur="$emit('blur', $event)"
+	>
 		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
 		<div v-if="allTaxonomyTerms.length===0">Brak przypisanych pojęć</div>
 		<div v-if="items.length > 0">
@@ -54,6 +59,8 @@
 			</ul>
 
 			<wnl-content-classifier-editor-recent-terms
+				:lastUsedTerm="lastUsedTerm"
+				:lastUsedTermsSet="lastUsedTermsSet"
 				:items="items"
 				@attachTaxonomyTerm="onAttachTaxonomyTerm"
 			/>
@@ -61,6 +68,8 @@
 			<div class="field">
 				<label class="label is-uppercase"><strong>Przypisz pojęcie</strong></label>
 				<wnl-taxonomy-term-selector
+					:isFocused="isTaxonomyTermAutocompleteFocused"
+					@blur="onTaxonomyTermAutocompleteBlur"
 					@change="onAttachTaxonomyTerm"
 				/>
 			</div>
@@ -118,6 +127,7 @@ import WnlTaxonomyTermSelector from 'js/components/global/taxonomies/TaxonomyTer
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import contentClassifierStore from 'js/services/contentClassifierStore';
 import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
+import {scrollToElement} from 'js/utils/animations';
 
 export default {
 	components: {
@@ -128,13 +138,23 @@ export default {
 	data() {
 		return {
 			isLoading: false,
+			isTaxonomyTermAutocompleteFocused: false,
+			taxonomyId: null,
+			triggerAttachLastUsedTerm: false,
+			triggerAttachLastUsedTermsSet: false,
+			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM),
+			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS, []),
 		};
 	},
 	props: {
 		items: {
 			type: Array,
 			required: true,
-		}
+		},
+		isFocused: {
+			type: Boolean,
+			default: false
+		},
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
@@ -228,6 +248,42 @@ export default {
 				});
 			} finally {
 				this.isLoading = false;
+				this.isTaxonomyTermAutocompleteFocused = true;
+			}
+		},
+		async onTaxonomyTermAutocompleteBlur() {
+			this.isTaxonomyTermAutocompleteFocused = false;
+		},
+		onKeyDown(event) {
+			if (!this.$shortcutKeyIsEditable(event.target)) {
+				switch (event.key) {
+				case 't':
+					// Disable global shortcut
+					event.stopImmediatePropagation();
+					this.isTaxonomyTermAutocompleteFocused = true;
+					break;
+
+				case 'r':
+					if (this.lastUsedTerm) {
+						this.onAttachTaxonomyTerm(this.lastUsedTerm);
+					}
+					break;
+				case 'R':
+					if (this.lastUsedTermsSet) {
+						this.lastUsedTermsSet.forEach(term => this.onAttachTaxonomyTerm(term));
+					}
+					break;
+				}
+			}
+		},
+	},
+	watch: {
+		async isFocused() {
+			if (this.isFocused) {
+				scrollToElement(this.$el);
+				this.$el.focus();
+			} else {
+				this.$el.blur();
 			}
 		},
 	},

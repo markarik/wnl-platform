@@ -58,12 +58,10 @@
 			</ul>
 
 			<wnl-content-classifier-editor-recent-terms
-				:trigger-attach-last-used-term="triggerAttachLastUsedTerm"
-				:trigger-attach-last-used-terms-set="triggerAttachLastUsedTermsSet"
+				:lastUsedTerm="lastUsedTerm"
+				:lastUsedTermsSet="lastUsedTermsSet"
 				:items="items"
 				@attachTaxonomyTerm="onAttachTaxonomyTerm"
-				@attachLastUsedTermTriggered="onAttachLastUsedTermTriggered"
-				@attachLastUsedTermsSetTriggered="onAttachLastUsedTermsSetTriggered"
 			/>
 
 			<div class="field">
@@ -155,6 +153,8 @@ export default {
 			taxonomyId: null,
 			triggerAttachLastUsedTerm: false,
 			triggerAttachLastUsedTermsSet: false,
+			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM),
+			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS),
 		};
 	},
 	props: {
@@ -295,19 +295,17 @@ export default {
 					break;
 
 				case 'r':
-					this.triggerAttachLastUsedTerm = true;
+					if (this.lastUsedTerm) {
+						this.onAttachTaxonomyTerm(this.lastUsedTerm);
+					}
 					break;
 				case 'R':
-					this.triggerAttachLastUsedTermsSet = true;
+					if (this.lastUsedTermsSet) {
+						this.lastUsedTermsSet.forEach(term => this.onAttachTaxonomyTerm(term));
+					}
 					break;
 				}
 			}
-		},
-		onAttachLastUsedTermTriggered() {
-			this.triggerAttachLastUsedTerm = false;
-		},
-		onAttachLastUsedTermsSetTriggered() {
-			this.triggerAttachLastUsedTermsSet = false;
 		},
 	},
 	watch: {

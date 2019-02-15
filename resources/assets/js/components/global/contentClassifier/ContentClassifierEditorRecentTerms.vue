@@ -53,28 +53,19 @@
 </style>
 
 <script>
-import contentClassifierStore from 'js/services/contentClassifierStore';
-import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
-
 export default {
-	data() {
-		return {
-			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM),
-			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS),
-		};
-	},
 	props: {
 		items: {
 			type: Array,
 			required: true,
 		},
-		triggerAttachLastUsedTerm: {
-			type: Boolean,
-			default: false,
+		lastUsedTerm: {
+			type: Object,
+			default: null,
 		},
-		triggerAttachLastUsedTermsSet: {
-			type: Boolean,
-			default: false,
+		lastUsedTermsSet: {
+			type: Object,
+			default: null,
 		},
 	},
 	computed: {
@@ -93,26 +84,12 @@ export default {
 		},
 		attachLastUsedTermsSet() {
 			if (this.canAttachLastUsedTermsSet) {
-				this.lastUsedTermsSet.map(term => this.$emit('attachTaxonomyTerm', term));
+				this.lastUsedTermsSet.forEach(term => this.$emit('attachTaxonomyTerm', term));
 			}
 		},
 		isTermAttached(term) {
 			return this.items.every(item => item.taxonomyTerms.find(({id}) => id === term.id));
 		}
-	},
-	watch: {
-		async triggerAttachLastUsedTerm(triggerAttachLastUsedTerm) {
-			if (triggerAttachLastUsedTerm) {
-				this.attachLastUsedTerm();
-				this.$emit('attachLastUsedTermTriggered');
-			}
-		},
-		triggerAttachLastUsedTermsSet(triggerAttachLastUsedTermsSet) {
-			if (triggerAttachLastUsedTermsSet) {
-				this.attachLastUsedTermsSet();
-				this.$emit('attachLastUsedTermsSetTriggered');
-			}
-		},
 	},
 };
 </script>

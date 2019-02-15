@@ -305,8 +305,55 @@ export default {
 				this.isLoading = false;
 			}
 		},
+		async fetchContentByTag([contentType, meta]) {
+			const filters = [];
+			if (this.filterTags.length) {
+				filters.push({
+					tags: this.filterTags.map(tag => tag.id),
+				});
+			}
+			if (this.filterTaxonomyTerms.length) {
+				filters.push({
+					taxonomy_terms: this.filterTaxonomyTerms.map(tag => tag.id),
+				});
+			}
+
+			const {data} = await axios.post(getApiUrl(meta.resourceName), {
+				filters,
+				include: 'taxonomy_terms.tag,taxonomy_terms.taxonomy,taxonomy_terms.ancestors.tag',
+				// TODO use wnl-paginated-list instead
+				limit: 10000,
+			});
+
+			const {data: {included = {}, ...items}} = data;
+
+			return Object.values(items).map(item => {
+				item.type = contentType;
+				item.taxonomyTerms = parseTaxonomyTermsFromIncludes(item.taxonomy_terms, included);
+				return item;
+			});
+		},
 		async onByTagSearch() {
-			console.log(this.contentTypes);
+			this.isLoading = true;
+			this.selectedItemIds = [];
+
+			const promises = Object.entries(this.contentTypes).filter(([contentType, meta]) => meta.isActive).map(this.fetchContentByTag);
+
+			try {
+				const values = await Promise.all(promises);
+
+				this.filteredContent = [].concat(...values);
+			} catch (error) {
+				this.filteredContent = [];
+
+				$wnl.logger.capture(error);
+				this.addAutoDismissableAlert({
+					text: 'Coś poszło nie tak. Spróbuj ponownie.',
+					type: ALERT_TYPES.ERROR
+				});
+			} finally {
+				this.isLoading = false;
+			}
 		},
 
 		onTaxonomyTermAttached(term) {

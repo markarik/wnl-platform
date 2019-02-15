@@ -33,7 +33,9 @@
 				></wnl-annotations>
 			</div>
 		</div>
-		<wnl-slide-classifier-editor :current-slide-id="currentSlideId" />
+		<wnl-slide-classifier-editor
+			:current-slide-id="currentSlideId"
+		/>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass">
@@ -434,11 +436,29 @@ export default {
 					this.modifiedSlides = {};
 				} else if (event.data.value.name === 'navigate') {
 					window.open(event.data.value.data);
+				} else if (event.data.value.name === 'global-shortcut-key') {
+					document.dispatchEvent(
+						new KeyboardEvent('keydown', {key: event.data.value.data})
+					);
 				}
 			}
 		},
 		fullscreenChangeHandler(event) {
 			this.child.call('toggleFullscreen', screenfull.isFullscreen);
+		},
+		keydownNavigationHandler(event) {
+			if (this.$shortcutKeyIsEditable(event.target)){
+				return;
+			}
+
+			switch (event.key) {
+			case ']':
+				this.navigateToSlide(this.currentSlideNumber + 1);
+				break;
+			case '[':
+				this.navigateToSlide(this.currentSlideNumber - 1);
+				break;
+			}
 		},
 		debouncedMessageListener: _.debounce(function(event) {this.messageEventListener(event);}, {
 			trailing: true,
@@ -455,6 +475,7 @@ export default {
 			addEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
 			addEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
 			addEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
+			document.addEventListener('keydown', this.keydownNavigationHandler, false);
 
 			addEventListener('message', this.debouncedMessageListener);
 			addEventListener('blur', this.checkFocus);
@@ -465,6 +486,7 @@ export default {
 			removeEventListener('fullscreenchange', this.fullscreenChangeHandler, false);
 			removeEventListener('webkitfullscreenchange', this.fullscreenChangeHandler, false);
 			removeEventListener('mozfullscreenchange', this.fullscreenChangeHandler, false);
+			document.removeEventListener('keydown', this.keydownNavigationHandler, false);
 
 			removeEventListener('blur', this.checkFocus);
 			removeEventListener('focus', this.checkFocus);

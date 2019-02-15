@@ -27,7 +27,7 @@ class QuizQuestionObserver
 		if ($quizQuestion->isForceDeleting()) {
 			$quizQuestion->unsearchable();
 			$this->dispatch(new DetachReactions($quizQuestion));
-			$this->dispatch(new DeleteModels($quizQuestion->answers));
+			$this->dispatch(new DeleteModels($quizQuestion->quizAnswers));
 		}
 	}
 }

@@ -303,6 +303,10 @@ function keyDown(e, parent) {
 		toggleBookmark(parent);
 		break;
 	}
+
+	if (['t', '[', ']'].includes(e.key)) {
+		parent.emit('global-shortcut-key', e.key);
+	}
 }
 
 function setBookmarkClickListener(parent) {

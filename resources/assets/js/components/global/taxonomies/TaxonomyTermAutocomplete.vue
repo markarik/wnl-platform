@@ -13,6 +13,8 @@
 			:placeholder="placeholder"
 			:items="autocompleteTerms"
 			:disabled="disabled"
+			:isFocused="isFocused"
+			@blur="$emit('blur', $event)"
 			@change="onSelect"
 		>
 			<wnl-taxonomy-term-with-ancestors
@@ -38,6 +40,7 @@
 </style>
 
 <script>
+import {nextTick} from 'vue';
 import {mapState, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 
@@ -46,17 +49,21 @@ import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/Taxono
 
 export default {
 	props: {
-		selected: {
-			type: Object,
-			default: null,
-		},
-		placeholder: {
-			type: String,
-			default: 'Wpisz nazwę nadrzędnego pojęcia'
-		},
 		disabled: {
 			type: Boolean,
 			default: false,
+		},
+		isFocused: {
+			type: Boolean,
+			default: false,
+		},
+		placeholder: {
+			type: String,
+			default: 'Wpisz nazwę nadrzędnego pojęcia',
+		},
+		selected: {
+			type: Object,
+			default: null,
 		},
 	},
 	data() {

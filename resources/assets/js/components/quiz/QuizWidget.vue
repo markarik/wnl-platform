@@ -24,11 +24,6 @@
 			@userEvent="proxyUserEvent"
 			v-if="currentQuestion"
 		></wnl-quiz-question>
-		<wnl-content-item-classifier-editor
-			class="quiz-question__content-item-classifier-editor"
-			:content-item-id="currentQuestion.id"
-			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-		/>
 		<p class="has-text-centered">
 			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
 				Sprawdź odpowiedź
@@ -55,12 +50,6 @@
 					@selectAnswer="selectAnswer"
 					@answerDoubleclick="onAnswerDoubleClick"
 				></wnl-quiz-question>
-				<wnl-content-item-classifier-editor
-					class="quiz-question__content-item-classifier-editor"
-					:key="`cc-editor-${question.id}`"
-					:content-item-id="question.id"
-					:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
-				/>
 			</template>
 		</div>
 	</div>
@@ -77,29 +66,24 @@
 	.quiz-widget-controls
 		display: flex
 		justify-content: space-between
-
-	.quiz-question__content-item-classifier-editor
-		margin-top: -$margin-base
-		margin-bottom: $margin-big
 </style>
 
 <script>
 import _ from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
-import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
+import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
+
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import feature_components from 'js/consts/events_map/feature_components.json';
-import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 
 export default {
 	name: 'QuizWidget',
 	components: {
-		WnlContentItemClassifierEditor,
-		'wnl-quiz-question': QuizQuestion,
+		WnlQuizQuestion,
 	},
 	mixins: [emits_events],
 	props: {

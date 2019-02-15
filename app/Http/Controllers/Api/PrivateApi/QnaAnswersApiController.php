@@ -30,7 +30,7 @@ class QnaAnswersApiController extends ApiController
 			return $this->respondNotFound('Question does not exist.');
 		}
 
-		$answer = $question->answers()->create([
+		$answer = $question->qnaAnswers()->create([
 			'text'    => $text,
 			'user_id' => $user->id,
 		]);

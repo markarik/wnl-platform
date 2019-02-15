@@ -18,10 +18,9 @@ class SlideAdded
 		EventContextTrait;
 
 	public $slide;
-
 	public $presentables;
-
 	public $channels;
+	public $data;
 
 	/**
 	 * Create a new event instance.

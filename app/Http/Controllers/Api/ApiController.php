@@ -30,6 +30,7 @@ class ApiController extends Controller
 
 	protected $fractal;
 	protected $request;
+	public $include;
 	public $resourceName;
 
 	const WITH_COUNT_INCLUDE_SUFFIX = '_count';

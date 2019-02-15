@@ -8,13 +8,17 @@ use Illuminate\Support\ServiceProvider;
 class DiscussableServiceProvider extends ServiceProvider {
 	public function register() {
 		Blueprint::macro('discussable', function() {
-			$this->tinyInteger('is_discussable')->default(0);
-			$this->integer('discussion_id')->nullable();
+			/** @var mixed */
+			$table = $this;
+			$table->tinyInteger('is_discussable')->default(0);
+			$table->integer('discussion_id')->nullable();
 		});
 
 		Blueprint::macro('dropDiscussable', function() {
-			$this->dropColumn('is_discussable');
-			$this->dropColumn('discussion_id');
+			/** @var mixed */
+			$table = $this;
+			$table->dropColumn('is_discussable');
+			$table->dropColumn('discussion_id');
 		});
 	}
 }

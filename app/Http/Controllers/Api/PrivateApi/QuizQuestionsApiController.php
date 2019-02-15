@@ -21,7 +21,7 @@ use League\Fractal\Resource\Item;
 
 class QuizQuestionsApiController extends ApiController
 {
-	const AVAILABLE_FILTERS = [
+	static $AVAILABLE_FILTERS = [
 		'quiz-planned',
 		'quiz-resolution',
 		'quiz-collection',

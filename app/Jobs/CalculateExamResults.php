@@ -116,7 +116,6 @@ class CalculateExamResults implements ShouldQueue
 			'resolved_percentage' => $resolvedLekQuestions->count() / count($examQuestions) * 100,
 			'exam_tag_id' => $this->examId,
 			'user_id' => $this->userId,
-			'exam_tag_id' => $this->examId,
 			'total' => count($examQuestions),
 			'details' => json_encode(['subjects' => $subjects])
 		]);

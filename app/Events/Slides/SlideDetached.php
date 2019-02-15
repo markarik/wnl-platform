@@ -16,10 +16,9 @@ class SlideDetached
 		EventContextTrait;
 
 	public $slide;
-
 	public $presentable;
-
 	public $channels;
+	public $data;
 
 	/**
 	 * Create a new event instance.

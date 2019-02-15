@@ -12,14 +12,4 @@ class PrivateMessageSent extends Event
 	use Dispatchable,
 		InteractsWithSockets,
 		SerializesModels;
-
-	/**
-	 * Create a new event instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		//
-	}
 }

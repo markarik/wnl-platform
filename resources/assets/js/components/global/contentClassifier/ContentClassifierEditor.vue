@@ -36,6 +36,7 @@
 								:term="term"
 								:ancestors="term.ancestors"
 								class="content-classifier__panel-editor__term__name"
+								is-bordered
 							/>
 							<span
 								v-if="allItemsCount > 1"

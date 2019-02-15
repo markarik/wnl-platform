@@ -37,8 +37,10 @@ $autocomplete-box-shadow: 1px 0 2px 0 rgba(132, 102, 102, 0.15);
 $autocomplete-text-color: #0f1a29;
 $autocomplete-box-border: solid 1px #d6d9e1;
 $autocomplete-box-background: #fff;
-$autocomplete-active-item-background: #009699;
+$autocomplete-active-item-background: $color-light-gray;
 $autocomplete-active-item-text-color: #fff;
+
+// TODO share tlo na aktywne filtry
 
 // Gradients
 $gradient-bg-image-left: #30E8BF;

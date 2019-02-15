@@ -60,6 +60,7 @@
 					:key="term.id"
 					@click="onTaxonomyTermDelete(term)"
 					class="clickable"
+					is-bordered
 				>
 					<span class="icon is-small">
 						<i class="fa fa-times"></i>
@@ -229,15 +230,15 @@ export default {
 	},
 	data() {
 		const contentTypes = {
-			[CONTENT_TYPES.ANNOTATION]: {
-				resourceName: 'annotations/.filter',
-				name: 'Przypisy',
-				component: WnlAnnotationResult,
+			[CONTENT_TYPES.SLIDE]: {
+				resourceName: 'slides/.filter',
+				name: 'Slajdy',
+				component: WnlSlideResult,
 				isActive: true,
 			},
 			[CONTENT_TYPES.QUIZ_QUESTION]: {
 				resourceName: 'quiz_questions/.filter',
-				name: 'Pytania z bazy pytań',
+				name: 'Pytania zamknięte',
 				component: WnlHtmlResult,
 				isActive: true,
 			},
@@ -247,10 +248,10 @@ export default {
 				component: WnlFlashcardResult,
 				isActive: true,
 			},
-			[CONTENT_TYPES.SLIDE]: {
-				resourceName: 'slides/.filter',
-				name: 'Slajdy',
-				component: WnlSlideResult,
+			[CONTENT_TYPES.ANNOTATION]: {
+				resourceName: 'annotations/.filter',
+				name: 'Przypisy',
+				component: WnlAnnotationResult,
 				isActive: true,
 			},
 		};

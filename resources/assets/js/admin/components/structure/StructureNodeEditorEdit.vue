@@ -7,7 +7,6 @@
 		subtitle="Wybierz lekcję/grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową."
 		vuex-module="courseStructure"
 		:on-save="onSave"
-		@changeNode="onSelectStructurable"
 	>
 		<wnl-node-autocomplete
 			slot="parentAutocomplete"

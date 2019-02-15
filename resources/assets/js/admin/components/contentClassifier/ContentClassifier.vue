@@ -58,7 +58,7 @@
 		</form>
 
 
-		<form @submit.prevent="onSearch">
+		<form @submit.prevent="onSearchById">
 			<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field">
 				<label class="label">{{meta.name}}</label>
 				<input class="input" placeholder="Wpisz id po przecinku: 36,45,..." v-model="filters[contentType]"/>
@@ -259,53 +259,18 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		async fetchContent([contentType, meta]) {
-			if (this.filters[contentType] === '') {
-				return [];
-			}
+		fetchContentByIds([contentType, meta]) {
+			const filters = [];
 
-			const {data} = await axios.post(getApiUrl(meta.resourceName), {
-				filters: [
-					{
-						by_ids: {ids: this.filters[contentType].split(',')},
-					},
-				],
-				include: 'taxonomy_terms.tag,taxonomy_terms.taxonomy,taxonomy_terms.ancestors.tag',
-				// TODO use wnl-paginated-list instead
-				limit: 10000,
-			});
-
-			const {data: {included = {}, ...items}} = data;
-
-			return Object.values(items).map(item => {
-				item.type = contentType;
-				item.taxonomyTerms = parseTaxonomyTermsFromIncludes(item.taxonomy_terms, included);
-				return item;
-			});
-		},
-		async onSearch() {
-			this.isLoading = true;
-			this.selectedItemIds = [];
-
-			const promises = Object.entries(this.contentTypes).map(this.fetchContent);
-
-			try {
-				const values = await Promise.all(promises);
-
-				this.filteredContent = [].concat(...values);
-			} catch (error) {
-				this.filteredContent = [];
-
-				$wnl.logger.capture(error);
-				this.addAutoDismissableAlert({
-					text: 'Coś poszło nie tak. Spróbuj ponownie.',
-					type: ALERT_TYPES.ERROR
+			if (this.filters[contentType] !== '') {
+				filters.push({
+					by_ids: {ids: this.filters[contentType].split(',')},
 				});
-			} finally {
-				this.isLoading = false;
 			}
+
+			return this.fetchContent(contentType, meta.resourceName, filters);
 		},
-		async fetchContentByTag([contentType, meta]) {
+		fetchContentByTag([contentType, meta]) {
 			const filters = [];
 			if (this.filterTags.length) {
 				filters.push({
@@ -318,7 +283,14 @@ export default {
 				});
 			}
 
-			const {data} = await axios.post(getApiUrl(meta.resourceName), {
+			return this.fetchContent(contentType, meta.resourceName, filters);
+		},
+		async fetchContent(contentType, resourceName, filters) {
+			if (filters.length === 0) {
+				return [];
+			}
+
+			const {data} = await axios.post(getApiUrl(resourceName), {
 				filters,
 				include: 'taxonomy_terms.tag,taxonomy_terms.taxonomy,taxonomy_terms.ancestors.tag',
 				// TODO use wnl-paginated-list instead
@@ -333,11 +305,19 @@ export default {
 				return item;
 			});
 		},
+		async onSearchById() {
+			const promises = Object.entries(this.contentTypes).map(this.fetchContentByIds);
+
+			this.onSearch(promises);
+		},
 		async onByTagSearch() {
+			const promises = Object.entries(this.contentTypes).filter(([contentType, meta]) => meta.isActive).map(this.fetchContentByTag);
+
+			this.onSearch(promises);
+		},
+		async onSearch(promises) {
 			this.isLoading = true;
 			this.selectedItemIds = [];
-
-			const promises = Object.entries(this.contentTypes).filter(([contentType, meta]) => meta.isActive).map(this.fetchContentByTag);
 
 			try {
 				const values = await Promise.all(promises);
@@ -355,7 +335,6 @@ export default {
 				this.isLoading = false;
 			}
 		},
-
 		onTaxonomyTermAttached(term) {
 			this.filteredContent.forEach((item) => {
 				if (!item.taxonomyTerms.find(({id}) => id === term.id)) {

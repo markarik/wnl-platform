@@ -64,8 +64,8 @@ export default {
 			default: null,
 		},
 		lastUsedTermsSet: {
-			type: Object,
-			default: null,
+			type: Array,
+			default: () => [],
 		},
 	},
 	computed: {

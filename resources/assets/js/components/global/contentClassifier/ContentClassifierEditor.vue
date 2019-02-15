@@ -79,7 +79,7 @@
 						:disabled="!taxonomyId"
 						:isFocused="isTaxonomyTermAutocompleteFocused"
 						@change="onAttachTaxonomyTerm"
-						@focused="onTaxonomyTermAutocompleteFocused"
+						@blur="onTaxonomyTermAutocompleteBlur"
 					/>
 				</div>
 			</div>
@@ -154,7 +154,7 @@ export default {
 			triggerAttachLastUsedTerm: false,
 			triggerAttachLastUsedTermsSet: false,
 			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM),
-			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS),
+			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS, []),
 		};
 	},
 	props: {
@@ -282,7 +282,7 @@ export default {
 				});
 			}
 		},
-		async onTaxonomyTermAutocompleteFocused() {
+		async onTaxonomyTermAutocompleteBlur() {
 			this.isTaxonomyTermAutocompleteFocused = false;
 		},
 		onKeyDown(event) {

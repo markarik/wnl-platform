@@ -9,6 +9,7 @@
 			@input="$emit('input', $event.target.value)"
 			@keydown="onKeyDown"
 			ref="input"
+			@blur="$emit('blur', $event)"
 		/>
 		<wnl-autocomplete-list
 			:items="items"
@@ -56,10 +57,21 @@ export default {
 			type: String,
 			default: '',
 		},
+		isFocused: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	components: {
 		WnlAutocompleteList,
 	},
 	mixins: [WnlAutocompleteKeyboardNavigation],
+	watch: {
+		async isFocused(isFocused) {
+			if (isFocused) {
+				this.$refs.input.focus();
+			}
+		},
+	},
 };
 </script>

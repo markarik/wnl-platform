@@ -21,7 +21,7 @@ class DiscussionTransformer extends ApiTransformer
 
 	public function includeQnaQuestions(Discussion $discussion)
 	{
-		$qnaQuestions = $discussion->questions;
+		$qnaQuestions = $discussion->qnaQuestions;
 
 		return $this->collection(
 			$qnaQuestions,

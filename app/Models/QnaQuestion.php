@@ -28,7 +28,7 @@ class QnaQuestion extends Model
 		return $this->belongsTo('App\Models\Discussion');
 	}
 
-	public function answers()
+	public function qnaAnswers()
 	{
 		return $this->hasMany('App\Models\QnaAnswer', 'question_id');
 	}

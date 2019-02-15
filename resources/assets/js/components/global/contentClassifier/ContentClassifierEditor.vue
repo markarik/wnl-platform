@@ -1,8 +1,12 @@
 <template>
-	<div :class="{
-		'content-classifier__panel-editor': true,
-		'is-loading': isLoading,
-	}">
+	<div
+		:class="{
+			'content-classifier__panel-editor': true,
+			'is-loading': isLoading,
+		}"
+		tabindex="-1"
+		@keydown="onKeyDown"
+	>
 		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
 		<div v-if="allTaxonomyTerms.length===0">Brak przypisanych pojęć</div>
 		<div v-if="items.length > 0">
@@ -58,8 +62,8 @@
 				:trigger-attach-last-used-terms-set="triggerAttachLastUsedTermsSet"
 				:items="items"
 				@attachTaxonomyTerm="onAttachTaxonomyTerm"
-				@attachLastUsedTermTriggered="$emit('attachLastUsedTermTriggered', $event)"
-				@attachLastUsedTermsSetTriggered="$emit('attachLastUsedTermsSetTriggered', $event)"
+				@attachLastUsedTermTriggered="onAttachLastUsedTermTriggered"
+				@attachLastUsedTermsSetTriggered="onAttachLastUsedTermsSetTriggered"
 			/>
 
 			<div class="field">
@@ -149,6 +153,8 @@ export default {
 			isLoading: false,
 			isTaxonomyTermAutocompleteFocused: false,
 			taxonomyId: null,
+			triggerAttachLastUsedTerm: false,
+			triggerAttachLastUsedTermsSet: false,
 		};
 	},
 	props: {
@@ -156,17 +162,9 @@ export default {
 			type: Array,
 			required: true,
 		},
-		triggerAttachLastUsedTerm: {
+		isFocused: {
 			type: Boolean,
-			default: false,
-		},
-		triggerAttachLastUsedTermsSet: {
-			type: Boolean,
-			default: false,
-		},
-		triggerFocusTaxonomyTermAutocomplete: {
-			type: Boolean,
-			default: false,
+			default: false
 		},
 	},
 	computed: {
@@ -286,13 +284,40 @@ export default {
 		},
 		async onTaxonomyTermAutocompleteFocused() {
 			this.isTaxonomyTermAutocompleteFocused = false;
-			this.$emit('taxonomyTermAutocompleteFocused');
+		},
+		onKeyDown(event) {
+			if (!this.$shortcutKeyIsEditable(event.target)) {
+				switch (event.key) {
+				case 't':
+					// Disable global shortcut
+					event.stopImmediatePropagation();
+					this.isTaxonomyTermAutocompleteFocused = true;
+					break;
+
+				case 'r':
+					this.triggerAttachLastUsedTerm = true;
+					break;
+				case 'R':
+					this.triggerAttachLastUsedTermsSet = true;
+					break;
+				}
+			}
+		},
+		onAttachLastUsedTermTriggered() {
+			this.triggerAttachLastUsedTerm = false;
+		},
+		onAttachLastUsedTermsSetTriggered() {
+			this.triggerAttachLastUsedTermsSet = false;
 		},
 	},
 	watch: {
-		triggerFocusTaxonomyTermAutocomplete(triggerFocusTaxonomyTermAutocomplete) {
-			this.isTaxonomyTermAutocompleteFocused = triggerFocusTaxonomyTermAutocomplete;
-		}
+		async isFocused() {
+			if (this.isFocused) {
+				this.$el.focus();
+			} else {
+				this.$el.blur();
+			}
+		},
 	},
 	async mounted() {
 		try {

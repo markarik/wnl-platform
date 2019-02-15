@@ -11,8 +11,10 @@ sync(store, router);
 
 // Import plugins
 import VueSweetAlert from 'vue-sweetalert';
+import ShortcutKeys from 'js/plugins/shortcut-keys';
 Vue.use(VueSweetAlert);
 Vue.use(WnlAxios, {store, router});
+Vue.use(ShortcutKeys, {store});
 
 // i18n
 import VueI18n from 'vue-i18n';

@@ -1,5 +1,5 @@
 <template>
-	<div v-if="canAccess" class="content-item-classifier" tabindex="-1" @keydown="onKeyDown">
+	<div v-if="canAccess" class="content-item-classifier">
 		<template v-if="hasContentItem">
 			<div v-if="isAlwaysActive || isActive" class="content-item-classifier__editor">
 				<div
@@ -18,14 +18,9 @@
 				<wnl-content-classifier-editor
 					v-if="hasContentItem"
 					:items="[contentItem]"
-					@attachLastUsedTermTriggered="onAttachLastUsedTermTriggered"
-					@attachLastUsedTermsSetTriggered="onAttachLastUsedTermsSetTriggered"
-					:trigger-attach-last-used-term="triggerAttachLastUsedTerm"
-					:trigger-attach-last-used-terms-set="triggerAttachLastUsedTermsSet"
-					:trigger-focus-taxonomy-term-autocomplete="triggerFocusTaxonomyTermAutocomplete"
+					:isFocused="isFocused"
 					@taxonomyTermAttached="onTaxonomyTermAttached"
 					@taxonomyTermDetached="onTaxonomyTermDetached"
-					@taxonomyTermAutocompleteFocused="onTaxonomyTermAutocompleteFocused"
 				/>
 			</div>
 			<div v-else class="clickable content-item-classifier__tag-names" @click="updateIsActive(true)">
@@ -92,9 +87,6 @@ export default {
 	},
 	data() {
 		return {
-			triggerAttachLastUsedTerm: false,
-			triggerAttachLastUsedTermsSet: false,
-			triggerFocusTaxonomyTermAutocomplete: false,
 			CONTENT_TYPE_NAMES,
 		};
 	},
@@ -140,30 +132,6 @@ export default {
 			attachTerm: CONTENT_CLASSIFIER_ATTACH_TERM,
 			detachTerm: CONTENT_CLASSIFIER_DETACH_TERM
 		}),
-		onAttachLastUsedTermTriggered() {
-			this.triggerAttachLastUsedTerm = false;
-		},
-		onAttachLastUsedTermsSetTriggered() {
-			this.triggerAttachLastUsedTermsSet = false;
-		},
-		onKeyDown(event) {
-			if (this.isFocused && !this.$shortcutKeyIsEditable(event.target)) {
-				switch (event.key) {
-				case 't':
-					// Disable global shortcut
-					event.stopImmediatePropagation();
-					this.triggerFocusTaxonomyTermAutocomplete = true;
-					break;
-
-				case 'r':
-					this.triggerAttachLastUsedTerm = true;
-					break;
-				case 'R':
-					this.triggerAttachLastUsedTermsSet = true;
-					break;
-				}
-			}
-		},
 		onTaxonomyTermAttached(term) {
 			this.attachTerm({
 				term,
@@ -176,9 +144,6 @@ export default {
 				contentItem: this.contentItem
 			});
 		},
-		onTaxonomyTermAutocompleteFocused() {
-			this.triggerFocusTaxonomyTermAutocomplete = false;
-		},
 		updateIsActive(isActive) {
 			this.$emit('updateIsActive', isActive);
 		},
@@ -188,20 +153,6 @@ export default {
 	},
 	beforeDestroy() {
 		this.$emit('editorDestroyed');
-	},
-	watch: {
-		async isFocused() {
-			if (this.isFocused) {
-				this.$el.focus();
-			} else {
-				this.$el.blur();
-			}
-		},
-		isActive() {
-			if (!this.isActive) {
-				this.$el.blur();
-			}
-		},
 	},
 };
 </script>

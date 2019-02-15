@@ -3,11 +3,21 @@
 		<h3 class="title is-3">Klasyfikacja treści</h3>
 		<div class="tabs">
 			<ul>
-				<li class="is-active"><a>Po klasyfikacji</a></li>
-				<li><a>Po id</a></li>
+				<li
+					:class="{'is-active': activeTab === TABS.BY_CLASSIFICATION}"
+					@click="activeTab=TABS.BY_CLASSIFICATION"
+				>
+					<a>Po klasyfikacji</a>
+				</li>
+				<li
+					:class="{'is-active': activeTab === TABS.BY_ID}"
+					@click="activeTab=TABS.BY_ID"
+				>
+					<a>Po id</a>
+				</li>
 			</ul>
 		</div>
-		<form @submit.prevent="onByTagSearch">
+		<form @submit.prevent="onByTagSearch" v-if="activeTab === TABS.BY_CLASSIFICATION">
 			<label class="label">Wybierz tag</label>
 			<wnl-tag-autocomplete
 				placeholder="Zacznij pisać aby wyszukać tag"
@@ -58,7 +68,7 @@
 		</form>
 
 
-		<form @submit.prevent="onSearchById">
+		<form @submit.prevent="onSearchById" v-if="activeTab === TABS.BY_ID">
 			<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field">
 				<label class="label">{{meta.name}}</label>
 				<input class="input" placeholder="Wpisz id po przecinku: 36,45,..." v-model="filters[contentType]"/>
@@ -194,6 +204,11 @@ import WnlTag from 'js/admin/components/global/Tag';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
+const TABS = {
+	BY_CLASSIFICATION: 'by-classification',
+	BY_ID: 'by-id',
+};
+
 export default {
 	components: {
 		WnlContentClassifierEditor,
@@ -246,6 +261,8 @@ export default {
 			filteredContent: [],
 			selectedItemIds: [],
 			isLoading: false,
+			activeTab: TABS.BY_CLASSIFICATION,
+			TABS,
 		};
 	},
 	computed: {

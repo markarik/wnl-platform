@@ -89,7 +89,7 @@ export default {
 		this.structurable = this.node.structurable;
 	},
 	watch: {
-		term() {
+		node() {
 			this.structurable = this.node.structurable;
 			this.parent = this.getAncestorsById(this.node.id).slice(-1)[0];
 		}

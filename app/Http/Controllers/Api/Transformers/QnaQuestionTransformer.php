@@ -42,7 +42,7 @@ class QnaQuestionTransformer extends ApiTransformer
 
 	public function includeQnaAnswers(QnaQuestion $question)
 	{
-		$answers = $question->answers;
+		$answers = $question->qnaAnswers;
 
 		return $this->collection($answers, new QnaAnswerTransformer(['qna_questions' => $question->id]), 'qna_answers');
 	}

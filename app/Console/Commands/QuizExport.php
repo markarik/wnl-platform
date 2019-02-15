@@ -82,7 +82,7 @@ class QuizExport extends Command
 		}
 
 		foreach ($questions as $question) {
-			$answers = $question->answers;
+			$answers = $question->quizAnswers;
 			$aAnswers = $answers->toArray();
 			$correct = '-';
 			foreach ($aAnswers as $index => $aAnswer) {

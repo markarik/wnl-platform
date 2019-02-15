@@ -41,7 +41,7 @@ class QuizQuestionTransformer extends ApiTransformer
 
 	public function includeQuizAnswers(QuizQuestion $quizQuestion)
 	{
-		$answers = $quizQuestion->answers;
+		$answers = $quizQuestion->quizAnswers;
 
 		return $this->collection(
 			$answers,

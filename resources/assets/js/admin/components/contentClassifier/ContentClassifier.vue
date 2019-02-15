@@ -18,7 +18,7 @@
 			</ul>
 		</div>
 		<form @submit.prevent="onByTagSearch" v-if="activeTab === TABS.BY_CLASSIFICATION">
-			<label class="label">Wybierz tag</label>
+			<label class="label">Wybierz tagi</label>
 			<wnl-tag-autocomplete
 				placeholder="Zacznij pisać aby wyszukać tag"
 				@change="onTagSelect"
@@ -31,7 +31,7 @@
 
 			<div>
 				<wnl-tag
-					v-for="tag in filterTags"
+					v-for="tag in byTagsFilter"
 					:key="tag.id"
 					:tag="tag"
 					@click="onTagDelete(tag)"
@@ -45,7 +45,7 @@
 
 			<div>
 				<wnl-taxonomy-term-with-ancestors
-					v-for="term in filterTaxonomyTerms"
+					v-for="term in byTaxonomyTermsFilter"
 					:term="term"
 					:ancestors="getAncestorsById(term.id)"
 					:key="term.id"
@@ -71,7 +71,7 @@
 		<form @submit.prevent="onSearchById" v-if="activeTab === TABS.BY_ID">
 			<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field">
 				<label class="label">{{meta.name}}</label>
-				<input class="input" placeholder="Wpisz id po przecinku: 36,45,..." v-model="filters[contentType]"/>
+				<input class="input" placeholder="Wpisz id po przecinku: 36,45,..." v-model="byIdFilters[contentType]"/>
 			</div>
 			<button class="button submit is-primary" type="submit">Szukaj</button>
 		</form>
@@ -245,7 +245,7 @@ export default {
 			},
 		};
 
-		const filters = Object.keys(contentTypes).reduce(
+		const byIdFilters = Object.keys(contentTypes).reduce(
 			(collector, contentType) => {
 				collector[contentType] = '';
 				return collector;
@@ -255,9 +255,9 @@ export default {
 
 		return {
 			contentTypes,
-			filters,
-			filterTags: [],
-			filterTaxonomyTerms: [],
+			byIdFilters,
+			byTagsFilter: [],
+			byTaxonomyTermsFilter: [],
 			filteredContent: [],
 			selectedItemIds: [],
 			isLoading: false,
@@ -279,9 +279,9 @@ export default {
 		fetchContentByIds([contentType, meta]) {
 			const filters = [];
 
-			if (this.filters[contentType] !== '') {
+			if (this.byIdFilters[contentType] !== '') {
 				filters.push({
-					by_ids: {ids: this.filters[contentType].split(',')},
+					by_ids: {ids: this.byIdFilters[contentType].split(',')},
 				});
 			}
 
@@ -289,14 +289,14 @@ export default {
 		},
 		fetchContentByTag([contentType, meta]) {
 			const filters = [];
-			if (this.filterTags.length) {
+			if (this.byTagsFilter.length) {
 				filters.push({
-					tags: this.filterTags.map(tag => tag.id),
+					tags: this.byTagsFilter.map(tag => tag.id),
 				});
 			}
-			if (this.filterTaxonomyTerms.length) {
+			if (this.byTaxonomyTermsFilter.length) {
 				filters.push({
-					taxonomy_terms: this.filterTaxonomyTerms.map(tag => tag.id),
+					taxonomy_terms: this.byTaxonomyTermsFilter.map(tag => tag.id),
 				});
 			}
 
@@ -380,22 +380,22 @@ export default {
 			this.selectedItemIds = this.filteredContent.map(item => item.id);
 		},
 		onTagSelect(tag) {
-			if (!this.filterTags.find(({id}) => id === tag.id)) {
-				this.filterTags.push(tag);
+			if (!this.byTagsFilter.find(({id}) => id === tag.id)) {
+				this.byTagsFilter.push(tag);
 			}
 		},
 		onTermSelect(term) {
-			if (!this.filterTaxonomyTerms.find(({id}) => id === term.id)) {
-				this.filterTaxonomyTerms.push(term);
+			if (!this.byTaxonomyTermsFilter.find(({id}) => id === term.id)) {
+				this.byTaxonomyTermsFilter.push(term);
 			}
 		},
 		onTagDelete(tag) {
-			const index = this.filterTags.findIndex(({id}) => id === tag.id);
-			this.filterTags.splice(index, 1);
+			const index = this.byTagsFilter.findIndex(({id}) => id === tag.id);
+			this.byTagsFilter.splice(index, 1);
 		},
 		onTaxonomyTermDelete(term) {
-			const index = this.filterTaxonomyTerms.findIndex(({id}) => id === term.id);
-			this.filterTaxonomyTerms.splice(index, 1);
+			const index = this.byTaxonomyTermsFilter.findIndex(({id}) => id === term.id);
+			this.byTaxonomyTermsFilter.splice(index, 1);
 		}
 	},
 };

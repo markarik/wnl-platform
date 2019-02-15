@@ -447,6 +447,10 @@ export default {
 			this.child.call('toggleFullscreen', screenfull.isFullscreen);
 		},
 		keydownNavigationHandler(event) {
+			if (this.$shortcutKeyIsEditable(event.target)){
+				return;
+			}
+
 			switch (event.key) {
 			case ']':
 				this.navigateToSlide(this.currentSlideNumber + 1);

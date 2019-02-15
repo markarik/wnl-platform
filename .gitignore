@@ -17,6 +17,7 @@ npm-debug.log
 public/hot
 .env.dusk.*
 phpunit.dusk.xml
+phpunit.log.xml
 scenario.dusk
 public/report.html
 *.sql

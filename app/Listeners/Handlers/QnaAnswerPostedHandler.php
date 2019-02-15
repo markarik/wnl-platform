@@ -45,7 +45,7 @@ class QnaAnswerPostedHandler
 	{
 		return User::select()
 			->whereHas('qnaAnswers', function ($query) use ($answer) {
-				$query->whereIn('id', $answer->question->answers->pluck('id'));
+				$query->whereIn('id', $answer->question->qnaAnswers->pluck('id'));
 			})
 			->where('id', '!=', $event->data['actors']['id'])
 			->where('id', '!=', $answer->question->user->id)

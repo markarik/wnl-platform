@@ -12,7 +12,7 @@ class QnaQuestionObserver
 
 	public function deleting(QnaQuestion $qnaQuestion)
 	{
-		$this->dispatch(new DeleteModels($qnaQuestion->answers));
+		$this->dispatch(new DeleteModels($qnaQuestion->qnaAnswers));
 		$this->dispatch(new DetachReactions($qnaQuestion));
 	}
 

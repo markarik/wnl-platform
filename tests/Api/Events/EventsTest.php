@@ -3,7 +3,10 @@
 namespace Tests\Api\Qna;
 
 use App\Models\Comment;
+use App\Models\QnaAnswer;
+use App\Models\QnaQuestion;
 use App\Models\User;
+use Mail;
 use Tests\Api\ApiTestCase;
 
 
@@ -45,7 +48,10 @@ class EventsTest extends ApiTestCase
 	/** @test */
 	public function post_mention_from_comment()
 	{
-		$user = User::find(1);
+		QnaAnswer::flushEventListeners();
+		QnaQuestion::flushEventListeners();
+		Comment::flushEventListeners();
+		$user = factory(User::class)->create();
 		$mentioned = factory(User::class)->create();
 		$comment = factory(Comment::class)->create();
 

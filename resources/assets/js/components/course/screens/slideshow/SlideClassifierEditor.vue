@@ -5,6 +5,7 @@
 		:content-item-type="CONTENT_TYPES.SLIDE"
 		:is-active="isActive"
 		:is-focused="isFocused"
+		@blur="onBlur"
 		@updateIsActive="onUpdateIsActive"
 		@editorCreated="onEditorCreated"
 		@editorDestroyed="onEditorDestroyed"
@@ -17,7 +18,6 @@ import {mapGetters, mapActions} from 'vuex';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
-import {scrollToElement} from 'js/utils/animations';
 
 export default {
 	components: {
@@ -46,7 +46,7 @@ export default {
 	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
-		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),
+		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister', 'resetFocus']),
 		loadTerms: _.debounce(async function (slideId) {
 			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId]});
 		}, 300, {leading: false, trailing: true}),
@@ -56,6 +56,9 @@ export default {
 			} else {
 				this.resetActiveInstance();
 			}
+		},
+		onBlur() {
+			this.resetFocus();
 		},
 		onEditorCreated() {
 			this.register(this.activateWithShortcutKeyId);

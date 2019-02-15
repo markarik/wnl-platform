@@ -33,6 +33,7 @@
 						@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
 						@editorCreated="activateWithShortcutKey.onComponentCreated"
 						@editorDestroyed="activateWithShortcutKey.onComponentDestroyed"
+						@blur="activateWithShortcutKey.onBlur"
 					/>
 				</template>
 			</wnl-activate-with-shortcut-key>

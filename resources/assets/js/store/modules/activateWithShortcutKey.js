@@ -37,8 +37,8 @@ export const mutations = {
 		set(state, 'activeInstanceIndex', index);
 		set(state, 'isFocused', false);
 	},
-	[types.ACTIVATE_WITH_SHORTCUT_KEY_SET_FOCUSED] (state) {
-		set(state, 'isFocused', true);
+	[types.ACTIVATE_WITH_SHORTCUT_KEY_SET_FOCUSED] (state, isFocused = true) {
+		set(state, 'isFocused', isFocused);
 	},
 };
 
@@ -92,6 +92,9 @@ export const actions = {
 		} else {
 			commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_FOCUSED);
 		}
+	},
+	resetFocus({commit}) {
+		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_FOCUSED, false);
 	}
 };
 

@@ -6,6 +6,7 @@
 		}"
 		tabindex="-1"
 		@keydown="onKeyDown"
+		@blur="$emit('blur', $event)"
 	>
 		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
 		<div v-if="allTaxonomyTerms.length===0">Brak przypisanych pojęć</div>
@@ -138,6 +139,7 @@ import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/Taxono
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import contentClassifierStore from 'js/services/contentClassifierStore';
 import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
+import {scrollToElement} from 'js/utils/animations';
 
 export default {
 	components: {
@@ -311,6 +313,7 @@ export default {
 	watch: {
 		async isFocused() {
 			if (this.isFocused) {
+				scrollToElement(this.$el);
 				this.$el.focus();
 			} else {
 				this.$el.blur();

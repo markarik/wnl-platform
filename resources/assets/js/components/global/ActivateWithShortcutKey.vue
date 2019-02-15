@@ -6,6 +6,7 @@
 			:on-update-is-active="onUpdateIsActive"
 			:on-component-created="onComponentCreated"
 			:on-component-destroyed="onComponentDestroyed"
+			:on-blur="onBlur"
 		></slot>
 	</div>
 </template>
@@ -32,7 +33,7 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),
+		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister', 'resetFocus']),
 		onUpdateIsActive(isActive) {
 			if (isActive) {
 				this.setActiveInstance(this.activateWithShortcutKeyId);
@@ -45,7 +46,10 @@ export default {
 		},
 		onComponentDestroyed() {
 			this.deregister(this.activateWithShortcutKeyId);
-		}
+		},
+		onBlur() {
+			this.resetFocus();
+		},
 	},
 	watch: {
 		async isActive() {

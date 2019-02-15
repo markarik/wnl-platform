@@ -19,6 +19,7 @@
 					v-if="hasContentItem"
 					:items="[contentItem]"
 					:isFocused="isFocused"
+					@blur="$emit('blur', $event)"
 					@taxonomyTermAttached="onTaxonomyTermAttached"
 					@taxonomyTermDetached="onTaxonomyTermDetached"
 				/>

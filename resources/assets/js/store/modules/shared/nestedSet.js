@@ -118,18 +118,17 @@ export const nestedSetActions = {
 	},
 	async create({commit, state, getters, dispatch}, nodeData) {
 		commit(types.SET_NESTED_SET_SAVING, true);
-		let node = {};
 		try {
-			node = await dispatch('_post', nodeData);
+			const node = await dispatch('_post', nodeData);
 			commit(types.ADD_NESTED_SET_NODE, node);
 			commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {
 				list: getters.getChildrenByParentId(node.parent_id)
 			});
+			return node;
 		} catch (error) {
 			throw error;
 		} finally {
 			commit(types.SET_NESTED_SET_SAVING, false);
-			return node;
 		}
 	},
 
@@ -145,6 +144,7 @@ export const nestedSetActions = {
 			}
 
 			commit(types.UPDATE_NESTED_SET_NODE, {...nodeData, ...node});
+			return node;
 		} catch (error) {
 			throw error;
 		} finally {

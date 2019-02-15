@@ -45,13 +45,9 @@ import {mapActions, mapState, mapGetters} from 'vuex';
 import WnlTaxonomyTermEditorCurrentTerm from 'js/admin/components/taxonomies/TaxonomyTermEditorCurrentTerm';
 import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
 import WnlTagAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTagAutocomplete';
-import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 import WnlNestedSetEditorForm from 'js/admin/components/nestedSet/NestedSetEditorForm';
 
 export default {
-	mixins: [
-		scrollToNodeMixin,
-	],
 	components: {
 		WnlNestedSetEditorForm,
 		WnlTaxonomyTermEditorCurrentTerm,
@@ -73,7 +69,7 @@ export default {
 	computed: {
 		...mapGetters('taxonomyTerms', {termById: 'nodeById'}),
 		...mapGetters('taxonomyTerms', ['getAncestorsById']),
-		...mapState('taxonomyTerms', {selectedTerms: 'selectedNodes'}),
+		...mapState('taxonomyTerms', {selectedTerms: 'selectedNodes', isSaving: 'isSaving'}),
 		parent() {
 			if (this.selectedTerms.length === 0) {
 				return null;

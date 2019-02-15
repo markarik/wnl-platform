@@ -9,7 +9,16 @@
 <script>
 export default {
 	name: 'QuizQuestionListItem',
-	props: ['id', 'text'],
+	props: {
+		id: {
+			type: Number,
+			required: true
+		},
+		text: {
+			type: String,
+			required: true
+		}
+	},
 	computed: {
 		to() {
 			return {

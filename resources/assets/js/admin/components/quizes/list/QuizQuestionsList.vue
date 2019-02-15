@@ -14,7 +14,7 @@
 				slot="list"
 				slot-scope="slotParams"
 			>
-				<quiz-question-list-item
+				<wnl-quiz-question-list-item
 					v-for="question in slotParams.list"
 					:key="question.id"
 					:text="question.text"
@@ -33,7 +33,7 @@ import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 export default {
 	name: 'QuizQuestionsList',
 	components: {
-		'quiz-question-list-item': WnlQuizQuestionListItem,
+		'wnl-quiz-question-list-item': WnlQuizQuestionListItem,
 		WnlPaginatedList
 	},
 };

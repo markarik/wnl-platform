@@ -18,18 +18,25 @@
 			</ul>
 		</div>
 		<form @submit.prevent="onByTagSearch" v-if="activeTab === TABS.BY_CLASSIFICATION">
-			<label class="label">Wybierz tagi</label>
-			<wnl-tag-autocomplete
-				placeholder="Zacznij pisać aby wyszukać tag"
-				@change="onTagSelect"
-			/>
+			<div class="field">
+				<label class="label">Wybierz tagi</label>
+				<wnl-tag-autocomplete
+					placeholder="Zacznij pisać aby wyszukać tag"
+					@change="onTagSelect"
+				/>
+			</div>
 
-			<label class="label">Wybierz pojęcia</label>
-			<wnl-taxonomy-term-selector
-				@change="onTermSelect"
-			/>
+			<div class="field">
+				<label class="label">Wybierz pojęcia</label>
+				<wnl-taxonomy-term-selector
+					@change="onTermSelect"
+				/>
+			</div>
 
-			<div>
+			<h5 class="title is-5">Aktywne filtry</h5>
+
+			<strong>Tagi:</strong>
+			<div v-if="byTagsFilter.length > 0">
 				<wnl-tag
 					v-for="tag in byTagsFilter"
 					:key="tag.id"
@@ -42,8 +49,10 @@
 					</span>
 				</wnl-tag>
 			</div>
+			<small v-else>Nie ma wybranych tagów</small>
 
-			<div>
+			<strong>Pojęcia:</strong>
+			<div v-if="byTaxonomyTermsFilter.length > 0">
 				<wnl-taxonomy-term-with-ancestors
 					v-for="term in byTaxonomyTermsFilter"
 					:term="term"
@@ -57,8 +66,9 @@
 					</span>
 				</wnl-taxonomy-term-with-ancestors>
 			</div>
+			<small v-else>Nie ma wybranych pojęć</small>
 
-			<div class="content-classifier__type-filters">
+			<div class="content-classifier__type-filters margin vertical">
 				<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier__type-filters__item">
 					<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="meta.isActive"/>
 					<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>

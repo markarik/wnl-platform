@@ -72,6 +72,7 @@ export default {
 
 		onEsc(evt) {
 			this.$emit('input', '');
+			this.$refs.input.blur();
 
 			this.killEvent(evt);
 			return false;

@@ -46,21 +46,29 @@
 				</button>
 			</div>
 			<ol class="flashcards-set__list">
-				<template v-for="(flashcard, index) in set.flashcards">
-					<wnl-flashcard-item
-							:key="flashcard.id"
+				<wnl-activate-with-shortcut-key
+					v-for="(flashcard, index) in set.flashcards"
+					:key="`flashcard-cce-${flashcard.id}`"
+				>
+					<template slot-scope="activateWithShortcutKey">
+						<wnl-flashcard-item
 							:flashcard="flashcard"
 							:index="index + 1"
 							:context="{type: context, id: screenData.id}"
-							slot="content"
 							@userEvent="trackUserEvent"
-					/>
-					<wnl-content-item-classifier-editor
-						:key="`cc-editor-${flashcard.id}`"
-						:content-item-id="flashcard.id"
-						:content-item-type="CONTENT_TYPES.FLASHCARD"
-					/>
-				</template>
+						/>
+						<wnl-content-item-classifier-editor
+							:is-active="activateWithShortcutKey.isActive"
+							:is-focused="activateWithShortcutKey.isFocused"
+							:content-item-id="flashcard.id"
+							:content-item-type="CONTENT_TYPES.FLASHCARD"
+							@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+							@editorCreated="activateWithShortcutKey.onComponentCreated"
+							@editorDestroyed="activateWithShortcutKey.onComponentDestroyed"
+							@blur="activateWithShortcutKey.onBlur"
+						/>
+					</template>
+				</wnl-activate-with-shortcut-key>
 			</ol>
 		</div>
 		<div class="flashcards-scroll" @click="scrollTop">
@@ -191,6 +199,7 @@ import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
 
 export default {
 	mixins: [emits_events],
@@ -206,7 +215,8 @@ export default {
 	},
 	components: {
 		WnlFlashcardItem,
-		WnlContentItemClassifierEditor
+		WnlContentItemClassifierEditor,
+		WnlActivateWithShortcutKey,
 	},
 	data() {
 		return {

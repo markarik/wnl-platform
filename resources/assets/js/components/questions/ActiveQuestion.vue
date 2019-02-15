@@ -31,8 +31,13 @@
 		/>
 		<wnl-content-item-classifier-editor
 			class="quiz-question__content-item-classifier-editor"
+			:is-active="isContentItemClassifierEditorActive"
+			:is-focused="isContentItemClassifierEditorFocused"
 			:content-item-id="question.id"
 			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+			@updateIsActive="onContentItemClassifierEditorUpdateIsActive"
+			@editorCreated="onContentItemClassifierEditorCreated"
+			@editorDestroyed="onContentItemClassifierEditorDestroyed"
 		/>
 		<p class="active-question-button has-text-centered">
 			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
@@ -71,10 +76,12 @@
 </style>
 
 <script>
-import _ from 'lodash';
+import {nextTick} from 'vue';
+import {isNumber} from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
-import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
+import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
+
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import {KEYS} from 'js/consts/keys';
@@ -84,8 +91,8 @@ import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 export default {
 	name: 'ActiveQuestion',
 	components: {
-		'wnl-quiz-question': QuizQuestion,
-		WnlContentItemClassifierEditor
+		WnlQuizQuestion,
+		WnlContentItemClassifierEditor,
 	},
 	mixins: [emits_events],
 	props: {
@@ -112,8 +119,9 @@ export default {
 	},
 	data() {
 		return {
-			hasErrors: false,
 			allowDoubleclick: true,
+			hasErrors: false,
+			activateWithShortcutKeyId: 'activate-question',
 			timeout: 0,
 			CONTENT_TYPES
 		};
@@ -121,8 +129,15 @@ export default {
 	computed: {
 		...mapGetters(['isMobile']),
 		...mapGetters('questions', ['getQuestion']),
+		...mapGetters('activateWithShortcutKey', ['isActiveByUid', 'isFocusedByUid']),
+		isContentItemClassifierEditorActive() {
+			return this.isActiveByUid(this.activateWithShortcutKeyId);
+		},
+		isContentItemClassifierEditorFocused() {
+			return this.isFocusedByUid(this.activateWithShortcutKeyId);
+		},
 		hasAnswer() {
-			return _.isNumber(this.question.selectedAnswer);
+			return isNumber(this.question.selectedAnswer);
 		},
 		selectedAnswerIndex () {
 			if (this.hasAnswer) {
@@ -140,6 +155,7 @@ export default {
 	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
+		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),
 		nextQuestion() {
 			this.$emit('changeQuestion', 1);
 			scrollToElement(this.$el, 63);
@@ -162,7 +178,7 @@ export default {
 			this.hasAnswer && this.$emit('verify', this.question.id);
 		},
 		keyDown(e) {
-			if (e.keyCode === KEYS.arrowLeft) {
+			if (e.keyCode === KEYS.arrowLeft || e.key === '[') {
 				this.previousQuestion();
 			}
 
@@ -178,7 +194,7 @@ export default {
 				return false;
 			}
 
-			if (e.keyCode === KEYS.arrowRight) {
+			if (e.keyCode === KEYS.arrowRight || e.key === ']') {
 				this.nextQuestion();
 			}
 
@@ -202,12 +218,33 @@ export default {
 				}
 			}
 		},
+		onContentItemClassifierEditorUpdateIsActive(isActive) {
+			if (isActive) {
+				this.setActiveInstance(this.activateWithShortcutKeyId);
+			} else {
+				this.resetActiveInstance();
+			}
+		},
+		onContentItemClassifierEditorCreated() {
+			this.register(this.activateWithShortcutKeyId);
+		},
+		onContentItemClassifierEditorDestroyed() {
+			this.deregister(this.activateWithShortcutKeyId);
+		},
 	},
 	mounted() {
 		window.addEventListener('keydown', this.keyDown);
 	},
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.keyDown);
+	},
+	watch: {
+		async isContentItemClassifierEditorActive() {
+			if (this.isContentItemClassifierEditorActive) {
+				await nextTick();
+				scrollToElement(this.$el);
+			}
+		},
 	}
 };
 </script>

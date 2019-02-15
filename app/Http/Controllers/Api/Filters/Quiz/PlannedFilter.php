@@ -18,6 +18,10 @@ class PlannedFilter extends ApiFilter
 
 		$builder = $builder->where(function ($query) use ($plan){
 			foreach ($this->params['list'] as $state) {
+				if (empty($state)) {
+					throw new \Exception('Filter method not specified.', 400);
+				}
+
 				$query->orWhere(function ($query) use ($state, $plan) {
 					$this->{$state}($plan, $query);
 				});

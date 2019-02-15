@@ -2,6 +2,7 @@
 
 namespace Tests\Api\Course;
 
+use App\Models\Role;
 use App\Models\Screen;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -16,7 +17,9 @@ class SlidesTest extends ApiTestCase
 	public function post_slide()
 	{
 		$this->markTestSkipped();
-		$user = User::find(1);
+		$user = factory(User::class)->create();
+		$adminRole = Role::byName('admin');
+		$user->roles()->attach($adminRole);
 		$screen = factory(Screen::class)->create();
 
 		$data = [

@@ -21,7 +21,7 @@ class QuizQuestion extends Model
 		$this->preserve_order = (bool) $value;
 	}
 
-	public function answers()
+	public function quizAnswers()
 	{
 		return $this->hasMany('App\Models\QuizAnswer');
 	}

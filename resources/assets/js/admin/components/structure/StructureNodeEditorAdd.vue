@@ -1,83 +1,82 @@
 <template>
-	<wnl-structure-node-editor-form
-		submit-label="Dodaj"
-		:on-save="onSave"
-		:courseId="courseId"
-		:node="node"
-		@parentChange="onParentChange"
-	/>
+	<div>
+		<wnl-nested-set-editor-form
+			parent-title="Gałąź nadrzędna"
+			parent-subtitle="Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii"
+			title="Powiązana jednostka struktury"
+			subtitle="Wybierz lekcję/grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową."
+			vuex-module="courseStructure"
+			:on-save="onSave"
+			@changeNode="onSelectStructurable"
+		>
+			<wnl-node-autocomplete
+				slot="parentAutocomplete"
+				slot-scope="parentAutocomplete"
+				:selected="parent"
+				@change="parentAutocomplete.validateAndChangeParent"
+			></wnl-node-autocomplete>
+
+			<wnl-structurable-autocomplete
+				slot="autocomplete"
+				:selected="structurable"
+				@change="onSelectStructurable"
+			></wnl-structurable-autocomplete>
+		</wnl-nested-set-editor-form>
+	</div>
 </template>
 
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex';
 
-import WnlStructureNodeEditorForm from 'js/admin/components/structure/StructureNodeEditorForm';
-import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
+import WnlNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
+import WnlStructurableAutocomplete from 'js/admin/components/structure/StructureNodeEditorStructurableAutocomplete';
+import WnlNestedSetEditorForm from 'js/admin/components/nestedSet/NestedSetEditorForm';
 
 export default {
 	components: {
-		WnlStructureNodeEditorForm
+		WnlNodeAutocomplete,
+		WnlStructurableAutocomplete,
+		WnlNestedSetEditorForm
 	},
-	mixins: [
-		scrollToNodeMixin,
-	],
 	props: {
 		courseId: {
 			type: [String, Number],
 			required: true,
 		},
 	},
+	data() {
+		return {
+			structurable: null
+		};
+	},
 	computed: {
 		...mapGetters('courseStructure', ['nodeById']),
 		...mapState('courseStructure', ['selectedNodes']),
-		node() {
+		parent() {
 			if (this.selectedNodes.length === 0) {
 				return null;
 			}
 
-			return {
-				parent: this.nodeById(this.selectedNodes[0])
-			};
+			return this.nodeById(this.selectedNodes[0]);
 		}
 	},
 	methods: {
-		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('courseStructure', {
 			'createNode': 'create',
-			'expandNode': 'expand',
-			'selectNodes': 'select',
 		}),
-		async onSave(node) {
-			try {
-				await this.createNode(node);
+		onSave() {
+			const node = {
+				parent_id: this.parent ? this.parent.id : null,
+				structurable_id: this.structurable.id,
+				structurable_type: this.structurable.type,
+				course_id: this.courseId,
+			};
 
-				if (node.parent_id) {
-					this.expandNode(node.parent_id);
-				}
-
-				this.addAutoDismissableAlert({
-					text: 'Dodano!',
-					type: 'success'
-				});
-			} catch (error) {
-				$wnl.logger.capture(error);
-
-				this.addAutoDismissableAlert({
-					text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
-					type: 'error',
-				});
-			}
+			return this.createNode(node);
 		},
-		onParentChange(parent) {
-			if (parent) {
-				this.selectNodes([parent.id]);
-				this.expandNode(parent.id);
-				this.scrollToNode(parent);
-			} else {
-				this.selectNodes([]);
-			}
+		onSelectStructurable(structurable) {
+			this.structurable = structurable;
 		},
-
 	},
 };
 </script>

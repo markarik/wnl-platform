@@ -13,7 +13,7 @@ const initialState = {
 	[CONTENT_TYPES.ANNOTATION]: {},
 	[CONTENT_TYPES.QUIZ_QUESTION]: {},
 	[CONTENT_TYPES.SLIDE]: {},
-	[CONTENT_TYPES.FLASHCARD]: {}
+	[CONTENT_TYPES.FLASHCARD]: {},
 };
 
 const state = {
@@ -117,8 +117,7 @@ const actions = {
 			$wnl.logger.capture(error);
 			commit(mutationsTypes.CONTENT_CLASSIFIER_SET_ERROR, {contentItemIds: contentIds, contentType});
 		}
-
-	}
+	},
 };
 
 export default {

@@ -1,8 +1,13 @@
 <template>
-	<div :class="{
-		'content-classifier__panel-editor': true,
-		'is-loading': isLoading,
-	}">
+	<div
+		:class="{
+			'content-classifier__panel-editor': true,
+			'is-loading': isLoading,
+		}"
+		tabindex="-1"
+		@keydown="onKeyDown"
+		@blur="$emit('blur', $event)"
+	>
 		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
 		<div v-if="allTaxonomyTerms.length===0">Brak przypisanych pojęć</div>
 		<div v-if="items.length > 0">
@@ -54,6 +59,8 @@
 			</ul>
 
 			<wnl-content-classifier-editor-recent-terms
+				:lastUsedTerm="lastUsedTerm"
+				:lastUsedTermsSet="lastUsedTermsSet"
 				:items="items"
 				@attachTaxonomyTerm="onAttachTaxonomyTerm"
 			/>
@@ -69,9 +76,11 @@
 					/>
 					<wnl-taxonomy-term-autocomplete
 						placeholder="Zacznij pisać, aby wyszukać pojęcie"
-						:disabled="!taxonomyId"
-						@change="onAttachTaxonomyTerm"
 						class="margin left content-classifier__panel-editor__term-select__autocomplete"
+						:disabled="!taxonomyId"
+						:isFocused="isTaxonomyTermAutocompleteFocused"
+						@change="onAttachTaxonomyTerm"
+						@blur="onTaxonomyTermAutocompleteBlur"
 					/>
 				</div>
 			</div>
@@ -130,6 +139,7 @@ import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/Taxono
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import contentClassifierStore from 'js/services/contentClassifierStore';
 import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
+import {scrollToElement} from 'js/utils/animations';
 
 export default {
 	components: {
@@ -140,15 +150,24 @@ export default {
 	},
 	data() {
 		return {
-			taxonomyId: null,
 			isLoading: false,
+			isTaxonomyTermAutocompleteFocused: false,
+			taxonomyId: null,
+			triggerAttachLastUsedTerm: false,
+			triggerAttachLastUsedTermsSet: false,
+			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM),
+			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS, []),
 		};
 	},
 	props: {
 		items: {
 			type: Array,
 			required: true,
-		}
+		},
+		isFocused: {
+			type: Boolean,
+			default: false
+		},
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
@@ -250,11 +269,13 @@ export default {
 				});
 			} finally {
 				this.isLoading = false;
+				this.isTaxonomyTermAutocompleteFocused = true;
 			}
 		},
 		async onTaxonomyChange(taxonomyId) {
 			try {
 				await this.setUpNestedSet(taxonomyId);
+				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TAXONOMY_ID, taxonomyId);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
@@ -262,11 +283,52 @@ export default {
 					type: ALERT_TYPES.ERROR
 				});
 			}
-		}
+		},
+		async onTaxonomyTermAutocompleteBlur() {
+			this.isTaxonomyTermAutocompleteFocused = false;
+		},
+		onKeyDown(event) {
+			if (!this.$shortcutKeyIsEditable(event.target)) {
+				switch (event.key) {
+				case 't':
+					// Disable global shortcut
+					event.stopImmediatePropagation();
+					this.isTaxonomyTermAutocompleteFocused = true;
+					break;
+
+				case 'r':
+					if (this.lastUsedTerm) {
+						this.onAttachTaxonomyTerm(this.lastUsedTerm);
+					}
+					break;
+				case 'R':
+					if (this.lastUsedTermsSet) {
+						this.lastUsedTermsSet.forEach(term => this.onAttachTaxonomyTerm(term));
+					}
+					break;
+				}
+			}
+		},
+	},
+	watch: {
+		async isFocused() {
+			if (this.isFocused) {
+				scrollToElement(this.$el);
+				this.$el.focus();
+			} else {
+				this.$el.blur();
+			}
+		},
 	},
 	async mounted() {
 		try {
 			await this.fetchTaxonomies();
+
+			const lastTaxonomyId = contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TAXONOMY_ID);
+
+			if (lastTaxonomyId) {
+				this.taxonomyId = lastTaxonomyId;
+			}
 		} catch (error) {
 			$wnl.logger.capture(error);
 			this.addAutoDismissableAlert({

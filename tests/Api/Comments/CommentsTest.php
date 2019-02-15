@@ -51,12 +51,15 @@ class CommentsTest extends ApiTestCase
 	public function delete_comment()
 	{
 		Comment::flushEventListeners();
+		QnaQuestion::flushEventListeners();
+		QnaAnswer::flushEventListeners();
 
 		$user = User::find(1);
 		$comment = factory(Comment::class)->create([
 			'user_id' => $user->id
 		]);
 
+		// TODO: Performance issue. Problem here is we iterate over each user in DB. Not sure what to do about it yet.
 		$response = $this
 			->actingAs($user)
 			->json('DELETE', $this->url("/comments/{$comment->id}"));

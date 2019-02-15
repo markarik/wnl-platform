@@ -61,7 +61,7 @@ class CertificatesApiController extends ApiController
 			return $this->respondForbidden("User not allowed to view order details");
 		}
 
-		$file = Storage::get('participation_certificate.jpg');
+		$file = Storage::drive()->get('participation_certificate.jpg');
 		$img = Image::make($file);
 
 		$img->text($order->id, 1740, 915, function($font) {
@@ -124,7 +124,7 @@ class CertificatesApiController extends ApiController
 			return $this->respondForbidden("User did not finish the course");
 		}
 
-		$file = Storage::get('final_certificate.jpg');
+		$file = Storage::drive()->get('final_certificate.jpg');
 		$img = Image::make($file);
 
 		$img->text($order->id, 870, 438, function($font) {

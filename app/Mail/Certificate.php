@@ -13,6 +13,7 @@ class Certificate extends Mailable
 	use Queueable, SerializesModels;
 	public $user;
 	protected $file;
+	public $type;
 
 	/**
 	 * Create a new message instance.

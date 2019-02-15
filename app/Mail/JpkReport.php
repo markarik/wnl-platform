@@ -34,7 +34,7 @@ class JpkReport extends Mailable
      */
     public function build()
     {
-        $fileContents = \Storage::get('exports/' . $this->filename);
+        $fileContents = \Storage::drive()->get('exports/' . $this->filename);
         $lastMonth = Carbon::now()->subMonth();
 
         $message = $this

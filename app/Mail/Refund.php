@@ -36,7 +36,7 @@ class Refund extends Mailable implements ShouldQueue
 	 */
 	public function build()
 	{
-		$invoiceData = \Storage::get($this->invoice->file_path);
+		$invoiceData = \Storage::drive()->get($this->invoice->file_path);
 
 		return $this
 			->view('mail.refund')

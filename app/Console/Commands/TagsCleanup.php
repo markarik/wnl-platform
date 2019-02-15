@@ -42,7 +42,7 @@ class TagsCleanup extends Command
 	 */
 	public function handle()
 	{
-		$source = \Storage::get($this->argument('filename'));
+		$source = \Storage::drive()->get($this->argument('filename'));
 		$rows = explode(self::ROW_DELIMITER, $source);
 
 		if (!$rows) {

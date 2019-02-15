@@ -37,8 +37,8 @@ class QuizTestCompareRedis extends Command
      */
     public function handle()
     {
-		$byProfile = json_decode(\Storage::get("quiz_test_dump_before.json"));
-		$byUser = collect(json_decode(\Storage::get("quiz_test_dump_after.json")));
+		$byProfile = json_decode(\Storage::drive()->get("quiz_test_dump_before.json"));
+		$byUser = collect(json_decode(\Storage::drive()->get("quiz_test_dump_after.json")));
 
 		foreach ($byProfile as $record) {
 			list ($userId, $quizId, $score) = $record;

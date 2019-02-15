@@ -1,7 +1,8 @@
 <template>
-	<div>
+	<div @click="$emit('click', $event)">
 		<div class="parent-term">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}}</div>
 		<strong>{{term.tag.name}}</strong>
+		<slot></slot>
 	</div>
 </template>
 

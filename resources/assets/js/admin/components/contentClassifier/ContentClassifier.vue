@@ -33,6 +33,21 @@
 				</wnl-tag>
 			</div>
 
+			<div>
+				<wnl-taxonomy-term-with-ancestors
+					v-for="term in filterTaxonomyTerms"
+					:term="term"
+					:ancestors="getAncestorsById(term.id)"
+					:key="term.id"
+					@click="onTaxonomyTermDelete(term)"
+					class="clickable"
+				>
+					<span class="icon is-small">
+						<i class="fa fa-times"></i>
+					</span>
+				</wnl-taxonomy-term-with-ancestors>
+			</div>
+
 			<div class="content-classifier__type-filters">
 				<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier__type-filters__item">
 					<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="meta.isActive"/>
@@ -161,7 +176,7 @@
 
 <script>
 import axios from 'axios';
-import {mapActions} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 import {groupBy} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
@@ -174,6 +189,7 @@ import WnlAnnotationResult from 'js/admin/components/contentClassifier/Annotatio
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 import WnlTagAutocomplete from 'js/admin/components/global/TagAutocomplete';
 import WnlTaxonomyTermSelector from 'js/components/global/taxonomies/TaxonomyTermSelector';
+import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 import WnlTag from 'js/admin/components/global/Tag';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
@@ -184,6 +200,7 @@ export default {
 		WnlTagAutocomplete,
 		WnlTag,
 		WnlTaxonomyTermSelector,
+		WnlTaxonomyTermWithAncestors,
 	},
 	data() {
 		const contentTypes = {
@@ -225,12 +242,14 @@ export default {
 			contentTypes,
 			filters,
 			filterTags: [],
+			filterTaxonomyTerms: [],
 			filteredContent: [],
 			selectedItemIds: [],
 			isLoading: false,
 		};
 	},
 	computed: {
+		...mapGetters('taxonomyTerms', ['getAncestorsById']),
 		groupedFilteredContent() {
 			return groupBy(this.filteredContent, 'type');
 		},
@@ -323,11 +342,17 @@ export default {
 			}
 		},
 		onTermSelect(term) {
-			console.log(term);
+			if (!this.filterTaxonomyTerms.find(({id}) => id === term.id)) {
+				this.filterTaxonomyTerms.push(term);
+			}
 		},
 		onTagDelete(tag) {
 			const index = this.filterTags.findIndex(({id}) => id === tag.id);
 			this.filterTags.splice(index, 1);
+		},
+		onTaxonomyTermDelete(term) {
+			const index = this.filterTaxonomyTerms.findIndex(({id}) => id === term.id);
+			this.filterTaxonomyTerms.splice(index, 1);
 		}
 	},
 };

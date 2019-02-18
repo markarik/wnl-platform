@@ -10,3 +10,5 @@ parameters:
         - '#Method Illuminate\\Contracts\\Foundation\\Application::environment\(\) invoked with 2 parameters, 0 required#'
         # https://github.com/nunomaduro/larastan/issues/101
         - '#Call to an undefined method Psr\\Log\\LoggerInterface::[a-zA-Z]+\(\)#'
+        # https://github.com/nunomaduro/larastan/issues/40
+        - '#Call to an undefined method .+Illuminate\\Database\\Eloquent\\Model::restore\(\)#'

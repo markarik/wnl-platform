@@ -72,7 +72,8 @@ class Slide extends Model implements WithReactions
 
 	public function setSnippetAttribute($value)
 	{
-		$this->attributes['snippet'] = json_encode(Parser::createSnippet($value));
+		$snippet = (new Parser())->createSnippet($value);
+		$this->attributes['snippet'] = json_encode($snippet);
 	}
 
 	public function toSearchableArray()

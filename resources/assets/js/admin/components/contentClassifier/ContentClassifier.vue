@@ -97,17 +97,21 @@
 		</form>
 
 
-		<div class="content-classifier__panels">
+		<div class="content-classifier__panels" v-if="filteredContent !== null">
 			<div class="content-classifier__panel-results">
 				<div class="content-classifier__panel-results__header">
 					<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
 					<a @click="selectAll">Zaznacz wszystkie</a>
 				</div>
-				<div v-if="!isLoading">
-					<div v-for="(meta, contentType) in contentTypes" :key="contentType">
+				<wnl-text-loader v-if="isLoading" />
+				<div v-else-if="filteredContent.length">
+					<div
+						v-for="(meta, contentType) in contentTypes"
+						:key="contentType"
+					>
+						<template v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length">
 						<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
 						<ul
-							v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length"
 							class="content-classifier__result-list margin bottom"
 						>
 							<li
@@ -123,10 +127,10 @@
 								</span>
 							</li>
 						</ul>
-						<p class="margin bottom" v-else>Brak wyników</p>
+						</template>
 					</div>
 				</div>
-				<wnl-text-loader v-else />
+				<div v-else>Brak wyników</div>
 			</div>
 			<wnl-content-classifier-editor
 				v-show="!isLoading"
@@ -291,7 +295,7 @@ export default {
 			byIdFilters,
 			byTagsFilter: [],
 			byTaxonomyTermsFilter: [],
-			filteredContent: [],
+			filteredContent: null,
 			selectedItemIds: [],
 			isLoading: false,
 			activeTab: TABS.BY_CLASSIFICATION,
@@ -375,6 +379,7 @@ export default {
 		async onSearch(promises) {
 			this.isLoading = true;
 			this.selectedItemIds = [];
+			this.filteredContent = [];
 
 			try {
 				const values = await Promise.all(promises);

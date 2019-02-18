@@ -39,6 +39,10 @@
 					name="name"
 					class="margin top bottom"
 				>Nazwa</wnl-form-text>
+				<wnl-form-color
+					name="color"
+					class="margin top bottom"
+				>Kolor</wnl-form-color>
 				<wnl-textarea
 					name="description"
 					class="margin top bottom"
@@ -69,12 +73,20 @@
 
 <script>
 import {mapActions} from 'vuex';
-import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
+import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea, Color as WnlFormColor} from 'js/components/global/form';
 import WnlTaxonomyTermsEditor from 'js/admin/components/taxonomies/TaxonomyTermsEditor';
 import {getApiUrl} from 'js/utils/env';
 import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
+	components: {
+		WnlFormText,
+		WnlForm,
+		WnlSubmit,
+		WnlTextarea,
+		WnlTaxonomyTermsEditor,
+		WnlFormColor
+	},
 	props: {
 		id: {
 			type: [String, Number],
@@ -97,13 +109,6 @@ export default {
 		resourceRoute() {
 			return this.isEdit ? `taxonomies/${this.id}` : 'taxonomies';
 		},
-	},
-	components: {
-		WnlFormText,
-		WnlForm,
-		WnlSubmit,
-		WnlTextarea,
-		WnlTaxonomyTermsEditor,
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

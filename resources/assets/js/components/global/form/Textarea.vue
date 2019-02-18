@@ -6,11 +6,12 @@
 		</label>
 
 		<textarea
-				  class="textarea normal"
-				  :name="name"
-				  @input="$emit('input', $event.target.value)"
-				  :placeholder="placeholder"
-				  v-model="inputValue"
+					class="textarea normal"
+					:name="name"
+					@input="$emit('input', $event.target.value)"
+					:placeholder="placeholder"
+					v-model="inputValue"
+					@keydown.enter.stop
 		>
 		</textarea>
 

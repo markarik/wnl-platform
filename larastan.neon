@@ -4,6 +4,7 @@ parameters:
     ignoreErrors:
         # https://github.com/nunomaduro/larastan/issues/14
         - '#Call to an undefined static method Illuminate\\Support\\Facades\\Redis::[a-z]+\(\)#'
+        - '#Call to an undefined method Illuminate\\Redis\\Connections\\Connection::[a-z]+\(\)#'
         - '#Call to an undefined static method GrahamCampbell\\Throttle\\Facades\\Throttle::hit\(\)#'
         # https://github.com/nunomaduro/larastan/issues/91
         - '#Method Illuminate\\Contracts\\Foundation\\Application::environment\(\) invoked with 2 parameters, 0 required#'

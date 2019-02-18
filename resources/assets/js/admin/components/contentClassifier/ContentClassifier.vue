@@ -35,39 +35,31 @@
 
 			<h5 class="title is-5">Aktywne filtry</h5>
 
-			<strong>Tagi:</strong>
-			<div v-if="byTagsFilter.length > 0">
-				<wnl-tag
-					v-for="tag in byTagsFilter"
-					:key="tag.id"
-					:tag="tag"
-					@click="onTagDelete(tag)"
-					class="clickable"
-				>
-					<span class="icon is-small">
-						<i class="fa fa-times"></i>
-					</span>
-				</wnl-tag>
-			</div>
-			<small v-else>Nie ma wybranych tagów</small>
+			<wnl-tag
+				v-for="tag in byTagsFilter"
+				:key="tag.id"
+				:tag="tag"
+				@click="onTagDelete(tag)"
+				class="clickable"
+			>
+				<span class="icon is-small">
+					<i class="fa fa-times"></i>
+				</span>
+			</wnl-tag>
 
-			<strong>Pojęcia:</strong>
-			<div v-if="byTaxonomyTermsFilter.length > 0">
-				<wnl-taxonomy-term-with-ancestors
-					v-for="term in byTaxonomyTermsFilter"
-					:term="term"
-					:ancestors="getAncestorsById(term.id)"
-					:key="term.id"
-					@click="onTaxonomyTermDelete(term)"
-					class="clickable"
-					is-bordered
-				>
-					<span class="icon is-small">
-						<i class="fa fa-times"></i>
-					</span>
-				</wnl-taxonomy-term-with-ancestors>
-			</div>
-			<small v-else>Nie ma wybranych pojęć</small>
+			<wnl-taxonomy-term-with-ancestors
+				v-for="term in byTaxonomyTermsFilter"
+				:term="term"
+				:ancestors="getAncestorsById(term.id)"
+				:key="term.id"
+				@click="onTaxonomyTermDelete(term)"
+				class="clickable"
+				is-bordered
+			>
+				<span class="icon is-small">
+					<i class="fa fa-times"></i>
+				</span>
+			</wnl-taxonomy-term-with-ancestors>
 
 			<div class="content-classifier__type-filters margin vertical">
 				<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier__type-filters__item">
@@ -75,7 +67,13 @@
 					<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
 				</div>
 			</div>
-			<button class="button submit is-primary" type="submit">Szukaj</button>
+			<button
+				class="button submit is-primary"
+				type="submit"
+				:disabled="byClassificationSubmitDisabled"
+			>
+				Szukaj
+			</button>
 		</form>
 
 
@@ -84,7 +82,13 @@
 				<label class="label">{{meta.name}}</label>
 				<input class="input" placeholder="Wpisz id po przecinku: 36,45,..." v-model="byIdFilters[contentType]"/>
 			</div>
-			<button class="button submit is-primary" type="submit">Szukaj</button>
+			<button
+				class="button submit is-primary"
+				type="submit"
+				:disabled="byIdSubmitDisabled"
+			>
+				Szukaj
+			</button>
 		</form>
 
 
@@ -283,6 +287,13 @@ export default {
 		},
 		selectedItems() {
 			return this.filteredContent.filter(item => this.selectedItemIds.includes(item.id));
+		},
+		byClassificationSubmitDisabled() {
+			return (this.byTaxonomyTermsFilter.length === 0 && this.byTagsFilter.length === 0) ||
+				Object.values(this.contentTypes).find(item => item.isActive) === undefined;
+		},
+		byIdSubmitDisabled() {
+			return Object.values(this.byIdFilters).find(filter => filter !== '') === undefined;
 		}
 	},
 	methods: {

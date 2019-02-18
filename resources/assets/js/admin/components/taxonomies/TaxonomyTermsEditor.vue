@@ -12,9 +12,9 @@
 					</span>
 				</span>
 		</template>
-		<wnl-taxonomy-terms-list slot="nodesList" :terms="getRootNodes"/>
+		<wnl-taxonomy-terms-list slot="nodes-list" :terms="getRootNodes"/>
 		<wnl-taxonomy-term-editor-right
-			slot="panelRight"
+			slot="panel-right"
 			:taxonomyId="taxonomyId"
 		/>
 	</wnl-nested-set-editor>

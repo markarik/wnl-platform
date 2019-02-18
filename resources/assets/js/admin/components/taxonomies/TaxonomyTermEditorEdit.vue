@@ -106,12 +106,16 @@ export default {
 		},
 	},
 	created() {
+		if (!this.term) return;
+
 		this.description = this.term.description;
 		this.tag = this.term.tag;
 		this.parent = this.getAncestorsById(this.term.id).slice(-1)[0];
 	},
 	watch: {
 		term() {
+			if (!this.term) return;
+
 			this.description = this.term.description;
 			this.tag = this.term.tag;
 			this.parent = this.getAncestorsById(this.term.id).slice(-1)[0];

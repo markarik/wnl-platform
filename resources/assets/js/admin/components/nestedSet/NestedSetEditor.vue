@@ -4,11 +4,11 @@
 			<div class="nested-set-editor__panel__header">
 				<slot name="header"></slot>
 			</div>
-			<slot name="nodesList" v-if="!isLoading"/>
+			<slot name="nodes-list" v-if="!isLoading"/>
 			<wnl-text-loader v-else />
 		</div>
 		<div class="nested-set-editor__panel is-right">
-			<slot name="panelRight"></slot>
+			<slot name="panel-right"></slot>
 		</div>
 	</div>
 </template>

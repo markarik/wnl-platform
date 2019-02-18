@@ -62,7 +62,7 @@ export default {
 			type: Boolean,
 			default: false
 		},
-		vuexModule: {
+		vuexModuleName: {
 			type: String,
 			required: true
 		},
@@ -73,11 +73,18 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+		getter(getter, payload) {
+			const storeGetter = this.$store.getters[`${this.vuexModuleName}/${getter}`];
+			if (typeof storeGetter === 'function') {
+				return storeGetter(payload);
+			}
+			return storeGetter(payload);
+		},
 		action(action, payload = {}) {
-			return this.$store.dispatch(`${this.vuexModule}/${action}`, payload);
+			return this.$store.dispatch(`${this.vuexModuleName}/${action}`, payload);
 		},
 		validateParent(parent, source) {
-			if (parent && this.action('getAncestorsById', parent.id).find(t => t.id === source.id)) {
+			if (parent && this.getter('getAncestorsById', parent.id).find(t => t.id === source.id)) {
 				this.addAutoDismissableAlert({
 					text: 'Nie możesz przenieść elementu do jego potomka.',
 					type: ALERT_TYPES.ERROR,

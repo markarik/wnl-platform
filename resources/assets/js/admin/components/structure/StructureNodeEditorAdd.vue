@@ -2,25 +2,25 @@
 	<div>
 		<wnl-nested-set-editor-form
 			parent-title="Gałąź nadrzędna"
-			parent-subtitle="Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii"
+			parent-subtitle="Pozostaw puste, aby dodać gałąź na najwyższym poziomie."
 			title="Powiązana jednostka struktury"
 			subtitle="Wybierz lekcję/grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową."
 			vuex-module="courseStructure"
 			:on-save="onSave"
 			@changeNode="onSelectStructurable"
 		>
-			<wnl-node-autocomplete
+			<wnl-structure-node-editor-node-autocomplete
 				slot="parentAutocomplete"
 				slot-scope="parentAutocomplete"
 				:selected="parent"
 				@change="parentAutocomplete.validateAndChangeParent"
-			></wnl-node-autocomplete>
+			></wnl-structure-node-editor-node-autocomplete>
 
-			<wnl-structurable-autocomplete
+			<wnl-structure-node-editor-structurable-autocomplete
 				slot="autocomplete"
 				:selected="structurable"
 				@change="onSelectStructurable"
-			></wnl-structurable-autocomplete>
+			></wnl-structure-node-editor-structurable-autocomplete>
 		</wnl-nested-set-editor-form>
 	</div>
 </template>
@@ -28,14 +28,14 @@
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex';
 
-import WnlNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
-import WnlStructurableAutocomplete from 'js/admin/components/structure/StructureNodeEditorStructurableAutocomplete';
+import WnlStructureNodeEditorNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
+import WnlStructureNodeEditorStructurableAutocomplete from 'js/admin/components/structure/StructureNodeEditorStructurableAutocomplete';
 import WnlNestedSetEditorForm from 'js/admin/components/nestedSet/NestedSetEditorForm';
 
 export default {
 	components: {
-		WnlNodeAutocomplete,
-		WnlStructurableAutocomplete,
+		WnlStructureNodeEditorNodeAutocomplete,
+		WnlStructureNodeEditorStructurableAutocomplete,
 		WnlNestedSetEditorForm
 	},
 	props: {

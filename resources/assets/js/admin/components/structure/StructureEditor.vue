@@ -14,8 +14,8 @@
 					</span>
 				</span>
 			</template>
-			<wnl-structure-nodes-list slot="nodesList" :nodes="getRootNodes"/>
-			<wnl-structure-node-editor-right slot="panelRight" :courseId="courseId"/>
+			<wnl-structure-nodes-list slot="nodes-list" :nodes="getRootNodes"/>
+			<wnl-structure-node-editor-right slot="panel-right" :courseId="courseId"/>
 		</wnl-nested-set-editor>
 	</div>
 </template>

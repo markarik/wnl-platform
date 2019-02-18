@@ -2,24 +2,24 @@
 	<wnl-nested-set-editor-form
 		v-if="node"
 		parent-title="Gałąź nadrzędna"
-		parent-subtitle="Pozostaw puste, aby dodać pojęcie na 1. poziomie taksonomii"
+		parent-subtitle="Pozostaw puste, aby dodać gałąź na najwyższym poziomie."
 		title="Powiązana jednostka struktury"
 		subtitle="Wybierz lekcję/grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową."
 		vuex-module="courseStructure"
 		:on-save="onSave"
 	>
-		<wnl-node-autocomplete
+		<wnl-structure-node-editor-node-autocomplete
 			slot="parentAutocomplete"
 			slot-scope="parentAutocomplete"
 			:selected="parent"
 			@change="parentAutocomplete.validateAndChangeParent"
-		></wnl-node-autocomplete>
+		></wnl-structure-node-editor-node-autocomplete>
 
-		<wnl-structurable-autocomplete
+		<wnl-structure-node-editor-structurable-autocomplete
 			slot="autocomplete"
 			:selected="structurable"
 			@change="onSelectStructurable"
-		></wnl-structurable-autocomplete>
+		></wnl-structure-node-editor-structurable-autocomplete>
 	</wnl-nested-set-editor-form>
 	<div v-else class="notification is-info">
 		<span class="icon">
@@ -32,16 +32,16 @@
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex';
 
-import WnlNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
-import WnlStructurableAutocomplete from 'js/admin/components/structure/StructureNodeEditorStructurableAutocomplete';
+import WnlStructureNodeEditorNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
+import WnlStructureNodeEditorStructurableAutocomplete from 'js/admin/components/structure/StructureNodeEditorStructurableAutocomplete';
 import WnlNestedSetEditorForm from 'js/admin/components/nestedSet/NestedSetEditorForm';
 
 
 export default {
 	components: {
 		WnlNestedSetEditorForm,
-		WnlStructurableAutocomplete,
-		WnlNodeAutocomplete
+		WnlStructureNodeEditorStructurableAutocomplete,
+		WnlStructureNodeEditorNodeAutocomplete
 	},
 	props: {
 		courseId: {
@@ -85,11 +85,15 @@ export default {
 		},
 	},
 	created() {
+		if (!this.node) return;
+
 		this.parent = this.getAncestorsById(this.node.id).slice(-1)[0];
 		this.structurable = this.node.structurable;
 	},
 	watch: {
 		node() {
+			if (!this.node) return;
+
 			this.structurable = this.node.structurable;
 			this.parent = this.getAncestorsById(this.node.id).slice(-1)[0];
 		}

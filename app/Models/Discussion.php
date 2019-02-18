@@ -8,7 +8,7 @@ class Discussion extends Model
 {
 	protected $fillable = ['name'];
 
-	public function questions() {
+	public function qnaQuestions() {
 		return $this->hasMany('\App\Models\QnaQuestion', 'discussion_id');
 	}
 

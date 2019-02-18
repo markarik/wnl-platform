@@ -1,11 +1,11 @@
 <template>
 	<div v-if="canAccess" class="content-item-classifier">
 		<template v-if="hasContentItem">
-			<div v-if="alwaysExpanded || expanded" class="content-item-classifier__editor">
+			<div v-if="isAlwaysActive || isActive" class="content-item-classifier__editor">
 				<div
-					v-if="!alwaysExpanded"
+					v-if="!isAlwaysActive"
 					class="content-item-classifier__editor__header clickable"
-					@click="expanded=false"
+					@click="updateIsActive(false)"
 				>
 					<div>
 						<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
@@ -18,11 +18,13 @@
 				<wnl-content-classifier-editor
 					v-if="hasContentItem"
 					:items="[contentItem]"
+					:isFocused="isFocused"
+					@blur="$emit('blur', $event)"
 					@taxonomyTermAttached="onTaxonomyTermAttached"
 					@taxonomyTermDetached="onTaxonomyTermDetached"
 				/>
 			</div>
-			<div v-else class="clickable content-item-classifier__tag-names" @click="expanded=true">
+			<div v-else class="clickable content-item-classifier__tag-names" @click="updateIsActive(true)">
 				<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
 				<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
 				<span v-else>brak</span>
@@ -66,7 +68,9 @@
 
 <script>
 import {mapGetters, mapMutations} from 'vuex';
+
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
+
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 import {CONTENT_CLASSIFIER_ATTACH_TERM, CONTENT_CLASSIFIER_DETACH_TERM} from 'js/store/mutations-types';
 import {REQUEST_STATES} from 'js/consts/state';
@@ -84,15 +88,10 @@ export default {
 	},
 	data() {
 		return {
-			expanded: false,
 			CONTENT_TYPE_NAMES,
 		};
 	},
 	props: {
-		alwaysExpanded: {
-			type: Boolean,
-			default: false,
-		},
 		contentItemId: {
 			type: [Number, String],
 			required: true,
@@ -100,7 +99,19 @@ export default {
 		contentItemType: {
 			type: String,
 			required: true
-		}
+		},
+		isActive: {
+			type: Boolean,
+			default: false,
+		},
+		isAlwaysActive: {
+			type: Boolean,
+			default: false,
+		},
+		isFocused: {
+			type: Boolean,
+			default: false
+		},
 	},
 	computed: {
 		...mapGetters('contentClassifier', ['getContentItem', 'canAccess', 'getContentItemState']),
@@ -110,11 +121,11 @@ export default {
 		hasContentItem() {
 			return this.contentItem;
 		},
-		isError() {
-			return this.getContentItemState({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) === REQUEST_STATES.ERROR;
-		},
 		hasTaxonomyTerms() {
 			return this.contentItem.taxonomyTerms && this.contentItem.taxonomyTerms.length > 0;
+		},
+		isError() {
+			return this.getContentItemState({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) === REQUEST_STATES.ERROR;
 		},
 	},
 	methods: {
@@ -134,6 +145,15 @@ export default {
 				contentItem: this.contentItem
 			});
 		},
+		updateIsActive(isActive) {
+			this.$emit('updateIsActive', isActive);
+		},
+	},
+	mounted() {
+		if (this.canAccess) this.$emit('editorCreated');
+	},
+	beforeDestroy() {
+		this.$emit('editorDestroyed');
 	},
 };
 </script>

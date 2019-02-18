@@ -78,7 +78,7 @@ export default {
 			if (typeof storeGetter === 'function') {
 				return storeGetter(payload);
 			}
-			return storeGetter(payload);
+			return storeGetter;
 		},
 		action(action, payload = {}) {
 			return this.$store.dispatch(`${this.vuexModuleName}/${action}`, payload);

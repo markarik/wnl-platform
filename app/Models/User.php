@@ -290,7 +290,7 @@ class User extends Authenticatable
 	/**
 	 * Get the current user or find by id.
 	 *
-	 * @param $id
+	 * @param string $id
 	 * @param array $columns
 	 *
 	 * @return User|\Illuminate\Contracts\Auth\Authenticatable

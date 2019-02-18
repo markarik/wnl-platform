@@ -79,7 +79,7 @@ class SlidesImport extends Command
 	/**
 	 * Import slideshow form file.
 	 *
-	 * @param $file
+	 * @param string $file
 	 * @param null $screenId
 	 * @param null $discussionId
 	 * @param bool $enableSlidesMatching

@@ -3,7 +3,6 @@
 use Storage;
 use Artisan;
 use App\Models\QuizQuestion;
-use App\Models\Slide;
 use Lib\SlideParser\Parser;
 use Illuminate\Console\Command;
 
@@ -41,6 +40,7 @@ class LinkQuestionsToSlides extends Command
 	 *
 	 * @param Parser $parser
 	 * @return mixed
+	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
 	 */
 	public function handle(Parser $parser)
 	{
@@ -81,9 +81,11 @@ class LinkQuestionsToSlides extends Command
 	/**
 	 * Import slideshow form file.
 	 *
-	 * @param $file
+	 * @param string $file
+	 * @return array
+	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
 	 */
-	public function linkSlidesFromFile($file, $screenId = null)
+	public function linkSlidesFromFile($file)
 	{
 		$stats = [
 			'all' => 0,

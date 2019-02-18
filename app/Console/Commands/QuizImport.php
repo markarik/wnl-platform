@@ -46,6 +46,7 @@ class QuizImport extends Command
 	 * Execute the console command.
 	 *
 	 * @return mixed
+	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
 	 */
 	public function handle()
 	{
@@ -73,7 +74,8 @@ class QuizImport extends Command
 	/**
 	 * Import quiz set form file.
 	 *
-	 * @param $file
+	 * @param string $file
+	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
 	 */
 	public function importFile($file)
 	{

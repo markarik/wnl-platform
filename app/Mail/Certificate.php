@@ -2,10 +2,10 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Storage;
 
 class Certificate extends Mailable
@@ -18,7 +18,10 @@ class Certificate extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
-	 * @param $file
+	 * @param string $file
+	 * @param User $user
+	 * @param string $type
+	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
 	 */
 	public function __construct($file, $user, $type)
 	{

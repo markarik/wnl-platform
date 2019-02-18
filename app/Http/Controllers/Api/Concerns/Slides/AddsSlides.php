@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Concerns\Slides;
 
 use App\Models\Presentable;
+use App\Models\Screen;
 use App\Models\Slide;
 use DB;
 use Illuminate\Support\Collection;
@@ -12,7 +13,7 @@ trait AddsSlides
 	/**
 	 * Increment order no. of all slides above the submitted order no.
 	 *
-	 * @param $presentables
+	 * @param Collection $presentables slides section, subsection, categories
 	 */
 	protected function incrementOrderNumber($presentables)
 	{
@@ -30,8 +31,8 @@ trait AddsSlides
 	/**
 	 * Attach slide to presentables.
 	 *
-	 * @param $slide
-	 * @param $presentables
+	 * @param Slide $slide
+	 * @param Collection $presentables slides section, subsection, categories
 	 */
 	protected function attachSlide($slide, $presentables)
 	{
@@ -45,8 +46,8 @@ trait AddsSlides
 	/**
 	 * Get slide that currently has the given order no.
 	 *
-	 * @param $slideshowId
-	 * @param $orderNumber
+	 * @param int $slideshowId
+	 * @param int $orderNumber
 	 *
 	 * @return mixed
 	 */
@@ -65,8 +66,8 @@ trait AddsSlides
 	/**
 	 * Get slides section, subsection, categories etc.
 	 *
-	 * @param $slide
-	 * @param $screen
+	 * @param Slide $slide
+	 * @param Screen $screen
 	 *
 	 * @return Collection
 	 */
@@ -97,8 +98,8 @@ trait AddsSlides
 	/**
 	 * Figure out the correct order number in each presentables group
 	 *
-	 * @param $currentSlide
-	 * @param $presentables
+	 * @param Slide $currentSlide
+	 * @param Collection $presentables slides section, subsection, categories
 	 *
 	 * @return Collection
 	 */

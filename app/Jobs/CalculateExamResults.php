@@ -13,10 +13,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-
-/**
- * @property bool mail
- */
 class CalculateExamResults implements ShouldQueue
 {
 	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -27,11 +23,9 @@ class CalculateExamResults implements ShouldQueue
 	/**
 	 * Create a new job instance.
 	 *
-	 * @param Order $order
-	 * @param bool $proforma
-	 * @param bool $send
-	 *
-	 * @internal param bool $mail
+	 * @param mixed $examId
+	 * @param string $userId
+	 * @param array $answers
 	 */
 	public function __construct($examId, $userId, $answers)
 	{

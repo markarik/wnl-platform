@@ -2,11 +2,11 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class JpkReport extends Mailable
 {
@@ -18,8 +18,8 @@ class JpkReport extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param $users
-     * @param $filename
+     * @param string $filename
+     * @param User[] $users
      */
     public function __construct($filename, $users)
     {

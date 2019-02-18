@@ -53,7 +53,7 @@ class TagsApiController extends ApiController {
 	}
 
 	/**
-	 * @param $id
+	 * @param string $id
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Throwable
 	 */

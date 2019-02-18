@@ -1,13 +1,14 @@
 <?php namespace App\Http\Controllers\Api\Transformers;
 
 use App\Models\Reaction;
+use Illuminate\Database\Eloquent\Model;
 
 class ReactionsCountTransformer
 {
 	/**
 	 * Get formatted reactions counters and flags;
 	 *
-	 * @param $reactable
+	 * @param Model $reactable
 	 * @return array
 	 */
 	public static function transform($reactable)

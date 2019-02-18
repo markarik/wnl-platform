@@ -50,7 +50,7 @@ class ApiController extends Controller
 	/**
 	 * Get a resource.
 	 *
-	 * @param $id
+	 * @param string $id
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
@@ -81,7 +81,7 @@ class ApiController extends Controller
 	/**
 	 * Delete a resource.
 	 *
-	 * @param $id
+	 * @param string $id
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
@@ -122,7 +122,7 @@ class ApiController extends Controller
 	/**
 	 * Get resource model class name.
 	 *
-	 * @param $resource
+	 * @param string $resource
 	 *
 	 * @return string
 	 */
@@ -134,8 +134,8 @@ class ApiController extends Controller
 	/**
 	 * Dispatch event.
 	 *
-	 * @param $model
-	 * @param $resourceName
+	 * @param Model $model
+	 * @param string $resourceName
 	 */
 	protected static function dispatchRemovedEvent($model, $resourceName)
 	{
@@ -149,7 +149,7 @@ class ApiController extends Controller
 	/**
 	 * Get resource transformer name.
 	 *
-	 * @param $resource
+	 * @param string $resource
 	 *
 	 * @return string
 	 */
@@ -161,7 +161,7 @@ class ApiController extends Controller
 	/**
 	 * Convert resource name to a class name.
 	 *
-	 * @param $resource
+	 * @param string $resource
 	 *
 	 * @return string
 	 */
@@ -173,7 +173,7 @@ class ApiController extends Controller
 	/**
 	 * Determine whether a resource should be included.
 	 *
-	 * @param $name
+	 * @param string $name
 	 *
 	 * @return bool
 	 */
@@ -185,7 +185,7 @@ class ApiController extends Controller
 	/**
 	 * Determine which fields should be excluded from response.
 	 *
-	 * @param $name
+	 * @param string $name
 	 *
 	 * @return bool
 	 */
@@ -195,7 +195,7 @@ class ApiController extends Controller
 	}
 
 	/**
-	 * @param $results
+	 * @param mixed $results
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
@@ -207,7 +207,7 @@ class ApiController extends Controller
 	}
 
 	/**
-	 * @param $data
+	 * @param mixed $data
 	 *
 	 * @return array
 	 */

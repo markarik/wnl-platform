@@ -2,10 +2,10 @@
 
 namespace App\Mail;
 
+use App\Models\Coupon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class StudyGroup extends Mailable
 {
@@ -16,7 +16,7 @@ class StudyGroup extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
-	 * @param $coupon
+	 * @param Coupon $coupon
 	 */
     public function __construct($coupon)
     {

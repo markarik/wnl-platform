@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Api\Concerns\Slides;
 
 use App\Models\Presentable;
+use App\Models\Slide;
 use DB;
+use Illuminate\Database\Eloquent\Model;
 
 trait RemovesSlides
 {
 	/**
 	 * Decrements order no. of all slides above the submitted order no.
 	 *
-	 * @param $presentables
+	 * @param Presentable[] $presentables
 	 */
 	protected function decrementOrderNumber($presentables)
 	{
@@ -28,8 +30,8 @@ trait RemovesSlides
 	/**
 	 * Detach slide from presentables.
 	 *
-	 * @param $slide
-	 * @param $presentables
+	 * @param Slide $slide
+	 * @param Model[] $presentables
 	 */
 	protected function detachSlide($slide, $presentables)
 	{
@@ -42,8 +44,8 @@ trait RemovesSlides
 	/**
 	 * Get slides order number.
 	 *
-	 * @param $slide
-	 * @param $presentable
+	 * @param Slide $slide
+	 * @param Model $presentable
 	 *
 	 * @return mixed
 	 */

@@ -19,7 +19,7 @@ class CorrectiveInvoice extends Mailable implements ShouldQueue
 	 *
 	 * @param Order $order
 	 * @param Invoice $invoice
-	 * @param $value
+	 * @param string $value
 	 */
 	public function __construct(Order $order, Invoice $invoice, $value)
 	{

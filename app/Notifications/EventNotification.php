@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Events\Event;
 use App\Notifications\Media\DatabaseChannel;
 use App\Notifications\Media\LiveChannel;
 use Illuminate\Broadcasting\Channel;
@@ -21,8 +22,8 @@ class EventNotification extends Notification
 	/**
 	 * Create a new notification instance.
 	 *
-	 * @param $event
-	 * @param $channel
+	 * @param Event $event
+	 * @param string $channel
 	 */
 	public function __construct($event, $channel)
 	{
@@ -43,6 +44,9 @@ class EventNotification extends Notification
 		return [LiveChannel::class, DatabaseChannel::class];
 	}
 
+	/**
+	 * @return Channel
+	 */
 	public function broadcastOn()
 	{
 		return new Channel($this->channel);

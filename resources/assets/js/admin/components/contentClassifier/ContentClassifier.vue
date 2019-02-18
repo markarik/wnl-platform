@@ -19,13 +19,13 @@
 		</div>
 
 		<wnl-content-classifier-filter-by-classification
-			v-if="activeTab === TABS.BY_CLASSIFICATION"
+			v-show="activeTab === TABS.BY_CLASSIFICATION"
 			:content-types="contentTypes"
 			@search="onByTagSearch"
 		/>
 
 		<wnl-content-classifier-filter-by-ids
-			v-if="activeTab === TABS.BY_ID"
+			v-show="activeTab === TABS.BY_ID"
 			:contentTypes="contentTypes"
 			@search="onSearchById"
 		/>
@@ -52,7 +52,7 @@
 								:key="contentItem.id"
 								:is="meta.component"
 								:item="contentItem"
-								:is-active="selectedItems.find(item => item.id === contentItem.id && item.type === contentItem.type)"
+								:is-active="selectedItems.findIndex(item => item.id === contentItem.id && item.type === contentItem.type) > -1"
 								@click="toggleSelected(contentItem)"
 							/>
 						</ul>

@@ -30,7 +30,7 @@ script:
   - php vendor/bin/phpunit --filter=Http
   - yarn run test
   - yarn run lint
-  - php artisan code:analyse --level 2
+  - php artisan code:analyse --level 3
 
 after_failure:
   - cat storage/logs/laravel.log | grep testing.ERROR

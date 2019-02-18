@@ -140,7 +140,7 @@ class QuizImport extends Command
 			$hits = 0;
 			$isCorrect = trim($values[6]) === chr(64 + $i);
 
-			$question->answers()->firstOrCreate([
+			$question->quizAnswers()->firstOrCreate([
 				'text'       => $values[$i],
 				'is_correct' => $isCorrect,
 				'hits'       => $hits,
@@ -227,7 +227,7 @@ class QuizImport extends Command
 				$this->warn('Similar question found! Similarity: ' . ceil($similarity) . '%');
 				$this->info('Database:');
 				dump($question->text . PHP_EOL);
-				dump($question->answers->pluck('text')->toArray());
+				dump($question->quizAnswers->pluck('text')->toArray());
 
 				$this->info('File:');
 				dump($text . PHP_EOL);

@@ -22,6 +22,7 @@ import Logger from 'js/utils/logger';
 import App from 'js/components/App.vue';
 import ChatConnection from 'js/plugins/chat-connection';
 import WnlAxios from 'js/plugins/axios';
+import ShortcutKeys from 'js/plugins/shortcut-keys';
 import EventsTracker from 'js/plugins/events-tracker';
 import $ from 'jquery';
 import '@babel/polyfill';
@@ -46,6 +47,7 @@ Vue.use(VueSweetAlert);
 Vue.use(ChatConnection, {store});
 Vue.use(WnlAxios, {store, router});
 Vue.use(EventsTracker, {store, router});
+Vue.use(ShortcutKeys, {store});
 
 // Simple Breakpoints
 Vue.use(VueSimpleBreakpoints, {

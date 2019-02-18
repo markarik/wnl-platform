@@ -76,7 +76,7 @@ class MigrateQna extends Command
 		$discussion = Discussion::create([
 			'name' => $discussionName
 		]);
-		$discussion->questions()->saveMany($matchingQnaQuestions);
+		$discussion->qnaQuestions()->saveMany($matchingQnaQuestions);
 
 		$discussable->discussion()->associate($discussion);
 		$discussable->is_discussable = true;

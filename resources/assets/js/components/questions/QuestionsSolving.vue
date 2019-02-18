@@ -96,14 +96,9 @@
 						:question="question"
 						:readOnly="showListResults"
 						:hideComments="true"
+						:key="`question-${question.id}`"
 						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
 						@userEvent="proxyUserEvent"
-					/>
-					<wnl-content-item-classifier-editor
-						class="quiz-question__content-item-classifier-editor"
-						:key="`cc-editor-${question.id}`"
-						:content-item-id="question.id"
-						:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
 					/>
 				</div>
 
@@ -210,24 +205,20 @@
 
 			.wnl-quiz-question
 				margin: 0
-
-	.quiz-question__content-item-classifier-editor
-		margin-top: -$margin-base
-		margin-bottom: $margin-big
 </style>
 
 <script>
 import {isEmpty, isNumber} from 'lodash';
 import {mapActions} from 'vuex';
 
-import ActiveQuestion from 'js/components/questions/ActiveQuestion';
-import QuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder';
-import QuizQuestion from 'js/components/quiz/QuizQuestion';
-import Pagination from 'js/components/global/Pagination';
+import WnlActiveQuestion from 'js/components/questions/ActiveQuestion';
+import WnlQuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder';
+import WnlQuizQuestion from 'js/components/quiz/QuizQuestion';
+import WnlPagination from 'js/components/global/Pagination';
+
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import {VIEWS} from 'js/consts/questionsSolving';
-import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 
@@ -251,11 +242,10 @@ const limit = 30;
 export default {
 	name: 'QuestionsSolving',
 	components: {
-		'wnl-active-question': ActiveQuestion,
-		'wnl-questions-test-builder': QuestionsTestBuilder,
-		'wnl-quiz-question': QuizQuestion,
-		'wnl-pagination': Pagination,
-		WnlContentItemClassifierEditor
+		WnlActiveQuestion,
+		WnlQuestionsTestBuilder,
+		WnlQuizQuestion,
+		WnlPagination,
 	},
 	mixins: [emits_events],
 	props: {

@@ -52,14 +52,14 @@ class CheckQuizQuestions extends Command
 
 	protected function check($question)
 	{
-		$answersCount = $question->answers->count();
+		$answersCount = $question->quizAnswers->count();
 		if ($answersCount !== 5) {
 			$this->warn(
 				"Question {$question->id} has {$answersCount} answers!"
 			);
 		}
 
-		$correctAnswersCount = $question->answers
+		$correctAnswersCount = $question->quizAnswers
 			->where('is_correct', 1)->count();
 
 		if ($correctAnswersCount !== 1) {

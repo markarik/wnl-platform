@@ -128,6 +128,7 @@ class SlidesApiController extends ApiController
 		// Get all presentables
 		$presentables = Presentable::where('slide_id', $slideId)->get();
 
+		/** @var App\Models\Concerns\WithSlides[] $presentablesInstances */
 		$presentablesInstances = $presentables->map(function($presentable) {
 			return $presentable->presentable_type::find($presentable->presentable_id);
 		});

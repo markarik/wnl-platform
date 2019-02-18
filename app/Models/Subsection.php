@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
+use App\Models\Concerns\WithSlides;
 use Illuminate\Database\Eloquent\Model;
 
-class Subsection extends Model
+class Subsection extends Model implements WithSlides
 {
 	use Cached;
 

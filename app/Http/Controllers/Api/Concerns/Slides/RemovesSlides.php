@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Concerns\Slides;
 
+use App\Models\Concerns\WithSlides;
 use App\Models\Presentable;
 use App\Models\Slide;
 use DB;
@@ -31,7 +32,7 @@ trait RemovesSlides
 	 * Detach slide from presentables.
 	 *
 	 * @param Slide $slide
-	 * @param Model[] $presentables
+	 * @param WithSlides[] $presentables
 	 */
 	protected function detachSlide($slide, $presentables)
 	{
@@ -45,7 +46,7 @@ trait RemovesSlides
 	 * Get slides order number.
 	 *
 	 * @param Slide $slide
-	 * @param Model $presentable
+	 * @param Model|WithSlides $presentable
 	 *
 	 * @return mixed
 	 */

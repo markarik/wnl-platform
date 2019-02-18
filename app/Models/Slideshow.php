@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
+use App\Models\Concerns\WithSlides;
 use Facades\Lib\Bethink\Bethink;
 use Illuminate\Database\Eloquent\Model;
 
-class Slideshow extends Model
+class Slideshow extends Model implements WithSlides
 {
 	use Cached;
 

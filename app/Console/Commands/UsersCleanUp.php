@@ -126,6 +126,9 @@ class UsersCleanUp extends Command
 		$this->table($headers, $rows);
 	}
 
+	/**
+	 * @param User[] $users
+	 */
 	private function apply($users)
 	{
 		$this->info('Applying changes...');

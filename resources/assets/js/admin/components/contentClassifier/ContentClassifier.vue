@@ -84,12 +84,12 @@
 			flex: 50%
 			margin-right: $margin-big
 
-		&__panel-editor
-			flex: 50%
-
 			&__header
 				display: flex
 				justify-content: space-between
+
+		&__panel-editor
+			flex: 50%
 
 		&__result-list
 			display: flex

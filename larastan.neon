@@ -12,3 +12,5 @@ parameters:
         - '#Call to an undefined method Psr\\Log\\LoggerInterface::[a-zA-Z]+\(\)#'
         # https://github.com/nunomaduro/larastan/issues/40
         - '#Call to an undefined method .+Illuminate\\Database\\Eloquent\\Model::restore\(\)#'
+        # Possibly can be handled by writing an extension for the Searchable trait but there is only 1 error instance
+        - '#Call to an undefined static method .+::searchRaw\(\)#'

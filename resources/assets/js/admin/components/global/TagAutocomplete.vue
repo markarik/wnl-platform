@@ -32,7 +32,7 @@
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
-	@import '../../../../sass/variables'
+	@import 'resources/assets/sass/variables'
 
 	.autocomplete-selected
 		display: flex

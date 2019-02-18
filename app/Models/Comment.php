@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Events\Comments\CommentPosted;
+use App\Models\Concerns\WithReactions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Comment extends Model
+class Comment extends Model implements WithReactions
 {
 	use SoftDeletes;
 

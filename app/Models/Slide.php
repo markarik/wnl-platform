@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
-use Facades\Lib\SlideParser\Parser;
+use App\Models\Concerns\WithReactions;
+use Lib\SlideParser\Parser;
 use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;
 
-class Slide extends Model
+class Slide extends Model implements WithReactions
 {
 	use Cached, Searchable;
 

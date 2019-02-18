@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\Concerns\WithReactions;
 use Illuminate\Bus\Queueable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,14 +12,14 @@ class DetachReactions implements ShouldQueue
 {
 	use Dispatchable, InteractsWithQueue, Queueable;
 	/**
-	 * @var Model $model
+	 * @var WithReactions $model
 	 */
 	private $model;
 
 	/**
 	 * Create a new job instance.
 	 *
-	 * @param Model $model
+	 * @param WithReactions $model
 	 */
 	public function __construct($model)
 	{

@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\WithReactions;
 use Illuminate\Database\Eloquent\Model;
 
-class Task extends Model
+class Task extends Model implements WithReactions
 {
 	protected $fillable = [
 		'id',

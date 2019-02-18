@@ -13,7 +13,7 @@ class InvoicesApiController extends ApiController
 		$this->resourceName = config('papi.resources.invoices');
 	}
 
-	public function get($id)
+	public function getFile($id)
 	{
 		$user = Auth::user();
 

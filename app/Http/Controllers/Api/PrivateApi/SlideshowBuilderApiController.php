@@ -35,7 +35,7 @@ class SlideshowBuilderApiController extends ApiController
 		return response($view);
 	}
 
-	public function get($slideshowId)
+	public function getHtml($slideshowId)
 	{
 		$key = self::key(sprintf(self::SLIDESHOW_SUBKEY, $slideshowId));
 		if (Cache::has($key)) {

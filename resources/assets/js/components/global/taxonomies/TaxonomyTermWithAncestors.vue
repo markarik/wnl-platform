@@ -25,7 +25,7 @@
 			border: 1px solid $color-light-gray
 			border-radius: $border-radius-small
 			display: inline-flex
-			margin-right: $margin-medium
+			margin: $margin-small-minus $margin-medium $margin-small-minus 0
 			padding: $margin-small
 
 </style>

@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Models\Concerns\WithReactions;
+use App\Models\Concerns\WithTags;
 use Illuminate\Database\Eloquent\Model;
 
-class Task extends Model implements WithReactions
+class Task extends Model implements WithReactions, WithTags
 {
 	protected $fillable = [
 		'id',

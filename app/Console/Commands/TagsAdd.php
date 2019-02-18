@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Models\QuizQuestion;
+use App\Models\Concerns\WithTags;
 use App\Models\Tag;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
-use Storage;
+use Illuminate\Support\Collection;
 
 class TagsAdd extends Command
 {
@@ -34,6 +35,7 @@ class TagsAdd extends Command
 		$modelName = $this->option('model');
 		$modelClass = "\\App\\Models\\$modelName";
 
+		/** @var Model[]|WithTags[]|Collection $models */
 		$models = $modelClass::all();
 		$createdTags = [];
 

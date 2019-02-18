@@ -5,11 +5,12 @@ namespace App\Models;
 use App\Events\Qna\QnaQuestionPosted;
 use App\Models\Concerns\Cached;
 use App\Models\Concerns\WithReactions;
+use App\Models\Concerns\WithTags;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
-class QnaQuestion extends Model implements WithReactions
+class QnaQuestion extends Model implements WithReactions, WithTags
 {
 	use Cached, Searchable, SoftDeletes;
 

@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\WithTags;
 use Illuminate\Database\Eloquent\Model;
 
-class Page extends Model
+class Page extends Model implements WithTags
 {
 	protected $fillable = ['content', 'name', 'slug'];
 

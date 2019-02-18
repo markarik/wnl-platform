@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Models\Concerns\Cached;
 use App\Models\Concerns\WithReactions;
+use App\Models\Concerns\WithTags;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use ScoutEngines\Elasticsearch\Searchable;
 
-class QuizQuestion extends Model implements WithReactions
+class QuizQuestion extends Model implements WithReactions, WithTags
 {
 	use Cached, Searchable, SoftDeletes;
 

@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
+use App\Models\Concerns\WithTags;
 use Illuminate\Database\Eloquent\Model;
 
-class Screen extends Model
+class Screen extends Model implements WithTags
 {
 	use Cached;
 

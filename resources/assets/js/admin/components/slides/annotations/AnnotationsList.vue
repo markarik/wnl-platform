@@ -90,7 +90,7 @@
 
 <script>
 import { getColourForStr } from 'js/utils/colors.js';
-import WnlTag from 'js/admin/components/global/Tag'
+import WnlTag from 'js/admin/components/global/Tag';
 
 export default {
 	data() {

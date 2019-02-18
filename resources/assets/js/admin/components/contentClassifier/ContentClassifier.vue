@@ -18,19 +18,21 @@
 			</ul>
 		</div>
 		<form @submit.prevent="onByTagSearch" v-if="activeTab === TABS.BY_CLASSIFICATION">
-			<div class="field">
-				<label class="label">Wybierz tagi</label>
-				<wnl-tag-autocomplete
-					placeholder="Zacznij pisać aby wyszukać tag"
-					@change="onTagSelect"
-				/>
-			</div>
+			<div class="content-classifier__fields">
+				<div class="field content-classifier__fields__field">
+					<label class="label">Wybierz tagi</label>
+					<wnl-tag-autocomplete
+						placeholder="Zacznij pisać aby wyszukać tag"
+						@change="onTagSelect"
+					/>
+				</div>
 
-			<div class="field">
-				<label class="label">Wybierz pojęcia</label>
-				<wnl-taxonomy-term-selector
-					@change="onTermSelect"
-				/>
+				<div class="field margin left content-classifier__fields__field">
+					<label class="label">Wybierz pojęcia</label>
+					<wnl-taxonomy-term-selector
+						@change="onTermSelect"
+					/>
+				</div>
 			</div>
 
 			<div class="content-classifier__active-filters">
@@ -140,6 +142,11 @@
 	@import 'resources/assets/sass/variables'
 
 	.content-classifier
+		&__fields
+			display: flex
+			&__field
+				flex-grow: 1
+
 		&__active-filters
 			background-color: $color-lightest-gray
 			border-radius: $border-radius-small

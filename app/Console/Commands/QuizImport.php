@@ -200,6 +200,7 @@ class QuizImport extends Command
 
 	protected function tryMatchingCollectionTaxonomy($question)
 	{
+		/** @var TagsTaxonomy[] $collectionsTagsTx */
 		$collectionsTagsTx = TagsTaxonomy::select()
 			->whereHas('taxonomy', function ($query) {
 				$query->where('name', 'collections');

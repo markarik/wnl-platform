@@ -39,6 +39,7 @@ class AddContext extends Command
 	 */
 	public function handle()
 	{
+		/** @var QnaQuestion[] $qnaQuestions */
 		$qnaQuestions = QnaQuestion::all();
 
 		foreach ($qnaQuestions as $question) {

@@ -48,13 +48,13 @@
 							class="content-classifier__result-list margin bottom"
 						>
 							<li
-								v-for="item in groupedFilteredContent[contentType]"
-								:key="item.id"
+								v-for="contentItem in groupedFilteredContent[contentType]"
+								:key="contentItem.id"
 								class="content-classifier__result-item"
-								:class="{'is-active': selectedItemIds.includes(item.id)}"
-								@click="toggleSelected(item)"
+								:class="{'is-active': selectedItems.find(item => item.id === contentItem.id && item.type === contentItem.type)}"
+								@click="toggleSelected(contentItem)"
 							>
-								<component :is="meta.component" :item="item"/>
+								<component :is="meta.component" :item="contentItem"/>
 								<span class="icon content-classifier__result-item__icon">
 									<i class="fa fa-check-circle"></i>
 								</span>
@@ -133,7 +133,7 @@
 
 <script>
 import axios from 'axios';
-import {mapActions, mapGetters} from 'vuex';
+import {mapActions} from 'vuex';
 import {groupBy} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
@@ -146,7 +146,6 @@ import WnlAnnotationResult from 'js/admin/components/contentClassifier/Annotatio
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 import WnlContentClassifierFilterByIds from 'js/admin/components/contentClassifier/ContentClassifierFilterByIds';
 import WnlContentClassifierFilterByClassification from 'js/admin/components/contentClassifier/ContentClassifierFilterByClassification';
-import WnlTag from 'js/admin/components/global/Tag';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
@@ -158,7 +157,6 @@ const TABS = {
 export default {
 	components: {
 		WnlContentClassifierEditor,
-		WnlTag,
 		WnlContentClassifierFilterByIds,
 		WnlContentClassifierFilterByClassification
 	},
@@ -189,7 +187,7 @@ export default {
 		return {
 			contentTypes,
 			filteredContent: null,
-			selectedItemIds: [],
+			selectedItems: [],
 			isLoading: false,
 			activeTab: TABS.BY_CLASSIFICATION,
 			TABS,
@@ -198,9 +196,6 @@ export default {
 	computed: {
 		groupedFilteredContent() {
 			return groupBy(this.filteredContent, 'type');
-		},
-		selectedItems() {
-			return this.filteredContent.filter(item => this.selectedItemIds.includes(item.id));
 		},
 	},
 	methods: {
@@ -266,7 +261,7 @@ export default {
 		},
 		async onSearch(promises) {
 			this.isLoading = true;
-			this.selectedItemIds = [];
+			this.selectedItems = [];
 			this.filteredContent = [];
 
 			try {
@@ -301,16 +296,16 @@ export default {
 				}
 			});
 		},
-		toggleSelected(item) {
-			const index = this.selectedItemIds.findIndex(itemId => itemId === item.id);
+		toggleSelected(contentItem) {
+			const index = this.selectedItems.findIndex(item => contentItem.id === item.id && contentItem.type === item.type);
 			if (index === -1) {
-				this.selectedItemIds.push(item.id);
+				this.selectedItems.push(contentItem);
 			} else {
-				this.selectedItemIds.splice(index, 1);
+				this.selectedItems.splice(index, 1);
 			}
 		},
 		selectAll() {
-			this.selectedItemIds = this.filteredContent.map(item => item.id);
+			this.selectedItems = [...this.filteredContent];
 		},
 	},
 };

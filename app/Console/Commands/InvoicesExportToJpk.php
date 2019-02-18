@@ -122,8 +122,8 @@ class InvoicesExportToJpk extends Command
 		$formCode->addAttribute('kodSystemowy', 'JPK_VAT (3)');
 		$formCode->addAttribute('wersjaSchemy', '1-1');
 
-		$header->addChild('tns:WariantFormularza', 3);
-		$header->addChild('tns:CelZlozenia', 0);
+		$header->addChild('tns:WariantFormularza', '3');
+		$header->addChild('tns:CelZlozenia', '0');
 		$header->addChild('tns:DataWytworzeniaJPK', Carbon::now()->toIso8601ZuluString());
 		$header->addChild('tns:DataOd', $dateFrom->format('Y-m-d'));
 		$header->addChild('tns:DataDo', $dateTo->subDay()->format('Y-m-d'));

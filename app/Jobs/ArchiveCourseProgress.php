@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\UserCourseProgress;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 
 class ArchiveCourseProgress
@@ -19,7 +20,7 @@ class ArchiveCourseProgress
 	 * Create a new job instance.
 	 *
 	 * @param User $user
-	 * @param UserCourseProgress $progress
+	 * @param UserCourseProgress[]|Collection $progress
 	 */
 	public function __construct($user, $progress)
 	{

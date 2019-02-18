@@ -22,7 +22,7 @@ class EventNotification extends Notification
 	/**
 	 * Create a new notification instance.
 	 *
-	 * @param Event $event
+	 * @param Event|\stdClass $event
 	 * @param string $channel
 	 */
 	public function __construct($event, $channel)

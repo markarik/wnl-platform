@@ -53,7 +53,7 @@ class SlidesImport extends Command
 
 		$screenId = $this->option('id');
 		$discussionId = $this->option('discussionId');
-		$enableSlidesMatching = $this->option('enableSlidesMatching');
+		$enableSlidesMatching = (bool) $this->option('enableSlidesMatching');
 
 		$files = Storage::disk('s3')->files($path);
 		$this->info('Importing slideshows...');

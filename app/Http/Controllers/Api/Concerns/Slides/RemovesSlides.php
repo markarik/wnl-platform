@@ -7,13 +7,14 @@ use App\Models\Presentable;
 use App\Models\Slide;
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 trait RemovesSlides
 {
 	/**
 	 * Decrements order no. of all slides above the submitted order no.
 	 *
-	 * @param Presentable[] $presentables
+	 * @param Presentable[]|Collection $presentables
 	 */
 	protected function decrementOrderNumber($presentables)
 	{

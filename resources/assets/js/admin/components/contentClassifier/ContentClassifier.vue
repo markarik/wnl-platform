@@ -47,18 +47,14 @@
 						<ul
 							class="content-classifier__result-list margin bottom"
 						>
-							<li
+							<component
 								v-for="contentItem in groupedFilteredContent[contentType]"
 								:key="contentItem.id"
-								class="content-classifier__result-item"
-								:class="{'is-active': selectedItems.find(item => item.id === contentItem.id && item.type === contentItem.type)}"
+								:is="meta.component"
+								:item="contentItem"
+								:is-active="selectedItems.find(item => item.id === contentItem.id && item.type === contentItem.type)"
 								@click="toggleSelected(contentItem)"
-							>
-								<component :is="meta.component" :item="contentItem"/>
-								<span class="icon content-classifier__result-item__icon">
-									<i class="fa fa-check-circle"></i>
-								</span>
-							</li>
+							/>
 						</ul>
 						</template>
 					</div>
@@ -98,43 +94,6 @@
 		&__result-list
 			display: flex
 			flex-wrap: wrap
-
-		&__result-item
-			// TODO make ID in the left top corner and color gray
-			border: $border-light-gray
-			cursor: pointer
-			display: flex
-			font-size: $font-size-minus-1
-			line-height: $line-height-minus
-			margin: $margin-tiny
-			max-height: 200px
-			min-height: 90px
-			overflow: auto
-			padding: $margin-base
-			position: relative
-			transition: border-width .3s ease-in-out, border-color .3s ease-in-out
-			width: 160 + 4 * $margin-small
-
-			&__icon
-				animation: fadein .3s
-				color: $color-correct-shadow
-				display: none
-				position: absolute
-				right: 5px
-				top: 5px
-
-				.is-active &
-					display: block
-
-			&.is-active
-				border: 2px solid $color-correct-shadow
-				border-radius: $border-radius-small
-
-	@keyframes fadein
-		from
-			opacity: 0
-		to
-			opacity: 1
 </style>
 
 <script>

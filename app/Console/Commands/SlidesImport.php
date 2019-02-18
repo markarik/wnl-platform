@@ -66,7 +66,7 @@ class SlidesImport extends Command
 			$bar->advance();
 			\Log::debug($file . ' processed');
 		}
-		if (!$files) $this->importFile($path, $screenId, $discussionId, $enableSlidesMatching);
+		if (empty($files)) $this->importFile($path, $screenId, $discussionId, $enableSlidesMatching);
 		print PHP_EOL;
 
 		Artisan::queue('tags:fromCategories');

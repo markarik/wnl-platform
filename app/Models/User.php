@@ -294,7 +294,7 @@ class User extends Authenticatable
 	 * @param string $id
 	 * @param array $columns
 	 *
-	 * @return User|\Illuminate\Contracts\Auth\Authenticatable
+	 * @return User|\Illuminate\Contracts\Auth\Authenticatable|null
 	 */
 	public static function fetch($id, $columns = ['*'])
 	{

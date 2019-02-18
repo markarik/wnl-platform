@@ -41,7 +41,7 @@ class QuizExport extends Command
 	public function handle()
 	{
 		$setId = $this->option('setId');
-		$tag = trim($this->option('tag'));
+		$tagName = trim($this->option('tag'));
 		$name = 'QuizQuestions-';
 
 		$headers = ['Treść pytania', 'A', 'B', 'C', 'D', 'E', 'Prawidłowa odpowiedź',
@@ -60,16 +60,18 @@ class QuizExport extends Command
 
 			$name .= $set->name;
 			$questions = $set->questions;
-		} elseif ($tag) {
-			$tagId = Tag::where('name', $tag)->pluck('id');
-			if (!$tagId) {
-				$this->error('Tag not found.');
-				exit;
-			}
+		} elseif ($tagName) {
+			$tag = Tag::firstOr(
+				['name' => $tagName],
+				function () {
+					$this->error('Tag not found.');
+					exit;
+				}
+			);
 
-			$name .= $tag;
-			$questions = QuizQuestion::whereHas('tags', function ($query) use ($tagId) {
-				$query->whereIn('tags.id', $tagId);
+			$name .= $tagName;
+			$questions = QuizQuestion::whereHas('tags', function ($query) use ($tag) {
+				$query->whereIn('tags.id', $tag->id);
 			})->get();
 		} else {
 			$this->error('Either a set ID or tag is required.');

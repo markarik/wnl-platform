@@ -45,12 +45,12 @@ class MarkPaymentsAsFailed extends Command
 			$payment = Payment::find($paymentId);
 			if (empty($payment)) {
 				$this->warn('Invalid payment id');
-				die;
+				return;
 			}
 			$payment->status = 'error';
 			$payment->save();
 			$this->info('Done');
-			die;
+			return;
 		}
 
 		$payments = Payment
@@ -67,6 +67,5 @@ class MarkPaymentsAsFailed extends Command
 
 		$bar->finish();
 		$this->info('Done');
-		die;
 	}
 }

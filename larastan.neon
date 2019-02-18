@@ -13,6 +13,6 @@ parameters:
         # https://github.com/nunomaduro/larastan/issues/40
         - '#Call to an undefined method .+Illuminate\\Database\\Eloquent\\Model::restore\(\)#'
         # https://github.com/nunomaduro/larastan/issues/72
-        - '#Call to protected method decrement\(\) of class Illuminate\\Database\\Eloquent\\Model#'
+        - '#Call to protected method (decrement|increment)\(\) of class Illuminate\\Database\\Eloquent\\Model#'
         # Possibly can be handled by writing an extension for the Searchable trait but there is only 1 error instance
         - '#Call to an undefined static method .+::searchRaw\(\)#'

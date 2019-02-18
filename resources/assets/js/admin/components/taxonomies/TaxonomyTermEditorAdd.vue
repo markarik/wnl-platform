@@ -14,11 +14,11 @@
 			submit-label="Dodaj pojęcie"
 			:submit-disabled="submitDisabled"
 			:on-save="onSave"
-			vuex-module="taxonomyTerms"
+			vuex-module-name="taxonomyTerms"
 			@changeNode="onSelectTag"
 		>
 			<wnl-taxonomy-term-autocomplete
-				slot="parentAutocomplete"
+				slot="parent-autocomplete"
 				slot-scope="parentAutocomplete"
 				:selected="parent"
 				@change="parentAutocomplete.validateAndChangeParent"
@@ -30,7 +30,7 @@
 				@change="onSelectTag"
 			></wnl-tag-autocomplete>
 
-			<div class="field" slot="extraFields">
+			<div class="field" slot="extra-fields">
 				<label class="label is-uppercase"><strong>Notatka</strong></label>
 				<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
 				<textarea class="textarea margin bottom" v-model="description" placeholder="Wpisz tekst" />

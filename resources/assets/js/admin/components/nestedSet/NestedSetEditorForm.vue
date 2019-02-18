@@ -3,7 +3,7 @@
 		<div class="field">
 			<label class=" label is-uppercase"><strong>{{parentTitle}}</strong></label>
 			<span class="info small">{{parentSubtitle}}</span>
-			<slot name="parentAutocomplete" :validate-and-change-parent="validateAndChangeParent"></slot>
+			<slot name="parent-autocomplete" :validate-and-change-parent="validateAndChangeParent"></slot>
 		</div>
 
 		<div class="field">
@@ -12,7 +12,7 @@
 			<slot name="autocomplete"></slot>
 		</div>
 
-		<slot name="extraFields"></slot>
+		<slot name="extra-fields"></slot>
 		<div class="has-text-centered">
 			<button class="button" @click="onSubmit" :disabled="submitDisabled">{{submitLabel}}</button>
 		</div>

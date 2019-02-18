@@ -5,12 +5,12 @@
 			parent-subtitle="Pozostaw puste, aby dodać gałąź na najwyższym poziomie."
 			title="Powiązana jednostka struktury"
 			subtitle="Wybierz lekcję/grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową."
-			vuex-module="courseStructure"
+			vuex-module-name="courseStructure"
 			:on-save="onSave"
 			@changeNode="onSelectStructurable"
 		>
 			<wnl-structure-node-editor-node-autocomplete
-				slot="parentAutocomplete"
+				slot="parent-autocomplete"
 				slot-scope="parentAutocomplete"
 				:selected="parent"
 				@change="parentAutocomplete.validateAndChangeParent"

@@ -17,85 +17,18 @@
 				</li>
 			</ul>
 		</div>
-		<form @submit.prevent="onByTagSearch" v-if="activeTab === TABS.BY_CLASSIFICATION">
-			<div class="content-classifier__fields">
-				<div class="field content-classifier__fields__field">
-					<label class="label">Wybierz tagi</label>
-					<wnl-tag-autocomplete
-						placeholder="Zacznij pisać aby wyszukać tag"
-						@change="onTagSelect"
-					/>
-				</div>
 
-				<div class="field margin left content-classifier__fields__field">
-					<label class="label">Wybierz pojęcia</label>
-					<wnl-taxonomy-term-selector
-						@change="onTermSelect"
-					/>
-				</div>
-			</div>
+		<wnl-content-classifier-filter-by-classification
+			v-if="activeTab === TABS.BY_CLASSIFICATION"
+			:content-types="contentTypes"
+			@search="onByTagSearch"
+		/>
 
-			<div class="content-classifier__active-filters">
-				<h5 class="title is-5">Aktywne filtry</h5>
-
-				<wnl-tag
-					v-for="tag in byTagsFilter"
-					:key="tag.id"
-					:tag="tag"
-					@click="onTagDelete(tag)"
-					class="clickable"
-				>
-					<span class="icon is-small">
-						<i class="fa fa-times"></i>
-					</span>
-				</wnl-tag>
-
-				<wnl-taxonomy-term-with-ancestors
-					v-for="term in byTaxonomyTermsFilter"
-					:term="term"
-					:ancestors="getAncestorsById(term.id)"
-					:key="term.id"
-					@click="onTaxonomyTermDelete(term)"
-					class="clickable content-classifier__active-filters__term"
-					is-bordered
-				>
-					<span class="icon is-small margin left">
-						<i class="fa fa-times"></i>
-					</span>
-				</wnl-taxonomy-term-with-ancestors>
-
-				<div class="content-classifier__type-filters margin top">
-					<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier__type-filters__item">
-						<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="meta.isActive"/>
-						<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
-					</div>
-				</div>
-			</div>
-
-			<button
-				class="button submit is-primary margin top"
-				type="submit"
-				:disabled="byClassificationSubmitDisabled"
-			>
-				Szukaj
-			</button>
-		</form>
-
-
-		<form @submit.prevent="onSearchById" v-if="activeTab === TABS.BY_ID">
-			<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field">
-				<label class="label">{{meta.name}}</label>
-				<input class="input" placeholder="Wpisz id po przecinku: 36,45,..." v-model="byIdFilters[contentType]"/>
-			</div>
-			<button
-				class="button submit is-primary"
-				type="submit"
-				:disabled="byIdSubmitDisabled"
-			>
-				Szukaj
-			</button>
-		</form>
-
+		<wnl-content-classifier-filter-by-ids
+			v-if="activeTab === TABS.BY_ID"
+			:contentTypes="contentTypes"
+			@search="onSearchById"
+		/>
 
 		<div class="content-classifier__panels" v-if="filteredContent !== null">
 			<div class="content-classifier__panel-results">
@@ -146,29 +79,6 @@
 	@import 'resources/assets/sass/variables'
 
 	.content-classifier
-		&__fields
-			display: flex
-			&__field
-				flex-grow: 1
-
-		&__active-filters
-			background-color: $color-lightest-gray
-			border-radius: $border-radius-small
-			padding: $margin-base
-
-			&__term
-				background-color: $color-white
-
-		&__type-filters
-			display: flex
-			&__item
-				align-items: center
-				display: flex
-				margin-bottom: 0!important
-				margin-right: $margin-huge
-				.label
-					padding-left: $margin-medium
-
 		&__panels
 			display: flex
 
@@ -234,9 +144,8 @@ import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
-import WnlTagAutocomplete from 'js/admin/components/global/TagAutocomplete';
-import WnlTaxonomyTermSelector from 'js/components/global/taxonomies/TaxonomyTermSelector';
-import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
+import WnlContentClassifierFilterByIds from 'js/admin/components/contentClassifier/ContentClassifierFilterByIds';
+import WnlContentClassifierFilterByClassification from 'js/admin/components/contentClassifier/ContentClassifierFilterByClassification';
 import WnlTag from 'js/admin/components/global/Tag';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
@@ -249,10 +158,9 @@ const TABS = {
 export default {
 	components: {
 		WnlContentClassifierEditor,
-		WnlTagAutocomplete,
 		WnlTag,
-		WnlTaxonomyTermSelector,
-		WnlTaxonomyTermWithAncestors,
+		WnlContentClassifierFilterByIds,
+		WnlContentClassifierFilterByClassification
 	},
 	data() {
 		const contentTypes = {
@@ -260,41 +168,26 @@ export default {
 				resourceName: 'slides/.filter',
 				name: 'Slajdy',
 				component: WnlSlideResult,
-				isActive: true,
 			},
 			[CONTENT_TYPES.QUIZ_QUESTION]: {
 				resourceName: 'quiz_questions/.filter',
 				name: 'Pytania zamknięte',
 				component: WnlHtmlResult,
-				isActive: true,
 			},
 			[CONTENT_TYPES.FLASHCARD]: {
 				resourceName: 'flashcards/.filter',
 				name: 'Pytania otwarte',
 				component: WnlFlashcardResult,
-				isActive: true,
 			},
 			[CONTENT_TYPES.ANNOTATION]: {
 				resourceName: 'annotations/.filter',
 				name: 'Przypisy',
 				component: WnlAnnotationResult,
-				isActive: true,
 			},
 		};
 
-		const byIdFilters = Object.keys(contentTypes).reduce(
-			(collector, contentType) => {
-				collector[contentType] = '';
-				return collector;
-			},
-			{}
-		);
-
 		return {
 			contentTypes,
-			byIdFilters,
-			byTagsFilter: [],
-			byTaxonomyTermsFilter: [],
 			filteredContent: null,
 			selectedItemIds: [],
 			isLoading: false,
@@ -303,44 +196,36 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters('taxonomyTerms', ['getAncestorsById']),
 		groupedFilteredContent() {
 			return groupBy(this.filteredContent, 'type');
 		},
 		selectedItems() {
 			return this.filteredContent.filter(item => this.selectedItemIds.includes(item.id));
 		},
-		byClassificationSubmitDisabled() {
-			return (this.byTaxonomyTermsFilter.length === 0 && this.byTagsFilter.length === 0) ||
-				Object.values(this.contentTypes).find(item => item.isActive) === undefined;
-		},
-		byIdSubmitDisabled() {
-			return Object.values(this.byIdFilters).find(filter => filter !== '') === undefined;
-		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		fetchContentByIds([contentType, meta]) {
+		fetchContentByIds(contentType, meta, filter) {
 			const filters = [];
 
-			if (this.byIdFilters[contentType] !== '') {
+			if (filter !== '') {
 				filters.push({
-					by_ids: {ids: this.byIdFilters[contentType].split(',')},
+					by_ids: {ids: filter.split(',')},
 				});
 			}
 
 			return this.fetchContent(contentType, meta.resourceName, filters);
 		},
-		fetchContentByTag([contentType, meta]) {
+		fetchContentByTag(contentType, meta, byTagsFilter, byTaxonomyTermsFilter) {
 			const filters = [];
-			if (this.byTagsFilter.length) {
+			if (byTagsFilter.length) {
 				filters.push({
-					tags: this.byTagsFilter.map(tag => tag.id),
+					tags: byTagsFilter.map(tag => tag.id),
 				});
 			}
-			if (this.byTaxonomyTermsFilter.length) {
+			if (byTaxonomyTermsFilter.length) {
 				filters.push({
-					taxonomy_terms: this.byTaxonomyTermsFilter.map(tag => tag.id),
+					taxonomy_terms: byTaxonomyTermsFilter.map(tag => tag.id),
 				});
 			}
 
@@ -366,13 +251,16 @@ export default {
 				return item;
 			});
 		},
-		async onSearchById() {
-			const promises = Object.entries(this.contentTypes).map(this.fetchContentByIds);
+		async onSearchById(filters) {
+			const promises = Object.entries(this.contentTypes)
+				.map(([contentType, meta]) => this.fetchContentByIds(contentType, meta, filters[contentType]));
 
 			this.onSearch(promises);
 		},
-		async onByTagSearch() {
-			const promises = Object.entries(this.contentTypes).filter(([contentType, meta]) => meta.isActive).map(this.fetchContentByTag);
+		async onByTagSearch({byTagsFilter, byTaxonomyTermsFilter, isActiveContentTypes}) {
+			const promises = Object.entries(this.contentTypes)
+				.filter(([contentType]) => isActiveContentTypes[contentType])
+				.map(([contentType, meta]) => this.fetchContentByTag(contentType, meta, byTagsFilter, byTaxonomyTermsFilter));
 
 			this.onSearch(promises);
 		},
@@ -424,24 +312,6 @@ export default {
 		selectAll() {
 			this.selectedItemIds = this.filteredContent.map(item => item.id);
 		},
-		onTagSelect(tag) {
-			if (!this.byTagsFilter.find(({id}) => id === tag.id)) {
-				this.byTagsFilter.push(tag);
-			}
-		},
-		onTermSelect(term) {
-			if (!this.byTaxonomyTermsFilter.find(({id}) => id === term.id)) {
-				this.byTaxonomyTermsFilter.push(term);
-			}
-		},
-		onTagDelete(tag) {
-			const index = this.byTagsFilter.findIndex(({id}) => id === tag.id);
-			this.byTagsFilter.splice(index, 1);
-		},
-		onTaxonomyTermDelete(term) {
-			const index = this.byTaxonomyTermsFilter.findIndex(({id}) => id === term.id);
-			this.byTaxonomyTermsFilter.splice(index, 1);
-		}
 	},
 };
 </script>

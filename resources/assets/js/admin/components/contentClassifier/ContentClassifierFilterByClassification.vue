@@ -1,0 +1,166 @@
+<template>
+	<form @submit.prevent="onSearch">
+		<div class="content-classifier-filter__fields">
+			<div class="field content-classifier-filter__fields__field">
+				<label class="label">Wybierz tagi</label>
+				<wnl-tag-autocomplete
+					placeholder="Zacznij pisać aby wyszukać tag"
+					@change="onTagSelect"
+				/>
+			</div>
+
+			<div class="field margin left content-classifier-filter__fields__field">
+				<label class="label">Wybierz pojęcia</label>
+				<wnl-taxonomy-term-selector
+					@change="onTermSelect"
+				/>
+			</div>
+		</div>
+
+		<div class="content-classifier-filter__active-filters">
+			<h5 class="title is-5">Aktywne filtry</h5>
+
+			<wnl-tag
+				v-for="tag in byTagsFilter"
+				:key="tag.id"
+				:tag="tag"
+				@click="onTagDelete(tag)"
+				class="clickable"
+			>
+				<span class="icon is-small">
+					<i class="fa fa-times"></i>
+				</span>
+			</wnl-tag>
+
+			<wnl-taxonomy-term-with-ancestors
+				v-for="term in byTaxonomyTermsFilter"
+				:term="term"
+				:ancestors="getAncestorsById(term.id)"
+				:key="term.id"
+				@click="onTaxonomyTermDelete(term)"
+				class="clickable content-classifier-filter__active-filters__term"
+				is-bordered
+			>
+				<span class="icon is-small margin left">
+					<i class="fa fa-times"></i>
+				</span>
+			</wnl-taxonomy-term-with-ancestors>
+
+			<div class="content-classifier-filter__type-filters margin top">
+				<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier-filter__type-filters__item">
+					<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="isActiveContentTypes[contentType]"/>
+					<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
+				</div>
+			</div>
+		</div>
+
+		<button
+			class="button submit is-primary margin top"
+			type="submit"
+			:disabled="submitDisabled"
+		>
+			Szukaj
+		</button>
+	</form>
+</template>
+
+<style lang="sass">
+	@import 'resources/assets/sass/variables'
+
+	.content-classifier-filter
+		&__fields
+			display: flex
+			&__field
+				flex-grow: 1
+
+		&__active-filters
+			background-color: $color-lightest-gray
+			border-radius: $border-radius-small
+			padding: $margin-base
+
+			&__term
+				background-color: $color-white
+
+		&__type-filters
+			display: flex
+			&__item
+				align-items: center
+				display: flex
+				margin-bottom: 0!important
+				margin-right: $margin-huge
+				.label
+					padding-left: $margin-medium
+</style>
+
+<script>
+import { mapGetters} from 'vuex';
+
+import WnlTagAutocomplete from 'js/admin/components/global/TagAutocomplete';
+import WnlTaxonomyTermSelector from 'js/components/global/taxonomies/TaxonomyTermSelector';
+import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
+import WnlTag from 'js/admin/components/global/Tag';
+
+export default {
+	components: {
+		WnlTagAutocomplete,
+		WnlTag,
+		WnlTaxonomyTermSelector,
+		WnlTaxonomyTermWithAncestors,
+	},
+	props: {
+		contentTypes: {
+			type: Object,
+			required: true,
+		}
+	},
+	data() {
+		const isActiveContentTypes = Object.keys(this.contentTypes).reduce(
+			(collector, contentType) => {
+				collector[contentType] = true;
+				return collector;
+			},
+			{}
+		);
+
+		return {
+			byTagsFilter: [],
+			byTaxonomyTermsFilter: [],
+			isActiveContentTypes
+		};
+	},
+	computed: {
+		...mapGetters('taxonomyTerms', ['getAncestorsById']),
+		submitDisabled() {
+			return (this.byTaxonomyTermsFilter.length === 0 && this.byTagsFilter.length === 0) ||
+				!Object.values(this.isActiveContentTypes).includes(true);
+		},
+	},
+	methods: {
+		onTagSelect(tag) {
+			if (!this.byTagsFilter.find(({id}) => id === tag.id)) {
+				this.byTagsFilter.push(tag);
+			}
+		},
+		onTermSelect(term) {
+			if (!this.byTaxonomyTermsFilter.find(({id}) => id === term.id)) {
+				this.byTaxonomyTermsFilter.push(term);
+			}
+		},
+		onTagDelete(tag) {
+			const index = this.byTagsFilter.findIndex(({id}) => id === tag.id);
+			this.byTagsFilter.splice(index, 1);
+		},
+		onTaxonomyTermDelete(term) {
+			const index = this.byTaxonomyTermsFilter.findIndex(({id}) => id === term.id);
+			this.byTaxonomyTermsFilter.splice(index, 1);
+		},
+		onSearch() {
+			this.$emit('search', {
+				byTagsFilter: this.byTagsFilter,
+				byTaxonomyTermsFilter: this.byTaxonomyTermsFilter,
+				isActiveContentTypes: this.isActiveContentTypes
+			});
+		}
+	},
+};
+</script>

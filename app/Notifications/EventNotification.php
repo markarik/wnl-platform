@@ -45,7 +45,7 @@ class EventNotification extends Notification
 	}
 
 	/**
-	 * @return Channel
+	 * @return Channel|array
 	 */
 	public function broadcastOn()
 	{

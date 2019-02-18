@@ -52,6 +52,9 @@ class EventTaskNotification extends Notification
 		return [LiveChannel::class, DatabaseTaskChannel::class];
 	}
 
+	/**
+	 * @return array|Channel
+	 */
 	public function broadcastOn()
 	{
 		return new Channel($this->channel);

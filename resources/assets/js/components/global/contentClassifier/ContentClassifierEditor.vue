@@ -1,7 +1,7 @@
 <template>
 	<div
 		:class="{
-			'content-classifier__panel-editor': true,
+			'content-classifier__editor': true,
 			'is-loading': isLoading,
 		}"
 		tabindex="-1"
@@ -12,34 +12,33 @@
 		<div v-if="allTaxonomyTerms.length===0">Brak przypisanych pojęć</div>
 		<div v-if="items.length > 0">
 			<ul class="margin bottom">
-				<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id" class="margin bottom">
-					<div class="content-classifier__panel-editor__taxonomy">
-						{{group.taxonomy.name}}
-					</div>
+				<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id">
 					<ul>
 						<li
 							v-for="term in group.terms"
 							:key="term.id"
-							:class="{
-								'content-classifier__panel-editor__term': true,
-								'has-parent': term.parent_id !== null,
-							}"
 						>
-							<span
-								class="icon is-small margin right clickable"
-								title="Odznacz"
-								@click="onDetachTaxonomyTerm(term)"
-							>
-								<i class="fa fa-close"></i>
-							</span>
 							<wnl-taxonomy-term-with-ancestors
 								:term="term"
 								:ancestors="term.ancestors"
-								class="content-classifier__panel-editor__term__name"
-							/>
-							<span
-								v-if="allItemsCount > 1"
 								:class="{
+									'content-classifier__editor__term': true,
+									'has-parent': term.parent_id !== null,
+								}"
+								is-bordered
+							>
+								<span
+									slot="left"
+									class="icon is-small margin right clickable"
+									title="Odznacz"
+									@click="onDetachTaxonomyTerm(term)"
+								>
+									<i class="fa fa-close"></i>
+								</span>
+								<span
+									slot="right"
+									v-if="allItemsCount > 1"
+									:class="{
 									'margin': true,
 									'left': true,
 									'tag': true,
@@ -47,12 +46,14 @@
 									'is-white': !hasAllItemsAttached(term),
 									'clickable': !hasAllItemsAttached(term),
 								}"
-								:title="!hasAllItemsAttached(term) && 'Dodaj do wszystkich'"
-								@click="!hasAllItemsAttached(term) && onAttachTaxonomyTerm(term)"
-							>
+									:title="!hasAllItemsAttached(term) && 'Dodaj do wszystkich'"
+									@click="!hasAllItemsAttached(term) && onAttachTaxonomyTerm(term)"
+								>
 								<span class="icon is-small" v-if="!hasAllItemsAttached(term)"><i class="fa fa-plus"></i></span>
 								<span>{{term.itemsCount}}/{{allItemsCount}}</span>
 							</span>
+							</wnl-taxonomy-term-with-ancestors>
+
 						</li>
 					</ul>
 				</li>
@@ -81,36 +82,23 @@
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.content-classifier
-		&__panel-editor
-			flex: 50%
+	.content-classifier__editor
+		position: sticky
+		top: 0
 
-			&__term
-				align-items: center
-				border-bottom: $border-light-gray
-				display: flex
-				padding: $margin-medium 0
+		.content-classifier__editor__term
+			display: flex
+			margin-bottom: $margin-tiny
+			margin-top: $margin-tiny
 
-				&.has-parent &__name
-					font-size: $font-size-minus-1
+			/deep/ .taxonomy-term__content
+				flex-grow: 1
 
-				&__name
-					flex-grow: 1
-
-			&__taxonomy
-				text-transform: uppercase
-
-			&__term-select
-				display: flex
-
-				&__autocomplete
-					flex-grow: 1
-
-		.icon.is-small .fa
-			font-size: $font-size-minus-2
+	.icon.is-small .fa
+		font-size: $font-size-minus-2
 </style>
 
 <script>

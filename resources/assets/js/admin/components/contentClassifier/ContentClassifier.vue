@@ -65,12 +65,14 @@
 				</div>
 				<div v-else>Brak wyników</div>
 			</div>
-			<wnl-content-classifier-editor
-				v-show="!isLoading"
-				:items="selectedItems"
-				@taxonomyTermAttached="onTaxonomyTermAttached"
-				@taxonomyTermDetached="onTaxonomyTermDetached"
-			/>
+			<div class="content-classifier__panel-editor">
+				<wnl-content-classifier-editor
+					v-show="!isLoading"
+					:items="selectedItems"
+					@taxonomyTermAttached="onTaxonomyTermAttached"
+					@taxonomyTermDetached="onTaxonomyTermDetached"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
@@ -86,6 +88,9 @@
 			flex: 50%
 			margin-right: $margin-big
 
+		&__panel-editor
+			flex: 50%
+
 			&__header
 				display: flex
 				justify-content: space-between
@@ -95,6 +100,7 @@
 			flex-wrap: wrap
 
 		&__result-item
+			// TODO make ID in the left top corner and color gray
 			border: $border-light-gray
 			cursor: pointer
 			display: flex

@@ -4,8 +4,8 @@
 		:style="{backgroundColor: getColourForStr(tag.name)}"
 		@click="$emit('click', $event)"
 	>
-		{{tag.name}}
 		<slot></slot>
+		{{tag.name}}
 	</span>
 </template>
 

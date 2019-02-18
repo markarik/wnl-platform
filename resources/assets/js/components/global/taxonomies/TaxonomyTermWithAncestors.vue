@@ -1,10 +1,11 @@
 <template>
 	<div @click="$emit('click', $event)" class="taxonomy-term" :class="{'is-bordered': isBordered}">
-		<div class="taxonomy-term__content">
+		<slot name="left"></slot>
+		<div class="taxonomy-term__content" :class="{'has-parent': ancestors.length}">
 			<div class="taxonomy-term__content__parent">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}}</div>
 			<strong>{{term.tag.name}}</strong>
 		</div>
-		<slot></slot>
+		<slot name="right"></slot>
 	</div>
 </template>
 
@@ -15,6 +16,9 @@
 		align-items: center
 		display: flex
 		line-height: $line-height-minus
+
+		.has-parent
+			font-size: $font-size-minus-1
 
 		&__content
 			&__parent

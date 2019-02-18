@@ -1,6 +1,13 @@
 <template>
 	<form @submit.prevent="onSearch">
-		<div class="content-classifier-filter__fields">
+		<div class="content-classifier-filter__fields margin bottom">
+			<div class="field margin right content-classifier-filter__fields__field">
+				<label class="label">Wybierz pojęcia</label>
+				<wnl-taxonomy-term-selector
+					@change="onTermSelect"
+				/>
+			</div>
+
 			<div class="field content-classifier-filter__fields__field">
 				<label class="label">Wybierz tagi</label>
 				<wnl-tag-autocomplete
@@ -8,45 +15,45 @@
 					@change="onTagSelect"
 				/>
 			</div>
-
-			<div class="field margin left content-classifier-filter__fields__field">
-				<label class="label">Wybierz pojęcia</label>
-				<wnl-taxonomy-term-selector
-					@change="onTermSelect"
-				/>
-			</div>
 		</div>
 
 		<div class="content-classifier-filter__active-filters">
 			<h5 class="title is-5">Aktywne filtry</h5>
 
-			<wnl-tag
-				v-for="tag in byTagsFilter"
-				:key="tag.id"
-				:tag="tag"
-				@click="onTagDelete(tag)"
-				class="clickable"
-			>
-				<span class="icon is-small">
-					<i class="fa fa-times"></i>
-				</span>
-			</wnl-tag>
+			<div class="content-classifier-filter__active-filters__list margin bottom" v-if="byTaxonomyTermsFilter.length || byTagsFilter.length">
+				<wnl-taxonomy-term-with-ancestors
+					v-for="term in byTaxonomyTermsFilter"
+					:term="term"
+					:ancestors="getAncestorsById(term.id)"
+					:key="term.id"
+					class="content-classifier-filter__active-filters__term"
+					is-bordered
+				>
+					<span
+						slot="left"
+						class="icon is-small margin right clickable"
+						@click="onTaxonomyTermDelete(term)"
+					>
+						<i class="fa fa-times"></i>
+					</span>
+				</wnl-taxonomy-term-with-ancestors>
 
-			<wnl-taxonomy-term-with-ancestors
-				v-for="term in byTaxonomyTermsFilter"
-				:term="term"
-				:ancestors="getAncestorsById(term.id)"
-				:key="term.id"
-				@click="onTaxonomyTermDelete(term)"
-				class="clickable content-classifier-filter__active-filters__term"
-				is-bordered
-			>
-				<span class="icon is-small margin left">
-					<i class="fa fa-times"></i>
-				</span>
-			</wnl-taxonomy-term-with-ancestors>
 
-			<div class="content-classifier-filter__type-filters margin top">
+				<wnl-tag
+					v-for="tag in byTagsFilter"
+					:key="tag.id"
+					:tag="tag"
+				>
+					<span
+						class="icon is-small margin right clickable"
+						@click="onTagDelete(tag)"
+					>
+						<i class="fa fa-times"></i>
+					</span>
+				</wnl-tag>
+			</div>
+
+			<div class="content-classifier-filter__type-filters">
 				<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier-filter__type-filters__item">
 					<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="isActiveContentTypes[contentType]"/>
 					<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
@@ -77,6 +84,9 @@
 			background-color: $color-lightest-gray
 			border-radius: $border-radius-small
 			padding: $margin-base
+
+			&__list
+				align-items: center
 
 			&__term
 				background-color: $color-white

@@ -64,6 +64,7 @@ class SlideshowBuilderApiController extends ApiController
 		$screenId = $request->get('screenId');
 		$slideId = $request->get('slideId');
 		$content = $request->get('content');
+		$screen = null;
 
 		if (empty($screenId) && empty($slideId)) {
 			return $this->respondInvalidInput('Pass either screenId or slideId');

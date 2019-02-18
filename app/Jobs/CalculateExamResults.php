@@ -94,6 +94,8 @@ class CalculateExamResults implements ShouldQueue
 			)
 		)->keyBy('key');
 
+		$subjects = [];
+
 		foreach ($txTags as $txTag) {
 			$correct = $correctAggregated->get($txTag->tag_id)['doc_count'] ?? 0;
 			$total = $totalAggregated->get($txTag->tag_id)['doc_count'];

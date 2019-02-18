@@ -232,6 +232,8 @@ class QuizQuestionsApiController extends ApiController
 			)
 		)->keyBy('key');
 
+		$subjects = [];
+
 		foreach ($txTags as $txTag) {
 			$total = $totalAggregated->get($txTag->tag_id)['doc_count'];
 			$resolved = $resolvedAggregated->get($txTag->tag_id)['doc_count'] ?? 0;

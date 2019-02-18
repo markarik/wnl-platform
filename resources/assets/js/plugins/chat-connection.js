@@ -33,11 +33,21 @@ const createEventsQueue = () => {
 const WnlSocket = {
 	install(Vue, {store}) {
 		const onSocketError = (error) => {
+			// Happens e.g. when server is restared or session expires
+			// Socket.io handles it by reconnecting or creating new session
+			// No need to pollute the logs
+			if (
+				error.type === 'TransportError' &&
+				(error.message === 'xhr poll error' || error.message === 'xhr post error')
+			) {
+				return;
+			}
+
 			if (error === 'Unauthorized') {
 				window.location.replace('/login');
 				return;
 			}
-			$wnl.logger.error(`Socket error: ${error}`);
+			$wnl.logger.error(`Chat socket error: ${error}`);
 		};
 
 		if (!global.$socket) {

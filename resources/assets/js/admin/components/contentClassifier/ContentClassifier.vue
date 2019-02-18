@@ -33,42 +33,45 @@
 				/>
 			</div>
 
-			<h5 class="title is-5">Aktywne filtry</h5>
+			<div class="content-classifier__active-filters">
+				<h5 class="title is-5">Aktywne filtry</h5>
 
-			<wnl-tag
-				v-for="tag in byTagsFilter"
-				:key="tag.id"
-				:tag="tag"
-				@click="onTagDelete(tag)"
-				class="clickable"
-			>
-				<span class="icon is-small">
-					<i class="fa fa-times"></i>
-				</span>
-			</wnl-tag>
+				<wnl-tag
+					v-for="tag in byTagsFilter"
+					:key="tag.id"
+					:tag="tag"
+					@click="onTagDelete(tag)"
+					class="clickable"
+				>
+					<span class="icon is-small">
+						<i class="fa fa-times"></i>
+					</span>
+				</wnl-tag>
 
-			<wnl-taxonomy-term-with-ancestors
-				v-for="term in byTaxonomyTermsFilter"
-				:term="term"
-				:ancestors="getAncestorsById(term.id)"
-				:key="term.id"
-				@click="onTaxonomyTermDelete(term)"
-				class="clickable"
-				is-bordered
-			>
-				<span class="icon is-small">
-					<i class="fa fa-times"></i>
-				</span>
-			</wnl-taxonomy-term-with-ancestors>
+				<wnl-taxonomy-term-with-ancestors
+					v-for="term in byTaxonomyTermsFilter"
+					:term="term"
+					:ancestors="getAncestorsById(term.id)"
+					:key="term.id"
+					@click="onTaxonomyTermDelete(term)"
+					class="clickable content-classifier__active-filters__term"
+					is-bordered
+				>
+					<span class="icon is-small margin left">
+						<i class="fa fa-times"></i>
+					</span>
+				</wnl-taxonomy-term-with-ancestors>
 
-			<div class="content-classifier__type-filters margin vertical">
-				<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier__type-filters__item">
-					<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="meta.isActive"/>
-					<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
+				<div class="content-classifier__type-filters margin top">
+					<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier__type-filters__item">
+						<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="meta.isActive"/>
+						<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
+					</div>
 				</div>
 			</div>
+
 			<button
-				class="button submit is-primary"
+				class="button submit is-primary margin top"
 				type="submit"
 				:disabled="byClassificationSubmitDisabled"
 			>
@@ -137,6 +140,14 @@
 	@import 'resources/assets/sass/variables'
 
 	.content-classifier
+		&__active-filters
+			background-color: $color-lightest-gray
+			border-radius: $border-radius-small
+			padding: $margin-base
+
+			&__term
+				background-color: $color-white
+
 		&__type-filters
 			display: flex
 			&__item

@@ -1,7 +1,9 @@
 <template>
 	<div @click="$emit('click', $event)" class="taxonomy-term" :class="{'is-bordered': isBordered}">
-		<div class="taxonomy-term__parent">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}}</div>
-		<strong>{{term.tag.name}}</strong>
+		<div class="taxonomy-term__content">
+			<div class="taxonomy-term__content__parent">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}}</div>
+			<strong>{{term.tag.name}}</strong>
+		</div>
 		<slot></slot>
 	</div>
 </template>
@@ -10,16 +12,19 @@
 	@import 'resources/assets/sass/variables'
 
 	.taxonomy-term
+		align-items: center
+		display: flex
 		line-height: $line-height-minus
 
-		&__parent
-			color: $color-lighter-gray
-			font-size: $font-size-minus-2
+		&__content
+			&__parent
+				color: $color-lighter-gray
+				font-size: $font-size-minus-2
 
 		&.is-bordered
-			border: 1px solid #efefef
-			border-radius: 4px
-			display: inline-block
+			border: 1px solid $color-light-gray
+			border-radius: $border-radius-small
+			display: inline-flex
 			margin-right: $margin-medium
 			padding: $margin-small
 

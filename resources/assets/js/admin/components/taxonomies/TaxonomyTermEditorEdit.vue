@@ -11,6 +11,7 @@
 			:submit-disabled="submitDisabled"
 			:on-save="onSave"
 			vuex-module-name="taxonomyTerms"
+			@changeParent="parent = $event"
 		>
 			<wnl-taxonomy-term-autocomplete
 				slot="parent-autocomplete"

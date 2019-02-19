@@ -98,13 +98,7 @@ export default {
 				return;
 			}
 
-			if (parent) {
-				this.action('select', [parent.id]);
-				this.action('expand', parent.id);
-				this.scrollToNode(parent);
-			} else {
-				this.action('select', []);
-			}
+			this.$emit('changeParent', parent);
 		},
 		async onSubmit() {
 			try {

@@ -8,6 +8,7 @@
 			vuex-module-name="courseStructure"
 			:on-save="onSave"
 			@changeNode="onSelectStructurable"
+			@changeParent="onSelectParent"
 		>
 			<wnl-structure-node-editor-node-autocomplete
 				slot="parent-autocomplete"
@@ -64,6 +65,7 @@ export default {
 		...mapActions('courseStructure', {
 			'createNode': 'create',
 		}),
+		...mapActions('taxonomyTerms', ['select', 'expand']),
 		onSave() {
 			const node = {
 				parent_id: this.parent ? this.parent.id : null,
@@ -77,6 +79,15 @@ export default {
 		onSelectStructurable(structurable) {
 			this.structurable = structurable;
 		},
+		onSelectParent(parent) {
+			if (parent) {
+				this.select([parent.id]);
+				this.expand(parent.id);
+				this.scrollToNode(parent);
+			} else {
+				this.select([]);
+			}
+		}
 	},
 };
 </script>

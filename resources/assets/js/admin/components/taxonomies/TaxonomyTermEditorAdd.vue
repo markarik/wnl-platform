@@ -16,6 +16,7 @@
 			:on-save="onSave"
 			vuex-module-name="taxonomyTerms"
 			@changeNode="onSelectTag"
+			@changeParent="onSelectParent"
 		>
 			<wnl-taxonomy-term-autocomplete
 				slot="parent-autocomplete"
@@ -83,10 +84,20 @@ export default {
 	},
 	methods: {
 		...mapActions('taxonomyTerms', {
-			'createTerm': 'create',
+			'createTerm': 'create'
 		}),
+		...mapActions('taxonomyTerms', ['select', 'expand']),
 		onSelectTag(tag) {
 			this.tag = tag;
+		},
+		onSelectParent(parent) {
+			if (parent) {
+				this.select([parent.id]);
+				this.expand(parent.id);
+				this.scrollToNode(parent);
+			} else {
+				this.select([]);
+			}
 		},
 		onSave() {
 			const term = {

@@ -17,7 +17,7 @@
 				<div class="annotation-item__header__tags annotation-item__header__item">
 					<wnl-tag
 						v-for="tag in annotation.tags"
-					 :key="tag.id"
+						:key="tag.id"
 						:tag="tag"
 					/>
 				</div>

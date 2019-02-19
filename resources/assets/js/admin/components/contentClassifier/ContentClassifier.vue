@@ -21,12 +21,12 @@
 		<wnl-content-classifier-filter-by-classification
 			v-show="activeTab === TABS.BY_CLASSIFICATION"
 			:content-types="contentTypes"
-			@search="onByTagSearch"
+			@search="onSearchByTag"
 		/>
 
 		<wnl-content-classifier-filter-by-ids
 			v-show="activeTab === TABS.BY_ID"
-			:contentTypes="contentTypes"
+			:content-types="contentTypes"
 			@search="onSearchById"
 		/>
 
@@ -44,7 +44,7 @@
 					>
 						<template v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length">
 						<h5 class="title is-5 is-marginless">{{meta.name}}
-							<strong class="content-classifier__result-count">({{getselectedCountsByContentType(contentType)}}/{{groupedFilteredContent[contentType].length}})</strong>
+							<strong class="content-classifier__result-count">({{getSelectedCountsByContentType(contentType)}}/{{groupedFilteredContent[contentType].length}})</strong>
 						</h5>
 						<ul
 							class="content-classifier__result-list margin bottom"
@@ -226,9 +226,9 @@ export default {
 
 			this.onSearch(promises);
 		},
-		async onByTagSearch({byTagsFilter, byTaxonomyTermsFilter, isActiveContentTypes}) {
+		async onSearchByTag({byTagsFilter, byTaxonomyTermsFilter, activeContentTypesMap}) {
 			const promises = Object.entries(this.contentTypes)
-				.filter(([contentType]) => isActiveContentTypes[contentType])
+				.filter(([contentType]) => activeContentTypesMap[contentType])
 				.map(([contentType, meta]) => this.fetchContentByTag(contentType, meta, byTagsFilter, byTaxonomyTermsFilter));
 
 			this.onSearch(promises);
@@ -281,7 +281,7 @@ export default {
 		selectAll() {
 			this.selectedItems = [...this.filteredContent];
 		},
-		getselectedCountsByContentType(contentType) {
+		getSelectedCountsByContentType(contentType) {
 			return (this.groupedSelectedItems[contentType] && this.groupedSelectedItems[contentType].length) || 0;
 		}
 	},

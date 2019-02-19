@@ -20,7 +20,7 @@
 		<div class="content-classifier-filter__active-filters">
 			<h5 class="title is-5">Aktywne filtry</h5>
 
-			<div class="content-classifier-filter__active-filters__list margin bottom" v-if="byTaxonomyTermsFilter.length || byTagsFilter.length">
+			<div class="content-classifier-filter__active-filters__list margin bottom" v-if="hasActiveFilters">
 				<wnl-taxonomy-term-with-ancestors
 					v-for="term in byTaxonomyTermsFilter"
 					:term="term"
@@ -55,7 +55,7 @@
 
 			<div class="content-classifier-filter__type-filters">
 				<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier-filter__type-filters__item">
-					<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="isActiveContentTypes[contentType]"/>
+					<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="activeContentTypesMap[contentType]"/>
 					<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
 				</div>
 			</div>
@@ -124,7 +124,7 @@ export default {
 		}
 	},
 	data() {
-		const isActiveContentTypes = Object.keys(this.contentTypes).reduce(
+		const activeContentTypesMap = Object.keys(this.contentTypes).reduce(
 			(collector, contentType) => {
 				collector[contentType] = true;
 				return collector;
@@ -135,14 +135,16 @@ export default {
 		return {
 			byTagsFilter: [],
 			byTaxonomyTermsFilter: [],
-			isActiveContentTypes
+			activeContentTypesMap,
 		};
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['getAncestorsById']),
+		hasActiveFilters() {
+			return this.byTaxonomyTermsFilter.length || this.byTagsFilter.length;
+		},
 		submitDisabled() {
-			return (this.byTaxonomyTermsFilter.length === 0 && this.byTagsFilter.length === 0) ||
-				!Object.values(this.isActiveContentTypes).includes(true);
+			return !this.hasActiveFilters || !Object.values(this.activeContentTypesMap).includes(true);
 		},
 	},
 	methods: {
@@ -158,17 +160,21 @@ export default {
 		},
 		onTagDelete(tag) {
 			const index = this.byTagsFilter.findIndex(({id}) => id === tag.id);
-			this.byTagsFilter.splice(index, 1);
+			if (index > -1) {
+				this.byTagsFilter.splice(index, 1);
+			}
 		},
 		onTaxonomyTermDelete(term) {
 			const index = this.byTaxonomyTermsFilter.findIndex(({id}) => id === term.id);
-			this.byTaxonomyTermsFilter.splice(index, 1);
+			if (index > -1) {
+				this.byTaxonomyTermsFilter.splice(index, 1);
+			}
 		},
 		onSearch() {
 			this.$emit('search', {
 				byTagsFilter: this.byTagsFilter,
 				byTaxonomyTermsFilter: this.byTaxonomyTermsFilter,
-				isActiveContentTypes: this.isActiveContentTypes
+				activeContentTypesMap: this.activeContentTypesMap
 			});
 		}
 	},

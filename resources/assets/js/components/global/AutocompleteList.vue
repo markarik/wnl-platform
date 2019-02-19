@@ -64,7 +64,6 @@
 			&:hover,
 			&.active
 				background: $autocomplete-active-item-background
-				color: $autocomplete-active-item-text-color
 
 		&__text
 			padding: 5px 10px

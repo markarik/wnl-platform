@@ -33,7 +33,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 	&& docker-php-ext-install -j$(nproc) opcache bcmath gd zip mysqli pdo_mysql
 
 # Install New Relic Agent
-RUN curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-8.4.0.231-linux-musl.tar.gz | tar -C /tmp -zx && \
+RUN curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-8.5.0.235-linux-musl.tar.gz | tar -C /tmp -zx && \
 NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 /tmp/newrelic-php5-*/newrelic-install install && \
 rm -rf /tmp/newrelic-php5-* /tmp/nrinstall*
 
@@ -41,5 +41,6 @@ WORKDIR /www/current
 
 COPY --from=js-build /src/. .
 RUN touch storage/logs/laravel.log
-USER root
-RUN chown -R 82:82 /www
+RUN chown -R 82:82 /www /run /tmp
+
+USER 82

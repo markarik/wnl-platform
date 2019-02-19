@@ -53,6 +53,7 @@
 			justify-content: space-between
 
 		.thumb-top-left
+			color: $color-lighter-gray
 			font-size: $font-size-minus-3
 			line-height: $line-height-minus
 			margin-bottom: $margin-tiny

@@ -1,28 +1,8 @@
 <template>
-	<div class="nodes-editor-right">
-		<nav class="tabs is-uppercase small">
-			<ul>
-				<li v-for="mode in modes" :class="{'is-active': mode.key === editorMode}" :key="mode.key">
-					<a @click="setEditorMode(mode.key)">
-						<span class="icon is-small"><i :class="['fa', mode.icon]" aria-hidden="true"></i></span>
-						<span>{{mode.label}}</span>
-					</a>
-				</li>
-			</ul>
-		</nav>
-
-		<component :is="activeMode.componentName" :courseId="courseId" />
-	</div>
+	<wnl-nested-set-panel-right :active-mode="editorMode" @setEditorMode="setEditorMode">
+		<component slot="activeView" :is="activeComponent" :course-id="courseId" />
+	</wnl-nested-set-panel-right>
 </template>
-
-<style lang="sass" rel="stylesheet/sass" scoped>
-	@import 'resources/assets/sass/variables'
-
-	.nodes-editor-right
-		padding-top: $margin-big
-		position: sticky
-		top: -30px
-</style>
 
 <script>
 import {mapActions, mapState} from 'vuex';
@@ -31,8 +11,12 @@ import WnlStructureNodeEditorAdd from 'js/admin/components/structure/StructureNo
 import WnlStructureNodeEditorDelete from 'js/admin/components/structure/StructureNodeEditorDelete';
 import WnlStructureNodeEditorEdit from 'js/admin/components/structure/StructureNodeEditorEdit';
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
+import WnlNestedSetPanelRight from 'js/admin/components/nestedSet/NestedSetPanelRight';
 
 export default {
+	components: {
+		WnlNestedSetPanelRight
+	},
 	props: {
 		courseId: {
 			type: [String, Number],
@@ -41,37 +25,21 @@ export default {
 	},
 	data() {
 		return {
-			modes: [
-				{
-					icon: 'fa-plus',
-					key: NESTED_SET_EDITOR_MODES.ADD,
-					label: 'Dodaj',
-					componentName: WnlStructureNodeEditorAdd
-				},
-				{
-					icon: 'fa-pencil',
-					key: NESTED_SET_EDITOR_MODES.EDIT,
-					label: 'Edytuj',
-					componentName: WnlStructureNodeEditorEdit
-				},
-				{
-					icon: 'fa-trash',
-					key: NESTED_SET_EDITOR_MODES.DELETE,
-					label: 'Usuń',
-					componentName: WnlStructureNodeEditorDelete
-				}
-			],
+			viewComponents: {
+				[NESTED_SET_EDITOR_MODES.ADD]: WnlStructureNodeEditorAdd,
+				[NESTED_SET_EDITOR_MODES.EDIT]: WnlStructureNodeEditorEdit,
+				[NESTED_SET_EDITOR_MODES.DELETE]: WnlStructureNodeEditorDelete
+			}
 		};
 	},
 	computed: {
-		...mapState('courseStructure', ['editorMode', 'selectedNodes']),
-		activeMode() {
-			return this.modes.find(mode => mode.key === this.editorMode);
+		...mapState('courseStructure', ['editorMode']),
+		activeComponent() {
+			return this.viewComponents[this.editorMode];
 		}
 	},
 	methods: {
 		...mapActions('courseStructure', {
-			selectNodes: 'select',
 			setEditorMode: 'setEditorMode',
 		}),
 	},

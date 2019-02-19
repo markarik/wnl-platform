@@ -29,7 +29,17 @@ const createEventsQueue = () => {
 const EventsTracker = {
 	install(Vue, {store, router}) {
 		const onSocketError = (error) => {
-			$wnl.logger.error(`Socket error: ${error}`);
+			// Happens e.g. when server is restared or session expires
+			// Socket.io handles it by reconnecting or creating new session
+			// No need to pollute the logs
+			if (
+				error.type === 'TransportError' &&
+				(error.message === 'xhr poll error' || error.message === 'xhr post error')
+			) {
+				return;
+			}
+
+			$wnl.logger.error(`Sad socket error: ${error}`);
 		};
 
 		const onSocketConnectionError = (err) => {

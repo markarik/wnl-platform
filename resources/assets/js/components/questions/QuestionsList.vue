@@ -48,6 +48,7 @@
 						@verify="onVerify"
 						@userEvent="onUserEvent"
 						@activeViewChange="onActiveViewChange"
+						@updateTime="onUpdateTime"
 				/>
 				<div v-else class="text-loader">
 					<wnl-text-loader/>
@@ -118,6 +119,7 @@
 import {isEmpty, get} from 'lodash';
 import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
 import {QUESTIONS_SET_TOKEN as setToken} from 'js/store/mutations-types';
+import {VIEWS} from 'js/consts/questionsSolving';
 
 import QuestionsFilters from 'js/components/questions/QuestionsFilters';
 import QuestionsNavigation from 'js/components/questions/QuestionsNavigation';
@@ -130,6 +132,8 @@ import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 import context from 'js/consts/events_map/context.json';
 import feature_components from 'js/consts/events_map/feature_components.json';
+import {timeBaseOnQuestions} from 'js/services/testBuilder';
+import examStateStore from 'js/services/examStateStore';
 
 export default {
 	name: 'QuestionsList',
@@ -157,7 +161,7 @@ export default {
 
 		return {
 			fetchingFilters: false,
-			fetchingQuestions: false,
+			fetchingQuestions: true,
 			orderedQuestionsList: [],
 			showBuilder: false,
 			testMode: false,
@@ -181,6 +185,7 @@ export default {
 			'isLargeDesktop',
 			'isSidenavMounted',
 			'isSidenavVisible',
+			'currentUserId'
 		]),
 		...mapGetters('questions', [
 			'activeFilters',
@@ -197,7 +202,7 @@ export default {
 			'testQuestions',
 			'testQuestionsUnanswered',
 			'getSafePage',
-			'getAnswer'
+			'getAnswer',
 		]),
 		...mapState('questions', {
 			'currentQuestionState': 'currentQuestion'
@@ -226,7 +231,7 @@ export default {
 			return !!this.presetOptionsToPass.examMode && this.testMode;
 		},
 		examTagId() {
-			return get(this.presetOptions, 'examTagId', 0);
+			return get(this.presetOptionsToPass, 'examTagId', 0);
 		},
 		initialFilters() {
 			let filters = !isEmpty(this.presetFilters) ? this.presetFilters : this.activeFilters;
@@ -240,6 +245,9 @@ export default {
 			}
 
 			return filters;
+		},
+		examStateStoreKey() {
+			return `wnl-exam-state-${this.currentUserId}`;
 		}
 	},
 	methods: {
@@ -253,6 +261,7 @@ export default {
 			'getPosition',
 			'fetchQuestionData',
 			'fetchQuestions',
+			'fetchQuestionsByIds',
 			'fetchPage',
 			'fetchTestQuestions',
 			'fetchDynamicFilters',
@@ -314,16 +323,16 @@ export default {
 
 			return new Promise((resolve, reject) => {
 				this.$swal(config)
-					.then(() => resolve(), (dismiss) => {
-						if (dismiss === 'cancel') {
-							return reject();
-						}
-					})
-					.catch(e => reject());
+					.then(resolve)
+					.catch(() => {
+						examStateStore.remove(this.examStateStoreKey);
+						return reject();
+					});
 			});
 		},
 		endQuiz() {
 			this.testMode = this.testProcessing = false;
+			examStateStore.remove(this.examStateStoreKey);
 			this.testResults = {};
 			this.trackFinshTest();
 			this.resetTest();
@@ -378,11 +387,38 @@ export default {
 			scrollToTop();
 			this.changePage(page);
 		},
-		onSelectAnswer(payload) {
-			payload.answer === this.getQuestion(payload.id).selectedAnswer
-				&& !this.testMode
-				? this.onVerify(payload.id) || (payload.position && this.savePosition({position: payload.position}))
-				: this.selectAnswer(payload);
+		onSelectAnswer(payload, useLocalStorage = true) {
+			if (payload.answer === this.getQuestion(payload.id).selectedAnswer && !this.testMode) {
+				this.onVerify(payload.id) || (payload.position && this.savePosition({position: payload.position}));
+			} else {
+				this.selectAnswer(payload);
+				useLocalStorage && this.persistStateInExamStateStorage();
+			}
+		},
+		persistStateInExamStateStorage() {
+			const persistedState = this.readPersistedState();
+			this.testMode && examStateStore.set(this.examStateStoreKey, JSON.stringify({
+				...persistedState,
+				examTagId: this.examTagId,
+				results: this.testQuestions.map(question => ({
+					question_id: question.id,
+					answer_id: question.answers[question.selectedAnswer] && question.answers[question.selectedAnswer].id
+				}))
+			}));
+		},
+		readPersistedState() {
+			const persistedState = examStateStore.get(this.examStateStoreKey);
+			let storedState = {};
+
+			if (persistedState) {
+				try {
+					storedState = JSON.parse(persistedState);
+				} catch (e) {
+					$wnl.logger.warning(e);
+				}
+			}
+
+			return storedState;
 		},
 		onVerify(questionId) {
 			const question = this.getQuestion(questionId);
@@ -474,6 +510,7 @@ export default {
 				})).then(() => false)
 					.catch(() => this.performCheckQuestions());
 			} else {
+				examStateStore.remove(this.examStateStoreKey);
 				this.performCheckQuestions();
 			}
 		},
@@ -521,61 +558,121 @@ export default {
 				context: this.context.value,
 				...payload,
 			});
+		},
+		onUpdateTime(remainingTime) {
+			const persistedState = this.readPersistedState();
+
+			examStateStore.set(this.examStateStoreKey, JSON.stringify({
+				...persistedState,
+				time: Math.floor(remainingTime / 60)
+			}));
+		},
+		setupQuestions() {
+			const hasPresetFilters = !isEmpty(this.presetFilters);
+
+			this.switchOverlay(true);
+			this.fetchingFilters = true;
+			return this.setupFilters().then(() => {
+				return new Promise(resolve => {
+					if (hasPresetFilters) {
+						this.activeFiltersSet(this.presetFilters);
+						resolve();
+					} else {
+						this.fetchActiveFilters().then(resolve);
+					}
+				})
+					.then(() => {
+						this.fetchingFilters = false;
+						this.resetCurrentQuestion();
+						this.resetPages();
+						this.setToken();
+					})
+					.then(this.fetchDynamicFilters)
+					.then(this.getPosition)
+					.then(({data = {}}) => {
+						return new Promise((resolve, reject) => {
+							this.fetchQuestions({
+								saveFilters: false,
+								useSavedFilters: false,
+								page: (data.position && data.position.page) || 1,
+								filters: this.initialFilters,
+							}).then(() => resolve(data));
+						});
+					})
+					.then(({position}) => {
+						!isEmpty(position) && this.changeCurrentQuestion(position);
+						this.switchOverlay(false);
+						this.$trackUserEvent({
+							subcontext: this.activeView,
+							feature: this.feature.value,
+							feature_component: this.featureComponent.value,
+							action: this.featureComponent.actions.open.value,
+							target: this.currentQuestion.id,
+							context: this.context.value
+						});
+					})
+					.then(() => this.fetchQuestionsReactions(this.getPage(1)))
+					.then(() => this.reactionsFetched = true)
+					.then(() => this.fetchQuestionData(this.currentQuestion.id));
+			});
+		},
+		async restoreExamState() {
+			const storedState = this.readPersistedState();
+			if (!storedState.results) return;
+
+			const results = storedState.results;
+			const questionsIds = results.map(response => response.question_id);
+			try {
+				await this.$swal(swalConfig({
+					title: 'Zapisaliśmy nieukończony test!',
+					html: '<p>Wygląda na to, że jesteś w trakcie rozwiązywania testu.</p><p>Czy chcesz do niego wrócić?</p>',
+					showCancelButton: true,
+					confirmButtonText: 'TAK, WRACAM DO TESTU',
+					cancelButtonText: 'NIE, PRZERYWAM TEST',
+					type: 'info',
+					confirmButtonClass: 'button is-primary',
+					reverseButtons: true
+				}));
+				this.presetOptionsToPass = {
+					activeView: VIEWS.TEST_YOURSELF,
+					canChangeTime: false,
+					loadingText: 'mockExam',
+					sizesToChoose: [results.length],
+					testQuestionsCount: results.length,
+					time: storedState.time || timeBaseOnQuestions(results.length),
+					examTagId: storedState.examTagId || 0,
+					examMode: !!storedState.examTagId,
+					examQuestions: questionsIds
+				};
+				this.switchOverlay(true, 'testBuilding', 'testBuilding');
+				this.resetTest();
+				this.testMode = true;
+				await this.fetchQuestionsByIds(questionsIds);
+
+				results
+					.filter(response => response.answer_id)
+					.forEach(response => {
+						const question = this.getQuestion(response.question_id);
+						const answerIndex = question.answers.findIndex(answer => answer.id === response.answer_id);
+						if (answerIndex === -1) return;
+						this.onSelectAnswer({id: response.question_id, answer: answerIndex}, false);
+					});
+			} catch (e) {
+				examStateStore.remove(this.examStateStoreKey);
+			} finally {
+				this.switchOverlay(false, 'testBuilding');
+			}
 		}
 	},
-	mounted() {
-		const hasPresetFilters = !isEmpty(this.presetFilters);
-
-		this.switchOverlay(true);
-		this.fetchingFilters = true;
-		this.setupFilters().then(() => {
-			return new Promise(resolve => {
-				if (hasPresetFilters) {
-					this.activeFiltersSet(this.presetFilters);
-					resolve();
-				} else {
-					this.fetchActiveFilters().then(resolve);
-				}
-			})
-				.then(() => {
-					this.fetchingFilters = false;
-					this.resetCurrentQuestion();
-					this.resetPages();
-					this.setToken();
-				})
-				.then(this.fetchDynamicFilters)
-				.then(this.getPosition)
-				.then(({data = {}}) => {
-					return new Promise((resolve, reject) => {
-						this.fetchQuestions({
-							saveFilters: false,
-							useSavedFilters: false,
-							page: (data.position && data.position.page) || 1,
-							filters: this.initialFilters,
-						}).then(() => resolve(data));
-					});
-				})
-				.then(({position}) => {
-					!isEmpty(position) && this.changeCurrentQuestion(position);
-					this.switchOverlay(false);
-					this.$trackUserEvent({
-						subcontext: this.activeView,
-						feature: this.feature.value,
-						feature_component: this.featureComponent.value,
-						action: this.featureComponent.actions.open.value,
-						target: this.currentQuestion.id,
-						context: this.context.value
-					});
-				})
-				.then(() => this.fetchQuestionsReactions(this.getPage(1)))
-				.then(() => this.reactionsFetched = true)
-				.then(() => this.fetchQuestionData(this.currentQuestion.id))
-				.catch(e => {
-					$wnl.logger.error(e);
-					this.fetchingFilters = false;
-					this.switchOverlay(false);
-				});
-		});
+	async mounted() {
+		try {
+			await this.setupQuestions();
+			await this.restoreExamState();
+		} catch (e) {
+			$wnl.logger.error(e);
+			this.fetchingFilters = false;
+			this.switchOverlay(false);
+		}
 	},
 	beforeRouteLeave(to, from, next) {
 		if (this.testMode) {

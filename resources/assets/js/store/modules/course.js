@@ -1,17 +1,16 @@
 import _ from 'lodash';
-import {set, delete as destroy} from 'vue';
+import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
-import {resource} from 'js/utils/config';
+import {resources} from 'js/utils/constants';
 import * as types from 'js/store/mutations-types';
+import { modelToResourceMap, getModelByResource } from 'js/utils/config';
 
-// Helper functions
-function getCourseApiUrl(courseId) {
-	return getApiUrl(
-		`${resource('courses')}/${courseId}/structure
-		?include=groups.lessons.screens.sections.subsections,
-		groups.lessons.screens.tags
-		&user=current&exclude=screens.content`
-	);
+function _getCourseStructure(courseId = 1) {
+	return axios.get(getApiUrl(`course_structure_nodes/${courseId}`), {
+		params: {
+			include: 'groups,lessons,course,structurable'
+		}
+	});
 }
 
 const STATUS_NONE = 'none';
@@ -27,7 +26,10 @@ const state = {
 	id: 0,
 	name: '',
 	groups: [],
-	structure: {},
+	sections: {},
+	subsections: {},
+	screens: {},
+	structure: []
 };
 
 // Getters
@@ -35,60 +37,74 @@ const getters = {
 	ready: state => state.ready,
 	courseId: state => state.id,
 	name: state => state.name,
-	groups: state => state[resource('groups')],
-	structure: state => state.structure,
-	getGroup: state => (groupId) => state.structure[resource('groups')][groupId] || {},
-	getLessons: state => state.structure[resource('lessons')] || {},
-	getRequiredLessons: (state, getters, rootState, rootGetters) => {
-		return Object.values(getters.getLessons)
-			.filter(lesson => lesson.is_required && lesson.isAccessible);
+	groups: state => {
+		return state.structure.filter(node => node.structurable_type === getModelByResource(resources.groups))
+			.map(node => node.model);
+	},
+	getGroup: (state, getters) => groupId => {
+		const castedGroupId = groupId.toString();
+		return getters.groups.find(group => group.id.toString() === castedGroupId) || {};
+	},
+	getLessonsForGroup: (state, getters) => groupId => {
+		const castedGroupId = groupId.toString();
+		return getters.getLessons.filter(lesson => lesson.groups.toString() === castedGroupId);
+	},
+	getLessons: state => {
+		return state.structure.filter(node => node.structurable_type === getModelByResource(resources.lessons))
+			.map(node => node.model);
+	},
+	getRequiredLessons: (state, getters) => {
+		return getters.getLessons.filter(lesson => lesson.is_required && lesson.isAccessible);
 	},
 	userLessons: (state, getters) => {
-		return Object.values(getters.getLessons)
-			.filter(lesson => lesson.isAccessible);
+		return getters.getLessons.filter(lesson => lesson.isAccessible);
 	},
-	getLesson: state => (lessonId) => _.get(state.structure[resource('lessons')], lessonId, {}),
-	isLessonAvailable: (state) => (lessonId) => {
-		return state.structure[resource('lessons')][lessonId].isAvailable;
+	getLesson: (state, getters) => lessonId => {
+		return getters.getLessons.find(lesson => lesson.id.toString() === lessonId.toString()) || {};
 	},
-	isLessonAccessible: (state) => (lessonId) => {
-		return state.structure[resource('lessons')][lessonId].isAccessible;
+	isLessonAvailable: (state, getters) => lessonId => {
+		const lesson = getters.getLesson(lessonId);
+		return lesson && lesson.isAvailable;
 	},
-	getScreen: state => (screenId) => state.structure[resource('screens')][screenId],
-	getSection: state => (sectionId) => _.get(state.structure['sections'], sectionId, {}),
-	getSections: state => (sections) => {
-		return sections
-			.map((sectionId) => _.get(state.structure, `sections.${sectionId}`, {}));
+	getScreen: state => screenId => state.screens[screenId] || {},
+	getScreensForLesson: state => lessonId => {
+		const castedLessonId = lessonId.toString();
+		return Object.values(state.screens)
+			.filter(screen => {
+				return screen.lessons && screen.lessons.toString() === castedLessonId;
+			})
+			.sort((screenA, screenB) => screenA.order_number - screenB.order_number);
 	},
-	getSubsections: state => (subsections) => subsections.map((subsectionId) => _.get(state.structure, `subsections.${subsectionId}`, {})) || [],
-	getScreenSectionsCheckpoints: (state, getters) => (screenId) => {
-		const sectionsIds = getters.getScreen(screenId).sections;
-		const sections = getters.getSections(sectionsIds);
+	getSection: state => sectionId => state.section[sectionId] || {},
+	getSectionsForScreen: state => screenId => {
+		const castedScreenId = screenId.toString();
+
+		return Object.values(state.sections)
+			.filter(section => {
+				return section.screens.toString() === castedScreenId;
+			});
+	},
+	getScreenSectionsCheckpoints: (state, getters) => screenId => {
+		const sections = getters.getSectionsForScreen(screenId);
 
 		return sections.map((section) => section.slide);
 	},
-	getSectionSubsectionsCheckpoints: (state, getters) => (sectionId) => {
-		const subsectionsIds = getters.getSection(sectionId).subsections;
-		const subsections = getters.getSubsections(subsectionsIds);
+	getSubsectionsForSection: state => sectionId => {
+		const castedSectionId = sectionId.toString();
 
+		return Object.values(state.subsections)
+			.filter(subsection => {
+				return subsection.sections.toString() === castedSectionId;
+			});
+	},
+	getSectionSubsectionsCheckpoints: (state, getters) => sectionId => {
+		const subsections = getters.getSubsectionsForSection(sectionId);
 		return subsections.map((subsections) => subsections.slide);
 	},
-	getScreens: state => (lessonId) => {
-		let screensIds = state.structure[resource('lessons')][lessonId][resource('screens')];
-
-		if (_.isEmpty(screensIds)) {
-			return [];
-		}
-
-		return _.sortBy(
-			screensIds.map((screenId) => state.structure[resource('screens')][screenId]),
-			'order_number'
-		);
-	},
 	getAdjacentScreenId: (state, getters) => (lessonId, currentScreenId, direction) => {
-		let screens = getters.getScreens(lessonId);
+		let screens = getters.getScreensForLesson(lessonId);
 
-		if (_.isEmpty(screens)) return undefined;
+		if (!screens.length) return;
 
 		let currentScreenIndex = _.findIndex(screens, {'id': parseInt(currentScreenId)}),
 			adjScreenIndex;
@@ -120,29 +136,24 @@ const getters = {
 
 			return lesson;
 		} else {
-			const sortedLessonsIds = Object.keys(getters.getLessons).sort((keyA, keyB) => {
-				const lessonA = getters.getLessons[keyA];
-				const lessonB = getters.getLessons[keyB];
-
+			const sortedLessons = getters.getLessons.sort((lessonA, lessonB) => {
 				const byOrderNumber = lessonA.order_number - lessonB.order_number;
 				if (byOrderNumber === 0) {
 					return lessonA.id - lessonB.id;
 				}
 				return byOrderNumber;
-			}).map(Number);
+			});
 
-			for (let i = 0; i < sortedLessonsIds.length; i++) {
-				const lessonId = sortedLessonsIds[i];
-				const isAvailable = getters.isLessonAvailable(lessonId);
-				const isAccessible = getters.isLessonAccessible(lessonId);
+			for (let i = 0; i < sortedLessons.length; i++) {
+				const lesson = sortedLessons[i];
+				const isAvailable = lesson.isAvailable;
+				const isAccessible = lesson.isAccessible;
 				if (isAvailable &&
-					!rootGetters['progress/wasLessonStarted'](state.id, lessonId)
+					!rootGetters['progress/wasLessonStarted'](state.id, lesson.id)
 				) {
-					const lesson = getters.getLesson(lessonId);
 					lesson.status = STATUS_AVAILABLE;
 					return lesson;
 				} else if (!isAvailable && isAccessible) {
-					const lesson = getters.getLesson(lessonId);
 					lesson.status = STATUS_NONE;
 					return lesson;
 				}
@@ -160,27 +171,30 @@ const mutations = {
 	[types.COURSE_READY] (state) {
 		set(state, 'ready', true);
 	},
-	[types.SET_STRUCTURE] (state, data) {
-		set(state, 'id', data.id);
-		set(state, 'name', data.name);
-		set(state, resource('groups'), data[resource('groups')]);
-		set(state, 'structure', data.included);
+	[types.SET_STRUCTURE](state, payload) {
+		set(state, 'structure', payload);
 	},
-	[types.COURSE_REMOVE_GROUP] (state, payload) {
-		state.groups.splice(payload.index, 1);
-		destroy(state.structure.groups, payload.id);
-		payload.lessons.forEach((lesson) => {
-			destroy(state.structure.lessons, lesson);
+	[types.SET_SCREENS](state, screens) {
+		set(state, 'screens', {
+			...state.screens,
+			...screens
 		});
 	},
-	[types.COURSE_SET_LESSON_AVAILABILITY] (state, payload) {
-		set(state.structure.lessons[payload.lessonId], 'isAvailable', payload.status);
+	[types.SET_SECTIONS](state, sections) {
+		set(state, 'sections', {
+			...state.sections,
+			...sections
+		});
 	},
-	[types.COURSE_UPDATE_LESSON_START_DATE] (state, payload) {
-		set(state.structure.lessons[payload.lessonId], 'startDate', payload.start_date);
+	[types.SET_SUBSECTIONS](state, subsections) {
+		set(state, 'subsections', {
+			...state.subsections,
+			...subsections
+		});
 	},
-	[types.SET_SCREEN_CONTENT] (state, {data, screenId}) {
-		set(state.structure.screens[screenId], 'content', data.content);
+	[types.SET_COURSE](state, {name, id}) {
+		set(state, 'name', name);
+		set(state, 'id', id);
 	},
 };
 
@@ -203,24 +217,43 @@ const actions = {
 				});
 		});
 	},
-	setStructure({commit, rootGetters}, courseId = 1) {
-		return axios.get(getCourseApiUrl(courseId, rootGetters.currentUserId))
-			.then(response => {
-				commit(types.SET_STRUCTURE, response.data);
-			});
+	async setupLesson({commit}, lessonId) {
+		const { data } = await axios.get(getApiUrl(`lessons/${lessonId}/screens`), {
+			params: {
+				include: 'sections.subsections'
+			}
+		});
+		const {included, ...screensUnordered} = data;
+		const screens = Object.values(screensUnordered).reduce((screens, screen) => {
+			screens[screen.id] = screen;
+			return screens;
+		}, {});
+		const sections = included ? included.sections : {};
+		const subsections = included ? included.subsections : {};
+
+		commit(types.SET_SCREENS, screens);
+		commit(types.SET_SECTIONS, sections);
+		commit(types.SET_SUBSECTIONS, subsections);
 	},
-	setLessonAvailabilityStatus({commit}, payload) {
-		commit(types.COURSE_SET_LESSON_AVAILABILITY, payload);
+	async setStructure({commit}, courseId = 1) {
+		const response = await _getCourseStructure(courseId);
+		const {data: {included, ...structureObj}} = response;
+		const structure = Object.values(structureObj);
+		const {courses} = included;
+
+		const withIncludes = structure.map(node => {
+			const include = modelToResourceMap[node.structurable_type];
+			const value = included[include][node.structurable_id];
+
+			return {
+				...node,
+				model: value
+			};
+		});
+
+		commit(types.SET_STRUCTURE, withIncludes);
+		commit(types.SET_COURSE, courses[courseId]);
 	},
-	updateLessonStartDate({commit}, payload) {
-		commit(types.COURSE_UPDATE_LESSON_START_DATE, payload);
-	},
-	fetchScreenContent({commit}, screenId) {
-		return axios.get(getApiUrl(`screens/${screenId}`))
-			.then(({data}) => {
-				commit(types.SET_SCREEN_CONTENT, {data, screenId});
-			});
-	}
 };
 
 export default {

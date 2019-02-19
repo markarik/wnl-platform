@@ -1,10 +1,7 @@
 import {uniq} from 'lodash';
 import {set} from 'vue';
-import * as types from 'js/admin/store/mutations-types';
+import * as types from 'js/store/mutations-types';
 import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
-
-// Namespace
-const namespaced = true;
 
 export const initialState = {
 	editorMode: NESTED_SET_EDITOR_MODES.ADD,
@@ -127,6 +124,7 @@ export const nestedSetActions = {
 			commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {
 				list: getters.getChildrenByParentId(node.parent_id)
 			});
+			return node;
 		} catch (error) {
 			throw error;
 		} finally {
@@ -146,6 +144,7 @@ export const nestedSetActions = {
 			}
 
 			commit(types.UPDATE_NESTED_SET_NODE, {...nodeData, ...node});
+			return node;
 		} catch (error) {
 			throw error;
 		} finally {

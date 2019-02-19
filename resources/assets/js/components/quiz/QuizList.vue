@@ -11,18 +11,32 @@
 					{{index+1}}/{{questions.length}}
 				</slot>
 			</span>
-			<wnl-quiz-question
-				:module="module"
-				:class="`quiz-question-${question.id}`"
-				:question="question"
-				:index="index"
-				:isQuizComplete="isComplete"
-				:key="question.id"
-				:readOnly="readOnly"
-				:getReaction="getReaction"
-				@selectAnswer="onSelectAnswer"
-				@userEvent="proxyUserEvent"
-			></wnl-quiz-question>
+			<wnl-activate-with-shortcut-key :key="question.id">
+				<template slot-scope="activateWithShortcutKey">
+					<wnl-quiz-question
+						:module="module"
+						:class="`quiz-question-${question.id}`"
+						:question="question"
+						:index="index"
+						:isQuizComplete="isComplete"
+						:readOnly="readOnly"
+						:getReaction="getReaction"
+						@selectAnswer="onSelectAnswer"
+						@userEvent="proxyUserEvent"
+					></wnl-quiz-question>
+					<wnl-content-item-classifier-editor
+						class="quiz-question__content-item-classifier-editor"
+						:content-item-id="question.id"
+						:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+						:is-active="activateWithShortcutKey.isActive"
+						:is-focused="activateWithShortcutKey.isFocused"
+						@updateIsActive="activateWithShortcutKey.onUpdateIsActive"
+						@editorCreated="activateWithShortcutKey.onComponentCreated"
+						@editorDestroyed="activateWithShortcutKey.onComponentDestroyed"
+						@blur="activateWithShortcutKey.onBlur"
+					/>
+				</template>
+			</wnl-activate-with-shortcut-key>
 		</div>
 		<p v-if="!plainList && !displayResults" class="has-text-centered">
 			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
@@ -49,25 +63,39 @@
 			.question-number
 				text-align: center
 
+	.quiz-question__content-item-classifier-editor
+		margin-top: -$margin-base
+		margin-bottom: $margin-big
+
 </style>
 
 <script>
 import _ from 'lodash';
-import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
+import {mapActions} from 'vuex';
+
+import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
+
 import { scrollToElement } from 'js/utils/animations';
 import { swalConfig } from 'js/utils/swal';
 import emits_events from 'js/mixins/emits-events';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+
 
 export default {
 	name: 'QuizList',
 	components: {
-		'wnl-quiz-question': QuizQuestion,
+		WnlQuizQuestion,
+		WnlContentItemClassifierEditor,
+		WnlActivateWithShortcutKey,
 	},
 	mixins: [emits_events],
 	props: ['readOnly', 'allQuestions', 'getReaction', 'module', 'isComplete', 'isProcessing', 'plainList', 'canEndQuiz', 'hideCount'],
 	data() {
 		return {
 			hasErrors: false,
+			CONTENT_TYPES
 		};
 	},
 	computed: {
@@ -77,6 +105,9 @@ export default {
 			}
 
 			return this.questionsUnresolved;
+		},
+		questionsIds() {
+			return this.allQuestions.map(question => question.id);
 		},
 		questionsUnresolved() {
 			return this.allQuestions.filter((question) => !question.isResolved);
@@ -94,6 +125,7 @@ export default {
 		},
 	},
 	methods: {
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		confirmQuizEnd(unanswered) {
 			const config = swalConfig({
 				confirmButtonText: this.$t('questions.solving.confirm.yes'),
@@ -141,6 +173,16 @@ export default {
 			const id = _.head(this.questionsUnaswered).id;
 			scrollToElement(document.querySelector(`.quiz-question-${id}`));
 		},
+	},
+	mounted() {
+		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
+	},
+	watch: {
+		questionsIds(newValue, oldValue) {
+			if (_.isEqual(newValue, oldValue)) return;
+
+			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
+		}
 	},
 };
 </script>

@@ -25,6 +25,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	$r = config('papi.resources');
 
 	Route::group(['middleware' => ['admin']], function () use ($r) {
+
 		// Courses
 		Route::put("{$r['courses']}/{id}", 'CoursesApiController@put');
 		Route::get("{$r['courses']}/{id}", 'CoursesApiController@get');
@@ -122,7 +123,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::group(['middleware' => ['account-status', 'subscription']], function () use ($r) {
 		// Courses
-		Route::get("{$r['courses']}/{id}/structure", 'CoursesApiController@getStructure');
+		Route::get("{$r['courses']}/{id}/structure", 'CoursesApiController@get');
 		Route::get("{$r['course-structure-nodes']}/{courseId}", 'CourseStructureNodesApiController@getByCourseId');
 
 		// Groups
@@ -369,4 +370,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Discussions
 	Route::get("{$r['discussions']}/{id}", 'DiscussionsApiController@get');
+
+	// CSRF token
+	Route::get("token", 'TokenApiController@getToken');
 });

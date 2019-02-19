@@ -10,7 +10,10 @@
 		</form>
 		<div class="content-classifier__panels">
 			<div class="content-classifier__panel-results">
-				<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
+				<div class="content-classifier__panel-results__header">
+					<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
+					<a @click="selectAll">Zaznacz wszystkie</a>
+				</div>
 				<div v-if="!isLoading">
 					<div v-for="(meta, contentType) in contentTypes" :key="contentType">
 						<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
@@ -22,8 +25,13 @@
 								v-for="item in groupedFilteredContent[contentType]"
 								:key="item.id"
 								class="content-classifier__result-item"
+								:class="{'is-active': selectedItemIds.includes(item.id)}"
+								@click="toggleSelected(item)"
 							>
 								<component :is="meta.component" :item="item"/>
+								<span class="icon content-classifier__result-item__icon">
+									<i class="fa fa-check-circle"></i>
+								</span>
 							</li>
 						</ul>
 						<p class="margin bottom" v-else>Brak wyników</p>
@@ -33,9 +41,9 @@
 			</div>
 			<wnl-content-classifier-editor
 				v-show="!isLoading"
-				:filteredContent="filteredContent"
-				@onTaxonomyTermAttached="onTaxonomyTermAttached"
-				@onTaxonomyTermDetached="onTaxonomyTermDetached"
+				:items="selectedItems"
+				@taxonomyTermAttached="onTaxonomyTermAttached"
+				@taxonomyTermDetached="onTaxonomyTermDetached"
 			/>
 		</div>
 	</div>
@@ -50,6 +58,11 @@
 
 		&__panel-results
 			flex: 50%
+			margin-right: $margin-big
+
+			&__header
+				display: flex
+				justify-content: space-between
 
 		&__result-list
 			display: flex
@@ -57,15 +70,39 @@
 
 		&__result-item
 			border: $border-light-gray
+			cursor: pointer
 			display: flex
 			font-size: $font-size-minus-1
 			line-height: $line-height-minus
-			margin: $margin-small
+			margin: $margin-tiny
 			max-height: 200px
 			min-height: 90px
 			overflow: auto
-			padding: $margin-small
+			padding: $margin-base
+			position: relative
+			transition: border-width .3s ease-in-out, border-color .3s ease-in-out
 			width: 160 + 4 * $margin-small
+
+			&__icon
+				animation: fadein .3s
+				color: $color-correct-shadow
+				display: none
+				position: absolute
+				right: 5px
+				top: 5px
+
+				.is-active &
+					display: block
+
+			&.is-active
+				border: 2px solid $color-correct-shadow
+				border-radius: $border-radius-small
+
+	@keyframes fadein
+		from
+			opacity: 0
+		to
+			opacity: 1
 </style>
 
 <script>
@@ -80,29 +117,9 @@ import WnlHtmlResult from 'js/admin/components/contentClassifier/HtmlResult';
 import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
-import WnlContentClassifierEditor from 'js/admin/components/contentClassifier/ContentClassifierEditor';
-
-const parseIncludes = (item, included) => {
-	item.taxonomyTerms = item.taxonomy_terms ? item.taxonomy_terms.map(termId => {
-		const term = included.taxonomy_terms[termId];
-		term.tag = included.tags[term.tags[0]];
-		term.taxonomy = included.taxonomies[term.taxonomies[0]];
-		term.ancestors = [];
-
-		let currentTerm = term;
-		while (currentTerm.parent_id) {
-			const parentTerm = included.ancestors[currentTerm.parent_id];
-			parentTerm.tag = included.tags[parentTerm.tags[0]];
-			term.ancestors.unshift(parentTerm);
-
-			currentTerm = parentTerm;
-		}
-
-		return term;
-	}) : [];
-
-	return item;
-};
+import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
+import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	components: {
@@ -110,22 +127,22 @@ export default {
 	},
 	data() {
 		const contentTypes = {
-			annotations: {
+			[CONTENT_TYPES.ANNOTATION]: {
 				resourceName: 'annotations/.filter',
 				name: 'Przypisy',
 				component: WnlAnnotationResult,
 			},
-			quizQuestions: {
+			[CONTENT_TYPES.QUIZ_QUESTION]: {
 				resourceName: 'quiz_questions/.filter',
 				name: 'Pytania z bazy pytań',
 				component: WnlHtmlResult,
 			},
-			flashcards: {
+			[CONTENT_TYPES.FLASHCARD]: {
 				resourceName: 'flashcards/.filter',
 				name: 'Pytania otwarte',
 				component: WnlFlashcardResult,
 			},
-			slides: {
+			[CONTENT_TYPES.SLIDE]: {
 				resourceName: 'slides/.filter',
 				name: 'Slajdy',
 				component: WnlSlideResult,
@@ -144,12 +161,16 @@ export default {
 			contentTypes,
 			filters,
 			filteredContent: [],
+			selectedItemIds: [],
 			isLoading: false,
 		};
 	},
 	computed: {
 		groupedFilteredContent() {
 			return groupBy(this.filteredContent, 'type');
+		},
+		selectedItems() {
+			return this.filteredContent.filter(item => this.selectedItemIds.includes(item.id));
 		}
 	},
 	methods: {
@@ -165,7 +186,7 @@ export default {
 						by_ids: {ids: this.filters[contentType].split(',')},
 					},
 				],
-				include: 'taxonomy_terms.tags,taxonomy_terms.taxonomies,taxonomy_terms.ancestors.tags',
+				include: 'taxonomy_terms.tag,taxonomy_terms.taxonomy,taxonomy_terms.ancestors.tag',
 				// TODO use wnl-paginated-list instead
 				limit: 10000,
 			});
@@ -174,11 +195,13 @@ export default {
 
 			return Object.values(items).map(item => {
 				item.type = contentType;
-				return parseIncludes(item, included);
+				item.taxonomyTerms = parseTaxonomyTermsFromIncludes(item.taxonomy_terms, included);
+				return item;
 			});
 		},
 		async onSearch() {
 			this.isLoading = true;
+			this.selectedItemIds = [];
 
 			const promises = Object.entries(this.contentTypes).map(this.fetchContent);
 
@@ -214,6 +237,17 @@ export default {
 				}
 			});
 		},
+		toggleSelected(item) {
+			const index = this.selectedItemIds.findIndex(itemId => itemId === item.id);
+			if (index === -1) {
+				this.selectedItemIds.push(item.id);
+			} else {
+				this.selectedItemIds.splice(index, 1);
+			}
+		},
+		selectAll() {
+			this.selectedItemIds = this.filteredContent.map(item => item.id);
+		}
 	},
 };
 </script>

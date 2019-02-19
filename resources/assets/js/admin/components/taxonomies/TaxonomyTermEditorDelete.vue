@@ -3,6 +3,9 @@
 		v-if="term"
 		class="has-text-centered"
 	>
+		<wnl-taxonomy-term-editor-current-term :term="term">
+			Usuwasz pojęcie:
+		</wnl-taxonomy-term-editor-current-term>
 		<p class="margin bottom">
 			Czy na pewno chcesz usunąć pojęcie <em><strong>{{term.tag.name}}</strong></em> wraz z potomkami?
 		</p>
@@ -26,7 +29,12 @@
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex';
 
+import WnlTaxonomyTermEditorCurrentTerm from 'js/admin/components/taxonomies/TaxonomyTermEditorCurrentTerm';
+
 export default {
+	components: {
+		WnlTaxonomyTermEditorCurrentTerm,
+	},
 	computed: {
 		...mapGetters('taxonomyTerms', {termById: 'nodeById'}),
 		...mapState('taxonomyTerms', {

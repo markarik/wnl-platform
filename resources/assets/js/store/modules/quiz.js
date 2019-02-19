@@ -129,7 +129,7 @@ const getters = {
 	isProcessing: (state) => state.processing,
 	hasQuestions: (state, getters) => getters.questionsLength !== 0,
 	questionsLength: (state) => state.questionsIds.length,
-	getAnswer: (state) => (id) => state.quiz_answers[id]
+	getAnswer: (state) => (id) => state.quiz_answers[id],
 };
 
 const mutations = {
@@ -236,7 +236,7 @@ const mutations = {
 	},
 	[types.QUIZ_SET_PAGINATION] (state, pagination) {
 		set(state, 'pagination', pagination);
-	}
+	},
 };
 
 const actions = {
@@ -251,15 +251,15 @@ const actions = {
 			fetchQuizSet(resource.id),
 			fetchQuizSetStats(resource.id)
 		]).then(([storedState, response, quizStats]) => {
-			const {included, ...quizQuestions} = response.data,
-				quizQuestionsOldWay = {};
+			const {included, ...quizQuestions} = response.data;
+			const quizQuestionsOldWay = {};
 
 			Object.values(quizQuestions).forEach((quizQuestion) => {
 				quizQuestionsOldWay[quizQuestion.id] = quizQuestion;
 			});
 
-			const quizQuestionsIds = Object.keys(quizQuestionsOldWay),
-				len = quizQuestionsIds;
+			const quizQuestionsIds = Object.keys(quizQuestionsOldWay);
+			const len = quizQuestionsIds;
 
 			included.comments && dispatch('comments/setComments', {...included.comments}, {root: true});
 			commit(types.UPDATE_INCLUDED, {...included, quiz_questions: quizQuestionsOldWay});
@@ -331,7 +331,7 @@ const actions = {
 					commit(types.QUIZ_SET_QUESTIONS, {
 						setId: 0,
 						setName: `Pytanie numer ${id}`,
-						let: 1,
+						len: 1,
 						questionsIds: [id],
 					});
 					commit(types.QUIZ_RESET_PROGRESS);

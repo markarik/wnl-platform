@@ -36,18 +36,21 @@
 			<p class="notification small">
 				Możesz wybrać dowolne pytanie z listy klikając na jego tytuł
 			</p>
-			<wnl-quiz-question
+			<template
 				v-for="(question, index) in otherQuestions"
-				:headerOnly="true"
-				:question="question"
-				:class="`clickable quiz-question-${question.id}`"
-				:key="index"
-				:getReaction="getReaction"
-				:module="module"
-				@headerClicked="selectQuestionFromList(index)"
-				@selectAnswer="selectAnswer"
-				@answerDoubleclick="onAnswerDoubleClick"
-			></wnl-quiz-question>
+			>
+				<wnl-quiz-question
+					:key="question.id"
+					:headerOnly="true"
+					:question="question"
+					:class="`clickable quiz-question-${question.id}`"
+					:getReaction="getReaction"
+					:module="module"
+					@headerClicked="selectQuestionFromList(index)"
+					@selectAnswer="selectAnswer"
+					@answerDoubleclick="onAnswerDoubleClick"
+				></wnl-quiz-question>
+			</template>
 		</div>
 	</div>
 </template>
@@ -67,17 +70,20 @@
 
 <script>
 import _ from 'lodash';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
-import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
+import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
+
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import feature_components from 'js/consts/events_map/feature_components.json';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+
 
 export default {
 	name: 'QuizWidget',
 	components: {
-		'wnl-quiz-question': QuizQuestion,
+		WnlQuizQuestion,
 	},
 	mixins: [emits_events],
 	props: {
@@ -105,7 +111,8 @@ export default {
 	data() {
 		return {
 			hasErrors: false,
-			allowDoubleclick: true
+			allowDoubleclick: true,
+			CONTENT_TYPES
 		};
 	},
 	computed: {
@@ -130,9 +137,13 @@ export default {
 		},
 		hasOtherQuestions() {
 			return this.otherQuestions.length > 0;
+		},
+		questionsIds() {
+			return this.questions.map(({id}) => id);
 		}
 	},
 	methods: {
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		verify() {
 			if (this.hasAnswer) {
 				this.$emit('verify', this.currentQuestion.id);
@@ -174,6 +185,7 @@ export default {
 	},
 	created() {
 		this.trackQuizQuestionChanged();
+		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
 	},
 	watch: {
 		'currentQuestion.id'() {

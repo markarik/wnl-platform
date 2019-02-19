@@ -26,7 +26,8 @@ before_script:
   - php artisan db:seed --class=TestSeeder
 
 script:
-  - phpunit --filter=Api
+  - php vendor/bin/phpunit --filter=Api
+  - php vendor/bin/phpunit --filter=Http
   - yarn run test
   - yarn run lint
 

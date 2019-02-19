@@ -5,29 +5,45 @@
 			:resource-route="resourceRoute"
 			:populate="isEdit"
 			:hideDefaultSubmit="true"
+			@formIsLoaded="onFormIsLoaded"
 			@submitSuccess="onSubmitSuccess"
 			name="TaxonomyEditor"
-			class="editor"
 		>
 			<div class="header">
-				<h2 class="title is-2">Edycja taksonomii <span v-if="isEdit">(Id: {{id}})</span></h2>
+				<h2 class="title is-2">
+					<span v-if="isEdit">Taksonomia:
+						<span v-if="name">{{name}}</span>
+						<span v-else>...</span>
+					</span>
+					<span v-else>Dodaj taksonomię</span>
+				</h2>
 				<div class="field is-grouped">
 					<!-- TODO PLAT-924 unblock deleting "reserved" taxonomies -->
 					<button v-if="isEdit && id > 3" class="button is-danger margin right" type="button" @click="onDelete">
 						<span class="icon is-small"><i class="fa fa-trash"></i></span>
 						<span>Usuń</span>
 					</button>
-					<wnl-submit class="submit"/>
+					<wnl-submit v-if="!isEdit || isEditFormVisible" class="submit"/>
+					<button
+						v-if="isEdit && !isEditFormVisible"
+						class="button"
+						@click="isEditFormVisible = true"
+					>
+						<span class="icon is-small"><i class="fa fa-pencil"></i></span>
+						<span>Edytuj</span>
+					</button>
 				</div>
 			</div>
-			<wnl-form-text
-				name="name"
-				class="margin top bottom"
-			>Nazwa</wnl-form-text>
-			<wnl-textarea
-				name="description"
-				class="margin top bottom"
-			>Opis</wnl-textarea>
+			<div v-if="!isEdit || isEditFormVisible" class="editor">
+				<wnl-form-text
+					name="name"
+					class="margin top bottom"
+				>Nazwa</wnl-form-text>
+				<wnl-textarea
+					name="description"
+					class="margin top bottom"
+				>Opis</wnl-textarea>
+			</div>
 		</wnl-form>
 		<wnl-taxonomy-terms-editor :taxonomyId="id" v-if="isEdit" />
 	</div>
@@ -41,16 +57,11 @@
 		max-width: 800px
 
 	.header
-		+small-shadow-bottom()
 		align-items: flex-start
 		display: flex
 		justify-content: space-between
-		background: $color-white
 		margin-bottom: $margin-medium
 		padding-top: $margin-small
-		position: sticky
-		top: -$margin-big
-		z-index: 101
 
 		.submit
 			width: auto
@@ -69,6 +80,12 @@ export default {
 			type: [String, Number],
 			required: true,
 		},
+	},
+	data() {
+		return {
+			isEditFormVisible: false,
+			name: null,
+		};
 	},
 	computed: {
 		isEdit() {
@@ -90,9 +107,18 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		onSubmitSuccess(data) {
-			if (!this.isEdit) {
-				this.$router.push({ name: 'taxonomy-edit', params: { id: data.id } });
+		...mapActions('taxonomies', ['resetTaxonomies']),
+		onFormIsLoaded({name}) {
+			this.name = name;
+		},
+		onSubmitSuccess({id, name}) {
+			this.resetTaxonomies();
+			this.name = name;
+
+			if (this.isEdit) {
+				this.isEditFormVisible = false;
+			} else {
+				this.$router.push({name: 'taxonomy-edit', params: {id}});
 			}
 		},
 		async onDelete() {
@@ -112,6 +138,7 @@ export default {
 
 			try {
 				await axios.delete(getApiUrl(this.resourceRoute));
+				this.resetTaxonomies();
 				this.addAutoDismissableAlert({
 					text: 'Taksonomia została usunięta',
 					type: ALERT_TYPES.SUCCESS

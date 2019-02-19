@@ -23,7 +23,7 @@
 
 <script>
 export default {
-	name: 'wnl-form-input',
+	name: 'WnlFormInput',
 	props: ['type', 'name', 'form'],
 };
 </script>

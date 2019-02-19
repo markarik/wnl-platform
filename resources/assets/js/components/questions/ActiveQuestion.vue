@@ -29,6 +29,16 @@
 			@answerDoubleclick="onAnswerDoubleclick"
 			@userEvent="proxyUserEvent"
 		/>
+		<wnl-content-item-classifier-editor
+			class="quiz-question__content-item-classifier-editor"
+			:is-active="isContentItemClassifierEditorActive"
+			:is-focused="isContentItemClassifierEditorFocused"
+			:content-item-id="question.id"
+			:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+			@updateIsActive="onContentItemClassifierEditorUpdateIsActive"
+			@editorCreated="onContentItemClassifierEditorCreated"
+			@editorDestroyed="onContentItemClassifierEditorDestroyed"
+		/>
 		<p class="active-question-button has-text-centered">
 			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
 				Sprawdź odpowiedź
@@ -50,7 +60,6 @@
 
 	.active-question-button
 		margin-bottom: $margin-big * 6
-		margin-top: -$margin-big
 
 	.active-question-controls
 		display: flex
@@ -60,29 +69,30 @@
 
 	.matched-count
 		color: $color-green
+
+	.quiz-question__content-item-classifier-editor
+		margin-top: -$margin-base
+		margin-bottom: $margin-big
 </style>
 
 <script>
-import _ from 'lodash';
+import {nextTick} from 'vue';
+import {isNumber} from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
-import QuizQuestion from 'js/components/quiz/QuizQuestion.vue';
-import { scrollToElement } from 'js/utils/animations';
-import { swalConfig } from 'js/utils/swal';
-import emits_events from 'js/mixins/emits-events';
+import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 
-const KEYS = {
-	leftArrow: 37,
-	upArrow: 38,
-	rightArrow: 39,
-	downArrow: 40,
-	enter: 13
-};
+import { scrollToElement } from 'js/utils/animations';
+import emits_events from 'js/mixins/emits-events';
+import {KEYS} from 'js/consts/keys';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	name: 'ActiveQuestion',
 	components: {
-		'wnl-quiz-question': QuizQuestion,
+		WnlQuizQuestion,
+		WnlContentItemClassifierEditor,
 	},
 	mixins: [emits_events],
 	props: {
@@ -109,16 +119,25 @@ export default {
 	},
 	data() {
 		return {
-			hasErrors: false,
 			allowDoubleclick: true,
+			hasErrors: false,
+			activateWithShortcutKeyId: 'activate-question',
 			timeout: 0,
+			CONTENT_TYPES
 		};
 	},
 	computed: {
 		...mapGetters(['isMobile']),
 		...mapGetters('questions', ['getQuestion']),
+		...mapGetters('activateWithShortcutKey', ['isActiveByUid', 'isFocusedByUid']),
+		isContentItemClassifierEditorActive() {
+			return this.isActiveByUid(this.activateWithShortcutKeyId);
+		},
+		isContentItemClassifierEditorFocused() {
+			return this.isFocusedByUid(this.activateWithShortcutKeyId);
+		},
 		hasAnswer() {
-			return _.isNumber(this.question.selectedAnswer);
+			return isNumber(this.question.selectedAnswer);
 		},
 		selectedAnswerIndex () {
 			if (this.hasAnswer) {
@@ -135,6 +154,8 @@ export default {
 		},
 	},
 	methods: {
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
+		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),
 		nextQuestion() {
 			this.$emit('changeQuestion', 1);
 			scrollToElement(this.$el, 63);
@@ -157,11 +178,11 @@ export default {
 			this.hasAnswer && this.$emit('verify', this.question.id);
 		},
 		keyDown(e) {
-			if (e.keyCode === KEYS.leftArrow) {
+			if (e.keyCode === KEYS.arrowLeft || e.key === '[') {
 				this.previousQuestion();
 			}
 
-			if (e.keyCode === KEYS.upArrow) {
+			if (e.keyCode === KEYS.arrowUp) {
 				if(this.question.isResolved) {
 					return false;
 				}
@@ -173,11 +194,11 @@ export default {
 				return false;
 			}
 
-			if (e.keyCode === KEYS.rightArrow) {
+			if (e.keyCode === KEYS.arrowRight || e.key === ']') {
 				this.nextQuestion();
 			}
 
-			if (e.keyCode === KEYS.downArrow) {
+			if (e.keyCode === KEYS.arrowDown) {
 				if(this.question.isResolved) {
 					return false;
 				}
@@ -197,12 +218,33 @@ export default {
 				}
 			}
 		},
+		onContentItemClassifierEditorUpdateIsActive(isActive) {
+			if (isActive) {
+				this.setActiveInstance(this.activateWithShortcutKeyId);
+			} else {
+				this.resetActiveInstance();
+			}
+		},
+		onContentItemClassifierEditorCreated() {
+			this.register(this.activateWithShortcutKeyId);
+		},
+		onContentItemClassifierEditorDestroyed() {
+			this.deregister(this.activateWithShortcutKeyId);
+		},
 	},
 	mounted() {
 		window.addEventListener('keydown', this.keyDown);
 	},
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.keyDown);
+	},
+	watch: {
+		async isContentItemClassifierEditorActive() {
+			if (this.isContentItemClassifierEditorActive) {
+				await nextTick();
+				scrollToElement(this.$el);
+			}
+		},
 	}
 };
 </script>

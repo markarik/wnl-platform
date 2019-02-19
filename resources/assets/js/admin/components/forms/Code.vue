@@ -20,7 +20,7 @@ const modelist  = brace.acequire('ace/ext/modelist');
 const themelist = brace.acequire('ace/ext/themelist');
 
 export default {
-	name: 'wnl-form-code',
+	name: 'WnlFormCode',
 	props: ['type', 'name', 'form', 'value'],
 	data() {
 		return {

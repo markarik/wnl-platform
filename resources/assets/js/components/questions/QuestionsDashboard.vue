@@ -37,7 +37,7 @@
 						<div class="questions-plan-create" v-else>
 							<p class="questions-plan-create-heading">
 								{{$t('questions.dashboard.plan.create.heading')}}
-							<p>
+							</p>
 							<p class="questions-plan-create-tip">
 								{{$t('questions.dashboard.plan.create.tip')}}
 							</p>
@@ -403,8 +403,8 @@ export default {
 				name: 'questions-list',
 				params: {
 					presetFilters: [
-						'quiz-planned.items[0]',
-						'quiz-resolution.items[0]',
+						'quiz-planned.items["planned"]',
+						'quiz-resolution.items["unresolved"]',
 					],
 				},
 			};

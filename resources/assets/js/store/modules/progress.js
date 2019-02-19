@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as types from '../mutations-types';
+import * as types from 'js/store/mutations-types';
 import progressStore, {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 import {set} from 'vue';
 import { getApiUrl } from 'js/utils/env';

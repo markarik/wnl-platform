@@ -97,7 +97,7 @@ export default {
 				feature: features.quiz_questions.value,
 				...payload,
 			});
-		}
+		},
 	}
 };
 </script>

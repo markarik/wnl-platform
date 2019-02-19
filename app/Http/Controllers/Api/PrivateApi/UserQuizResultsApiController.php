@@ -76,9 +76,13 @@ class UserQuizResultsApiController extends ApiController
 			}
 		}
 
+		if (count($recordsToInsert) > 100) {
+			\Log::notice('>>>More than 100 answers send. Possible exam');
+		}
+
 		if (!empty($meta['examMode']) && !empty($meta['examTagId'])) {
 			$examTagId = $meta['examTagId'];
-
+			\Log::notice('>>>Dispatching CalculateExamResults Job');
 			$this->dispatch(new CalculateExamResults($examTagId, $userId, $recordsToInsert));
 		}
 

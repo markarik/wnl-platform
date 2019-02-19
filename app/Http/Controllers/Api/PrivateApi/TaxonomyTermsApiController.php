@@ -20,7 +20,9 @@ class TaxonomyTermsApiController extends ApiController
 
 	public function getByTaxonomy($taxonomyId)
 	{
-		return $this->transformAndRespond(TaxonomyTerm::where('taxonomy_id', $taxonomyId)
+		$model = $this->eagerLoadIncludes(TaxonomyTerm::class);
+
+		return $this->transformAndRespond($model->where('taxonomy_id', $taxonomyId)
 			->defaultOrder()
 			->get()
 			->toFlatTree()

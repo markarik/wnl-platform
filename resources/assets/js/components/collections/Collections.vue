@@ -9,7 +9,7 @@
 				<wnl-sidenav :items="getNavigation()" :options="navigationOptions"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
-		<div class="wnl-middle wnl-app-layout-main" v-bind:class="{'full-width': isTouchScreen}" v-if="!isLoading">
+		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isTouchScreen}" v-if="!isLoading">
 			<div class="scrollable-main-container" v-if="rootCategoryName && categoryName">
 				<div class="collections-header">
 					<div class="collections-breadcrumbs">
@@ -26,7 +26,7 @@
 						</div>
 					</div>
 					<div class="collections-controls">
-						<a v-for="(name, panel) in panels" class="panel-toggle" :class="{'is-active': isPanelActive(panel), 'is-single': isSinglePanelView}"  :key="panel" @click="togglePanel(panel)">
+						<a v-for="(name, panel) in panels" class="panel-toggle" :class="{'is-active': isPanelActive(panel), 'is-single': isSinglePanelView}" :key="panel" @click="togglePanel(panel)">
 							{{name}}
 							<span class="icon is-small">
 								<i class="fa" :class="[isPanelActive(panel) ? 'fa-check-circle' : 'fa-circle-o']"></i>
@@ -158,7 +158,6 @@ import MainNav from 'js/components/MainNav';
 import QnaCollection from 'js/components/collections/QnaCollection';
 import QuizCollection from 'js/components/collections/QuizCollection';
 import SlidesCarousel from 'js/components/collections/SlidesCarousel';
-import { resource } from 'js/utils/config';
 import navigation from 'js/services/navigation';
 import { layouts } from 'js/store/modules/ui';
 

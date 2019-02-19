@@ -7,21 +7,22 @@
 			</span>
 			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
 		</div>
-		<div class="control" v-else>
-			<input class="input" v-model="search" :placeholder="placeholder" />
-			<wnl-autocomplete
-				:items="autocompleteTerms"
-				:onItemChosen="onSelect"
-				:isDown="true"
-			>
-				<template slot-scope="slotProps">
-					<wnl-taxonomy-term-with-ancestors
-						:term="slotProps.item"
-						:ancestors="getAncestorsById(slotProps.item.id)"
-					/>
-				</template>
-			</wnl-autocomplete>
-		</div>
+		<wnl-autocomplete
+			v-else
+			v-model="search"
+			:placeholder="placeholder"
+			:items="autocompleteTerms"
+			:disabled="disabled"
+			:isFocused="isFocused"
+			@blur="$emit('blur', $event)"
+			@change="onSelect"
+		>
+			<wnl-taxonomy-term-with-ancestors
+				:term="slotProps.item"
+				:ancestors="getAncestorsById(slotProps.item.id)"
+				slot-scope="slotProps"
+			/>
+		</wnl-autocomplete>
 	</div>
 </template>
 
@@ -39,22 +40,31 @@
 </style>
 
 <script>
+import {nextTick} from 'vue';
 import {mapState, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
-import WnlTaxonomyTermWithAncestors from 'js/admin/components/taxonomies/TaxonomyTermWithAncestors';
+import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 
 export default {
 	props: {
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
+		isFocused: {
+			type: Boolean,
+			default: false,
+		},
+		placeholder: {
+			type: String,
+			default: 'Wpisz nazwę nadrzędnego pojęcia',
+		},
 		selected: {
 			type: Object,
 			default: null,
 		},
-		placeholder: {
-			type: String,
-			default: 'Wpisz nazwę nadrzędnego pojęcia'
-		}
 	},
 	data() {
 		return {

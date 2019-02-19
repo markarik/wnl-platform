@@ -4,12 +4,9 @@ namespace App\Console\Commands;
 
 use App\Models\Product;
 use App\Models\Role;
+use App\Models\UserQuizResults;
 use Illuminate\Console\Command;
 use App\Models\User;
-use App\Models\UserCourseProgress;
-use App\Models\Lesson;
-use App\Models\UserQuizResults;
-use App\Models\QuizQuestion;
 use Storage;
 
 class ExportUserStatistics extends Command
@@ -46,6 +43,8 @@ class ExportUserStatistics extends Command
 	 */
 	public function handle()
 	{
+		dump(env('DB_DATABASE'));
+		dump(UserQuizResults::max('created_at'));
 		$productIds = $this->argument('products');
 		$products = Product::whereIn('id', $productIds)->get();
 
@@ -54,8 +53,16 @@ class ExportUserStatistics extends Command
 
 		$this->info("Exporting user stats for date range from {$minDate} to {$maxDate}.");
 
-		$headers = ['Id', 'Imię', 'Nazwisko', 'Czas spędzony na platformie', 'Procent ukończonych lekcji',
-			'Procent rozwiązanych pytań'];
+		$headers = implode("\t", [
+			'Id',
+			'Imię',
+			'Nazwisko',
+			'Czas spędzony na platformie',
+			'Procent ukończonych lekcji',
+			'Procent przerobionych sekcji',
+			'Procent rozwiązanych pytań',
+			'Produkty',
+		]);
 
 		$groups = $this->getUserGroups($minDate, $maxDate, $productIds);
 
@@ -69,9 +76,11 @@ class ExportUserStatistics extends Command
 					$user->id,
 					$user->first_name,
 					$user->last_name,
-					$user->userTime,
-					$user->userCourseProgressPrecentage,
+					$user->time,
+					$user->userCourseProgressPercentage,
+					$user->userSectionsProgressPercentage,
 					$user->userQuizQuestionsSolvedPercentage,
+					$user->orders->pluck('product_id')->unique()->implode(','),
 				]);
 			});
 			$group->prepend($headers);
@@ -98,8 +107,8 @@ class ExportUserStatistics extends Command
 					->whereIn('product_id', $productIds)
 					->where('paid', 1);
 			})
-			->whereDoesntHave('roles', function($query){
-				$query->whereIn('name', [Role::ROLE_ADMIN, Role::ROLE_MODERATOR]);
+			->whereDoesntHave('roles', function ($query) {
+				$query->whereIn('name', [Role::ROLE_ADMIN, Role::ROLE_MODERATOR, Role::ROLE_TEST]);
 			})
 			->get();
 
@@ -107,17 +116,17 @@ class ExportUserStatistics extends Command
 
 		foreach ($users as $user) {
 			$courseProgressStats = $user->getCourseProgressStats($minDate, $maxDate);
-			$user->userCourseProgressPrecentage = $courseProgressStats['course_progress_perc'];
+			$user->userCourseProgressPercentage = $courseProgressStats['course_progress_perc'];
 			$user->userQuizQuestionsSolvedPercentage = $courseProgressStats['quiz_questions_solved_perc'];
-			$user->userTime = $courseProgressStats['time'];
+			$user->userSectionsProgressPercentage = $courseProgressStats['sections_progress_perc'];
+			$user->time = $courseProgressStats['time'];
 
 			$firstGroupCriteria = $user->hasFinishedCourse($minDate, $maxDate);
 
 			$secondGroupCriteria =
 				$user->userCourseProgressPercentage >= 30 &&
 				$user->userQuizQuestionsSolvedPercentage >= 30 &&
-				$user->userTime >= 100;
-
+				$user->time >= 100;
 
 			if ($firstGroupCriteria) {
 				$firstGroup->push($user);

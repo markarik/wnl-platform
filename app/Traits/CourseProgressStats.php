@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\Lesson;
 use App\Models\QuizQuestion;
+use App\Models\Section;
 use App\Models\UserCourseProgress;
 use App\Models\UserQuizResults;
 
@@ -38,9 +39,28 @@ trait CourseProgressStats {
 
 		$userQuizQuestionsSolvedPercentage = (int)round(($userQuizQuestionsSolved / $allQuestions) * 100);
 
+		$userSectionsProgress = UserCourseProgress::where('user_id', $this->profile->id)
+			->whereDate('user_course_progress.created_at', '<=', $endDate)
+			->join('lessons', 'lessons.id', '=', 'lesson_id')
+			->join('sections', 'sections.id', '=', 'section_id')
+			->where('lessons.is_required', 1)
+			->whereNotNull('user_course_progress.section_id')
+			->where('user_course_progress.status', 'complete')
+			->count();
+
+		$allSections = Section::select(['id'])
+			->whereDate('sections.created_at', '<=', $endDate)
+			->join('screens', 'screens.id', '=', 'screen_id')
+			->join('lessons', 'lessons.id', '=', 'lesson_id')
+			->where('lessons.is_required', 1)
+			->count();
+
+		$userSectionsProgressPercentage = (int)round(($userSectionsProgress / $allSections) * 100);
+
 		return [
 			'quiz_questions_solved_perc' => $userQuizQuestionsSolvedPercentage,
 			'course_progress_perc' => $userCourseProgressPercentage,
+			'sections_progress_perc' => $userSectionsProgressPercentage,
 			'time' => $userTime
 		];
 	}

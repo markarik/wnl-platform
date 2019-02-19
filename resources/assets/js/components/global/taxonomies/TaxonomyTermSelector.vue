@@ -70,6 +70,7 @@ export default {
 		async onTaxonomyChange(taxonomyId) {
 			try {
 				await this.setUpNestedSet(taxonomyId);
+				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TAXONOMY_ID, taxonomyId);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

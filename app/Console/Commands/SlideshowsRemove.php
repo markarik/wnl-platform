@@ -41,9 +41,9 @@ class SlideshowsRemove extends Command
 		$screensIdsRaw = $this->argument('screensIds');
 		$screensIds = explode(self::SCREENS_DELIMITER, $screensIdsRaw);
 
-		if (count($screensIds) === 0) die("Screens with IDs $screensIdsRaw do not exist.\n");
+		if (count($screensIds) === 0) die("Screens with IDs {$screensIdsRaw} do not exist.\n");
 
-		$confirm = "You are about to remove screens " . $screensIdsRaw . ", with all slides, tags etc. Are you absolutely sure?";
+		$confirm = "You are about to remove screens {$screensIdsRaw}, with all slides, tags etc. Are you absolutely sure?";
 
 		if ($this->confirm($confirm)) {
 			$bar = $this->output->createProgressBar(count($screensIds));

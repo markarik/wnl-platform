@@ -158,7 +158,7 @@ class ReorderSectionsTest extends TestCase
 			'sections' => $sectionIds
 		]);
 
-		$sortedSlidesScreenOne = $screenOne->slideshow->slides()->orderBy('order_number')->get();
+		$sortedSlidesScreenOne = $screenOne->slideshow->slides()->get();
 
 		foreach ($sortedSlidesScreenOne as $index => $slide) {
 			$this->assertDatabaseHas('presentables', [
@@ -169,7 +169,7 @@ class ReorderSectionsTest extends TestCase
 			]);
 		}
 
-		$sortedSlidesScreenTwo = $screenTwo->slideshow->slides()->orderBy('order_number')->get();
+		$sortedSlidesScreenTwo = $screenTwo->slideshow->slides()->get();
 
 		foreach ($sortedSlidesScreenTwo as $index => $slide) {
 			$this->assertDatabaseHas('presentables', [

@@ -120,7 +120,6 @@ class SectionsUpdate extends Command
 				['presentable_type', '=', 'App\\Models\\Slideshow'],
 				['presentable_id', '=', $slideshow->id],
 			])
-			->orderBy('order_number', 'asc')
 			->get()
 			->toArray();
 

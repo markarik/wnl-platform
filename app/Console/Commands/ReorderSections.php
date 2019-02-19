@@ -46,7 +46,7 @@ class ReorderSections extends Command
 		foreach ($passedSections as $index => $sectionId) {
 			$section = Section::find($sectionId);
 			$sectionScreen = $section->screen;
-			$sectionSlides = $section->slides()->orderBy('order_number')->get();
+			$sectionSlides = $section->slides()->get();
 			$sortedSlides = $sortedSlides->concat($sectionSlides);
 			$sectionsInstances[] = $section;
 

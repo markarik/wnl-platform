@@ -35,7 +35,6 @@ abstract class ByTaxonomyFilter extends ApiFilter
 	protected function buildTaxonomyStructure($taxonomyTags, $aggregatedTags)
 	{
 		$groupedTags = $taxonomyTags
-			->sortBy('order_number')
 			->groupBy('parent_tag_id');
 
 		$items = $this->buildChildStructure(0, $groupedTags, [], $aggregatedTags);

@@ -153,8 +153,7 @@ class CalculateCoursePlan
 		}
 
 		$builder = $this->user->lessonsAvailability()
-			->orderBy('group_id')
-			->orderBy('order_number');
+			->orderBy('group_id');
 
 		$notRequired = (clone $builder)
 			->whereIn('group_id', [

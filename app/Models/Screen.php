@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
+use App\Scopes\OrderByOrderNumberScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Screen extends Model
@@ -17,6 +18,11 @@ class Screen extends Model
 		'content', 'type', 'name', 'meta', 'lesson_id',
 		'order_number', 'id', 'discussion_id', 'is_discussable'
 	];
+
+	protected static function boot() {
+		parent::boot();
+		static::addGlobalScope(new OrderByOrderNumberScope());
+	}
 
 	public function lesson()
 	{

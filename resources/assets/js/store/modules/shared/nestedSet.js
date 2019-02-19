@@ -124,6 +124,7 @@ export const nestedSetActions = {
 			commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {
 				list: getters.getChildrenByParentId(node.parent_id)
 			});
+			return node;
 		} catch (error) {
 			throw error;
 		} finally {
@@ -143,6 +144,7 @@ export const nestedSetActions = {
 			}
 
 			commit(types.UPDATE_NESTED_SET_NODE, {...nodeData, ...node});
+			return node;
 		} catch (error) {
 			throw error;
 		} finally {

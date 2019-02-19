@@ -61,13 +61,11 @@ class QuizExport extends Command
 			$name .= $set->name;
 			$questions = $set->questions;
 		} elseif ($tagName) {
-			$tag = Tag::firstOr(
-				['name' => $tagName],
-				function () {
-					$this->error('Tag not found.');
-					exit;
-				}
-			);
+			$tag = Tag::where('name', $tagName)->first();
+			if (!$tag) {
+				$this->error('Tag not found.');
+				exit;
+			}
 
 			$name .= $tagName;
 			$questions = QuizQuestion::whereHas('tags', function ($query) use ($tag) {

@@ -107,9 +107,9 @@ export default {
 				if (node.parent_id) {
 					this.action('expand', node.parent_id);
 				} else {
-					this.$emit('changeNode');
 					this.scrollToNode(node);
 				}
+				this.$emit('changeNode');
 
 				this.addAutoDismissableAlert({
 					text: 'Zapisano!',

@@ -47,6 +47,7 @@ import WnlTaxonomyTermEditorCurrentTerm from 'js/admin/components/taxonomies/Tax
 import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
 import WnlTagAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTagAutocomplete';
 import WnlNestedSetEditorForm from 'js/admin/components/nestedSet/NestedSetEditorForm';
+import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
 export default {
 	components: {
@@ -55,6 +56,7 @@ export default {
 		WnlTaxonomyTermAutocomplete,
 		WnlTagAutocomplete
 	},
+	mixins: [scrollToNodeMixin],
 	props: {
 		taxonomyId: {
 			type: [String, Number],
@@ -106,6 +108,7 @@ export default {
 				description: this.description,
 				taxonomy_id: this.taxonomyId,
 			};
+			this.tag = null;
 
 			return this.createTerm(term);
 		},

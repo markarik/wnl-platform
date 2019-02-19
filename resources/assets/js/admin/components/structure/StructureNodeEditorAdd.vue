@@ -5,8 +5,10 @@
 			parent-subtitle="Pozostaw puste, aby dodać gałąź na najwyższym poziomie."
 			title="Powiązana jednostka struktury"
 			subtitle="Wybierz lekcję/grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową."
+			submit-label="Dodaj"
 			vuex-module-name="courseStructure"
 			:on-save="onSave"
+			:submit-disabled="submitDisabled"
 			@changeNode="onSelectStructurable"
 			@changeParent="onSelectParent"
 		>
@@ -32,6 +34,7 @@ import {mapActions, mapGetters, mapState} from 'vuex';
 import WnlStructureNodeEditorNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
 import WnlStructureNodeEditorStructurableAutocomplete from 'js/admin/components/structure/StructureNodeEditorStructurableAutocomplete';
 import WnlNestedSetEditorForm from 'js/admin/components/nestedSet/NestedSetEditorForm';
+import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
 export default {
 	components: {
@@ -39,6 +42,7 @@ export default {
 		WnlStructureNodeEditorStructurableAutocomplete,
 		WnlNestedSetEditorForm
 	},
+	mixins: [scrollToNodeMixin],
 	props: {
 		courseId: {
 			type: [String, Number],
@@ -52,20 +56,23 @@ export default {
 	},
 	computed: {
 		...mapGetters('courseStructure', ['nodeById']),
-		...mapState('courseStructure', ['selectedNodes']),
+		...mapState('courseStructure', ['selectedNodes', 'isSaving']),
 		parent() {
 			if (this.selectedNodes.length === 0) {
 				return null;
 			}
 
 			return this.nodeById(this.selectedNodes[0]);
-		}
+		},
+		submitDisabled() {
+			return !this.structurable || this.isSaving;
+		},
 	},
 	methods: {
 		...mapActions('courseStructure', {
 			'createNode': 'create',
 		}),
-		...mapActions('taxonomyTerms', ['select', 'expand']),
+		...mapActions('courseStructure', ['select', 'expand']),
 		onSave() {
 			const node = {
 				parent_id: this.parent ? this.parent.id : null,

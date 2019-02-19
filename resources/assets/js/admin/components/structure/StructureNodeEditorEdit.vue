@@ -7,6 +7,7 @@
 		subtitle="Wybierz lekcję/grupę, na podstawie której chcesz utworzyć gałąź struktury, lub utwórz nową."
 		vuex-module-name="courseStructure"
 		:on-save="onSave"
+		:submit-disabled="submitDisabled"
 		@changeParent="parent = $event"
 	>
 		<wnl-structure-node-editor-node-autocomplete
@@ -58,14 +59,17 @@ export default {
 	},
 	computed: {
 		...mapGetters('courseStructure', ['nodeById', 'getAncestorsById']),
-		...mapState('courseStructure', ['selectedNodes']),
+		...mapState('courseStructure', ['selectedNodes', 'isSaving']),
 		node() {
 			if (this.selectedNodes.length === 0) {
 				return null;
 			}
 
 			return this.nodeById(this.selectedNodes[0]);
-		}
+		},
+		submitDisabled() {
+			return !this.structurable || this.isSaving;
+		},
 	},
 	methods: {
 		...mapActions('courseStructure', {

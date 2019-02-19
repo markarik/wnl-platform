@@ -21,8 +21,16 @@
 </template>
 
 <style lang="sass" scoped>
+	@import 'resources/assets/sass/variables'
+
 	.structure-editor__search
 		flex: 1 0 auto
+
+		/deep/ .autocomplete-box .icon
+			color: $color-darkest-gray
+			height: 1rem
+			width: 1rem
+			position: relative
 </style>
 
 <script>

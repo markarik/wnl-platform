@@ -43,7 +43,9 @@
 						:key="contentType"
 					>
 						<template v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length">
-						<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
+						<h5 class="title is-5 is-marginless">{{meta.name}}
+							<strong class="content-classifier__result-count">({{getselectedCountsByContentType(contentType)}}/{{groupedFilteredContent[contentType].length}})</strong>
+						</h5>
 						<ul
 							class="content-classifier__result-list margin bottom"
 						>
@@ -90,6 +92,10 @@
 
 		&__panel-editor
 			flex: 50%
+
+		.content-classifier__result-count
+			font-size: $font-size-minus-2
+			font-weight: bold
 
 		&__result-list
 			display: flex
@@ -161,6 +167,9 @@ export default {
 	computed: {
 		groupedFilteredContent() {
 			return groupBy(this.filteredContent, 'type');
+		},
+		groupedSelectedItems() {
+			return groupBy(this.selectedItems, 'type');
 		},
 	},
 	methods: {
@@ -272,6 +281,9 @@ export default {
 		selectAll() {
 			this.selectedItems = [...this.filteredContent];
 		},
+		getselectedCountsByContentType(contentType) {
+			return (this.groupedSelectedItems[contentType] && this.groupedSelectedItems[contentType].length) || 0;
+		}
 	},
 };
 </script>

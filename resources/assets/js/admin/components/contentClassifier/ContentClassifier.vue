@@ -65,6 +65,7 @@
 			</div>
 			<div class="content-classifier__panel-editor">
 				<wnl-content-classifier-editor
+					class="content-classifier__panel-editor__editor"
 					v-show="!isLoading"
 					:items="selectedItems"
 					@taxonomyTermAttached="onTaxonomyTermAttached"
@@ -92,6 +93,11 @@
 
 		&__panel-editor
 			flex: 50%
+			&__editor
+				position: sticky
+				max-height: calc(100vh - #{2 * $margin-big})
+				overflow-y: auto
+				top: 0
 
 		.content-classifier__result-count
 			font-size: $font-size-minus-2

@@ -24,7 +24,7 @@
 				<wnl-taxonomy-term-with-ancestors
 					v-for="term in byTaxonomyTermsFilter"
 					:term="term"
-					:ancestors="getAncestorsById(term.id)"
+					:ancestors="term.ancestors"
 					:key="term.id"
 					class="content-classifier-filter__active-filters__term"
 					is-bordered
@@ -155,7 +155,10 @@ export default {
 		},
 		onTermSelect(term) {
 			if (!this.byTaxonomyTermsFilter.find(({id}) => id === term.id)) {
-				this.byTaxonomyTermsFilter.push(term);
+				this.byTaxonomyTermsFilter.push({
+					...term,
+					ancestors: this.getAncestorsById(term.id),
+				});
 			}
 		},
 		onTagDelete(tag) {

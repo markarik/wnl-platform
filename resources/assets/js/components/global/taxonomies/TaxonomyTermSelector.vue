@@ -11,6 +11,7 @@
 			placeholder="Zacznij pisać, aby wyszukać pojęcie"
 			:isFocused="isFocused"
 			:disabled="!taxonomyId"
+			:isDown="isDown"
 			@change="onChange"
 			@blur="$emit('blur', $event)"
 		/>
@@ -46,6 +47,10 @@ export default {
 		isFocused: {
 			type: Boolean,
 			default: false,
+		},
+		isDown: {
+			type: Boolean,
+			default: true,
 		},
 	},
 	data() {

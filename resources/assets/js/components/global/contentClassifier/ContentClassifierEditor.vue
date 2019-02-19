@@ -69,6 +69,7 @@
 			<div class="field">
 				<label class="label is-uppercase"><strong>Przypisz pojęcie</strong></label>
 				<wnl-taxonomy-term-selector
+					:isDown="false"
 					:isFocused="isTaxonomyTermAutocompleteFocused"
 					@blur="onTaxonomyTermAutocompleteBlur"
 					@change="onAttachTaxonomyTerm"

@@ -108,7 +108,6 @@ export default {
 				description: this.description,
 				taxonomy_id: this.taxonomyId,
 			};
-			this.tag = null;
 
 			return this.createTerm(term);
 		},

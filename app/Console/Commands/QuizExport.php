@@ -69,7 +69,7 @@ class QuizExport extends Command
 
 			$name .= $tagName;
 			$questions = QuizQuestion::whereHas('tags', function ($query) use ($tag) {
-				$query->whereIn('tags.id', $tag->id);
+				$query->where('tags.id', $tag->id);
 			})->get();
 		} else {
 			$this->error('Either a set ID or tag is required.');

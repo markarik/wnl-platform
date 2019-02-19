@@ -80,7 +80,7 @@ class ExportUserStatistics extends Command
 					$user->userCourseProgressPercentage,
 					$user->userSectionsProgressPercentage,
 					$user->userQuizQuestionsSolvedPercentage,
-					$user->orders->pluck('product_id')->unique()->implode(','),
+					$user->orders()->where('paid', 1)->pluck('product_id')->unique()->implode(' | '),
 				]);
 			});
 			$group->prepend($headers);

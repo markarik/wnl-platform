@@ -31,7 +31,7 @@
 		>
 			<div class="recent-terms__group-title">
 				<span class="icon is-small">
-					<i class="fa fa-tag"></i>
+					<i class="fa fa-tags"></i>
 				</span>
 				Dodaj wszystkie pojęcia ostatnio edytowanego elementu:
 			</div>
@@ -55,9 +55,10 @@
 			text-overflow: ellipsis
 			overflow: hidden
 			padding-left: 23px
+			font-size: $font-size-minus-1
 
 		&__option
-			padding: 0 $margin-medium
+			padding-right: $margin-big
 			overflow: hidden
 
 			&.fit-content

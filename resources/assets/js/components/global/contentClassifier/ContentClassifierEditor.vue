@@ -8,8 +8,7 @@
 		@keydown="onKeyDown"
 		@blur="$emit('blur', $event)"
 	>
-		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
-		<div v-if="allTaxonomyTerms.length===0">Brak przypisanych pojęć</div>
+		<div v-if="allTaxonomyTerms.length===0" class="label is-uppercase margin bottom">Brak przypisanych pojęć</div>
 		<div v-if="items.length > 0">
 			<ul class="margin bottom">
 				<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id">
@@ -68,7 +67,7 @@
 			/>
 
 			<div class="field">
-				<label class="label is-uppercase"><strong>Przypisz pojęcie</strong></label>
+				<label class="label small is-uppercase"><strong>Przypisz pojęcie</strong></label>
 				<wnl-taxonomy-term-selector
 					:isDown="false"
 					:isFocused="isTaxonomyTermAutocompleteFocused"

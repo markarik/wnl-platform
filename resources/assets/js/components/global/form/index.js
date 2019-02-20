@@ -9,6 +9,7 @@ import SlideIds from './SlideIds';
 import Datepicker from './Datepicker';
 import Checkbox from './Checkbox';
 import Sortable from './Sortable';
+import Select from './Select';
 
 export {
 	Form,
@@ -21,5 +22,6 @@ export {
 	SlideIds,
 	Datepicker,
 	Checkbox,
-	Sortable
+	Sortable,
+	Select,
 };

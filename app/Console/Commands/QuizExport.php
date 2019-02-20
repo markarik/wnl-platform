@@ -49,7 +49,7 @@ class QuizExport extends Command
 		$rows = collect([$headers]);
 
 		if ($setId) {
-			$set = QuizSet::with(['questions.answers', 'questions.tags'])
+			$set = QuizSet::with(['questions.quizAnswers', 'questions.tags'])
 			->where('id', $setId)
 			->first();
 

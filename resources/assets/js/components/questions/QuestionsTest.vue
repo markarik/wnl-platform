@@ -52,8 +52,8 @@
 						<span class="results-heading">
 							{{$t('questions.solving.results.displayOnly')}}
 						</span>
-						<span v-for="(questions, status) in testResults"
-							v-if="questions.length > 0"
+						<span
+							v-for="(questions, status) in testResultsWithQuestions"
 							:class="[{'is-active': filterResults === status}, `results-${status}`]"
 							:key="status"
 							@click="toggleFilter(status)"
@@ -306,6 +306,16 @@ export default {
 		score() {
 			return this.testResults &&
 					Math.floor(this.correctCount * 100 / this.totalCount);
+		},
+		testResultsWithQuestions() {
+			return Object.entries(this.testResults)
+				.reduce((acc, [key, value]) => {
+					if (value.length > 0) {
+						acc[key] = value;
+					}
+
+					return acc;
+				}, {});
 		},
 		totalCount() {
 			return this.questions.length;

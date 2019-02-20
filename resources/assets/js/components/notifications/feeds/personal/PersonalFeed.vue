@@ -25,11 +25,10 @@
 					<div v-else class="feed-content">
 						<component :is="getEventComponent(message)"
 							:message="message"
-							:key="id"
+							:key="message.id"
 							:notificationComponent="PersonalNotification"
 							@goingToContext="onGoingToContext"
-							v-for="(message, id) in notifications"
-							v-if="hasComponentForEvent(message)"
+							v-for="message in notificationsWithComponentForEvent"
 						/>
 						<div class="show-more has-text-centered">
 							<a v-if="canShowMore" class="button is-small is-outlined margin vertical"

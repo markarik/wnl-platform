@@ -14,11 +14,12 @@
 				v-model="inputValue">
 		</div>
 
-		<span class="help is-danger"
-					v-if="hasErrors"
-					v-for="(error, index) in getErrors"
-					v-text="error"
-					:key="index"></span>
+		<template v-if="hasErrors">
+			<span class="help is-danger"
+						v-for="(error, index) in getErrors"
+						v-text="error"
+						:key="index"></span>
+		</template>
 	</div>
 </template>
 

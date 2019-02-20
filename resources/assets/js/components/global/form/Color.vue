@@ -25,7 +25,7 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	input.is-empty[type=color]::-webkit-color-swatch
 		background-color: transparent !important
 </style>

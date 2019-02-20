@@ -21,26 +21,27 @@
 			</div>
 			<slot/>
 		</div>
-		<wnl-comment
-			v-if="showComments"
-			v-for="comment in comments"
-			:key="comment.id"
-			:comment="comment"
-			:profile="commentProfile(comment.profiles[0])"
-			@removeComment="onRemoveComment"
-			@resolveComment="onResolveComment"
-			@unresolveComment="onUnresolveComment"
-		/>
-		<div class="form-container" v-if="showComments">
-			<transition name="fade">
-				<wnl-new-comment-form v-if="!readOnly"
-					:commentableResource="commentableResource"
-					:commentableId="commentableId"
-					:isUnique="isUnique"
-					@submitSuccess="onSubmitSuccess">
-				</wnl-new-comment-form>
-			</transition>
-		</div>
+		<template v-if="showComments">
+			<wnl-comment
+				v-for="comment in comments"
+				:key="comment.id"
+				:comment="comment"
+				:profile="commentProfile(comment.profiles[0])"
+				@removeComment="onRemoveComment"
+				@resolveComment="onResolveComment"
+				@unresolveComment="onUnresolveComment"
+			/>
+			<div class="form-container">
+				<transition name="fade">
+					<wnl-new-comment-form v-if="!readOnly"
+						:commentableResource="commentableResource"
+						:commentableId="commentableId"
+						:isUnique="isUnique"
+						@submitSuccess="onSubmitSuccess">
+					</wnl-new-comment-form>
+				</transition>
+			</div>
+		</template>
 	</div>
 </template>
 

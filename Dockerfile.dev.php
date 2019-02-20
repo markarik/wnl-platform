@@ -1,4 +1,4 @@
-FROM bethink/php:7.2.7-fpm-alpine3.7
+FROM php:7.3.2-fpm-alpine3.9
 
 USER root
 

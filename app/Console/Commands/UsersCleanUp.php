@@ -87,7 +87,6 @@ class UsersCleanUp extends Command
 					break;
 
 				case 'skip' :
-					continue;
 					break;
 
 				case 'back' :

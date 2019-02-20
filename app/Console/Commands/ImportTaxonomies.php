@@ -51,7 +51,7 @@ class ImportTaxonomies extends Command
 	{
 		$file = $this->argument('file');
 
-		$contents = Storage::get($file);
+		$contents = Storage::drive()->get($file);
 		$this->import($contents);
 
 		$this->display();

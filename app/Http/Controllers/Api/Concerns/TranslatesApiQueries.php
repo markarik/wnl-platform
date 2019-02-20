@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Api\Concerns;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
@@ -40,8 +41,8 @@ trait TranslatesApiQueries
 	/**
 	 * Parse order rules and apply to query builder.
 	 *
-	 * @param $model
-	 * @param $rules
+	 * @param Model $model
+	 * @param array $rules
 	 *
 	 * @return mixed
 	 */
@@ -57,8 +58,8 @@ trait TranslatesApiQueries
 	/**
 	 * Apply filters from request to the model.
 	 *
-	 * @param $model
-	 * @param $request
+	 * @param Model $model
+	 * @param Request $request
 	 *
 	 * @return mixed
 	 */

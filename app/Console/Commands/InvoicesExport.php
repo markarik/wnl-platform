@@ -40,11 +40,10 @@ class InvoicesExport extends Command
 
 	/**
 	 * Execute the console command.
-	 *
-	 * @return mixed
 	 */
 	public function handle()
 	{
+		/** @var Order[] $orders */
 		$orders = Order::with(['invoices', 'user', 'product'])
 			->whereHas('invoices', function ($query) {
 				$query->where('series', self::ADVANCE_SERIES_NAME);

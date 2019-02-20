@@ -22,8 +22,6 @@ class SlidesSnippets extends Command
 
 	/**
 	 * Create a new command instance.
-	 *
-	 * @param Parser $parser
 	 */
 	public function __construct()
 	{

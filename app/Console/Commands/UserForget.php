@@ -32,6 +32,7 @@ class UserForget extends Command
 		$headers = ['id', 'name', 'time', 'roles', 'created', 'last session'];
 
 		foreach ($ids as $id) {
+			/** @var User|null $user */
 			$user = User::find($id);
 
 			if (!$user) {

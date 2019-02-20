@@ -21,6 +21,7 @@ class SendCertificate implements ShouldQueue
 	 *
 	 * @param User $user
 	 * @param string $file
+	 * @param string $type
 	 */
 	public function __construct(User $user, string $file, string $type)
 	{

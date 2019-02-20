@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Api\PrivateApi\CoursesApiController;
 use Illuminate\Console\Command;
 use App\Models\Screen;
 use App\Models\Section;
@@ -39,11 +38,12 @@ class SlideshowsRemove extends Command
 	 */
 	public function handle()
 	{
-		$screensIds = explode(self::SCREENS_DELIMITER, $this->argument('screensIds'));
+		$screensIdsRaw = $this->argument('screensIds');
+		$screensIds = explode(self::SCREENS_DELIMITER, $screensIdsRaw);
 
-		if (count($screensIds) === 0) die("Screen with ID $screensIds does not exist.\n");
+		if (count($screensIds) === 0) die("Screens with IDs {$screensIdsRaw} do not exist.\n");
 
-		$confirm = "You are about to remove screens " . $this->argument('screensIds') . ", with all slides, tags etc. Are you absolutely sure?";
+		$confirm = "You are about to remove screens {$screensIdsRaw}, with all slides, tags etc. Are you absolutely sure?";
 
 		if ($this->confirm($confirm)) {
 			$bar = $this->output->createProgressBar(count($screensIds));

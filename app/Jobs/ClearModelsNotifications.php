@@ -6,9 +6,9 @@ use DB;
 use App\Models\User;
 use App\Models\Notification;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
 use App\Notifications\EventNotification;
 use App\Notifications\Media\LiveChannel;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,32 +16,32 @@ use Illuminate\Support\Facades\Notification as Notify;
 
 class ClearModelsNotifications implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable;
+	use Dispatchable, InteractsWithQueue, Queueable;
 
 	/**
-	 * @var
+	 * @var Model $model
 	 */
 	private $model;
 
 	/**
 	 * Create a new job instance.
 	 *
-	 * @param $model
+	 * @param Model $model
 	 */
-    public function __construct($model)
-    {
+	public function __construct($model)
+	{
 		$this->model = $model;
 	}
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
+	/**
+	 * Execute the job.
+	 *
+	 * @return void
+	 */
+	public function handle()
+	{
 		$this->updateNotifications($this->model);
-    }
+	}
 
 	public function updateNotifications($model)
 	{
@@ -98,7 +98,7 @@ class ClearModelsNotifications implements ShouldQueue
 					->whereRaw('data->"$.subject.id" = ' . $model->id)
 					->whereRaw('data->"$.subject.type" = "' . $model->resource . '"');
 			})
-			->orWhere(function($query) use ($model) {
+			->orWhere(function ($query) use ($model) {
 				$query
 					->whereRaw('data->"$.objects.id" = ' . $model->id)
 					->whereRaw('data->"$.objects.type" = "' . $model->resource . '"');
@@ -106,7 +106,8 @@ class ClearModelsNotifications implements ShouldQueue
 			->get();
 	}
 
-	private function update($data, $params) {
+	private function update($data, $params)
+	{
 		$deletedNotificationParams = [
 			'referer' => '',
 			'context' => '',

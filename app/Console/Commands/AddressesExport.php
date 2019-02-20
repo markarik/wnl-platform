@@ -64,6 +64,7 @@ class AddressesExport extends Command
 				->whereIn('product_id', $products);
 		} else {
 			$this->error('Specify IDs or ProductIDs to export orders.');
+			return;
 		}
 
 		if ($from) {

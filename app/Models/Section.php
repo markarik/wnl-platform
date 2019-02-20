@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
+use App\Models\Contracts\WithSlides;
+use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 
-class Section extends Model
+class Section extends Model implements WithSlides, WithTags
 {
 	use Cached;
 

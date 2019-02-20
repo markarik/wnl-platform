@@ -49,6 +49,8 @@
 
 		&__group-title
 			white-space: nowrap
+			overflow: hidden
+			text-overflow: ellipsis
 
 		&__group
 			white-space: nowrap

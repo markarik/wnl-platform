@@ -86,7 +86,6 @@
 
 		&__panel-results
 			flex: 0 0 50%
-			margin-right: $margin-big
 
 			&__header
 				display: flex
@@ -95,6 +94,7 @@
 		&__panel-editor
 			flex: 0 0 50%
 			overflow: hidden
+			padding-left: $margin-big
 
 			&__editor
 				position: sticky

@@ -308,10 +308,10 @@ export default {
 					Math.floor(this.correctCount * 100 / this.totalCount);
 		},
 		testResultsWithQuestions() {
-			return Object.keys(this.testResults)
-				.reduce((acc, key) => {
-					if (this.testResults[key].length > 0) {
-						acc[key] = this.testResults[key];
+			return Object.entries(this.testResults)
+				.reduce((acc, [key, value]) => {
+					if (value.length > 0) {
+						acc[key] = value;
 					}
 
 					return acc;

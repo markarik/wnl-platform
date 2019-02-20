@@ -57,17 +57,9 @@ class EventServiceProvider extends ServiceProvider
 			'App\Listeners\ContentUpdatesGate',
 		],
 
-		'App\Events\Chat\PrivateMessageSent' => [
-			'App\Listeners\UserNotificationsGate',
-		],
-
 		'App\Events\Mentions\Mentioned' => [
 			'App\Listeners\UserNotificationsGate',
 		],
-
-		// 'App\Events\Quiz\QuizQuestionEdited' => [
-		// 	'App\Listeners\UserNotificationsGate',
-		// ],
 
 		'App\Events\Tasks\AssignedToTask' => [
 			'App\Listeners\UserNotificationsGate',
@@ -76,9 +68,6 @@ class EventServiceProvider extends ServiceProvider
 		'App\Events\Slides\SlideAdded' => [
 			'App\Listeners\ContentUpdatesGate',
 		],
-
-//		'App\Events\Slides\SlideRemoved' => [
-//		],
 
 		'App\Events\Slides\SlideDetached' => [
 			'App\Listeners\ContentUpdatesGate',

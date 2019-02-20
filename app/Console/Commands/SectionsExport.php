@@ -47,7 +47,7 @@ class SectionsExport extends Command
 		$presentables = $this->getPresentables($slideshow);
 		$out = [];
 
-		foreach ($screen->sections->sortBy('order_number') as $section) {
+		foreach ($screen->sections as $section) {
 			$sp = $presentables->whereIn('slide_id',
 				$section->slides->pluck('id')->toArray()
 			);

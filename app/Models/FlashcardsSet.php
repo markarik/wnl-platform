@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\OrderByOrderNumberScope;
 use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;
 
@@ -10,6 +11,11 @@ class FlashcardsSet extends Model
 	use Searchable;
 
 	protected $fillable = ['description', 'mind_maps_text', 'name', 'lesson_id'];
+
+	protected static function boot() {
+		parent::boot();
+		static::addGlobalScope(new OrderByOrderNumberScope());
+	}
 
 	public function flashcards()
 	{

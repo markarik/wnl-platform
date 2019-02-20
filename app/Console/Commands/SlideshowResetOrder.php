@@ -46,7 +46,6 @@ class SlideshowResetOrder extends Command
 
 		$presentables = Presentable::select()
 			->where($whereClause)
-			->orderBy('order_number', 'asc')
 			->get();
 
 		foreach ($presentables as $index => $presentable) {

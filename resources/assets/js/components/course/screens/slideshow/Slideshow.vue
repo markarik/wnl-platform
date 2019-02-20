@@ -128,6 +128,7 @@ import SlideshowNavigation from './SlideshowNavigation';
 import {isDebug, getApiUrl} from 'js/utils/env';
 import moderatorFeatures from 'js/perimeters/moderator';
 import WnlSlideClassifierEditor from 'js/components/course/screens/slideshow/SlideClassifierEditor';
+import {SETTING_NAMES} from 'js/consts/settings';
 
 export default {
 	name: 'Slideshow',
@@ -646,7 +647,7 @@ export default {
 				toSlide = to.params.slide;
 
 			if (this.loaded && !_.isUndefined(toSlide)) {
-				if (this.getSetting('skip_functional_slides') && !!this.isFunctional(toSlide)) {
+				if (this.getSetting(SETTING_NAMES.SKIP_FUNCTIONAL_SLIDES) && !!this.isFunctional(toSlide)) {
 					let direction = toSlide > fromSlide ? 'next' : 'previous',
 						skipTo = this.findRegularSlide(toSlide, direction);
 					this.goToSlide(skipTo - 1);

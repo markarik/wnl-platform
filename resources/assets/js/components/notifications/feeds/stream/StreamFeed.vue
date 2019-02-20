@@ -7,9 +7,9 @@
 					<div class="stream-line"></div>
 					<component :is="getEventComponent(message)"
 						:message="message"
-						:key="index"
+						:key="message.id"
 						:notificationComponent="StreamNotification"
-						v-for="(message, index) in filtered"
+						v-for="message in filtered"
 					/>
 				</div>
 				<div class="all-seen" v-if="!showRead && unreadCount > 0">

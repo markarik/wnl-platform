@@ -5,9 +5,9 @@
 				<div class="stream-line"></div>
 				<component :is="getEventComponent(message)"
 					:message="message"
-					:key="index"
+					:key="message.id"
 					:notificationComponent="QuestionsNotification"
-					v-for="(message, index) in filtered"
+					v-for="message in filtered"
 				/>
 			</div>
 			<div class="show-more">

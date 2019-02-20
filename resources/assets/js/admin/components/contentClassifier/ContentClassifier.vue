@@ -82,9 +82,10 @@
 	.content-classifier
 		&__panels
 			display: flex
+			overflow: hidden
 
 		&__panel-results
-			flex: 50%
+			flex: 0 0 50%
 			margin-right: $margin-big
 
 			&__header
@@ -92,7 +93,9 @@
 				justify-content: space-between
 
 		&__panel-editor
-			flex: 50%
+			flex: 0 0 50%
+			overflow: hidden
+
 			&__editor
 				position: sticky
 				max-height: calc(100vh - #{2 * $margin-big})

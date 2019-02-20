@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
-use App\Models\Concerns\WithTags;
+use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 
 class Screen extends Model implements WithTags

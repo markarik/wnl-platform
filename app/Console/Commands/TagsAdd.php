@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Concerns\WithTags;
+use App\Models\Contracts\WithTags;
 use App\Models\Tag;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;

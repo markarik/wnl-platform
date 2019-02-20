@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
-use App\Models\Concerns\WithReactions;
-use App\Models\Concerns\WithTags;
+use App\Models\Contracts\WithReactions;
+use App\Models\Contracts\WithTags;
 use Lib\SlideParser\Parser;
 use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;

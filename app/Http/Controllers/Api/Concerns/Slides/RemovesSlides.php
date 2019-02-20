@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Concerns\Slides;
 
-use App\Models\Concerns\WithSlides;
+use App\Models\Contracts\WithSlides;
 use App\Models\Presentable;
 use App\Models\Slide;
 use DB;

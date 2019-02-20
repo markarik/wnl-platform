@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Events\Qna\QnaAnswerPosted;
 use App\Models\Concerns\Cached;
-use App\Models\Concerns\WithReactions;
+use App\Models\Contracts\WithReactions;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 

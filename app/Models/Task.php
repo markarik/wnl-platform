@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\WithReactions;
-use App\Models\Concerns\WithTags;
+use App\Models\Contracts\WithReactions;
+use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model implements WithReactions, WithTags

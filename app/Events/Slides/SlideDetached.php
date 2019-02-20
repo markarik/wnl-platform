@@ -2,7 +2,7 @@
 
 namespace App\Events\Slides;
 
-use App\Models\Concerns\WithSlides;
+use App\Models\Contracts\WithSlides;
 use App\Models\Slide;
 use App\Traits\EventContextTrait;
 use Facades\Lib\Bethink\Bethink;

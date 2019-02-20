@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models\Concerns;
+namespace App\Models\Contracts;
 
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-interface WithSlides
+interface WithReactions
 {
 	/**
 	 * @return MorphToMany
 	 */
-	public function slides();
+	public function reactions();
 }

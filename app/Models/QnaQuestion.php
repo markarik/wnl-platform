@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Events\Qna\QnaQuestionPosted;
 use App\Models\Concerns\Cached;
-use App\Models\Concerns\WithReactions;
-use App\Models\Concerns\WithTags;
+use App\Models\Contracts\WithReactions;
+use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;

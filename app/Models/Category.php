@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\WithSlides;
+use App\Models\Contracts\WithSlides;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model implements WithSlides

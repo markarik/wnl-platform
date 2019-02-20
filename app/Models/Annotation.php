@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\WithTags;
+use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;
 

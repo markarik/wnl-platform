@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Concerns\WithReactions;
+use App\Models\Contracts\WithReactions;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;

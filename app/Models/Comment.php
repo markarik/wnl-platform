@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Events\Comments\CommentPosted;
-use App\Models\Concerns\WithReactions;
+use App\Models\Contracts\WithReactions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

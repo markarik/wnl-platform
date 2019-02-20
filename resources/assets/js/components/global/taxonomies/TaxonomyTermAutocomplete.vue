@@ -14,6 +14,7 @@
 			:items="autocompleteTerms"
 			:disabled="disabled"
 			:isFocused="isFocused"
+			:isDown="isDown"
 			@blur="$emit('blur', $event)"
 			@change="onSelect"
 		>
@@ -65,6 +66,10 @@ export default {
 			type: Object,
 			default: null,
 		},
+		isDown: {
+			type: Boolean,
+			default: true,
+		}
 	},
 	data() {
 		return {

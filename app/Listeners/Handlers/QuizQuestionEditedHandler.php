@@ -8,7 +8,7 @@ class QuizQuestionEditedHandler
 	/**
 	 * Notification rules for Quiz Question edits
 	 *
-	 * @param AnswerPosted $event
+	 * @param QuizQuestionEdited $event
 	 * @param UserNotificationsGate $gate
 	 */
 	public function handle(QuizQuestionEdited $event, UserNotificationsGate $gate)

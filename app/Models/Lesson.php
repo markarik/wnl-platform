@@ -4,12 +4,13 @@ namespace App\Models;
 
 use App\Models\Concerns\Cached;
 use App\Scopes\OrderByOrderNumberScope;
+use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DB;
 use ScoutEngines\Elasticsearch\Searchable;
 
-class Lesson extends Model
+class Lesson extends Model implements WithTags
 {
 	use Cached, Searchable;
 

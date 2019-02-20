@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class UsersCleanUp extends Command
 {
@@ -31,6 +32,8 @@ class UsersCleanUp extends Command
 	public function handle()
 	{
 		$roleNames = Role::all()->pluck('name')->toArray();
+
+		/** @var User[]|Collection $users */
 		$users = User::with(['userTime'])
 			->where(function ($query) {
 				$query
@@ -126,6 +129,9 @@ class UsersCleanUp extends Command
 		$this->table($headers, $rows);
 	}
 
+	/**
+	 * @param User[]|Collection $users
+	 */
 	private function apply($users)
 	{
 		$this->info('Applying changes...');

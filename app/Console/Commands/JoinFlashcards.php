@@ -76,7 +76,7 @@ class JoinFlashcards extends Command
 
 		try {
 			$callback();
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			\DB::rollBack();
 			throw $e;
 		}

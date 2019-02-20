@@ -2,11 +2,14 @@
 
 namespace App\Events\Slides;
 
+use App\Models\Contracts\WithSlides;
 use App\Models\Slide;
 use App\Traits\EventContextTrait;
 use Facades\Lib\Bethink\Bethink;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
 
 class SlideDetached
@@ -16,15 +19,16 @@ class SlideDetached
 		EventContextTrait;
 
 	public $slide;
-
+	/** @var WithSlides|Builder|Model */
 	public $presentable;
-
 	public $channels;
+	public $data;
 
 	/**
 	 * Create a new event instance.
 	 *
 	 * @param Slide $slide
+	 * @param Builder|Model|WithSlides $presentable
 	 */
 	public function __construct(Slide $slide, $presentable)
 	{

@@ -45,7 +45,7 @@ class TaxonomizeTags extends Command
 		$tags = $this->argument('tags');
 
 		$taxonomy = Taxonomy::find($taxonomyId);
-		$parentTag = $parentTagId !== 0 ? Tag::find($parentTagId) : 0;
+		$parentTag = $parentTagId !== '0' ? Tag::find($parentTagId) : null;
 
 		if (empty($taxonomy)) {
 			echo "Passed taxonomy not found. Passed id: $taxonomyId \n";

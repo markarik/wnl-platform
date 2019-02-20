@@ -45,7 +45,7 @@ class UserCreate extends Command
             'street' => $this->ask('Address (street)'),
             'zip' => $this->ask('Address (zip)'),
             'city' => $this->ask('Address (city)'),
-            'phone' => $this->ask('Phone number', 000),
+            'phone' => $this->ask('Phone number', '000'),
         ];
 
         $pass = $this->ask('Password', str_random(8));

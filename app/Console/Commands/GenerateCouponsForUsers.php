@@ -6,6 +6,7 @@ use App\Models\Coupon;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class GenerateCouponsForUsers extends Command
 {
@@ -42,6 +43,7 @@ class GenerateCouponsForUsers extends Command
 	{
 		$productIds = $this->argument('productIds');
 
+		/** @var User[]|Collection $users */
 		$users = User::select('id')
 			->whereHas('orders', function ($query) use ($productIds){
 				$query->where('paid', 1);

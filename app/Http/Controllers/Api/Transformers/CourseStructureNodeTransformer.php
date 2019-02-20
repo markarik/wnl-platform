@@ -12,6 +12,7 @@ use App\Models\Lesson;
 class CourseStructureNodeTransformer extends ApiTransformer
 {
 	protected $availableIncludes = ['lessons', 'groups', 'course'];
+	public $parent;
 
 	public function __construct($parent = null)
 	{

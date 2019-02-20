@@ -47,10 +47,11 @@ abstract class ApiFilter
 	 * Perform some common actions on input values and call the
 	 * actual filtering method.
 	 *
-	 * @param $builder
-	 * @param $params
+	 * @param Builder $builder
+	 * @param array $params
 	 *
 	 * @return Builder
+	 * @throws ApiFilterException
 	 */
 	public function apply($builder, $params)
 	{

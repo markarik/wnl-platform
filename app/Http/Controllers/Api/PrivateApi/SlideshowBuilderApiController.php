@@ -35,7 +35,7 @@ class SlideshowBuilderApiController extends ApiController
 		return response($view);
 	}
 
-	public function get($slideshowId)
+	public function getHtml($slideshowId)
 	{
 		$key = self::key(sprintf(self::SLIDESHOW_SUBKEY, $slideshowId));
 		if (Cache::has($key)) {
@@ -63,6 +63,7 @@ class SlideshowBuilderApiController extends ApiController
 		$screenId = $request->get('screenId');
 		$slideId = $request->get('slideId');
 		$content = $request->get('content');
+		$screen = null;
 
 		if (empty($screenId) && empty($slideId)) {
 			return $this->respondInvalidInput('Pass either screenId or slideId');

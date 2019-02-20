@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Order;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class StudyBuddyCancel extends Command
 {
@@ -47,6 +48,7 @@ class StudyBuddyCancel extends Command
 			});
 		}
 
+		/** @var Order[]|Collection $orders */
 		$orders = $orders->whereHas('studyBuddy', function($query){
 			$query->where('status', '<>', 'expired');
 		})->get();

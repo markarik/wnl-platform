@@ -53,7 +53,7 @@ class TagsApiController extends ApiController {
 	}
 
 	/**
-	 * @param $id
+	 * @param string $id
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Throwable
 	 */
@@ -70,15 +70,9 @@ class TagsApiController extends ApiController {
 			]);
 		}
 
-		if ($tag->hasProtectedTaggable()) {
-			return $this->respondUnprocessableEntity([
-				'message' => __('tags.errors.in-taxonomy')
-			]);
-		}
-
 		if ($tag->isInTaxonomy()) {
 			return $this->respondUnprocessableEntity([
-				'message' => __('tags.errors.in-course-structure')
+				'message' => __('tags.errors.in-taxonomy')
 			]);
 		}
 

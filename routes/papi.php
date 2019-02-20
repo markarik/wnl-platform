@@ -215,7 +215,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['slideshow-builder']}/category/{categoryId}/.searchBySlides/", 'SlideshowBuilderApiController@byCategorySlides');
 		Route::get("{$r['slideshow-builder']}/slide/{slideId}/", 'SlideshowBuilderApiController@bySlideId');
 		Route::post("{$r['slideshow-builder']}/preview", 'SlideshowBuilderApiController@preview');
-		Route::get("{$r['slideshow-builder']}/{slideshowId}", 'SlideshowBuilderApiController@get');
+		Route::get("{$r['slideshow-builder']}/{slideshowId}", 'SlideshowBuilderApiController@getHtml');
 		Route::get("{$r['slideshow-builder']}", 'SlideshowBuilderApiController@getEmpty');
 
 
@@ -314,7 +314,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::get("{$r['orders']}/{id}/.cancel", 'OrdersApiController@cancel');
 
 	// Invoices
-	Route::get("{$r['invoices']}/{id}", 'InvoicesApiController@get');
+	Route::get("{$r['invoices']}/{id}", 'InvoicesApiController@getFile');
 
 	// Payments
 	Route::post("{$r['payments']}", 'PaymentsApiController@post');

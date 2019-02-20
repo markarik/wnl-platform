@@ -1,0 +1,18 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+parameters:
+    ignoreErrors:
+        # https://github.com/nunomaduro/larastan/issues/14
+        - '#Call to an undefined static method Illuminate\\Support\\Facades\\Redis::[a-z]+\(\)#'
+        - '#Call to an undefined method Illuminate\\Redis\\Connections\\Connection::[a-z]+\(\)#'
+        - '#Call to an undefined static method GrahamCampbell\\Throttle\\Facades\\Throttle::hit\(\)#'
+        # https://github.com/nunomaduro/larastan/issues/91
+        - '#Method Illuminate\\Contracts\\Foundation\\Application::environment\(\) invoked with 2 parameters, 0 required#'
+        # https://github.com/nunomaduro/larastan/issues/101
+        - '#Call to an undefined method Psr\\Log\\LoggerInterface::[a-zA-Z]+\(\)#'
+        # https://github.com/nunomaduro/larastan/issues/40
+        - '#Call to an undefined method .+Illuminate\\Database\\Eloquent\\Model::restore\(\)#'
+        # https://github.com/nunomaduro/larastan/issues/72
+        - '#Call to protected method (decrement|increment)\(\) of class Illuminate\\Database\\Eloquent\\Model#'
+        # Possibly can be handled by writing an extension for the Searchable trait but there is only 1 error instance
+        - '#Call to an undefined static method .+::searchRaw\(\)#'

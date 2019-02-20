@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -22,7 +23,7 @@ class PopulateUserCoursePlan implements ShouldQueue
 	 * Create a new job instance.
 	 *
 	 * @param User $user
-	 * @param $product
+	 * @param Product $product
 	 */
 	public function __construct($user, $product)
 	{

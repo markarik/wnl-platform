@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Contracts\WithSlides;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Category extends Model implements WithSlides
 {
 	protected $fillable = ['name', 'parent_id'];
 

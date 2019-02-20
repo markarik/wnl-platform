@@ -40,7 +40,7 @@ class PaymentConfirmation extends Mailable implements ShouldQueue
 			->bcc('zamowienia@wiecejnizlek.pl');
 
 		if ($this->invoice) {
-			$invoiceData = \Storage::get($this->invoice->file_path);
+			$invoiceData = \Storage::drive()->get($this->invoice->file_path);
 
 			$this->attachData($invoiceData, $this->invoice->number_slugged . '.pdf', [
 				'mime' => 'application/pdf',

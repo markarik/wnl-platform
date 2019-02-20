@@ -8,9 +8,10 @@ use Auth;
 trait ProvidesApiFiltering
 {
 	static $ACTIVE_FILTERS_KEY = 'active-filters-user-%d-resource-%s';
+	static $AVAILABLE_FILTERS = [];
 
 	public $defaultLimit = 30;
-
+	public $page;
 	public $limit;
 
 	public function activeFilters(Request $request) {
@@ -76,7 +77,7 @@ trait ProvidesApiFiltering
 	protected function getCounters($filters, $model)
 	{
 		$available = [];
-		foreach (static::AVAILABLE_FILTERS as $filterName) {
+		foreach (static::$AVAILABLE_FILTERS as $filterName) {
 			$filter = $this->getFilter($filterName);
 			$filteredFilters = $this->filtersExcept($filters, $filterName);
 			$builder = $this->addFilters($filteredFilters, $model);

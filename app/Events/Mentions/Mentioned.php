@@ -14,24 +14,24 @@ class Mentioned extends Event
 		SerializesModels;
 
 	/**
-	 * @var User
+	 * @var array $mentioned
 	 */
 	public $mentioned;
 
 	/**
-	 * @var
+	 * @var User $actor
 	 */
 	public $actor;
 
 	/**
-	 * @var
+	 * @var array $payload
 	 */
 	private $payload;
 
 	/**
 	 * Create a new event instance.
 	 *
-	 * @param $payload
+	 * @param array $payload
 	 */
 	public function __construct(array $payload)
 	{

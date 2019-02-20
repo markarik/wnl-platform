@@ -4,6 +4,7 @@
 		<wnl-taxonomy-term-with-ancestors
 			:ancestors="getAncestorsById(term.id)"
 			:term="term"
+			is-bordered
 		/>
 	</div>
 </template>

@@ -46,7 +46,7 @@ import {mapActions, mapGetters, mapState} from 'vuex';
 
 import WnlTaxonomyTermEditorCurrentTerm from 'js/admin/components/taxonomies/TaxonomyTermEditorCurrentTerm';
 import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
-import WnlTagAutocomplete from 'js/admin/components/taxonomies/TaxonomyTermEditorTagAutocomplete';
+import WnlTagAutocomplete from 'js/admin/components/global/TagAutocomplete';
 import WnlNestedSetEditorForm from 'js/admin/components/nestedSet/NestedSetEditorForm';
 
 

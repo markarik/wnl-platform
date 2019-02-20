@@ -9,7 +9,7 @@
 			v-model="search"
 			:items="autocompleteTags"
 			@change="onSelect"
-			placeholder="Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć"
+			:placeholder="placeholder"
 		>
 			<div slot-scope="slotProps">
 				{{slotProps.item.name}}
@@ -58,6 +58,10 @@ export default {
 		selected: {
 			type: Object,
 			default: null,
+		},
+		placeholder: {
+			type: String,
+			default: 'Wpisz nazwę tagu, który chcesz dołączyć lub utworzyć'
 		}
 	},
 	data() {

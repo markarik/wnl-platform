@@ -15,13 +15,11 @@
 					{{annotation.title}}
 				</span>
 				<div class="annotation-item__header__tags annotation-item__header__item">
-					<span
-						class="tag"
+					<wnl-tag
 						v-for="tag in annotation.tags"
 						:key="tag.id"
-						:style="{backgroundColor: getColourForStr(tag.name)}">
-						{{tag.name}}
-					</span>
+						:tag="tag"
+					/>
 				</div>
 				<span class="annotation-item__header__item  annotation-item__header__item--small" v-if="modifiedAnnotationId === annotation.id">
 					...niezapisany
@@ -84,13 +82,6 @@
 				flex-wrap: wrap
 				align-items: center
 				max-width: 60%
-				.tag
-					color: black
-					font-size: 0.75rem
-					margin-right: 10px
-					margin-top: 5px
-					margin-bottom: 5px
-					padding: 5px 10px
 		&__description
 			margin: $margin-medium
 		&--is-even
@@ -99,6 +90,7 @@
 
 <script>
 import { getColourForStr } from 'js/utils/colors.js';
+import WnlTag from 'js/admin/components/global/Tag';
 
 export default {
 	data() {
@@ -116,6 +108,9 @@ export default {
 			type: Object,
 			required: true
 		}
+	},
+	components: {
+		WnlTag
 	},
 	methods: {
 		isEven(index) {

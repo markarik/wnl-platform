@@ -29,7 +29,7 @@
 	.autocomplete-box
 		background: $autocomplete-box-background
 		border: $autocomplete-box-border
-		bottom: 44px
+		bottom: 100%
 		box-shadow: $autocomplete-box-shadow
 		color: $autocomplete-text-color
 		left: 0
@@ -64,7 +64,6 @@
 			&:hover,
 			&.active
 				background: $autocomplete-active-item-background
-				color: $autocomplete-active-item-text-color
 
 		&__text
 			padding: 5px 10px

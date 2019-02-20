@@ -92,16 +92,18 @@
 		@endif
 		<div class="columns">
 			<div class="column">
-				<div class="block has-text-centered is-hidden-tablet">
-					@if(!$online->available)
-						<div class="notification has-text-centered strong">Brak miejsc :(</div>
-					@else
-						<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary">
-							@lang('payment.select-product-online-button-label')
-						</a>
-						<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
-					@endif
-				</div>
+				@if($online->signups_start->isPast() && $online->signups_close->isFuture())
+					<div class="block has-text-centered is-hidden-tablet">
+						@if(!$online->available)
+							<div class="notification has-text-centered strong">Brak miejsc :(</div>
+						@else
+							<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary">
+								@lang('payment.select-product-online-button-label')
+							</a>
+							<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
+						@endif
+					</div>
+				@endif
 				<div class="box">
 					<p class="title">@lang('payment.select-product-online-heading')</p>
 					<p class="subtitle">
@@ -116,28 +118,32 @@
 						@lang('payment.select-product-online-description')
 					</ul>
 				</div>
-				<div class="block has-text-centered is-hidden-tablet">
-					@if(!$online->available)
-						<div class="notification has-text-centered strong">Brak miejsc :(</div>
-					@else
-						<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary">
-							@lang('payment.select-product-online-button-label')
-						</a>
-						<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
-					@endif
-				</div>
+				@if($online->signups_start->isPast() && $online->signups_close->isFuture())
+					<div class="block has-text-centered is-hidden-tablet">
+						@if(!$online->available)
+							<div class="notification has-text-centered strong">Brak miejsc :(</div>
+						@else
+							<a href="{{route('payment-personal-data', 'wnl-online')}}" class="button is-primary">
+								@lang('payment.select-product-online-button-label')
+							</a>
+							<p class="metadata has-text-centered">Pozostało miejsc: {{ $online->quantity }}/{{ $online->initial }}</p>
+						@endif
+					</div>
+				@endif
 			</div>
 			<div class="column">
-				<div class="block has-text-centered is-hidden-tablet">
-					@if(!$onsite->available)
-						<div class="notification has-text-centered strong">Brak miejsc :(</div>
-					@else
-						<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary is-outlined">
-							@lang('payment.select-product-onsite-button-label')
-						</a>
-						<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>
-					@endif
-				</div>
+				@if($onsite->signups_start->isPast() && $onsite->signups_close->isFuture())
+					<div class="block has-text-centered is-hidden-tablet">
+						@if(!$onsite->available)
+							<div class="notification has-text-centered strong">Brak miejsc :(</div>
+						@else
+							<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary is-outlined">
+								@lang('payment.select-product-onsite-button-label')
+							</a>
+							<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>
+						@endif
+					</div>
+				@endif
 				<div class="box">
 					<p class="title">@lang('payment.select-product-onsite-heading')</p>
 					<p class="subtitle">@lang('common.currency', ['value' => 2000])</p>
@@ -149,16 +155,18 @@
 						@lang('payment.select-product-onsite-description')
 					</ul>
 				</div>
-				<div class="block has-text-centered is-hidden-tablet">
-					@if(!$onsite->available)
-						<div class="notification has-text-centered strong">Brak miejsc :(</div>
-					@else
-						<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary is-outlined">
-							@lang('payment.select-product-onsite-button-label')
-						</a>
-						<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>
-					@endif
-				</div>
+				@if($onsite->signups_start->isPast() && $onsite->signups_close->isFuture())
+					<div class="block has-text-centered is-hidden-tablet">
+						@if(!$onsite->available)
+							<div class="notification has-text-centered strong">Brak miejsc :(</div>
+						@else
+							<a href="{{route('payment-personal-data', 'wnl-online-onsite')}}" class="button is-primary is-outlined">
+								@lang('payment.select-product-onsite-button-label')
+							</a>
+							<p class="metadata has-text-centered">Pozostało miejsc: {{ $onsite->quantity }}/{{ $onsite->initial }}</p>
+						@endif
+					</div>
+				@endif
 			</div>
 		</div>
 		@if($online->signups_close->isPast() && $onsite->signups_close->isPast())

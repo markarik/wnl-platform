@@ -45,6 +45,7 @@
 				<wnl-tags :defaultTags="annotation.tags || []" ref="tags" @insertTag="onFieldChange"></wnl-tags>
 			</fieldset>
 			<wnl-content-item-classifier-editor
+				v-if="annotation.id"
 				class="margin bottom"
 				:is-always-active="true"
 				:content-item-id="annotation.id"

@@ -50,7 +50,6 @@ class SlideshowBuilderApiController extends ApiController
 
 		$slides = $slideshow
 			->slides()
-			->orderBy('order_number')
 			->get();
 
 		$viewData = $this->getViewData($slides, $slideshow->background_url);
@@ -120,7 +119,6 @@ class SlideshowBuilderApiController extends ApiController
 
 		$slides = $category
 			->slides()
-			->orderBy('order_number')
 			->get();
 
 		$screen = Screen::select()

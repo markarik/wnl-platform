@@ -13,7 +13,7 @@
 		<div v-if="items.length > 0">
 			<ul class="margin bottom">
 				<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id">
-					<ul>
+					<ul class="content-classifier__editor__terms-group">
 						<li
 							v-for="term in group.terms"
 							:key="term.id"
@@ -26,6 +26,7 @@
 									'has-parent': term.parent_id !== null,
 								}"
 								is-bordered
+								:style="getStyleForTerm(term)"
 							>
 								<span
 									slot="left"
@@ -87,6 +88,11 @@
 	@import 'resources/assets/sass/variables'
 
 	.content-classifier__editor
+
+		&__terms-group
+			display: flex
+			flex-wrap: wrap
+
 		.content-classifier__editor__term
 			display: flex
 			margin-bottom: $margin-tiny
@@ -262,6 +268,14 @@ export default {
 				}
 			}
 		},
+		getStyleForTerm(term) {
+			const color = term.taxonomy && term.taxonomy.color;
+			if (!color) return {};
+
+			return {
+				borderColor: color
+			};
+		}
 	},
 	watch: {
 		async isFocused() {

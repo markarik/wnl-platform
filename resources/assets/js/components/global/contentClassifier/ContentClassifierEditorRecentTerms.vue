@@ -7,12 +7,16 @@
 				clickable: canAttachLastUsedTerm,
 				'recent-terms__option': true,
 				disabled: !canAttachLastUsedTerm,
+				'fit-content': true
 			}"
 		>
-			<span class="icon is-small">
-				<i class="fa fa-tag"></i>
-			</span>
-			Dodaj ostatnio użyte pojęcie: <strong>{{lastUsedTerm.tag.name}}</strong>
+			<div class="recent-terms__group-title">
+				<span class="icon is-small">
+					<i class="fa fa-tag"></i>
+				</span>
+				Dodaj ostatnio użyte pojęcie:
+			</div>
+			<div class="recent-terms__group"><strong>{{lastUsedTerm.tag.name}}</strong></div>
 		</div>
 		<div
 			v-if="lastUsedTermsSet"
@@ -23,26 +27,41 @@
 				content: true,
 				disabled: !canAttachLastUsedTermsSet,
 			}"
+			:title="lastUsedTermsDisplay"
 		>
-			<span class="icon is-small">
-				<i class="fa fa-tags"></i>
-			</span>
-			Dodaj wszystkie pojęcia ostatnio edytowanego elementu:
-			<ul>
-				<li v-for="term in lastUsedTermsSet" :key="term.id"><strong>{{term.tag.name}}</strong></li>
-			</ul>
+			<div class="recent-terms__group-title">
+				<span class="icon is-small">
+					<i class="fa fa-tag"></i>
+				</span>
+				Dodaj wszystkie pojęcia ostatnio edytowanego elementu:
+			</div>
+			<div class="recent-terms__group"><strong>{{lastUsedTermsDisplay}}</strong></div>
 		</div>
 	</div>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.recent-terms
+		margin-bottom: $margin-base
 		display: flex
+
+		&__group-title
+			white-space: nowrap
+
+		&__group
+			white-space: nowrap
+			text-overflow: ellipsis
+			overflow: hidden
+			padding-left: 23px
+
 		&__option
-			flex: 1
-			margin: 0 $margin-medium
+			padding: 0 $margin-medium
+			overflow: hidden
+
+			&.fit-content
+				flex-shrink: 0
 
 			&.disabled
 				opacity: .3
@@ -75,6 +94,9 @@ export default {
 		canAttachLastUsedTermsSet() {
 			return this.lastUsedTermsSet && !this.lastUsedTermsSet.every(this.isTermAttached);
 		},
+		lastUsedTermsDisplay() {
+			return this.lastUsedTermsSet.map(term => term.tag.name).join(', ');
+		}
 	},
 	methods: {
 		attachLastUsedTerm() {

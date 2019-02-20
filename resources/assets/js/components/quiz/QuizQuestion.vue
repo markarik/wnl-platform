@@ -41,9 +41,9 @@
 					></wnl-quiz-answer>
 				</ul>
 				<div class="quiz-question-meta">
-					<div class="quiz-question-tags">
-						<span v-if="displayResults && question.tags">{{$t('questions.question.tags')}}:</span>
-						<span v-if="displayResults" v-for="(tag, index) in question.tags"
+					<div class="quiz-question-tags" v-if="displayResults && question.tags">
+						<span>{{$t('questions.question.tags')}}:</span>
+						<span v-for="(tag, index) in question.tags"
 							class="quiz-question-tag"
 							:key="index"
 						>
@@ -82,9 +82,11 @@
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="currentSlideIndex = index">
-						{{slideLink(slide)}}
-					</a>
+					<template v-if="slidesExpanded">
+						<a class="slide-list-item" v-for="(slide, index) in slides" :key="index" @click="currentSlideIndex = index">
+							{{slideLink(slide)}}
+						</a>
+					</template>
 					<wnl-slide-preview
 							:showModal="show"
 							:content="slideContent"

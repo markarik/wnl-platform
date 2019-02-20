@@ -26,6 +26,9 @@ export const feed = {
 		notifications() {
 			return this.getSortedNotifications(this.channel);
 		},
+		notificationsWithComponentForEvent() {
+			return this.notifications.filter(message => this.hasComponentForEvent(message));
+		},
 		showEndInfo() {
 			return this.totalNotifications > this.limit && !this.canShowMore;
 		},

@@ -3,8 +3,8 @@
 		<div class="qna-question" ref="highlight">
 			<wnl-vote
 				type="up"
-				:reactableId="questionId"
-				:reactableResource="reactableResource"
+				:reactable-id="questionId"
+				:reactable-resource="reactableResource"
 				:state="voteState"
 				module="qna"
 			/>
@@ -13,10 +13,10 @@
 					<div class="qna-question-content content" v-html="content"></div>
 					<wnl-bookmark
 						class="qna-bookmark"
-						:reactableId="questionId"
-						:reactableResource="reactableResource"
+						:reactable-id="questionId"
+						:reactable-resource="reactableResource"
 						:state="bookmarkState"
-						:reactionsDisabled="reactionsDisabled"
+						:reactions-disabled="reactionsDisabled"
 						module="qna"
 					></wnl-bookmark>
 				</div>
@@ -28,7 +28,7 @@
 				<div class="qna-question-meta qna-meta">
 					<div class="modal-activator" :class="{'author-forgotten': author.deleted_at}" @click="showModal">
 						<wnl-avatar class="avatar"
-								:fullName="author.full_name"
+								:full-name="author.full_name"
 								:url="author.avatar"
 								size="medium">
 						</wnl-avatar>
@@ -42,7 +42,7 @@
 					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
 							:target="deleteTarget"
-							:requestRoute="resourceRoute"
+							:request-route="resourceRoute"
 							@deleteSuccess="onDeleteSuccess"
 						></wnl-delete>
 					</span>
@@ -56,10 +56,10 @@
 				<div class="level-left qna-answers-heading">
 					<p>Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
 					<wnl-watch
-						:reactableId="questionId"
-						:reactableResource="reactableResource"
+						:reactable-id="questionId"
+						:reactable-resource="reactableResource"
 						:state="watchState"
-						:reactionsDisabled="reactionsDisabled"
+						:reactions-disabled="reactionsDisabled"
 						module="qna"
 					>
 					</wnl-watch>
@@ -78,23 +78,23 @@
 			</div>
 			<transition name="fade">
 				<wnl-qna-new-answer-form v-if="showAnswerForm"
-					:questionId="this.id"
+					:question-id="this.id"
 					@submitSuccess="onSubmitSuccess">
 				</wnl-qna-new-answer-form>
 			</transition>
 			<wnl-qna-answer
 				v-if="hasAnswers && !showAllAnswers"
 				:answer="latestAnswer"
-				:questionId="questionId"
-				:readOnly="readOnly"
+				:question-id="questionId"
+				:read-only="readOnly"
 				:refresh="refreshQuestionAndShowAnswers"
 			></wnl-qna-answer>
 			<wnl-qna-answer v-else-if="showAllAnswers"
 				v-for="answer in allAnswers"
 				:answer="answer"
-				:questionId="questionId"
+				:question-id="questionId"
 				:key="answer.id"
-				:readOnly="readOnly"
+				:read-only="readOnly"
 				:refresh="refreshQuestionAndShowAnswers"
 			></wnl-qna-answer>
 			<a class="qna-answers-show-all"

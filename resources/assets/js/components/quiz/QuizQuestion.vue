@@ -17,8 +17,8 @@
 					<div class="card-header-icons">
 						<wnl-bookmark
 							v-if="reactionState"
-							:reactableId="question.id"
-							:reactableResource="reactableResource"
+							:reactable-id="question.id"
+							:reactable-resource="reactableResource"
 							:state="reactionState"
 							:module="module"
 						></wnl-bookmark>
@@ -30,12 +30,12 @@
 					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
 						:answer="answer"
 						:index="answerIndex"
-						:questionId="question.id"
-						:totalHits="question.total_hits"
+						:question-id="question.id"
+						:total-hits="question.total_hits"
 						:key="answerIndex"
-						:readOnly="readOnly"
-						:isSelected="question.selectedAnswer === answerIndex"
-						:answersStats="displayResults && question.answersStats"
+						:read-only="readOnly"
+						:is-selected="question.selectedAnswer === answerIndex"
+						:answers-stats="displayResults && question.answersStats"
 						@answerSelected="selectAnswer(answerIndex)"
 						@dblclick.native="$emit('answerDoubleclick', {answer: answerIndex})"
 					></wnl-quiz-answer>
@@ -88,9 +88,9 @@
 						</a>
 					</template>
 					<wnl-slide-preview
-							:showModal="show"
+							:show-modal="show"
 							:content="slideContent"
-							:slidesCount="hasSlides"
+							:slides-count="hasSlides"
 							@closeModal="hideSlidePreview"
 							@switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id"
 							@userEvent="onRelatedSlideUserEvent"
@@ -100,18 +100,18 @@
 							class="button is-primary is-outlined is-small"
 							slot="footer"
 							:context="currentModalSlide.context"
-							:blankPage="blankPage">
+							:blank-page="blankPage">
 								{{$t('quiz.slideModal.goToPrezentation')}}
 						</wnl-slide-link>
 					</wnl-slide-preview>
 				</div>
 				<div class="card-item">
 					<wnl-comments-list
-						commentableResource="quiz_questions"
-						urlParam="quiz_question"
+						commentable-resource="quiz_questions"
+						url-param="quiz_question"
 						:module="module"
-						:commentableId="question.id"
-						:isUnique="showComments">
+						:commentable-id="question.id"
+						:is-unique="showComments">
 					</wnl-comments-list>
 				</div>
 			</div>

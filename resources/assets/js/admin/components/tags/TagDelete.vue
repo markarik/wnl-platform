@@ -16,8 +16,8 @@
 				Chcesz przypisać powiązania do innego taga, czy je usunąć?
 			</p>
 			<wnl-taggables-mover
-				:beforeSubmit="confirmDelete"
-				:sourceTagId="id"
+				:before-submit="confirmDelete"
+				:source-tag-id="id"
 				@taggablesMoved="onTaggablesMoved"
 			>Przenieś powiązania i usuń taga</wnl-taggables-mover>
 			<div class="field">

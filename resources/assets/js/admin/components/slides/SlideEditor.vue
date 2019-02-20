@@ -2,7 +2,7 @@
 	<div class="slides-editor">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 			:alert="alert"
-			cssClass="fixed"
+			css-class="fixed"
 			:key="timestamp"
 			:timestamp="timestamp"
 			@delete="onDelete"
@@ -83,7 +83,7 @@
 				</div>
 			</div>
 		</form>
-		<wnl-slide-preview :showModal="showPreviewModal"
+		<wnl-slide-preview :show-modal="showPreviewModal"
 							 :content="previewModalContent"
 							 @closeModal="showPreviewModal=false"/>
 	</div>

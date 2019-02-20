@@ -9,9 +9,9 @@
 		<wnl-taxonomy-term-autocomplete
 			class="margin left term-select__autocomplete"
 			placeholder="Zacznij pisać, aby wyszukać pojęcie"
-			:isFocused="isFocused"
+			:is-focused="isFocused"
 			:disabled="!taxonomyId"
-			:isDown="isDown"
+			:is-down="isDown"
 			@change="onChange"
 			@blur="$emit('blur', $event)"
 		/>

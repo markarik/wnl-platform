@@ -8,7 +8,7 @@
 					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
 						<div class="activator" @click="toggleModal(true, user.profile)">
 							<wnl-avatar
-								:fullName="user.profile.full_name"
+								:full-name="user.profile.full_name"
 								:url="user.profile.avatar"
 								size="medium">
 							</wnl-avatar>

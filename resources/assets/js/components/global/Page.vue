@@ -3,8 +3,8 @@
 		<div class="page content" v-html="content"></div>
 		<wnl-qna
 			:context-tags="tags"
-			:reactionsDisabled="true"
-			:discussionId="discussion_id"
+			:reactions-disabled="true"
+			:discussion-id="discussion_id"
 			v-if="qna"/>
 	</div>
 </template>

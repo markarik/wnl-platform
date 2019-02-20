@@ -16,7 +16,7 @@
 				<div class="user-profile" :class="isMobile" v-if="!isLoading && responseCondition">
 					<div class="user-content" :class="avatarClass">
 						<wnl-avatar class="user-avatar image" size="extraextralarge"
-						:fullName="fullName"
+						:full-name="fullName"
 						:url="profile.avatar"
 						></wnl-avatar>
 						<div class="user-info-header">
@@ -26,7 +26,7 @@
 										<a class="edit-profile button is-primary is-outlined is-small">{{ $t('user.userProfile.editProfileButton') }}</a>
 									</router-link>
 								</span>
-								<wnl-message-link :userId="profile.user_id">
+								<wnl-message-link :user-id="profile.user_id">
 									<a class="button is-primary is-outlined is-small">Wyślij wiadomość</a>
 								</wnl-message-link>
 								<span class="user-info-header-names">
@@ -63,28 +63,28 @@
 
 					<div class="top-activities" v-if="ifAnyQuestions || ifAnyAnswers">
 						<wnl-qna
-						:isUserProfileClass="isUserProfileClass"
-						:numbersDisabled="true"
+						:is-user-profile-class="isUserProfileClass"
+						:numbers-disabled="true"
 						:title="$t('user.userProfile.bestQuestions')"
 						:icon="iconForQuestions"
 						v-if="!isLoading && ifAnyQuestions"
-						:sortingEnabled="false"
-						:readOnly="true"
-						:reactionsDisabled="true"
-						:passedQuestions="sortedQuestions"
-						:showContext="true"
+						:sorting-enabled="false"
+						:read-only="true"
+						:reactions-disabled="true"
+						:passed-questions="sortedQuestions"
+						:show-context="true"
 						></wnl-qna>
 						<wnl-qna
-						:isUserProfileClass="isUserProfileClass"
-						:numbersDisabled="true"
+						:is-user-profile-class="isUserProfileClass"
+						:numbers-disabled="true"
 						:icon="iconForAnswers"
 						:title="$t('user.userProfile.bestAnswers')"
 						v-if="!isLoading && ifAnyAnswers"
-						:sortingEnabled="false"
-						:readOnly="true"
-						:reactionsDisabled="true"
-						:passedQuestions="sortedQuestionsForAnswers"
-						:showContext="true"
+						:sorting-enabled="false"
+						:read-only="true"
+						:reactions-disabled="true"
+						:passed-questions="sortedQuestionsForAnswers"
+						:show-context="true"
 						:config="qnaConfig"
 						></wnl-qna>
 					</div>

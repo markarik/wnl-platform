@@ -42,7 +42,7 @@
 			</div>
 			<fieldset class="annotation-tags">
 				<legend class="annotation-tags__legend">Tagi</legend>
-				<wnl-tags :defaultTags="annotation.tags || []" ref="tags" @insertTag="onFieldChange"></wnl-tags>
+				<wnl-tags :default-tags="annotation.tags || []" ref="tags" @insertTag="onFieldChange"></wnl-tags>
 			</fieldset>
 			<wnl-content-item-classifier-editor
 				v-if="annotation.id"

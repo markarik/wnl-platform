@@ -11,9 +11,9 @@
 		<wnl-form class="margin vertical"
 			name="Settings"
 			method="put"
-			resourceRoute="users/current/settings"
+			resource-route="users/current/settings"
 			populate="true"
-			hideDefaultSubmit="true"
+			hide-default-submit="true"
 			@submitSuccess="onSubmitSuccess">
 			<!-- <wnl-form-check name="newsletter">Otrzymuj newsletter</wnl-form-check> -->
 			<wnl-form-check name="chat_on">Chat włączony</wnl-form-check>

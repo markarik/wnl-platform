@@ -2,13 +2,13 @@
 	<div class="stream-feed">
 		<div v-if="!loading">
 			<div>
-				<wnl-stream-filtering :showRead="showRead" @changeFiltering="changeFiltering" @toggleShowRead="toggleShowRead"/>
+				<wnl-stream-filtering :show-read="showRead" @changeFiltering="changeFiltering" @toggleShowRead="toggleShowRead"/>
 				<div class="stream-notifications">
 					<div class="stream-line"></div>
 					<component :is="getEventComponent(message)"
 						:message="message"
 						:key="message.id"
-						:notificationComponent="StreamNotification"
+						:notification-component="StreamNotification"
 						v-for="message in filtered"
 					/>
 				</div>

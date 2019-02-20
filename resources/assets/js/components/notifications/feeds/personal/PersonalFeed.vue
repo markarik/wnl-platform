@@ -26,7 +26,7 @@
 						<component :is="getEventComponent(message)"
 							:message="message"
 							:key="message.id"
-							:notificationComponent="PersonalNotification"
+							:notification-component="PersonalNotification"
 							@goingToContext="onGoingToContext"
 							v-for="message in notificationsWithComponentForEvent"
 						/>

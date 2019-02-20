@@ -53,10 +53,10 @@
 		</div>
 		<wnl-stream-feed v-show="overviewView === 'stream'"/>
 		<wnl-qna
-			:sortingEnabled="true"
-			:numbersDisabled="true"
+			:sorting-enabled="true"
+			:numbers-disabled="true"
 			v-show="overviewView === 'qna'"
-			:hideTitle="true"
+			:hide-title="true"
 			class="wnl-overview-qna"
 		/>
 	</div>

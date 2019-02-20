@@ -1,10 +1,10 @@
 <template>
 	<div class="wnl-app-layout">
 		<wnl-sidenav-slot
-			:isVisible="isSidenavVisible"
-			:isDetached="!isSidenavMounted"
+			:is-visible="isSidenavVisible"
+			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside myself-sidenav">
 				<wnl-sidenav :items="items"></wnl-sidenav>
 			</aside>

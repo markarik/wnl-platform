@@ -27,8 +27,8 @@
 			<wnl-form-checkbox
 				v-for="role in availableRoles"
 				:key="role.id"
-				:checkboxId="role.name"
-				:checkboxValue="role.id"
+				:checkbox-id="role.name"
+				:checkbox-value="role.id"
 				name="roles"
 			>{{role.name}}</wnl-form-checkbox>
 		</wnl-form>

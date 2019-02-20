@@ -3,11 +3,11 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Laravel\Scout\Searchable;
 
 class SearchImportAll implements ShouldQueue
 {
@@ -18,7 +18,7 @@ class SearchImportAll implements ShouldQueue
 	/**
 	 * Create a new job instance.
 	 *
-	 * @param Model $model
+	 * @param string $model
 	 */
 	public function __construct($model)
 	{
@@ -32,6 +32,8 @@ class SearchImportAll implements ShouldQueue
 	 */
 	public function handle()
 	{
-		($this->model)::makeAllSearchable();
+		/** @var Searchable $model */
+		$model = $this->model;
+		$model::makeAllSearchable();
 	}
 }

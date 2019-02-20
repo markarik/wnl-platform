@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\Event;
 use App\Events\Live\LiveContentUpdated;
 
 class ContentUpdatesGate
@@ -9,13 +10,16 @@ class ContentUpdatesGate
 	/**
 	 * Handle the event.
 	 *
-	 * @param  $event
+	 * @param Event $event
 	 *
 	 * @return void
 	 */
 	public function handle($event)
 	{
-		$event->transform();
+		if (method_exists($event, 'transform')) {
+			$event->transform();
+		}
+
 		$liveEvent = new LiveContentUpdated($event->data, $event->broadcastOn());
 
 		broadcast($liveEvent)->toOthers();

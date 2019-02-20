@@ -30,8 +30,8 @@ abstract class Event
 	/**
 	 * Get event class name basing on action and resource name.
 	 *
-	 * @param $resourceName
-	 * @param $action
+	 * @param string $resourceName
+	 * @param string $action
 	 *
 	 * @return string
 	 */

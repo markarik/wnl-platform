@@ -51,7 +51,7 @@ class OrdersHandleUnpaid extends Command
 		$timeShift = $this->option('time-shift');
 
 		if ($timeShift) {
-			Carbon::setTestNow(Carbon::now()->addDays($timeShift));
+			Carbon::setTestNow(Carbon::now()->addDays((int) $timeShift));
 		}
 
 		$expired = Carbon::today()->subDays(30);

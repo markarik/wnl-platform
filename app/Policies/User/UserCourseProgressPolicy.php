@@ -14,7 +14,7 @@ class UserCourseProgressPolicy
 	 * Determine whether the user can view the userCourseProgress.
 	 *
 	 * @param  \App\Models\User $user
-	 * @param  \App\Models\UserCourseProgress $userSettings
+	 * @param  \App\Models\UserCourseProgress $userCourseProgress
 	 * @return boolean
 	 */
 	public function view(User $user, UserCourseProgress $userCourseProgress)

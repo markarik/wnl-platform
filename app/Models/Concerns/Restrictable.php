@@ -8,7 +8,7 @@ use App\Models\Permission;
 trait Restrictable
 {
 	/**
-	 * @param $permission \App\Models\Permission | string
+	 * @param \App\Models\Permission|string $permission
 	 *
 	 * @return bool
 	 */

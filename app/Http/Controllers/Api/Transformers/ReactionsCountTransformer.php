@@ -1,13 +1,15 @@
 <?php namespace App\Http\Controllers\Api\Transformers;
 
 use App\Models\Reaction;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class ReactionsCountTransformer
 {
 	/**
 	 * Get formatted reactions counters and flags;
 	 *
-	 * @param $reactable
+	 * @param Model $reactable
 	 * @return array
 	 */
 	public static function transform($reactable)
@@ -18,13 +20,17 @@ class ReactionsCountTransformer
 				return $element->type;
 			});
 
-		$counts = Reaction::count($reactable)
+		/** @var Collection $counts */
+		$counts = Reaction::count($reactable);
+		$counts = $counts
 			->keyBy('type')
 			->map(function ($element) {
 				return $element->count;
 			});
 
-		$flags = Reaction::flags($reactable)
+		/** @var Collection $flags */
+		$flags = Reaction::flags($reactable);
+		$flags = $flags
 			->keyBy('type')
 			->map(function ($element) {
 				return $element->count;

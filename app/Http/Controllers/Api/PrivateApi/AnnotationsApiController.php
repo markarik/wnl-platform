@@ -11,7 +11,7 @@ use Cache;
 
 class AnnotationsApiController extends ApiController
 {
-	const AVAILABLE_FILTERS = [
+	static $AVAILABLE_FILTERS = [
 		'search'
 	];
 

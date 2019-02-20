@@ -39,7 +39,7 @@ Taksonomia kliniczna,,,,,,
     {
 			$file = $this->argument('file');
 
-			$contents = Storage::get($file);
+			$contents = Storage::drive()->get($file);
 
 			$csv = array_map('str_getcsv', explode("\n",$contents));
 			// CSV headers => ignore

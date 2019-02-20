@@ -41,14 +41,14 @@
 					></wnl-quiz-answer>
 				</ul>
 				<div class="quiz-question-meta">
-					<div class="quiz-question-tags" v-if="displayResults && question.tags">
-						<span>{{$t('questions.question.tags')}}:</span>
-						<span v-for="(tag, index) in question.tags"
-							class="quiz-question-tag"
-							:key="index"
-						>
-							{{trim(tag.name)}}
-						</span>
+					<div class="quiz-question-tags">
+						<template v-if="displayResults && question.tags">
+							<span>{{$t('questions.question.tags')}}:</span>
+							<span v-for="(tag, index) in question.tags"
+								class="quiz-question-tag"
+								:key="index"
+							>{{trim(tag.name)}}</span>
+						</template>
 					</div>
 					<div class="quiz-question-id">
 						#{{question.id}}

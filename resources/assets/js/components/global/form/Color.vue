@@ -7,7 +7,7 @@
 			<input
 				class="input"
 				type="color"
-				:class="{'is-danger': hasErrors}"
+				:class="{'is-danger': hasErrors, 'is-empty': !inputValue}"
 				:name="name"
 				:disabled="disabled"
 				@input="onInput"
@@ -15,16 +15,19 @@
 		</div>
 
 		<template v-if="hasErrors">
-			<span class="help is-danger"
-						v-for="(error, index) in getErrors"
-						v-text="error"
-						:key="index"></span>
+			<span
+				class="help is-danger"
+				v-for="(error, index) in getErrors"
+				v-text="error"
+				:key="index"
+			></span>
 		</template>
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-
+<style lang="sass" rel="stylesheet/sass">
+	input.is-empty[type=color]::-webkit-color-swatch
+		background-color: transparent !important
 </style>
 
 <script>

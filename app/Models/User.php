@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\OrderByOrderNumberScope;
 use App\Traits\CourseProgressStats;
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
@@ -131,6 +132,12 @@ class User extends Authenticatable
 	public function lessonsAvailability()
 	{
 		return $this->belongsToMany('App\Models\Lesson', 'user_lesson');
+	}
+
+	public function lessonsAvailabilityUnordered()
+	{
+		return $this->belongsToMany('App\Models\Lesson', 'user_lesson')
+			->withoutGlobalScope(OrderByOrderNumberScope::class);
 	}
 
 	public function reactables()

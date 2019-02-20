@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Http\Controllers\Api\PrivateApi\CoursesApiController;
+use App\Models\User;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\UserLesson;
 use Carbon\Carbon;
@@ -20,6 +21,7 @@ class CalculateCoursePlan
 	const GROUP_ID_PROBNY_LEK = 14;
 
 	protected $now;
+	/** @var User */
 	protected $user;
 	protected $preset;
 	protected $endDate;
@@ -152,8 +154,9 @@ class CalculateCoursePlan
 				(clone $this->endDate)->addDay());
 		}
 
-		$builder = $this->user->lessonsAvailability()
-			->orderBy('group_id');
+		$builder = $this->user->lessonsAvailabilityUnordered()
+			->orderBy('group_id')
+			->orderBy('order_number');
 
 		$notRequired = (clone $builder)
 			->whereIn('group_id', [

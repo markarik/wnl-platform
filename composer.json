@@ -1,5 +1,5 @@
 {
-	"name": "wnl-platform",
+	"name": "bethink/wnl-platform",
 	"description": "The main app for delivering medical e-learning courses. Based on Laravel.",
 	"license": "GPL-3.0",
 	"type": "project",

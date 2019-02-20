@@ -29,7 +29,7 @@
 	.autocomplete-box
 		background: $autocomplete-box-background
 		border: $autocomplete-box-border
-		bottom: 44px
+		bottom: 100%
 		box-shadow: $autocomplete-box-shadow
 		color: $autocomplete-text-color
 		left: 0

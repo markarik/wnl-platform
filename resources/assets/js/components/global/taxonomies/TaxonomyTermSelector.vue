@@ -11,6 +11,7 @@
 			placeholder="Zacznij pisać, aby wyszukać pojęcie"
 			:isFocused="isFocused"
 			:disabled="!taxonomyId"
+			:isDown="isDown"
 			@change="onChange"
 			@blur="$emit('blur', $event)"
 		/>
@@ -47,6 +48,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		isDown: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	data() {
 		return {
@@ -70,6 +75,7 @@ export default {
 		async onTaxonomyChange(taxonomyId) {
 			try {
 				await this.setUpNestedSet(taxonomyId);
+				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TAXONOMY_ID, taxonomyId);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({

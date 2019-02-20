@@ -69,6 +69,7 @@
 			<div class="field">
 				<label class="label is-uppercase"><strong>Przypisz pojęcie</strong></label>
 				<wnl-taxonomy-term-selector
+					:isDown="false"
 					:isFocused="isTaxonomyTermAutocompleteFocused"
 					@blur="onTaxonomyTermAutocompleteBlur"
 					@change="onAttachTaxonomyTerm"
@@ -86,11 +87,6 @@
 	@import 'resources/assets/sass/variables'
 
 	.content-classifier__editor
-		position: sticky
-		max-height: calc(100vh - #{2 * $margin-big})
-		overflow-y: auto
-		top: 0
-
 		.content-classifier__editor__term
 			display: flex
 			margin-bottom: $margin-tiny

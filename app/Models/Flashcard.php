@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use ScoutEngines\Elasticsearch\Searchable;
 
-class Flashcard extends Model
+class Flashcard extends Model implements WithTags
 {
 	use Searchable;
 

@@ -57,7 +57,7 @@ class CouponsGenerateGroup extends Command
 		$couponAttributes = [
 			'name' => $this->ask('Coupon name', 'Zniżka grupowa'),
 			'type' => $this->anticipate('Type', ['percentage', 'amount'], 'percentage'),
-			'value' => $this->ask('Value', 10),
+			'value' => $this->ask('Value', '10'),
 			'expires' => Carbon::parse($this->ask('Expiration date', Product::max('signups_end'))),
 		];
 

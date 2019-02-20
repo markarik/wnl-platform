@@ -23,7 +23,7 @@ class PresentablesApiController extends ApiController
 			->where('order_number', $orderNumber)
 			->get();
 
-		if (!$presentable) {
+		if ($presentable->count() === 0) {
 			return $this->respondNotFound();
 		}
 

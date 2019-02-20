@@ -6,10 +6,7 @@ use App\Models\Product;
 use App\Models\Role;
 use Illuminate\Console\Command;
 use App\Models\User;
-use App\Models\UserCourseProgress;
-use App\Models\Lesson;
-use App\Models\UserQuizResults;
-use App\Models\QuizQuestion;
+use Illuminate\Support\Collection;
 use Storage;
 
 class ExportUserStatistics extends Command
@@ -92,6 +89,7 @@ class ExportUserStatistics extends Command
 		$secondGroup = collect();
 		$thirdGroup = collect();
 
+		/** @var User[]|Collection $users */
 		$users = User::select()
 			->whereHas('orders', function ($query) use ($productIds) {
 				$query

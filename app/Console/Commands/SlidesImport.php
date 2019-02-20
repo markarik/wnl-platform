@@ -53,7 +53,7 @@ class SlidesImport extends Command
 
 		$screenId = $this->option('id');
 		$discussionId = $this->option('discussionId');
-		$enableSlidesMatching = $this->option('enableSlidesMatching');
+		$enableSlidesMatching = (bool) $this->option('enableSlidesMatching');
 
 		$files = Storage::disk('s3')->files($path);
 		$this->info('Importing slideshows...');
@@ -66,7 +66,7 @@ class SlidesImport extends Command
 			$bar->advance();
 			\Log::debug($file . ' processed');
 		}
-		if (!$files) $this->importFile($path, $screenId, $discussionId, $enableSlidesMatching);
+		if (empty($files)) $this->importFile($path, $screenId, $discussionId, $enableSlidesMatching);
 		print PHP_EOL;
 
 		Artisan::queue('tags:fromCategories');
@@ -79,7 +79,7 @@ class SlidesImport extends Command
 	/**
 	 * Import slideshow form file.
 	 *
-	 * @param $file
+	 * @param string $file
 	 * @param null $screenId
 	 * @param null $discussionId
 	 * @param bool $enableSlidesMatching

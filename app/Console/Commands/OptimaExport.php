@@ -46,6 +46,7 @@ class OptimaExport extends Command
 		$contractors = [];
 		$invoices = [];
 
+		/** @var Order[] $orders */
 		$orders = Order::with(['invoices', 'user', 'product'])
 			->whereHas('invoices', function ($query) {
 				$query->where('series', self::ADVANCE_SERIES_NAME);

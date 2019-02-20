@@ -20,10 +20,9 @@ class SlideUpdated implements ShouldBroadcast
 		EventContextTrait;
 
 	public $slide;
-
 	public $channels;
-
 	public $presentables;
+	public $data;
 
 	/**
 	 * Create a new event instance.

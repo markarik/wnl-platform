@@ -7,6 +7,9 @@ use App\Models\Role;
 use App\Models\UserQuizResults;
 use Illuminate\Console\Command;
 use App\Models\User;
+use Maatwebsite\Excel\Excel;
+use Rap2hpoutre\FastExcel\FastExcel;
+use Rap2hpoutre\FastExcel\SheetCollection;
 use Storage;
 
 class ExportUserStatistics extends Command
@@ -43,63 +46,80 @@ class ExportUserStatistics extends Command
 	 */
 	public function handle()
 	{
-		dump(env('DB_DATABASE'));
-		dump(UserQuizResults::max('created_at'));
+		$start = microtime(true);
+		$dbName = env('DB_DATABASE');
+		$newestRecord = UserQuizResults::orderBy('id', 'desc')->limit(1)->first()->created_at;
+
 		$productIds = $this->argument('products');
 		$products = Product::whereIn('id', $productIds)->get();
 
 		$minDate = $products->first()->signups_start;
 		$maxDate = $products->first()->course_end;
 
-		$this->info("Exporting user stats for date range from {$minDate} to {$maxDate}.");
+		$filename = storage_path('app/exports/user_stats.xlsx');
 
-		$headers = implode("\t", [
-			'Id',
-			'Imię',
-			'Nazwisko',
-			'Czas spędzony na platformie',
-			'Procent ukończonych lekcji',
-			'Procent przerobionych sekcji',
-			'Procent rozwiązanych pytań',
-			'Produkty',
-		]);
+		$this->info("Exporting user stats for date range from {$minDate} to {$maxDate}.");
+		$this->info("Database: {$dbName}, newest record from {$newestRecord}");
 
 		$groups = $this->getUserGroups($minDate, $maxDate, $productIds);
 
 		$total = 0;
-		foreach ($groups as $key => $group) {
-			$recordsCount = $group->count();
-			$total += $recordsCount;
-			$this->info("Group {$key} has {$recordsCount} records.");
-			$group = $group->map(function ($user) {
-				return implode("\t", [
-					$user->id,
-					$user->first_name,
-					$user->last_name,
-					$user->time,
-					$user->userCourseProgressPercentage,
-					$user->userSectionsProgressPercentage,
-					$user->userQuizQuestionsSolvedPercentage,
-					$user->orders()->where('paid', 1)->pluck('product_id')->unique()->implode(' | '),
-				]);
-			});
-			$group->prepend($headers);
-			$contents = $group->implode("\n");
-			$path = 'exports/user-stats/' . $key . '.tsv';
-			Storage::put($path, $contents);
-			$this->info("Saved under {$path}");
-		}
+		$groups = $groups
+			->filter(function ($group) {
+				return $group->count();
+			})
+			->map(function ($group, $key) use ($total) {
+				$recordsCount = $group->count();
+				$total += $recordsCount;
+				$this->info("Group {$key} has {$recordsCount} records.");
 
+				return $group->map(function ($userRecord) {
+					$user = $userRecord['user'];
+					return [
+						'Id'                           => $user->id,
+						'Imię'                         => $user->first_name,
+						'Nazwisko'                     => $user->last_name,
+						'Czas spędzony na platformie'  => $userRecord['time'],
+						'Procent ukończonych lekcji'   => $userRecord['userCourseProgressPercentage'],
+						'Procent przerobionych sekcji' => $userRecord['userSectionsProgressPercentage'],
+						'Rozwiązanych pytań'           => $userRecord['userQuizQuestionsSolved'],
+						'Produkty'                     => $userRecord['products']->implode(' | '),
+					];
+				});
+			});
+
+
+		$sheets = new SheetCollection($groups);
+		(new FastExcel($sheets))->export($filename);
+
+		$this->info("Saved under {$filename}");
 		$this->info("Total records: {$total}");
+
+		$time = number_format(microtime(true) - $start, 2);
+		$this->info("Finished in {$time} seconds");
 
 		return;
 	}
 
 	protected function getUserGroups($minDate, $maxDate, $productIds)
 	{
-		$firstGroup = collect();
-		$secondGroup = collect();
-		$thirdGroup = collect();
+		$oldProducts = [1, 2, 5, 6, 9, 10];
+		$groups = collect([
+			'N-G1' => collect(),
+			'N-G2' => collect(),
+			'N-G3' => collect(),
+			'N-G4' => collect(),
+			'N-G5' => collect(),
+
+			'P-G1' => collect(),
+			'P-G2' => collect(),
+			'P-G3' => collect(),
+			'P-G4' => collect(),
+			'P-G5' => collect(),
+
+			'N-KORELACJE' => collect(),
+			'P-KORELACJE' => collect(),
+		]);
 
 		$users = User::select()
 			->whereHas('orders', function ($query) use ($productIds) {
@@ -110,30 +130,63 @@ class ExportUserStatistics extends Command
 			->whereDoesntHave('roles', function ($query) {
 				$query->whereIn('name', [Role::ROLE_ADMIN, Role::ROLE_MODERATOR, Role::ROLE_TEST]);
 			})
+			->limit(12)
 			->get();
 
 		$bar = $this->output->createProgressBar($users->count());
 
 		foreach ($users as $user) {
+			$userRecord['user'] = $user;
 			$courseProgressStats = $user->getCourseProgressStats($minDate, $maxDate);
-			$user->userCourseProgressPercentage = $courseProgressStats['course_progress_perc'];
-			$user->userQuizQuestionsSolvedPercentage = $courseProgressStats['quiz_questions_solved_perc'];
-			$user->userSectionsProgressPercentage = $courseProgressStats['sections_progress_perc'];
-			$user->time = $courseProgressStats['time'];
+			$userRecord['userCourseProgressPercentage'] = $courseProgressStats['course_progress_perc'];
+			$userRecord['userQuizQuestionsSolved'] = $courseProgressStats['quiz_questions_solved'];
+			$userRecord['userSectionsProgressPercentage'] = $courseProgressStats['sections_progress_perc'];
+			$userRecord['products'] = $user->orders()->where('paid', 1)->pluck('product_id')->unique();
+			$userRecord['time'] = $courseProgressStats['time'];
 
-			$firstGroupCriteria = $user->hasFinishedCourse($minDate, $maxDate);
+			$newUser = $userRecord['products']->containsStrict(function ($productId) use ($oldProducts) {
+				return !in_array($productId, $oldProducts);
+			});
 
-			$secondGroupCriteria =
-				$user->userCourseProgressPercentage >= 30 &&
-				$user->userQuizQuestionsSolvedPercentage >= 30 &&
-				$user->time >= 100;
+			$G1 =
+				$userRecord['userCourseProgressPercentage'] >= 80 &&
+				$userRecord['userQuizQuestionsSolved'] >= 1700 &&
+				$userRecord['time'] >= 240;
 
-			if ($firstGroupCriteria) {
-				$firstGroup->push($user);
-			} else if ($secondGroupCriteria) {
-				$secondGroup->push($user);
-			} else {
-				$thirdGroup->push($user);
+			$G2 =
+				$userRecord['userCourseProgressPercentage'] >= 80 &&
+				$userRecord['time'] >= 240;
+
+			$G3 =
+				$userRecord['userQuizQuestionsSolved'] >= 1700 &&
+				$userRecord['time'] >= 240;
+
+			$G4 =
+				$userRecord['userCourseProgressPercentage'] >= 20 &&
+				$userRecord['userQuizQuestionsSolved'] >= 1700 &&
+				$userRecord['time'] >= 100;
+
+			$userClassification = [
+				'N-G1' => $newUser && $G1,
+				'N-G2' => $newUser && ($G1 || $G2),
+				'N-G3' => $newUser && !$G1 && $G3,
+				'N-G4' => $newUser && !$G1 && $G4,
+				'N-G5' => $newUser && !$G1 && !$G4,
+
+				'P-G1' => !$newUser && $G1,
+				'P-G2' => !$newUser && ($G1 || $G2),
+				'P-G3' => !$newUser && !$G1 && $G3,
+				'P-G4' => !$newUser && !$G1 && $G4,
+				'P-G5' => !$newUser && !$G1 && !$G4,
+
+				'N-KORELACJE' => $newUser,
+				'P-KORELACJE' => !$newUser,
+			];
+
+			foreach ($groups as $groupName => $group) {
+				if ($userClassification[$groupName]) {
+					$groups[$groupName]->push($userRecord);
+				}
 			}
 
 			$bar->advance();
@@ -142,6 +195,6 @@ class ExportUserStatistics extends Command
 
 		print PHP_EOL;
 
-		return [$firstGroup, $secondGroup, $thirdGroup];
+		return $groups;
 	}
 }

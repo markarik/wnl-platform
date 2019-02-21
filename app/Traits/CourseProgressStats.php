@@ -10,16 +10,24 @@ use App\Models\UserQuizResults;
 
 trait CourseProgressStats {
 	public function getCourseProgressStats($startDate, $endDate) {
+		$start = microtime(true);
+		$t = false;
+
 		$allLessons = Lesson::select(['id'])
 			->whereDate('created_at', '<=', $endDate)
 			->where('is_required', 1)
 			->count();
-		$allQuestions = QuizQuestion::whereDate('created_at', '<=', $endDate)->count();
+
+		if ($t) dump('allLessons', microtime(true) - $start);
+
+
 		$timeCollection = $this->userTime()
 			->whereBetween('created_at', [$startDate, $endDate])
 			->orderBy('id', 'desc')
 			->get();
 		$userTime = (int)round(($timeCollection->max('time') - $timeCollection->min('time')) / 60);
+
+		if ($t) dump('timeCollection', microtime(true) - $start);
 
 		$userCourseProgress = UserCourseProgress::where('user_id', $this->profile->id)
 			->whereDate('user_course_progress.created_at', '<=', $endDate)
@@ -32,12 +40,13 @@ trait CourseProgressStats {
 
 		$userCourseProgressPercentage = (int)round(($userCourseProgress / $allLessons) * 100);
 
+		if ($t) dump('userCourseProgress', microtime(true) - $start);
+
 		$userQuizQuestionsSolved = UserQuizResults::where('user_id', $this->id)
 			->groupBy('quiz_question_id')
-			->get(['quiz_question_id'])
 			->count();
 
-		$userQuizQuestionsSolvedPercentage = (int)round(($userQuizQuestionsSolved / $allQuestions) * 100);
+		if ($t) dump('quizQuestionsSolved', microtime(true) - $start);
 
 		$userSectionsProgress = UserCourseProgress::where('user_id', $this->profile->id)
 			->whereDate('user_course_progress.created_at', '<=', $endDate)
@@ -48,6 +57,8 @@ trait CourseProgressStats {
 			->where('user_course_progress.status', 'complete')
 			->count();
 
+		if ($t) dump('sectionsProgress', microtime(true) - $start);
+
 		$allSections = Section::select(['id'])
 			->whereDate('sections.created_at', '<=', $endDate)
 			->join('screens', 'screens.id', '=', 'screen_id')
@@ -57,8 +68,15 @@ trait CourseProgressStats {
 
 		$userSectionsProgressPercentage = (int)round(($userSectionsProgress / $allSections) * 100);
 
+		if ($t) dump('allSections', microtime(true) - $start);
+
+		$end = microtime(true) - $start;
+//		if ($end > 0.4) {
+//			dump("User {$this->id} is slow, time {$end}");
+//		}
+
 		return [
-			'quiz_questions_solved_perc' => $userQuizQuestionsSolvedPercentage,
+			'quiz_questions_solved' => $userQuizQuestionsSolved,
 			'course_progress_perc' => $userCourseProgressPercentage,
 			'sections_progress_perc' => $userSectionsProgressPercentage,
 			'time' => $userTime

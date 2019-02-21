@@ -32,15 +32,10 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-
-</style>
-
 <script>
 import { formInput } from 'js/mixins/form-input';
 
 export default {
-	name: 'TextInput',
 	props: {
 		name: {
 			type: String,

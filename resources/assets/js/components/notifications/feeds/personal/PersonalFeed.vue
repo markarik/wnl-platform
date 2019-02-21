@@ -76,7 +76,7 @@ import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned,
 	from 'js/components/notifications/events';
 import { feed } from 'js/components/notifications/feed';
 import { getImageUrl } from 'js/utils/env';
-import {SETTING_NAMES} from 'js/consts/settings';
+import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 export default {
 	name: 'PersonalFeed',
@@ -101,7 +101,7 @@ export default {
 			isActive: false,
 			limit: 15,
 			PersonalNotification,
-			setting: SETTING_NAMES.NOTIFY_LIVE,
+			setting: USER_SETTING_NAMES.NOTIFY_LIVE,
 			icons: ['fa-bell-slash', 'fa-bell'],
 		};
 	},

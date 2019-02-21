@@ -35,7 +35,7 @@ import {ALERT_TYPES} from 'js/consts/alert';
 
 import WnlSelect from 'js/admin/components/forms/Select';
 import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
-import {SETTING_NAMES} from 'js/consts/settings';
+import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 export default {
 	components: {
@@ -93,9 +93,9 @@ export default {
 			await this.fetchTaxonomies();
 
 			await this.setupCurrentUser();
-			const defaultTaxonomyId = this.getSetting(SETTING_NAMES.DEFAULT_TAXONOMY_ID);
+			const defaultTaxonomyId = this.getSetting(USER_SETTING_NAMES.DEFAULT_TAXONOMY_ID);
 
-			if (defaultTaxonomyId) {
+			if (this.taxonomyById(defaultTaxonomyId)) {
 				this.taxonomyId = defaultTaxonomyId;
 			}
 		} catch (error) {

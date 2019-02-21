@@ -1,4 +1,4 @@
-export const SETTING_NAMES = {
+export const USER_SETTING_NAMES = {
 	CHAT_ON: 'chat_on',
 	SKIP_FUNCTIONAL_SLIDES: 'skip_functional_slides',
 	NOTIFY_LIVE: 'notify_live',

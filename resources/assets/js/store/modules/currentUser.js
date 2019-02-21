@@ -1,7 +1,7 @@
 import * as types from 'js/store/mutations-types';
 import { getApiUrl } from 'js/utils/env';
 import { set } from 'vue';
-import {SETTING_NAMES} from 'js/consts/settings';
+import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 let getCurrentUserPromise;
 
@@ -49,7 +49,7 @@ const getters = {
 	currentUserSlug: state => state.profile.full_name.toLowerCase().replace(/\W/g, ''),
 	currentUserIdentity: state => state.profile.identity,
 	getSetting: state => setting => state.settings[setting],
-	thickScrollbar: state => state.settings[SETTING_NAMES.THICK_SCROLLBAR],
+	thickScrollbar: state => state.settings[USER_SETTING_NAMES.THICK_SCROLLBAR],
 	getAllSettings: state => state.settings,
 	hasRole: state => role => state.profile.roles.indexOf(role) > -1,
 	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
@@ -211,7 +211,7 @@ const actions = {
 
 	toggleChat({ dispatch, getters }) {
 		dispatch('changeUserSettingAndSync', {
-			setting: SETTING_NAMES.CHAT_ON, value: !getters.getSetting(SETTING_NAMES.CHAT_ON)
+			setting: USER_SETTING_NAMES.CHAT_ON, value: !getters.getSetting(USER_SETTING_NAMES.CHAT_ON)
 		});
 	},
 

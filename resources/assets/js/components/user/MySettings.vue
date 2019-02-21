@@ -18,25 +18,25 @@
 			<template slot-scope="slotParams">
 				<!-- <wnl-form-check name="newsletter">Otrzymuj newsletter</wnl-form-check> -->
 				<wnl-form-check
-					:name="SETTING_NAMES.CHAT_ON"
+					:name="USER_SETTING_NAMES.CHAT_ON"
 					@input="slotParams.onSubmit"
 				>Chat włączony</wnl-form-check>
 				<wnl-form-check
-					:name="SETTING_NAMES.SKIP_FUNCTIONAL_SLIDES"
+					:name="USER_SETTING_NAMES.SKIP_FUNCTIONAL_SLIDES"
 					@input="slotParams.onSubmit"
 				>Pomijaj slajdy funkcjonalne</wnl-form-check>
 				<wnl-form-check
-					:name="SETTING_NAMES.NOTIFY_LIVE"
+					:name="USER_SETTING_NAMES.NOTIFY_LIVE"
 					@input="slotParams.onSubmit"
 				>Powiadomienia w przeglądarce</wnl-form-check>
 				<wnl-form-check
-					:name="SETTING_NAMES.THICK_SCROLLBAR"
+					:name="USER_SETTING_NAMES.THICK_SCROLLBAR"
 					@input="slotParams.onSubmit"
 				>Pogrubiony pasek przewijania</wnl-form-check>
 
 				<wnl-form-select
 					v-if="isAdmin"
-					:name="SETTING_NAMES.DEFAULT_TAXONOMY_ID"
+					:name="USER_SETTING_NAMES.DEFAULT_TAXONOMY_ID"
 					:options="taxonomiesSelectOptions"
 					@input="slotParams.onSubmit"
 				>Ulubiona taksonomia</wnl-form-select>
@@ -50,18 +50,18 @@
 <script>
 import { mapGetters, mapActions, mapState } from 'vuex';
 
-import { Form, Check, Select as WnlFormSelect } from 'js/components/global/form';
-import {SETTING_NAMES} from 'js/consts/settings';
+import { Form as WnlForm, Check as WnlCheck, Select as WnlFormSelect } from 'js/components/global/form';
+import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 export default {
 	components: {
-		'wnl-form': Form,
-		'wnl-form-check': Check,
+		WnlForm,
+		WnlCheck,
 		WnlFormSelect,
 	},
 	data() {
 		return {
-			SETTING_NAMES
+			USER_SETTING_NAMES
 		};
 	},
 	computed: {

@@ -28,7 +28,7 @@ class CouponsApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$coupon->times_usable = $request->coupon->times_usable;
+		$coupon->times_usable = $request->coupon['times_usable'];
 		$coupon->removeObservableEvents(['updated']);
 		$coupon->save();
 		return $this->transformAndRespond($coupon);

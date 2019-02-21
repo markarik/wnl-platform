@@ -1,6 +1,7 @@
 import * as types from 'js/store/mutations-types';
 import { set, delete as destroy } from 'vue';
 import { isString, pickBy, values } from 'lodash';
+import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 // Initial state
 const state = {
@@ -42,7 +43,7 @@ const getters = {
 	isMobileProfile: (state, getters) => getters.isTouchScreen,
 	isChatMounted: (state, getters) => getters.isLargeDesktop,
 	isChatVisible: (state, getters, rootState) => state.canShowChat && getters.isChatMounted ?
-		rootState.currentUser.settings['chat_on'] : state.isChatOpen,
+		rootState.currentUser.settings[USER_SETTING_NAMES.CHAT_ON] : state.isChatOpen,
 	isChatToggleVisible: (state, getters) => !getters.isMobile && !getters.isChatVisible,
 	canShowCloseIconInChat: (state, getters) => !getters.isMobile,
 	canShowChat: state => state.canShowChat,

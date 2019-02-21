@@ -9,5 +9,5 @@ return [
 	'private_chat_nofitications' => true,
 	'skip_functional_slides' => false,
 	'do_not_disturb_mode'    => false,
-	'thick_scrollbar'        => false
+	'thick_scrollbar'        => false,
 ];

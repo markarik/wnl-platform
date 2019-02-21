@@ -51,6 +51,7 @@ class TagsFromTaxonomies extends Command
 
 			foreach ($children as $child) {
 				$tagModel = Tag::find($child->parent_tag_id);
+				/** @var QuizQuestion[] $questionsToTag */
 				$questionsToTag = QuizQuestion::whereHas('tags', function($query) use ($child) {
 					$query->where('tags.id', $child->tag_id);
 				})->whereDoesntHave('tags', function ($query) use ($child) {

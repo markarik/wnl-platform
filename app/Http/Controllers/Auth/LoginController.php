@@ -44,7 +44,7 @@ class LoginController extends Controller
 	 *
 	 * @param  \Illuminate\Http\Request $request
 	 *
-	 * @return \Illuminate\Http\Response
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function logout(Request $request)
 	{

@@ -40,7 +40,7 @@ class CouponsGenerateFromFbComments extends Command
 	 */
 	public function handle()
 	{
-		$contents = Storage::get('import/facebook.json');
+		$contents = Storage::drive()->get('import/facebook.json');
 		$decoded = json_decode($contents, true);
 		$comments = $decoded['comments']['data'];
 

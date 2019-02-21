@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\FinalInvoice;
 
 
-/**
- * @property bool mail
- */
 class IssueFinalInvoice implements ShouldQueue
 {
 	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;

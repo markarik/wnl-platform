@@ -2,6 +2,7 @@
 
 use Auth;
 use Cache;
+use Illuminate\Database\Eloquent\Builder;
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\Collection;
 
@@ -40,9 +41,10 @@ trait PaginatesResponses
 			]
 		];
 	}
+
 	/**
-	 * @param $model
-	 * @param $limit
+	 * @param Builder $model
+	 * @param int $limit
 	 *
 	 * @return array
 	 */

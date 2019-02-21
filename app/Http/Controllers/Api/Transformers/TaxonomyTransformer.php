@@ -17,6 +17,7 @@ class TaxonomyTransformer extends ApiTransformer {
 			'id' => $taxonomy->id,
 			'name' => $taxonomy->name,
 			'description' => $taxonomy->description,
+			'color' => $taxonomy->color
 		];
 
 		if ($this->parent) {

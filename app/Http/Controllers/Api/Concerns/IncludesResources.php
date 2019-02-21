@@ -6,7 +6,7 @@ trait IncludesResources
 	/**
 	 * Determine whether a resource should be included.
 	 *
-	 * @param $name
+	 * @param string $name
 	 *
 	 * @return bool
 	 */

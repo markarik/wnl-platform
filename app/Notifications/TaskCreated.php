@@ -37,7 +37,7 @@ class TaskCreated extends Notification implements ShouldQueue
 	/**
 	 * Send notification to slack channel
 	 *
-	 * @param $notifiable
+	 * @param mixed $notifiable
 	 *
 	 * @return SlackMessage
 	 */

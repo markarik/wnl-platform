@@ -1,5 +1,6 @@
 <?php namespace App\Listeners;
 
+use App\Events\Event;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserCourseProgress;
@@ -80,7 +81,7 @@ class UserNotificationsGate implements ShouldQueue
 	/**
 	 * Notify all moderators about an event.
 	 *
-	 * @param $event
+	 * @param Event $event
 	 *
 	 * @return bool
 	 */
@@ -103,7 +104,7 @@ class UserNotificationsGate implements ShouldQueue
 	/**
 	 * Handle the event.
 	 *
-	 * @param $event
+	 * @param Event $event
 	 *
 	 * @return void
 	 * @throws \Exception

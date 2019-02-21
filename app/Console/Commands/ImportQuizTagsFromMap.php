@@ -42,7 +42,7 @@ class ImportQuizTagsFromMap extends Command
 	{
 		$filename = $this->argument('file');
 
-		$contents = Storage::get($filename);
+		$contents = Storage::drive()->get($filename);
 		$map = json_decode($contents, true);
 
 		foreach ($map as $tag => $questions) {

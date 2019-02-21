@@ -58,7 +58,7 @@ class SendCertificates extends Command
 			$id = str_replace([self::BASE_DIRECTORY . '/', '.pdf'], '', $file);
 			$user = User::find($id);
 			if (!$user) {
-				$this->warning('User not found ' . $id);
+				$this->warn('User not found ' . $id);
 				continue;
 			}
 			$this->dispatch(new SendCertificate($user, $file, $type));

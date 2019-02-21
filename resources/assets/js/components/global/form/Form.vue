@@ -7,7 +7,7 @@
 			:timestamp="timestamp"
 			@delete="onDelete"
 		></wnl-alert>
-		<slot></slot>
+		<slot :on-submit="onSubmitForm"></slot>
 		<wnl-submit v-if="!hideDefaultSubmit"></wnl-submit>
 	</form>
 </template>

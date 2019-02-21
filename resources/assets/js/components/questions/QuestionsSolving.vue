@@ -74,7 +74,7 @@
 					/>
 				</div>
 
-				<div v-if="questionsCurrentPage.length > 0"
+				<div
 					v-for="(question, index) in questionsCurrentPage"
 					class="questions-list-item"
 					:key="index"

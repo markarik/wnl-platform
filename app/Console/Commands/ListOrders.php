@@ -46,7 +46,7 @@ class ListOrders extends Command
 		} else {
 			$orders = Order::with(['user', 'product'])->whereIn('id', $orderId)->get();
 
-			if (!$orders) {
+			if ($orders->count() === 0) {
 				$this->error("Sorry, it seems that there is no order with ID {$orderId} in the database.");
 				exit;
 			}

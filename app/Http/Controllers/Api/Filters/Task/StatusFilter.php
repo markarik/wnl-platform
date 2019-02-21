@@ -24,6 +24,6 @@ class StatusFilter extends ApiFilter
 
 	public function count($builder)
 	{
-		return null;
+		return [];
 	}
 }

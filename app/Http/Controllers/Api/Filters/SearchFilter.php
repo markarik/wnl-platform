@@ -8,6 +8,10 @@ class SearchFilter extends ApiFilter
 {
 	protected $expected = ['phrase'/*, 'mode'*/];
 
+	/**
+	 * @param \Illuminate\Database\Eloquent\Builder $builder
+	 * @return \Illuminate\Database\Eloquent\Builder
+	 */
 	public function handle($builder)
 	{
 //		$this->checkIsSearchable($builder);

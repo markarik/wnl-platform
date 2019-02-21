@@ -45,6 +45,7 @@ class CancelOrder extends Command
 			exit;
 		}
 
+		/** @var Order|null $order */
 		$order = Order::with(['user', 'product'])->find($orderId);
 
 		if (!$order) {

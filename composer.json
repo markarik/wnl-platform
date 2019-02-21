@@ -4,7 +4,7 @@
 	"license": "GPL-3.0",
 	"type": "project",
 	"require": {
-		"php": ">=7.2.0",
+		"php": ">=7.3.2",
 		"laravel/framework": "5.7.*",
 		"kris/laravel-form-builder": "^1.10",
 		"laracasts/utilities": "~2.0",
@@ -67,6 +67,9 @@
 		]
 	},
 	"config": {
-		"preferred-install": "dist"
+		"preferred-install": "dist",
+		"platform": {
+			"ext-bcmath": "7.3.2"
+		}
 	}
 }

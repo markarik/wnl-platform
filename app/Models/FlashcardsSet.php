@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Scopes\OrderByOrderNumberScope;
 use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;
 
@@ -12,11 +11,6 @@ class FlashcardsSet extends Model
 
 	protected $fillable = ['description', 'mind_maps_text', 'name', 'lesson_id'];
 
-	protected static function boot() {
-		parent::boot();
-		static::addGlobalScope(new OrderByOrderNumberScope());
-	}
-
 	public function flashcards()
 	{
 		return	$this->belongsToMany(
@@ -24,7 +18,9 @@ class FlashcardsSet extends Model
 			'flashcards_set_flashcard',
 			'flashcard_set_id',
 			'flashcard_id'
-		)->withPivot('order_number');
+		)
+			->withPivot('order_number')
+			->orderBy('pivot_order_number');
 	}
 
 	public function lesson()

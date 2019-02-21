@@ -16,7 +16,7 @@
 			:class="`quiz-question-${currentQuestion.id}`"
 			:id="currentQuestion.id"
 			:question="currentQuestion"
-			show-comments
+			:show-comments="true"
 			:get-reaction="getReaction"
 			:module="module"
 			@selectAnswer="selectAnswer"
@@ -41,7 +41,7 @@
 			>
 				<wnl-quiz-question
 					:key="question.id"
-					header-only
+					:header-only="true"
 					:question="question"
 					:class="`clickable quiz-question-${question.id}`"
 					:get-reaction="getReaction"

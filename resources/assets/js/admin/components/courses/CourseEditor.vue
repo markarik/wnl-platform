@@ -4,7 +4,7 @@
 			:resource-route="resourceRoute"
 			:populate="isEdit"
 			name="CourseEditor"
-			hide-default-submit
+			:hide-default-submit="true"
 			class="editor"
 	>
 		<div class="header">

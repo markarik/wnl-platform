@@ -124,7 +124,7 @@
 		<wnl-sidenav-slot
 			:is-detached="!isChatMounted"
 			:is-visible="isChatVisible"
-			has-chat
+			:has-chat="true"
 		>
 			<div class="questions-feed-container">
 				<div class="questions-feed-heading" :class="{'detached': !isChatMounted}">

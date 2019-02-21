@@ -9,7 +9,7 @@
 			@userEvent="proxyUserEvent"
 		/>
 		<wnl-qna
-			sorting-enabled
+			:sorting-enabled="true"
 			v-if="showQna"
 			:context-tags="tags"
 			class="wnl-screen-qna"

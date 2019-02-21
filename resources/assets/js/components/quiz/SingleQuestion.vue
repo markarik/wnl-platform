@@ -18,7 +18,7 @@
 						{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
 					</div>
 					<wnl-quiz-widget v-else
-						is-single
+						:is-single="true"
 						:questions="getQuestionsWithAnswers"
 						:get-reaction="getReaction"
 						@selectAnswer="commitSelectAnswer"

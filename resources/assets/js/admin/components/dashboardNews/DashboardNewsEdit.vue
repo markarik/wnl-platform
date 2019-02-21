@@ -5,7 +5,7 @@
 				:populate="isEdit"
 				:method="formMethod"
 				:resource-route="formResourceRoute"
-				suppress-enter
+				:suppress-enter="true"
 				@submitSuccess="onSubmitSucess"
 				@change="onChange"
 		>

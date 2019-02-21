@@ -1,11 +1,11 @@
 <template>
 	<wnl-form
 		class="qna-new-question-form"
-		hide-default-submit
+		hide-default-submit="true"
 		name="QnaNewQuestion"
 		method="post"
-		suppress-enter
-		reset-after-submit
+		suppress-enter="true"
+		reset-after-submit="true"
 		resource-route="qna_questions"
 		:attach="attachedData"
 		@submitSuccess="onSubmitSuccess">

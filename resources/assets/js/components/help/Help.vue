@@ -15,7 +15,7 @@
 				<router-view
 						:arguments="templateArguments"
 						:slug="$route.name"
-						qna
+						:qna="true"
 						@userEvent="onUserEvent"
 				></router-view>
 			</div>
@@ -23,7 +23,7 @@
 		<wnl-sidenav-slot
 				:is-visible="isChatVisible"
 				:is-detached="!isChatMounted"
-				has-chat
+				:has-chat="true"
 		>
 			<wnl-public-chat :rooms="chatRooms"
 							 title="W czym możemy Ci pomóc?"></wnl-public-chat>

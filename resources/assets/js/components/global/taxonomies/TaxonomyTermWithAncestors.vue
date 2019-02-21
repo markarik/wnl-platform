@@ -1,5 +1,10 @@
 <template>
-	<div @click="$emit('click', $event)" class="taxonomy-term" :class="{'is-bordered': isBordered}">
+	<div
+		@click="$emit('click', $event)"
+		class="taxonomy-term"
+		:class="{'is-bordered': isBordered}"
+		:style="getStyle"
+	>
 		<slot name="left"></slot>
 		<div class="taxonomy-term__content" :class="{'has-parent': ancestors.length}">
 			<div class="taxonomy-term__content__parent">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}}</div>
@@ -50,5 +55,15 @@ export default {
 			default: false,
 		}
 	},
+	methods: {
+		getStyleForTerm() {
+			const color = this.term.taxonomy && this.term.taxonomy.color;
+			if (!color || !this.isBordered) return {};
+
+			return {
+				borderColor: color
+			};
+		}
+	}
 };
 </script>

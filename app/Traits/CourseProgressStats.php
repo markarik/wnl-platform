@@ -42,9 +42,11 @@ trait CourseProgressStats {
 
 		if ($t) dump('userCourseProgress', microtime(true) - $start);
 
-		$userQuizQuestionsSolved = UserQuizResults::selectRaw('distinct(quiz_question_id)')
+		$userQuizQuestionsSolved = UserQuizResults
+			::selectRaw('count(distinct(quiz_question_id)) as count')
 			->where('user_id', $this->id)
-			->count();
+			->first()
+			->count;
 
 		if ($t) dump('quizQuestionsSolved', microtime(true) - $start);
 

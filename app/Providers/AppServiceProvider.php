@@ -137,7 +137,8 @@ class AppServiceProvider extends ServiceProvider
 	protected function registerQueueLogger()
 	{
 		Queue::failing(function (JobFailed $event) {
-			app('sentry')->captureException($event->exception, [
+			$sentryClient = new \Raven_Client(env('SENTRY_DSN'));
+			$sentryClient->captureException($event->exception, [
 				'extra' => ['app_version' => config('app.version')],
 				'job' => $event->job->resolveName(),
 			]);

@@ -21,11 +21,10 @@ class CouponObserver
 		}
 
 		if (empty($coupon->studyBuddy)) {
-			// TODO sync the coupon with other platform
 			$headers = [
 				'Accept' => 'application/json',
 				'BETHINK_COUPON_SYNC_TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
-				'Host' => "platform-copy.local"
+				'Host' => env('APP_COUPONS_SYNC_HOST')
 			];
 			$request = Requests::post(env('APP_COUPONS_SYNC_URL') . '/api/v1/coupons', $headers, [
 				'coupon' => $coupon->toArray()

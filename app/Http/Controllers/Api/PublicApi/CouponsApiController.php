@@ -15,6 +15,7 @@ class CouponsApiController extends ApiController
 	public function post(Request $request)
 	{
 		$coupon = new Coupon($request->coupon);
+		$coupon->removeObservableEvents(['created']);
 		$coupon->save();
 		return $this->transformAndRespond($coupon);
 	}

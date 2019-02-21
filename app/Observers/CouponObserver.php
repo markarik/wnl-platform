@@ -23,7 +23,9 @@ class CouponObserver
 				'BETHINK_COUPON_SYNC_TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
 				'Host' => "platform-copy.local"
 			];
-			$request = Requests::post(env('APP_COUPONS_SYNC_URL') . '/api/v1/coupons', $headers, $coupon->toArray());
+			$request = Requests::post(env('APP_COUPONS_SYNC_URL') . '/api/v1/coupons', $headers, [
+				'coupon' => $coupon->toArray()
+			]);
 			dd($request->body);
 		}
 	}

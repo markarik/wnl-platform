@@ -46,7 +46,7 @@ class CouponObserver
 				'X-BETHINK-COUPON-SYNC-TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
 			];
 			Requests::put(env('APP_COUPONS_SYNC_URL') . "/api/v1/coupons/{$coupon->code}", $headers, [
-				'coupon' => $coupon->toArray()
+				'coupon' => $couponToUpdate
 			]);
 		}
 	}

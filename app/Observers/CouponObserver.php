@@ -26,8 +26,8 @@ class CouponObserver
 
 			$headers = [
 				'Accept' => 'application/json',
-				'BETHINK_COUPON_SYNC_TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
-				'Host' => env('APP_COUPONS_SYNC_HOST')
+				'Host' => env('APP_COUPONS_SYNC_HOST'),
+				'X-BETHINK-COUPON-SYNC-TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
 			];
 			Requests::post(env('APP_COUPONS_SYNC_URL') . '/api/v1/coupons', $headers, [
 				'coupon' => $couponToCreate
@@ -42,8 +42,8 @@ class CouponObserver
 
 			$headers = [
 				'Accept' => 'application/json',
-				'BETHINK_COUPON_SYNC_TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
-				'Host' => env('APP_COUPONS_SYNC_HOST')
+				'Host' => env('APP_COUPONS_SYNC_HOST'),
+				'X-BETHINK-COUPON-SYNC-TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
 			];
 			Requests::put(env('APP_COUPONS_SYNC_URL') . "/api/v1/coupons/{$coupon->code}", $headers, [
 				'coupon' => $coupon->toArray()

@@ -14,7 +14,7 @@ class CouponsApiController extends ApiController
 
 	public function post(Request $request)
 	{
-		if ($request->header['BETHINK_COUPON_SYNC_TOKEN'] !== env('APP_COUPONS_SYNC_TOKEN')) {
+		if ($request->header('BETHINK_COUPON_SYNC_TOKEN') !== env('APP_COUPONS_SYNC_TOKEN')) {
 			return $this->respondUnauthorized();
 		}
 
@@ -26,7 +26,7 @@ class CouponsApiController extends ApiController
 
 	public function put(Request $request)
 	{
-		if ($request->header['BETHINK_COUPON_SYNC_TOKEN'] !== env('APP_COUPONS_SYNC_TOKEN')) {
+		if ($request->header('BETHINK_COUPON_SYNC_TOKEN') !== env('APP_COUPONS_SYNC_TOKEN')) {
 			return $this->respondUnauthorized();
 		}
 

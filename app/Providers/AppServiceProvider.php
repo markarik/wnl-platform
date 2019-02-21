@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
-use Laravel\Tinker\TinkerServiceProvider;
 use Log;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RavenHandler;
@@ -47,7 +46,6 @@ class AppServiceProvider extends ServiceProvider
 			$this->app->register(DuskServiceProvider::class);
 		}
 		if ($this->app->environment('dev', 'local')) {
-			$this->app->register(TinkerServiceProvider::class);
 			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 		}
 		if (env('DEBUG_BAR') === true) {

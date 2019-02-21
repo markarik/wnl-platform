@@ -2,7 +2,7 @@
 # Install PHP dependencies
 #
 
-FROM bethink/composer:1.6.5 AS php-build
+FROM composer:1.8.4 AS php-build
 
 ADD . /src
 WORKDIR /src
@@ -25,10 +25,10 @@ RUN yarn run setup \
 # Build final image
 #
 
-FROM php:7.2.7-fpm-alpine3.7
+FROM php:7.3.2-fpm-alpine3.9
 
 # Install PHP extensions
-RUN apk --no-cache add freetype-dev libjpeg-turbo-dev libpng-dev
+RUN apk --no-cache add freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
 	&& docker-php-ext-install -j$(nproc) opcache bcmath gd zip mysqli pdo_mysql
 

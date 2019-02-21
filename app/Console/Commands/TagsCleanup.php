@@ -87,18 +87,18 @@ class TagsCleanup extends Command
 					$this->info("Trimming tag {$name} to {$trimmed}");
 					$tag->name = $trimmed;
 					$tag->save();
-					continue;
+					break;
 				case 2:
 					$this->replace($tag, $commandTarget);
-					continue;
+					break;
 				case 3:
 					$this->info("Updating tag {$name} to {$commandTarget}");
 					$tag->name = $commandTarget;
 					$tag->save();
-					continue;
+					break;
 				case 4:
 					$this->remove($tag);
-					continue;
+					break;
 			}
 		}
 	}

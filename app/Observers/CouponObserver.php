@@ -21,21 +21,33 @@ class CouponObserver
 		}
 
 		if (empty($coupon->studyBuddy)) {
+			$couponToCreate = $coupon->toArray();
+			unset($couponToCreate['id']);
+
 			$headers = [
 				'Accept' => 'application/json',
 				'BETHINK_COUPON_SYNC_TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
 				'Host' => env('APP_COUPONS_SYNC_HOST')
 			];
-			$request = Requests::post(env('APP_COUPONS_SYNC_URL') . '/api/v1/coupons', $headers, [
-				'coupon' => $coupon->toArray()
+			Requests::post(env('APP_COUPONS_SYNC_URL') . '/api/v1/coupons', $headers, [
+				'coupon' => $couponToCreate
 			]);
-			dd($request->body);
 		}
 	}
 
 	public function updated(Coupon $coupon) {
 		if (empty($coupon->studyBuddy)) {
-			// TODO sync the coupon with other platform
+			$couponToUpdate = $coupon->toArray();
+			unset($couponToUpdate['id']);
+
+			$headers = [
+				'Accept' => 'application/json',
+				'BETHINK_COUPON_SYNC_TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
+				'Host' => env('APP_COUPONS_SYNC_HOST')
+			];
+			Requests::put(env('APP_COUPONS_SYNC_URL') . "/api/v1/coupons/{$coupon->code}", $headers, [
+				'coupon' => $coupon->toArray()
+			]);
 		}
 	}
 }

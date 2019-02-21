@@ -22,6 +22,15 @@ class CouponsApiController extends ApiController
 
 	public function put(Request $request)
 	{
-		return $this->respondOk();
+		$coupon = Coupon::where('code', $request->route('code'))->first();
+
+		if (empty($coupon)) {
+			return $this->respondNotFound();
+		}
+
+		$coupon->times_usable = $request->coupon->times_usable;
+		$coupon->removeObservableEvents(['updated']);
+		$coupon->save();
+		return $this->transformAndRespond($coupon);
 	}
 }

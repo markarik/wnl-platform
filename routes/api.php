@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,6 +18,6 @@ Route::group(['namespace' => 'Api\PublicApi'], function () {
 	Route::get('products/availability', 'ProductsApiController@getAvailability');
 
 	Route::post("{$r['coupons']}", 'CouponsApiController@post');
-	Route::put("{$r['coupons']}/{id}", 'CouponsApiController@put');
+	Route::put("{$r['coupons']}/{code}", 'CouponsApiController@put');
 
 });

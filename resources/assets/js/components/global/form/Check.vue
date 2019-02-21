@@ -36,7 +36,7 @@ export default {
 	methods: {
 		onToggle() {
 			this.inputValue = !this.inputValue;
-			this.$parent.$emit('submitForm');
+			this.$emit('input');
 		}
 	},
 };

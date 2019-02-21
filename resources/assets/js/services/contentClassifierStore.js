@@ -10,5 +10,4 @@ export default store;
 export const CONTENT_CLASSIFIER_STORE_KEYS = {
 	LAST_TERM: 'content-classifier-last-term',
 	ALL_TERMS: 'content-classifier-all-terms',
-	LAST_TAXONOMY_ID: 'content-classifier-last-taxonomy-id',
 };

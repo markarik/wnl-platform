@@ -3,14 +3,14 @@
 		<p class="title is-4">Zapisane pytania kontrolne ({{howManyQuestions}})</p>
 		<div v-show="isLoaded">
 			<wnl-pagination v-if="lastPage && lastPage > 1"
-							:currentPage="currentPage"
-							:lastPage="lastPage"
+							:current-page="currentPage"
+							:last-page="lastPage"
 							@changePage="changePage"
 			/>
 			<wnl-quiz-widget
 				v-if="isLoaded && howManyQuestions > 0"
 				:questions="getQuestionsWithAnswers"
-				:getReaction="getReaction"
+				:get-reaction="getReaction"
 				@changeQuestion="performChangeQuestion"
 				@verify="trackAndResolve"
 				@selectAnswer="onSelectAnswer"

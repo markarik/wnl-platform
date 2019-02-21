@@ -14,7 +14,7 @@
 				</wnl-form-textarea>
 				<fieldset class="tags-fieldset">
 					<legend>Tagi</legend>
-					<wnl-tags :defaultTags="flashcardTags" @tagsChanged="onTagsChanged"></wnl-tags>
+					<wnl-tags :default-tags="flashcardTags" @tagsChanged="onTagsChanged"></wnl-tags>
 				</fieldset>
 				<div class="control">
 					<button class="button is-small is-success"

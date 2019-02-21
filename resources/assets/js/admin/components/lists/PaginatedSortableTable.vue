@@ -1,8 +1,8 @@
 <template>
 		<wnl-paginated-list
-			:resourceName="resourceName"
-			:customRequestParams="requestParams"
-			:isSearchEnabled="isSearchEnabled"
+			:resource-name="resourceName"
+			:custom-request-params="requestParams"
+			:is-search-enabled="isSearchEnabled"
 		>
 			<template slot="header">
 				<slot name="header"></slot>
@@ -12,8 +12,8 @@
 				slot-scope="slotProps"
 				slot="list"
 				:columns="columns"
-				:activeSortColumnName="activeSortColumnName"
-				:sortDirection="sortDirection"
+				:active-sort-column-name="activeSortColumnName"
+				:sort-direction="sortDirection"
 				:list="slotProps.list"
 				@changeOrder="changeOrder"
 			>

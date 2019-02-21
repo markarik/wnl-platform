@@ -7,7 +7,7 @@
 				</div>
 				<small class="slide-meta" v-if="$moderatorFeatures.isAllowed('access')">
 					{{currentSlideId}}
-					<wnl-linked-questions :slideId="currentSlideId"/>
+					<wnl-linked-questions :slide-id="currentSlideId"/>
 				</small>
 				<div class="controls-right">
 					<div class="controls-item">
@@ -24,12 +24,12 @@
 			</div>
 			<div class="slideshow-menu">
 				<wnl-annotations
-					:slideshowId="presentableId"
+					:slideshow-id="presentableId"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
-					:screenId="Number(screenId)"
-					:currentSlideId="currentSlideId"
-					:isLoadingComments="isLoadingComments"
+					:screen-id="Number(screenId)"
+					:current-slide-id="currentSlideId"
+					:is-loading-comments="isLoadingComments"
 				></wnl-annotations>
 			</div>
 		</div>

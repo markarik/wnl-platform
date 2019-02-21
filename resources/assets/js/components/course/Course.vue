@@ -1,25 +1,25 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout" v-if="ready">
 		<wnl-sidenav-slot
-			:isVisible="canRenderSidenav"
-			:isDetached="!isSidenavMounted"
+			:is-visible="canRenderSidenav"
+			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<wnl-course-navigation
 				v-if="$currentEditionParticipant.isAllowed('access')"
-				:isLesson="isLesson"
+				:is-lesson="isLesson"
 			>
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column" v-if="$currentEditionParticipant.isAllowed('access')">
-			<router-view :presenceChannel="presenceChannel"/>
+			<router-view :presence-channel="presenceChannel"/>
 		</div>
 		<wnl-splash-screen v-else/>
 		<wnl-sidenav-slot
 			class="course-chat"
-			:isVisible="isChatVisible"
-			:isDetached="!isChatMounted"
-			:hasChat="true"
+			:is-visible="isChatVisible"
+			:is-detached="!isChatMounted"
+			has-chat
 		>
 			<div v-if="isLesson" class="lesson-active-users-container">
 				<wnl-active-users message="dashboard.activeUsersLessons" :channel="presenceChannel"/>

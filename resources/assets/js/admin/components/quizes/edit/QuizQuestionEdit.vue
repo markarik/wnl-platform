@@ -1,5 +1,5 @@
 <template>
-	<wnl-quiz-question-editor :isEdit="true"></wnl-quiz-question-editor>
+	<wnl-quiz-question-editor is-edit></wnl-quiz-question-editor>
 </template>
 
 <script>

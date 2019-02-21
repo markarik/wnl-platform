@@ -1,11 +1,11 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-			:isVisible="isSidenavVisible"
-			:isDetached="!isSidenavMounted"
-			:isMaxWidth="true"
+			:is-visible="isSidenavVisible"
+			:is-detached="!isSidenavMounted"
+			is-max-width
 		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside rooms-sidenav">
 				<wnl-conversations-list/>
 			</aside>
@@ -14,7 +14,7 @@
 			<wnl-private-chat
 				:room="currentRoom"
 				:users="currentRoomUsers"
-				:messagesLoaded="messagesLoaded"
+				:messages-loaded="messagesLoaded"
 				v-if="currentRoom.id"
 			></wnl-private-chat>
 		</div>

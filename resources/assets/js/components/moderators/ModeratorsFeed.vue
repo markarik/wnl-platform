@@ -5,14 +5,14 @@
 			<wnl-task class="wnl-task-card" v-for="(task, index) in tasks"
 				:key="index"
 				:task="task"
-				:availableModerators="moderators"
-				:closeDropdown="closeDropdowns"
+				:available-moderators="moderators"
+				:close-dropdown="closeDropdowns"
 				@statusSelected="updateTask"
 				@assign="updateTask"
 			/>
 			<wnl-pagination v-if="paginationMeta.lastPage > 1"
-				:currentPage="paginationMeta.currentPage"
-				:lastPage="paginationMeta.lastPage"
+				:current-page="paginationMeta.currentPage"
+				:last-page="paginationMeta.lastPage"
 				@changePage="(page) => $emit('changePage', {page})"
 			/>
 		</div>

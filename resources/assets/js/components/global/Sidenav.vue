@@ -9,8 +9,8 @@
 			<wnl-sidenav-group v-for="(item, index) in items"
 				:item="item"
 				:key="index"
-				:forceGroupOpen="isOption('forceGroupsOpen')"
-				:showSubitemsCount="isOption('showSubitemsCount')"
+				:force-group-open="isOption('forceGroupsOpen')"
+				:show-subitems-count="isOption('showSubitemsCount')"
 			>
 			</wnl-sidenav-group>
 		</ul>

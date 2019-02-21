@@ -12,9 +12,9 @@
 			class="margin vertical"
 			name="MyPassword"
 			method="put"
-			resourceRoute="users/current/password"
+			resource-route="users/current/password"
 			@submitError="submitError"
-			:submitError="true">
+			submit-error>
 			<wnl-form-password name="old_password">Stare hasło</wnl-form-password>
 			<wnl-form-password name="new_password">Nowe hasło</wnl-form-password>
 			<wnl-form-password name="new_password_confirmation">Powtórz nowe hasło</wnl-form-password>

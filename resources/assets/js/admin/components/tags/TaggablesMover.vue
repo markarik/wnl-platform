@@ -1,16 +1,16 @@
 <template>
 	<wnl-form
-		:beforeSubmit="beforeSubmit"
-		:resourceRoute="resourceRoute"
+		:before-submit="beforeSubmit"
+		:resource-route="resourceRoute"
 		@submitSuccess="onSubmitSuccess"
-		hideDefaultSubmit="true"
+		hide-default-submit
 		name="TaggableMover"
 		method="post"
 	>
 		<wnl-form-text
 			name="target_tag_id"
 		>ID taga docelowego</wnl-form-text>
-		<wnl-submit cssClass="button is-primary">
+		<wnl-submit css-class="button is-primary">
 			<slot></slot>
 		</wnl-submit>
 	</wnl-form>

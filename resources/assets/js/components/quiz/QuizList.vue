@@ -18,9 +18,9 @@
 						:class="`quiz-question-${question.id}`"
 						:question="question"
 						:index="index"
-						:isQuizComplete="isComplete"
-						:readOnly="readOnly"
-						:getReaction="getReaction"
+						:is-quiz-complete="isComplete"
+						:read-only="readOnly"
+						:get-reaction="getReaction"
 						@selectAnswer="onSelectAnswer"
 						@userEvent="proxyUserEvent"
 					></wnl-quiz-question>

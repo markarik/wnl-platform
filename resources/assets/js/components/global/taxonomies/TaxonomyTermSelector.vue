@@ -9,9 +9,9 @@
 		<wnl-taxonomy-term-autocomplete
 			class="margin left term-select__autocomplete"
 			placeholder="Zacznij pisać, aby wyszukać pojęcie"
-			:isFocused="isFocused"
+			:is-focused="isFocused"
 			:disabled="!taxonomyId"
-			:isDown="isDown"
+			:is-down="isDown"
 			@change="onChange"
 			@blur="$emit('blur', $event)"
 		/>
@@ -35,8 +35,7 @@ import {ALERT_TYPES} from 'js/consts/alert';
 
 import WnlSelect from 'js/admin/components/forms/Select';
 import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
-import contentClassifierStore from 'js/services/contentClassifierStore';
-import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
+import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 export default {
 	components: {
@@ -61,6 +60,7 @@ export default {
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
 		...mapGetters('taxonomies', ['taxonomyById']),
+		...mapGetters(['getSetting']),
 		...mapState('taxonomies', ['taxonomies']),
 		taxonomiesOptions() {
 			return this.taxonomies.map(taxonomy => ({value: taxonomy.id, text: taxonomy.name}));
@@ -69,13 +69,13 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('taxonomyTerms', ['setUpNestedSet']),
+		...mapActions(['setupCurrentUser']),
 		...mapActions('taxonomies', {
 			fetchTaxonomies: 'fetchAll',
 		}),
 		async onTaxonomyChange(taxonomyId) {
 			try {
 				await this.setUpNestedSet(taxonomyId);
-				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TAXONOMY_ID, taxonomyId);
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
@@ -92,10 +92,11 @@ export default {
 		try {
 			await this.fetchTaxonomies();
 
-			const lastTaxonomyId = contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TAXONOMY_ID);
+			await this.setupCurrentUser();
+			const defaultTaxonomyId = this.getSetting(USER_SETTING_NAMES.DEFAULT_TAXONOMY_ID);
 
-			if (lastTaxonomyId) {
-				this.taxonomyId = lastTaxonomyId;
+			if (this.taxonomyById(defaultTaxonomyId)) {
+				this.taxonomyId = defaultTaxonomyId;
 			}
 		} catch (error) {
 			$wnl.logger.capture(error);

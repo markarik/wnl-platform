@@ -2,9 +2,9 @@
 	<wnl-slides-editor
 		title="Dodaj slajd"
 		method="post"
-		:resourceUrl="resourceUrl"
-		:requestPayload="requestPayload"
-		:screenId="Number(screenId)"
+		:resource-url="resourceUrl"
+		:request-payload="requestPayload"
+		:screen-id="Number(screenId)"
 	>
 		<div class="level margin vertical">
 			<div class="level-left">

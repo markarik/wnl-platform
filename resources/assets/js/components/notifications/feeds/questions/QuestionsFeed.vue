@@ -6,7 +6,7 @@
 				<component :is="getEventComponent(message)"
 					:message="message"
 					:key="message.id"
-					:notificationComponent="QuestionsNotification"
+					:notification-component="QuestionsNotification"
 					v-for="message in filtered"
 				/>
 			</div>

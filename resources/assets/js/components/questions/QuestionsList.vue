@@ -25,19 +25,19 @@
 				</div>
 				<wnl-questions-solving
 						v-if="computedQuestionsList.length > 0 || !fetchingQuestions"
-						:activeFilters="activeFiltersNames"
-						:currentQuestion="currentQuestion"
+						:active-filters="activeFiltersNames"
+						:current-question="currentQuestion"
 						:loading="fetchingQuestions || fetchingFilters"
-						:getReaction="computedGetReaction"
-						:isMobile="isMobile"
+						:get-reaction="computedGetReaction"
+						:is-mobile="isMobile"
 						:meta="meta"
-						:questionsListCount="matchedQuestionsCount"
-						:questionsCurrentPage="questionsCurrentPage"
-						:presetOptions="presetOptionsToPass"
-						:testMode="testMode"
-						:testQuestions="testQuestions"
-						:testProcessing="testProcessing"
-						:testResults="testResults"
+						:questions-list-count="matchedQuestionsCount"
+						:questions-current-page="questionsCurrentPage"
+						:preset-options="presetOptionsToPass"
+						:test-mode="testMode"
+						:test-questions="testQuestions"
+						:test-processing="testProcessing"
+						:test-results="testResults"
 						@buildTest="buildTest"
 						@changeQuestion="onChangeQuestion"
 						@changePage="onChangePage"
@@ -56,15 +56,15 @@
 			</div>
 		</div>
 		<wnl-sidenav-slot
-				:isDetached="!isChatMounted"
-				:isVisible="isLargeDesktop || isChatVisible"
-				:hasChat="true"
+				:is-detached="!isChatMounted"
+				:is-visible="isLargeDesktop || isChatVisible"
+				has-chat
 		>
 			<wnl-questions-filters
 					v-show="!testMode"
 					:loading="fetchingQuestions || fetchingFilters"
-					:activeFilters="activeFilters"
-					:fetchingData="fetchingQuestions || fetchingFilters"
+					:active-filters="activeFilters"
+					:fetching-data="fetchingQuestions || fetchingFilters"
 					:filters="filters"
 					@activeFiltersChanged="onActiveFiltersChanged"
 					@search="onSearch"

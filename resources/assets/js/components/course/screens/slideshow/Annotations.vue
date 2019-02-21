@@ -14,17 +14,17 @@
 		<wnl-comments-list
 			v-if="currentSlideId > 0 && !isLoadingComments"
 			module="slideshow"
-			urlParam="slide"
-			commentableResource="slides"
-			isUnique="true"
-			:commentableId="currentSlideId"
-			:currentSlideId="currentSlideId"
+			url-param="slide"
+			commentable-resource="slides"
+			is-unique
+			:commentable-id="currentSlideId"
+			:current-slide-id="currentSlideId"
 			@commentsHidden="$emit('commentsHidden')"
 			@commentsUpdated="onCommentsUpdated"
 		>
 		<wnl-edit-slide-button
-			:currentSlideId="Number(currentSlideId)"
-			:screenId="Number(screenId)"
+			:current-slide-id="Number(currentSlideId)"
+			:screen-id="Number(screenId)"
 			v-if="isAdmin"
 		/>
 	</wnl-comments-list>

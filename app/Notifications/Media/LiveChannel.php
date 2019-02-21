@@ -19,7 +19,7 @@ class LiveChannel
 		$message = new BroadcastMessage($notification->event->data);
 
 		$event = new LiveNotificationCreated(
-			$notifiable, $notification, is_array($message) ? $message : $message->data
+			$notifiable, $notification, $message->data
 		);
 
 		// If actor is not set on event we don't want to send live notification to users

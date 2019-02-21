@@ -16,12 +16,13 @@ use App\Models\Tag;
 use App\Models\Taxonomy;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 
 class QuizQuestionsApiController extends ApiController
 {
-	const AVAILABLE_FILTERS = [
+	static $AVAILABLE_FILTERS = [
 		'quiz-planned',
 		'quiz-resolution',
 		'quiz-collection',
@@ -52,6 +53,7 @@ class QuizQuestionsApiController extends ApiController
 		]);
 		$ids = $request->get('ids');
 
+		/** @var Builder $questions */
 		$questions = QuizQuestion::select();
 
 		if ($request->has('ids')) {
@@ -231,6 +233,8 @@ class QuizQuestionsApiController extends ApiController
 				false
 			)
 		)->keyBy('key');
+
+		$subjects = [];
 
 		foreach ($txTags as $txTag) {
 			$total = $totalAggregated->get($txTag->tag_id)['doc_count'];

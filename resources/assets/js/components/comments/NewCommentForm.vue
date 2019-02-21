@@ -1,11 +1,11 @@
 <template>
 	<wnl-form
 		class="qna-new-comment-form margin vertical"
-		hideDefaultSubmit="true"
+		hide-default-submit
 		method="post"
-		suppressEnter="true"
-		resetAfterSubmit="true"
-		resourceRoute="comments"
+		suppress-enter
+		reset-after-submit
+		resource-route="comments"
 		:attach="attachedData"
 		:name="name"
 		:value="newCommentDraft"
@@ -23,7 +23,7 @@
 			<div class="level-left"></div>
 			<div class="level-right">
 				<div class="level-item">
-					<wnl-submit cssClass="button is-small is-primary">
+					<wnl-submit css-class="button is-small is-primary">
 						Zapisz
 					</wnl-submit>
 				</div>

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Events\Qna\QnaAnswerPosted;
 use App\Models\Concerns\Cached;
+use App\Models\Contracts\WithReactions;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 
-class QnaAnswer extends Model
+class QnaAnswer extends Model implements WithReactions
 {
 	use Cached, Searchable;
 

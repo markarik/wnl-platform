@@ -8,12 +8,11 @@
 		@keydown="onKeyDown"
 		@blur="$emit('blur', $event)"
 	>
-		<h4 class="title is-4 margin bottom">Przypisane pojęcia</h4>
-		<div v-if="allTaxonomyTerms.length===0">Brak przypisanych pojęć</div>
+		<div v-if="allTaxonomyTerms.length===0" class="label is-uppercase margin bottom">Brak przypisanych pojęć</div>
 		<div v-if="items.length > 0">
 			<ul class="margin bottom">
 				<li v-for="group in groupedTaxonomyTerms" :key="group.taxonomy.id">
-					<ul>
+					<ul class="content-classifier__editor__terms-group">
 						<li
 							v-for="term in group.terms"
 							:key="term.id"
@@ -26,6 +25,7 @@
 									'has-parent': term.parent_id !== null,
 								}"
 								is-bordered
+								:style="getStyleForTerm(term)"
 							>
 								<span
 									slot="left"
@@ -60,17 +60,17 @@
 			</ul>
 
 			<wnl-content-classifier-editor-recent-terms
-				:lastUsedTerm="lastUsedTerm"
-				:lastUsedTermsSet="lastUsedTermsSet"
+				:last-used-term="lastUsedTerm"
+				:last-used-terms-set="lastUsedTermsSet"
 				:items="items"
 				@attachTaxonomyTerm="onAttachTaxonomyTerm"
 			/>
 
 			<div class="field">
-				<label class="label is-uppercase"><strong>Przypisz pojęcie</strong></label>
+				<label class="label small is-uppercase"><strong>Przypisz pojęcie</strong></label>
 				<wnl-taxonomy-term-selector
-					:isDown="false"
-					:isFocused="isTaxonomyTermAutocompleteFocused"
+					:is-down="false"
+					:is-focused="isTaxonomyTermAutocompleteFocused"
 					@blur="onTaxonomyTermAutocompleteBlur"
 					@change="onAttachTaxonomyTerm"
 				/>
@@ -87,6 +87,11 @@
 	@import 'resources/assets/sass/variables'
 
 	.content-classifier__editor
+
+		&__terms-group
+			display: flex
+			flex-wrap: wrap
+
 		.content-classifier__editor__term
 			display: flex
 			margin-bottom: $margin-tiny
@@ -262,6 +267,14 @@ export default {
 				}
 			}
 		},
+		getStyleForTerm(term) {
+			const color = term.taxonomy && term.taxonomy.color;
+			if (!color) return {};
+
+			return {
+				borderColor: color
+			};
+		}
 	},
 	watch: {
 		async isFocused() {

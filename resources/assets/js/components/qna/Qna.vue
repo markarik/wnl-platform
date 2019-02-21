@@ -38,9 +38,9 @@
 			<transition name="fade">
 				<div class="qna-new-question" v-if="showForm && discussionId">
 					<wnl-new-question
-						:contextTags="contextTags"
+						:context-tags="contextTags"
 						@submitSuccess="showForm = false"
-						:discussionId="discussionId"
+						:discussion-id="discussionId"
 					/>
 				</div>
 			</transition>
@@ -49,9 +49,9 @@
 				<div v-if="howManyQuestions > 0">
 					<wnl-qna-question v-for="question in questionsList"
 						:key="question.id"
-						:questionId="question.id"
-						:readOnly="readOnly"
-						:reactionsDisabled="reactionsDisabled"
+						:question-id="question.id"
+						:read-only="readOnly"
+						:reactions-disabled="reactionsDisabled"
 						:config="config"
 					>
 						<router-link v-if="showContext && question.meta && question.meta.context" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{ $t('user.userProfile.showContext')}}</router-link>

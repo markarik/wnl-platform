@@ -4,8 +4,8 @@
 		<wnl-progress
 			:value="progressValue"
 			:max="progressMax"
-			:hasNumbers="progressHasNumbers"
-			:modifyingClass="progressModifyingClass">
+			:has-numbers="progressHasNumbers"
+			:modifying-class="progressModifyingClass">
 		</wnl-progress>
 		<p class="progress-message">{{ progressMessage }}</p>
 	</div>

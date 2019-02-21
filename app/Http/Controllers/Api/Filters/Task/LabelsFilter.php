@@ -36,6 +36,6 @@ class LabelsFilter extends ApiFilter
             ]
         ];
 
-        return $rootCategories;
+        return $rootCategories->toArray();
     }
 }

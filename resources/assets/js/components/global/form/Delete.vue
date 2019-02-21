@@ -1,7 +1,7 @@
 <template>
 	<span class="icon text-dimmed" :class="[sizeClass]" :title="computedTitle" @click="checkSanity">
 		<wnl-alert v-for="(alert, timestamp) in alerts"
-			cssClass="fixed"
+			css-class="fixed"
 			:alert="alert"
 			:key="timestamp"
 			:timestamp="timestamp"

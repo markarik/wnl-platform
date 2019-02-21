@@ -2,7 +2,7 @@
 	<div class="wnl-private-chat">
 		<div class="chat-title">
 			<wnl-avatar
-				:fullName="interlocutorProfile.full_name"
+				:full-name="interlocutorProfile.full_name"
 				:url="interlocutorProfile.avatar"
 				size="small"
 				class="chat-title__avatar"
@@ -12,14 +12,14 @@
 		<wnl-chat
 			:room="room"
 			:messages="room.messages"
-			:hasMore="hasMore"
-			:onScrollTop="pullMore"
+			:has-more="hasMore"
+			:on-scroll-top="pullMore"
 			:loaded="messagesLoaded"
 		/>
 		<wnl-message-form
 			:room="room"
-			:messagePayload="{users}"
-			:autofocusOnRoomChange="true"
+			:message-payload="{users}"
+			autofocus-on-room-change
 			@messageSent="onMessageSent"
 		/>
 	</div>

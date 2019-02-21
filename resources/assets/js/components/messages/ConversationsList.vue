@@ -22,15 +22,15 @@
 			<wnl-message-link
 				v-for="(room) in roomsToShow"
 				:key="room.id"
-				:userId="getOtherUser(room).user_id"
-				:roomId="room.id"
+				:user-id="getOtherUser(room).user_id"
+				:room-id="room.id"
 				 class="is-relative is-block"
 			>
 				<wnl-conversation-snippet
 					:key="room.id"
 					:room="room"
 					:profile="getOtherUser(room)"
-					:isActive="isActive(room)"
+					:is-active="isActive(room)"
 					:class="{'has-unread': room.unread_count > 0}"
 				/>
 				 <div v-if="room.unread_count" class="counter">{{room.unread_count > 9 ? '9+' : room.unread_count}}</div>

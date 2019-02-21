@@ -13,7 +13,7 @@ class InvoicesApiController extends ApiController
 		$this->resourceName = config('papi.resources.invoices');
 	}
 
-	public function get($id)
+	public function getFile($id)
 	{
 		$user = Auth::user();
 
@@ -33,7 +33,7 @@ class InvoicesApiController extends ApiController
 
 		$filename = $invoice->number_slugged . '.pdf';
 
-		return response(\Storage::get($invoice->file_path), 200)
+		return response(\Storage::drive()->get($invoice->file_path), 200)
 			->header('Content-type', 'application/pdf')
 			->header('Content-Disposition', sprintf('attachment; filename=%s', $filename))
 			->header('Cache-Control', 'no-store, no-cache');

@@ -9,7 +9,7 @@ class Taxonomy extends Model
 {
 	use Searchable;
 
-	protected $fillable = ['name', 'description'];
+	protected $fillable = ['name', 'description', 'color'];
 
 	public function tagsTaxonomy() {
 		return $this->hasMany('App\Models\TagsTaxonomy');

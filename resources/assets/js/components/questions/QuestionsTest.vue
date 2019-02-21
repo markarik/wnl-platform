@@ -18,7 +18,7 @@
 							</a>
 						</span>
 						<wnl-quiz-timer ref="timer"
-							:hideTime="hideTime"
+							:hide-time="hideTime"
 							:time="time"
 							@clicked="hideTime = !hideTime"
 							@timesUp="onTimesUp"/>
@@ -68,8 +68,8 @@
 		<div v-if="lastPage > 1" class="pagination top">
 			<wnl-pagination
 				ref="firstpagination"
-				:currentPage="currentPage"
-				:lastPage="lastPage"
+				:current-page="currentPage"
+				:last-page="lastPage"
 				@changePage="changePage"
 			/>
 		</div>
@@ -77,11 +77,11 @@
 		<wnl-quiz-list
 			module="questions"
 			ref="quizlist"
-			:allQuestions="questionsCurrentPage"
-			:getReaction="getReaction"
-			:isComplete="isComplete"
-			:isProcessing="testProcessing"
-			:plainList="true"
+			:all-questions="questionsCurrentPage"
+			:get-reaction="getReaction"
+			:is-complete="isComplete"
+			:is-processing="testProcessing"
+			plain-list
 			@selectAnswer="selectAnswer"
 			@userEvent="onUserEvent"
 		>
@@ -92,8 +92,8 @@
 
 		<div v-if="lastPage > 1" class="pagination bottom">
 			<wnl-pagination
-				:currentPage="currentPage"
-				:lastPage="lastPage"
+				:current-page="currentPage"
+				:last-page="lastPage"
 				@changePage="changePage"
 			/>
 		</div>

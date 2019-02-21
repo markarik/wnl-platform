@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Scopes\OrderByOrderNumberScope;
 use App\Traits\CourseProgressStats;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
@@ -131,6 +133,12 @@ class User extends Authenticatable
 	public function lessonsAvailability()
 	{
 		return $this->belongsToMany('App\Models\Lesson', 'user_lesson');
+	}
+
+	public function lessonsAvailabilityUnordered()
+	{
+		return $this->belongsToMany('App\Models\Lesson', 'user_lesson')
+			->withoutGlobalScope(OrderByOrderNumberScope::class);
 	}
 
 	public function reactables()
@@ -290,10 +298,10 @@ class User extends Authenticatable
 	/**
 	 * Get the current user or find by id.
 	 *
-	 * @param $id
+	 * @param string $id
 	 * @param array $columns
 	 *
-	 * @return User|\Illuminate\Contracts\Auth\Authenticatable
+	 * @return User|\Illuminate\Contracts\Auth\Authenticatable|null
 	 */
 	public static function fetch($id, $columns = ['*'])
 	{
@@ -348,14 +356,17 @@ class User extends Authenticatable
 	 * @param \Illuminate\Database\Eloquent\Builder $query
 	 * @param string $role
 	 *
-	 * @return \Illuminate\Database\Query\Builder
+	 * @return User[]|Collection
 	 */
 	public function scopeOfRole($query, $role)
 	{
-		return $query
+		/** @var User[]|Collection $users */
+		$users = $query
 			->whereHas('roles', function ($query) use ($role) {
 				return $query->where('name', $role);
 			})->get();
+
+		return $users;
 	}
 
 	public function suspend()

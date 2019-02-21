@@ -5,7 +5,6 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class Newsletter extends Mailable
 {
@@ -16,9 +15,9 @@ class Newsletter extends Mailable
 	/**
 	 * Create a new message instance.
 	 *
-	 * @param $template
-	 * @param $subject
-	 * @param $email
+	 * @param string $template
+	 * @param string $subject
+	 * @param string $email
 	 */
 	public function __construct($template, $subject, $email)
 	{

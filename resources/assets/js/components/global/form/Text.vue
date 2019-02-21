@@ -25,10 +25,6 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
-
-</style>
-
 <script>
 import { formInput } from 'js/mixins/form-input';
 

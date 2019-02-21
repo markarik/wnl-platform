@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<wnl-text-overlay :isLoading="isLoading" :text="$t('lessonsAvailability.loader')"/>
+		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')"/>
 		<div class="open-all">
 			<div class="level">
 				{{ $t('lessonsAvailability.openAllLessons.annotation') }}

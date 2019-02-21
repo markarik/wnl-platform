@@ -1,13 +1,13 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-			:isVisible="isSidenavVisible"
-			:isDetached="!isSidenavMounted"
+			:is-visible="isSidenavVisible"
+			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside dashboard-sidenav">
 				<wnl-accordion
-						:dataSource="subjectTypeFilters"
+						:data-source="subjectTypeFilters"
 						:config="accordionConfig"
 						:loading="false"
 						@itemToggled="onItemToggled"
@@ -17,12 +17,12 @@
 				</div>
 				<wnl-moderators-autocomplete
 					class="margin"
-					:usersList="moderators"
+					:users-list="moderators"
 					@change="search"
 					:selected="autocompleteUser"
 				/>
 				<wnl-accordion
-					:dataSource="labelFilters"
+					:data-source="labelFilters"
 					:config="accordionConfigByLesson"
 					:loading="false"
 					@itemToggled="onTagSelect"
@@ -67,15 +67,15 @@
 				<wnl-moderators-feed
 					v-if="moderators.length > 0"
 					:moderators="moderators"
-					:closeDropdowns="bodyClicked"
+					:close-dropdowns="bodyClicked"
 					@changePage="fetchTasks"
 				/>
 			</div>
 		</div>
 		<wnl-sidenav-slot
-				:isVisible="isChatVisible"
-				:isDetached="!isChatMounted"
-				:hasChat="true"
+				:is-visible="isChatVisible"
+				:is-detached="!isChatMounted"
+				has-chat
 		>
 			<wnl-public-chat :rooms="chatRooms" title="USZANOWANKO"></wnl-public-chat>
 		</wnl-sidenav-slot>

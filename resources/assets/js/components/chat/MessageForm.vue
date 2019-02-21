@@ -2,17 +2,17 @@
 	<div class="wnl-chat-form">
 		<article class="media">
 			<figure class="media-left">
-				<wnl-avatar :fullName="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
+				<wnl-avatar :full-name="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
 			</figure>
 			<div class="media-content wnl-chat-form-wrapper">
 				<wnl-form
 					:id="formId"
 					class="chat-message-form"
-					hideDefaultSubmit="true"
+					hide-default-submit
 					name="ChatMessage"
 					method="post"
-					suppressEnter="false"
-					resourceRoute="qna_questions"
+					suppress-enter="false"
+					resource-route="qna_questions"
 				>
 					<wnl-quill
 						ref="editor"
@@ -21,7 +21,7 @@
 						:options="quillOptions"
 						:keyboard="keyboard"
 						:toolbar="toolbar"
-						:allowMentions="true"
+						allow-mentions
 						@input="onInput"
 					></wnl-quill>
 				</wnl-form>

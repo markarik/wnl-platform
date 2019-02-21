@@ -4,7 +4,7 @@
 			<div class="meta">
 				<div class="avatar meta-actor" @click="showModal">
 					<wnl-avatar :size="isMobile ? 'medium' : 'large'"
-						:fullName="message.actors.full_name"
+						:full-name="message.actors.full_name"
 						:url="message.actors.avatar">
 					</wnl-avatar>
 				</div>

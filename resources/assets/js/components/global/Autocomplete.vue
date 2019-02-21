@@ -15,7 +15,7 @@
 			:items="items"
 			:active-index="activeIndex"
 			@change="$emit('change', $event)"
-			:isDown="isDown"
+			:is-down="isDown"
 		>
 			<template slot-scope="slotProps">
 				<slot :item="slotProps.item"></slot>

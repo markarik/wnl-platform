@@ -13,8 +13,8 @@
 			:placeholder="placeholder"
 			:items="autocompleteTerms"
 			:disabled="disabled"
-			:isFocused="isFocused"
-			:isDown="isDown"
+			:is-focused="isFocused"
+			:is-down="isDown"
 			@blur="$emit('blur', $event)"
 			@change="onSelect"
 		>

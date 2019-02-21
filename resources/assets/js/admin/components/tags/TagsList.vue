@@ -1,9 +1,9 @@
 <template>
 	<div class="orders-list">
 		<wnl-paginated-sortable-table
-			:resourceName="'tags/.filter'"
+			:resource-name="'tags/.filter'"
 			:columns="columns"
-			:customRequestParams="{include: 'taggables_count'}"
+			:custom-request-params="{include: 'taggables_count'}"
 		>
 			<h3 slot="header" class="title">
 				Lista Tagów

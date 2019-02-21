@@ -11,9 +11,9 @@
 		<wnl-form class="margin vertical"
 			name="Settings"
 			method="put"
-			resourceRoute="users/current/settings"
-			populate="true"
-			hideDefaultSubmit="true"
+			resource-route="users/current/settings"
+			populate
+			hide-default-submit
 			@submitSuccess="onSubmitSuccess">
 			<template slot-scope="slotParams">
 				<!-- <wnl-form-check name="newsletter">Otrzymuj newsletter</wnl-form-check> -->

@@ -3,8 +3,8 @@
 		<div class="qna-answer">
 				<wnl-vote
 					type="up"
-					:reactableId="id"
-					:reactableResource="reactableResource"
+					:reactable-id="id"
+					:reactable-resource="reactableResource"
 					:state="upvoteState"
 					module="qna"
 				></wnl-vote>
@@ -15,7 +15,7 @@
 				<div class="qna-meta">
 					<div class="modal-activator" :class="{'author-forgotten': author.deleted_at}" @click="showModal">
 						<wnl-avatar class="avatar"
-								:fullName="author.full_name"
+								:full-name="author.full_name"
 								:url="author.avatar"
 								size="medium">
 						</wnl-avatar>
@@ -29,7 +29,7 @@
 					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
 							:target="deleteTarget"
-							:requestRoute="resourceRoute"
+							:request-route="resourceRoute"
 							@deleteSuccess="onDeleteSuccess"
 						></wnl-delete>
 					</span>
@@ -38,13 +38,13 @@
 		</div>
 		<div class="qna-answer-comments">
 			<wnl-comments-list
-				commentableResource="qna_answers"
-				urlParam="qna_answer"
+				commentable-resource="qna_answers"
+				url-param="qna_answer"
 				module="qna"
-				:readOnly="readOnly"
-				:commentableId="id"
-				:hideWatchlist="true"
-				:isUnique="false"
+				:read-only="readOnly"
+				:commentable-id="id"
+				hide-watchlist
+				:is-unique="false"
 			>
 			</wnl-comments-list>
 		</div>

@@ -12,10 +12,10 @@
 				</span>
 				<wnl-watch
 				v-if="!hideWatchlist"
-				:reactableId="commentableId"
-				:reactableResource="commentableResource"
+				:reactable-id="commentableId"
+				:reactable-resource="commentableResource"
 				:state="watchState"
-				:reactionsDisabled="false"
+				:reactions-disabled="false"
 				:module="module"
 				/>
 			</div>
@@ -34,9 +34,9 @@
 			<div class="form-container">
 				<transition name="fade">
 					<wnl-new-comment-form v-if="!readOnly"
-						:commentableResource="commentableResource"
-						:commentableId="commentableId"
-						:isUnique="isUnique"
+						:commentable-resource="commentableResource"
+						:commentable-id="commentableId"
+						:is-unique="isUnique"
 						@submitSuccess="onSubmitSuccess">
 					</wnl-new-comment-form>
 				</transition>

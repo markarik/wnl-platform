@@ -2,7 +2,7 @@
 	<div class="lessons">
 		<p class="title is-3">Edycja lekcji</p>
 		<div class="lessons-container">
-			<wnl-lesson-editor v-if="lessonId" :lessonId="lessonId"></wnl-lesson-editor>
+			<wnl-lesson-editor v-if="lessonId" :lesson-id="lessonId"></wnl-lesson-editor>
 			<wnl-lessons-list v-else></wnl-lessons-list>
 		</div>
 	</div>

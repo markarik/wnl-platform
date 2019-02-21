@@ -16,8 +16,8 @@
 			<wnl-message-link
 					v-for="(room, index) in roomsToShow"
 					:key="index"
-					:userId="getInterlocutor(room).user_id"
-					:roomId="room.id"
+					:user-id="getInterlocutor(room).user_id"
+					:room-id="room.id"
 					@navigate="onNavigate"
 					@beforeNavigate="onNavigateStart"
 					ref="messageLink"
@@ -25,8 +25,8 @@
 				<wnl-conversation-snippet
 					:key="index"
 					:room="room"
-					:bothNames="true"
-					:isActive="index === activeIndex"
+					both-names
+					:is-active="index === activeIndex"
 					:profile="getInterlocutor(room)"
 				/>
 			</wnl-message-link>

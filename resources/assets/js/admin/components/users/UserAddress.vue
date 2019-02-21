@@ -1,5 +1,5 @@
 <template>
-	<wnl-user-address :address="user.user_address" :resourceRoute="`users/${user.id}/address`" />
+	<wnl-user-address :address="user.user_address" :resource-route="`users/${user.id}/address`" />
 </template>
 
 <script>

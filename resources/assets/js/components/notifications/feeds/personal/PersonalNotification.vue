@@ -2,7 +2,7 @@
 	<div class="notification-wrapper">
 		<div class="avatar" @click.stop="showModal">
 			<wnl-avatar size="medium"
-				:fullName="message.actors.full_name"
+				:full-name="message.actors.full_name"
 				:url="message.actors.avatar">
 			</wnl-avatar>
 		</div>

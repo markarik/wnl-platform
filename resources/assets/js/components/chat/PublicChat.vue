@@ -19,17 +19,17 @@
 		<wnl-chat
 			:room="currentRoom"
 			:messages="messages"
-			:highlightedMessageId="highlightedMessageId"
-			:hasMore="hasMore"
-			:onScrollTop="pullMore"
+			:highlighted-message-id="highlightedMessageId"
+			:has-more="hasMore"
+			:on-scroll-top="pullMore"
 			:loaded="loaded"
 			ref="messagesList"
 		/>
 		<wnl-message-form
-			:roomId="currentRoom.id"
+			:room-id="currentRoom.id"
 			:room="currentRoom"
 			:loaded="loaded"
-			:messagePayload="{users: [currentUser]}"
+			:message-payload="{users: [currentUser]}"
 			@messageSent="onMessageSent"
 			@foundMentions="processMentions"
 		></wnl-message-form>

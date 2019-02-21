@@ -2,10 +2,10 @@
 	<div class="wnl-quiz-summary">
 		<wnl-quiz-stats></wnl-quiz-stats>
 		<wnl-quiz-list
-			:allQuestions="getQuestionsWithAnswersAndStats"
-			:getReaction="getReaction"
-			:isProcessing="isProcessing"
-			:isComplete="isComplete"
+			:all-questions="getQuestionsWithAnswersAndStats"
+			:get-reaction="getReaction"
+			:is-processing="isProcessing"
+			:is-complete="isComplete"
 			module="quiz"
 			@resetState="resetState"
 			@userEvent="proxyUserEvent"

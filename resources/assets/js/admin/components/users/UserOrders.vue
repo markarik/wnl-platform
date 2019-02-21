@@ -1,6 +1,6 @@
 <template>
 	<div v-if="user.orders.length">
-		<order v-for="(order, index) in user.orders" :orderInstance="order" :key="index">
+		<order v-for="(order, index) in user.orders" :order-instance="order" :key="index">
 			<span slot="order-tags" class="tag">{{$t('orders.tags.shipping.status')}}: {{translateShippingStatus(order)}}</span>
 		</order>
 	</div>

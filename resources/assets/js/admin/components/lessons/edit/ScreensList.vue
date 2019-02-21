@@ -14,8 +14,8 @@
 			:key="screen.id"
 			:index="index"
 			:screen="screen"
-			:isFirst="index === 0"
-			:isLast="index === screens.length - 1"
+			:is-first="index === 0"
+			:is-last="index === screens.length - 1"
 			@moveScreen="moveScreen"
 			@deleteScreen="deleteScreen">
 		</wnl-screens-list-item>

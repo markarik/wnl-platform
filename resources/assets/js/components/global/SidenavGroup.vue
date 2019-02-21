@@ -4,9 +4,9 @@
 			<div class="wnl-sidenav-group-toggle" @click="toggleNavigationGroup({groupIndex, isOpen: !isOpen})">
 				<wnl-sidenav-item
 					:item="item"
-					:hasSubitems="hasSubitems"
-					:toggleIcon="toggleIcon"
-					:isOpen="isOpen"
+					:has-subitems="hasSubitems"
+					:toggle-icon="toggleIcon"
+					:is-open="isOpen"
 				>
 					{{item.text}}
 					<span class="subitems-count" v-if="showSubitemsCount && hasSubitems">({{item.subitems.length}})</span>

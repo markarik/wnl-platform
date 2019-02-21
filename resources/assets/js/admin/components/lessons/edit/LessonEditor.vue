@@ -34,7 +34,7 @@
 				</div>
 			</div>
 		</form>
-		<wnl-screens-editor v-if="isEdit" :lessonId="lessonId"></wnl-screens-editor>
+		<wnl-screens-editor v-if="isEdit" :lesson-id="lessonId"></wnl-screens-editor>
 		<p v-else>Zapisz lekcję, żeby dodać do niej ekran</p>
 	</div>
 </template>

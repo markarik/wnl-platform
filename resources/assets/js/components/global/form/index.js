@@ -10,6 +10,7 @@ import Datepicker from './Datepicker';
 import Checkbox from './Checkbox';
 import Sortable from './Sortable';
 import Select from './Select';
+import Color from './Color';
 
 export {
 	Form,
@@ -24,4 +25,5 @@ export {
 	Checkbox,
 	Sortable,
 	Select,
+	Color,
 };

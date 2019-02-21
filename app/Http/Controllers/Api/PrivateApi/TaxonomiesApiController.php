@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Course\CreateTaxonomy;
 use App\Http\Requests\Course\UpdateTaxonomy;
 use App\Models\Taxonomy;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class TaxonomiesApiController extends ApiController {
 		$this->resourceName = config('papi.resources.taxonomies');
 	}
 
-	public function post(UpdateTaxonomy $request) {
+	public function post(CreateTaxonomy $request) {
 		$taxonomy = Taxonomy::create($request->all());
 
 		return $this->transformAndRespond($taxonomy);

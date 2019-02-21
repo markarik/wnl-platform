@@ -71,7 +71,7 @@ class SlidesFromCategory extends Command
 		if (!empty($category->parent_id)) {
 			$lessonsWithTag = Lesson::whereHas('tags', function($tag) use ($categoryTag) {
 				$tag->where('name', $categoryTag->name);
-			})->orderBy('order_number')->get();
+			})->get();
 
 
 			$this->attachLessonsSlidesToCategory($lessonsWithTag, $category);

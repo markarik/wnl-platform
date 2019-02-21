@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
+use App\Scopes\OrderByOrderNumberScope;
 use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,11 @@ class Screen extends Model implements WithTags
 		'content', 'type', 'name', 'meta', 'lesson_id',
 		'order_number', 'id', 'discussion_id', 'is_discussable'
 	];
+
+	protected static function boot() {
+		parent::boot();
+		static::addGlobalScope(new OrderByOrderNumberScope());
+	}
 
 	public function lesson()
 	{

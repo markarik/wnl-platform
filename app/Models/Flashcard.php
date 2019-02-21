@@ -20,7 +20,9 @@ class Flashcard extends Model implements WithTags
 			'flashcards_set_flashcard',
 			'flashcard_id',
 			'flashcard_set_id'
-		)->withPivot('order_number');
+		)
+			->withPivot('order_number')
+			->orderBy('pivot_order_number');
 	}
 
 	public function userFlashcardNotes()

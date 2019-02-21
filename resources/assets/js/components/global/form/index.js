@@ -9,6 +9,7 @@ import SlideIds from './SlideIds';
 import Datepicker from './Datepicker';
 import Checkbox from './Checkbox';
 import Sortable from './Sortable';
+import Select from './Select';
 import Color from './Color';
 
 export {
@@ -23,5 +24,6 @@ export {
 	Datepicker,
 	Checkbox,
 	Sortable,
-	Color
+	Select,
+	Color,
 };

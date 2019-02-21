@@ -4,14 +4,21 @@
 			<slot></slot>
 		</label>
 		<div class="control" :class="{'is-loading': isLoading}">
-			<input
-				class="input"
+			<select
+				class="select"
 				:class="{'is-danger': hasErrors}"
 				:name="name"
-				:placeholder="placeholder || $slots.default[0].text || ''"
 				:disabled="disabled"
 				@input="onInput"
-				v-model="inputValue">
+				v-model="inputValue"
+			>
+				<option
+					v-for="(option, key) in options"
+					:key="key"
+					:value="option.value"
+					v-text="option.text">
+				</option>
+			</select>
 		</div>
 
 		<template v-if="hasErrors">
@@ -29,24 +36,20 @@
 import { formInput } from 'js/mixins/form-input';
 
 export default {
-	name: 'TextInput',
 	props: {
 		name: {
 			type: String,
-		},
-		placeholder: {
-			type: String
+			required: true,
 		},
 		disabled: {
 			type: Boolean,
 			default: false
+		},
+		options: {
+			type: Array,
+			required: true,
 		}
 	},
 	mixins: [formInput],
-	computed: {
-		default() {
-			return '';
-		},
-	}
 };
 </script>

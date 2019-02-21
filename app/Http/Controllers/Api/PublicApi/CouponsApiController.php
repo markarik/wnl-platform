@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
+use App\Models\Coupon;
 
 class CouponsApiController extends ApiController
 {
@@ -13,7 +14,9 @@ class CouponsApiController extends ApiController
 
 	public function post(Request $request)
 	{
-		return $this->respondOk();
+		$coupon = new Coupon($request->coupon);
+		$coupon->save();
+		return $this->transformAndRespond($coupon);
 	}
 
 	public function put(Request $request)

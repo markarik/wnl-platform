@@ -16,6 +16,10 @@ class CouponObserver
 
 	public function created(Coupon $coupon)
 	{
+		if (empty(env('APP_COUPONS_SYNC_SOURCE'))) {
+			return;
+		}
+
 		if (empty($coupon->studyBuddy)) {
 			// TODO sync the coupon with other platform
 			$headers = [

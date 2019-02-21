@@ -2,10 +2,8 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class QueueJobFailed extends Notification
 {
@@ -45,7 +43,7 @@ class QueueJobFailed extends Notification
 	/**
 	 * Send notification to slack channel
 	 *
-	 * @param $notifiable
+	 * @param mixed $notifiable
 	 *
 	 * @return SlackMessage
 	 */

@@ -120,7 +120,7 @@ class UserLessonApiController extends ApiController
 
 		$csvData = $userLessons
 			->sortBy('start_date')
-			->map(function($userLesson) use ($user) {
+			->map(function($userLesson) {
 				return [
 					"name" => $userLesson->lesson->name,
 					"start_date" => $userLesson->start_date->format('m/d/Y')

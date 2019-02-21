@@ -46,7 +46,7 @@ class RedisRestoreKeys extends Command
 		$path = 'import/' . $filename . '.json';
 		$redis = Redis::connection($db);
 
-		$keys = json_decode(\Storage::get($path), true);
+		$keys = json_decode(\Storage::drive()->get($path), true);
 		$keyCount = count($keys);
 		$this->info("Restore {$keyCount} keys from {$path} to {$db} database?");
 

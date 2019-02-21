@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Events\Event;
 use App\Models\Lesson;
 use App\Notifications\Media\DatabaseTaskChannel;
 use App\Notifications\Media\LiveChannel;
@@ -26,9 +27,9 @@ class EventTaskNotification extends Notification
 	/**
 	 * Create a new notification instance.
 	 *
-	 * @param $event
-	 * @param $channel
-	 * @param $team
+	 * @param Event $event
+	 * @param string $channel
+	 * @param string $team
 	 */
 	public function __construct($event, $channel, $team)
 	{
@@ -51,6 +52,9 @@ class EventTaskNotification extends Notification
 		return [LiveChannel::class, DatabaseTaskChannel::class];
 	}
 
+	/**
+	 * @return array|Channel
+	 */
 	public function broadcastOn()
 	{
 		return new Channel($this->channel);

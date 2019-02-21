@@ -7,6 +7,7 @@ use App\Models\Reactable;
 use App\Models\Reaction;
 use App\Models\User;
 use Auth;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Collection;
 
@@ -67,7 +68,9 @@ class UserReactionsApiController extends ApiController
 
 		$grouped = $reactables->groupBy('reactable_type');
 
+		/** @var string|Model $key */
 		foreach ($grouped as $key => $item) {
+			/** @var \Illuminate\Support\Collection $item */
 			$grouped->{$key} = $item->keyBy('reactable_id');
 
 			$models = $key::with(['tags'])

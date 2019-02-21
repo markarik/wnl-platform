@@ -56,6 +56,7 @@ class IssueFinalInvoice extends Command
 
 			$this->dispatch(new IssueFinalAndSend($order));
 		} else {
+			/** @var Order[] $orders */
 			$orders = Order::with(['product'])
 				->whereDoesntHave('invoices', function ($query) {
 					$query

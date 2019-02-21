@@ -23,7 +23,7 @@ class PresentablesApiController extends ApiController
 			->where('order_number', $orderNumber)
 			->get();
 
-		if (!$presentable) {
+		if ($presentable->count() === 0) {
 			return $this->respondNotFound();
 		}
 
@@ -37,7 +37,6 @@ class PresentablesApiController extends ApiController
 		$presentables = Presentable::where('presentable_type', $presentableType)
 			->where('presentable_id', $presentableId)
 			->join('slides', 'presentables.slide_id', '=', 'slides.id')
-			->orderBy('presentables.order_number')
 			->get();
 
 		return $this->transformAndRespond($presentables);

@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
 		$schedule
 			->command("scout:import 'App\\Models\\Slide'")
 			->dailyAt('00:30')
-			->after(function () use ($schedule) {
+			->after(function () {
 				Artisan::call('cache:clear', [
 					'--tags' => 'courses',
 				]);

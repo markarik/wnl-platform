@@ -20,6 +20,7 @@ use App\Models\Tag;
 use Artisan;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use League\Fractal\Resource\Item;
 use Lib\SlideParser\Parser;
 
@@ -95,7 +96,7 @@ class SlidesApiController extends ApiController
 
 		if (!App::environment('dev')) {
 			\Artisan::call('screens:countSlides');
-			dispatch(new SearchImportAll('App\\Models\\Slide'));
+			dispatch(new SearchImportAll(App\Models\Slide::class));
 		}
 
 		$this->slideCacheForget($slide);
@@ -126,8 +127,10 @@ class SlidesApiController extends ApiController
 		$slide = Slide::find($slideId);
 
 		// Get all presentables
+		/** @var Presentable[]|Collection $presentables */
 		$presentables = Presentable::where('slide_id', $slideId)->get();
 
+		/** @var App\Models\Contracts\WithSlides[] $presentablesInstances */
 		$presentablesInstances = $presentables->map(function($presentable) {
 			return $presentable->presentable_type::find($presentable->presentable_id);
 		});
@@ -148,7 +151,7 @@ class SlidesApiController extends ApiController
 		$slide->delete();
 
 		if (!App::environment('dev')) {
-			dispatch(new SearchImportAll('App\\Models\\Slide'));
+			dispatch(new SearchImportAll(App\Models\Slide::class));
 			\Artisan::call('screens:countSlides');
 		}
 

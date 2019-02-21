@@ -7,6 +7,7 @@ use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\ChatRoomUser;
 use Auth;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class ChatRoomsApiController extends ApiController
@@ -28,6 +29,7 @@ class ChatRoomsApiController extends ApiController
 			'max(chat_messages.time) as last_message_time',
 		];
 
+		/** @var Builder $rooms */
 		$rooms = ChatRoom::with('users.profile')
 			->select(\DB::raw(implode(',', $select)))
 			->join(

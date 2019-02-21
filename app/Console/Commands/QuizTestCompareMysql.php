@@ -37,8 +37,8 @@ class QuizTestCompareMysql extends Command
      */
     public function handle()
     {
-		$byProfile = json_decode(\Storage::get("quiz_test_dump_mysql_before.json"), true);
-		$byUser = json_decode(\Storage::get("quiz_test_dump_mysql_after.json"), true);
+		$byProfile = json_decode(\Storage::drive()->get("quiz_test_dump_mysql_before.json"), true);
+		$byUser = json_decode(\Storage::drive()->get("quiz_test_dump_mysql_after.json"), true);
 
 		foreach ($byProfile as $id => $count) {
 			if ($count !== $byUser[$id]) {

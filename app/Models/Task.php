@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Contracts\WithReactions;
+use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 
-class Task extends Model
+class Task extends Model implements WithReactions, WithTags
 {
 	protected $fillable = [
 		'id',

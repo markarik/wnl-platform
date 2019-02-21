@@ -44,11 +44,10 @@ class CategoriesTags extends Command
 	 */
 	public function handle()
 	{
+		/** @var Category[] $allCategories */
 		$allCategories = Category::all();
 
 		foreach ($allCategories as $category) {
-			$qnasWithTag = [];
-
 			if (!empty($category->parent_id)) {
 				$createdTag = Tag::firstOrCreate(['name' => $category->name]);
 

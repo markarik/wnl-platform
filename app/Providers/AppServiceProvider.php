@@ -105,6 +105,7 @@ class AppServiceProvider extends ServiceProvider
 		Models\Slide::observe(Observers\SlideObserver::class);
 		Models\Task::observe(Observers\TaskObserver::class);
 		Models\UserProfile::observe(Observers\UserProfileObserver::class);
+		Models\Coupon::observe(Observers\CouponObserver::class);
 	}
 
 	protected function registerCustomValidators()

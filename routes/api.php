@@ -14,8 +14,12 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['namespace' => 'Api\PublicApi'], function () {
+	$r = config('papi.resources');
 
 	// Products
 	Route::get('products/availability', 'ProductsApiController@getAvailability');
+
+	Route::post("{$r['coupons']}", 'CouponsApiController@post');
+	Route::put("{$r['coupons']}/{id}", 'CouponsApiController@put');
 
 });

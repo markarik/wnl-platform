@@ -127,7 +127,7 @@ class PersonalDataController extends Controller
 	protected function generateStudyBuddy($order)
 	{
 		$expires = Carbon::now()->addYears(1);
-		$coupon = Coupon::create([
+		$coupon = new Coupon([
 			'name'         => 'Study Buddy',
 			'type'         => 'amount',
 			'value'        => 100,
@@ -136,13 +136,14 @@ class PersonalDataController extends Controller
 			'times_usable' => 0,
 		]);
 
-		$coupon->products()->attach(
-			Product::whereIn('slug', ['wnl-online', 'wnl-online-onsite'])->get()
-		);
-
 		$order->studyBuddy()->create([
 			'code' => $coupon->code,
 		]);
+
+		$coupon->save();
+		$coupon->products()->attach(
+			Product::whereIn('slug', ['wnl-online', 'wnl-online-onsite'])->get()
+		);
 	}
 
 	protected function createAccount($request)

@@ -50,13 +50,13 @@
 <script>
 import { mapGetters, mapActions, mapState } from 'vuex';
 
-import { Form as WnlForm, Check as WnlCheck, Select as WnlFormSelect } from 'js/components/global/form';
+import { Form as WnlForm, Check as WnlFormCheck, Select as WnlFormSelect } from 'js/components/global/form';
 import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 export default {
 	components: {
 		WnlForm,
-		WnlCheck,
+		WnlFormCheck,
 		WnlFormSelect,
 	},
 	data() {

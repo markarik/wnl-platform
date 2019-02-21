@@ -64,27 +64,27 @@
 					<div class="top-activities" v-if="ifAnyQuestions || ifAnyAnswers">
 						<wnl-qna
 						:is-user-profile-class="isUserProfileClass"
-						:numbers-disabled="true"
+						numbers-disabled
 						:title="$t('user.userProfile.bestQuestions')"
 						:icon="iconForQuestions"
 						v-if="!isLoading && ifAnyQuestions"
 						:sorting-enabled="false"
-						:read-only="true"
-						:reactions-disabled="true"
+						read-only
+						reactions-disabled
 						:passed-questions="sortedQuestions"
-						:show-context="true"
+						show-context
 						></wnl-qna>
 						<wnl-qna
 						:is-user-profile-class="isUserProfileClass"
-						:numbers-disabled="true"
+						numbers-disabled
 						:icon="iconForAnswers"
 						:title="$t('user.userProfile.bestAnswers')"
 						v-if="!isLoading && ifAnyAnswers"
 						:sorting-enabled="false"
-						:read-only="true"
-						:reactions-disabled="true"
+						read-only
+						reactions-disabled
 						:passed-questions="sortedQuestionsForAnswers"
-						:show-context="true"
+						show-context
 						:config="qnaConfig"
 						></wnl-qna>
 					</div>

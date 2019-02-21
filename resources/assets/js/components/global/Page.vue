@@ -3,7 +3,7 @@
 		<div class="page content" v-html="content"></div>
 		<wnl-qna
 			:context-tags="tags"
-			:reactions-disabled="true"
+			reactions-disabled
 			:discussion-id="discussion_id"
 			v-if="qna"/>
 	</div>

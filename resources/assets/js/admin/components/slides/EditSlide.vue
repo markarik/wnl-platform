@@ -4,7 +4,7 @@
 		:screen-id="Number(screenId) || 0"
 		:resource-url="resourceUrl"
 		:excluded="['snippet']"
-		:remove="true"
+		remove
 		@resetSearchInputs="resetSearchInputs"
 	>
 		<wnl-slides-search

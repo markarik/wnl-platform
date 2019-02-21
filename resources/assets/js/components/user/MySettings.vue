@@ -12,8 +12,8 @@
 			name="Settings"
 			method="put"
 			resource-route="users/current/settings"
-			populate="true"
-			hide-default-submit="true"
+			populate
+			hide-default-submit
 			@submitSuccess="onSubmitSuccess">
 			<template slot-scope="slotParams">
 				<!-- <wnl-form-check name="newsletter">Otrzymuj newsletter</wnl-form-check> -->

@@ -3,7 +3,7 @@
 		<wnl-sidenav-slot
 			:is-visible="isSidenavVisible"
 			:is-detached="!isSidenavMounted"
-			:is-max-width="true"
+			is-max-width
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside rooms-sidenav">

@@ -43,7 +43,7 @@
 									<i class="fa fa-hourglass-1"></i>
 								</span>
 							</label>
-							<wnl-datepicker :with-border="true" v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
+							<wnl-datepicker with-border v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
 							<p class="tip">
 								{{$t('questions.plan.tips.startDate')}}
 							</p>
@@ -55,7 +55,7 @@
 									<i class="fa fa-hourglass-3"></i>
 								</span>
 							</label>
-							<wnl-datepicker :with-border="true" v-model="endDate" :config="endDateConfig" @onChange="onEndDateChange"/>
+							<wnl-datepicker with-border v-model="endDate" :config="endDateConfig" @onChange="onEndDateChange"/>
 							<p class="tip">
 								{{$t('questions.plan.tips.endDate')}}
 							</p>
@@ -141,7 +141,7 @@
 		<wnl-sidenav-slot
 			:is-detached="!isChatMounted"
 			:is-visible="isLargeDesktop || isChatVisible"
-			:has-chat="true"
+			has-chat
 		>
 			<wnl-questions-filters
 				v-show="showPlanner && selectedOption === 'custom'"

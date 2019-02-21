@@ -4,7 +4,7 @@
 			:method="method"
 			:resource-route="resourceRoute"
 			:populate="isEdit"
-			:hide-default-submit="true"
+			hide-default-submit
 			@change="onChange"
 			@submitSuccess="onSubmitSuccess"
 			name="TagEditor"

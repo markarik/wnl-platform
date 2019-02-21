@@ -3,7 +3,7 @@
 		:before-submit="beforeSubmit"
 		:resource-route="resourceRoute"
 		@submitSuccess="onSubmitSuccess"
-		hide-default-submit="true"
+		hide-default-submit
 		name="TaggableMover"
 		method="post"
 	>

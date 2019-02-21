@@ -95,7 +95,7 @@
 						:module="module"
 						:question="question"
 						:read-only="showListResults"
-						:hide-comments="true"
+						hide-comments
 						:key="`question-${question.id}`"
 						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
 						@userEvent="proxyUserEvent"

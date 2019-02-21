@@ -3,10 +3,10 @@
 		<wnl-form
 			:attach="attach"
 			class="chat-message-form"
-			hide-default-submit="true"
+			hide-default-submit
 			name="QuizQuestionEditor"
 			:method="formMethod"
-			:suppress-enter="true"
+			suppress-enter
 			:resource-route="formResourceRoute"
 			@submitSuccess="onSubmitSuccess"
 			ref="quizQuestionForm"

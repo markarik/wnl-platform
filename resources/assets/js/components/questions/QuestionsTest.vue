@@ -81,7 +81,7 @@
 			:get-reaction="getReaction"
 			:is-complete="isComplete"
 			:is-processing="testProcessing"
-			:plain-list="true"
+			plain-list
 			@selectAnswer="selectAnswer"
 			@userEvent="onUserEvent"
 		>

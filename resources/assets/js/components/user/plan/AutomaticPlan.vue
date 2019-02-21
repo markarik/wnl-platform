@@ -77,7 +77,7 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:with-border="true"
+								with-border
 								v-model="startDate"
 								:config="startDateConfigWithMin"
 								@onChange="onPresetStartDateChange"/>
@@ -104,7 +104,7 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:with-border="true"
+								with-border
 								v-model="startDate"
 								:config="startDateConfigWithMin"
 								@onChange="onPresetStartDateChange"/>
@@ -122,7 +122,7 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:with-border="true"
+								with-border
 								v-model="endDate"
 								:config="endDateConfig"
 								@onChange="onEndDateChange"/>

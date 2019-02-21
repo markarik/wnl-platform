@@ -19,7 +19,7 @@
 		<wnl-message-form
 			:room="room"
 			:message-payload="{users}"
-			:autofocus-on-room-change="true"
+			autofocus-on-room-change
 			@messageSent="onMessageSent"
 		/>
 	</div>

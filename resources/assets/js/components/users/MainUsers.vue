@@ -14,7 +14,7 @@
 			</router-view>
 		</div>
 		<wnl-sidenav-slot class="full-width-sidenav-slot scrollable-container" v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
-			:is-visible="true"
+			is-visible
 			:is-detached="false"
 		>
 			<wnl-user-about v-if="profile" :profile="profile"></wnl-user-about>

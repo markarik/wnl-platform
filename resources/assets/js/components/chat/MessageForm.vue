@@ -8,7 +8,7 @@
 				<wnl-form
 					:id="formId"
 					class="chat-message-form"
-					hide-default-submit="true"
+					hide-default-submit
 					name="ChatMessage"
 					method="post"
 					suppress-enter="false"
@@ -21,7 +21,7 @@
 						:options="quillOptions"
 						:keyboard="keyboard"
 						:toolbar="toolbar"
-						:allow-mentions="true"
+						allow-mentions
 						@input="onInput"
 					></wnl-quill>
 				</wnl-form>

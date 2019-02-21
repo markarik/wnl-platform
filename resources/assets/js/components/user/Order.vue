@@ -229,7 +229,7 @@
 									name="CouponCode"
 									method="put"
 									:resource-route="couponUrl"
-									hide-default-submit="true"
+									hide-default-submit
 									@submitSuccess="couponSubmitSuccess">
 							<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
 							<wnl-submit>Wykorzystaj kod</wnl-submit>

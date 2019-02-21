@@ -119,6 +119,7 @@ namespace App\Models{
  * @property string $text
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Annotation $annotation
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Keyword newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Keyword newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Keyword query()
@@ -140,11 +141,13 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $description
+ * @property string|null $color
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TagsTaxonomy[] $tagsTaxonomy
  * @property-read \Kalnoy\Nestedset\Collection|\App\Models\TaxonomyTerm[] $taxonomyTerms
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy whereColor($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Taxonomy whereId($value)
@@ -814,6 +817,7 @@ namespace App\Models{
  * @property-read mixed $subscription_dates
  * @property-read mixed $subscription_status
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lesson[] $lessonsAvailability
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lesson[] $lessonsAvailabilityUnordered
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
  * @property-read \App\Models\UserPersonalData $personalData
@@ -874,6 +878,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Kalnoy\Nestedset\Collection|\App\Models\CourseStructureNode[] $children
+ * @property-read \App\Models\Course $course
  * @property-read \App\Models\CourseStructureNode|null $parent
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $structurable
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CourseStructureNode d()
@@ -950,14 +955,14 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $name
- * @property int $group_id
+ * @property int|null $group_id
  * @property int $order_number
  * @property int $is_required
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\FlashcardsSet $flashcardsSets
  * @property-read mixed $questions
- * @property-read \App\Models\Group $group
+ * @property-read \App\Models\Group|null $group
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Screen[] $screens
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lesson newModelQuery()
@@ -1014,7 +1019,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Page $page
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QnaQuestion[] $questions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QnaQuestion[] $qnaQuestions
  * @property-read \App\Models\Screen $screen
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Discussion newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Discussion newQuery()
@@ -1044,25 +1049,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LessonUserAccess whereUserId($value)
  */
 	class LessonUserAccess extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\TaxonomyTermable
- *
- * @property int $id
- * @property int $taxonomy_term_id
- * @property int $taxonomy_termable_id
- * @property string $taxonomy_termable_type
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable whereTaxonomyTermId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable whereTaxonomyTermableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TaxonomyTermable whereTaxonomyTermableType($value)
- */
-	class TaxonomyTermable extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -1152,10 +1138,10 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property int $discussion_id
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QnaAnswer[] $answers
  * @property-read \App\Models\Discussion $discussion
  * @property-read mixed $page
  * @property-read mixed $screen
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QnaAnswer[] $qnaAnswers
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reaction[] $reactions
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags
  * @property-read \App\Models\User $user
@@ -1458,6 +1444,7 @@ namespace App\Models{
  * @property string $slug
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Kalnoy\Nestedset\Collection|\App\Models\CourseStructureNode[] $courseStructureNodes
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Group[] $groups
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course newQuery()
@@ -1737,8 +1724,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuizAnswer[] $answers
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuizAnswer[] $quizAnswers
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reaction[] $reactions
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuizSet[] $sets
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Slide[] $slides

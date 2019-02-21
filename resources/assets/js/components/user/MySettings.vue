@@ -87,7 +87,9 @@ export default {
 		},
 	},
 	mounted() {
-		this.fetchTaxonomies();
+		if (this.isAdmin) {
+			this.fetchTaxonomies();
+		}
 	},
 };
 </script>

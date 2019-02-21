@@ -7,7 +7,6 @@ use App\Models\Role;
 use App\Models\UserQuizResults;
 use Illuminate\Console\Command;
 use App\Models\User;
-use Maatwebsite\Excel\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Rap2hpoutre\FastExcel\SheetCollection;
 use Storage;
@@ -80,7 +79,6 @@ class ExportUserStatistics extends Command
 						'Imię'                         => $user->first_name,
 						'Nazwisko'                     => $user->last_name,
 						'Czas spędzony na platformie'  => $userRecord['time'],
-						'Procent ukończonych lekcji'   => $userRecord['userCourseProgressPercentage'],
 						'Procent przerobionych sekcji' => $userRecord['userSectionsProgressPercentage'],
 						'Rozwiązanych pytań'           => $userRecord['userQuizQuestionsSolved'],
 						'Produkty'                     => $userRecord['products']->implode(' | '),
@@ -130,7 +128,6 @@ class ExportUserStatistics extends Command
 			->whereDoesntHave('roles', function ($query) {
 				$query->whereIn('name', [Role::ROLE_ADMIN, Role::ROLE_MODERATOR, Role::ROLE_TEST]);
 			})
-			->limit(12)
 			->get();
 
 		$bar = $this->output->createProgressBar($users->count());
@@ -138,23 +135,22 @@ class ExportUserStatistics extends Command
 		foreach ($users as $user) {
 			$userRecord['user'] = $user;
 			$courseProgressStats = $user->getCourseProgressStats($minDate, $maxDate);
-			$userRecord['userCourseProgressPercentage'] = $courseProgressStats['course_progress_perc'];
 			$userRecord['userQuizQuestionsSolved'] = $courseProgressStats['quiz_questions_solved'];
 			$userRecord['userSectionsProgressPercentage'] = $courseProgressStats['sections_progress_perc'];
 			$userRecord['products'] = $user->orders()->where('paid', 1)->pluck('product_id')->unique();
 			$userRecord['time'] = $courseProgressStats['time'];
 
-			$newUser = $userRecord['products']->containsStrict(function ($productId) use ($oldProducts) {
-				return !in_array($productId, $oldProducts);
+			$newUser = !$userRecord['products']->contains(function ($productId) use ($oldProducts) {
+				return in_array($productId, $oldProducts);
 			});
 
 			$G1 =
-				$userRecord['userCourseProgressPercentage'] >= 80 &&
+				$userRecord['userSectionsProgressPercentage'] >= 80 &&
 				$userRecord['userQuizQuestionsSolved'] >= 1700 &&
 				$userRecord['time'] >= 240;
 
 			$G2 =
-				$userRecord['userCourseProgressPercentage'] >= 80 &&
+				$userRecord['userSectionsProgressPercentage'] >= 80 &&
 				$userRecord['time'] >= 240;
 
 			$G3 =
@@ -162,7 +158,7 @@ class ExportUserStatistics extends Command
 				$userRecord['time'] >= 240;
 
 			$G4 =
-				$userRecord['userCourseProgressPercentage'] >= 20 &&
+				$userRecord['userSectionsProgressPercentage'] >= 20 &&
 				$userRecord['userQuizQuestionsSolved'] >= 1700 &&
 				$userRecord['time'] >= 100;
 

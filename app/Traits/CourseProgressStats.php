@@ -29,21 +29,21 @@ trait CourseProgressStats {
 
 		if ($t) dump('timeCollection', microtime(true) - $start);
 
-		$userCourseProgress = UserCourseProgress::where('user_id', $this->profile->id)
-			->whereDate('user_course_progress.created_at', '<=', $endDate)
-			->join('lessons', 'lessons.id', '=', 'lesson_id')
-			->where('lessons.is_required', 1)
-			->whereNull('user_course_progress.section_id')
-			->whereNull('user_course_progress.screen_id')
-			->where('user_course_progress.status', 'complete')
-			->count();
-
-		$userCourseProgressPercentage = (int)round(($userCourseProgress / $allLessons) * 100);
+//		$userCourseProgress = UserCourseProgress::where('user_id', $this->profile->id)
+//			->whereDate('user_course_progress.created_at', '<=', $endDate)
+//			->join('lessons', 'lessons.id', '=', 'lesson_id')
+//			->where('lessons.is_required', 1)
+//			->whereNull('user_course_progress.section_id')
+//			->whereNull('user_course_progress.screen_id')
+//			->where('user_course_progress.status', 'complete')
+//			->count();
+//
+//		$userCourseProgressPercentage = (int)round(($userCourseProgress / $allLessons) * 100);
 
 		if ($t) dump('userCourseProgress', microtime(true) - $start);
 
-		$userQuizQuestionsSolved = UserQuizResults::where('user_id', $this->id)
-			->groupBy('quiz_question_id')
+		$userQuizQuestionsSolved = UserQuizResults::selectRaw('distinct(quiz_question_id)')
+			->where('user_id', $this->id)
 			->count();
 
 		if ($t) dump('quizQuestionsSolved', microtime(true) - $start);
@@ -77,7 +77,7 @@ trait CourseProgressStats {
 
 		return [
 			'quiz_questions_solved' => $userQuizQuestionsSolved,
-			'course_progress_perc' => $userCourseProgressPercentage,
+//			'course_progress_perc' => $userCourseProgressPercentage,
 			'sections_progress_perc' => $userSectionsProgressPercentage,
 			'time' => $userTime
 		];

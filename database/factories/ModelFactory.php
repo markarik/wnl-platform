@@ -21,6 +21,7 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 		'address'    => $faker->address,
 		'zip'        => $faker->postcode,
 		'city'       => $faker->city,
+		'consent_terms' => 1
 	];
 });
 

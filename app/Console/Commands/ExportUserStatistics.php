@@ -10,7 +10,6 @@ use App\Models\User;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Rap2hpoutre\FastExcel\SheetCollection;
 use Illuminate\Support\Collection;
-use Storage;
 
 class ExportUserStatistics extends Command
 {
@@ -76,13 +75,14 @@ class ExportUserStatistics extends Command
 				return $group->map(function ($userRecord) {
 					$user = $userRecord['user'];
 					return [
-						'Id'                           => $user->id,
-						'Imię'                         => $user->first_name,
-						'Nazwisko'                     => $user->last_name,
-						'Czas spędzony na platformie'  => $userRecord['time'],
-						'Procent przerobionych sekcji' => $userRecord['userSectionsProgressPercentage'],
-						'Rozwiązanych pytań'           => $userRecord['userQuizQuestionsSolved'],
-						'Produkty'                     => $userRecord['products']->implode(' | '),
+						'Id'                             => $user->id,
+						'Imię'                           => $user->first_name,
+						'Nazwisko'                       => $user->last_name,
+						'Czas spędzony na platformie'    => $userRecord['time'],
+						'Procent przerobionych sekcji'   => $userRecord['userSectionsProgressPercentage'],
+						'Rozwiązanych pytań zamkniętych' => $userRecord['userQuizQuestionsSolved'],
+						'Rozwiązanych pytań otwartych'   => $userRecord['userFlashcardsSolved'],
+						'Produkty'                       => $userRecord['products']->implode(' | '),
 					];
 				});
 			});
@@ -138,6 +138,7 @@ class ExportUserStatistics extends Command
 			$userRecord['user'] = $user;
 			$courseProgressStats = $user->getCourseProgressStats($minDate, $maxDate);
 			$userRecord['userQuizQuestionsSolved'] = $courseProgressStats['quiz_questions_solved'];
+			$userRecord['userFlashcardsSolved'] = $courseProgressStats['flashcards_solved'];
 			$userRecord['userSectionsProgressPercentage'] = $courseProgressStats['sections_progress_perc'];
 			$userRecord['products'] = $user->orders()->where('paid', 1)->pluck('product_id')->unique();
 			$userRecord['time'] = $courseProgressStats['time'];
@@ -161,21 +162,21 @@ class ExportUserStatistics extends Command
 
 			$G4 =
 				$userRecord['userSectionsProgressPercentage'] >= 20 &&
-				$userRecord['userQuizQuestionsSolved'] >= 1700 &&
+				$userRecord['userQuizQuestionsSolved'] >= 300 &&
 				$userRecord['time'] >= 100;
 
 			$userClassification = [
 				'N-G1' => $newUser && $G1,
 				'N-G2' => $newUser && ($G1 || $G2),
-				'N-G3' => $newUser && !$G1 && $G3,
-				'N-G4' => $newUser && !$G1 && $G4,
-				'N-G5' => $newUser && !$G1 && !$G4,
+				'N-G3' => $newUser && ($G1 || $G3),
+				'N-G4' => $newUser && !$G1 && !$G2 && !$G3 && $G4,
+				'N-G5' => $newUser && !$G1 && !$G2 && !$G3 && !$G4,
 
 				'P-G1' => !$newUser && $G1,
 				'P-G2' => !$newUser && ($G1 || $G2),
-				'P-G3' => !$newUser && !$G1 && $G3,
-				'P-G4' => !$newUser && !$G1 && $G4,
-				'P-G5' => !$newUser && !$G1 && !$G4,
+				'P-G3' => !$newUser && ($G1 || $G3),
+				'P-G4' => !$newUser && !$G1 && !$G2 && !$G3 && $G4,
+				'P-G5' => !$newUser && !$G1 && !$G2 && !$G3 && !$G4,
 
 				'N-KORELACJE' => $newUser,
 				'P-KORELACJE' => !$newUser,

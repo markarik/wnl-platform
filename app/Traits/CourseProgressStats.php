@@ -2,10 +2,12 @@
 
 namespace App\Traits;
 
+use App\Models\Flashcard;
 use App\Models\Lesson;
 use App\Models\QuizQuestion;
 use App\Models\Section;
 use App\Models\UserCourseProgress;
+use App\Models\UserFlashcardsResults;
 use App\Models\UserQuizResults;
 
 trait CourseProgressStats {
@@ -20,7 +22,6 @@ trait CourseProgressStats {
 
 		if ($t) dump('allLessons', microtime(true) - $start);
 
-
 		$timeCollection = $this->userTime()
 			->whereBetween('created_at', [$startDate, $endDate])
 			->orderBy('id', 'desc')
@@ -28,19 +29,6 @@ trait CourseProgressStats {
 		$userTime = (int)round(($timeCollection->max('time') - $timeCollection->min('time')) / 60);
 
 		if ($t) dump('timeCollection', microtime(true) - $start);
-
-//		$userCourseProgress = UserCourseProgress::where('user_id', $this->profile->id)
-//			->whereDate('user_course_progress.created_at', '<=', $endDate)
-//			->join('lessons', 'lessons.id', '=', 'lesson_id')
-//			->where('lessons.is_required', 1)
-//			->whereNull('user_course_progress.section_id')
-//			->whereNull('user_course_progress.screen_id')
-//			->where('user_course_progress.status', 'complete')
-//			->count();
-//
-//		$userCourseProgressPercentage = (int)round(($userCourseProgress / $allLessons) * 100);
-
-		if ($t) dump('userCourseProgress', microtime(true) - $start);
 
 		$userQuizQuestionsSolved = UserQuizResults
 			::selectRaw('count(distinct(quiz_question_id)) as count')
@@ -72,6 +60,14 @@ trait CourseProgressStats {
 
 		if ($t) dump('allSections', microtime(true) - $start);
 
+		$userFlashcardsSolved = UserFlashcardsResults
+			::selectRaw('count(distinct(flashcard_id)) as count')
+			->where('user_id', $this->id)
+			->first()
+			->count;
+
+		if ($t) dump('userFlashcardsSolved', microtime(true) - $start);
+
 		$end = microtime(true) - $start;
 //		if ($end > 0.4) {
 //			dump("User {$this->id} is slow, time {$end}");
@@ -79,7 +75,7 @@ trait CourseProgressStats {
 
 		return [
 			'quiz_questions_solved' => $userQuizQuestionsSolved,
-//			'course_progress_perc' => $userCourseProgressPercentage,
+			'flashcards_solved' => $userFlashcardsSolved,
 			'sections_progress_perc' => $userSectionsProgressPercentage,
 			'time' => $userTime
 		];

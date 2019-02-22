@@ -18,7 +18,7 @@ class ScrapeLdekQuizQuestions extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'quiz:scrape-ldek-quiz-questions';
+	protected $signature = 'quiz:scrape-ldek-quiz-questions {login} {password}';
 
 	/**
 	 * The console command description.
@@ -112,8 +112,8 @@ class ScrapeLdekQuizQuestions extends Command
 
 
 		$examCreationFormResponse = $this->httpClient->post('http://egzaminldek.pl/login/', ['form_params' =>  [
-			'username' => 'modrzas',
-			'password'=> '',
+			'username' => $this->argument('login'),
+			'password'=> $this->argument('password'),
 			'csrfmiddlewaretoken' => $parsedCookie->getValue(),
 		]]);
 

@@ -36,7 +36,7 @@ class P24ChooseBank extends BasePage
 	public function elements()
 	{
 		return [
-			'@ing-logo'        => '.bank-logo-112',
+			'@ing-logo'        => 'a[data-search="Płać z ING 112"]',
 			'@accept-tou'      => 'button[id="reagulation-accept-button"]',
 			'@login-button'    => 'button[type="submit"]',
 			'@confirm-payment' => '#pay_by_link_pay',

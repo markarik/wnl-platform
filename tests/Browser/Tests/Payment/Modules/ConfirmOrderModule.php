@@ -67,7 +67,7 @@ class ConfirmOrderModule
 		if ($method === 'online') {
 			$browser
 				->press('#p24-submit-full-payment')
-				->waitForText('Wybierz formę płatności', 300);
+				->waitFor('a[data-search="Płać z ING 112"]', 100);
 		}
 	}
 

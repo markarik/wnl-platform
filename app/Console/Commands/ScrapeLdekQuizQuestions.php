@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\QuizQuestion;
+use App\Models\Tag;
+use App\Models\Taxonomy;
+use App\Models\TaxonomyTerm;
 use Illuminate\Console\Command;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -49,8 +52,10 @@ class ScrapeLdekQuizQuestions extends Command
 			'C' => 2,
 			'D' => 3,
 			'E' => 4,
-			'?' => null
 		];
+
+		$cemTaxonomy = Taxonomy::firstOrCreate(['name' => 'Klasyfikacja CEM']);
+		$examTaxonomy = Taxonomy::firstOrCreate(['name' => 'Egzaminy']);
 
 		$bar = $this->output->createProgressBar(count($questions));
 
@@ -65,15 +70,33 @@ class ScrapeLdekQuizQuestions extends Command
 			$answersText = $questionCrawler->filter('.radio .question-and-answear')->each(function (Crawler $node) {
 					return $node->text();
 				});
+			$tagsText = $questionCrawler->filter('small')->first()->text();
 
-			$quizQuestion = QuizQuestion::firstOrCreate(['text' => $questionText, 'preserve_order'=> 1]);
+			$quizQuestion = QuizQuestion::firstOrCreate(['text' => $questionText], ['preserve_order'=> true]);
 
 			foreach($answersText as $key => $answerText) {
-				$quizQuestion->quizAnswers()->firstOrCreate([
-					'text'       => substr($answerText, 4),
-					'is_correct' => $key === $answersMap[$correctAnswer],
-				]);
+				$quizQuestion->quizAnswers()->firstOrCreate(
+					['text' => $this->transformQuizAnswerText($answerText)],
+					['is_correct' => $key === ($answersMap[$correctAnswer] ?? null)]
+				);
 			}
+
+			if ($tagsText) {
+				$tagsNames = array_map('trim', explode(',', $tagsText));
+
+				if ($tagsNames[0]) {
+					$tag = Tag::firstOrCreate(['name' => $tagsNames[0]]);
+					$term = TaxonomyTerm::firstOrCreate(['tag_id' => $tag->id, 'taxonomy_id' => $cemTaxonomy->id]);
+					$quizQuestion->taxonomyTerms()->syncWithoutDetaching([$term->id]);
+				}
+
+				if ($tagsNames[1]) {
+					$tag = Tag::firstOrCreate(['name' => $tagsNames[1]]);
+					$term = TaxonomyTerm::firstOrCreate(['tag_id' => $tag->id, 'taxonomy_id' => $examTaxonomy->id]);
+					$quizQuestion->taxonomyTerms()->syncWithoutDetaching([$term->id]);
+				}
+			}
+
 			$bar->advance();
 		}
 
@@ -122,5 +145,12 @@ class ScrapeLdekQuizQuestions extends Command
 		$examResponse = $this->httpClient->get('http://egzaminldek.pl/wygeneruj-egzamin/', ['query' => $queryString]);
 
 		return $examResponse->getBody()->getContents();
+	}
+
+	protected function transformQuizAnswerText($text) {
+		// Remove answer id prefix and dot at the end
+		$text = rtrim(trim(mb_substr($text, 3)), '.');
+		// mb_ucfirst
+		return mb_strtoupper(mb_substr($text, 0, 1)) . mb_substr($text, 1);
 	}
 }

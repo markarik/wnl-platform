@@ -161,8 +161,8 @@ class ExportUserStatistics extends Command
 				$userRecord['time'] >= 240;
 
 			$G4 =
-				$userRecord['userSectionsProgressPercentage'] >= 20 &&
-				$userRecord['userQuizQuestionsSolved'] >= 300 &&
+				$userRecord['userSectionsProgressPercentage'] >= 20 ||
+				$userRecord['userQuizQuestionsSolved'] >= 300 ||
 				$userRecord['time'] >= 100;
 
 			$userClassification = [

@@ -69,6 +69,8 @@ class ScrapeLdekQuizQuestions extends Command
 			 *
 			 * 		var pytanieId = '797';
 			 * 		var odpowiedzPoprawna = 'B.'.replace(" ", "");
+			 *
+			 * When the corrent anser is unknown then we get 'X' or '?' here.
 			 */
 			preg_match("/var pytanieId = '$questionId'.*\\n.*?= '(.)/", $examHtml, $matches);
 			$correctAnswer = $matches[1];

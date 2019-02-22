@@ -63,6 +63,13 @@ class ScrapeLdekQuizQuestions extends Command
 			$questionCrawler = new Crawler($question);
 			$questionId = $question->getAttribute('pytanieid');
 
+
+			/*
+			 * Match correct answer, example source text
+			 *
+			 * 		var pytanieId = '797';
+			 * 		var odpowiedzPoprawna = 'B.'.replace(" ", "");
+			 */
 			preg_match("/var pytanieId = '$questionId'.*\\n.*?= '(.)/", $examHtml, $matches);
 			$correctAnswer = $matches[1];
 

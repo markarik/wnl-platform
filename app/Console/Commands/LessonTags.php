@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Screen;
 use Illuminate\Console\Command;
 use App\Models\Tag;
 use App\Models\QuizSet;
@@ -61,6 +62,7 @@ class LessonTags extends Command
 		$lessons = Lesson::all();
 
 		foreach ($lessons as $lesson) {
+			/** @var Screen[] $lessonScreens */
 			$lessonScreens = $lesson->screens;
 			$tag = Tag::firstOrCreate(['name' => $lesson->name]);
 

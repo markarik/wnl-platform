@@ -12,35 +12,36 @@
 				</span>
 				<wnl-watch
 				v-if="!hideWatchlist"
-				:reactableId="commentableId"
-				:reactableResource="commentableResource"
+				:reactable-id="commentableId"
+				:reactable-resource="commentableResource"
 				:state="watchState"
-				:reactionsDisabled="false"
+				:reactions-disabled="false"
 				:module="module"
 				/>
 			</div>
 			<slot/>
 		</div>
-		<wnl-comment
-			v-if="showComments"
-			v-for="comment in comments"
-			:key="comment.id"
-			:comment="comment"
-			:profile="commentProfile(comment.profiles[0])"
-			@removeComment="onRemoveComment"
-			@resolveComment="onResolveComment"
-			@unresolveComment="onUnresolveComment"
-		/>
-		<div class="form-container" v-if="showComments">
-			<transition name="fade">
-				<wnl-new-comment-form v-if="!readOnly"
-					:commentableResource="commentableResource"
-					:commentableId="commentableId"
-					:isUnique="isUnique"
-					@submitSuccess="onSubmitSuccess">
-				</wnl-new-comment-form>
-			</transition>
-		</div>
+		<template v-if="showComments">
+			<wnl-comment
+				v-for="comment in comments"
+				:key="comment.id"
+				:comment="comment"
+				:profile="commentProfile(comment.profiles[0])"
+				@removeComment="onRemoveComment"
+				@resolveComment="onResolveComment"
+				@unresolveComment="onUnresolveComment"
+			/>
+			<div class="form-container">
+				<transition name="fade">
+					<wnl-new-comment-form v-if="!readOnly"
+						:commentable-resource="commentableResource"
+						:commentable-id="commentableId"
+						:is-unique="isUnique"
+						@submitSuccess="onSubmitSuccess">
+					</wnl-new-comment-form>
+				</transition>
+			</div>
+		</template>
 	</div>
 </template>
 

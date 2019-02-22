@@ -27,7 +27,7 @@ class FlashcardsSetTransformer extends ApiTransformer
 	public function includeFlashcards(FlashcardsSet $set)
 	{
 		return $this->collection(
-			$set->flashcards()->orderBy('pivot_order_number')->get(),
+			$set->flashcards,
 			new FlashcardTransformer(['flashcards_sets' => $set->id]),
 			'flashcards'
 		);

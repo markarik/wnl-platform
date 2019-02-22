@@ -6,7 +6,6 @@ use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class StudyBuddyWithoutInvoice extends Mailable
 {
@@ -18,7 +17,6 @@ class StudyBuddyWithoutInvoice extends Mailable
 	 * Create a new message instance.
 	 *
 	 * @param Order $order
-	 * @param Invoice $invoice
 	 */
 	public function __construct(Order $order)
 	{

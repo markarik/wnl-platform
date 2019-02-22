@@ -3,7 +3,7 @@
 		<div class="media-container">
 			<div class="left">
 				<wnl-avatar class="avatar"
-					:fullName="author.full_name"
+					:full-name="author.full_name"
 					:url="author.avatar"
 					size="extralarge"/>
 			</div>
@@ -38,7 +38,7 @@
 				<div class="level">
 					<div class="level-left">
 						<div class="send-message">
-							<wnl-message-link :userId="userId">
+							<wnl-message-link :user-id="userId">
 								<span class="button is-primary is-outlined is-small">{{ $t('user.userProfileModal.sendMessage')}}</span>
 							</wnl-message-link>
 						</div>

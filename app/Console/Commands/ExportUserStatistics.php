@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 use App\Models\User;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Rap2hpoutre\FastExcel\SheetCollection;
+use Illuminate\Support\Collection;
 use Storage;
 
 class ExportUserStatistics extends Command
@@ -119,6 +120,7 @@ class ExportUserStatistics extends Command
 			'P-KORELACJE' => collect(),
 		]);
 
+		/** @var User[]|Collection $users */
 		$users = User::select()
 			->whereHas('orders', function ($query) use ($productIds) {
 				$query

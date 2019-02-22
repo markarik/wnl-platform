@@ -40,10 +40,6 @@ module.exports = {
 			'error',
 			'kebab-case'
 		],
-		// TODO enable essential rules below
-		'vue/no-use-v-if-with-v-for': [
-			'off'
-		],
 		// TODO enable strongly-recommended rules below
 		'vue/html-indent': [
 			'off'
@@ -55,9 +51,6 @@ module.exports = {
 			'off'
 		],
 		'vue/mustache-interpolation-spacing': [
-			'off'
-		],
-		'vue/attribute-hyphenation': [
 			'off'
 		],
 		'vue/max-attributes-per-line': [

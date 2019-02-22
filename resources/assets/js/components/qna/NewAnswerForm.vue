@@ -1,11 +1,11 @@
 <template>
 	<wnl-form
 		class="qna-new-answer-form"
-		hideDefaultSubmit="true"
+		hide-default-submit="true"
 		method="post"
-		suppressEnter="true"
-		resetAfterSubmit="true"
-		resourceRoute="qna_answers"
+		suppress-enter="true"
+		reset-after-submit="true"
+		resource-route="qna_answers"
 		:attach="attachedData"
 		:name="name"
 		@submitSuccess="onSubmitSuccess">
@@ -20,7 +20,7 @@
 			<div class="level-left"></div>
 			<div class="level-right">
 				<div class="level-item">
-					<wnl-submit cssClass="button is-small is-primary">
+					<wnl-submit css-class="button is-small is-primary">
 						Zapisz
 					</wnl-submit>
 				</div>

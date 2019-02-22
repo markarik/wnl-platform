@@ -2,7 +2,7 @@
 	<div class="screens-editor">
 		<div class="screens-list">
 			<p class="title is-5">Ekrany</p>
-			<wnl-screens-list :lessonId="lessonId" :screens="screens" ref="ScreensList"></wnl-screens-list>
+			<wnl-screens-list :lesson-id="lessonId" :screens="screens" ref="ScreensList"></wnl-screens-list>
 		</div>
 		<div class="screen-editor" v-if="loaded">
 			<form>

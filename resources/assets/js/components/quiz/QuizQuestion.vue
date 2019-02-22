@@ -17,8 +17,8 @@
 					<div class="card-header-icons">
 						<wnl-bookmark
 							v-if="reactionState"
-							:reactableId="question.id"
-							:reactableResource="reactableResource"
+							:reactable-id="question.id"
+							:reactable-resource="reactableResource"
 							:state="reactionState"
 							:module="module"
 						></wnl-bookmark>
@@ -30,25 +30,25 @@
 					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
 						:answer="answer"
 						:index="answerIndex"
-						:questionId="question.id"
-						:totalHits="question.total_hits"
+						:question-id="question.id"
+						:total-hits="question.total_hits"
 						:key="answerIndex"
-						:readOnly="readOnly"
-						:isSelected="question.selectedAnswer === answerIndex"
-						:answersStats="displayResults && question.answersStats"
+						:read-only="readOnly"
+						:is-selected="question.selectedAnswer === answerIndex"
+						:answers-stats="displayResults && question.answersStats"
 						@answerSelected="selectAnswer(answerIndex)"
 						@dblclick.native="$emit('answerDoubleclick', {answer: answerIndex})"
 					></wnl-quiz-answer>
 				</ul>
 				<div class="quiz-question-meta">
 					<div class="quiz-question-tags">
-						<span v-if="displayResults && question.tags">{{$t('questions.question.tags')}}:</span>
-						<span v-if="displayResults" v-for="(tag, index) in question.tags"
-							class="quiz-question-tag"
-							:key="index"
-						>
-							{{trim(tag.name)}}
-						</span>
+						<template v-if="displayResults && question.tags">
+							<span>{{$t('questions.question.tags')}}:</span>
+							<span v-for="(tag, index) in question.tags"
+								class="quiz-question-tag"
+								:key="index"
+							>{{trim(tag.name)}}</span>
+						</template>
 					</div>
 					<div class="quiz-question-id">
 						#{{question.id}}
@@ -82,13 +82,15 @@
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<a class="slide-list-item" v-if="slidesExpanded" v-for="(slide, index) in slides" :key="index" @click="currentSlideIndex = index">
-						{{slideLink(slide)}}
-					</a>
+					<template v-if="slidesExpanded">
+						<a class="slide-list-item" v-for="(slide, index) in slides" :key="index" @click="currentSlideIndex = index">
+							{{slideLink(slide)}}
+						</a>
+					</template>
 					<wnl-slide-preview
-							:showModal="show"
+							:show-modal="show"
 							:content="slideContent"
-							:slidesCount="hasSlides"
+							:slides-count="hasSlides"
 							@closeModal="hideSlidePreview"
 							@switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id"
 							@userEvent="onRelatedSlideUserEvent"
@@ -98,18 +100,18 @@
 							class="button is-primary is-outlined is-small"
 							slot="footer"
 							:context="currentModalSlide.context"
-							:blankPage="blankPage">
+							:blank-page="blankPage">
 								{{$t('quiz.slideModal.goToPrezentation')}}
 						</wnl-slide-link>
 					</wnl-slide-preview>
 				</div>
 				<div class="card-item">
 					<wnl-comments-list
-						commentableResource="quiz_questions"
-						urlParam="quiz_question"
+						commentable-resource="quiz_questions"
+						url-param="quiz_question"
 						:module="module"
-						:commentableId="question.id"
-						:isUnique="showComments">
+						:commentable-id="question.id"
+						:is-unique="showComments">
 					</wnl-comments-list>
 				</div>
 			</div>

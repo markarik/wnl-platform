@@ -35,7 +35,7 @@ class ChartsUpdatingDone extends Notification
 	/**
 	 * Send notification to slack channel
 	 *
-	 * @param $notifiable
+	 * @param mixed $notifiable
 	 * @return SlackMessage
 	 */
 	public function toSlack($notifiable)

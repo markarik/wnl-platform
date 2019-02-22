@@ -2,15 +2,14 @@
 	<div class="stream-feed">
 		<div v-if="!loading">
 			<div>
-				<wnl-stream-filtering :showRead="showRead" @changeFiltering="changeFiltering" @toggleShowRead="toggleShowRead"/>
+				<wnl-stream-filtering :show-read="showRead" @changeFiltering="changeFiltering" @toggleShowRead="toggleShowRead"/>
 				<div class="stream-notifications">
 					<div class="stream-line"></div>
 					<component :is="getEventComponent(message)"
 						:message="message"
-						:key="id"
-						:notificationComponent="StreamNotification"
-						v-for="(message, id) in filtered"
-						v-if="hasComponentForEvent(message)"
+						:key="message.id"
+						:notification-component="StreamNotification"
+						v-for="message in filtered"
 					/>
 				</div>
 				<div class="all-seen" v-if="!showRead && unreadCount > 0">
@@ -138,6 +137,7 @@ export default {
 			}
 
 			filtered = _.filter(filtered, (notification) => this.showRead ? notification.read_at : !notification.read_at);
+			filtered = filtered.filter(message => this.hasComponentForEvent(message));
 
 			return filtered;
 		},

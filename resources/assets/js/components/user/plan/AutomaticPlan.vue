@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<wnl-text-overlay :isLoading="isLoading" :text="$t('lessonsAvailability.loader')"/>
+		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')"/>
 		<div class="presets-view">
 			<div class="wnl-screen-title">
 				<div class="level-left">
@@ -77,7 +77,7 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:withBorder="true"
+								:with-border="true"
 								v-model="startDate"
 								:config="startDateConfigWithMin"
 								@onChange="onPresetStartDateChange"/>
@@ -104,7 +104,7 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:withBorder="true"
+								:with-border="true"
 								v-model="startDate"
 								:config="startDateConfigWithMin"
 								@onChange="onPresetStartDateChange"/>
@@ -122,7 +122,7 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:withBorder="true"
+								:with-border="true"
 								v-model="endDate"
 								:config="endDateConfig"
 								@onChange="onEndDateChange"/>

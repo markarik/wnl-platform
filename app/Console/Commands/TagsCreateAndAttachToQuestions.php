@@ -44,7 +44,7 @@ class TagsCreateAndAttachToQuestions extends Command
 	public function handle()
 	{
 		$filename = $this->option('filename');
-		$questionsIds = explode(',', Storage::get($filename));
+		$questionsIds = explode(',', Storage::drive()->get($filename));
 		$tagsNames = explode(',', $this->option('tagsNames'));
 
 		foreach ($tagsNames as $tag) {

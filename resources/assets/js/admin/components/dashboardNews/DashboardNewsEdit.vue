@@ -4,8 +4,8 @@
 				name="DashboardNewsEditor"
 				:populate="isEdit"
 				:method="formMethod"
-				:resourceRoute="formResourceRoute"
-				:suppressEnter="true"
+				:resource-route="formResourceRoute"
+				:suppress-enter="true"
 				@submitSuccess="onSubmitSucess"
 				@change="onChange"
 		>
@@ -33,7 +33,7 @@
 		<h3 class="title is-3">Podgląd</h3>
 		<wnl-dashboard-news-content
 				:message="formData.message"
-				:messageArguments="messageArguments"
+				:message-arguments="messageArguments"
 				:slug="formData.slug"
 		/>
 	</div>

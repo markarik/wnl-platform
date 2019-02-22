@@ -267,3 +267,20 @@ $factory->define(App\Models\Discussion::class, function (Faker\Generator $faker)
 		'name'    => $faker->text,
 	];
 });
+
+$factory->define(App\Models\Taxonomy::class, function (Faker\Generator $faker) {
+	return [
+		'name' => $faker->name,
+	];
+});
+
+$factory->define(App\Models\TaxonomyTerm::class, function (Faker\Generator $faker) {
+	return [
+		'tag_id'           => function () {
+			return factory(App\Models\Tag::class)->create()->id;
+		},
+		'taxonomy_id'    => function () {
+			return factory(App\Models\Taxonomy::class)->create()->id;
+		},
+	];
+});

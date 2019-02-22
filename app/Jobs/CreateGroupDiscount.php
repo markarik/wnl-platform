@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 
 class CreateGroupDiscount implements ShouldQueue
@@ -26,8 +27,8 @@ class CreateGroupDiscount implements ShouldQueue
 	/**
 	 * Create a new job instance.
 	 *
-	 * @param $mailCollection
-	 * @param $couponAttributes
+	 * @param Collection $mailCollection
+	 * @param array $couponAttributes
 	 * @param bool $emailIsCode
 	 */
 	public function __construct($mailCollection, $couponAttributes, $emailIsCode = true)

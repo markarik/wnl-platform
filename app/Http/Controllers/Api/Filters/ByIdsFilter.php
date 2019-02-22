@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\Filters;
 
-use Illuminate\Database\Query\Builder;
+
+use Illuminate\Database\Eloquent\Builder;
 
 class ByIdsFilter extends ApiFilter
 {

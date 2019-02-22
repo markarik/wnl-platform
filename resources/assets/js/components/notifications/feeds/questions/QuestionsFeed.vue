@@ -5,10 +5,9 @@
 				<div class="stream-line"></div>
 				<component :is="getEventComponent(message)"
 					:message="message"
-					:key="id"
-					:notificationComponent="QuestionsNotification"
-					v-for="(message, id) in filtered"
-					v-if="hasComponentForEvent(message)"
+					:key="message.id"
+					:notification-component="QuestionsNotification"
+					v-for="message in filtered"
 				/>
 			</div>
 			<div class="show-more">
@@ -112,9 +111,7 @@ export default {
 			return this.totalNotifications === 0 && this.fetching;
 		},
 		filtered() {
-			let filtered = this.filterQuiz(this.channel);
-
-			return filtered;
+			return Object.values(this.filterQuiz(this.channel)).filter(message => this.hasComponentForEvent(message));
 		},
 	},
 };

@@ -61,7 +61,8 @@ class ArchiveChatMessages extends Command
 	/**
 	 * Copy rooms and move messages from redis to MySQL.
 	 *
-	 * @param $room
+	 * @param string $room
+	 * @throws Exception
 	 */
 	private function moveToMysql($room)
 	{
@@ -89,7 +90,7 @@ class ArchiveChatMessages extends Command
 	/**
 	 * Search for chat rooms in redis DB.
 	 *
-	 * @param $cursor
+	 * @param int $cursor
 	 * @param int $limit
 	 *
 	 * @return mixed
@@ -128,7 +129,7 @@ class ArchiveChatMessages extends Command
 	/**
 	 * Get messages from chat room.
 	 *
-	 * @param $room
+	 * @param string $room
 	 * @param int $leave
 	 * @param int $take
 	 *
@@ -142,8 +143,8 @@ class ArchiveChatMessages extends Command
 	/**
 	 * Remove message from chat storage.
 	 *
-	 * @param $room
-	 * @param $message
+	 * @param string $room
+	 * @param array $message
 	 *
 	 * @return mixed
 	 */
@@ -156,7 +157,7 @@ class ArchiveChatMessages extends Command
 	 * Sanitize single message record
 	 * before putting it into MySQL.
 	 *
-	 * @param $message
+	 * @param array $message
 	 *
 	 * @return array
 	 */
@@ -176,7 +177,7 @@ class ArchiveChatMessages extends Command
 	/**
 	 * Transform json encoded redis entries into array.
 	 *
-	 * @param $messages
+	 * @param array $messages
 	 *
 	 * @return array
 	 */
@@ -199,7 +200,7 @@ class ArchiveChatMessages extends Command
 	/**
 	 * Execute closure using double transaction (redis + MySQL).
 	 *
-	 * @param $callback
+	 * @param Closure $callback
 	 *
 	 * @throws Exception
 	 */

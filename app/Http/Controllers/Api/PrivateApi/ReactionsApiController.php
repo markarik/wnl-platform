@@ -35,7 +35,7 @@ class ReactionsApiController extends ApiController
 			$now = Carbon::now();
 
 			try {
-				if (!$user->reactables->contains(function($value, $key) use ($reactable, $modelName, $reaction, $reactions, $user) {
+				if (!$user->reactables->contains(function($value, $key) use ($reactable, $modelName, $reaction) {
 					return $value->reactable_id == $reactable->id
 						&& $value->reactable_type == $modelName
 						&& $value->reaction_id == $reaction->id;
@@ -64,7 +64,7 @@ class ReactionsApiController extends ApiController
 					'user' => $user->id]
 				]);
 
-				return $this->respondInternalError($e->getMessage());
+				return $this->respondInternalError();
 			}
 
 		}

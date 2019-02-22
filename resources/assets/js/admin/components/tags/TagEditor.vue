@@ -4,7 +4,7 @@
 			:method="method"
 			:resource-route="resourceRoute"
 			:populate="isEdit"
-			:hideDefaultSubmit="true"
+			:hide-default-submit="true"
 			@change="onChange"
 			@submitSuccess="onSubmitSuccess"
 			name="TagEditor"
@@ -15,8 +15,8 @@
 				<div class="field is-grouped">
 					<wnl-tag-delete
 						:id="id"
-						:isDeleteAllowed="formData.is_delete_allowed"
-						:taggablesCount="formData.taggables_count"
+						:is-delete-allowed="formData.is_delete_allowed"
+						:taggables-count="formData.taggables_count"
 						@tagDeleted="onTagDeleted"
 					>Usuń</wnl-tag-delete>
 					<wnl-submit class="submit"/>
@@ -37,10 +37,10 @@
 			>Opis</wnl-textarea>
 		</wnl-form>
 		<wnl-paginated-sortable-table
-			:isSearchEnabled="false"
-			:resourceName="'taggables/.filter'"
+			:is-search-enabled="false"
+			:resource-name="'taggables/.filter'"
 			:columns="columns"
-			:customRequestParams="requestParams"
+			:custom-request-params="requestParams"
 		>
 			<div slot="header">
 				<h3 class="title is-3">Lista elementów powiązanych</h3>

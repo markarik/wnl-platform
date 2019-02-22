@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use ScoutEngines\Elasticsearch\Searchable;
 
-class Flashcard extends Model
+class Flashcard extends Model implements WithTags
 {
 	use Searchable;
 
@@ -19,7 +20,9 @@ class Flashcard extends Model
 			'flashcards_set_flashcard',
 			'flashcard_id',
 			'flashcard_set_id'
-		)->withPivot('order_number');
+		)
+			->withPivot('order_number')
+			->orderBy('pivot_order_number');
 	}
 
 	public function userFlashcardNotes()

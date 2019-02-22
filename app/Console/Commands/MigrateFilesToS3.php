@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemAdapter;
 
 class MigrateFilesToS3 extends Command
@@ -61,7 +62,7 @@ class MigrateFilesToS3 extends Command
 	 * Recursively traverse directory tree on $disk starting from $path
 	 * and execute $callback for each file.
 	 *
-	 * @param FilesystemAdapter $disk
+	 * @param FilesystemAdapter|Filesystem $disk
 	 * @param string $path
 	 * @param callable $callback
 	 */

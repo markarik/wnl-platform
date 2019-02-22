@@ -18,7 +18,9 @@ class FlashcardsSet extends Model
 			'flashcards_set_flashcard',
 			'flashcard_set_id',
 			'flashcard_id'
-		)->withPivot('order_number');
+		)
+			->withPivot('order_number')
+			->orderBy('pivot_order_number');
 	}
 
 	public function lesson()

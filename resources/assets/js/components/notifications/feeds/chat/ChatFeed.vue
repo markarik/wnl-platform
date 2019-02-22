@@ -24,7 +24,7 @@
 						<p class="zero-state-text" v-t="'notifications.chat.zeroState'"/>
 					</div>
 					<div class="feed-content" v-else>
-						<wnl-conversations-list :withSearch="false"/>
+						<wnl-conversations-list :with-search="false"/>
 					</div>
 				</div>
 

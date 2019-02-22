@@ -3,12 +3,12 @@
 		<div class="questions-filters-content">
 			<div class="wnl-active-filters-container">
 				<wnl-active-filters
-						:activeFilters="activeFilters"
+						:active-filters="activeFilters"
 						:loading="fetchingData"
 						:filters="filters"
-						:itemsNamesSource="itemsNamesSource"
-						:matchedCount="matchedQuestionsCount"
-						:totalCount="allQuestionsCount"
+						:items-names-source="itemsNamesSource"
+						:matched-count="matchedQuestionsCount"
+						:total-count="allQuestionsCount"
 						@activeFiltersChanged="onActiveFiltersChanged"
 						@autorefreshChange="onAutorefreshChange"
 						@elementHeight="setActiveFiltersHeight"
@@ -39,7 +39,7 @@
 					</a>
 				</div>
 				<wnl-accordion
-					:dataSource="listableFilters"
+					:data-source="listableFilters"
 					:config="accordionConfig"
 					:loading="fetchingData"
 					@itemToggled="onItemToggled"

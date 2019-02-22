@@ -1,50 +1,77 @@
 <template>
 	<div class="content-classifier">
 		<h3 class="title is-3">Klasyfikacja treści</h3>
-		<form @submit.prevent="onSearch">
-			<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field">
-				<label class="label">{{meta.name}}</label>
-				<input class="input" placeholder="Wpisz id po przecinku: 36,45,..." v-model="filters[contentType]"/>
-			</div>
-			<button class="button submit is-primary" type="submit">Szukaj</button>
-		</form>
-		<div class="content-classifier__panels">
+		<div class="tabs">
+			<ul>
+				<li
+					:class="{'is-active': activeTab === TABS.BY_CLASSIFICATION}"
+					@click="activeTab=TABS.BY_CLASSIFICATION"
+				>
+					<a>Po klasyfikacji</a>
+				</li>
+				<li
+					:class="{'is-active': activeTab === TABS.BY_ID}"
+					@click="activeTab=TABS.BY_ID"
+				>
+					<a>Po id</a>
+				</li>
+			</ul>
+		</div>
+
+		<wnl-content-classifier-filter-by-classification
+			v-show="activeTab === TABS.BY_CLASSIFICATION"
+			:content-types="contentTypes"
+			@search="onSearchByTag"
+		/>
+
+		<wnl-content-classifier-filter-by-ids
+			v-show="activeTab === TABS.BY_ID"
+			:content-types="contentTypes"
+			@search="onSearchById"
+		/>
+
+		<div class="content-classifier__panels" v-if="filteredContent !== null">
 			<div class="content-classifier__panel-results">
 				<div class="content-classifier__panel-results__header">
 					<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
 					<a @click="selectAll">Zaznacz wszystkie</a>
 				</div>
-				<div v-if="!isLoading">
-					<div v-for="(meta, contentType) in contentTypes" :key="contentType">
-						<h5 class="title is-5 is-marginless">{{meta.name}}</h5>
+				<wnl-text-loader v-if="isLoading" />
+				<div v-else-if="filteredContent.length">
+					<div
+						v-for="(meta, contentType) in contentTypes"
+						:key="contentType"
+					>
+						<template v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length">
+						<h5 class="title is-5 is-marginless">{{meta.name}}
+							<strong class="content-classifier__result-count">({{getSelectedCountsByContentType(contentType)}}/{{groupedFilteredContent[contentType].length}})</strong>
+						</h5>
 						<ul
-							v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length"
 							class="content-classifier__result-list margin bottom"
 						>
-							<li
-								v-for="item in groupedFilteredContent[contentType]"
-								:key="item.id"
-								class="content-classifier__result-item"
-								:class="{'is-active': selectedItemIds.includes(item.id)}"
-								@click="toggleSelected(item)"
-							>
-								<component :is="meta.component" :item="item"/>
-								<span class="icon content-classifier__result-item__icon">
-									<i class="fa fa-check-circle"></i>
-								</span>
-							</li>
+							<component
+								v-for="contentItem in groupedFilteredContent[contentType]"
+								:key="contentItem.id"
+								:is="meta.component"
+								:item="contentItem"
+								:is-active="selectedItems.findIndex(item => item.id === contentItem.id && item.type === contentItem.type) > -1"
+								@click="toggleSelected(contentItem)"
+							/>
 						</ul>
-						<p class="margin bottom" v-else>Brak wyników</p>
+						</template>
 					</div>
 				</div>
-				<wnl-text-loader v-else />
+				<div v-else>Brak wyników</div>
 			</div>
-			<wnl-content-classifier-editor
-				v-show="!isLoading"
-				:items="selectedItems"
-				@taxonomyTermAttached="onTaxonomyTermAttached"
-				@taxonomyTermDetached="onTaxonomyTermDetached"
-			/>
+			<div class="content-classifier__panel-editor">
+				<wnl-content-classifier-editor
+					class="content-classifier__panel-editor__editor"
+					v-show="!isLoading"
+					:items="selectedItems"
+					@taxonomyTermAttached="onTaxonomyTermAttached"
+					@taxonomyTermDetached="onTaxonomyTermDetached"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
@@ -55,54 +82,33 @@
 	.content-classifier
 		&__panels
 			display: flex
+			overflow: hidden
 
 		&__panel-results
-			flex: 50%
-			margin-right: $margin-big
+			flex: 0 0 50%
 
 			&__header
 				display: flex
 				justify-content: space-between
 
+		&__panel-editor
+			flex: 0 0 50%
+			overflow: hidden
+			padding-left: $margin-big
+
+			&__editor
+				position: sticky
+				max-height: calc(100vh - #{2 * $margin-big})
+				overflow-y: auto
+				top: 0
+
+		.content-classifier__result-count
+			font-size: $font-size-minus-2
+			font-weight: bold
+
 		&__result-list
 			display: flex
 			flex-wrap: wrap
-
-		&__result-item
-			border: $border-light-gray
-			cursor: pointer
-			display: flex
-			font-size: $font-size-minus-1
-			line-height: $line-height-minus
-			margin: $margin-tiny
-			max-height: 200px
-			min-height: 90px
-			overflow: auto
-			padding: $margin-base
-			position: relative
-			transition: border-width .3s ease-in-out, border-color .3s ease-in-out
-			width: 160 + 4 * $margin-small
-
-			&__icon
-				animation: fadein .3s
-				color: $color-correct-shadow
-				display: none
-				position: absolute
-				right: 5px
-				top: 5px
-
-				.is-active &
-					display: block
-
-			&.is-active
-				border: 2px solid $color-correct-shadow
-				border-radius: $border-radius-small
-
-	@keyframes fadein
-		from
-			opacity: 0
-		to
-			opacity: 1
 </style>
 
 <script>
@@ -118,23 +124,32 @@ import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
 import WnlFlashcardResult from 'js/admin/components/contentClassifier/FlashcardResult';
 import WnlAnnotationResult from 'js/admin/components/contentClassifier/AnnotationResult';
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
+import WnlContentClassifierFilterByIds from 'js/admin/components/contentClassifier/ContentClassifierFilterByIds';
+import WnlContentClassifierFilterByClassification from 'js/admin/components/contentClassifier/ContentClassifierFilterByClassification';
 import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
+const TABS = {
+	BY_CLASSIFICATION: 'by-classification',
+	BY_ID: 'by-id',
+};
+
 export default {
 	components: {
-		WnlContentClassifierEditor
+		WnlContentClassifierEditor,
+		WnlContentClassifierFilterByIds,
+		WnlContentClassifierFilterByClassification
 	},
 	data() {
 		const contentTypes = {
-			[CONTENT_TYPES.ANNOTATION]: {
-				resourceName: 'annotations/.filter',
-				name: 'Przypisy',
-				component: WnlAnnotationResult,
+			[CONTENT_TYPES.SLIDE]: {
+				resourceName: 'slides/.filter',
+				name: 'Slajdy',
+				component: WnlSlideResult,
 			},
 			[CONTENT_TYPES.QUIZ_QUESTION]: {
 				resourceName: 'quiz_questions/.filter',
-				name: 'Pytania z bazy pytań',
+				name: 'Pytania zamknięte',
 				component: WnlHtmlResult,
 			},
 			[CONTENT_TYPES.FLASHCARD]: {
@@ -142,50 +157,65 @@ export default {
 				name: 'Pytania otwarte',
 				component: WnlFlashcardResult,
 			},
-			[CONTENT_TYPES.SLIDE]: {
-				resourceName: 'slides/.filter',
-				name: 'Slajdy',
-				component: WnlSlideResult,
+			[CONTENT_TYPES.ANNOTATION]: {
+				resourceName: 'annotations/.filter',
+				name: 'Przypisy',
+				component: WnlAnnotationResult,
 			},
 		};
 
-		const filters = Object.keys(contentTypes).reduce(
-			(collector, contentType) => {
-				collector[contentType] = '';
-				return collector;
-			},
-			{}
-		);
-
 		return {
 			contentTypes,
-			filters,
-			filteredContent: [],
-			selectedItemIds: [],
+			filteredContent: null,
+			selectedItems: [],
 			isLoading: false,
+			activeTab: TABS.BY_CLASSIFICATION,
+			TABS,
 		};
 	},
 	computed: {
 		groupedFilteredContent() {
 			return groupBy(this.filteredContent, 'type');
 		},
-		selectedItems() {
-			return this.filteredContent.filter(item => this.selectedItemIds.includes(item.id));
-		}
+		groupedSelectedItems() {
+			return groupBy(this.selectedItems, 'type');
+		},
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		async fetchContent([contentType, meta]) {
-			if (this.filters[contentType] === '') {
+		fetchContentByIds(contentType, meta, filter) {
+			const filters = [];
+
+			if (filter !== '') {
+				filters.push({
+					by_ids: {ids: filter.split(',')},
+				});
+			}
+
+			return this.fetchContent(contentType, meta.resourceName, filters);
+		},
+		fetchContentByTag(contentType, meta, byTagsFilter, byTaxonomyTermsFilter) {
+			const filters = [];
+			if (byTagsFilter.length) {
+				filters.push({
+					tags: byTagsFilter.map(tag => tag.id),
+				});
+			}
+			if (byTaxonomyTermsFilter.length) {
+				filters.push({
+					taxonomy_terms: byTaxonomyTermsFilter.map(tag => tag.id),
+				});
+			}
+
+			return this.fetchContent(contentType, meta.resourceName, filters);
+		},
+		async fetchContent(contentType, resourceName, filters) {
+			if (filters.length === 0) {
 				return [];
 			}
 
-			const {data} = await axios.post(getApiUrl(meta.resourceName), {
-				filters: [
-					{
-						by_ids: {ids: this.filters[contentType].split(',')},
-					},
-				],
+			const {data} = await axios.post(getApiUrl(resourceName), {
+				filters,
 				include: 'taxonomy_terms.tag,taxonomy_terms.taxonomy,taxonomy_terms.ancestors.tag',
 				// TODO use wnl-paginated-list instead
 				limit: 10000,
@@ -199,11 +229,23 @@ export default {
 				return item;
 			});
 		},
-		async onSearch() {
-			this.isLoading = true;
-			this.selectedItemIds = [];
+		async onSearchById(filters) {
+			const promises = Object.entries(this.contentTypes)
+				.map(([contentType, meta]) => this.fetchContentByIds(contentType, meta, filters[contentType]));
 
-			const promises = Object.entries(this.contentTypes).map(this.fetchContent);
+			this.onSearch(promises);
+		},
+		async onSearchByTag({byTagsFilter, byTaxonomyTermsFilter, activeContentTypesMap}) {
+			const promises = Object.entries(this.contentTypes)
+				.filter(([contentType]) => activeContentTypesMap[contentType])
+				.map(([contentType, meta]) => this.fetchContentByTag(contentType, meta, byTagsFilter, byTaxonomyTermsFilter));
+
+			this.onSearch(promises);
+		},
+		async onSearch(promises) {
+			this.isLoading = true;
+			this.selectedItems = [];
+			this.filteredContent = [];
 
 			try {
 				const values = await Promise.all(promises);
@@ -237,16 +279,19 @@ export default {
 				}
 			});
 		},
-		toggleSelected(item) {
-			const index = this.selectedItemIds.findIndex(itemId => itemId === item.id);
+		toggleSelected(contentItem) {
+			const index = this.selectedItems.findIndex(item => contentItem.id === item.id && contentItem.type === item.type);
 			if (index === -1) {
-				this.selectedItemIds.push(item.id);
+				this.selectedItems.push(contentItem);
 			} else {
-				this.selectedItemIds.splice(index, 1);
+				this.selectedItems.splice(index, 1);
 			}
 		},
 		selectAll() {
-			this.selectedItemIds = this.filteredContent.map(item => item.id);
+			this.selectedItems = [...this.filteredContent];
+		},
+		getSelectedCountsByContentType(contentType) {
+			return (this.groupedSelectedItems[contentType] && this.groupedSelectedItems[contentType].length) || 0;
 		}
 	},
 };

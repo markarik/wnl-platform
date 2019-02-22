@@ -2,7 +2,7 @@
 	<article class="media wnl-chat-message" :class="{ 'is-full': showAuthor }" :data-id="id">
 		<figure class="media-left" @click="showModal" :class="{'author-forgotten': author.deleted_at}">
 			<wnl-avatar
-				:fullName="fullName"
+				:full-name="fullName"
 				:url="avatar"
 				v-if="showAuthor">
 			</wnl-avatar>

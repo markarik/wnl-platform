@@ -8,12 +8,12 @@
 			class="search"
 			v-if="isSearchEnabled"
 			@search="onSearch"
-			:availableFields="searchAvailableFields"
+			:available-fields="searchAvailableFields"
 		/>
 		<wnl-pagination
 			v-if="lastPage > 1"
-			:currentPage="page"
-			:lastPage="lastPage"
+			:current-page="page"
+			:last-page="lastPage"
 			@changePage="onPageChange"
 			class="pagination"
 		/>
@@ -26,8 +26,8 @@
 
 		<wnl-pagination
 			v-if="lastPage > 1"
-			:currentPage="page"
-			:lastPage="lastPage"
+			:current-page="page"
+			:last-page="lastPage"
 			@changePage="onPageChange"
 			class="pagination"
 		/>

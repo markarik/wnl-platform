@@ -42,7 +42,7 @@ class TagsCleanup extends Command
 	 */
 	public function handle()
 	{
-		$source = \Storage::get($this->argument('filename'));
+		$source = \Storage::drive()->get($this->argument('filename'));
 		$rows = explode(self::ROW_DELIMITER, $source);
 
 		if (!$rows) {
@@ -62,6 +62,7 @@ class TagsCleanup extends Command
 			$name = $fields[1];
 			$trimmed = $fields[2];
 			$command = $fields[3];
+			$commandTarget = '';
 
 			if (count($fields) > 4) {
 				$commandTarget = $fields[4];
@@ -86,18 +87,18 @@ class TagsCleanup extends Command
 					$this->info("Trimming tag {$name} to {$trimmed}");
 					$tag->name = $trimmed;
 					$tag->save();
-					continue;
+					break;
 				case 2:
 					$this->replace($tag, $commandTarget);
-					continue;
+					break;
 				case 3:
 					$this->info("Updating tag {$name} to {$commandTarget}");
 					$tag->name = $commandTarget;
 					$tag->save();
-					continue;
+					break;
 				case 4:
 					$this->remove($tag);
-					continue;
+					break;
 			}
 		}
 	}

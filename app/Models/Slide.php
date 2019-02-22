@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
-use Facades\Lib\SlideParser\Parser;
+use App\Models\Contracts\WithReactions;
+use App\Models\Contracts\WithTags;
+use Lib\SlideParser\Parser;
 use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;
 
-class Slide extends Model
+class Slide extends Model implements WithReactions, WithTags
 {
 	use Cached, Searchable;
 
@@ -71,7 +73,8 @@ class Slide extends Model
 
 	public function setSnippetAttribute($value)
 	{
-		$this->attributes['snippet'] = json_encode(Parser::createSnippet($value));
+		$snippet = (new Parser())->createSnippet($value);
+		$this->attributes['snippet'] = json_encode($snippet);
 	}
 
 	public function toSearchableArray()

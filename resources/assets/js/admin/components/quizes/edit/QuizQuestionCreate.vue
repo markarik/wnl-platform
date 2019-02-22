@@ -1,9 +1,9 @@
 <template>
-	<wnl-quiz-question-editor :isEdit="false"></wnl-quiz-question-editor>
+	<wnl-quiz-question-editor :is-edit="false"></wnl-quiz-question-editor>
 </template>
 
 <script>
-import QuizQuestionEditor from 'js/admin/components/quizes/QuizQuestionEditor';
+import QuizQuestionEditor from 'js/admin/components/quizes/edit/QuizQuestionEditor';
 
 export default {
 	name: 'QuizQuestionCreate',

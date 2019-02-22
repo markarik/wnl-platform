@@ -5,13 +5,13 @@
 				<div class="avatar-activator" @click="showModal" :class="{'author-forgotten': profile.deleted_at}">
 					<p class="image is-32x32">
 						<wnl-avatar size="medium"
-							:fullName="profile.full_name"
+							:full-name="profile.full_name"
 							:url="profile.avatar">
 						</wnl-avatar>
 					</p>
 				</div>
 			</figure>
-			<wnl-vote type="up" :reactableId="id" reactableResource="comments" :state="voteState" module="comments"/>
+			<wnl-vote type="up" :reactable-id="id" reactable-resource="comments" :state="voteState" module="comments"/>
 		</div>
 		<div class="media-content comment-content">
 			<span class="author" :class="{'author-forgotten': profile.deleted_at}" @click="showModal">{{ profile.display_name }}</span>
@@ -19,7 +19,7 @@
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
 				&nbsp;·
-				<wnl-delete :requestRoute="requestRoute" :target="target" @deleteSuccess="onDeleteSuccess"></wnl-delete>
+				<wnl-delete :request-route="requestRoute" :target="target" @deleteSuccess="onDeleteSuccess"></wnl-delete>
 			</span>
 			<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)" />
 		</div>

@@ -1,9 +1,8 @@
 <template>
-	<div class="terms-editor">
-		<div class="terms-editor__panel is-left">
-			<div class="terms-editor__panel__header">
-				<h4 class="title is-5 is-marginless"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
-				<span class="terms-editor__panel__header__search control has-icons-right">
+	<wnl-nested-set-editor :is-loading="isLoadingTerms">
+		<template slot="header">
+			<h4 class="title is-5 is-marginless"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
+			<span class="terms-editor__search control has-icons-right">
 					<wnl-taxonomy-term-autocomplete
 						@change="onSearch"
 						placeholder="Szukaj pojęcia"
@@ -12,53 +11,27 @@
 						<i class="fa fa-search"></i>
 					</span>
 				</span>
-			</div>
-			<wnl-taxonomy-terms-list v-if="!isLoadingTerms" :terms="getRootNodes"/>
-			<wnl-text-loader v-else />
-		</div>
-		<div class="terms-editor__panel is-right">
-			<wnl-taxonomy-term-editor-right
-				:taxonomyId="taxonomyId"
-			/>
-		</div>
-	</div>
+		</template>
+		<wnl-taxonomy-terms-list slot="nodes-list" :terms="getRootNodes"/>
+		<wnl-taxonomy-term-editor-right
+			slot="panel-right"
+			:taxonomy-id="taxonomyId"
+		/>
+	</wnl-nested-set-editor>
 </template>
 
-<style lang="sass" rel="stylesheet/sass" scoped>
+<style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.terms-editor
-		border-top: 1px solid $color-lightest-gray
-		display: flex
-
-		&__panel
-			flex: 50%
-
-			&.is-left
-				border-right: 1px solid $color-lightest-gray
-				padding-right: $margin-big
-
-			&.is-right
-				padding-left: $margin-big
-
-			&__header
-				align-items: center
-				background-color: $color-white
-				display: flex
-				justify-content: space-between
-				padding: $margin-big 0 $margin-base
-				position: sticky
-				top: -30px
-				z-index: 1
-
-				&__search
-					flex-grow: 1
-					margin-left: $margin-big
+	.terms-editor__search
+		flex: 1 0 auto
+		margin-left: $margin-big
 </style>
 
 <script>
 import {mapActions, mapState, mapGetters} from 'vuex';
 
+import WnlNestedSetEditor from 'js/admin/components/nestedSet/NestedSetEditor';
 import WnlTaxonomyTermsList from 'js/admin/components/taxonomies/TaxonomyTermsList';
 import WnlTaxonomyTermEditorRight from 'js/admin/components/taxonomies/TaxonomyTermEditorRight';
 import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
@@ -68,7 +41,8 @@ export default {
 	components: {
 		WnlTaxonomyTermsList,
 		WnlTaxonomyTermEditorRight,
-		WnlTaxonomyTermAutocomplete
+		WnlTaxonomyTermAutocomplete,
+		WnlNestedSetEditor
 	},
 	props: {
 		taxonomyId: {

@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;
 
-class Annotation extends Model
+class Annotation extends Model implements WithTags
 {
 	use Searchable;
 

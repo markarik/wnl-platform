@@ -8,7 +8,7 @@ use App\Models\Category;
 
 class TasksApiController extends ApiController
 {
-	const AVAILABLE_FILTERS = [
+	static $AVAILABLE_FILTERS = [
 		'task-labels',
 		'task-assignee',
 		'task-subject_type'

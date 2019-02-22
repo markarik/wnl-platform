@@ -139,7 +139,7 @@ class ScrapeLdekQuizQuestions extends Command
 		$examParams['isWebsiteSource'] = 'True';
 
 		// Format querystring: https://stackoverflow.com/a/8171667
-		$query = http_build_query($examParams, null, '&');
+		$query = http_build_query($examParams, '', '&');
 		$queryString = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $query);
 
 		$examResponse = $this->httpClient->get('http://egzaminldek.pl/wygeneruj-egzamin/', ['query' => $queryString]);

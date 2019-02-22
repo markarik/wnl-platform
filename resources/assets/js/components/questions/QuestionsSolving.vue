@@ -53,10 +53,10 @@
 			<div v-if="activeView === VIEWS.CURRENT_QUESTION">
 				<wnl-active-question
 					:module="module"
-					:getReaction="getReaction"
+					:get-reaction="getReaction"
 					:question="currentQuestion"
-					:questionNumber="currentQuestionNumber"
-					:allQuestionsCount="questionsListCount"
+					:question-number="currentQuestionNumber"
+					:all-questions-count="questionsListCount"
 					@changeQuestion="changeQuestion"
 					@selectAnswer="selectAnswer"
 					@verify="onVerify"
@@ -68,8 +68,8 @@
 			<div v-if="activeView === VIEWS.LIST" class="questions-list">
 				<div class="pagination-container">
 					<wnl-pagination v-if="meta.lastPage && meta.lastPage > 1"
-						:currentPage="meta.currentPage"
-						:lastPage="meta.lastPage"
+						:current-page="meta.currentPage"
+						:last-page="meta.lastPage"
 						@changePage="changePage"
 					/>
 				</div>
@@ -90,12 +90,12 @@
 					</div>
 					<wnl-quiz-question
 						:class="`quiz-question-${question.id}`"
-						:getReaction="getReaction"
+						:get-reaction="getReaction"
 						:id="question.id"
 						:module="module"
 						:question="question"
-						:readOnly="showListResults"
-						:hideComments="true"
+						:read-only="showListResults"
+						:hide-comments="true"
 						:key="`question-${question.id}`"
 						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
 						@userEvent="proxyUserEvent"
@@ -104,8 +104,8 @@
 
 				<div v-if="questionsCurrentPage.length > 5" class="pagination-container">
 					<wnl-pagination v-if="meta.lastPage && meta.lastPage > 1"
-						:currentPage="meta.currentPage"
-						:lastPage="meta.lastPage"
+						:current-page="meta.currentPage"
+						:last-page="meta.lastPage"
 						@changePage="changePage"
 					/>
 				</div>
@@ -114,13 +114,13 @@
 			<!-- Test -->
 			<div v-if="activeView === VIEWS.TEST_YOURSELF">
 				<wnl-questions-test-builder
-					:getReaction="getReaction"
+					:get-reaction="getReaction"
 					:questions="testQuestions"
-					:questionsPoolSize="questionsListCount"
-					:presetOptions="presetOptions"
-					:testMode="testMode"
-					:testProcessing="testProcessing"
-					:testResults="testResults"
+					:questions-pool-size="questionsListCount"
+					:preset-options="presetOptions"
+					:test-mode="testMode"
+					:test-processing="testProcessing"
+					:test-results="testResults"
 					@buildTest="buildTest"
 					@selectAnswer="selectAnswer"
 					@checkQuiz="(payload) => $emit('checkQuiz', payload)"

@@ -1,41 +1,40 @@
 {
-	"name": "wnl-platform",
+	"name": "bethink/wnl-platform",
 	"description": "The main app for delivering medical e-learning courses. Based on Laravel.",
 	"license": "GPL-3.0",
 	"type": "project",
 	"require": {
-		"php": ">=7.2.0",
-		"laravel/framework": "5.7.*",
-		"kris/laravel-form-builder": "^1.10",
-		"laracasts/utilities": "~2.0",
-		"league/fractal": "^0.15.0",
-		"guzzlehttp/guzzle": "^6.2",
+		"php": ">=7.3.2",
 		"barryvdh/laravel-dompdf": "^0.8.0",
-		"sentry/sentry-laravel": "^0.6.1",
-		"predis/predis": "^1.1",
-		"league/flysystem-aws-s3-v3": "^1.0",
-		"intervention/image": "^2.3",
-		"laravel/scout": "^4.0",
 		"bethink/elastic-scout": "3.0.8",
+		"bschmitt/laravel-amqp": "^1.2",
 		"doctrine/dbal": "2.5.13",
 		"graham-campbell/throttle": "^7.0",
+		"guzzlehttp/guzzle": "^6.2",
+		"intervention/image": "^2.3",
+		"kalnoy/nestedset": "^4.3",
+		"kris/laravel-form-builder": "^1.10",
+		"laracasts/utilities": "~2.0",
+		"laravel/framework": "5.7.*",
+		"laravel/scout": "^4.0",
+		"league/flysystem-aws-s3-v3": "^1.0",
+		"league/fractal": "^0.15.0",
 		"nao-pon/flysystem-google-drive": "~1.1",
-		"bschmitt/laravel-amqp": "^1.2",
-		"kalnoy/nestedset": "^4.3"
+		"predis/predis": "^1.1",
+		"sentry/sentry": "^1.10"
 	},
 	"require-dev": {
-		"laravel/dusk": "^4.0",
-		"laravel/tinker": "^1.0",
+		"barryvdh/laravel-debugbar": "^3.2",
+		"barryvdh/laravel-ide-helper": "^2.5",
+		"filp/whoops": "~2.0",
 		"fzaninotto/faker": "~1.4",
+		"johnkary/phpunit-speedtrap": "^3.0",
+		"laravel/dusk": "^4.0",
 		"mockery/mockery": "0.9.*",
+		"nunomaduro/larastan": "^0.3.15",
 		"phpunit/phpunit": "^7.0",
 		"symfony/css-selector": "3.1.*",
-		"symfony/dom-crawler": "3.1.*",
-		"barryvdh/laravel-debugbar": "^3.2",
-		"filp/whoops": "~2.0",
-		"barryvdh/laravel-ide-helper": "^2.5.3",
-		"johnkary/phpunit-speedtrap": "^3.0",
-		"nunomaduro/larastan": "^0.3.15"
+		"symfony/dom-crawler": "3.1.*"
 	},
 	"autoload": {
 		"classmap": [
@@ -68,6 +67,10 @@
 		]
 	},
 	"config": {
-		"preferred-install": "dist"
+		"preferred-install": "dist",
+		"platform": {
+			"ext-bcmath": "7.3.2"
+		},
+		"sort-packages": true
 	}
 }

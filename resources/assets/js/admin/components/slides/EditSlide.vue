@@ -1,8 +1,8 @@
 <template>
 	<wnl-slides-editor
-		:slideId="Number(slideId) || 0"
-		:screenId="Number(screenId) || 0"
-		:resourceUrl="resourceUrl"
+		:slide-id="Number(slideId) || 0"
+		:screen-id="Number(screenId) || 0"
+		:resource-url="resourceUrl"
 		:excluded="['snippet']"
 		:remove="true"
 		@resetSearchInputs="resetSearchInputs"
@@ -11,8 +11,8 @@
 			@screenIdChange="saveScreenId"
 			@slideIdChange="saveSlideId"
 			@resourceUrlFetched="onResourceUrlFetched"
-			:slideId="Number(slideId) || 0"
-			:screenId="Number(screenId) || 0"
+			:slide-id="Number(slideId) || 0"
+			:screen-id="Number(screenId) || 0"
 		/>
 	</wnl-slides-editor>
 </template>

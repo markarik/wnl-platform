@@ -1,12 +1,12 @@
 <template>
 	<div>
 		<wnl-paginated-list
-			:resourceName="'users/.filter'"
-			:searchAvailableFields="searchAvailableFields"
-			:customRequestParams="requestParams"
+			:resource-name="'users/.filter'"
+			:search-available-fields="searchAvailableFields"
+			:custom-request-params="requestParams"
 		>
 			<router-link class="button is-primary margin bottom" :to="{'name': 'users-add'}" slot="header">Dodaj Użytkownika</router-link>
-			<wnl-users-list :usersResponse="slotParams.list" slot="list" slot-scope="slotParams"/>
+			<wnl-users-list :users-response="slotParams.list" slot="list" slot-scope="slotParams"/>
 		</wnl-paginated-list>
 	</div>
 </template>

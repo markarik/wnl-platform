@@ -2,7 +2,7 @@
 	<div>
 		<wnl-alert v-for="(alert, timestamp) in alerts"
 				   :alert="alert"
-				   cssClass="fixed"
+				   css-class="fixed"
 				   :key="timestamp"
 				   :timestamp="timestamp"
 				   @delete="onDelete"

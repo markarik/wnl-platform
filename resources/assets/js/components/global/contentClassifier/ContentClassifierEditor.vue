@@ -59,8 +59,8 @@
 			</ul>
 
 			<wnl-content-classifier-editor-recent-terms
-				:lastUsedTerm="lastUsedTerm"
-				:lastUsedTermsSet="lastUsedTermsSet"
+				:last-used-term="lastUsedTerm"
+				:last-used-terms-set="lastUsedTermsSet"
 				:items="items"
 				@attachTaxonomyTerm="onAttachTaxonomyTerm"
 			/>
@@ -68,8 +68,8 @@
 			<div class="field">
 				<label class="label small is-uppercase"><strong>Przypisz pojęcie</strong></label>
 				<wnl-taxonomy-term-selector
-					:isDown="false"
-					:isFocused="isTaxonomyTermAutocompleteFocused"
+					:is-down="false"
+					:is-focused="isTaxonomyTermAutocompleteFocused"
 					@blur="onTaxonomyTermAutocompleteBlur"
 					@change="onAttachTaxonomyTerm"
 				/>

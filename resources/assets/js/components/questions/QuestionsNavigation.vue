@@ -1,9 +1,9 @@
 <template>
 	<wnl-sidenav-slot
-		:isVisible="isSidenavVisible"
-		:isDetached="!isSidenavMounted"
+		:is-visible="isSidenavVisible"
+		:is-detached="!isSidenavMounted"
 	>
-		<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+		<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		<aside class="sidenav-aside">
 			<wnl-sidenav :items="navigationItems"></wnl-sidenav>
 		</aside>

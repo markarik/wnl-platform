@@ -40,7 +40,8 @@ class Handler extends ExceptionHandler
 	{
 		// Send exceptions to Sentry
 		if ($this->reportToSentry($exception)) {
-			app('sentry')->captureException($exception, ['extra' => ['app_version' => config('app.version')]]);
+			$sentryClient = new \Raven_Client(env('SENTRY_DSN'));
+			$sentryClient->captureException($exception, ['extra' => ['app_version' => config('app.version')]]);
 		}
 
 		parent::report($exception);

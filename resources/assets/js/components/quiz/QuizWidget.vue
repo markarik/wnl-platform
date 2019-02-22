@@ -16,8 +16,8 @@
 			:class="`quiz-question-${currentQuestion.id}`"
 			:id="currentQuestion.id"
 			:question="currentQuestion"
-			:showComments="true"
-			:getReaction="getReaction"
+			:show-comments="true"
+			:get-reaction="getReaction"
 			:module="module"
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleClick"
@@ -41,10 +41,10 @@
 			>
 				<wnl-quiz-question
 					:key="question.id"
-					:headerOnly="true"
+					:header-only="true"
 					:question="question"
 					:class="`clickable quiz-question-${question.id}`"
-					:getReaction="getReaction"
+					:get-reaction="getReaction"
 					:module="module"
 					@headerClicked="selectQuestionFromList(index)"
 					@selectAnswer="selectAnswer"

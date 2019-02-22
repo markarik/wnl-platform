@@ -2,7 +2,7 @@
 	<div :class="{'active-in-route': isActive, 'conversation-snippet': true}">
 		<figure class="media-left">
 			<wnl-avatar
-				:fullName="profile.display_name"
+				:full-name="profile.display_name"
 				:url="profile.avatar"
 				size="medium">
 			</wnl-avatar>

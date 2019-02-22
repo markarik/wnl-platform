@@ -1,10 +1,10 @@
 <template>
 	<div class="wnl-app-layout">
 		<wnl-sidenav-slot
-			:isVisible="isSidenavVisible"
-			:isDetached="!isSidenavMounted"
+			:is-visible="isSidenavVisible"
+			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside collections-sidenav">
 				<wnl-sidenav :items="getNavigation()" :options="navigationOptions"></wnl-sidenav>
 			</aside>
@@ -37,23 +37,23 @@
 				<div class="columns">
 					<div class="column" v-show="isSlidesPanelVisible">
 						<wnl-slides-carousel
-							:categoryId="categoryId"
-							:categoryName="categoryName"
-							:rootCategoryName="rootCategoryName"
-							:savedSlidesCount="slidesIds.length"
-							:slidesIds="slidesIds"
+							:category-id="categoryId"
+							:category-name="categoryName"
+							:root-category-name="rootCategoryName"
+							:saved-slides-count="slidesIds.length"
+							:slides-ids="slidesIds"
 							@userEvent="onUserEvent"
 						></wnl-slides-carousel>
 						<wnl-qna-collection
-							:categoryName="categoryName"
-							:rootCategoryName="rootCategoryName"
+							:category-name="categoryName"
+							:root-category-name="rootCategoryName"
 						></wnl-qna-collection>
 					</div>
 					<div class="column" v-show="isQuizPanelVisible">
 						<wnl-quiz-collection
-							:categoryName="categoryName"
-							:rootCategoryName="rootCategoryName"
-							:quizQuestionsIds="quizQuestionsIds"
+							:category-name="categoryName"
+							:root-category-name="rootCategoryName"
+							:quiz-questions-ids="quizQuestionsIds"
 							@changeQuizQuestionsPage="onChangeQuizQuestionsPage"
 							@userEvent="onUserEvent"
 						></wnl-quiz-collection>

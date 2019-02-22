@@ -1,21 +1,21 @@
 <template>
 	<div class="wnl-app-layout">
 		<wnl-sidenav-slot
-			:isVisible="isSidenavVisible"
-			:isDetached="!isSidenavMounted"
+			:is-visible="isSidenavVisible"
+			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
 		<div class="scrollable-main-container wnl-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
 			<router-view
 				@userDataLoaded="onDataLoaded"
-				:filterByHelp="filterByHelp"
-				:filterByLocation="filterByLocation">
+				:filter-by-help="filterByHelp"
+				:filter-by-location="filterByLocation">
 			</router-view>
 		</div>
 		<wnl-sidenav-slot class="full-width-sidenav-slot scrollable-container" v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
-			:isVisible="true"
-			:isDetached="false"
+			:is-visible="true"
+			:is-detached="false"
 		>
 			<wnl-user-about v-if="profile" :profile="profile"></wnl-user-about>
 		</wnl-sidenav-slot>

@@ -2,7 +2,7 @@
 	<wnl-dashboard-news-content
 			v-if="showNews"
 			:message="dashboardNews.message"
-			:messageArguments="messageArguments"
+			:message-arguments="messageArguments"
 			:slug="dashboardNews.slug"
 			@onClose="closed"
 			@onContentClick="contentClicked"

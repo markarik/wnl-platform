@@ -33,7 +33,7 @@
 				<wnl-moderators-autocomplete
 					class="margin horizontal"
 					:selected="task.assignee"
-					:usersList="availableModerators"
+					:users-list="availableModerators"
 					@change="assign"
 				/>
 			</div>

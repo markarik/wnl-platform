@@ -53,9 +53,6 @@ module.exports = {
 		'vue/mustache-interpolation-spacing': [
 			'off'
 		],
-		'vue/attribute-hyphenation': [
-			'off'
-		],
 		'vue/max-attributes-per-line': [
 			'off'
 		],

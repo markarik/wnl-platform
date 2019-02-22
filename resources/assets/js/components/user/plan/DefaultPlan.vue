@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<wnl-text-overlay :isLoading="isLoading" :text="$t('lessonsAvailability.loader')"/>
+		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')"/>
 		<div class="default-plan">
 			<div class="level">
 				<div class="level-item">

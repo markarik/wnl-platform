@@ -3,11 +3,11 @@
 		<wnl-form
 			:attach="attach"
 			class="chat-message-form"
-			hideDefaultSubmit="true"
+			hide-default-submit="true"
 			name="QuizQuestionEditor"
 			:method="formMethod"
 			:suppress-enter="true"
-			:resourceRoute="formResourceRoute"
+			:resource-route="formResourceRoute"
 			@submitSuccess="onSubmitSuccess"
 			ref="quizQuestionForm"
 		>
@@ -70,11 +70,11 @@
 			</fieldset>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Tagi</legend>
-				<wnl-tags :defaultTags="questionTags" ref="tags"></wnl-tags>
+				<wnl-tags :default-tags="questionTags" ref="tags"></wnl-tags>
 			</fieldset>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Powiązane slajdy</legend>
-				<wnl-slide-ids :defaultSlides="questionSlides" ref="slides"></wnl-slide-ids>
+				<wnl-slide-ids :default-slides="questionSlides" ref="slides"></wnl-slide-ids>
 			</fieldset>
 			<fieldset class="question-form-fieldset">
 				<label class="label checkbox-label">

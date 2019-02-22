@@ -1,10 +1,10 @@
 <template>
 	<wnl-form
 		class="qna-new-comment-form margin vertical"
-		hide-default-submit
+		hide-default-submit="true"
 		method="post"
-		suppress-enter
-		reset-after-submit
+		suppress-enter="true"
+		reset-after-submit="true"
 		resource-route="comments"
 		:attach="attachedData"
 		:name="name"

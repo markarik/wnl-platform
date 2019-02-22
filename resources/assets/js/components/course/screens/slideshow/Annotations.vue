@@ -16,7 +16,7 @@
 			module="slideshow"
 			url-param="slide"
 			commentable-resource="slides"
-			is-unique
+			is-unique="true"
 			:commentable-id="currentSlideId"
 			:current-slide-id="currentSlideId"
 			@commentsHidden="$emit('commentsHidden')"

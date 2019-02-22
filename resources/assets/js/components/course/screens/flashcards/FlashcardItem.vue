@@ -56,11 +56,11 @@
 				<wnl-form
 						v-if="isNoteEditorOpen"
 						:method="noteFormMethod"
-						reset-after-submit
+						:reset-after-submit="true"
 						:resource-route="noteFormResourceRoute"
 						:name="`flashcardNote-${flashcard.id}`"
-						suppress-enter
-						hide-default-submit
+						:suppress-enter="true"
+						:hide-default-submit="true"
 						@submitSuccess="onSubmitSuccess">
 					<label class="label">TWOJA NOTATKA <wnl-text-button type="button" @click="toggleNoteEditor" icon="close">ANULUJ</wnl-text-button></label>
 					<wnl-quill

@@ -58,7 +58,7 @@
 		<wnl-sidenav-slot
 				:is-detached="!isChatMounted"
 				:is-visible="isLargeDesktop || isChatVisible"
-				has-chat
+				:has-chat="true"
 		>
 			<wnl-questions-filters
 					v-show="!testMode"

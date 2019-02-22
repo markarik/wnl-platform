@@ -75,7 +75,7 @@
 		<wnl-sidenav-slot
 				:is-visible="isChatVisible"
 				:is-detached="!isChatMounted"
-				has-chat
+				:has-chat="true"
 		>
 			<wnl-public-chat :rooms="chatRooms" title="USZANOWANKO"></wnl-public-chat>
 		</wnl-sidenav-slot>

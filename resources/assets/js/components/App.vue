@@ -4,7 +4,7 @@
 			<span class="loader"></span>
 			<span class="loader-text">{{currentOverlayText}}</span>
 		</div>
-		<wnl-navbar show></wnl-navbar>
+		<wnl-navbar :show="true"></wnl-navbar>
 		<div class="wnl-main">
 			<wnl-alerts :alerts="alerts"/>
 			<router-view></router-view>

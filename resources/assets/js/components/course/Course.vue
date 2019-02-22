@@ -19,7 +19,7 @@
 			class="course-chat"
 			:is-visible="isChatVisible"
 			:is-detached="!isChatMounted"
-			has-chat
+			:has-chat="true"
 		>
 			<div v-if="isLesson" class="lesson-active-users-container">
 				<wnl-active-users message="dashboard.activeUsersLessons" :channel="presenceChannel"/>

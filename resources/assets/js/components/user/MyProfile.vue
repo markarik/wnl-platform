@@ -31,7 +31,7 @@
 			</wnl-upload>
 		</div>
 
-		<wnl-form class="margin vertical" name="MyProfile" method="put" resource-route="users/current/profile" populate ref="form" @formIsLoaded="onFormLoaded">
+		<wnl-form class="margin vertical" name="MyProfile" method="put" resource-route="users/current/profile" populate="true" ref="form" @formIsLoaded="onFormLoaded">
 			<div class="form-input-group">
 				<wnl-form-text name="display_name" :placeholder="$t('user.myProfile.displayNamePlaceholder')">{{ $t('user.myProfile.displayName') }}</wnl-form-text>
 			</div>

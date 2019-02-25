@@ -75,6 +75,7 @@ services:
     tty: true
     volumes:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
+    working_dir: ${CONTAINER_CODE_PATH}/wnl-platform
 
   echo:
     container_name: echo

@@ -22,6 +22,7 @@ class Invoice
 	const FINAL_SERIES_NAME = 'FK';
 	const VAT_SERIES_NAME = 'FV';
 	const CORRECTIVE_SERIES_NAME = 'KOR';
+
 	const VAT_THRESHOLD = 159452.00;
 	const VAT_ZERO = 0.0;
 	const VAT_NORMAL = 0.23;
@@ -29,7 +30,7 @@ class Invoice
 
 	public function vatInvoice(Order $order, $invoice = null)
 	{
-		$builder = $order->invoices()->where('series', self::VAT_SERIES_NAME);
+		$builder = $order->invoices()->where('series', config('invoice.vat_series'));
 		if ($invoice) $builder->where('id', '<', $invoice->id);
 		$previousAdvances = $builder->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
@@ -37,8 +38,8 @@ class Invoice
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
-				'number' => $this->nextNumberInSeries(self::VAT_SERIES_NAME),
-				'series' => self::VAT_SERIES_NAME,
+				'number' => $this->nextNumberInSeries(config('invoice.vat_series')),
+				'series' => config('invoice.vat_series'),
 				'amount' => $recentSettlement,
 				'type'   => 'vat',
 			]);

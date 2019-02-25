@@ -10,8 +10,10 @@ use App\Models\UserCourseProgress;
 use App\Models\UserFlashcardsResults;
 use App\Models\UserQuizResults;
 
-trait CourseProgressStats {
-	public function getCourseProgressStats($startDate, $endDate) {
+trait CourseProgressStats
+{
+	public function getCourseProgressStats($startDate, $endDate)
+	{
 		$start = microtime(true);
 		$t = false;
 
@@ -38,23 +40,29 @@ trait CourseProgressStats {
 
 		if ($t) dump('quizQuestionsSolved', microtime(true) - $start);
 
-		$userSectionsProgress = UserCourseProgress::where('user_id', $this->profile->id)
-			->whereDate('user_course_progress.created_at', '<=', $endDate)
-			->join('lessons', 'lessons.id', '=', 'lesson_id')
+
+		$userSectionsProgress = UserCourseProgress::selectRaw('count(distinct(section_id)) as count')
+			->where('user_id', $this->profile->id)
 			->join('sections', 'sections.id', '=', 'section_id')
+			->join('screens', 'screens.id', '=', 'sections.screen_id')
+			->join('lessons', 'lessons.id', '=', 'screens.lesson_id')
 			->where('lessons.is_required', 1)
-			->whereNotNull('user_course_progress.section_id')
 			->where('user_course_progress.status', 'complete')
-			->count();
+			->whereNotNull('user_course_progress.section_id')
+			->whereDate('user_course_progress.created_at', '<=', $endDate)
+			->first()
+			->count;
+
 
 		if ($t) dump('sectionsProgress', microtime(true) - $start);
 
-		$allSections = Section::select(['id'])
+		$allSections = Section::select(['sections.id'])
 			->whereDate('sections.created_at', '<=', $endDate)
 			->join('screens', 'screens.id', '=', 'screen_id')
 			->join('lessons', 'lessons.id', '=', 'lesson_id')
 			->where('lessons.is_required', 1)
 			->count();
+
 
 		$userSectionsProgressPercentage = (int)round(($userSectionsProgress / $allSections) * 100);
 
@@ -74,14 +82,15 @@ trait CourseProgressStats {
 //		}
 
 		return [
-			'quiz_questions_solved' => $userQuizQuestionsSolved,
-			'flashcards_solved' => $userFlashcardsSolved,
+			'quiz_questions_solved'  => $userQuizQuestionsSolved,
+			'flashcards_solved'      => $userFlashcardsSolved,
 			'sections_progress_perc' => $userSectionsProgressPercentage,
-			'time' => $userTime
+			'time'                   => $userTime
 		];
 	}
 
-	public function hasFinishedCourse($startDate, $endDate) {
+	public function hasFinishedCourse($startDate, $endDate)
+	{
 		$userStats = $this->getCourseProgressStats($startDate, $endDate);
 
 		return $userStats['course_progress_perc'] >= 80

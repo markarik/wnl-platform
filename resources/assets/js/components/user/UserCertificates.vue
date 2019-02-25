@@ -25,7 +25,7 @@
 			<ul>
 				<li v-for="order in finalCertificates" :key="order.id">
 					<a @click="downloadFinalCertificate(order.id)">
-						Certyfikat Ukończenia: {{order.product.name}} - {{formatDate(order.product.course_start)}} - {{formatDate(new Date())}}
+						Certyfikat Ukończenia: {{order.product.name}} - {{formatDate(order.product.course_start)}} - {{formatDate(order.product.access_end)}}
 					</a>
 				</li>
 			</ul>

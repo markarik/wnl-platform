@@ -87,7 +87,7 @@ class CertificatesApiController extends ApiController
 			$font->align('center');
 		});
 
-		$img->text(Carbon::now()->format('j / m / Y') . ' r., Poznań', 2365, 1650, function($font) {
+		$img->text($order->product->course_start->format('j / m / Y') . ' r., Poznań', 2365, 1650, function($font) {
 			$fontFile = base_path('resources/fonts/Rubik/Rubik-Medium.ttf');
 			$font->file($fontFile);
 			$font->size(61);

@@ -33,7 +33,7 @@ class CertificatesApiController extends ApiController
 			if (Carbon::parse($order->product->course_end)->isPast()) {
 				$hasFinishedCourse = $user->hasFinishedCourse(
 					$order->product->signups_start,
-					$order->product->course_end
+					$order->product->access_end
 				);
 
 				if ($hasFinishedCourse) $finishedCourses[] = $order;
@@ -73,7 +73,7 @@ class CertificatesApiController extends ApiController
 		$img->text(
 			sprintf("%s - %s r.",
 				$order->product->course_start->format('j.m.Y'),
-				$order->product->course_end->format('j.m.Y')
+				Carbon::now()->format('j.m.Y')
 			), 1794, 1372, function($font) {
 			$fontFile = base_path('resources/fonts/Rubik/Rubik-Light.ttf');
 			$font->file($fontFile);
@@ -87,7 +87,7 @@ class CertificatesApiController extends ApiController
 			$font->align('center');
 		});
 
-		$img->text($order->product->course_start->format('j / m / Y') . ' r., Poznań', 2365, 1650, function($font) {
+		$img->text(Carbon::now()->format('j / m / Y') . ' r., Poznań', 2365, 1650, function($font) {
 			$fontFile = base_path('resources/fonts/Rubik/Rubik-Medium.ttf');
 			$font->file($fontFile);
 			$font->size(61);
@@ -115,13 +115,6 @@ class CertificatesApiController extends ApiController
 
 		if (!$user->can('view', $order)) {
 			return $this->respondForbidden("User not allowed to view order details");
-		}
-
-		if (!$user->hasFinishedCourse(
-			$order->product->signups_start,
-			$order->product->course_end
-		)) {
-			return $this->respondForbidden("User did not finish the course");
 		}
 
 		$file = Storage::drive()->get('final_certificate.jpg');

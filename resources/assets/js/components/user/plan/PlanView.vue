@@ -66,7 +66,6 @@
 import {mapGetters} from 'vuex';
 
 import LessonsPlanner from './LessonsPlanner';
-import PlannerGuarantee from './PlanGuarantee.vue';
 import PlannerGuide from './PlannerGuide';
 import DownloadPlan from './DownloadPlan';
 import Dropdown from 'js/components/global/Dropdown';
@@ -88,10 +87,6 @@ export default {
 				{
 					title: 'Jak zmienić plan?',
 					component: PlannerGuide,
-				},
-				{
-					title: 'Gwarancja satysfakcji',
-					component: PlannerGuarantee,
 				},
 				{
 					title: 'Pobierz plan pracy',

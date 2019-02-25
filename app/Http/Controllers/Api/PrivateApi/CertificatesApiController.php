@@ -73,7 +73,7 @@ class CertificatesApiController extends ApiController
 		$img->text(
 			sprintf("%s - %s r.",
 				$order->product->course_start->format('j.m.Y'),
-				Carbon::now()->format('j.m.Y')
+				$order->product->access_end->format('j.m.Y')
 			), 1794, 1372, function($font) {
 			$fontFile = base_path('resources/fonts/Rubik/Rubik-Light.ttf');
 			$font->file($fontFile);
@@ -129,7 +129,7 @@ class CertificatesApiController extends ApiController
 		$img->text(
 			sprintf("%s - %s r.",
 				$order->product->course_start->format('j.m.Y'),
-				$order->product->course_end->format('j.m.Y')
+				$order->product->access_end->format('j.m.Y')
 			), 902, 624, function($font) {
 			$fontFile = base_path('resources/fonts/Rubik/Rubik-Light.ttf');
 			$font->file($fontFile);
@@ -143,7 +143,7 @@ class CertificatesApiController extends ApiController
 			$font->align('center');
 		});
 
-			$img->text($order->product->course_end->format('j / m / Y') . ' r., Poznań', 1182, 867, function($font) {
+			$img->text($order->product->access_end->format('j / m / Y') . ' r., Poznań', 1182, 867, function($font) {
 			$fontFile = base_path('resources/fonts/Rubik/Rubik-Medium.ttf');
 			$font->file($fontFile);
 			$font->size(30);

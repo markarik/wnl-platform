@@ -47,7 +47,7 @@
 			<wnl-content-item-classifier-editor
 				v-if="annotation.id"
 				class="margin bottom"
-				is-always-active
+				:is-always-active="true"
 				:content-item-id="annotation.id"
 				:content-item-type="CONTENT_TYPES.ANNOTATION"
 			/>

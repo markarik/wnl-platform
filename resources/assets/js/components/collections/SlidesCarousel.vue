@@ -22,7 +22,7 @@
 			ref="slideshow"
 			v-if="htmlContent"
 			:html-content="htmlContent"
-			preserve-route
+			:preserve-route="true"
 			:screen-data="screenData"
 			:slide-order-number="currentSlideOrderNumber"
 			@slideBookmarked="onSlideBookmarked"

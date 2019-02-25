@@ -19,10 +19,6 @@ class QuizQuestion extends Model implements WithReactions, WithTags
 		'preserve_order' => 'boolean',
 	];
 
-	public function setPreserveOrderAttribute($value) {
-		$this->preserve_order = (bool) $value;
-	}
-
 	public function quizAnswers()
 	{
 		return $this->hasMany('App\Models\QuizAnswer');

@@ -140,6 +140,7 @@ export default {
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['getAncestorsById']),
+		...mapGetters('taxonomies', ['taxonomyById']),
 		hasActiveFilters() {
 			return this.byTaxonomyTermsFilter.length || this.byTagsFilter.length;
 		},
@@ -153,10 +154,11 @@ export default {
 				this.byTagsFilter.push(tag);
 			}
 		},
-		onTermSelect(term) {
+		onTermSelect(term, taxonomyId) {
 			if (!this.byTaxonomyTermsFilter.find(({id}) => id === term.id)) {
 				this.byTaxonomyTermsFilter.push({
 					...term,
+					taxonomy: this.taxonomyById(taxonomyId),
 					ancestors: this.getAncestorsById(term.id),
 				});
 			}

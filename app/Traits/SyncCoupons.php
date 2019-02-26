@@ -2,15 +2,15 @@
 
 namespace App\Traits;
 
+use App\Models\Coupon;
 use GuzzleHttp\Client;
 
 trait SyncCoupons {
-
 	protected function issueSyncRequest($method, $body) {
 		$headers = [
 			'Accept' => 'application/json',
 			'Host' => env('APP_COUPONS_SYNC_HOST'),
-			'X-BETHINK-COUPON-SYNC-TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
+			Coupon::SYNC_TOKEN_HEADER => env('APP_COUPONS_SYNC_TOKEN'),
 		];
 
 		$client = new Client();

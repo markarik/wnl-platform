@@ -1,7 +1,7 @@
 <template>
 	<div class="orders-list">
 		<wnl-paginated-list
-			:resourceName="'orders/.filter'"
+			:resource-name="'orders/.filter'"
 		>
 			<h3 slot="header">Lista zamówień</h3>
 			<table class="table" slot-scope="slotProps" slot="list">

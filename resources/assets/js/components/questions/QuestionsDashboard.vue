@@ -33,7 +33,7 @@
 						<div v-if="plan === null" class="margin vertical">
 							<wnl-text-loader/>
 						</div>
-						<wnl-questions-plan-progress v-else-if="hasPlan" :allowChange="false" :plan="plan" @userEvent="onUserEvent"/>
+						<wnl-questions-plan-progress v-else-if="hasPlan" :allow-change="false" :plan="plan" @userEvent="onUserEvent"/>
 						<div class="questions-plan-create" v-else>
 							<p class="questions-plan-create-heading">
 								{{$t('questions.dashboard.plan.create.heading')}}
@@ -122,9 +122,9 @@
 			</div>
 		</div>
 		<wnl-sidenav-slot
-			:isDetached="!isChatMounted"
-			:isVisible="isChatVisible"
-			:hasChat="true"
+			:is-detached="!isChatMounted"
+			:is-visible="isChatVisible"
+			:has-chat="true"
 		>
 			<div class="questions-feed-container">
 				<div class="questions-feed-heading" :class="{'detached': !isChatMounted}">

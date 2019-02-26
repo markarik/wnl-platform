@@ -11,7 +11,7 @@
 			class="margin vertical"
 			method="put"
 			name="MyAddress"
-			:resourceRoute="resourceRoute"
+			:resource-route="resourceRoute"
 			:populate="!address"
 			:value="address"
 		>

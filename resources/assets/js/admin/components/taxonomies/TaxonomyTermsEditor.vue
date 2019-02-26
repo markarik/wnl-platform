@@ -15,7 +15,7 @@
 		<wnl-taxonomy-terms-list slot="nodes-list" :terms="getRootNodes"/>
 		<wnl-taxonomy-term-editor-right
 			slot="panel-right"
-			:taxonomyId="taxonomyId"
+			:taxonomy-id="taxonomyId"
 		/>
 	</wnl-nested-set-editor>
 </template>

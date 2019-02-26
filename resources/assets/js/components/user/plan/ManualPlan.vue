@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<wnl-text-overlay :isLoading="isLoading" :text="$t('lessonsAvailability.loader')"/>
+		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')"/>
 		<div class="all-lessons-view">
 			<div class="level-left all-lessons-annotation-header">
 				<div class="level">
@@ -72,7 +72,7 @@
 										<wnl-datepicker
 											:class="{'hasColorBackground': isEven(index)}"
 											:value="getStartDate(subitem)"
-											:subitemId="subitem.id"
+											:subitem-id="subitem.id"
 											:config="startDateConfig"
 											@onChange="(payload) => onStartDateChange(payload, subitem)"
 										/>

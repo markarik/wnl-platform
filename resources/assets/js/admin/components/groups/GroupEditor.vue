@@ -5,7 +5,7 @@
 			:populate="isEdit"
 			name="GroupEditor"
 			@submitSuccess="onSubmitSuccess"
-			:hideDefaultSubmit="true"
+			:hide-default-submit="true"
 			class="editor"
 	>
 		<div class="header">

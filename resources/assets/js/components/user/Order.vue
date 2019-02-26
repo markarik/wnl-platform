@@ -228,8 +228,8 @@
 						<wnl-form class="margin vertical"
 									name="CouponCode"
 									method="put"
-									:resourceRoute="couponUrl"
-									hideDefaultSubmit="true"
+									:resource-route="couponUrl"
+									hide-default-submit="true"
 									@submitSuccess="couponSubmitSuccess">
 							<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
 							<wnl-submit>Wykorzystaj kod</wnl-submit>
@@ -266,7 +266,7 @@
 		<wnl-p24-form
 				:user-data="userData"
 				:payment-data="paymentData"
-				:productName="order.product.name"
+				:product-name="order.product.name"
 				ref="p24Form"
 		/>
 	</div>

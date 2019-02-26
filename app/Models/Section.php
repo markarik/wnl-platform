@@ -20,7 +20,7 @@ class Section extends Model implements WithSlides, WithTags
 	}
 
 	public function slides() {
-		return $this->morphToMany('\App\Models\Slide', 'presentable');
+		return $this->morphToMany('\App\Models\Slide', 'presentable')->orderBy('order_number');
 	}
 
 	public function screen()

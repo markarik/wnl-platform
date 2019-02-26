@@ -25,7 +25,6 @@
 									'has-parent': term.parent_id !== null,
 								}"
 								is-bordered
-								:style="getStyleForTerm(term)"
 							>
 								<span
 									slot="left"
@@ -60,8 +59,8 @@
 			</ul>
 
 			<wnl-content-classifier-editor-recent-terms
-				:lastUsedTerm="lastUsedTerm"
-				:lastUsedTermsSet="lastUsedTermsSet"
+				:last-used-term="lastUsedTerm"
+				:last-used-terms-set="lastUsedTermsSet"
 				:items="items"
 				@attachTaxonomyTerm="onAttachTaxonomyTerm"
 			/>
@@ -69,8 +68,8 @@
 			<div class="field">
 				<label class="label small is-uppercase"><strong>Przypisz pojęcie</strong></label>
 				<wnl-taxonomy-term-selector
-					:isDown="false"
-					:isFocused="isTaxonomyTermAutocompleteFocused"
+					:is-down="false"
+					:is-focused="isTaxonomyTermAutocompleteFocused"
 					@blur="onTaxonomyTermAutocompleteBlur"
 					@change="onAttachTaxonomyTerm"
 				/>
@@ -267,14 +266,6 @@ export default {
 				}
 			}
 		},
-		getStyleForTerm(term) {
-			const color = term.taxonomy && term.taxonomy.color;
-			if (!color) return {};
-
-			return {
-				borderColor: color
-			};
-		}
 	},
 	watch: {
 		async isFocused() {

@@ -17,7 +17,7 @@ class Slideshow extends Model implements WithSlides
 
 	public function slides()
 	{
-		return $this->morphToMany('\App\Models\Slide', 'presentable');
+		return $this->morphToMany('\App\Models\Slide', 'presentable')->orderBy('order_number');
 	}
 
 	public function getBackgroundUrlAttribute()

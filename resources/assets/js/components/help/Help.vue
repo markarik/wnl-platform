@@ -1,13 +1,13 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-				:isVisible="isSidenavVisible"
-				:isDetached="!isSidenavMounted"
+				:is-visible="isSidenavVisible"
+				:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :isHorizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside help-sidenav">
 				<wnl-sidenav :items="sidenavItems"
-							 itemsHeading="Pomoc"></wnl-sidenav>
+							 items-heading="Pomoc"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
@@ -21,9 +21,9 @@
 			</div>
 		</div>
 		<wnl-sidenav-slot
-				:isVisible="isChatVisible"
-				:isDetached="!isChatMounted"
-				:hasChat="true"
+				:is-visible="isChatVisible"
+				:is-detached="!isChatMounted"
+				:has-chat="true"
 		>
 			<wnl-public-chat :rooms="chatRooms"
 							 title="W czym możemy Ci pomóc?"></wnl-public-chat>

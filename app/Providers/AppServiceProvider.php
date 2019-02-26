@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
-use Laravel\Tinker\TinkerServiceProvider;
 use Log;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RavenHandler;
@@ -47,7 +46,6 @@ class AppServiceProvider extends ServiceProvider
 			$this->app->register(DuskServiceProvider::class);
 		}
 		if ($this->app->environment('dev', 'local')) {
-			$this->app->register(TinkerServiceProvider::class);
 			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 		}
 		if (env('DEBUG_BAR') === true) {
@@ -112,12 +110,12 @@ class AppServiceProvider extends ServiceProvider
 	{
 		Validator::extend('alpha_spaces', function ($attribute, $value) {
 			// Useful for names and surnames - accept letters, spaces and hyphens
-			return preg_match('/^[\pL\s-]+$/u', $value);
+			return preg_match('/^[\pL\s\-]+$/u', $value);
 		});
 
 		Validator::extend('alpha_comas', function ($attribute, $value) {
 			// Useful for textareas - accepts letters, comas, dots, spaces and hyphens
-			return preg_match('/^[\pL\s\d-,.:;()""]+$/u', $value);
+			return preg_match('/^[\pL\s\d\-,.:;()""]+$/u', $value);
 		});
 
 		Validator::extend('morph_exists', function ($attribute, $value, $parameters, $validator) {
@@ -140,7 +138,8 @@ class AppServiceProvider extends ServiceProvider
 	protected function registerQueueLogger()
 	{
 		Queue::failing(function (JobFailed $event) {
-			app('sentry')->captureException($event->exception, [
+			$sentryClient = new \Raven_Client(env('SENTRY_DSN'));
+			$sentryClient->captureException($event->exception, [
 				'extra' => ['app_version' => config('app.version')],
 				'job' => $event->job->resolveName(),
 			]);

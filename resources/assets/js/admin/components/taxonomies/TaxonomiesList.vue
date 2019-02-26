@@ -1,7 +1,7 @@
 <template>
 	<div class="orders-list">
 		<wnl-paginated-list
-			:resourceName="'taxonomies/.filter'"
+			:resource-name="'taxonomies/.filter'"
 		>
 			<h3 slot="header" class="title">
 				Lista Taxonomii

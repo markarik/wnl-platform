@@ -18,7 +18,7 @@
 				<wnl-content-classifier-editor
 					v-if="hasContentItem"
 					:items="[contentItem]"
-					:isFocused="isFocused"
+					:is-focused="isFocused"
 					@blur="$emit('blur', $event)"
 					@taxonomyTermAttached="onTaxonomyTermAttached"
 					@taxonomyTermDetached="onTaxonomyTermDetached"

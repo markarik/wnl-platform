@@ -6,14 +6,14 @@ namespace App\Observers;
 
 use App\Jobs\SyncCouponUpdate;
 use App\Models\Coupon;
-use GuzzleHttp\Client;
+use App\Traits\SyncCoupons;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
 
 class CouponObserver
 {
-	use DispatchesJobs;
+	use DispatchesJobs, SyncCoupons;
 
 	public function created(Coupon $coupon)
 	{
@@ -25,22 +25,8 @@ class CouponObserver
 			$couponToCreate = $coupon->toArray();
 			unset($couponToCreate['id']);
 
-			\Log::debug('COUPON SHOULD BE CREATED' . $coupon->id);
-
-			$headers = [
-				'Accept' => 'application/json',
-				'Host' => env('APP_COUPONS_SYNC_HOST'),
-				'X-BETHINK-COUPON-SYNC-TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
-			];
-
-			$client = new Client();
 			try {
-				$client->request('POST', env('APP_COUPONS_SYNC_URL') . "/api/v1/coupons", [
-					'headers' => $headers,
-					'json' => [
-						'coupon' => $couponToCreate
-					]
-				]);
+				$this->issueSyncRequest('POST', $couponToCreate);
 			} catch (RequestException $exception) {
 				// DB::table is used to omit observable
 				// The removeObservableEvents doesn't work in this context.
@@ -64,19 +50,7 @@ class CouponObserver
 		}
 
 		if (empty($coupon->studyBuddy)) {
-			$couponToCreate = $coupon->toArray();
-			unset($couponToCreate['id']);
-
-			$headers = [
-				'Accept' => 'application/json',
-				'Host' => env('APP_COUPONS_SYNC_HOST'),
-				'X-BETHINK-COUPON-SYNC-TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
-			];
-
-			$client = new Client();
-			$client->request('DELETE', env('APP_COUPONS_SYNC_URL') . "/api/v1/coupons/{$coupon->code}", [
-				'headers' => $headers,
-			]);
+			$this->issueSyncRequest('DELETE', $coupon);
 		}
 	}
 }

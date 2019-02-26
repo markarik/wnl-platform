@@ -4,6 +4,7 @@
 namespace App\Observers;
 
 
+use App\Jobs\SyncCouponUpdate;
 use App\Models\Coupon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Requests;
@@ -40,14 +41,7 @@ class CouponObserver
 			$couponToUpdate = $coupon->toArray();
 			unset($couponToUpdate['id']);
 
-			$headers = [
-				'Accept' => 'application/json',
-				'Host' => env('APP_COUPONS_SYNC_HOST'),
-				'X-BETHINK-COUPON-SYNC-TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
-			];
-			Requests::put(env('APP_COUPONS_SYNC_URL') . "/api/v1/coupons/{$coupon->code}", $headers, [
-				'coupon' => $couponToUpdate
-			]);
+			$this->dispatch(new SyncCouponUpdate($couponToUpdate));
 		}
 	}
 }

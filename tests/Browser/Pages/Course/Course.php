@@ -29,7 +29,7 @@ class Course extends BasePage
 		return [
 			'@welcome_message_container' => '.scrollable-main-container',
 			'@start_first_lesson_button' => 'a[href="/app/courses/1/lessons/1"]',
-			'@side_nav' => '.wnl-sidenav'
+			'@side_nav' => '.course-sidenav'
 		];
 	}
 

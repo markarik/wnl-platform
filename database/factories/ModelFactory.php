@@ -11,6 +11,7 @@
 |
 */
 
+/** @var $factory \Illuminate\Database\Eloquent\Factory */
 $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 	return [
 		'first_name' => $faker->firstName,
@@ -21,6 +22,7 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 		'address'    => $faker->address,
 		'zip'        => $faker->postcode,
 		'city'       => $faker->city,
+		'consent_terms' => 1
 	];
 });
 

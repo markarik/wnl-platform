@@ -194,7 +194,7 @@ class BethinkBrowser extends Browser
 		return $this;
 	}
 
-	public function click($selector)
+	public function click($selector = null)
 	{
 		$element = $this->resolver->findOrFail($selector);
 		$this->scrollToElement($element);

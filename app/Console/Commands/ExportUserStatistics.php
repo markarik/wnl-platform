@@ -55,7 +55,6 @@ class ExportUserStatistics extends Command
 		$minDate = $products->first()->signups_start;
 		$maxDate = $products->first()->course_end;
 
-		$filename = storage_path('app/exports/user_stats.xlsx');
 
 		$this->info("Exporting user stats for date range from {$minDate} to {$maxDate}.");
 		$this->info("Database: {$dbName}, newest record from {$newestRecord}");
@@ -67,7 +66,7 @@ class ExportUserStatistics extends Command
 			->filter(function ($group) {
 				return $group->count();
 			})
-			->map(function ($group, $key) use ($total) {
+			->map(function ($group, $key) use (&$total) {
 				$recordsCount = $group->count();
 				$total += $recordsCount;
 				$this->info("Group {$key} has {$recordsCount} records.");
@@ -87,7 +86,7 @@ class ExportUserStatistics extends Command
 				});
 			});
 
-
+		$filename = storage_path('app/exports/user_stats.xlsx');
 		$sheets = new SheetCollection($groups);
 		(new FastExcel($sheets))->export($filename);
 
@@ -165,21 +164,23 @@ class ExportUserStatistics extends Command
 				$userRecord['userQuizQuestionsSolved'] >= 300 ||
 				$userRecord['time'] >= 100;
 
+			$G5 = !$G1 && !$G2 && !$G3 && !$G4;
+
 			$userClassification = [
 				'N-G1' => $newUser && $G1,
 				'N-G2' => $newUser && ($G1 || $G2),
 				'N-G3' => $newUser && ($G1 || $G3),
 				'N-G4' => $newUser && !$G1 && !$G2 && !$G3 && $G4,
-				'N-G5' => $newUser && !$G1 && !$G2 && !$G3 && !$G4,
+				'N-G5' => $newUser && $G5,
 
 				'P-G1' => !$newUser && $G1,
 				'P-G2' => !$newUser && ($G1 || $G2),
 				'P-G3' => !$newUser && ($G1 || $G3),
 				'P-G4' => !$newUser && !$G1 && !$G2 && !$G3 && $G4,
-				'P-G5' => !$newUser && !$G1 && !$G2 && !$G3 && !$G4,
+				'P-G5' => !$newUser && $G5,
 
-				'N-KORELACJE' => $newUser,
-				'P-KORELACJE' => !$newUser,
+				'N-KORELACJE' => $newUser && !$G5,
+				'P-KORELACJE' => !$newUser && !$G5,
 			];
 
 			foreach ($groups as $groupName => $group) {

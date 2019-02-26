@@ -14,33 +14,48 @@ trait CourseProgressStats
 {
 	public function getCourseProgressStats($startDate, $endDate)
 	{
-		$start = microtime(true);
-		$t = false;
-
+		/*
+		 * Course progress (by completed lessons)
+		 */
 		$allLessons = Lesson::select(['id'])
 			->whereDate('created_at', '<=', $endDate)
 			->where('is_required', 1)
 			->count();
 
-		if ($t) dump('allLessons', microtime(true) - $start);
+		$userCourseProgress = UserCourseProgress::where('user_id', $this->profile->id)
+			->whereDate('user_course_progress.created_at', '<=', $endDate)
+			->join('lessons', 'lessons.id', '=', 'lesson_id')
+			->where('lessons.is_required', 1)
+			->whereNull('user_course_progress.section_id')
+			->whereNull('user_course_progress.screen_id')
+			->where('user_course_progress.status', 'complete')
+			->count();
 
+		$userCourseProgressPercentage = (int)round(($userCourseProgress / $allLessons) * 100);
+
+		/*
+		 * Time
+		 */
 		$timeCollection = $this->userTime()
 			->whereBetween('created_at', [$startDate, $endDate])
 			->orderBy('id', 'desc')
 			->get();
+
 		$userTime = (int)round(($timeCollection->max('time') - $timeCollection->min('time')) / 60);
 
-		if ($t) dump('timeCollection', microtime(true) - $start);
-
+		/*
+		 * Quiz questions progress
+		 */
 		$userQuizQuestionsSolved = UserQuizResults
 			::selectRaw('count(distinct(quiz_question_id)) as count')
 			->where('user_id', $this->id)
 			->first()
 			->count;
 
-		if ($t) dump('quizQuestionsSolved', microtime(true) - $start);
 
-
+		/*
+		 * Sections progress
+		 */
 		$userSectionsProgress = UserCourseProgress::selectRaw('count(distinct(section_id)) as count')
 			->where('user_id', $this->profile->id)
 			->join('sections', 'sections.id', '=', 'section_id')
@@ -54,8 +69,6 @@ trait CourseProgressStats
 			->count;
 
 
-		if ($t) dump('sectionsProgress', microtime(true) - $start);
-
 		$allSections = Section::select(['sections.id'])
 			->whereDate('sections.created_at', '<=', $endDate)
 			->join('screens', 'screens.id', '=', 'screen_id')
@@ -63,29 +76,23 @@ trait CourseProgressStats
 			->where('lessons.is_required', 1)
 			->count();
 
-
 		$userSectionsProgressPercentage = (int)round(($userSectionsProgress / $allSections) * 100);
 
-		if ($t) dump('allSections', microtime(true) - $start);
-
+		/*
+		 * Flashcards prgress
+		 */
 		$userFlashcardsSolved = UserFlashcardsResults
 			::selectRaw('count(distinct(flashcard_id)) as count')
 			->where('user_id', $this->id)
 			->first()
 			->count;
 
-		if ($t) dump('userFlashcardsSolved', microtime(true) - $start);
-
-		$end = microtime(true) - $start;
-//		if ($end > 0.4) {
-//			dump("User {$this->id} is slow, time {$end}");
-//		}
-
 		return [
+			'course_progress_perc'   => $userCourseProgressPercentage,
 			'quiz_questions_solved'  => $userQuizQuestionsSolved,
+			'time'                   => $userTime,
 			'flashcards_solved'      => $userFlashcardsSolved,
 			'sections_progress_perc' => $userSectionsProgressPercentage,
-			'time'                   => $userTime
 		];
 	}
 

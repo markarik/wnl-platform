@@ -94,7 +94,7 @@ class OrdersHandleUnpaid extends Command
 			} else {
 				$reminder = $order->paymentReminders->last();
 
-				if ($now->diffInWeekdays($reminder->created_at) >= 2) {
+				if ($now->diffInWeekdays($reminder->created_at) >= 4) {
 					if ($this->mailDebug) $this->mail($order, 'canceled');
 					$order->cancel();
 				}
@@ -179,7 +179,7 @@ class OrdersHandleUnpaid extends Command
 
 		return
 			!$order->user->suspended &&
-			$now->diffInWeekdays($reminder->created_at) >= 2 &&
+			$now->diffInWeekdays($reminder->created_at) >= 4 &&
 			$reminder->instalment_number === $instalment->order_number;
 	}
 

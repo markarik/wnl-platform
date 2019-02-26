@@ -9,6 +9,7 @@ class PaymentRandomTest extends DuskTestCase
 	/** @test */
 	public function randomCheckoutTest()
 	{
+		$this->markTestSkipped();
 		if (file_exists('scenario.dusk')) unlink('scenario.dusk');
 		$this->browse(function ($browser) {
 			$next = UserModule::class;
@@ -36,6 +37,7 @@ class PaymentRandomTest extends DuskTestCase
 	/** @test */
 	public function fromScenarioFile()
 	{
+		$this->markTestSkipped();
 		if (!file_exists('scenario.dusk')) {
 			print 'File scenario.dusk not found!';
 		}

@@ -30,13 +30,8 @@ class CertificatesApiController extends ApiController
 		$finishedCourses = [];
 
 		foreach ($paidOrders as $order) {
-			if (Carbon::parse($order->product->course_end)->isPast()) {
-				$hasFinishedCourse = $user->hasFinishedCourse(
-					$order->product->signups_start,
-					$order->product->course_end
-				);
-
-				if ($hasFinishedCourse) $finishedCourses[] = $order;
+			if ($this->hasFinishedCoursePastItsEnd($user, $order)) {
+				$finishedCourses[] = $order;
 			}
 		}
 
@@ -117,10 +112,7 @@ class CertificatesApiController extends ApiController
 			return $this->respondForbidden("User not allowed to view order details");
 		}
 
-		if (!$user->hasFinishedCourse(
-			$order->product->signups_start,
-			$order->product->course_end
-		)) {
+		if (!$this->hasFinishedCoursePastItsEnd($user, $order)) {
 			return $this->respondForbidden("User did not finish the course");
 		}
 
@@ -163,5 +155,14 @@ class CertificatesApiController extends ApiController
 			->header('Content-type', "image/jpg")
 			->header("Cache-Control", 'no-store, no-cache')
 			->header('Content-Disposition', sprintf('attachment; filename="%s"', $imgPath));
+	}
+
+	private function hasFinishedCoursePastItsEnd($user, $order)
+	{
+		return Carbon::parse($order->product->course_end)->isPast() && 
+			$user->hasFinishedCourse(
+				$order->product->signups_start,
+				$order->product->access_end
+			);
 	}
 }

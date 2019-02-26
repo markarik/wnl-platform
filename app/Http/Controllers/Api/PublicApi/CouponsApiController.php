@@ -9,7 +9,7 @@ class CouponsApiController extends ApiController
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
-		$this->resourceName = config('papi.resources.coupons');
+		$this->resourceName = config('api.resources.coupons');
 	}
 
 	public function post(Request $request)

@@ -56,7 +56,6 @@ return [
 		'discussions'             => 'discussions',
 		'user-flashcard-notes'    => 'user_flashcard_notes',
 		'roles'                   => 'roles',
-		'course-structure-nodes'  => 'course_structure_nodes',
-		'coupons'                 => 'coupons'
+		'course-structure-nodes'  => 'course_structure_nodes'
 	],
 ];

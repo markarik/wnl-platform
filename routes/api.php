@@ -12,7 +12,7 @@
 */
 
 Route::group(['namespace' => 'Api\PublicApi'], function () {
-	$r = config('papi.resources');
+	$r = config('api.resources');
 
 	// Products
 	Route::get('products/availability', 'ProductsApiController@getAvailability');

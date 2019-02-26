@@ -17,7 +17,6 @@ class CouponObserver
 
 	public function created(Coupon $coupon)
 	{
-		\Log::debug("IM HERE....");
 		if (empty(env('APP_COUPONS_SYNC_SOURCE'))) {
 			return;
 		}
@@ -31,7 +30,7 @@ class CouponObserver
 			$headers = [
 				'Accept' => 'application/json',
 				'Host' => env('APP_COUPONS_SYNC_HOST'),
-//				'X-BETHINK-COUPON-SYNC-TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
+				'X-BETHINK-COUPON-SYNC-TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
 			];
 
 			$client = new Client();
@@ -43,9 +42,9 @@ class CouponObserver
 					]
 				]);
 			} catch (RequestException $exception) {
-				$coupon->removeObservableEvents(['deleted']);
-				$coupon->delete();
-				\Log::debug('COUPON SHOULD BE DELETED' . $coupon->id);
+				// DB::table is used to omit observable
+				// The removeObservableEvents doesn't work in this context.
+				\DB::table('coupons')->delete($coupon->id);
 			}
 		}
 	}
@@ -60,7 +59,6 @@ class CouponObserver
 	}
 
 	public function deleted(Coupon $coupon) {
-		\Log::debug('in deleted observable');
 		if (empty(env('APP_COUPONS_SYNC_SOURCE'))) {
 			return;
 		}

@@ -9,7 +9,7 @@
 		/>
 		<p class="title is-3">{{title}}</p>
 
-		<slot/>
+		<slot name="above-content"/>
 
 		<div class="notification is-danger has-text-centered"
 			 v-show="submissionFailed">
@@ -29,18 +29,21 @@
 			</template>
 
 			<div class="slide-content-editor">
-				<wnl-form-code type="text" name="content" :form="form" v-model="form.content"/>
+				<wnl-code type="text" name="content" :form="form" v-model="form.content"/>
 			</div>
+
+			<slot name="below-content"/>
+
 			<div class="level">
 				<div class="level-left">
 					<div class="level-item">
 						<p class="control">
-							<wnl-form-checkbox
+							<wnl-checkbox
 									type="text" name="is_functional"
 									:form="form"
 									v-model="form.is_functional">
 								Slajd funkcjonalny?
-							</wnl-form-checkbox>
+							</wnl-checkbox>
 						</p>
 					</div>
 				</div>
@@ -107,12 +110,14 @@
 
 <script>
 import {mapActions} from 'vuex';
+
+import WnlCode from 'js/admin/components/forms/Code';
+import WnlCheckbox from 'js/admin/components/forms/Checkbox';
+import WnlSlidePreview from 'js/components/global/SlidePreview';
+
+import {alerts} from 'js/mixins/alerts';
 import Form from 'js/classes/forms/Form';
 import {getApiUrl} from 'js/utils/env';
-import Code from 'js/admin/components/forms/Code';
-import SlidePreview from 'js/components/global/SlidePreview';
-import Checkbox from 'js/admin/components/forms/Checkbox';
-import {alerts} from 'js/mixins/alerts';
 
 const SECTION_OPEN_TAG_REGEX     = /<section.*>$/;
 const SECTION_CLOSE_TAG_REGEX    = /<\/section>$/;
@@ -122,9 +127,9 @@ const FUNCTIONAL_SLIDE_TAG_REGEX = /[#!]+\(functional\)/;
 export default {
 	name: 'SlideEditor',
 	components: {
-		'wnl-form-code': Code,
-		'wnl-form-checkbox': Checkbox,
-		'wnl-slide-preview': SlidePreview,
+		WnlCode,
+		WnlCheckbox,
+		WnlSlidePreview,
 	},
 	props: {
 		title: {

@@ -41,4 +41,21 @@ class CouponsApiController extends ApiController
 		$coupon->save();
 		return $this->transformAndRespond($coupon);
 	}
+
+	public function delete($code)
+	{
+		if ($this->request->header('X-BETHINK-COUPON-SYNC-TOKEN') !== env('APP_COUPONS_SYNC_TOKEN')) {
+			return $this->respondUnauthorized();
+		}
+
+		$coupon = Coupon::where('code', $code);
+
+		if (empty($coupon)) {
+			return $this->respondNotFound();
+		}
+
+		$coupon->removeObservableEvents(['deleted']);
+		$coupon->delete();
+		return $this->respondOk();
+	}
 }

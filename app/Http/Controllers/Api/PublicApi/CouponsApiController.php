@@ -29,26 +29,28 @@ class CouponsApiController extends ApiController
 		if ($request->header('X-BETHINK-COUPON-SYNC-TOKEN') !== env('APP_COUPONS_SYNC_TOKEN')) {
 			return $this->respondUnauthorized();
 		}
+		$updatedCoupon = $request->coupon;
 
-		$coupon = Coupon::where('code', $request->route('code'))->first();
+		$coupon = Coupon::where('code', $updatedCoupon['code'])->first();
 
 		if (empty($coupon)) {
 			return $this->respondNotFound();
 		}
 
-		$coupon->times_usable = $request->coupon['times_usable'];
+		$coupon->times_usable = $updatedCoupon['times_usable'];
 		$coupon->removeObservableEvents(['updated']);
 		$coupon->save();
 		return $this->transformAndRespond($coupon);
 	}
 
-	public function delete($code)
+	public function delete($id)
 	{
 		if ($this->request->header('X-BETHINK-COUPON-SYNC-TOKEN') !== env('APP_COUPONS_SYNC_TOKEN')) {
 			return $this->respondUnauthorized();
 		}
 
-		$coupon = Coupon::where('code', $code);
+		$deletedCoupon = $this->request->coupon;
+		$coupon = Coupon::where('code', $deletedCoupon['code'])->first();
 
 		if (empty($coupon)) {
 			return $this->respondNotFound();

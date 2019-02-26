@@ -18,7 +18,7 @@ Route::group(['namespace' => 'Api\PublicApi'], function () {
 	Route::get('products/availability', 'ProductsApiController@getAvailability');
 
 	Route::post("{$r['coupons']}", 'CouponsApiController@post');
-	Route::put("{$r['coupons']}/{code}", 'CouponsApiController@put');
-	Route::delete("{$r['coupons']}/{code}", 'CouponsApiController@delete');
+	Route::put("{$r['coupons']}", 'CouponsApiController@put');
+	Route::delete("{$r['coupons']}", 'CouponsApiController@delete');
 
 });

@@ -35,7 +35,7 @@ class SyncCouponUpdate implements ShouldQueue
 		];
 
 		$client = new Client();
-		$client->request('PUT', env('APP_COUPONS_SYNC_URL') . "/api/v1/coupons/{$this->coupon['code']}", [
+		$client->request('PUT', env('APP_COUPONS_SYNC_URL') . "/api/v1/coupons", [
 			'headers' => $headers,
 			'json' => [
 				'coupon' => $this->coupon

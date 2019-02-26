@@ -25,7 +25,6 @@
 									'has-parent': term.parent_id !== null,
 								}"
 								is-bordered
-								:style="getStyleForTerm(term)"
 							>
 								<span
 									slot="left"
@@ -267,14 +266,6 @@ export default {
 				}
 			}
 		},
-		getStyleForTerm(term) {
-			const color = term.taxonomy && term.taxonomy.color;
-			if (!color) return {};
-
-			return {
-				borderColor: color
-			};
-		}
 	},
 	watch: {
 		async isFocused() {

@@ -17,6 +17,8 @@ class TagsTableSeeder extends Seeder
 			['name' => 'Błędy'],
 			['name' => 'Nowe funkcje'],
 			['name' => 'Sugestie'],
+			// TODO PLAT-1055 - make code independent of Warsztaty tag
+			['name' => 'Warsztaty'],
 		]);
 	}
 }

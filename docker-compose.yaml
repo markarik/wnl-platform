@@ -131,8 +131,6 @@ services:
     ports:
       - "4444:4444"
       - "5900:5900"
-    links:
-      - nginx:platform.local
 
 volumes:
   nfsmount:

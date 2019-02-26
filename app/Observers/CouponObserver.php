@@ -6,6 +6,7 @@ namespace App\Observers;
 
 use App\Jobs\SyncCouponUpdate;
 use App\Models\Coupon;
+use GuzzleHttp\Client;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Requests;
 
@@ -30,8 +31,13 @@ class CouponObserver
 				'Host' => env('APP_COUPONS_SYNC_HOST'),
 				'X-BETHINK-COUPON-SYNC-TOKEN' => env('APP_COUPONS_SYNC_TOKEN'),
 			];
-			Requests::post(env('APP_COUPONS_SYNC_URL') . '/api/v1/coupons', $headers, [
-				'coupon' => $couponToCreate
+
+			$client = new Client();
+			$client->request('POST', env('APP_COUPONS_SYNC_URL') . "/api/v1/coupons", [
+				'headers' => $headers,
+				'json' => [
+					'coupon' => $couponToCreate
+				]
 			]);
 		}
 	}

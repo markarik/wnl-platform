@@ -159,11 +159,10 @@ class CertificatesApiController extends ApiController
 
 	private function hasFinishedCoursePastItsEnd($user, $order)
 	{
-		if (Carbon::parse($order->product->course_end)->isPast()) {
-			return $hasFinishedCourse = $user->hasFinishedCourse(
+		return Carbon::parse($order->product->course_end)->isPast() && 
+			$user->hasFinishedCourse(
 				$order->product->signups_start,
 				$order->product->access_end
 			);
-		}
 	}
 }

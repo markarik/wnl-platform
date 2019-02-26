@@ -49,7 +49,7 @@ class Lesson extends BasePage
 			'@navigate_right' => self::CSS_NAVIGATE_RIGHT,
 			'@navigate_left' => self::CSS_NAVIGATE_LEFT,
 			'@sections' => self::CSS_SECTIONS,
-			'@side_nav' => '.wnl-sidenav',
+			'@side_nav' => '.course-sidenav',
 			'@loading_overlay' => '.wnl-overlay'
 		];
 	}

@@ -19,7 +19,7 @@ class LessonChatTest extends DuskTestCase
 	private $user;
 	private $user2;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 		$faker = new Generator();

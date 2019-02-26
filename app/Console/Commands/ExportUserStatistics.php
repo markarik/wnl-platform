@@ -19,7 +19,7 @@ class ExportUserStatistics extends Command
 	 * @var string
 	 */
 	protected $signature =
-		"userStatistics:export {products* : The list of products user has to have access to. The dates are taken for the first product from the list}";
+		"userStatistics:export {products* : The list of products user has to have access to.}";
 
 	/**
 	 * The console command description.
@@ -42,6 +42,10 @@ class ExportUserStatistics extends Command
 	 * Execute the console command.
 	 *
 	 * @return mixed
+	 * @throws \Box\Spout\Common\Exception\IOException
+	 * @throws \Box\Spout\Common\Exception\InvalidArgumentException
+	 * @throws \Box\Spout\Common\Exception\UnsupportedTypeException
+	 * @throws \Box\Spout\Writer\Exception\WriterNotOpenedException
 	 */
 	public function handle()
 	{
@@ -139,8 +143,11 @@ class ExportUserStatistics extends Command
 			$userRecord['userQuizQuestionsSolved'] = $courseProgressStats['quiz_questions_solved'];
 			$userRecord['userFlashcardsSolved'] = $courseProgressStats['flashcards_solved'];
 			$userRecord['userSectionsProgressPercentage'] = $courseProgressStats['sections_progress_perc'];
-			$userRecord['products'] = $user->orders()->where('paid', 1)->pluck('product_id')->unique();
 			$userRecord['time'] = $courseProgressStats['time'];
+			$userRecord['products'] = $user->orders()
+				->where('paid', 1)
+				->pluck('product_id')
+				->unique();
 
 			$newUser = !$userRecord['products']->contains(function ($productId) use ($oldProducts) {
 				return in_array($productId, $oldProducts);

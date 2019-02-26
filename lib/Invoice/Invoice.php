@@ -276,8 +276,8 @@ class Invoice
 		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
-				'number' => $this->nextNumberInSeries(config('invoice.vat_series')),
-				'series' => config('invoice.vat_series'),
+				'number' => $this->nextNumberInSeries(config('invoice.final_series')),
+				'series' => config('invoice.final_series'),
 				'amount' => $recentSettlement,
 				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
 				'type'   => 'final',

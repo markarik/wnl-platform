@@ -30,13 +30,8 @@ class CertificatesApiController extends ApiController
 		$finishedCourses = [];
 
 		foreach ($paidOrders as $order) {
-			if (Carbon::parse($order->product->course_end)->isPast()) {
-				$hasFinishedCourse = $user->hasFinishedCourse(
-					$order->product->signups_start,
-					$order->product->access_end
-				);
-
-				if ($hasFinishedCourse) $finishedCourses[] = $order;
+			if ($this->hasFinishedCoursePastItsEnd($user, $order)) {
+				$finishedCourses[] = $order;
 			}
 		}
 
@@ -73,7 +68,7 @@ class CertificatesApiController extends ApiController
 		$img->text(
 			sprintf("%s - %s r.",
 				$order->product->course_start->format('j.m.Y'),
-				$order->product->access_end->format('j.m.Y')
+				$order->product->course_end->format('j.m.Y')
 			), 1794, 1372, function($font) {
 			$fontFile = base_path('resources/fonts/Rubik/Rubik-Light.ttf');
 			$font->file($fontFile);
@@ -117,6 +112,10 @@ class CertificatesApiController extends ApiController
 			return $this->respondForbidden("User not allowed to view order details");
 		}
 
+		if (!$this->hasFinishedCoursePastItsEnd($user, $order)) {
+			return $this->respondForbidden("User did not finish the course");
+		}
+
 		$file = Storage::drive()->get('final_certificate.jpg');
 		$img = Image::make($file);
 
@@ -129,7 +128,7 @@ class CertificatesApiController extends ApiController
 		$img->text(
 			sprintf("%s - %s r.",
 				$order->product->course_start->format('j.m.Y'),
-				$order->product->access_end->format('j.m.Y')
+				$order->product->course_end->format('j.m.Y')
 			), 902, 624, function($font) {
 			$fontFile = base_path('resources/fonts/Rubik/Rubik-Light.ttf');
 			$font->file($fontFile);
@@ -143,7 +142,7 @@ class CertificatesApiController extends ApiController
 			$font->align('center');
 		});
 
-			$img->text($order->product->access_end->format('j / m / Y') . ' r., Poznań', 1182, 867, function($font) {
+			$img->text($order->product->course_end->format('j / m / Y') . ' r., Poznań', 1182, 867, function($font) {
 			$fontFile = base_path('resources/fonts/Rubik/Rubik-Medium.ttf');
 			$font->file($fontFile);
 			$font->size(30);
@@ -156,5 +155,15 @@ class CertificatesApiController extends ApiController
 			->header('Content-type', "image/jpg")
 			->header("Cache-Control", 'no-store, no-cache')
 			->header('Content-Disposition', sprintf('attachment; filename="%s"', $imgPath));
+	}
+
+	private function hasFinishedCoursePastItsEnd($user, $order)
+	{
+		if (Carbon::parse($order->product->course_end)->isPast()) {
+			return $hasFinishedCourse = $user->hasFinishedCourse(
+				$order->product->signups_start,
+				$order->product->access_end
+			);
+		}
 	}
 }

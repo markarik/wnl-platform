@@ -10,6 +10,6 @@ class Category extends Model implements WithSlides
 	protected $fillable = ['name', 'parent_id'];
 
 	public function slides() {
-		return $this->morphToMany('\App\Models\Slide', 'presentable');
+		return $this->morphToMany('\App\Models\Slide', 'presentable')->orderBy('order_number');
 	}
 }

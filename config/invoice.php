@@ -1,15 +1,9 @@
 <?php
 
-const DEFAULT_PROFORMA_SERIES_NAME = 'PROFORMA';
-const DEFAULT_ADVANCE_SERIES_NAME = 'F-ZAL';
-const DEFAULT_FINAL_SERIES_NAME = 'FK';
-const DEFAULT_VAT_SERIES_NAME = 'FV';
-const DEFAULT_CORRECTIVE_SERIES_NAME = 'KOR';
-
 return [
-	'proforma_series'   => env('INVOICE_PROFORMA_SERIES', DEFAULT_PROFORMA_SERIES_NAME),
-	'advance_series'    => env('INVOICE_ADVANCE_SERIES', DEFAULT_ADVANCE_SERIES_NAME),
-	'final_series'      => env('INVOICE_FINAL_SERIES', DEFAULT_FINAL_SERIES_NAME),
-	'vat_series'        => env('INVOICE_VAT_SERIES', DEFAULT_VAT_SERIES_NAME),
-	'corrective_series' => env('INVOICE_CORRECTIVE_SERIES', DEFAULT_CORRECTIVE_SERIES_NAME),
+	'proforma_series'   => env('INVOICE_PROFORMA_SERIES', 'PROFORMA'),
+	'advance_series'    => env('INVOICE_ADVANCE_SERIES', 'F-ZAL'),
+	'final_series'      => env('INVOICE_FINAL_SERIES', 'FK'),
+	'vat_series'        => env('INVOICE_VAT_SERIES', 'FV'),
+	'corrective_series' => env('INVOICE_CORRECTIVE_SERIES', 'KOR'),
 ];

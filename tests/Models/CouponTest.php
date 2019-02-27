@@ -5,9 +5,11 @@ namespace Tests\Models;
 use App\Events\Coupons\CouponCreated;
 use App\Events\Coupons\CouponDeleted;
 use App\Events\Coupons\CouponUpdated;
+use App\Jobs\SyncCouponUpdate;
 use App\Models\Coupon;
 use Facades\App\Contracts\Requests;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
@@ -42,6 +44,25 @@ class CouponTest extends TestCase
 		Event::assertDispatchedTimes(CouponCreated::class, 1);
 		Event::assertDispatchedTimes(CouponUpdated::class, 1);
 		Event::assertNotDispatched(CouponDeleted::class);
+	}
+
+	/** @test */
+	public function updating_coupon_dispatches_job()
+	{
+		Event::fake([
+			CouponCreated::class,
+			CouponDeleted::class
+		]);
+		Bus::fake();
+
+		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
+		$coupon->value = 100;
+		$coupon->save();
+
+		Event::assertDispatchedTimes(CouponCreated::class, 1);
+		Event::assertNotDispatched(CouponDeleted::class);
+
+		Bus::assertDispatched(SyncCouponUpdate::class);
 	}
 
 	/** @test */

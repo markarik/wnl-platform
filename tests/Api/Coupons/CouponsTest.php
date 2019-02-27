@@ -9,6 +9,7 @@ use App\Events\Coupons\CouponDeleted;
 use App\Events\Coupons\CouponUpdated;
 use App\Models\Coupon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Tests\Api\ApiTestCase;
 
@@ -33,6 +34,9 @@ class CouponsTest extends ApiTestCase
 	public function create_coupon_success()
 	{
 		Event::fake();
+
+		$expectedToken = '123';
+		Config::set('coupons.coupons_sync_token', $expectedToken);
 
 		$response = $this
 			->withHeader(config('coupons.coupons_sync_header'), config('coupons.coupons_sync_token'))
@@ -65,6 +69,9 @@ class CouponsTest extends ApiTestCase
 	/** @test */
 	public function update_not_existing_coupon_fails()
 	{
+		$expectedToken = '123';
+		Config::set('coupons.coupons_sync_token', $expectedToken);
+
 		$this
 			->withHeader(config('coupons.coupons_sync_header'), config('coupons.coupons_sync_token'))
 			->json('PUT', $this->url('/coupons'), [
@@ -81,6 +88,9 @@ class CouponsTest extends ApiTestCase
 	public function update_coupon_success()
 	{
 		Event::fake();
+
+		$expectedToken = '123';
+		Config::set('coupons.coupons_sync_token', $expectedToken);
 
 		Coupon::create([
 			'code' => 'foo',
@@ -120,6 +130,9 @@ class CouponsTest extends ApiTestCase
 	/** @test */
 	public function delete_not_existing_coupon_fails()
 	{
+		$expectedToken = '123';
+		Config::set('coupons.coupons_sync_token', $expectedToken);
+
 		$this
 			->withHeader(config('coupons.coupons_sync_header'), config('coupons.coupons_sync_token'))
 			->json('DELETE', $this->url('/coupons'), [
@@ -136,6 +149,9 @@ class CouponsTest extends ApiTestCase
 	public function delete_coupon_success()
 	{
 		Event::fake();
+
+		$expectedToken = '123';
+		Config::set('coupons.coupons_sync_token', $expectedToken);
 
 		$createdCoupon = Coupon::create([
 			'code' => 'foo',

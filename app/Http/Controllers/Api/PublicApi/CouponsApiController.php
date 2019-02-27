@@ -14,7 +14,7 @@ class CouponsApiController extends ApiController
 
 	public function post(Request $request)
 	{
-		if ($request->header(Coupon::SYNC_TOKEN_HEADER) !== env('APP_COUPONS_SYNC_TOKEN')) {
+		if ($request->header(Coupon::SYNC_TOKEN_HEADER) !== config('coupons.coupons_sync_token')) {
 			return $this->respondUnauthorized();
 		}
 
@@ -26,7 +26,7 @@ class CouponsApiController extends ApiController
 
 	public function put(Request $request)
 	{
-		if ($request->header(Coupon::SYNC_TOKEN_HEADER) !== env('APP_COUPONS_SYNC_TOKEN')) {
+		if ($request->header(Coupon::SYNC_TOKEN_HEADER) !== config('coupons.coupons_sync_token')) {
 			return $this->respondUnauthorized();
 		}
 		$updatedCoupon = $request->coupon;
@@ -45,7 +45,7 @@ class CouponsApiController extends ApiController
 
 	public function delete($id)
 	{
-		if ($this->request->header(Coupon::SYNC_TOKEN_HEADER) !== env('APP_COUPONS_SYNC_TOKEN')) {
+		if ($this->request->header(Coupon::SYNC_TOKEN_HEADER) !== config('coupons.coupons_sync_token')) {
 			return $this->respondUnauthorized();
 		}
 

@@ -16,7 +16,7 @@ class CouponDeleted extends CouponEvent {
 	}
 
 	public function shouldSync() {
-		return !empty(env('APP_COUPONS_SYNC_SOURCE')) && empty($this->coupon->studyBuddy);
+		return !empty(config('coupons.coupons_sync_source')) && empty($this->coupon->studyBuddy);
 	}
 
 	public function sync() {

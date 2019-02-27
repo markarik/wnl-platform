@@ -2,23 +2,22 @@
 
 namespace App\Traits;
 
+use Facades\App\Contracts\Requests;
 use App\Models\Coupon;
-use GuzzleHttp\Client;
 
 trait SyncCoupons {
-	protected function issueSyncRequest($method, $body) {
+	protected function issueSyncRequest($method, $coupon) {
 		$headers = [
 			'Accept' => 'application/json',
-			'Host' => env('APP_COUPONS_SYNC_HOST'),
-			Coupon::SYNC_TOKEN_HEADER => env('APP_COUPONS_SYNC_TOKEN'),
+			'Host' => config('coupons.coupons_sync_host'),
+			Coupon::SYNC_TOKEN_HEADER => config('coupons.coupons_sync_token'),
 		];
 
-		$client = new Client();
-		$client->request($method, env('APP_COUPONS_SYNC_URL') . "/api/v1/coupons", [
-			'headers' => $headers,
-			'json' => [
-				'coupon' => $body
-			]
-		]);
+		$url = config('coupons.coupons_sync_url') . "/api/v1/coupons";
+		$body = [
+			'coupon' => $coupon
+		];
+
+		Requests::request($method, $url, $body, $headers);
 	}
 }

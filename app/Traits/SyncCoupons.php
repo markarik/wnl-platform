@@ -10,7 +10,7 @@ trait SyncCoupons {
 		$headers = [
 			'Accept' => 'application/json',
 			'Host' => config('coupons.coupons_sync_host'),
-			Coupon::SYNC_TOKEN_HEADER => config('coupons.coupons_sync_token'),
+			config('coupons.coupons_sync_header') => config('coupons.coupons_sync_token'),
 		];
 
 		$url = config('coupons.coupons_sync_url') . "/api/v1/coupons";

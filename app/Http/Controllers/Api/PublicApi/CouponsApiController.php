@@ -14,7 +14,7 @@ class CouponsApiController extends ApiController
 
 	public function post(Request $request)
 	{
-		if ($request->header(Coupon::SYNC_TOKEN_HEADER) !== config('coupons.coupons_sync_token')) {
+		if ($request->header(config('coupons.coupons_sync_header')) !== config('coupons.coupons_sync_token')) {
 			return $this->respondUnauthorized();
 		}
 
@@ -26,17 +26,22 @@ class CouponsApiController extends ApiController
 
 	public function put(Request $request)
 	{
-		if ($request->header(Coupon::SYNC_TOKEN_HEADER) !== config('coupons.coupons_sync_token')) {
+		if ($request->header(config('coupons.coupons_sync_header')) !== config('coupons.coupons_sync_token')) {
 			return $this->respondUnauthorized();
 		}
 		$updatedCoupon = $request->coupon;
 
-		$coupon = Coupon::where('code', $updatedCoupon['code'])->first();
+		$coupons = Coupon::where('code', $updatedCoupon['code'])->get();
 
-		if (empty($coupon)) {
+		if ($coupons->count() < 1) {
 			return $this->respondNotFound();
 		}
 
+		if ($coupons->count() > 1) {
+			\Log::warn('More than one coupon with the same code. Do not know what to update');
+		}
+
+		$coupon = $coupons->first();
 		$coupon->times_usable = $updatedCoupon['times_usable'];
 		$coupon->unsetEventDispatcher();
 		$coupon->save();
@@ -45,17 +50,22 @@ class CouponsApiController extends ApiController
 
 	public function deleteCoupon()
 	{
-		if ($this->request->header(Coupon::SYNC_TOKEN_HEADER) !== config('coupons.coupons_sync_token')) {
+		if ($this->request->header(config('coupons.coupons_sync_header')) !== config('coupons.coupons_sync_token')) {
 			return $this->respondUnauthorized();
 		}
 
 		$deletedCoupon = $this->request->coupon;
-		$coupon = Coupon::where('code', $deletedCoupon['code'])->first();
+		$coupons = Coupon::where('code', $deletedCoupon['code'])->get();
 
-		if (empty($coupon)) {
+		if ($coupons->count() < 1) {
 			return $this->respondNotFound();
 		}
 
+		if ($coupons->count() > 1) {
+			\Log::warn('More than one coupon with the same code. Do not know which to delete');
+		}
+
+		$coupon = $coupons->first();
 		$coupon->unsetEventDispatcher();
 		$coupon->delete();
 		return $this->respondOk();

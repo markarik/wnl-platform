@@ -6,7 +6,7 @@ use App\Models\Coupon;
 use App\Traits\SyncCoupons;
 use Illuminate\Queue\SerializesModels;
 
-class CouponDeleted extends CouponEvent {
+class CouponDeleted implements CouponEvent {
 	use SerializesModels, SyncCoupons;
 
 	public $coupon;

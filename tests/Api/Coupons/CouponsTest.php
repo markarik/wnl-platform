@@ -35,7 +35,7 @@ class CouponsTest extends ApiTestCase
 		Event::fake();
 
 		$response = $this
-			->withHeader(Coupon::SYNC_TOKEN_HEADER, config('coupons.coupons_sync_token'))
+			->withHeader(config('coupons.coupons_sync_header'), config('coupons.coupons_sync_token'))
 			->json('POST', $this->url('/coupons'), [
 				'coupon' => [
 					'code' => 'foo',
@@ -66,7 +66,7 @@ class CouponsTest extends ApiTestCase
 	public function update_not_existing_coupon_fails()
 	{
 		$this
-			->withHeader(Coupon::SYNC_TOKEN_HEADER, config('coupons.coupons_sync_token'))
+			->withHeader(config('coupons.coupons_sync_header'), config('coupons.coupons_sync_token'))
 			->json('PUT', $this->url('/coupons'), [
 				'coupon' => [
 					'code' => 'foo',
@@ -90,7 +90,7 @@ class CouponsTest extends ApiTestCase
 		]);
 
 		$response = $this
-			->withHeader(Coupon::SYNC_TOKEN_HEADER, config('coupons.coupons_sync_token'))
+			->withHeader(config('coupons.coupons_sync_header'), config('coupons.coupons_sync_token'))
 			->json('PUT', $this->url('/coupons'), [
 				'coupon' => [
 					'code' => 'foo',
@@ -121,7 +121,7 @@ class CouponsTest extends ApiTestCase
 	public function delete_not_existing_coupon_fails()
 	{
 		$this
-			->withHeader(Coupon::SYNC_TOKEN_HEADER, config('coupons.coupons_sync_token'))
+			->withHeader(config('coupons.coupons_sync_header'), config('coupons.coupons_sync_token'))
 			->json('DELETE', $this->url('/coupons'), [
 				'coupon' => [
 					'code' => 'foo',
@@ -145,7 +145,7 @@ class CouponsTest extends ApiTestCase
 		]);
 
 		$response = $this
-			->withHeader(Coupon::SYNC_TOKEN_HEADER, config('coupons.coupons_sync_token'))
+			->withHeader(config('coupons.coupons_sync_header'), config('coupons.coupons_sync_token'))
 			->json('DELETE', $this->url('/coupons'), [
 				'coupon' => $createdCoupon
 			]);

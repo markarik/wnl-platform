@@ -7,7 +7,7 @@ use App\Models\Coupon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Queue\SerializesModels;
 
-class CouponUpdated extends CouponEvent {
+class CouponUpdated implements CouponEvent {
 	use SerializesModels, DispatchesJobs;
 
 	public $coupon;

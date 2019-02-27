@@ -7,7 +7,7 @@ use App\Traits\SyncCoupons;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Queue\SerializesModels;
 
-class CouponCreated extends CouponEvent {
+class CouponCreated implements CouponEvent {
 	use SerializesModels, SyncCoupons;
 
 	public $coupon;

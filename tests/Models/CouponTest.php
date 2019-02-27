@@ -126,7 +126,7 @@ class CouponTest extends TestCase
 			[
 				'Accept' => 'application/json',
 				'Host' => $expectedHost,
-				Coupon::SYNC_TOKEN_HEADER => $expectedToken,
+				config('coupons.coupons_sync_header') => $expectedToken,
 			],
 		]);
 
@@ -160,7 +160,7 @@ class CouponTest extends TestCase
 				[
 					'Accept' => 'application/json',
 					'Host' => $expectedHost,
-					Coupon::SYNC_TOKEN_HEADER => $expectedToken,
+					config('coupons.coupons_sync_header') => $expectedToken,
 				],
 			]);
 

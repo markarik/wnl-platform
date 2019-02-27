@@ -2,7 +2,7 @@
 
 namespace App\Events\Coupons;
 
-abstract class CouponEvent {
-	abstract public function shouldSync();
-	abstract public function sync();
+interface CouponEvent {
+	public function shouldSync();
+	public function sync();
 }

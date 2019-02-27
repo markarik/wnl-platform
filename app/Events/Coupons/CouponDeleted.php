@@ -20,6 +20,6 @@ class CouponDeleted extends CouponEvent {
 	}
 
 	public function sync() {
-		$this->issueSyncRequest('DELETE', $this->coupon);
+		$this->issueSyncRequest('DELETE', $this->coupon->toArray());
 	}
 }

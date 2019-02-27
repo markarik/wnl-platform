@@ -80,38 +80,32 @@ class CouponTest extends TestCase
 
 	/** @test */
 	public function creating_coupon_performs_sync() {
-		$mocked = Requests::shouldReceive('request');
-
-		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
-		$couponToSync = $coupon->toArray();
-		unset($couponToSync['id']);
-
 		$expectedUrl = 'http://platform.test';
 		$expectedHost = 'platform.test';
 		$expectedToken = '123';
+
+		$coupon = new Coupon();
+		$coupon->code = 'foo';
+		$coupon->value = 10;
+		$coupon->type = 'amount';
+		$coupon->times_usable = 10;
+
 		Config::set('coupons.coupons_sync_url', $expectedUrl);
 		Config::set('coupons.coupons_sync_token', $expectedToken);
 		Config::set('coupons.coupons_sync_host', $expectedHost);
 		Config::set('coupons.coupons_sync_source', true);
 
-		$mocked->withArgs([
-			'POST',
-			$expectedUrl . "/api/v1/coupons",
-			[
-				'Accept' => 'application/json',
-				'Host' => $expectedToken,
-				Coupon::SYNC_TOKEN_HEADER => $expectedToken,
-			],
-			$body = [
-				'coupon' => $couponToSync
-			]
-		])->verify();
+		$couponToSync = $coupon->toArray();
+		unset($couponToSync['id']);
+
+		$mocked = Requests::shouldReceive('request')->once();
+
+		$coupon->save();
+		$mocked->verify();
 	}
 
 	/** @test */
 	public function deleting_coupon_performs_sync() {
-		$mocked = Requests::shouldReceive('request');
-
 		$expectedUrl = 'http://platform.test';
 		$expectedHost = 'platform.test';
 		$expectedToken = '123';
@@ -121,26 +115,28 @@ class CouponTest extends TestCase
 		Config::set('coupons.coupons_sync_source', true);
 
 		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
-		$coupon->delete();
+		$couponToSync = $coupon->toArray();
 
-		$mocked->withArgs([
+		$mocked = Requests::shouldReceive('request')->withArgs([
 			'DELETE',
 			$expectedUrl . "/api/v1/coupons",
+			$body = [
+				'coupon' => $couponToSync
+			],
 			[
 				'Accept' => 'application/json',
-				'Host' => $expectedToken,
+				'Host' => $expectedHost,
 				Coupon::SYNC_TOKEN_HEADER => $expectedToken,
 			],
-			$body = [
-				'coupon' => $coupon
-			]
-		])->verify();
+		]);
+
+		$coupon->delete();
+
+		$mocked->verify();
 	}
 
 	/** @test */
 	public function updating_coupon_performs_sync() {
-		$mocked = Requests::shouldReceive('request');
-
 		$expectedUrl = 'http://platform.test';
 		$expectedHost = 'platform.test';
 		$expectedToken = '123';
@@ -151,22 +147,25 @@ class CouponTest extends TestCase
 
 		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
 		$coupon->times_usable = 10;
-		$coupon->save();
 		$couponToSync = $coupon->toArray();
 		unset($couponToSync['id']);
 
-		$mocked->withArgs([
-			'PUT',
-			$expectedUrl . "/api/v1/coupons",
-			[
-				'Accept' => 'application/json',
-				'Host' => $expectedToken,
-				Coupon::SYNC_TOKEN_HEADER => $expectedToken,
-			],
-			$body = [
-				'coupon' => $couponToSync
-			]
-		])->verify();
+		$mocked = Requests::shouldReceive('request')
+			->withArgs([
+				'PUT',
+				$expectedUrl . "/api/v1/coupons",
+				$body = [
+					'coupon' => $couponToSync
+				],
+				[
+					'Accept' => 'application/json',
+					'Host' => $expectedHost,
+					Coupon::SYNC_TOKEN_HEADER => $expectedToken,
+				],
+			]);
+
+		$coupon->save();
+		$mocked->verify();
 	}
 
 	/** @test */
@@ -189,7 +188,6 @@ class CouponTest extends TestCase
 
 	/** @test */
 	public function updating_coupon_performs_sync_for_no_source() {
-		$mocked = Requests::shouldReceive('request');
 		$expectedUrl = 'http://platform.test';
 		$expectedHost = 'platform.test';
 		$expectedToken = '123';
@@ -199,37 +197,12 @@ class CouponTest extends TestCase
 		Config::set('coupons.coupons_sync_source', false);
 
 		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
-		$couponToSync = $coupon->toArray();
-		unset($couponToSync['id']);
+		$coupon->times_usable = 10;
 
-		$couponToSync = $coupon->toArray();
-		unset($couponToSync['id']);
+		$mocked = Requests::shouldReceive('request');
 
-		$mocked->withArgs([
-			'PUT',
-			$expectedUrl . "/api/v1/coupons",
-			[
-				'Accept' => 'application/json',
-				'Host' => $expectedToken,
-				Coupon::SYNC_TOKEN_HEADER => $expectedToken,
-			],
-			$body = [
-				'coupon' => $couponToSync
-			]
-		])->verify();
-
-		$mocked->withArgs([
-			'POST',
-			$expectedUrl . "/api/v1/coupons",
-			[
-				'Accept' => 'application/json',
-				'Host' => $expectedToken,
-				Coupon::SYNC_TOKEN_HEADER => $expectedToken,
-			],
-			$body = [
-				'coupon' => $couponToSync
-			]
-		])->never()->verify();
+		$coupon->save();
+		$mocked->verify();
 	}
 
 	/** @test */

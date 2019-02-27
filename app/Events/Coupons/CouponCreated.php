@@ -13,12 +13,7 @@ class CouponCreated extends CouponEvent {
 	public $coupon;
 
 	public function __construct(Coupon $coupon) {
-		$this->method = 'POST';
 		$this->coupon = $coupon;
-
-		$couponToCreate = $this->coupon->toArray();
-		unset($couponToCreate['id']);
-		$this->couponToUpdate = $couponToCreate;
 	}
 
 	public function shouldSync() {

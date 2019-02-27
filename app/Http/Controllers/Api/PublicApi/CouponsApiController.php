@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers\Api\PublicApi;
 
 use App\Http\Controllers\Api\ApiController;
-use Illuminate\Http\Request;
 use App\Models\Coupon;
+use Illuminate\Http\Request;
 
 class CouponsApiController extends ApiController
 {
@@ -19,7 +19,7 @@ class CouponsApiController extends ApiController
 		}
 
 		$coupon = new Coupon($request->coupon);
-		$coupon->removeObservableEvents(['created']);
+		$coupon->unsetEventDispatcher();
 		$coupon->save();
 		return $this->transformAndRespond($coupon);
 	}
@@ -38,12 +38,12 @@ class CouponsApiController extends ApiController
 		}
 
 		$coupon->times_usable = $updatedCoupon['times_usable'];
-		$coupon->removeObservableEvents(['updated']);
+		$coupon->unsetEventDispatcher();
 		$coupon->save();
 		return $this->transformAndRespond($coupon);
 	}
 
-	public function delete($id)
+	public function deleteCoupon()
 	{
 		if ($this->request->header(Coupon::SYNC_TOKEN_HEADER) !== config('coupons.coupons_sync_token')) {
 			return $this->respondUnauthorized();
@@ -56,7 +56,7 @@ class CouponsApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$coupon->removeObservableEvents(['deleted']);
+		$coupon->unsetEventDispatcher();
 		$coupon->delete();
 		return $this->respondOk();
 	}

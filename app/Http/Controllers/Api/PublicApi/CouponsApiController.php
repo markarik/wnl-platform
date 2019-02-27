@@ -1,23 +1,19 @@
 <?php namespace App\Http\Controllers\Api\PublicApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Coupon\SyncCoupon;
 use App\Models\Coupon;
-use Illuminate\Http\Request;
 
 class CouponsApiController extends ApiController
 {
-	public function __construct(Request $request)
+	public function __construct(SyncCoupon $request)
 	{
 		parent::__construct($request);
 		$this->resourceName = config('api.resources.coupons');
 	}
 
-	public function post(Request $request)
+	public function post(SyncCoupon $request)
 	{
-		if ($request->header(config('coupons.coupons_sync_header')) !== config('coupons.coupons_sync_token')) {
-			return $this->respondUnauthorized();
-		}
-
 		$coupon = new Coupon($request->coupon);
 		// This API is created to perform coupon's sync
 		// We don't want to dispatch events to prevent infinite loop
@@ -26,11 +22,8 @@ class CouponsApiController extends ApiController
 		return $this->transformAndRespond($coupon);
 	}
 
-	public function put(Request $request)
+	public function put(SyncCoupon $request)
 	{
-		if ($request->header(config('coupons.coupons_sync_header')) !== config('coupons.coupons_sync_token')) {
-			return $this->respondUnauthorized();
-		}
 		$updatedCoupon = $request->coupon;
 
 		$coupons = Coupon::where('code', $updatedCoupon['code'])->get();
@@ -40,7 +33,7 @@ class CouponsApiController extends ApiController
 		}
 
 		if ($coupons->count() > 1) {
-			\Log::warn('More than one coupon with the same code. Do not know what to update');
+			\Log::warning('More than one coupon with the same code. Do not know what to update');
 		}
 
 		$coupon = $coupons->first();
@@ -52,12 +45,8 @@ class CouponsApiController extends ApiController
 		return $this->transformAndRespond($coupon);
 	}
 
-	public function deleteCoupon()
+	public function deleteCoupon(SyncCoupon $request)
 	{
-		if ($this->request->header(config('coupons.coupons_sync_header')) !== config('coupons.coupons_sync_token')) {
-			return $this->respondUnauthorized();
-		}
-
 		$deletedCoupon = $this->request->coupon;
 		$coupons = Coupon::where('code', $deletedCoupon['code'])->get();
 
@@ -66,7 +55,7 @@ class CouponsApiController extends ApiController
 		}
 
 		if ($coupons->count() > 1) {
-			\Log::warn('More than one coupon with the same code. Do not know which to delete');
+			\Log::warning('More than one coupon with the same code. Do not know which to delete');
 		}
 
 		$coupon = $coupons->first();

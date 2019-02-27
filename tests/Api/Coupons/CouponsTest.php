@@ -30,7 +30,7 @@ class CouponsTest extends ApiTestCase
 
 		$this
 			->json('POST', $this->url('/coupons'), [])
-			->assertStatus(401);
+			->assertStatus(403);
 	}
 
 	/** @test */
@@ -69,7 +69,7 @@ class CouponsTest extends ApiTestCase
 
 		$this
 			->json('PUT', $this->url('/coupons'), [])
-			->assertStatus(401);
+			->assertStatus(403);
 	}
 
 	/** @test */
@@ -133,7 +133,7 @@ class CouponsTest extends ApiTestCase
 
 		$this
 			->json('DELETE', $this->url('/coupons'), [])
-			->assertStatus(401);
+			->assertStatus(403);
 	}
 
 	/** @test */

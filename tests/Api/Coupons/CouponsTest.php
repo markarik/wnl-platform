@@ -25,6 +25,9 @@ class CouponsTest extends ApiTestCase
 	/** @test */
 	public function create_coupon_no_token_fails()
 	{
+		$expectedToken = '123';
+		Config::set('coupons.coupons_sync_token', $expectedToken);
+
 		$this
 			->json('POST', $this->url('/coupons'), [])
 			->assertStatus(401);
@@ -61,6 +64,9 @@ class CouponsTest extends ApiTestCase
 	/** @test */
 	public function update_coupon_no_token_fails()
 	{
+		$expectedToken = '123';
+		Config::set('coupons.coupons_sync_token', $expectedToken);
+
 		$this
 			->json('PUT', $this->url('/coupons'), [])
 			->assertStatus(401);
@@ -122,6 +128,9 @@ class CouponsTest extends ApiTestCase
 	/** @test */
 	public function delete_coupon_no_token_fails()
 	{
+		$expectedToken = '123';
+		Config::set('coupons.coupons_sync_token', $expectedToken);
+
 		$this
 			->json('DELETE', $this->url('/coupons'), [])
 			->assertStatus(401);

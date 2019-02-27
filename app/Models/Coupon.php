@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Events\Coupons\CouponCreated;
+use App\Events\Coupons\CouponDeleted;
+use App\Events\Coupons\CouponUpdated;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +16,12 @@ class Coupon extends Model
 
 	protected $dates = [
 		'expires_at',
+	];
+
+	protected $dispatchesEvents = [
+		'created' => CouponCreated::class,
+		'updated' => CouponUpdated::class,
+		'deleted' => CouponDeleted::class
 	];
 
 	public function studyBuddy()

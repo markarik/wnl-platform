@@ -3,7 +3,6 @@
 namespace App\Traits;
 
 use Facades\App\Contracts\Requests;
-use App\Models\Coupon;
 
 trait SyncCoupons {
 	protected function issueSyncRequest($method, $coupon) {

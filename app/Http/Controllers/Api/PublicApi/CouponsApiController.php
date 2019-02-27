@@ -19,6 +19,8 @@ class CouponsApiController extends ApiController
 		}
 
 		$coupon = new Coupon($request->coupon);
+		// This API is created to perform coupon's sync
+		// We don't want to dispatch events to prevent infinite loop
 		$coupon->unsetEventDispatcher();
 		$coupon->save();
 		return $this->transformAndRespond($coupon);
@@ -43,6 +45,8 @@ class CouponsApiController extends ApiController
 
 		$coupon = $coupons->first();
 		$coupon->times_usable = $updatedCoupon['times_usable'];
+		// This API is created to perform coupon's sync
+		// We don't want to dispatch events to prevent infinite loop
 		$coupon->unsetEventDispatcher();
 		$coupon->save();
 		return $this->transformAndRespond($coupon);
@@ -66,6 +70,8 @@ class CouponsApiController extends ApiController
 		}
 
 		$coupon = $coupons->first();
+		// This API is created to perform coupon's sync
+		// We don't want to dispatch events to prevent infinite loop
 		$coupon->unsetEventDispatcher();
 		$coupon->delete();
 		return $this->respondOk();

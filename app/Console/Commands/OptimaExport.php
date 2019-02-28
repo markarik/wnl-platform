@@ -9,8 +9,6 @@ use Illuminate\Console\Command;
 class OptimaExport extends Command
 {
 	const DATABASE_ID = 'bethi';
-	const ADVANCE_SERIES_NAME = 'F-ZAL';
-	const FINAL_SERIES_NAME = 'FK';
 
 	/**
 	 * The name and signature of the console command.
@@ -49,8 +47,8 @@ class OptimaExport extends Command
 		/** @var Order[] $orders */
 		$orders = Order::with(['invoices', 'user', 'product'])
 			->whereHas('invoices', function ($query) {
-				$query->where('series', self::ADVANCE_SERIES_NAME);
-				$query->orWhere('series', self::FINAL_SERIES_NAME);
+				$query->where('series', config('invoice.advance_series'));
+				$query->orWhere('series', config('invoice.final_series'));
 			})->get();
 
 		foreach ($orders as $order) {
@@ -244,7 +242,7 @@ class OptimaExport extends Command
 			],
 		];
 
-		if ($invoice->series !== self::FINAL_SERIES_NAME) {
+		if ($invoice->series !== config('invoice.final_series')) {
 			$invoiceData['PLATNOSCI'] = [
 				'ID_ZRODLA_PLAT'               => '',
 				'TERMIN_PLAT'                  => $deadline,

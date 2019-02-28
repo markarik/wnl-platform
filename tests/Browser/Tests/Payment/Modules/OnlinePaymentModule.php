@@ -29,7 +29,7 @@ class OnlinePaymentModule
 	{
 		$browser
 			->on(new P24ChooseBank)
-			->press('@ing-logo');
+			->click('@ing-logo');
 
 		$browser
 			->waitFor('@login-button', 40)

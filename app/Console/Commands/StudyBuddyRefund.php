@@ -63,8 +63,6 @@ class StudyBuddyRefund extends Command
 		}
 
 		$this->studyBuddyRefund($order);
-
-		return 42;
 	}
 
 	protected function studyBuddyRefund($order)
@@ -85,7 +83,7 @@ class StudyBuddyRefund extends Command
 
 		$recentInvoice = $order
 			->invoices()
-			->whereIn('series', [Invoice::ADVANCE_SERIES_NAME, Invoice::VAT_SERIES_NAME])
+			->whereIn('series', [config('invoice.advance_series'), config('invoice.vat_series')])
 			->get()
 			->last();
 		$reason = 'Zniżka przydzielona po dokonaniu zapłaty (Study Buddy).';
@@ -107,7 +105,5 @@ class StudyBuddyRefund extends Command
 		Mail::to($order->user)->send(new Refund($order, $invoice, $value));
 
 		$this->info('OK. Invoice number: ' . $invoice->full_number);
-
-		return 42;
 	}
 }

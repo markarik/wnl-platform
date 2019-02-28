@@ -60,8 +60,8 @@ class IssueFinalInvoice extends Command
 			$orders = Order::with(['product'])
 				->whereDoesntHave('invoices', function ($query) {
 					$query
-						->where('series', Invoice::FINAL_SERIES_NAME)
-						->orWhere('series', Invoice::VAT_SERIES_NAME);
+						->where('series', config('invoice.final_series'))
+						->orWhere('series', config('invoice.vat_series'));
 				})
 				->where('paid', 1)
 				->get();

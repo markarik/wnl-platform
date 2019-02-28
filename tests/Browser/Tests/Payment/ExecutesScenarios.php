@@ -3,6 +3,8 @@
 namespace Tests\Browser\Tests\Payment;
 
 
+use Tests\BethinkBrowser;
+
 trait ExecutesScenarios
 {
 	protected function execute($scenario)

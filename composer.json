@@ -31,7 +31,7 @@
 		"filp/whoops": "~2.0",
 		"fzaninotto/faker": "~1.4",
 		"johnkary/phpunit-speedtrap": "^3.0",
-		"laravel/dusk": "^4.0",
+		"laravel/dusk": "^5.0",
 		"mockery/mockery": "0.9.*",
 		"nunomaduro/larastan": "^0.3.15",
 		"phpunit/phpunit": "^7.0"

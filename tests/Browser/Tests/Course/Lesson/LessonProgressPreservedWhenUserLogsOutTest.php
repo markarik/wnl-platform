@@ -20,7 +20,7 @@ class LessonProgressPreservedWhenUserLogsOutTest extends DuskTestCase
 	private $password;
 	private $email;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 

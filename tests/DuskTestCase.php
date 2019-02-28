@@ -22,22 +22,18 @@ abstract class DuskTestCase extends BaseTestCase
 		static::startChromeDriver();
 	}
 
-	/**
-	 * Create the RemoteWebDriver instance.
-	 *
-	 * @return \Facebook\WebDriver\Remote\RemoteWebDriver
-	 */
-	protected function driver()
+	protected function driver(): RemoteWebDriver
 	{
-		$chromeOptions = new ChromeOptions();
-		$chromeOptions->addArguments(['no-sandbox']);
-		$capabilities = DesiredCapabilities::chrome();
-		$capabilities->setCapability(ChromeOptions::CAPABILITY, $chromeOptions);
+		$options = (new ChromeOptions)->addArguments([
+//			'--disable-gpu',
+//			'--headless',
+			'--no-sandbox'
+		]);
 
 		return RemoteWebDriver::create(
-			'http://localhost:9515',
-			$capabilities, 150000, 150000
-		);
+			'http://selenium:4444/wd/hub', DesiredCapabilities::chrome()->setCapability(
+			ChromeOptions::CAPABILITY, $options
+		));
 	}
 
 	/**

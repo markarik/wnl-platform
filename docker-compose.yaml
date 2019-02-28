@@ -75,6 +75,7 @@ services:
     tty: true
     volumes:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
+    working_dir: ${CONTAINER_CODE_PATH}/wnl-platform
 
   echo:
     container_name: echo
@@ -121,6 +122,15 @@ services:
     image: rabbitmq:3.7.6-management-alpine
     ports:
       - "5672:5672"
+
+  selenium:
+    container_name: selenium
+    image: selenium/standalone-chrome-debug
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "4444:4444"
+      - "5900:5900"
 
 volumes:
   nfsmount:

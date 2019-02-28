@@ -43,7 +43,5 @@ class RoleAdd extends Command
 				'name' => $this->argument('name'),
 			])->id
 		);
-
-		return 42;
 	}
 }

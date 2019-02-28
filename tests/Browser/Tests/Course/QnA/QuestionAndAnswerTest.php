@@ -13,7 +13,7 @@ class QuestionAndAnswerTest extends DuskTestCase
 
 	private $user;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 		$this->user = factory(User::class)->create();

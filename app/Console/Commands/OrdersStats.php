@@ -72,7 +72,5 @@ class OrdersStats extends Command
 		$rows = [[$ordersCount, $total, $paid, $coupons, $coupons50, $couponsSb, $online, $onsite]];
 
 		$this->table($headers, $rows);
-
-		return 42;
 	}
 }

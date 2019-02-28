@@ -65,7 +65,5 @@ class RoleAssign extends Command
 		}
 
 		$this->info('OK.');
-
-		return 42;
 	}
 }

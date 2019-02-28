@@ -67,7 +67,5 @@ class RoleAssignFromProducts extends Command
 		}
 
 		$this->info("Assigned role to {$i} users.");
-
-		return 42;
 	}
 }

@@ -58,9 +58,7 @@ class InvoiceCorrect extends Command
 			exit;
 		}
 
-		$this->correct($order);
-
-		return 42;
+		return $this->correct($order);
 	}
 
 	protected function correct($order)
@@ -103,7 +101,5 @@ class InvoiceCorrect extends Command
 		Mail::to($order->user)->send($mail);
 
 		$this->info('OK. Invoice number: ' . $invoice->full_number);
-
-		return 42;
 	}
 }

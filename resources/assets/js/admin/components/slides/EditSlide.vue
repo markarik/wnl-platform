@@ -64,12 +64,12 @@ export default {
 		saveSlideId(event) {
 			this.slideId = event.target.value;
 		},
-		async onResourceUrlFetched({url, slideId}) {
+		onResourceUrlFetched({url, slideId}) {
 			this.slideId = slideId;
 			this.resourceUrl = url;
 		}
 	},
-	async mounted() {
+	mounted() {
 		const slideId = this.$route.query.slideId;
 		this.screenId = this.$route.query.screenId;
 		this.slideId = slideId;

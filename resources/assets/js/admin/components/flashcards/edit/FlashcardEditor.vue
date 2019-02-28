@@ -156,7 +156,7 @@ export default {
 		}
 	},
 	watch: {
-		async 'flashcardId'() {
+		async flashcardId() {
 			// This is called only after user saves new flashcard and we put ID in the URL
 			await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.FLASHCARD, contentIds: [this.flashcardId]});
 		}

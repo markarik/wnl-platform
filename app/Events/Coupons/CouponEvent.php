@@ -21,6 +21,6 @@ abstract class CouponEvent {
 			'coupon' => $coupon
 		];
 
-		Requests::request($method, $url, $body, $headers);
+		Requests::request($method, $url, $headers, $body);
 	}
 }

@@ -110,18 +110,20 @@ class CouponTest extends TestCase
 		Config::set('coupons.coupons_sync_token', $expectedToken);
 		Config::set('coupons.coupons_sync_is_source', true);
 
+		$mocked = Requests::shouldReceive('request');
+
 		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
 		$couponToSync = $coupon->toArray();
 
-		$mocked = Requests::shouldReceive('request')->withArgs([
+		$mocked->withArgs([
 			'DELETE',
 			$expectedUrl . "/api/v1/coupons",
-			$body = [
-				'coupon' => $couponToSync
-			],
 			[
 				'Accept' => 'application/json',
 				config('coupons.coupons_sync_header') => $expectedToken,
+			],
+			$body = [
+				'coupon' => $couponToSync
 			],
 		]);
 
@@ -138,23 +140,24 @@ class CouponTest extends TestCase
 		Config::set('coupons.coupons_sync_token', $expectedToken);
 		Config::set('coupons.coupons_sync_is_source', true);
 
+		$mocked = Requests::shouldReceive('request');
+
 		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
 		$coupon->times_usable = 10;
 		$couponToSync = $coupon->toArray();
 		unset($couponToSync['id']);
 
-		$mocked = Requests::shouldReceive('request')
-			->withArgs([
+		$mocked->withArgs([
 				'PUT',
 				$expectedUrl . "/api/v1/coupons",
-				$body = [
-					'coupon' => $couponToSync
-				],
 				[
 					'Accept' => 'application/json',
 					config('coupons.coupons_sync_header') => $expectedToken,
 				],
-			]);
+				$body = [
+					'coupon' => $couponToSync
+				]
+		]);
 
 		$coupon->save();
 		$mocked->verify();

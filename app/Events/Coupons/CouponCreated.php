@@ -29,6 +29,7 @@ class CouponCreated extends CouponEvent {
 			// DB::table is used to omit observable
 			// The removeObservableEvents doesn't work in this context.
 			\DB::table('coupons')->delete($this->coupon->id);
+			throw $exception;
 		}
 	}
 }

@@ -14,7 +14,9 @@ class SyncCoupon extends FormRequest
 
 	public function rules() {
 		return [
-			'coupon' => 'array|required'
+			'coupon.code' => 'string|required',
+			'coupon.type' => 'string|required',
+			'coupon.value' => 'required'
 		];
 	}
 }

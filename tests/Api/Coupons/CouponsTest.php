@@ -110,7 +110,9 @@ class CouponsTest extends ApiTestCase
 			->json('PUT', $this->url('/coupons'), [
 				'coupon' => [
 					'code' => 'foo',
-					'times_usable' => 0
+					'times_usable' => 0,
+					'type' => 'amount',
+					'value' => 10
 				]
 			]);
 
@@ -178,5 +180,36 @@ class CouponsTest extends ApiTestCase
 		$response->assertStatus(200);
 
 		Event::assertNotDispatched(CouponDeleted::class);
+	}
+
+	/** @test */
+	public function delete_coupon_with_duplicated_code_returns_error()
+	{
+		Event::fake();
+
+		$expectedToken = '123';
+		Config::set('coupons.coupons_sync_token', $expectedToken);
+
+		Coupon::create([
+			'code' => 'foo',
+			'value' => 10,
+			'type' => 'amount',
+			'times_usable' => 1
+		]);
+
+		$createdCoupon = Coupon::create([
+			'code' => 'foo',
+			'value' => 10,
+			'type' => 'amount',
+			'times_usable' => 1
+		]);
+
+		$response = $this
+			->withHeader(config('coupons.coupons_sync_header'), config('coupons.coupons_sync_token'))
+			->json('DELETE', $this->url('/coupons'), [
+				'coupon' => $createdCoupon
+			]);
+
+		$response->assertStatus(400);
 	}
 }

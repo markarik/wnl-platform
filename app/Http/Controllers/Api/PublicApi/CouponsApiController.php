@@ -33,7 +33,7 @@ class CouponsApiController extends ApiController
 		}
 
 		if ($coupons->count() > 1) {
-			\Log::warning('More than one coupon with the same code. Do not know what to update');
+			\Log::warning('More than one coupon with the same code. Do not know which to update');
 		}
 
 		$coupon = $coupons->first();
@@ -56,6 +56,7 @@ class CouponsApiController extends ApiController
 
 		if ($coupons->count() > 1) {
 			\Log::warning('More than one coupon with the same code. Do not know which to delete');
+			return $this->respondInvalidInput();
 		}
 
 		$coupon = $coupons->first();

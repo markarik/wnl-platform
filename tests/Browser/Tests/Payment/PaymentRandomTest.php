@@ -2,6 +2,8 @@
 
 namespace Tests\Browser\Tests\Payment;
 
+use Tests\BethinkBrowser;
+use Tests\Browser\Tests\Payment\Modules\UserModule;
 use Tests\DuskTestCase;
 
 class PaymentRandomTest extends DuskTestCase
@@ -10,7 +12,7 @@ class PaymentRandomTest extends DuskTestCase
 	public function randomCheckoutTest()
 	{
 		if (file_exists('scenario.dusk')) unlink('scenario.dusk');
-		$this->browse(function ($browser) {
+		$this->browse(function (BethinkBrowser $browser) {
 			$next = UserModule::class;
 			while ($next) $next = $this->callRandom($next, $browser);
 		});
@@ -40,7 +42,7 @@ class PaymentRandomTest extends DuskTestCase
 			print 'File scenario.dusk not found!';
 		}
 
-		$this->browse(function ($browser) {
+		$this->browse(function (BethinkBrowser $browser) {
 			$contents = file_get_contents('scenario.dusk');
 			$namespace = 'Tests\Browser\Tests\Payment\Modules\\';
 			foreach (explode("\n", $contents) as $item) {

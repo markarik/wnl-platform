@@ -5,12 +5,13 @@ namespace Tests\Browser\Tests\Payment\Modules;
 
 
 use App\Models\Coupon;
+use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Payment\SelectProductPage;
 use Tests\Browser\Pages\Payment\VoucherPage;
 
 class VoucherModule
 {
-	public function default($browser)
+	public function default(BethinkBrowser $browser)
 	{
 		$this->useCode($browser);
 	}
@@ -30,12 +31,7 @@ class VoucherModule
 		return $this->useCode($browser, 100);
 	}
 
-//	public function existingUser50PercCoupon()
-//	{
-//
-//	}
-
-	public function skip($browser)
+	public function skip(BethinkBrowser $browser)
 	{
 		if (!empty($browser->studyBuddy)) {
 			return $this->useCode($browser);
@@ -53,7 +49,7 @@ class VoucherModule
 		];
 	}
 
-	protected function useCode($browser, $value = 10)
+	protected function useCode(BethinkBrowser $browser, $value = 10)
 	{
 		if (!empty($browser->studyBuddy)) {
 			return $this->studyBuddy($browser);
@@ -78,7 +74,7 @@ class VoucherModule
 		];
 	}
 
-	protected function studyBuddy($browser)
+	protected function studyBuddy(BethinkBrowser $browser)
 	{
 		$studyBuddy = $browser->studyBuddy;
 

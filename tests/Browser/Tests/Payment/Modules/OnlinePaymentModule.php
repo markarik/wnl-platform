@@ -4,11 +4,12 @@
 namespace Tests\Browser\Tests\Payment\Modules;
 
 
+use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Payment\P24ChooseBank;
 
 class OnlinePaymentModule
 {
-	public function successfulPayment($browser)
+	public function successfulPayment(BethinkBrowser $browser)
 	{
 		$this->payment($browser);
 		$browser->press('@confirm-payment');
@@ -16,7 +17,7 @@ class OnlinePaymentModule
 		return MyOrdersModule::class;
 	}
 
-	public function rejectedPayment($browser)
+	public function rejectedPayment(BethinkBrowser $browser)
 	{
 		$this->payment($browser);
 		$browser->press('@decline-payment');
@@ -25,7 +26,7 @@ class OnlinePaymentModule
 		return MyOrdersModule::class;
 	}
 
-	protected function payment($browser)
+	protected function payment(BethinkBrowser $browser)
 	{
 		$browser
 			->on(new P24ChooseBank)

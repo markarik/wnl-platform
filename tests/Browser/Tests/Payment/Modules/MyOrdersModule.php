@@ -3,13 +3,14 @@
 
 namespace Tests\Browser\Tests\Payment\Modules;
 
-use App, Mail;
+use App;
 use PHPUnit\Framework\Assert;
+use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Course\Components\Navigation;
 
 class MyOrdersModule
 {
-	public function end($browser)
+	public function end(BethinkBrowser $browser)
 	{
 		$this->assertOrderPlaced($browser);
 		$this->assertPaid($browser);
@@ -20,7 +21,7 @@ class MyOrdersModule
 		return false;
 	}
 
-	public function studyBuddy($browser)
+	public function studyBuddy(BethinkBrowser $browser)
 	{
 		if (!empty($browser->studyBuddy)) {
 			$this->assertStudyBuddy($browser);
@@ -45,7 +46,7 @@ class MyOrdersModule
 		return [VoucherModule::class];
 	}
 
-	protected function assertOrderPlaced($browser)
+	protected function assertOrderPlaced(BethinkBrowser $browser)
 	{
 		$order = $browser->order;
 
@@ -62,7 +63,7 @@ class MyOrdersModule
 
 	}
 
-	protected function assertPaid($browser)
+	protected function assertPaid(BethinkBrowser $browser)
 	{
 		$browser->order = $browser->order->fresh();
 		if ($browser->order->method === 'instalments') {
@@ -86,7 +87,7 @@ class MyOrdersModule
 		$browser->waitForText('Wpłacono', 60);
 	}
 
-	protected function assertStudyBuddy($browser)
+	protected function assertStudyBuddy(BethinkBrowser $browser)
 	{
 		$studyBuddy = $browser->studyBuddy->fresh();
 		$originalOrder = $studyBuddy->order;

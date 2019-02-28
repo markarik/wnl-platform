@@ -1,12 +1,12 @@
 <template>
-	<wnl-slides-editor
+	<wnl-slide-editor
 		title="Dodaj slajd"
 		method="post"
 		:resource-url="resourceUrl"
 		:request-payload="requestPayload"
 		:screen-id="Number(screenId)"
 	>
-		<div class="level margin vertical">
+		<div class="level margin vertical" slot="above-content">
 			<div class="level-left">
 				<div class="level-item">
 					<div class="field is-grouped">
@@ -22,17 +22,24 @@
 				</div>
 			</div>
 		</div>
-	</wnl-slides-editor>
+
+		<div class="notification is-info" slot="below-content">
+			<span class="icon">
+				<i class="fa fa-info-circle"></i>
+			</span>
+			Przypisanie pojęć do slajdu jest możliwe tylko w trybie edycji
+		</div>
+	</wnl-slide-editor>
 </template>
 
 <script>
-import SlidesEditor from 'js/admin/components/slides/SlideEditor';
+import WnlSlideEditor from 'js/admin/components/slides/SlideEditor';
 import { getApiUrl } from 'js/utils/env';
 
 export default {
 	name: 'AddSlide',
 	components: {
-		'wnl-slides-editor': SlidesEditor,
+		WnlSlideEditor,
 	},
 	data() {
 		return {

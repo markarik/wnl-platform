@@ -45,9 +45,9 @@ class InvoicesExportToJpk extends Command
 
 		$invoices = Invoice::with(['order', 'order.user', 'order.product'])
 			->whereIn('series', [
-				LibInvoice::CORRECTIVE_SERIES_NAME,
-				LibInvoice::VAT_SERIES_NAME,
-				LibInvoice::ADVANCE_SERIES_NAME,
+				config('invoice.corrective_series'),
+				config('invoice.vat_series'),
+				config('invoice.advance_series'),
 			])
 			->whereBetween('created_at', [$dateFrom, $dateTo])
 			->get();

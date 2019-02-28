@@ -46,12 +46,13 @@ trait CourseProgressStats
 		/*
 		 * Quiz questions progress
 		 */
+		$allQuestions = QuizQuestion::whereDate('created_at', '<=', $endDate)->count();
 		$userQuizQuestionsSolved = UserQuizResults
 			::selectRaw('count(distinct(quiz_question_id)) as count')
 			->where('user_id', $this->id)
 			->first()
 			->count;
-
+		$userQuizQuestionsSolvedPercentage = (int)round(($userQuizQuestionsSolved / $allQuestions) * 100);
 
 		/*
 		 * Sections progress
@@ -88,10 +89,11 @@ trait CourseProgressStats
 			->count;
 
 		return [
-			'course_progress_perc'   => $userCourseProgressPercentage,
-			'quiz_questions_solved'  => $userQuizQuestionsSolved,
-			'time'                   => $userTime,
-			'flashcards_solved'      => $userFlashcardsSolved,
+			'course_progress_perc' => $userCourseProgressPercentage,
+			'quiz_questions_solved' => $userQuizQuestionsSolved,
+			'quiz_questions_solved_perc' => $userCourseProgressPercentage,
+			'time' => $userTime,
+			'flashcards_solved' => $userFlashcardsSolved,
 			'sections_progress_perc' => $userSectionsProgressPercentage,
 		];
 	}

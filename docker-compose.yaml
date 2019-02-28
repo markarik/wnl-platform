@@ -40,7 +40,9 @@ services:
 
   default-queue-worker:
     container_name: default-queue-worker
-    image: php:7.3.2-fpm-alpine3.9
+    build:
+      context: .
+      dockerfile: Dockerfile.dev.php
     volumes:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
     command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:work --queue=default --tries=3 --daemon
@@ -49,7 +51,9 @@ services:
 
   notifications-queue-worker:
     container_name: notifications-queue-worker
-    image: php:7.3.2-fpm-alpine3.9
+    build:
+      context: .
+      dockerfile: Dockerfile.dev.php
     volumes:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
     command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:work --queue=notifications --tries=3 --daemon
@@ -58,7 +62,9 @@ services:
 
   chat-queue-worker:
       container_name: chat-queue-worker
-      image: php:7.3.2-fpm-alpine3.9
+      build:
+        context: .
+        dockerfile: Dockerfile.dev.php
       volumes:
         - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
       command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan chat:process-queue

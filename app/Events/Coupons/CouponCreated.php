@@ -3,12 +3,11 @@
 namespace App\Events\Coupons;
 
 use App\Models\Coupon;
-use App\Traits\SyncCoupons;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Queue\SerializesModels;
 
-class CouponCreated implements CouponEvent {
-	use SerializesModels, SyncCoupons;
+class CouponCreated extends CouponEvent {
+	use SerializesModels;
 
 	public $coupon;
 
@@ -17,7 +16,7 @@ class CouponCreated implements CouponEvent {
 	}
 
 	public function shouldSync() {
-		return !empty(config('coupons.coupons_sync_source')) && empty($this->coupon->studyBuddy);
+		return !empty(config('coupons.coupons_sync_is_source')) && empty($this->coupon->studyBuddy);
 	}
 
 	public function sync() {

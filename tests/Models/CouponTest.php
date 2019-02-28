@@ -81,7 +81,6 @@ class CouponTest extends TestCase
 	/** @test */
 	public function creating_coupon_performs_sync() {
 		$expectedUrl = 'http://platform.test';
-		$expectedHost = 'platform.test';
 		$expectedToken = '123';
 
 		$coupon = new Coupon();
@@ -92,8 +91,7 @@ class CouponTest extends TestCase
 
 		Config::set('coupons.coupons_sync_url', $expectedUrl);
 		Config::set('coupons.coupons_sync_token', $expectedToken);
-		Config::set('coupons.coupons_sync_host', $expectedHost);
-		Config::set('coupons.coupons_sync_source', true);
+		Config::set('coupons.coupons_sync_is_source', true);
 
 		$couponToSync = $coupon->toArray();
 		unset($couponToSync['id']);
@@ -107,12 +105,10 @@ class CouponTest extends TestCase
 	/** @test */
 	public function deleting_coupon_performs_sync() {
 		$expectedUrl = 'http://platform.test';
-		$expectedHost = 'platform.test';
 		$expectedToken = '123';
 		Config::set('coupons.coupons_sync_url', $expectedUrl);
 		Config::set('coupons.coupons_sync_token', $expectedToken);
-		Config::set('coupons.coupons_sync_host', $expectedHost);
-		Config::set('coupons.coupons_sync_source', true);
+		Config::set('coupons.coupons_sync_is_source', true);
 
 		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
 		$couponToSync = $coupon->toArray();
@@ -125,7 +121,6 @@ class CouponTest extends TestCase
 			],
 			[
 				'Accept' => 'application/json',
-				'Host' => $expectedHost,
 				config('coupons.coupons_sync_header') => $expectedToken,
 			],
 		]);
@@ -138,12 +133,10 @@ class CouponTest extends TestCase
 	/** @test */
 	public function updating_coupon_performs_sync() {
 		$expectedUrl = 'http://platform.test';
-		$expectedHost = 'platform.test';
 		$expectedToken = '123';
 		Config::set('coupons.coupons_sync_url', $expectedUrl);
 		Config::set('coupons.coupons_sync_token', $expectedToken);
-		Config::set('coupons.coupons_sync_host', $expectedHost);
-		Config::set('coupons.coupons_sync_source', true);
+		Config::set('coupons.coupons_sync_is_source', true);
 
 		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
 		$coupon->times_usable = 10;
@@ -159,7 +152,6 @@ class CouponTest extends TestCase
 				],
 				[
 					'Accept' => 'application/json',
-					'Host' => $expectedHost,
 					config('coupons.coupons_sync_header') => $expectedToken,
 				],
 			]);
@@ -172,12 +164,10 @@ class CouponTest extends TestCase
 	public function creating_coupon_does_not_perform_sync_for_no_source() {
 		$mocked = Requests::shouldReceive('request');
 		$expectedUrl = 'http://platform.test';
-		$expectedHost = 'platform.test';
 		$expectedToken = '123';
 		Config::set('coupons.coupons_sync_url', $expectedUrl);
 		Config::set('coupons.coupons_sync_token', $expectedToken);
-		Config::set('coupons.coupons_sync_host', $expectedHost);
-		Config::set('coupons.coupons_sync_source', false);
+		Config::set('coupons.coupons_sync_is_source', false);
 
 		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
 		$couponToSync = $coupon->toArray();
@@ -189,12 +179,10 @@ class CouponTest extends TestCase
 	/** @test */
 	public function updating_coupon_performs_sync_for_no_source() {
 		$expectedUrl = 'http://platform.test';
-		$expectedHost = 'platform.test';
 		$expectedToken = '123';
 		Config::set('coupons.coupons_sync_url', $expectedUrl);
 		Config::set('coupons.coupons_sync_token', $expectedToken);
-		Config::set('coupons.coupons_sync_host', $expectedHost);
-		Config::set('coupons.coupons_sync_source', false);
+		Config::set('coupons.coupons_sync_is_source', false);
 
 		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
 		$coupon->times_usable = 10;
@@ -209,12 +197,10 @@ class CouponTest extends TestCase
 	public function deleting_coupon_does_not_perform_sync_for_no_source() {
 		$mocked = Requests::shouldReceive('request');
 		$expectedUrl = 'http://platform.test';
-		$expectedHost = 'platform.test';
 		$expectedToken = '123';
 		Config::set('coupons.coupons_sync_url', $expectedUrl);
 		Config::set('coupons.coupons_sync_token', $expectedToken);
-		Config::set('coupons.coupons_sync_host', $expectedHost);
-		Config::set('coupons.coupons_sync_source', false);
+		Config::set('coupons.coupons_sync_is_source', false);
 
 		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
 		$coupon->delete();

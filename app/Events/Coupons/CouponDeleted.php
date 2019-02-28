@@ -3,11 +3,10 @@
 namespace App\Events\Coupons;
 
 use App\Models\Coupon;
-use App\Traits\SyncCoupons;
 use Illuminate\Queue\SerializesModels;
 
-class CouponDeleted implements CouponEvent {
-	use SerializesModels, SyncCoupons;
+class CouponDeleted extends CouponEvent {
+	use SerializesModels;
 
 	public $coupon;
 
@@ -16,7 +15,7 @@ class CouponDeleted implements CouponEvent {
 	}
 
 	public function shouldSync() {
-		return !empty(config('coupons.coupons_sync_source')) && empty($this->coupon->studyBuddy);
+		return !empty(config('coupons.coupons_sync_is_source')) && empty($this->coupon->studyBuddy);
 	}
 
 	public function sync() {

@@ -5,10 +5,9 @@ namespace App\Events\Coupons;
 use App\Jobs\SyncCouponUpdate;
 use App\Models\Coupon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Queue\SerializesModels;
 
-class CouponUpdated implements CouponEvent {
-	use SerializesModels, DispatchesJobs;
+class CouponUpdated extends CouponEvent {
+	use DispatchesJobs;
 
 	public $coupon;
 
@@ -24,6 +23,6 @@ class CouponUpdated implements CouponEvent {
 		$couponToUpdate = $this->coupon->toArray();
 		unset($couponToUpdate['id']);
 
-		$this->dispatch(new SyncCouponUpdate($couponToUpdate));
+		$this->dispatch(new SyncCouponUpdate($this, $couponToUpdate));
 	}
 }

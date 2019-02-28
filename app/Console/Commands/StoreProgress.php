@@ -6,11 +6,10 @@ use App\Http\Controllers\Api\PrivateApi\UserStateApiController;
 use App\Models\UserCourseProgress;
 use Closure;
 use Exception;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
-class StoreProgress extends Command
+class StoreProgress extends CommandWithMonitoring
 {
 	/**
 	* The name and signature of the console command.
@@ -43,7 +42,7 @@ class StoreProgress extends Command
 	*
 	* @return mixed
 	*/
-	public function handle()
+	public function handleBody()
 	{
 		// IMPORTANT!!!! user id is in fact profile id
 		$passedUserId = $this->argument('user');

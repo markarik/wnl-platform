@@ -23,7 +23,7 @@
 				<span class="subtitle is-5">Pytania powiązane ze slajdem #{{slideId}}:</span>
 				<ul>
 					<li v-for="qq in form.quiz_questions" :key="qq">
-						<router-link :to="{name: 'quiz-editor', params: {quizId: qq}}">#{{qq}}</router-link>
+						<router-link :to="{name: 'quiz-editor', params: {quizQuestionId: qq}}">#{{qq}}</router-link>
 					</li>
 				</ul>
 			</template>

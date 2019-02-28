@@ -97,7 +97,7 @@ let routes = [
 	},
 	{
 		name: 'quiz-editor',
-		path: '/admin/app/quizes/edit/:quizId',
+		path: '/admin/app/quizes/edit/:quizQuestionId',
 		component: QuizQuestionEdit,
 	},
 	{

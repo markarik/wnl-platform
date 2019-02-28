@@ -14,7 +14,7 @@
 			<header class="question-form-header">
 				<h4 v-if="isEdit">
 					Edycja pytania
-					<strong>{{$route.params.quizId}}</strong>
+					<strong>{{quizQuestionId}}</strong>
 					<strong class="has-text-danger" v-if="questionIsDeleted">Usunięte</strong>
 				</h4>
 				<h4 v-else>Tworzenie nowego pytania</h4>
@@ -76,7 +76,7 @@
 				v-if="isEdit"
 				class="margin bottom"
 				:is-always-active="true"
-				:content-item-id="$route.params.quizId"
+				:content-item-id="quizQuestionId"
 				:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
 			/>
 			<div v-else class="notification is-info">
@@ -214,9 +214,9 @@ export default {
 		};
 	},
 	props: {
-		isEdit: {
-			type: Boolean,
-			required: true,
+		quizQuestionId: {
+			type: Number,
+			default: null,
 		}
 	},
 	computed: {
@@ -226,21 +226,23 @@ export default {
 			'questionAnswers',
 			'questionSlides',
 			'questionAnswersMap',
-			'questionId',
 			'questionIsDeleted',
 			'questionTags',
 			'preserveOrder'
 		]),
 		formResourceRoute() {
-			if (!this.isEdit) {
-				return 'quiz_questions?include=quiz_answers';
+			if (this.isEdit) {
+				return `quiz_questions/${this.quizQuestionId}?include=quiz_answers`;
 			} else {
-				return `quiz_questions/${this.$route.params.quizId}?include=quiz_answers`;
+				return 'quiz_questions?include=quiz_answers';
 			}
 		},
 		formMethod() {
 			return this.isEdit ? 'put' : 'post';
 		},
+		isEdit() {
+			return !!this.quizQuestionId;
+		}
 	},
 	methods: {
 		...mapActions([
@@ -300,11 +302,11 @@ export default {
 		},
 		onSubmitSuccess(data) {
 			if (this.isEdit) {
-				this.getQuizQuestion(this.$route.params.quizId);
+				this.getQuizQuestion(this.quizQuestionId);
 			} else {
 				//Timeout for the user to see the success banner
 				setTimeout(() => {
-					this.$router.push({name: 'quiz-editor', params: { quizId: data.id }});
+					this.$router.push({name: 'quiz-editor', params: { quizQuestionId: data.id }});
 				}, 2000);
 			}
 		},
@@ -346,13 +348,13 @@ export default {
 		questionExplanation(val) {
 			if (val) this.$refs.explanationEditor.editor.innerHTML = val;
 		},
-		'$route.params.quizId'(quizId) {
-			this.getQuizQuestion(this.$route.params.quizId);
+		quizQuestionId(quizQuestionId) {
+			this.getQuizQuestion(quizQuestionId);
 		}
 	},
 	created() {
 		if (this.isEdit) {
-			this.getQuizQuestion(this.$route.params.quizId);
+			this.getQuizQuestion(this.quizQuestionId);
 		} else {
 			this.setupFreshQuestion();
 		}
@@ -360,7 +362,7 @@ export default {
 	async mounted() {
 		if (this.isEdit) {
 			await this.setupCurrentUser();
-			await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [this.$route.params.quizId]});
+			await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [this.quizQuestionId]});
 		}
 	},
 };

@@ -215,7 +215,7 @@ export default {
 	},
 	props: {
 		quizQuestionId: {
-			type: Number,
+			type: [Number, String],
 			default: null,
 		}
 	},
@@ -350,6 +350,7 @@ export default {
 		},
 		quizQuestionId(quizQuestionId) {
 			this.getQuizQuestion(quizQuestionId);
+			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [quizQuestionId]});
 		}
 	},
 	created() {

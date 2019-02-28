@@ -1,5 +1,5 @@
 <template>
-	<wnl-slides-editor
+	<wnl-slide-editor
 		:slide-id="Number(slideId) || 0"
 		:screen-id="Number(screenId) || 0"
 		:resource-url="resourceUrl"
@@ -7,35 +7,53 @@
 		:remove="true"
 		@resetSearchInputs="resetSearchInputs"
 	>
-		<wnl-slides-search
+		<wnl-slide-search
+			slot="above-content"
 			@screenIdChange="saveScreenId"
 			@slideIdChange="saveSlideId"
 			@resourceUrlFetched="onResourceUrlFetched"
 			:slide-id="Number(slideId) || 0"
 			:screen-id="Number(screenId) || 0"
 		/>
-	</wnl-slides-editor>
+		<wnl-content-item-classifier-editor
+			v-if="slideId > 0"
+			class="margin bottom"
+			slot="below-content"
+			:is-always-active="true"
+			:content-item-id="slideId"
+			:content-item-type="CONTENT_TYPES.SLIDE"
+		/>
+	</wnl-slide-editor>
 </template>
 
 <script>
-import SlidesEditor from 'js/admin/components/slides/SlideEditor';
-import SlidesSearch from 'js/admin/components/slides/SlidesSearch';
+import {mapActions} from 'vuex';
+
+import WnlSlideEditor from 'js/admin/components/slides/SlideEditor';
+import WnlSlideSearch from 'js/admin/components/slides/SlidesSearch';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+
 import {getApiUrl} from 'js/utils/env';
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
 	name: 'EditSlide',
 	components: {
-		'wnl-slides-editor': SlidesEditor,
-		'wnl-slides-search': SlidesSearch,
+		WnlSlideEditor,
+		WnlSlideSearch,
+		WnlContentItemClassifierEditor
 	},
 	data() {
 		return {
 			slideId: 0,
 			screenId: 0,
-			resourceUrl: ''
+			resourceUrl: '',
+			CONTENT_TYPES,
 		};
 	},
 	methods: {
+		...mapActions(['setupCurrentUser']),
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		resetSearchInputs() {
 			this.slideId = 0;
 			this.screenId = 0;
@@ -60,6 +78,14 @@ export default {
 				url: getApiUrl(`slides/${slideId}`),
 				slideId: slideId,
 			});
+		}
+	},
+	watch: {
+		async slideId(slideId) {
+			if (slideId) {
+				await this.setupCurrentUser();
+				await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId]});
+			}
 		}
 	}
 };

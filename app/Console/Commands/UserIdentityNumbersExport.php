@@ -3,7 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Models\Product;
+use App\Models\UserQuizResults;
 use Illuminate\Console\Command;
+use Rap2hpoutre\FastExcel\FastExcel;
+use Rap2hpoutre\FastExcel\SheetCollection;
 
 class UserIdentityNumbersExport extends ExportUserStatistics
 {
@@ -44,6 +47,10 @@ class UserIdentityNumbersExport extends ExportUserStatistics
 			die;
 		}
 
+		$start = microtime(true);
+		$dbName = env('DB_DATABASE');
+		$newestRecord = UserQuizResults::orderBy('id', 'desc')->limit(1)->first()->created_at;
+
 		$productIds = $this->argument('products');
 		$products = Product::whereIn('id', $productIds)->get();
 
@@ -51,45 +58,49 @@ class UserIdentityNumbersExport extends ExportUserStatistics
 		$maxDate = $products->first()->course_end;
 
 		$this->info("Exporting user stats for date range from {$minDate} to {$maxDate}.");
-
-		$headers = implode("\t",
-			['ID', 'PESEL', 'Numer dowodu osobisgtego', 'Numer paszportu', 'czas', 'lekcje', 'baza pytań']);
+		$this->info("Database: {$dbName}, newest record from {$newestRecord}");
 
 		$groups = $this->getUserGroups($minDate, $maxDate, $productIds);
 
 		$total = 0;
-		foreach ($groups as $key => $group) {
-			$group = $group
-				->filter(function ($user) {
-					if(is_null($user->personalData)) return false;
-					return
-						$user->personalData->personal_identity_number ||
-						$user->personalData->identity_card_number ||
-						$user->personalData->passport_number;
-				});
-			$recordsCount = $group->count();
-			$total += $recordsCount;
-			$this->info("Group {$key} has {$recordsCount} records.");
-			$group = $group
-				->map(function ($user) {
-					return implode("\t", [
-						$user->id,
-						$user->personalData->personal_identity_number ?? '',
-						$user->personalData->identity_card_number ?? '',
-						$user->personalData->passport_number ?? '',
-						$user->userTime,
-						$user->userCourseProgressPrecentage,
-						$user->userQuizQuestionsSolvedPercentage,
-					]);
-				});
-			$group->prepend($headers);
-			$contents = $group->implode("\n");
-			$path = 'exports/user-stats/' . $key . '.tsv';
-			\Storage::put($path, $contents);
-			$this->info("Saved under {$path}");
-		}
+		$groups = $groups
+			->filter(function ($group) {
+				return $group->count();
+			})
+			->map(function ($group, $key) use (&$total) {
+				$group = $group
+					->filter(function ($userRecord) {
+						$user = $userRecord['user'];
+						return !is_null($user->personalData) && !empty($user->personalData->personal_identity_number);
+					});
 
+				$recordsCount = $group->count();
+				$total += $recordsCount;
+				$this->info("Group {$key} has {$recordsCount} records.");
+
+				return $group->map(function ($userRecord) {
+						$user = $userRecord['user'];
+						return [
+							'Id'                             => $user->id,
+							'PESEL'                          => $user->personalData->personal_identity_number ?? '',
+							'Czas spędzony na platformie'    => $userRecord['time'],
+							'Procent przerobionych sekcji'   => $userRecord['userSectionsProgressPercentage'],
+							'Rozwiązanych pytań zamkniętych' => $userRecord['userQuizQuestionsSolved'],
+							'Rozwiązanych pytań otwartych'   => $userRecord['userFlashcardsSolved'],
+							'Produkty'                       => $userRecord['products']->implode(' | '),
+						];
+					});
+			});
+
+		$filename = storage_path('app/exports/identity_numbers.xlsx');
+		$sheets = new SheetCollection($groups);
+		(new FastExcel($sheets))->export($filename);
+
+		$this->info("Saved under {$filename}");
 		$this->info("Total records: {$total}");
+
+		$time = number_format(microtime(true) - $start, 2);
+		$this->info("Finished in {$time} seconds");
 
 		return;
 	}

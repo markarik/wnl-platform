@@ -8,7 +8,7 @@
 				<p class="flashcards-list__item__text">{{flashcard.content}}</p>
 				<div
 					class="flashcards-list__item__buttons"
-					:class="{'is-loading': isLoading}"
+					:class="{'wnl-is-loading': isLoading}"
 					v-if="flashcard.answer === 'unsolved'"
 				>
 					<a class="flashcards-list__item__buttons__button text--easy"

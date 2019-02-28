@@ -576,7 +576,7 @@ ol {
 }
 
 // Make sure our loader doesn't clash with bulma loader
-.is-loading:not(.button, .select, .control) {
+.wnl-is-loading {
 	opacity: .5;
 	pointer-events: none;
 	position: relative;

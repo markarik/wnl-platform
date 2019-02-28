@@ -9,9 +9,6 @@ use Illuminate\Console\Command;
 
 class InvoicesExport extends Command
 {
-	const ADVANCE_SERIES_NAME = 'F-ZAL';
-	const FINAL_SERIES_NAME = 'FK';
-	const VAT_SERIES_NAME = 'FV';
 	const DELIMITER = ';';
 
 	/**
@@ -46,9 +43,9 @@ class InvoicesExport extends Command
 		/** @var Order[] $orders */
 		$orders = Order::with(['invoices', 'user', 'product'])
 			->whereHas('invoices', function ($query) {
-				$query->where('series', self::ADVANCE_SERIES_NAME);
-				$query->orWhere('series', self::FINAL_SERIES_NAME);
-				$query->orWhere('series', self::VAT_SERIES_NAME);
+				$query->where('series', config('invoice.advance_series'));
+				$query->orWhere('series', config('invoice.final_series'));
+				$query->orWhere('series', config('invoice.vat_series'));
 			})->get();
 
 		$schema = $this->getSchema();
@@ -68,17 +65,17 @@ class InvoicesExport extends Command
 			foreach ($order->invoices as $invoice) {
 				$valuesOverrides = [];
 
-				if ($invoice->series === 'PROFORMA') {
+				if ($invoice->series === config('invoice.proforma_series')) {
 					continue;
 				}
 
-				if ($invoice->series === 'F-ZAL') {
+				if ($invoice->series === config('invoice.advance_series')) {
 					$finalNet = $finalNet + $this->price($invoice->netValue);
 					$finalVat = $finalVat + $this->price($invoice->vatAmount);
 					$finalGross = $finalGross + $this->price($invoice->amount);
 				}
 
-				if ($invoice->series === 'FK') {
+				if ($invoice->series === config('invoice.final_series')) {
 					$valuesOverrides['netValue'] = $finalNet;
 					$valuesOverrides['amount'] = $finalGross;
 					$valuesOverrides['vatAmount'] = $finalVat;
@@ -95,7 +92,7 @@ class InvoicesExport extends Command
 	{
 		$isCompany = $order->user->invoice;
 
-		if ($invoice->series === 'FK') {
+		if ($invoice->series === config('invoice.final_series')) {
 			$netValue = $this->price($valuesOverrides['netValue']);
 			$vatAmount = $this->price($valuesOverrides['vatAmount']);
 			$grossValue = $this->price($valuesOverrides['amount']);

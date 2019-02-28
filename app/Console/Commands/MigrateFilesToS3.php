@@ -54,8 +54,6 @@ class MigrateFilesToS3 extends Command
 			$s3->setVisibility($path, 'public');
 			$this->line('Made public ' . $path);
 		});
-
-		return 42;
 	}
 
 	/**

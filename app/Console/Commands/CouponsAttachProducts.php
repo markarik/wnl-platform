@@ -50,7 +50,5 @@ class CouponsAttachProducts extends Command
 				$coupon->products()->attach($onlineOnsite);
 			}
 		}
-
-		return 42;
 	}
 }

@@ -58,8 +58,6 @@ class OrdersStatsExport extends Command
 		}
 
 		$this->writeRange($rows->toArray());
-
-		return 42;
 	}
 
 	protected function stats($startDate, $endDate, $fields)

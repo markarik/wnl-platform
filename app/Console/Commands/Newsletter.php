@@ -57,7 +57,5 @@ class Newsletter extends Command
 		);
 
 		$this->info('✈');
-
-		return 42;
 	}
 }

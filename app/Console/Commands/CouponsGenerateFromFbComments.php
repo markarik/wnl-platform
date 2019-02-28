@@ -55,7 +55,5 @@ class CouponsGenerateFromFbComments extends Command
 				'times_usable' => 1,
 			]);
 		}
-
-		return 42;
 	}
 }

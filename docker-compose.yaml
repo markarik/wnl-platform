@@ -32,6 +32,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev.php
+    env_file:
+      - .env.ngrok
     ports:
       - "9000:9000"
     volumes:
@@ -96,6 +98,8 @@ services:
     image: nginx:1.15.0-alpine
     ports:
       - "80:80"
+      # Required for ngrok, see ./ngrok-enable.sh
+      - "0.0.0.0:4040:4040"
     volumes:
       - ${LOCAL_DEV_PATH}/nginx/:/etc/nginx/conf.d:ro
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}

@@ -5,6 +5,8 @@
 /.vscode
 .env
 .env.backup
+.env.ngrok
+.env.dusk.*
 env*/
 public/css/*
 public/js/*
@@ -15,7 +17,6 @@ storage/debugbar
 yarn-error.log
 npm-debug.log
 public/hot
-.env.dusk.*
 phpunit.dusk.xml
 phpunit.log.xml
 scenario.dusk

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Coupon;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -64,7 +65,10 @@ class CouponsGenerateVouchers extends Command
 
 		print "\n";
 
-		\DB::table('coupons')->insert($coupons);
+
+		foreach ($coupons as $coupon) {
+			Coupon::create($coupon);
+		}
 
 		return;
 	}

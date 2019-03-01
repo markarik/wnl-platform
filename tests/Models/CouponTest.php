@@ -197,6 +197,19 @@ class CouponTest extends TestCase
 	}
 
 	/** @test */
+	public function updating_coupon_without_url_does_not_throw() {
+		Config::set('coupons.coupons_sync_url', null);
+
+		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
+		$coupon->times_usable = 10;
+
+		$mocked = Requests::shouldReceive('request')->never();
+
+		$coupon->save();
+		$mocked->verify();
+	}
+
+	/** @test */
 	public function deleting_coupon_does_not_perform_sync_for_no_source() {
 		$mocked = Requests::shouldReceive('request');
 		$expectedUrl = 'http://platform.test';

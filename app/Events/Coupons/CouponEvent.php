@@ -11,6 +11,11 @@ abstract class CouponEvent {
 	abstract public function sync();
 
 	public function issueSyncRequest($method, $coupon) {
+		if (empty(config('coupons.coupons_sync_url'))) {
+			\Log::info('Can not sync coupon. The sync URL is not provided');
+			return;
+		}
+
 		$headers = [
 			'Accept' => 'application/json',
 			config('coupons.coupons_sync_header') => config('coupons.coupons_sync_token'),

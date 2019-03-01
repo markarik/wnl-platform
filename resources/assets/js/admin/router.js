@@ -12,8 +12,7 @@ import AddSlide from 'js/admin/components/slides/AddSlide';
 import Charts from 'js/admin/components/slides/Charts';
 import Annotations from 'js/admin/components/slides/annotations/Annotations';
 import QuizQuestionsList from 'js/admin/components/quizes/list/QuizQuestionsList';
-import QuizQuestionEdit from 'js/admin/components/quizes/edit/QuizQuestionEdit';
-import QuizQuestionCreate from 'js/admin/components/quizes/edit/QuizQuestionCreate';
+import QuizQuestionEditor from 'js/admin/components/quizes/edit/QuizQuestionEditor';
 import FlashcardsSetsList from 'js/admin/components/flashcards/list/FlashcardsSetsList';
 import FlashcardsSetEditor from 'js/admin/components/flashcards/edit/FlashcardsSetEditor';
 import FlashcardsList from 'js/admin/components/flashcards/list/FlashcardsList';
@@ -97,13 +96,14 @@ let routes = [
 	},
 	{
 		name: 'quiz-editor',
-		path: '/admin/app/quizes/edit/:quizId',
-		component: QuizQuestionEdit,
+		path: '/admin/app/quizes/edit/:quizQuestionId',
+		component: QuizQuestionEditor,
+		props: true
 	},
 	{
 		name: 'quiz-creator',
 		path: '/admin/app/quizes/new',
-		component: QuizQuestionCreate
+		component: QuizQuestionEditor
 	},
 	{
 		name: 'flashcards-sets',

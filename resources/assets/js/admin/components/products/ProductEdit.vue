@@ -9,33 +9,32 @@
 				@submitSuccess="onSubmitSucess"
 				@change="onChange"
 		>
-			<wnl-text name="slug">Tytuł</wnl-text>
-			<wnl-textarea name="message">Treść</wnl-textarea>
-			<p class="message-links-info">
-				Jeżeli chcesz umieścić link do strony wewnątrz platformy, użyj relatywnego adresu.
-				Na przykład: <code>/app/courses/1</code> zamiast <code>https://platforma.wiecejnizlek.pl/app/courses/1</code>.
-				Pamiętaj o ukośniku <code>/</code> na początku adresu!
-				Dzięki temu strona otworzy się szybciej i bez przeładowania całego widoku.
-			</p>
-			<p>Możesz użyć następujących parametrów:</p>
-			<ul class="message-arguments">
-				<li
-						class="message-argument"
-						v-for="(value, key) in messageArguments" :key="key"
-				>
-					<code>{{escapeArgumentKey(key)}}</code> - {{value.description}}
-				</li>
-			</ul>
-			<wnl-datepicker name="start_date" :config="datepickerConfig">Wyświetlaj od</wnl-datepicker>
-			<wnl-datepicker name="end_date" :config="datepickerConfig">Wyświetlaj do</wnl-datepicker>
+			<h4>Produkt #{{ id }}</h4>
+			<wnl-text name="name">Nazwa</wnl-text>
+			<wnl-text name="slug">Slug</wnl-text>
+			<wnl-text name="price">Cena</wnl-text>
+			<wnl-select name="vat_rate" :options="vatRates">Stawka VAT</wnl-select>
+			<wnl-text name="vat_note">Opis VAT</wnl-text>
+			<wnl-textarea name="invoice_name">Opis na fakturze</wnl-textarea>
+
+			<wnl-text name="quantity">Ilość (obecnie)</wnl-text>
+			<wnl-text name="initial">Ilość (początkowa)</wnl-text>
+
+			<wnl-datepicker name="delivery_date" :config="datepickerConfig">Data dostawy</wnl-datepicker>
+
+			<wnl-datepicker name="course_start" :config="datepickerConfig">Start kursu</wnl-datepicker>
+			<wnl-datepicker name="course_end" :config="datepickerConfig">Koniec kursu</wnl-datepicker>
+
+			<wnl-datepicker name="access_start" :config="datepickerConfig">Początek dostępu</wnl-datepicker>
+			<wnl-datepicker name="access_end" :config="datepickerConfig">Koniec dostępu</wnl-datepicker>
+
+			<wnl-datepicker name="signups_start" :config="datepickerConfig">Start zapisów</wnl-datepicker>
+			<wnl-datepicker name="signups_end" :config="datepickerConfig">Koniec zapisów</wnl-datepicker>
+			<wnl-datepicker name="signups_close" :config="datepickerConfig">Zamknięcie zapisów</wnl-datepicker>
+
 		</wnl-form>
 
-		<h3 class="title is-3">Podgląd</h3>
-		<wnl-dashboard-news-content
-				:message="formData.message"
-				:message-arguments="messageArguments"
-				:slug="formData.slug"
-		/>
+
 	</div>
 
 </template>
@@ -56,13 +55,15 @@
 </style>
 
 <script>
-import {Form as WnlForm, Text as WnlText, Textarea as WnlTextarea, Datepicker as WnlDatepicker} from 'js/components/global/form';
-import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
-import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
+import {
+	Form as WnlForm,
+	Text as WnlText,
+	Textarea as WnlTextarea,
+	Datepicker as WnlDatepicker,
+	Select as WnlSelect,
+} from 'js/components/global/form';
 
 export default {
-	name: 'DashboardNewsEdit',
-	mixins: [dashboardNewsMessageArguments],
 	data() {
 		return {
 			datepickerConfig: {
@@ -81,11 +82,11 @@ export default {
 		WnlText,
 		WnlTextarea,
 		WnlDatepicker,
-		WnlDashboardNewsContent
+		WnlSelect,
 	},
 	computed: {
 		formResourceRoute() {
-			return this.isEdit ? `site_wide_messages/${this.id}` : 'site_wide_messages';
+			return this.isEdit ? `products/${this.id}` : 'products';
 		},
 		formMethod() {
 			return this.isEdit ? 'put' : 'post';
@@ -93,11 +94,19 @@ export default {
 		isEdit() {
 			return this.id !== 'new';
 		},
+		vatRates() {
+			return [
+				{value: '0', text: 'zw'},
+				{value: '23', text: '23'},
+				{value: '8', text: '8'},
+				{value: '5', text: '5'},
+			]; // TODO: Fetch it from server
+		}
 	},
 	methods: {
 		onSubmitSucess(data) {
 			if (!this.isEdit) {
-				this.$router.push({ name: 'dashboard-news-edit', params: { id: data.id } });
+				this.$router.push({ name: 'product-edit', params: { id: data.id } });
 			}
 		},
 		onChange({formData}) {

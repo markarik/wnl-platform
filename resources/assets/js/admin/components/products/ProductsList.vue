@@ -1,32 +1,33 @@
 <template>
 	<div >
 		<h3 class="title is-3">
-			Newsy
+			Produkty
 			<router-link
 					class="button is-primary"
-					:to="{ name: 'dashboard-news-edit', params: { id: 'new' } }"
+					:to="{ name: 'products-edit', params: { id: 'new' } }"
 			>
-				+ Dodaj nowego newsa
+				+ Dodaj nowy produkt
 			</router-link>
 		</h3>
 		<table class="table dashboard-news">
 			<tr>
 				<th>Id</th>
 				<th>Tytuł</th>
-				<th>Wyświetlaj od</th>
-				<th>Wyświetlaj do</th>
+				<th>Dostępność</th>
+				<th>Start zapisów</th>
+				<th>Utworzono</th>
 			</tr>
 			<tr
 					class="dashboard-news__item"
-					:class="{'has-text-success': product.id === activeItemId}"
 					v-for="product in products"
 					:key="product.id"
 					@click="goToEdit(product.id)"
 			>
 				<td>{{product.id}}</td>
 				<td>{{product.name}}</td>
-				<td>{{formatDate(product.start_date)}}</td>
-				<td>{{formatDate(product.end_date)}}</td>
+				<td>{{product.quantity}}/{{product.initial}}</td>
+				<td>{{formatDate(product.signups_start)}}</td>
+				<td>{{formatDate(product.created_at)}}</td>
 
 			</tr>
 		</table>
@@ -51,32 +52,21 @@ export default {
 			products: []
 		};
 	},
-	computed: {
-		activeItemId() {
-			const activeItem = this.products
-				.filter(item => (item.start_date === null || moment(item.start_date * 1000).isBefore())
-						&& (item.end_date === null || moment(item.end_date * 1000).isAfter())
-				)
-				.sort((a, b) => a.created_at < b.created_at ? 1 : -1)[0];
-
-			return activeItem && activeItem.id;
-		}
-	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		formatDate(date) {
 			if (date) {
-				return moment(date * 1000).format('L LT');
+				return moment(date * 1000).format('DD/MM/YY H:mm');
 			}
 		},
 		goToEdit(id) {
-			this.$router.push({ name: 'dashboard-news-edit', params: { id } });
+			this.$router.push({ name: 'products-edit', params: { id } });
 		},
 	},
 	async mounted() {
 		try {
 			const {data} = await axios.get(getApiUrl('products/all'));
-			this.products = Object.values(data);
+			this.products = Object.values(data).sort((a, b) => a.id < b.id ? 1 : -1);
 		} catch (error) {
 			$wnl.logger.error(error);
 			this.addAutoDismissableAlert({

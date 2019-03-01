@@ -57,5 +57,6 @@ return [
 		'user-flashcard-notes'    => 'user_flashcard_notes',
 		'roles'                   => 'roles',
 		'course-structure-nodes'  => 'course_structure_nodes',
+		'products'                => 'products',
 	],
 ];

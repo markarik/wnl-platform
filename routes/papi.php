@@ -107,6 +107,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// Slides
 		Route::post("{$r['slides']}/.filter", 'SlidesApiController@filter');
+
+		// Products
+		Route::get("{$r['products']}/{id}", 'ProductsApiController@get');
 	});
 
 	// Count

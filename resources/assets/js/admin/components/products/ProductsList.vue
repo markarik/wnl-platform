@@ -11,20 +11,22 @@
 		</h3>
 		<table class="table dashboard-news">
 			<tr>
+				<th>Id</th>
 				<th>Tytuł</th>
 				<th>Wyświetlaj od</th>
 				<th>Wyświetlaj do</th>
 			</tr>
 			<tr
 					class="dashboard-news__item"
-					:class="{'has-text-success': dashboardNewsItem.id === activeItemId}"
-					v-for="dashboardNewsItem in dashboardNewsList"
-					:key="dashboardNewsItem.id"
-					@click="goToEdit(dashboardNewsItem.id)"
+					:class="{'has-text-success': product.id === activeItemId}"
+					v-for="product in products"
+					:key="product.id"
+					@click="goToEdit(product.id)"
 			>
-				<td>{{dashboardNewsItem.slug}}</td>
-				<td>{{formatDate(dashboardNewsItem.start_date)}}</td>
-				<td>{{formatDate(dashboardNewsItem.end_date)}}</td>
+				<td>{{product.id}}</td>
+				<td>{{product.name}}</td>
+				<td>{{formatDate(product.start_date)}}</td>
+				<td>{{formatDate(product.end_date)}}</td>
 
 			</tr>
 		</table>
@@ -46,12 +48,12 @@ export default {
 	name: 'DashboardNews',
 	data() {
 		return {
-			dashboardNewsList: []
+			products: []
 		};
 	},
 	computed: {
 		activeItemId() {
-			const activeItem = this.dashboardNewsList
+			const activeItem = this.products
 				.filter(item => (item.start_date === null || moment(item.start_date * 1000).isBefore())
 						&& (item.end_date === null || moment(item.end_date * 1000).isAfter())
 				)
@@ -73,8 +75,8 @@ export default {
 	},
 	async mounted() {
 		try {
-			const {data} = await axios.get(getApiUrl('site_wide_messages/dashboard_news'));
-			this.dashboardNewsList = Object.values(data);
+			const {data} = await axios.get(getApiUrl('products/all'));
+			this.products = Object.values(data);
 		} catch (error) {
 			$wnl.logger.error(error);
 			this.addAutoDismissableAlert({

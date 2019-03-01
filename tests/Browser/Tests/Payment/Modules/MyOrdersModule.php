@@ -51,7 +51,6 @@ class MyOrdersModule
 		$order = $browser->order;
 
 		$browser->waitForText('Twoje zamówienia', 60);
-		$browser->pause(1000);
 		$browser->waitForText('Zamówienie numer ' . $order->id);
 
 		if (empty($browser->coupon)) {

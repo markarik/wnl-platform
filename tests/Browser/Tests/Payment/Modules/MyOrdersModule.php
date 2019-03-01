@@ -77,12 +77,6 @@ class MyOrdersModule
 			$browser->order->save();
 		}
 
-		$order = $browser->order;
-
-		if (!App::environment(['staging', 'sandbox']) && $order->method === 'online') {
-			return;
-		}
-
 		$browser->refresh();
 		$browser->waitForText('Wpłacono', 60);
 	}
@@ -93,11 +87,11 @@ class MyOrdersModule
 		$originalOrder = $studyBuddy->order;
 
 		if ($originalOrder->method === 'instalments') {
-			Assert::assertTrue($studyBuddy->status === 'refunded');
+			Assert::assertEquals('refunded', $studyBuddy->status, 'Study buddy status is refunded');
 
 			return;
 		}
 
-		Assert::assertTrue($studyBuddy->status === 'awaiting-refund');
+		Assert::assertEquals('awaiting-refund', $studyBuddy->status, 'Study buddy status is refunded');
 	}
 }

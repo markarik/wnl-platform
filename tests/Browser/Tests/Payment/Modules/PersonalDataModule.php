@@ -14,7 +14,7 @@ use Tests\Browser\Pages\Payment\PersonalDataPage;
 use Tests\Browser\Tests\Payment\SignsUpUsers;
 use PHPUnit\Framework\Assert;
 
-class PersonalDataModule extends TestModule
+class PersonalDataModule
 {
 	use SignsUpUsers;
 
@@ -24,8 +24,6 @@ class PersonalDataModule extends TestModule
 
 		$browser->on(new PersonalDataPage());
 		$this->signUp($browser, false);
-
-		return ConfirmOrderModule::class;
 	}
 
 	public function signUpCustomInvoice(BethinkBrowser $browser)
@@ -34,8 +32,6 @@ class PersonalDataModule extends TestModule
 
 		$browser->on(new PersonalDataPage());
 		$this->signUp($browser, true);
-
-		return ConfirmOrderModule::class;
 	}
 
 	public function logInUsingModal(BethinkBrowser $browser)
@@ -53,8 +49,6 @@ class PersonalDataModule extends TestModule
 			->click('@login')
 			->on(new LoginModal)
 			->loginAsUser($user->email, 'secret');
-
-		return ConfirmOrderModule::class;
 	}
 
 	protected function navigate(BethinkBrowser $browser)

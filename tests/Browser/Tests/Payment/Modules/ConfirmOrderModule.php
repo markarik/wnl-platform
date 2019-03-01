@@ -13,32 +13,24 @@ class ConfirmOrderModule
 	{
 		$browser->on(new ConfirmOrderPage);
 		$browser->click('@edit-persona-data');
-
-		return PersonalDataModule::class;
 	}
 
 	public function payByTransfer(BethinkBrowser $browser)
 	{
 		$browser->on(new ConfirmOrderPage);
 		$this->pay($browser, 'transfer');
-
-		return MyOrdersModule::class;
 	}
 
 	public function payOnline(BethinkBrowser $browser)
 	{
 		$browser->on(new ConfirmOrderPage);
 		$this->pay($browser, 'online');
-
-		return OnlinePaymentModule::class;
 	}
 
 	public function payByInstalments(BethinkBrowser $browser)
 	{
 		$browser->on(new ConfirmOrderPage);
 		$this->pay($browser, 'instalments');
-
-		return MyOrdersModule::class;
 	}
 
 	protected function pay(BethinkBrowser $browser, $method)

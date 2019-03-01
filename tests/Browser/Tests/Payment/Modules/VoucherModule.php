@@ -16,25 +16,16 @@ class VoucherModule
 		$this->useCode($browser);
 	}
 
-	public function code10Percent($browser)
-	{
-		return $this->useCode($browser, 10);
-	}
-
-	public function code20Percent($browser)
-	{
-		return $this->useCode($browser, 20);
-	}
-
 	public function code100Percent($browser)
 	{
-		return $this->useCode($browser, 100);
+		$this->useCode($browser, 100);
 	}
 
 	public function skip(BethinkBrowser $browser)
 	{
 		if (!empty($browser->studyBuddy)) {
-			return $this->useCode($browser);
+			$this->useCode($browser);
+			return;
 		}
 
 		$browser
@@ -43,16 +34,13 @@ class VoucherModule
 			->assertPathIs(
 				(new SelectProductPage)->url()
 			);
-
-		return [
-			SelectProductModule::class,
-		];
 	}
 
 	protected function useCode(BethinkBrowser $browser, $value = 10)
 	{
 		if (!empty($browser->studyBuddy)) {
-			return $this->studyBuddy($browser);
+			$this->studyBuddy($browser);
+			return;
 		}
 
 		$coupon = factory(Coupon::class)->create([
@@ -68,10 +56,6 @@ class VoucherModule
 			->assertPathIs(
 				(new SelectProductPage)->url()
 			);
-
-		return [
-			SelectProductModule::class,
-		];
 	}
 
 	protected function studyBuddy(BethinkBrowser $browser)
@@ -87,9 +71,5 @@ class VoucherModule
 			->assertPathIs(
 				(new SelectProductPage)->url()
 			);
-
-		return [
-			SelectProductModule::class,
-		];
 	}
 }

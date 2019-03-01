@@ -17,8 +17,6 @@ class MyOrdersModule
 		if (!empty($browser->studyBuddy)) {
 			$this->assertStudyBuddy($browser);
 		}
-
-		return false;
 	}
 
 	public function studyBuddy(BethinkBrowser $browser)
@@ -26,7 +24,7 @@ class MyOrdersModule
 		if (!empty($browser->studyBuddy)) {
 			$this->assertStudyBuddy($browser);
 
-			return false;
+			return;
 		}
 
 		$this->assertOrderPlaced($browser);
@@ -42,8 +40,6 @@ class MyOrdersModule
 		$browser
 			->on(new Navigation)
 			->logoutUser();
-
-		return [VoucherModule::class];
 	}
 
 	protected function assertOrderPlaced(BethinkBrowser $browser)
@@ -59,7 +55,6 @@ class MyOrdersModule
 			$coupon = $browser->coupon;
 			$browser->waitForText($coupon->name);
 		}
-
 	}
 
 	protected function assertPaid(BethinkBrowser $browser)

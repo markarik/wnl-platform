@@ -14,12 +14,6 @@ class SelectProductModule
 		$browser
 			->visit(new SelectProductPage)
 			->click('@online-button');
-
-		if (empty($browser->user)) {
-			return PersonalDataModule::class;
-		} else {
-			return ConfirmOrderModule::class;
-		}
 	}
 
 	public function onsite(BethinkBrowser $browser)
@@ -27,11 +21,5 @@ class SelectProductModule
 		$browser
 			->visit(new SelectProductPage)
 			->click('@onsite-button');
-
-		if (empty($browser->user)) {
-			return PersonalDataModule::class;
-		} else {
-			return ConfirmOrderModule::class;
-		}
 	}
 }

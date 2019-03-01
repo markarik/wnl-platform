@@ -15,15 +15,6 @@ use Tests\Browser\Pages\Login;
 
 class UserModule
 {
-	public function newUser()
-	{
-		return [
-			SelectProductModule::class,
-			VoucherModule::class,
-			PersonalDataModule::class,
-		];
-	}
-
 	public function existingUser(BethinkBrowser $browser)
 	{
 		$faker = new Generator();
@@ -48,11 +39,5 @@ class UserModule
 		$browser
 			->visit(new Login())
 			->loginAsUser($user->email, 'secret');
-
-		return [
-			SelectProductModule::class,
-			VoucherModule::class,
-			PersonalDataModule::class,
-		];
 	}
 }

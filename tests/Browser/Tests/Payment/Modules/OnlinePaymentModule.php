@@ -13,8 +13,6 @@ class OnlinePaymentModule
 	{
 		$this->payment($browser);
 		$browser->press('@confirm-payment');
-
-		return MyOrdersModule::class;
 	}
 
 	public function rejectedPayment(BethinkBrowser $browser)
@@ -22,8 +20,6 @@ class OnlinePaymentModule
 		$this->payment($browser);
 		$browser->press('@decline-payment');
 		$browser->click('@return');
-
-		return MyOrdersModule::class;
 	}
 
 	protected function payment(BethinkBrowser $browser)

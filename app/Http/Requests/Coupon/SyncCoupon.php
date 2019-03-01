@@ -9,6 +9,10 @@ class SyncCoupon extends FormRequest
 {
 	public function authorize(Request $request)
 	{
+		if (empty(config('coupons.coupons_sync_token'))) {
+			return false;
+		}
+
 		return $request->header(config('coupons.coupons_sync_header')) === config('coupons.coupons_sync_token');
 	}
 

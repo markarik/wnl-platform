@@ -62,6 +62,36 @@ class CouponsTest extends ApiTestCase
 	}
 
 	/** @test */
+	public function create_fails_when_token_not_set_in_config()
+	{
+		Event::fake();
+
+		Config::set('coupons.coupons_sync_token', null);
+
+		Coupon::create([
+			'code' => 'foo',
+			'value' => 10,
+			'type' => 'amount',
+			'times_usable' => 1
+		]);
+
+		$response = $this
+			->withHeader(config('coupons.coupons_sync_header'), '123')
+			->json('POST', $this->url('/coupons'), [
+				'coupon' => [
+					'code' => 'foo',
+					'times_usable' => 0,
+					'type' => 'amount',
+					'value' => 10
+				]
+			]);
+
+		$response->assertStatus(403);
+
+		Event::assertNotDispatched(CouponUpdated::class);
+	}
+
+	/** @test */
 	public function update_coupon_no_token_fails()
 	{
 		$expectedToken = '123';
@@ -123,6 +153,36 @@ class CouponsTest extends ApiTestCase
 			'type' => 'amount',
 			'value' => 10
 		]);
+
+		Event::assertNotDispatched(CouponUpdated::class);
+	}
+
+	/** @test */
+	public function update_fails_when_token_not_set_in_config()
+	{
+		Event::fake();
+
+		Config::set('coupons.coupons_sync_token', null);
+
+		Coupon::create([
+			'code' => 'foo',
+			'value' => 10,
+			'type' => 'amount',
+			'times_usable' => 1
+		]);
+
+		$response = $this
+			->withHeader(config('coupons.coupons_sync_header'), '123')
+			->json('PUT', $this->url('/coupons'), [
+				'coupon' => [
+					'code' => 'foo',
+					'times_usable' => 0,
+					'type' => 'amount',
+					'value' => 10
+				]
+			]);
+
+		$response->assertStatus(403);
 
 		Event::assertNotDispatched(CouponUpdated::class);
 	}
@@ -211,5 +271,35 @@ class CouponsTest extends ApiTestCase
 			]);
 
 		$response->assertStatus(400);
+	}
+
+	/** @test */
+	public function delete_fails_when_token_not_set_in_config()
+	{
+		Event::fake();
+
+		Config::set('coupons.coupons_sync_token', null);
+
+		Coupon::create([
+			'code' => 'foo',
+			'value' => 10,
+			'type' => 'amount',
+			'times_usable' => 1
+		]);
+
+		$response = $this
+			->withHeader(config('coupons.coupons_sync_header'), '123')
+			->json('DELETE', $this->url('/coupons'), [
+				'coupon' => [
+					'code' => 'foo',
+					'times_usable' => 0,
+					'type' => 'amount',
+					'value' => 10
+				]
+			]);
+
+		$response->assertStatus(403);
+
+		Event::assertNotDispatched(CouponUpdated::class);
 	}
 }

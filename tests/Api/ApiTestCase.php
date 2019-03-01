@@ -4,6 +4,7 @@
 namespace Tests\Api;
 
 
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 abstract class ApiTestCase extends TestCase

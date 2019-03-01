@@ -9,10 +9,14 @@ NGROK_URL=$(docker run --rm --name=jq --network=container:nginx endeveit/docker-
 
 if [[ "$NGROK_URL" == "null" ]]
 then
-    echo "ngrok failed to return public url"
+    printf "ngrok failed to return public url\n"
     exit 1
 fi
 
-echo "P24_STATUS_URL=$NGROK_URL/payment/status" > .env.ngrok
+printf "ngrok URL: $NGROK_URL\n"
+
+printf "
+P24_STATUS_URL=$NGROK_URL/payment/status
+" > .env.ngrok
 
 docker-compose up -d

@@ -34,6 +34,7 @@ services:
       dockerfile: Dockerfile.dev.php
     env_file:
       - .env.ngrok
+      - .env.selenium
     ports:
       - "9000:9000"
     volumes:

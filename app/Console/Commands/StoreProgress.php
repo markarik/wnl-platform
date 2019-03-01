@@ -42,7 +42,7 @@ class StoreProgress extends CommandWithMonitoring
 	*
 	* @return mixed
 	*/
-	public function handleBody()
+	public function handleCommand()
 	{
 		// IMPORTANT!!!! user id is in fact profile id
 		$passedUserId = $this->argument('user');

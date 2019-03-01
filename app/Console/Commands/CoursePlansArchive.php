@@ -28,7 +28,7 @@ class CoursePlansArchive extends CommandWithMonitoring
 	 *
 	 * @return mixed
 	 */
-	public function handleBody()
+	public function handleCommand()
 	{
 		$users = UserLesson::select('user_id')
 			->whereBetween('updated_at', [Carbon::yesterday(), Carbon::today()])

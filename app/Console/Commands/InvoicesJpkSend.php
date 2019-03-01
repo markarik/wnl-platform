@@ -28,7 +28,7 @@ class InvoicesJpkSend extends CommandWithMonitoring
      *
      * @return mixed
      */
-    public function handleBody()
+    public function handleCommand()
     {
         $dateFrom = Carbon::now()->subMonth()->startOfMonth();
         $dateTo = Carbon::now()->subMonth()->endOfMonth();

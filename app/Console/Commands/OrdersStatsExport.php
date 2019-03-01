@@ -27,7 +27,7 @@ class OrdersStatsExport extends CommandWithMonitoring
 	 *
 	 * @return mixed
 	 */
-	public function handleBody()
+	public function handleCommand()
 	{
 		$setOne = $this->stats(Carbon::parse('2018-09-24 23:59'), Carbon::now(),
 			['date', 'orders_count', 'value', 'paid', 'albums', '50%', '']);

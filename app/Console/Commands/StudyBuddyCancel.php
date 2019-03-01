@@ -26,7 +26,7 @@ class StudyBuddyCancel extends CommandWithMonitoring
 	 *
 	 * @return mixed
 	 */
-	public function handleBody()
+	public function handleCommand()
 	{
 		$ids = $this->argument('orderId');
 		if ($ids) {

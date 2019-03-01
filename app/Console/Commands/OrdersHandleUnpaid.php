@@ -39,7 +39,7 @@ class OrdersHandleUnpaid extends CommandWithMonitoring
 	 *
 	 * @return mixed
 	 */
-	public function handleBody()
+	public function handleCommand()
 	{
 		$this->mailDebug = $this->option('mail-debug');
 		$timeShift = $this->option('time-shift');

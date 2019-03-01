@@ -26,7 +26,7 @@ class SlackDaysCron extends CommandWithMonitoring
 	 *
 	 * @return mixed
 	 */
-	public function handleBody()
+	public function handleCommand()
 	{
 		$today = Carbon::today();
 

@@ -21,7 +21,7 @@ class RunDataIntegrityChecks extends CommandWithMonitoring
 	 *
 	 * @return mixed
 	 */
-	public function handleBody() {
+	public function handleCommand() {
 		(new PaymentsCheck())->check();
 		(new PresentablesOrderNumberCheck())->check();
 

@@ -26,7 +26,7 @@ class NotificationsCleanupOld extends CommandWithMonitoring
 	 *
 	 * @return mixed
 	 */
-	public function handleBody()
+	public function handleCommand()
 	{
 		$notifications = Notification::whereDate('created_at', '<', Carbon::now()->subWeeks(3));
 

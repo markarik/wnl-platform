@@ -43,7 +43,7 @@ class StoreTime extends CommandWithMonitoring
 	 *
 	 * @return mixed
 	 */
-	public function handleBody()
+	public function handleCommand()
 	{
 		$passedUserId = $this->argument('user');
 

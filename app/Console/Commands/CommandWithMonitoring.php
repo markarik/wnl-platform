@@ -10,7 +10,7 @@ abstract class CommandWithMonitoring extends Command
 {
 	public function handle()
 	{
-		$result = $this->handleBody();
+		$result = $this->handleCommand();
 
 		if (!$result) {
 			// don't send notification on command failure
@@ -25,5 +25,5 @@ abstract class CommandWithMonitoring extends Command
 		return $result;
 	}
 
-	abstract public function handleBody();
+	abstract public function handleCommand();
 }

@@ -17,7 +17,7 @@ abstract class CommandWithMonitoring extends Command
 
 			$metricName = env('MONITORING_METRIC_NAME');
 			if ($metricName) {
-				(new PrometheusPushgateway())->notify(env('MONITORING_METRIC_NAME'));
+				(new PrometheusPushgateway())->notify($metricName);
 			} else {
 				\Log::debug('Monitoring notification silenced on non-production env');
 			}

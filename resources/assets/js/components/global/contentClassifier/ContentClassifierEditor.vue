@@ -2,7 +2,7 @@
 	<div
 		:class="{
 			'content-classifier__editor': true,
-			'is-loading': isLoading,
+			'wnl-is-loading': isLoading,
 		}"
 		tabindex="-1"
 		@keydown="onKeyDown"

@@ -2,13 +2,15 @@
 namespace App\Console;
 
 
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Log;
 
 class PrometheusPushgateway
 {
 	public function notify($metricName)
 	{
-		$client = new \GuzzleHttp\Client();
+		$client = new Client();
 		try {
 			$timestamp = time();
 			$bodyLines = [
@@ -21,7 +23,7 @@ class PrometheusPushgateway
 				'body' => $body
 			]);
 		} catch (GuzzleException $exception) {
-			\Log::error('Sending laravel schedule metric to Prometheus Pushgateway failed', [
+			Log::error('Sending laravel schedule metric to Prometheus Pushgateway failed', [
 				'metricName' => $metricName,
 				'exceptionMessage' => $exception->getMessage()
 			]);

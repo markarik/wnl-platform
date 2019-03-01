@@ -59,7 +59,7 @@ return [
 	| Application Instance Name
 	|--------------------------------------------------------------------------
 	|
-	| Identify different proction environments like lek, ldek, etc...
+	| Identify different production environments like lek, ldek, etc...
 	|
 	*/
 	'instance_name' => env('APP_INSTANCE_NAME', 'test'),

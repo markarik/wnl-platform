@@ -4,9 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\Notification;
 use Carbon\Carbon;
-use Illuminate\Console\Command;
 
-class NotificationsCleanupOld extends Command
+class NotificationsCleanupOld extends CommandWithMonitoring
 {
 	/**
 	 * The name and signature of the console command.
@@ -23,21 +22,11 @@ class NotificationsCleanupOld extends Command
 	protected $description = 'Remove notifications older than 3 weeks';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed
 	 */
-	public function handle()
+	public function handleBody()
 	{
 		$notifications = Notification::whereDate('created_at', '<', Carbon::now()->subWeeks(3));
 

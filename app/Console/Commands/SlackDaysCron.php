@@ -4,9 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\UserPlan;
 use Carbon\Carbon;
-use Illuminate\Console\Command;
 
-class SlackDaysCron extends Command
+class SlackDaysCron extends CommandWithMonitoring
 {
 	/**
 	 * The name and signature of the console command.
@@ -23,21 +22,11 @@ class SlackDaysCron extends Command
 	protected $description = 'Command description';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed
 	 */
-	public function handle()
+	public function handleBody()
 	{
 		$today = Carbon::today();
 

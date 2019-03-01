@@ -6,9 +6,8 @@ use App\Jobs\ArchiveCoursePlan;
 use App\Models\User;
 use App\Models\UserLesson;
 use Carbon\Carbon;
-use Illuminate\Console\Command;
 
-class CoursePlansArchive extends Command
+class CoursePlansArchive extends CommandWithMonitoring
 {
 	/**
 	 * The name and signature of the console command.
@@ -25,21 +24,11 @@ class CoursePlansArchive extends Command
 	protected $description = 'Copy user course plans that have been lately changed.';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed
 	 */
-	public function handle()
+	public function handleBody()
 	{
 		$users = UserLesson::select('user_id')
 			->whereBetween('updated_at', [Carbon::yesterday(), Carbon::today()])

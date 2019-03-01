@@ -9,10 +9,9 @@ use App\Models\Order;
 use App\Models\PaymentReminder;
 use App\Models\SiteWideMessage;
 use Carbon\Carbon;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
-class OrdersHandleUnpaid extends Command
+class OrdersHandleUnpaid extends CommandWithMonitoring
 {
 	/**
 	 * The name and signature of the console command.
@@ -35,17 +34,12 @@ class OrdersHandleUnpaid extends Command
 
 	protected $mailDebug;
 
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
 	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed
 	 */
-	public function handle()
+	public function handleBody()
 	{
 		$this->mailDebug = $this->option('mail-debug');
 		$timeShift = $this->option('time-shift');

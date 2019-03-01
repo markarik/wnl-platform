@@ -7,11 +7,10 @@ use App\Models\UserTime;
 use Closure;
 use Exception;
 use Carbon\Carbon;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
-class StoreTime extends Command
+class StoreTime extends CommandWithMonitoring
 {
 	/**
 	 * The name and signature of the console command.
@@ -44,7 +43,7 @@ class StoreTime extends Command
 	 *
 	 * @return mixed
 	 */
-	public function handle()
+	public function handleBody()
 	{
 		$passedUserId = $this->argument('user');
 

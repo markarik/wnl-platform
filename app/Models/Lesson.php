@@ -7,7 +7,6 @@ use App\Scopes\OrderByOrderNumberScope;
 use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use DB;
 use ScoutEngines\Elasticsearch\Searchable;
 
 class Lesson extends Model implements WithTags
@@ -15,6 +14,10 @@ class Lesson extends Model implements WithTags
 	use Cached, Searchable;
 
 	protected $fillable = ['name', 'group_id', 'is_required'];
+
+	/** @var Carbon */
+	private $startDate = null;
+	private $startDateLoaded = false;
 
 	const USER_LESSON_CACHE_KEY = '%s-%s-%s-user-lesson-access';
 	const CACHE_VERSION = 1;
@@ -50,84 +53,73 @@ class Lesson extends Model implements WithTags
 		})->get();
 	}
 
-	public function isAvailable($user = null)
+	public function isAvailable()
 	{
-		$user = $user ?? \Auth::user();
-		if ($user) {
-			if ($user->isAdmin() || $user->isModerator()) {
-				return true;
-			}
+		$user = \Auth::user();
 
-			$lessonAccess = $this->userLessonAccess($user);
-			if (!is_null($lessonAccess) && !is_null($lessonAccess->start_date)) {
-				return Carbon::parse($lessonAccess->start_date)->isPast();
-			}
+		if ($user->isAdmin() || $user->isModerator()) {
+			return true;
 		}
 
-		return false;
+		$startDate = $this->startDate();
+
+		if (!is_null($startDate)) {
+			return $startDate->isPast();
+		} else {
+			return false;
+		}
 	}
 
-	public function isAccessible($user = null)
+	public function isAccessible()
 	{
-		$user = $user ?? \Auth::user();
-		if ($user) {
-			if ($user->isAdmin() || $user->isModerator()) {
-				return true;
-			}
+		$user = \Auth::user();
 
-			$lessonAccess = $this->userLessonAccess($user);
-			return !is_null($lessonAccess);
+		if ($user->isAdmin() || $user->isModerator()) {
+			return true;
 		}
 
-		return false;
+		return !is_null($this->startDate());
 	}
 
-	public function startDate($user = null)
+	public function startDate()
 	{
-		$user = $user ?? \Auth::user();
-		if ($user) {
-			$lessonAccess = $this->userLessonAccess($user);
-
-			if (!is_null($lessonAccess)) {
-				return Carbon::parse($lessonAccess->start_date);
-			}
+		if ($this->startDateLoaded) {
+			return $this->startDate;
 		}
 
-		return null;
-	}
+		$user = \Auth::user();
 
-	private function userLessonAccess(User $user) {
-		$userLesson = DB::table('user_lesson')
-			->where('lesson_id', $this->id)
-			->where('user_id', $user->id)
-			->first();
+		$userLesson = UserLesson::where([
+			'lesson_id' => $this->id,
+			'user_id' => $user->id
+		])->first();
 
 		if ($userLesson) {
-			return $userLesson;
+			return $this->setStartDate($userLesson->start_date);
 		}
 
-		// FIXME this is suboptimal to run on every lesson
-		// Rethink and run once
-		// Also, use Eloquent where possible
-		$newestProductBought = DB::select(DB::raw(
-			'select products.id from products join orders on orders.product_id = products.id join lesson_product on lesson_product.product_id = products.id where orders.user_id = :user_id and orders.paid = 1 group by products.id order by course_start desc limit 1;'
-		), ['user_id' => $user->id]);
+		$productId = $user->getProductIdForDefaultLessonsStartDates();
 
-		if (count($newestProductBought) < 1) {
-			return null;
+		if (!$productId) {
+			return $this->setStartDate(null);
 		}
 
-		$lessonProduct = DB::select(DB::raw(
-			'select start_date from lesson_product where product_id = :product_id and lesson_id = :lesson_id;'
-		), [
+		$lessonProduct = LessonProduct::where([
 			'lesson_id' => $this->id,
-			'product_id' => $newestProductBought[0]->id
-		]);
+			'product_id' => $productId
+		])->first();
 
-		if (count($lessonProduct) < 1) {
-			return null;
+		if ($lessonProduct) {
+			return $this->setStartDate($lessonProduct->start_date);
 		}
 
-		return $lessonProduct[0];
+		return $this->setStartDate(null);
+	}
+
+	private function setStartDate($startDate) {
+		$this->startDate = $startDate;
+		$this->startDateLoaded = true;
+
+		return $startDate;
 	}
 }

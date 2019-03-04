@@ -56,6 +56,9 @@ class User extends Authenticatable
 
 	protected $appends = ['subscription_status'];
 
+	private $productIdForDefaultLessonsStartDates = null;
+	private $productIdForDefaultLessonsStartDatesLoaded = false;
+
 	/**
 	 * Relationships
 	 */
@@ -281,6 +284,26 @@ class User extends Authenticatable
 		$max = $this->subscription ? Carbon::parse($this->subscription->access_end) : null;
 
 		return [$min, $max];
+	}
+
+	public function getProductIdForDefaultLessonsStartDates() {
+		if (!$this->productIdForDefaultLessonsStartDatesLoaded) {
+			$product = Product::select(['products.id'])
+				->join('orders', 'orders.product_id', '=', 'products.id')
+				->join('lesson_product', 'lesson_product.product_id', '=', 'products.id')
+				->where('orders.user_id', $this->id)
+				->where('orders.paid', 1)
+				->orderBy('course_start', 'desc')
+				->first();
+
+			if ($product) {
+				$this->productIdForDefaultLessonsStartDates = $product->id;
+			}
+
+			$this->productIdForDefaultLessonsStartDatesLoaded = true;
+		}
+
+		return $this->productIdForDefaultLessonsStartDates;
 	}
 
 	/**

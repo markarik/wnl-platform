@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 
-docker run --rm -d --name=ngrok --network=container:nginx wernight/ngrok ngrok http --region=eu nginx:80
+RELOAD=1
+
+while true ; do
+    case "$1" in
+        -r )
+            RELOAD=$2
+            shift 1
+        ;;
+        *)
+            break
+        ;;
+    esac
+done;
+
+# Send container id to /dev/null, so we can use output of this script in payment-tests.sh
+docker run --rm -d --name=ngrok --network=container:nginx wernight/ngrok ngrok http --region=eu nginx:80 > /dev/null
 
 # It takes some time for ngrok to set up public URL
 sleep 2
@@ -13,10 +28,11 @@ then
     exit 1
 fi
 
-printf "ngrok URL: $NGROK_URL\n"
 
-printf "
-P24_STATUS_URL=$NGROK_URL/payment/status
-" > .env.ngrok
-
-docker-compose up -d
+if [[ "$RELOAD" == "1" ]]
+then
+    printf "ngrok URL: $NGROK_URL\n"
+    P24_STATUS_URL="$NGROK_URL/payment/status" docker-compose up -d php
+else
+    echo ${NGROK_URL}
+fi

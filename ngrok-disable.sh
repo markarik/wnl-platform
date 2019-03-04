@@ -1,10 +1,22 @@
 #!/usr/bin/env bash
 
+RELOAD=1
+
+while true ; do
+    case "$1" in
+        -r )
+            RELOAD=$2
+            shift 1
+        ;;
+        *)
+            break
+        ;;
+    esac
+done;
+
 docker stop ngrok
 
-# remove file contents
-# we can't remove the file because docker-compose will complain
-# see https://github.com/docker/compose/pull/3955
-> ./.env.ngrok
-
-docker-compose up -d
+if [[ "$RELOAD" == "1" ]]
+then
+    docker-compose up -d php
+fi

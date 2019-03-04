@@ -6,8 +6,6 @@
 .env
 .env.backup
 .env.dusk.*
-.env.ngrok
-.env.selenium
 env*/
 public/css/*
 public/js/*

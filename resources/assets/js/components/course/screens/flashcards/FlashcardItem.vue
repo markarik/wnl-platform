@@ -6,21 +6,25 @@
 		<div class="flashcards-list__item__container">
 			<div class="flashcards-list__item__text__container">
 				<p class="flashcards-list__item__text">{{flashcard.content}}</p>
-				<div class="flashcards-list__item__buttons" v-if="flashcard.answer === 'unsolved'">
-					<a :class="['flashcards-list__item__buttons__button text--easy', isLoading && 'is-loading']"
+				<div
+					class="flashcards-list__item__buttons"
+					:class="{'wnl-is-loading': isLoading}"
+					v-if="flashcard.answer === 'unsolved'"
+				>
+					<a class="flashcards-list__item__buttons__button text--easy"
 					   @click="submitAnswer(flashcard, 'easy')"
 					   :title="ANSWERS_MAP.easy.text"
 					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span>
 					</a>
-					<a :class="['flashcards-list__item__buttons__button text--hard', isLoading && 'is-loading']"
+					<a class="flashcards-list__item__buttons__button text--hard"
 					   @click="submitAnswer(flashcard, 'hard')"
 					   :title="ANSWERS_MAP.hard.text"
 					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span>
 					</a>
 					<a
-							:class="['flashcards-list__item__buttons__button text--do-not-know', isLoading && 'is-loading']"
+							class="flashcards-list__item__buttons__button text--do-not-know"
 							@click="submitAnswer(flashcard, 'do_not_know')"
 							:title="ANSWERS_MAP.do_not_know.text"
 					>
@@ -86,7 +90,7 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	$buttonWidth: 78px
+	$buttonWidth: 42px
 
 	.text--bold
 		font-weight: 600
@@ -145,14 +149,12 @@
 			margin: $margin-small 0
 
 			@media #{$media-query-tablet}
-				flex: 0 0 $buttonWidth * 3
+				flex: 0 0 $buttonWidth * 2
 				justify-content: flex-end
-				margin: 0
+				margin: 0 0 0 $margin-big
 
 			&--retake
 				color: $color-blue
-				@media #{$media-query-tablet}
-					flex: 0 0 $buttonWidth * 2
 
 				.flashcards-list__item__buttons__button .icon .fa-undo
 					font-size: 16px
@@ -186,10 +188,6 @@
 					font-size: 12px
 
 				&.is-disabled
-					cursor: auto
-
-				&.is-loading
-					opacity: .2
 					cursor: auto
 
 		&__note-editor

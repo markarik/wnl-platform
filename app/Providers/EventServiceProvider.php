@@ -76,6 +76,16 @@ class EventServiceProvider extends ServiceProvider
 		'App\Events\Slides\SlideUpdated' => [
 			'App\Listeners\ContentUpdatesGate',
 		],
+
+		'App\Events\Coupons\CouponCreated' => [
+			'App\Listeners\PerformCouponSync'
+		],
+		'App\Events\Coupons\CouponUpdated' => [
+			'App\Listeners\PerformCouponSync'
+		],
+		'App\Events\Coupons\CouponDeleted' => [
+			'App\Listeners\PerformCouponSync'
+		]
 	];
 
 	/**

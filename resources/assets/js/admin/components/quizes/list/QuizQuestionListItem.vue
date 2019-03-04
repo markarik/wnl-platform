@@ -24,7 +24,7 @@ export default {
 			return {
 				name: 'quiz-editor',
 				params: {
-					quizId: this.id,
+					quizQuestionId: this.id,
 				},
 			};
 		},

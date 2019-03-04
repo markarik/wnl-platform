@@ -575,8 +575,8 @@ ol {
 	text-transform: uppercase;
 }
 
-
-.is-loading {
+// Make sure our loader doesn't clash with bulma loader
+.wnl-is-loading {
 	opacity: .5;
 	pointer-events: none;
 	position: relative;

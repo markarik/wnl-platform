@@ -3,10 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Order;
-use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
-class StudyBuddyCancel extends Command
+class StudyBuddyCancel extends CommandWithMonitoring
 {
 	/**
 	 * The name and signature of the console command.
@@ -20,24 +19,14 @@ class StudyBuddyCancel extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Command description';
-
-	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
+	protected $description = 'Cancel expired Studdy Buddy coupons';
 
 	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed
 	 */
-	public function handle()
+	public function handleCommand()
 	{
 		$ids = $this->argument('orderId');
 		if ($ids) {

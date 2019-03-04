@@ -195,6 +195,7 @@ class CalculateCoursePlan
 
 	protected function handleDefaultPlan($plan)
 	{
+		// TODO remove the custom plan
 		$productsIds = $this->user->orders()->where('paid', 1)->get(['product_id']);
 		$lessonsWithStartDates = \DB::table('lesson_product')
 			->whereIn('product_id', $productsIds)

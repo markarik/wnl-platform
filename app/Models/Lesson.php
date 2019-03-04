@@ -96,10 +96,38 @@ class Lesson extends Model implements WithTags
 		return null;
 	}
 
-	public function userLessonAccess(User $user) {
-		return DB::table('user_lesson')
+	private function userLessonAccess(User $user) {
+		$userLesson = DB::table('user_lesson')
 			->where('lesson_id', $this->id)
 			->where('user_id', $user->id)
 			->first();
+
+		if ($userLesson) {
+			return $userLesson;
+		}
+
+		// FIXME this is suboptimal to run on every lesson
+		// Rethink and run once
+		// Also, use Eloquent where possible
+		$newestProductBought = DB::select(DB::raw(
+			'select products.id from products join orders on orders.product_id = products.id join lesson_product on lesson_product.product_id = products.id where orders.user_id = :user_id and orders.paid = 1 group by products.id order by course_start desc limit 1;'
+		), ['user_id' => $user->id]);
+
+		if (count($newestProductBought) < 1) {
+			return null;
+		}
+
+		$lessonProduct = DB::select(DB::raw(
+			'select start_date from lesson_product where product_id = :product_id and lesson_id = :lesson_id;'
+		), [
+			'lesson_id' => $this->id,
+			'product_id' => $newestProductBought[0]->id
+		]);
+
+		if (count($lessonProduct) < 1) {
+			return null;
+		}
+
+		return $lessonProduct[0];
 	}
 }

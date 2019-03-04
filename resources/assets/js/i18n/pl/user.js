@@ -84,7 +84,7 @@ export const user = {
 	},
 	address: {
 		address: 'Adres',
-		recipient: 'Osoba odbierjąca przesyłkę',
+		recipient: 'Osoba odbierająca przesyłkę',
 		street: 'Ulica',
 		zip: 'Kod pocztowy',
 		city: 'Miasto',

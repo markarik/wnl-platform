@@ -39,6 +39,14 @@
 					:value="form.description"
 					@input="onDescriptionInput"
 			/>
+			<h4 class="title margin top">Dodaj pytanie</h4>
+			<input
+				type="number"
+				name="quizQuestionInput"
+				v-model="quizQuestionInput"
+				placeholder="Podaj numer id pytania"
+			>
+			<button type="button" name="button" @click="addQuizQuestion(quizQuestionInput)"></button>
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="quiz-questions-admin" v-if="form.questions">
 				<draggable v-model="form.questions" @start="drag=true" @end="drag=false">
@@ -47,18 +55,9 @@
 							:key="questionId"
 							:id="questionId"
 							:content="getQuizQuestionContent(questionId)"
+							@remove="removeQuestion(questionId)"
 					/>
 				</draggable>
-
-				<wnl-autocomplete
-					v-model="quizQuestionInput"
-					:items="flashcardAutocompleteItems"
-					@change="addQuizQuestion"
-					placeholder="Id lub treść aby wyszukać"
-					label="Wybierz pytanie"
-				>
-					<wnl-flashcard-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
-				</wnl-autocomplete>
 			</div>
 		</form>
 	</div>
@@ -96,14 +95,13 @@
 
 <script>
 import {isEqual} from 'lodash';
-import {mapGetters, mapActions, mapState} from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
 import draggable from 'vuedraggable';
 
 import Form from 'js/classes/forms/Form';
 import {getApiUrl} from 'js/utils/env';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
-import WnlFlashcardAutocompleteItem from 'js/admin/components/flashcards/edit/FlashcardAutocompleteItem';
 import WnlFormInput from 'js/admin/components/forms/Input';
 import WnlQuill from 'js/admin/components/forms/Quill';
 import WnlSelect from 'js/admin/components/forms/Select';
@@ -118,7 +116,6 @@ export default {
 		WnlSelect,
 		WnlQuizQuestionsSetListItem,
 		draggable,
-		WnlFlashcardAutocompleteItem,
 	},
 	props: ['quizQuestionsSetId'],
 	data() {
@@ -129,7 +126,7 @@ export default {
 				lesson_id: null,
 				questions: [],
 			}),
-			quizQuestionInput: '',
+			quizQuestionInput: 0,
 			loading: false,
 		};
 	},
@@ -149,20 +146,6 @@ export default {
 		},
 		hasChanged() {
 			return !isEqual(this.form.originalData, this.form.data());
-		},
-		flashcardAutocompleteItems() {
-			if (this.quizQuestionInput === '') {
-				return [];
-			}
-
-			return this.allQuizQuestions
-				.filter(flashcard => !this.form.flashcards.includes(flashcard.id) &&
-						(
-							flashcard.id === parseInt(this.quizQuestionInput, 10) ||
-							flashcard.content.toLowerCase().includes(this.quizQuestionInput.toLowerCase())
-						)
-				)
-				.slice(0, 10);
 		}
 	},
 	methods: {
@@ -174,8 +157,8 @@ export default {
 		onDescriptionInput() {
 			this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
 		},
-		removeFlashcard(flashcardId) {
-			this.form.flashcards = this.form.flashcards.filter(id => id !== flashcardId);
+		removeQuestion(questionId) {
+			this.form.questions = this.form.questions.filter(id => id !== questionId);
 		},
 		quizQuestionsSetFormSubmit() {
 			if (!this.hasChanged) {
@@ -190,7 +173,6 @@ export default {
 						text: 'Zestaw pytań zapisany!',
 						type: 'success'
 					});
-					this.invalidateFlashcardsSetsCache();
 					this.form.originalData = this.form.data();
 				})
 				.catch(exception => {
@@ -202,9 +184,10 @@ export default {
 					$wnl.logger.capture(exception);
 				});
 		},
-		addQuizQuestion(question) {
-			this.form.questions.push(question.id);
-			this.quizQuestionInput = '';
+		addQuizQuestion(questionId) {
+			let parsedQuestionId = parseInt(questionId)
+			this.form.questions.push(parsedQuestionId);
+			this.quizQuestionInput = 0;
 		}
 	},
 	mounted() {

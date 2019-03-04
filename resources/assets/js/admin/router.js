@@ -193,7 +193,7 @@ let routes = [
 		component: ProductsList,
 	},
 	{
-		name: 'products-edit',
+		name: 'product-edit',
 		path: '/admin/app/products/:id',
 		component: ProductEdit,
 		props: true,

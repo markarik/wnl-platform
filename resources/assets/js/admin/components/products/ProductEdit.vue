@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<wnl-form
-				name="DashboardNewsEditor"
+				name="ProductsEditor"
 				:populate="isEdit"
 				:method="formMethod"
 				:resource-route="formResourceRoute"
@@ -17,8 +17,8 @@
 			<wnl-text name="vat_note">Opis VAT</wnl-text>
 			<wnl-textarea name="invoice_name">Opis na fakturze</wnl-textarea>
 
-			<wnl-text name="quantity">Ilość (obecnie)</wnl-text>
-			<wnl-text name="initial">Ilość (początkowa)</wnl-text>
+			<wnl-text name="quantity">Liczba (obecnie)</wnl-text>
+			<wnl-text name="initial">Liczba (początkowa)</wnl-text>
 
 			<wnl-datepicker name="delivery_date" :config="datepickerConfig">Data dostawy</wnl-datepicker>
 
@@ -33,8 +33,6 @@
 			<wnl-datepicker name="signups_close" :config="datepickerConfig">Zamknięcie zapisów</wnl-datepicker>
 
 		</wnl-form>
-
-
 	</div>
 
 </template>
@@ -76,7 +74,12 @@ export default {
 			formData: {}
 		};
 	},
-	props: ['id'],
+	props: {
+		id: {
+			required: true,
+			type: [Number, String],
+		}
+	},
 	components: {
 		WnlForm,
 		WnlText,

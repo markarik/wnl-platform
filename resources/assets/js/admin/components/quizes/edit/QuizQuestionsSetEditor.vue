@@ -14,7 +14,7 @@
 					<span class="margin right">Zapisz</span>
 					<span class="icon is-small">
 					<i class="fa fa-save"></i>
-				</span>
+					</span>
 				</button>
 			</div>
 			<wnl-form-input
@@ -41,12 +41,13 @@
 			/>
 			<h4 class="title margin top">Dodaj pytanie</h4>
 			<input
+				class="quiz-question-id-input"
 				type="number"
 				name="quizQuestionInput"
 				v-model="quizQuestionInput"
 				placeholder="Podaj numer id pytania"
 			>
-			<button type="button" name="button" @click="addQuizQuestion(quizQuestionInput)"></button>
+			<button type="button" name="button" @click="addQuizQuestion(quizQuestionInput)">Dodaj</button>
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="quiz-questions-admin" v-if="form.questions">
 				<draggable v-model="form.questions" @start="drag=true" @end="drag=false">
@@ -86,10 +87,17 @@
 		display: flex
 		align-items: flex-start
 
-	.quiz-questions-set-editor-select
-		display: block
-		/deep/ select
-			width: 100%
+	.quiz-question-id-input
+		border: 0
+		border-bottom: 1px solid $color-ocean-blue
+		border-radius: 0
+		box-shadow: none
+		font-size: $font-size-plus-1
+		font-weight: bold
+		margin-top: $margin-small
+		outline: 0
+		text-align: center
+		width: 250px
 
 </style>
 
@@ -152,7 +160,13 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', {setupLessons: 'setup'}),
 		getQuizQuestionContent(questionId) {
-			return Object.values(this.form.included.questions).find(question => question.id === questionId).text
+			let question = Object.values(this.form.included.questions).find(question => question.id === questionId)
+
+			if (question) {
+				return question.text
+			} else {
+				return 'Nowo dodane pytanie'
+			}
 		},
 		onDescriptionInput() {
 			this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
@@ -186,7 +200,28 @@ export default {
 		},
 		addQuizQuestion(questionId) {
 			let parsedQuestionId = parseInt(questionId)
-			this.form.questions.push(parsedQuestionId);
+
+			if (!Number.isInteger(parsedQuestionId)) {
+				return this.addAutoDismissableAlert({
+					text: 'Podana wartość nie jest numerem!',
+					type: 'error'
+				})
+			} else if (parsedQuestionId === 0) {
+				return this.addAutoDismissableAlert({
+					text: 'Podana wartość nie może być zerem!',
+					type: 'error'
+				})
+			}
+
+			if (!this.form.questions.find(id => id === parsedQuestionId)) {
+				console.log('wezsł');
+				this.form.questions.push(parsedQuestionId);
+			} else {
+				this.addAutoDismissableAlert({
+					text: 'Pytanie o tym numerze id znajduje się już w tym zestawie!',
+					type: 'error'
+				});
+			}
 			this.quizQuestionInput = 0;
 		}
 	},

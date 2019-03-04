@@ -28,6 +28,7 @@ before_script:
 script:
   - php vendor/bin/phpunit --filter=Api
   - php vendor/bin/phpunit --filter=Http
+  - php vendor/bin/phpunit --filter=Models
   - yarn run test
   - yarn run lint
   - php artisan code:analyse

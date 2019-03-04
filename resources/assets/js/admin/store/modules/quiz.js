@@ -7,14 +7,16 @@ import * as types from 'js/admin/store/mutations-types';
 // Helper functions
 
 // Namespace
-const namespaced = false;
+const namespaced = true;
 
 // Initial state
 const state = {
 	question: null,
 	questionId: null,
 	answers: null,
-	slides: null
+	slides: null,
+	quizQuestions: [],
+	ready: false,
 };
 
 function getSlideshowId(screenId) {
@@ -97,6 +99,12 @@ function getSlidesArray(included = {}) {
 
 // Mutations
 const mutations = {
+	[types.QUIZ_QUESTIONS_READY] (state, payload) {
+		set(state, 'ready', payload);
+	},
+	[types.SETUP_QUIZ_QUESTIONS] (state, payload) {
+		set(state, 'quizQuestions', payload);
+	},
 	[types.SETUP_QUIZ_QUESTION](state, data) {
 		const answersObject = data.included && data.included.quiz_answers || {};
 		const answersArray = data.quiz_answers && data.quiz_answers.map(id => answersObject[id]);
@@ -116,6 +124,23 @@ const mutations = {
 
 // Actions
 const actions = {
+	async fetchAllQuizQuestions({commit, state}) {
+		if (!state.ready) {
+			const {data} = await axios.get(getApiUrl('quiz_questions/all'));
+			commit(types.SETUP_QUIZ_QUESTIONS, data);
+		}
+	},
+	async setup({commit, dispatch}) {
+		try {
+			await dispatch('fetchAllQuizQuestions');
+			commit(types.QUIZ_QUESTIONS_READY, true);
+		} catch (error) {
+			$wnl.logger.error(error);
+		}
+	},
+	invalidateCache({commit}) {
+		commit(types.FLASHCARDS_READY, false);
+	},
 	getQuizQuestion({commit}, id) {
 		axios.get(getApiUrl(`quiz_questions/trashed/${id}?include=quiz_answers,slides`))
 			.then((response) => {

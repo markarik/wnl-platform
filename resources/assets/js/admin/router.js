@@ -11,6 +11,8 @@ import EditSlide from 'js/admin/components/slides/EditSlide';
 import AddSlide from 'js/admin/components/slides/AddSlide';
 import Charts from 'js/admin/components/slides/Charts';
 import Annotations from 'js/admin/components/slides/annotations/Annotations';
+import QuizQuestionsSetsList from 'js/admin/components/quizes/list/QuizQuestionsSetsList';
+import QuizQuestionsSetEditor from 'js/admin/components/quizes/edit/QuizQuestionsSetEditor';
 import QuizQuestionsList from 'js/admin/components/quizes/list/QuizQuestionsList';
 import QuizQuestionEditor from 'js/admin/components/quizes/edit/QuizQuestionEditor';
 import FlashcardsSetsList from 'js/admin/components/flashcards/list/FlashcardsSetsList';
@@ -90,19 +92,30 @@ let routes = [
 		component: Annotations,
 	},
 	{
-		name: 'quizes',
-		path: '/admin/app/quizes',
+		name: 'quiz-sets',
+		path: '/admin/app/quiz-sets',
+		component: QuizQuestionsSetsList,
+	},
+	{
+		name: 'quiz-sets-edit',
+		path: '/admin/app/quiz-sets/:quizQuestionsSetId',
+		component: QuizQuestionsSetEditor,
+		props: true
+	},
+	{
+		name: 'quiz',
+		path: '/admin/app/quiz',
 		component: QuizQuestionsList,
 	},
 	{
 		name: 'quiz-editor',
-		path: '/admin/app/quizes/edit/:quizQuestionId',
+		path: '/admin/app/quiz/edit/:quizQuestionId',
 		component: QuizQuestionEditor,
 		props: true
 	},
 	{
 		name: 'quiz-creator',
-		path: '/admin/app/quizes/new',
+		path: '/admin/app/quiz/new',
 		component: QuizQuestionEditor
 	},
 	{

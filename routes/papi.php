@@ -38,6 +38,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['flashcards']}/.filter", 'FlashcardsApiController@filter');
 		Route::post("{$r['flashcards-sets']}/.filter", 'FlashcardsSetsApiController@filter');
 
+		// Quiz Questions admin
+		Route::post("{$r['quiz-sets']}", 'QuizSetsApiController@post');
+		Route::post("{$r['quiz-sets']}/.filter", 'QuizSetsApiController@filter');
+		Route::put("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@put');
+
 		//Users admin
 		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
 		Route::get("{$r['users']}/{id}", 'UsersApiController@get');

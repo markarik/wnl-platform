@@ -135,10 +135,6 @@ export default {
 	},
 	computed: {
 		...mapGetters('lessons', ['allLessons']),
-		...mapState('quiz', {
-			allQuizQuestions: 'quizQuestions',
-			areQuizQuestionsReady: 'ready'
-		}),
 		lessonsOptions() {
 			return this.allLessons.map(lesson => ({
 				text: lesson.name,
@@ -172,12 +168,6 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', {setupLessons: 'setup'}),
-		...mapActions('quiz', {
-			setupFlashcards: 'setup',
-		}),
-		...mapActions('flashcardsSets', {
-			invalidateFlashcardsSetsCache: 'invalidateCache',
-		}),
 		getQuizQuestionContent(questionId) {
 			return Object.values(this.form.included.questions).find(question => question.id === questionId).text
 		},
@@ -222,7 +212,6 @@ export default {
 			this.form.populate(this.quizQuestionsSetResourceUrl);
 		}
 		this.setupLessons();
-		this.setupFlashcards();
 	},
 };
 </script>

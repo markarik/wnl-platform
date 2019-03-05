@@ -21,7 +21,8 @@ class QuizSet extends Model
 		);
 	}
 
-	public function syncQuestions($questionsIds) {
+	public function syncQuestions($questionsIds)
+	{
 		$orderNumber = 0;
 		$questionsSync = [];
 		foreach($questionsIds as $questionId) {

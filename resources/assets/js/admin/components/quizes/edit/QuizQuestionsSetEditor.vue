@@ -7,38 +7,38 @@
 					<span v-if="isEdit">(Id: {{quizQuestionsSetId}})</span>
 				</h3>
 				<button class="button is-small is-success"
-						:class="{'is-loading': loading}"
-						:disabled="!hasChanged"
-						type="submit"
+					:class="{'is-loading': loading}"
+					:disabled="!hasChanged"
+					type="submit"
 				>
 					<span class="margin right">Zapisz</span>
 					<span class="icon is-small">
-					<i class="fa fa-save"></i>
+						<i class="fa fa-save"></i>
 					</span>
 				</button>
 			</div>
 			<wnl-form-input
-					name="name"
-					:form="form"
-					v-model="form.name"
-			>
-				Nazwa
+				name="name"
+				:form="form"
+				v-model="form.name"
+			>Nazwa
 			</wnl-form-input>
 			<label class="label">Lekcja, której dotyczy zestaw</label>
 			<span class="select quiz-questions-set-editor-select">
 				<wnl-select :form="form"
-							:options="lessonsOptions"
-							name="lesson_id"
+					:options="lessonsOptions"
+					v-model="form.lesson_id"
+					name="lesson_id"
 				/>
 			</span>
 			<label class="label">Opis</label>
 			<wnl-quill
-					ref="descriptionEditor"
-					name="description"
-					:options="{ theme: 'snow', placeholder: 'Opis' }"
-					:value="form.description"
-					:uploadEnabled="false"
-					@input="onDescriptionInput"
+				ref="descriptionEditor"
+				name="description"
+				:options="{ theme: 'snow', placeholder: 'Opis' }"
+				:value="form.description"
+				:uploadEnabled="false"
+				@input="onDescriptionInput"
 			/>
 			<h4 class="title margin top">Dodaj pytanie</h4>
 			<input
@@ -48,16 +48,21 @@
 				v-model="quizQuestionInput"
 				placeholder="Podaj numer id pytania"
 			>
-			<button class="button is-small is-success" type="button" name="button" @click="addQuizQuestion(quizQuestionInput)">Dodaj</button>
+			<button class="button is-small is-success"
+				type="button"
+				name="button"
+				@click="addQuizQuestion(quizQuestionInput)"
+			>Dodaj
+			</button>
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="quiz-questions-admin" v-if="form.questions">
 				<draggable v-model="form.questions" @start="drag=true" @end="drag=false">
 					<wnl-quiz-questions-set-list-item
-							v-for="questionId in form.questions"
-							:key="questionId"
-							:id="questionId"
-							:content="getQuizQuestionContent(questionId)"
-							@remove="removeQuestion(questionId)"
+						v-for="questionId in form.questions"
+						:key="questionId"
+						:id="questionId"
+						:content="getQuizQuestionContent(questionId)"
+						@remove="removeQuestion(questionId)"
 					/>
 				</draggable>
 			</div>

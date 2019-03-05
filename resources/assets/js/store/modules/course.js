@@ -136,6 +136,7 @@ const getters = {
 
 			return lesson;
 		} else {
+			// TODO PLAT-1090 don't use order_number on lesson
 			const sortedLessons = getters.getLessons.sort((lessonA, lessonB) => {
 				const byOrderNumber = lessonA.order_number - lessonB.order_number;
 				if (byOrderNumber === 0) {

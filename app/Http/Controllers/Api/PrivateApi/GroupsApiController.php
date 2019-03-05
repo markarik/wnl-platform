@@ -28,14 +28,8 @@ class GroupsApiController extends ApiController {
 		if (empty($group)) {
 			return $this->respondNotFound();
 		}
-		DB::transaction(function() use ($group, $request) {
-			$group->update($request->all());
 
-			foreach ($group->lessons as $lesson) {
-				$lesson->order_number = array_search($lesson->id, $request->lessons) + 1;
-				$lesson->save();
-			}
-		});
+		$group->update($request->all());
 
 		return $this->transformAndRespond($group);
 	}

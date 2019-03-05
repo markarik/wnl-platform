@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Concerns\Cached;
-use App\Scopes\OrderByOrderNumberScope;
 use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
@@ -18,11 +17,6 @@ class Lesson extends Model implements WithTags
 
 	const USER_LESSON_CACHE_KEY = '%s-%s-%s-user-lesson-access';
 	const CACHE_VERSION = 1;
-
-	protected static function boot() {
-		parent::boot();
-		static::addGlobalScope(new OrderByOrderNumberScope());
-	}
 
 	public function screens()
 	{

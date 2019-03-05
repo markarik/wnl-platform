@@ -12,7 +12,7 @@ class DeleteWorkshopsTag extends Migration
      */
     public function up()
     {
-			$tag = Tag::with('questions')->where(['name' => 'Warsztaty'])->first();
+			$tag = Tag::where(['name' => 'Warsztaty'])->first();
 			if ($tag) {
 				$tag->delete();
 			}

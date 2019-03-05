@@ -101,7 +101,6 @@ export default {
 				altFormat: 'Y-m-d H:i',
 				time_24hr: true,
 			},
-			formData: {},
 			vatRates: [],
 		};
 	},

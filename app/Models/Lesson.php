@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\Cached;
 use App\Scopes\OrderByOrderNumberScope;
 use App\Models\Contracts\WithTags;
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use ScoutEngines\Elasticsearch\Searchable;
@@ -53,9 +54,9 @@ class Lesson extends Model implements WithTags
 		})->get();
 	}
 
-	public function isAvailable()
+	public function isAvailable(User $user = null)
 	{
-		$user = \Auth::user();
+		$user = $user ?? Auth::user();
 
 		if ($user->isAdmin() || $user->isModerator()) {
 			return true;
@@ -70,9 +71,9 @@ class Lesson extends Model implements WithTags
 		}
 	}
 
-	public function isAccessible()
+	public function isAccessible(User $user = null)
 	{
-		$user = \Auth::user();
+		$user = $user ?? Auth::user();
 
 		if ($user->isAdmin() || $user->isModerator()) {
 			return true;
@@ -81,45 +82,20 @@ class Lesson extends Model implements WithTags
 		return !is_null($this->startDate());
 	}
 
-	public function startDate()
+	/**
+	 * TODO move it away from Lesson model
+	 *
+	 * @param User|null $user
+	 * @return Carbon
+	 */
+	public function startDate(User $user = null)
 	{
-		if ($this->startDateLoaded) {
-			return $this->startDate;
-		}
+		$user = $user ?? Auth::user();
 
-		$user = \Auth::user();
+		$lesson = $user->getLessonsAvailability()->filter(function ($lesson) {
+			return $lesson->id === $this->id;
+		})->first();
 
-		$userLesson = UserLesson::where([
-			'lesson_id' => $this->id,
-			'user_id' => $user->id
-		])->first();
-
-		if ($userLesson) {
-			return $this->setStartDate($userLesson->start_date);
-		}
-
-		$productId = $user->getProductIdForDefaultLessonsStartDates();
-
-		if (!$productId) {
-			return $this->setStartDate(null);
-		}
-
-		$lessonProduct = LessonProduct::where([
-			'lesson_id' => $this->id,
-			'product_id' => $productId
-		])->first();
-
-		if ($lessonProduct) {
-			return $this->setStartDate($lessonProduct->start_date);
-		}
-
-		return $this->setStartDate(null);
-	}
-
-	private function setStartDate($startDate) {
-		$this->startDate = $startDate;
-		$this->startDateLoaded = true;
-
-		return $startDate;
+		return $lesson ? Carbon::parse($lesson->start_date) : null;
 	}
 }

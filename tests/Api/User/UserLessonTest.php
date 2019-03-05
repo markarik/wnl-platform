@@ -16,6 +16,7 @@ class UserLessonTest extends ApiTestCase
 	/** @test */
 	public function openAllLessons()
 	{
+		/** @var User $user */
 		$user = factory(User::class)->create();
 		$lessons = factory(Lesson::class, 10)->create();
 
@@ -40,7 +41,7 @@ class UserLessonTest extends ApiTestCase
 
 		$response->assertStatus(200);
 
-		foreach($user->lessonsAvailability as $lesson) {
+		foreach ($user->getLessonsAvailability() as $lesson) {
 			$this->assertTrue($lesson->startDate($user)->isToday(), "Start date is not today");
 		};
 
@@ -65,7 +66,9 @@ class UserLessonTest extends ApiTestCase
 	/** @test */
 	public function insertDateToDatePlan()
 	{
+		/** @var User $user */
 		$user = factory(User::class)->create();
+		/** @var Lesson[] $requiredLessons */
 		$requiredLessons = [];
 
 		for ($i = 1; $i < 6; $i++) {
@@ -132,8 +135,11 @@ class UserLessonTest extends ApiTestCase
 	/** @test */
 	public function insertPreset()
 	{
+		/** @var User $user */
 		$user = factory(User::class)->create();
+		/** @var Lesson[] $requiredLessons */
 		$requiredLessons = [];
+		/** @var UserLesson[] $userLessons */
 		$userLessons = [];
 
 		for ($i = 1; $i < 6; $i++) {

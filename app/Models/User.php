@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Scopes\OrderByOrderNumberScope;
 use App\Traits\CourseProgressStats;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -56,6 +55,8 @@ class User extends Authenticatable
 
 	protected $appends = ['subscription_status'];
 
+	private $lessonsAvailability = null;
+	private $lessonsAvailabilityLoaded = false;
 	private $productIdForDefaultLessonsStartDates = null;
 	private $productIdForDefaultLessonsStartDatesLoaded = false;
 
@@ -133,17 +134,6 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\QnaAnswer');
 	}
 
-	public function lessonsAvailability()
-	{
-		return $this->belongsToMany('App\Models\Lesson', 'user_lesson');
-	}
-
-	public function lessonsAvailabilityUnordered()
-	{
-		return $this->belongsToMany('App\Models\Lesson', 'user_lesson')
-			->withoutGlobalScope(OrderByOrderNumberScope::class);
-	}
-
 	public function reactables()
 	{
 		return $this->hasMany('App\Models\Reactable');
@@ -161,6 +151,12 @@ class User extends Authenticatable
 
 	public function userTime() {
 		return $this->hasMany('App\Models\UserTime');
+	}
+
+	public function userLessons()
+	{
+		return $this->belongsToMany('App\Models\Lesson', 'user_lesson')
+			->withPivot(['start_date']);
 	}
 
 	/**
@@ -286,7 +282,7 @@ class User extends Authenticatable
 		return [$min, $max];
 	}
 
-	public function getProductIdForDefaultLessonsStartDates() {
+	public function getLatestPaidCourseProductId() {
 		if (!$this->productIdForDefaultLessonsStartDatesLoaded) {
 			$product = Product::select(['products.id'])
 				->join('orders', 'orders.product_id', '=', 'products.id')
@@ -304,6 +300,34 @@ class User extends Authenticatable
 		}
 
 		return $this->productIdForDefaultLessonsStartDates;
+	}
+
+	public function getProductLessons()
+	{
+		return Lesson::where('product_id', '=', $this->getLatestPaidCourseProductId())
+			->whereNotIn('lesson_id', $this->userLessons->pluck('id'))
+			->join('lesson_product', 'lesson_product.lesson_id', '=', 'lessons.id')
+			->get();
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Collection|Lesson[]
+	 */
+	public function getLessonsAvailability()
+	{
+		if (!$this->lessonsAvailabilityLoaded) {
+			$this->lessonsAvailability = $this->userLessons()
+				->get()
+				->merge($this->getProductLessons())
+				->sortBy(function (Lesson $lesson) {
+					// FIXME sort by order defined in course structure
+					return $lesson->order_number;
+				});
+
+			$this->lessonsAvailabilityLoaded = true;
+		}
+		
+		return $this->lessonsAvailability;
 	}
 
 	/**

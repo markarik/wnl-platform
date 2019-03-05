@@ -41,15 +41,15 @@
 	.notification
 		max-width: 900px
 
-	.message-links-info
-		margin-bottom: 10px
+		.message-links-info
+			margin-bottom: 10px
 
-	.message-arguments
-		list-style: disc
-		margin-bottom: 10px
+		.message-arguments
+			list-style: disc
+			margin-bottom: 10px
 
-	.message-argument
-		margin-left: 30px
+		.message-argument
+			margin-left: 30px
 </style>
 
 <script>
@@ -60,6 +60,9 @@ import {
 	Datepicker as WnlDatepicker,
 	Select as WnlSelect,
 } from 'js/components/global/form';
+import {mapActions} from 'vuex';
+import {getApiUrl} from 'js/utils/env';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
 	data() {
@@ -71,7 +74,8 @@ export default {
 				altFormat: 'Y-m-d H:i',
 				time_24hr: true,
 			},
-			formData: {}
+			formData: {},
+			vatRates: [],
 		};
 	},
 	props: {
@@ -97,19 +101,12 @@ export default {
 		isEdit() {
 			return this.id !== 'new';
 		},
-		vatRates() {
-			return [
-				{value: '0', text: 'zw'},
-				{value: '23', text: '23'},
-				{value: '8', text: '8'},
-				{value: '5', text: '5'},
-			]; // TODO: Fetch it from server
-		}
 	},
 	methods: {
+		...mapActions(['addAutoDismissableAlert']),
 		onSubmitSucess(data) {
 			if (!this.isEdit) {
-				this.$router.push({ name: 'product-edit', params: { id: data.id } });
+				this.$router.push({name: 'product-edit', params: {id: data.id}});
 			}
 		},
 		onChange({formData}) {
@@ -119,5 +116,19 @@ export default {
 			return `{{${key}}}`;
 		},
 	},
+	async mounted() {
+		try {
+			const {data} = await axios.get(getApiUrl('products/getVatRates'));
+			this.vatRates = data.vat_rates.map(value => {
+				return {value, text: value};
+			});
+		} catch (error) {
+			$wnl.logger.error(error);
+			this.addAutoDismissableAlert({
+				text: 'Coś poszło nie tak :(',
+				type: ALERT_TYPES.ERROR,
+			});
+		}
+	}
 };
 </script>

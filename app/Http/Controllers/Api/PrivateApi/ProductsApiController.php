@@ -69,4 +69,9 @@ class ProductsApiController extends ApiController
 
 		$this->transformAndRespond($product);
 	}
+
+	public function getVatRates()
+	{
+		return $this->respondOk(['vat_rates' => Product::VAT_RATES]);
+	}
 }

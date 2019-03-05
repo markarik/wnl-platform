@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+	const VAT_RATES = [0, 5, 8 , 23];
+
 	protected $fillable = [
 		'name',
 		'invoice_name',

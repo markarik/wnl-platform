@@ -15,7 +15,7 @@ P24_STATUS_URL="$NGROK_URL/payment/status" APP_URL="http://nginx" SESSION_DOMAIN
 printf "=======================================================\n"
 printf "To see what Selenium is doing open vnc://127.0.0.1:5900\n"
 printf "              The password is \`secret\`               \n"
-printf "              Don't user \`yarn run hot\`              \n"
+printf "              Don't use \`yarn run hot\`               \n"
 printf "=======================================================\n"
 
 docker exec -it php /bin/sh -c 'php artisan dusk tests/Browser/Tests/Payment/PaymentTest.php'

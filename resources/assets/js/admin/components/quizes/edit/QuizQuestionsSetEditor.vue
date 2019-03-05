@@ -55,10 +55,10 @@
 			>Dodaj
 			</button>
 			<h4 class="title margin top">Lista pytań</h4>
-			<div class="quiz-questions-admin" v-if="form.questions">
-				<draggable v-model="form.questions" @start="drag=true" @end="drag=false">
+			<div class="quiz-questions-admin" v-if="form.quiz_questions">
+				<draggable v-model="form.quiz_questions" @start="drag=true" @end="drag=false">
 					<wnl-quiz-questions-set-list-item
-						v-for="questionId in form.questions"
+						v-for="questionId in form.quiz_questions"
 						:key="questionId"
 						:id="questionId"
 						:content="getQuizQuestionContent(questionId)"
@@ -115,7 +115,6 @@ import draggable from 'vuedraggable';
 import Form from 'js/classes/forms/Form';
 import {getApiUrl} from 'js/utils/env';
 
-import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlFormInput from 'js/admin/components/forms/Input';
 import WnlQuill from 'js/admin/components/forms/Quill';
 import WnlSelect from 'js/admin/components/forms/Select';
@@ -124,7 +123,6 @@ import WnlQuizQuestionsSetListItem from 'js/admin/components/quizes/edit/QuizQue
 export default {
 	name: 'QuizQuestionsSetEditor',
 	components: {
-		WnlAutocomplete,
 		WnlFormInput,
 		WnlQuill,
 		WnlSelect,
@@ -138,7 +136,7 @@ export default {
 				name: '',
 				description: '',
 				lesson_id: null,
-				questions: [],
+				quiz_questions: [],
 			}),
 			quizQuestionInput: 0,
 			loading: false,
@@ -156,7 +154,7 @@ export default {
 			return this.quizQuestionsSetId !== 'new';
 		},
 		quizQuestionsSetResourceUrl() {
-			return getApiUrl(this.isEdit ? `quiz_sets/${this.quizQuestionsSetId}?include=questions` : 'quiz_sets');
+			return getApiUrl(this.isEdit ? `quiz_sets/${this.quizQuestionsSetId}?include=quiz_questions` : 'quiz_sets');
 		},
 		hasChanged() {
 			return !isEqual(this.form.originalData, this.form.data());
@@ -166,7 +164,7 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', {setupLessons: 'setup'}),
 		getQuizQuestionContent(questionId) {
-			let question = Object.values(this.form.included.questions).find(question => question.id === questionId);
+			let question = Object.values(this.form.included.quiz_questions).find(question => question.id === questionId);
 
 			if (question) {
 				return question.text;
@@ -181,7 +179,7 @@ export default {
 			this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
 		},
 		removeQuestion(questionId) {
-			this.form.questions = this.form.questions.filter(id => id !== questionId);
+			this.form.quiz_questions = this.form.quiz_questions.filter(id => id !== questionId);
 		},
 		quizQuestionsSetFormSubmit() {
 			if (!this.hasChanged) {
@@ -222,13 +220,13 @@ export default {
 				});
 			}
 
-			if (!this.form.questions.find(id => id === parsedQuestionId)) {
-				this.form.questions.push(parsedQuestionId);
+			if (!this.form.quiz_questions.find(id => id === parsedQuestionId)) {
+				this.form.quiz_questions.push(parsedQuestionId);
 				this.addAutoDismissableAlert({
 					text: 'Udało się dodać pytanie :)',
 					type: 'success'
 				});
-				this.quizQuestionsSetFormSubmit();
+				// this.quizQuestionsSetFormSubmit();
 			} else {
 				this.addAutoDismissableAlert({
 					text: 'Pytanie o tym numerze id znajduje się już w tym zestawie!',

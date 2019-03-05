@@ -34,8 +34,8 @@ class QuizSetsApiController extends ApiController
 
 		$quizSet->update($request->all());
 
-		if (is_array($request->questions)) {
-			$quizSet->syncQuestions($request->questions);
+		if (is_array($request->quiz_questions)) {
+			$quizSet->syncQuestions($request->quiz_questions);
 		}
 	}
 }

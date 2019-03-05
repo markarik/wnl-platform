@@ -27,7 +27,7 @@ class UpdateQuizSet extends FormRequest
 			'name' => 'string|required',
 			'description'   => 'nullable|string',
 			'lesson_id' => 'required|integer',
-			'questions' => 'required|array'
+			'quiz_questions' => 'required|array'
 		];
 	}
 }

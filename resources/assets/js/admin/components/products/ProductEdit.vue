@@ -47,10 +47,23 @@
 					<wnl-datepicker name="delivery_date" :config="datepickerConfig">Data dostawy</wnl-datepicker>
 				</div>
 			</div>
-
-
-
 		</wnl-form>
+
+		<article class="message is-primary">
+			<div class="message-header">
+				<p>Legenda</p>
+			</div>
+			<div class="message-body plan-details">
+				<strong>Slug</strong> - unikatowy identyfikator kursu, na jego podstawie produkt wyświetla
+				się na stronie sprzedażowej.<br>
+				<strong>Opis VAT</strong> - notatka dotycząca podstawy zwolnienia z podatku pojawiająca się
+				na fakturze. Zbędna w przypadku stawki 23%.<br>
+				<strong>Koniec zapisów</strong> - po tej dacie wciąż można zapisać się na kurs, ale wyświetlane jest
+				ostrzeżenie o tym, że kurs już się rozpoczął.<br>
+				<strong>Zamknięcie zapisów</strong> - po tej dacie nie można już zapisać się na kurs.<br>
+				<strong>Data dostawy</strong> - data realizacji usługi, zazwyczaj pokrywa się ze startem kursu.<br>
+			</div>
+		</article>
 	</div>
 
 </template>
@@ -64,7 +77,6 @@
 				margin-right: $margin-medium
 		.column.left
 			border-right: $border-light-gray
-
 </style>
 
 <script>

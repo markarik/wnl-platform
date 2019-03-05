@@ -40,7 +40,7 @@ class CreateProduct extends FormRequest
 			'signups_end'   => 'required|integer',
 			'signups_close' => 'required|integer',
 			'vat_rate'      => 'required|numeric',
-			'vat_note'      => 'required|string|max:255',
+			'vat_note'      => 'string|max:255',
 		];
 	}
 }

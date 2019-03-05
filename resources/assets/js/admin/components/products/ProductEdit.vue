@@ -124,9 +124,6 @@ export default {
 				this.$router.push({name: 'product-edit', params: {id: data.id}});
 			}
 		},
-		onChange({formData}) {
-			this.formData = formData;
-		},
 		escapeArgumentKey(key) {
 			return `{{${key}}}`;
 		},
@@ -134,9 +131,7 @@ export default {
 	async mounted() {
 		try {
 			const {data} = await axios.get(getApiUrl('products/getVatRates'));
-			this.vatRates = data.vat_rates.map(value => {
-				return {value, text: value};
-			});
+			this.vatRates = data.vat_rates.map(value => ({value, text: value}));
 		} catch (error) {
 			$wnl.logger.error(error);
 			this.addAutoDismissableAlert({

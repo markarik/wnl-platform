@@ -17,7 +17,7 @@
 				class="products"
 		>
 			<tbody slot-scope="slotProps" slot="tbody">
-			<tr v-for="product in slotProps.list" :key="product.id" @click="goToEdit(product.id)" class="products__item">
+			<tr v-for="product in slotProps.list" :key="product.id" @click="goToEdit(product.id)" class="clickable">
 				<td>{{product.id}}</td>
 				<td>{{product.name}}</td>
 				<td>{{product.quantity}}/{{product.initial}}</td>
@@ -28,11 +28,6 @@
 		</wnl-paginated-sortable-table>
 	</div>
 </template>
-
-<style lang="sass" scoped>
-	.products__item
-		cursor: pointer
-</style>
 
 <script>
 import { mapActions } from 'vuex';
@@ -68,9 +63,6 @@ export default {
 					label: 'Utworzono',
 				},
 			],
-			requestParams:{
-
-			}
 		};
 	},
 	components: {
@@ -80,7 +72,7 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		formatDate(date) {
 			if (date) {
-				return moment(date * 1000).format('DD/MM/YY H:mm');
+				return moment(date * 1000).format('L LT');
 			}
 		},
 		goToEdit(id) {

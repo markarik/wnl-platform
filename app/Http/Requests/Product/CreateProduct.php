@@ -25,7 +25,6 @@ class CreateProduct extends FormRequest
 	public function rules()
 	{
 		return [
-			'id'            => 'required|integer|exists:products,id',
 			'name'          => 'required|string|max:255',
 			'invoice_name'  => 'required|string|max:255',
 			'slug'          => 'required|string|max:255|unique:products,slug',

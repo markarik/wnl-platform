@@ -56,7 +56,6 @@
 		</ul>
 		<p class="menu-label">Produkty</p>
 		<ul class="menu-list">
-			<li><router-link :to="{ name: 'product-edit', params: { id: 'new' } }">Dodaj produkt</router-link></li>
 			<li><router-link :to="{ name: 'products' }">Lista produktów</router-link></li>
 		</ul>
 	</aside>

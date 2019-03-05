@@ -3,29 +3,28 @@
 
 namespace Tests\Browser\Tests\Payment\Modules;
 
-use App, Mail;
+use App;
 use PHPUnit\Framework\Assert;
+use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Course\Components\Navigation;
 
 class MyOrdersModule
 {
-	public function end($browser)
+	public function end(BethinkBrowser $browser)
 	{
 		$this->assertOrderPlaced($browser);
 		$this->assertPaid($browser);
 		if (!empty($browser->studyBuddy)) {
 			$this->assertStudyBuddy($browser);
 		}
-
-		return false;
 	}
 
-	public function studyBuddy($browser)
+	public function studyBuddy(BethinkBrowser $browser)
 	{
 		if (!empty($browser->studyBuddy)) {
 			$this->assertStudyBuddy($browser);
 
-			return false;
+			return;
 		}
 
 		$this->assertOrderPlaced($browser);
@@ -41,16 +40,13 @@ class MyOrdersModule
 		$browser
 			->on(new Navigation)
 			->logoutUser();
-
-		return [VoucherModule::class];
 	}
 
-	protected function assertOrderPlaced($browser)
+	protected function assertOrderPlaced(BethinkBrowser $browser)
 	{
 		$order = $browser->order;
 
 		$browser->waitForText('Twoje zamówienia', 60);
-		$browser->pause(1000);
 		$browser->waitForText('Zamówienie numer ' . $order->id);
 
 		if (empty($browser->coupon)) {
@@ -59,10 +55,9 @@ class MyOrdersModule
 			$coupon = $browser->coupon;
 			$browser->waitForText($coupon->name);
 		}
-
 	}
 
-	protected function assertPaid($browser)
+	protected function assertPaid(BethinkBrowser $browser)
 	{
 		$browser->order = $browser->order->fresh();
 		if ($browser->order->method === 'instalments') {
@@ -76,27 +71,21 @@ class MyOrdersModule
 			$browser->order->save();
 		}
 
-		$order = $browser->order;
-
-		if (!App::environment(['staging', 'sandbox']) && $order->method === 'online') {
-			return;
-		}
-
 		$browser->refresh();
 		$browser->waitForText('Wpłacono', 60);
 	}
 
-	protected function assertStudyBuddy($browser)
+	protected function assertStudyBuddy(BethinkBrowser $browser)
 	{
 		$studyBuddy = $browser->studyBuddy->fresh();
 		$originalOrder = $studyBuddy->order;
 
 		if ($originalOrder->method === 'instalments') {
-			Assert::assertTrue($studyBuddy->status === 'refunded');
+			Assert::assertEquals('refunded', $studyBuddy->status, 'Study buddy status is refunded');
 
 			return;
 		}
 
-		Assert::assertTrue($studyBuddy->status === 'awaiting-refund');
+		Assert::assertEquals('awaiting-refund', $studyBuddy->status, 'Study buddy status is refunded');
 	}
 }

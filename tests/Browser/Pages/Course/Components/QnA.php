@@ -3,6 +3,7 @@
 namespace Tests\Browser\Pages\Course\Components;
 
 use Laravel\Dusk\Page as BasePage;
+use Tests\BethinkBrowser;
 
 class QnA extends BasePage
 {
@@ -31,7 +32,7 @@ class QnA extends BasePage
 		];
 	}
 
-	public function postQuestion($browser, $question)
+	public function postQuestion(BethinkBrowser $browser, $question)
 	{
 		$browser
 			->waitFor('@post_question_button')
@@ -41,14 +42,14 @@ class QnA extends BasePage
 			->click('@question_submit');
 	}
 
-	public function assertQuestionPosted($browser, $question)
+	public function assertQuestionPosted(BethinkBrowser $browser, $question)
 	{
 		$browser->with('@question_container', function ($questionContainer) use ($question) {
 			$questionContainer->waitForText($question);
 		});
 	}
 
-	public function answerQuestion($browser, $answer)
+	public function answerQuestion(BethinkBrowser $browser, $answer)
 	{
 		$browser->with('@question_container', function ($questionContainer) use ($answer) {
 			$questionContainer
@@ -58,14 +59,14 @@ class QnA extends BasePage
 		});
 	}
 
-	public function assertAnswerPosted($browser, $answer)
+	public function assertAnswerPosted(BethinkBrowser $browser, $answer)
 	{
 		$browser->with('@answer_container', function ($answerContainer) use ($answer) {
 			$answerContainer->waitForText($answer);
 		});
 	}
 
-	public function commentAnswer($browser, $comment)
+	public function commentAnswer(BethinkBrowser $browser, $comment)
 	{
 		$browser->with('@answer_container', function ($answerContainer) use ($comment) {
 			$answerContainer
@@ -75,7 +76,7 @@ class QnA extends BasePage
 		});
 	}
 
-	public function assertCommentPosted($browser, $comment)
+	public function assertCommentPosted(BethinkBrowser $browser, $comment)
 	{
 		$browser->with('@answer_container', function ($answerContainer) use ($comment) {
 			$answerContainer->waitForText($comment);

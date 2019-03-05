@@ -19,8 +19,8 @@
 				</thead>
 				<tbody>
 				<tr v-for="productLesson in visibleProductLessons" :key="productLesson.id">
-					<td>{{productLesson.id}}</td>
-					<td>{{productLesson.name}}</td>
+					<td>{{productLesson.lesson_id}}</td>
+					<td>{{productLesson.lesson}}</td>
 					<td>{{productLesson.start_date}}</td>
 				</tr>
 				</tbody>
@@ -135,7 +135,7 @@ export default {
 			}
 
 			return this.lessons
-				.filter(lesson => !this.productLessons.find(({id}) => id === lesson.id) &&
+				.filter(lesson => !this.productLessons.find(({lesson_id}) => lesson_id === lesson.id) &&
 						lesson.name.toLowerCase().includes(this.lessonInput.toLowerCase()) &&
 						!this.selectedLessons.find(({id}) => id === lesson.id)
 				)
@@ -197,10 +197,10 @@ export default {
 			}
 		},
 		async getProductLessons() {
-			const productLessonsResponse = await axios.get(getApiUrl(`products/${this.id}?include=lessons`));
-			const { data: {included: { lessons }}} = productLessonsResponse;
+			const productLessonResponse = await axios.get(getApiUrl(`lesson_product/${this.id}?include=lessons`));
+			const { data: {included, ...productLessons}} = productLessonResponse;
 
-			const productLessonsList = Object.values(lessons);
+			const productLessonsList = Object.values(productLessons);
 
 			if (!productLessonsList.length) {
 				return;
@@ -209,7 +209,8 @@ export default {
 			return productLessonsList.map(productLesson => {
 				return {
 					...productLesson,
-					start_date: moment(productLesson.startDate * 1000).format('lll'),
+					start_date: moment(productLesson.start_date.date).format('ll'),
+					lesson: included.lessons[productLesson.lesson_id].name
 				};
 			});
 		}

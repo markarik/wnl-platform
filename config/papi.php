@@ -58,5 +58,6 @@ return [
 		'roles'                   => 'roles',
 		'course-structure-nodes'  => 'course_structure_nodes',
 		'products'                => 'products',
+		'lesson-product'          => 'lesson_product',
 	],
 ];

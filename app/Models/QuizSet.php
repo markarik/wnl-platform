@@ -20,4 +20,14 @@ class QuizSet extends Model
 			'quiz_question_id'
 		);
 	}
+
+	public function syncQuestions($questionsIds) {
+		$orderNumber = 0;
+		$questionsSync = [];
+		foreach($questionsIds as $questionId) {
+			$questionsSync[$questionId] = ['order_number' => $orderNumber++];
+		}
+
+		$this->questions()->sync($questionsSync);
+	}
 }

@@ -25,6 +25,9 @@ class UpdateQuizSet extends FormRequest
 	{
 		return [
 			'name' => 'string|required',
+			'description'   => 'nullable|string',
+			'lesson_id' => 'required|integer',
+			'questions' => 'array'
 		];
 	}
 }

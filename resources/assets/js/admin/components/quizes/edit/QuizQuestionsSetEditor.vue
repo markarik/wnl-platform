@@ -37,6 +37,7 @@
 					name="description"
 					:options="{ theme: 'snow', placeholder: 'Opis' }"
 					:value="form.description"
+					:uploadEnabled="false"
 					@input="onDescriptionInput"
 			/>
 			<h4 class="title margin top">Dodaj pytanie</h4>
@@ -47,7 +48,7 @@
 				v-model="quizQuestionInput"
 				placeholder="Podaj numer id pytania"
 			>
-			<button type="button" name="button" @click="addQuizQuestion(quizQuestionInput)">Dodaj</button>
+			<button class="button is-small is-success" type="button" name="button" @click="addQuizQuestion(quizQuestionInput)">Dodaj</button>
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="quiz-questions-admin" v-if="form.questions">
 				<draggable v-model="form.questions" @start="drag=true" @end="drag=false">
@@ -214,8 +215,11 @@ export default {
 			}
 
 			if (!this.form.questions.find(id => id === parsedQuestionId)) {
-				console.log('wezsł');
 				this.form.questions.push(parsedQuestionId);
+				this.addAutoDismissableAlert({
+					text: 'Udało się dodać pytanie :)',
+					type: 'success'
+				});
 			} else {
 				this.addAutoDismissableAlert({
 					text: 'Pytanie o tym numerze id znajduje się już w tym zestawie!',

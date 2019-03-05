@@ -24,4 +24,18 @@ class QuizSetsApiController extends ApiController
 
 		return $this->respondOk($data);
 	}
+	public function put(UpdateQuizSet $request)
+	{
+		$quizSet = QuizSet::find($request->route('id'));
+
+		if (!$quizSet) {
+			return $this->respondNotFound();
+		}
+
+		$quizSet->update($request->all());
+
+		if (is_array($request->questions)) {
+			$quizSet->syncQuestions($request->questions);
+		}
+	}
 }

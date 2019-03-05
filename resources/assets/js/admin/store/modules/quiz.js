@@ -7,7 +7,7 @@ import * as types from 'js/admin/store/mutations-types';
 // Helper functions
 
 // Namespace
-const namespaced = true;
+const namespaced = false;
 
 // Initial state
 const state = {
@@ -116,9 +116,6 @@ const mutations = {
 
 // Actions
 const actions = {
-	invalidateCache({commit}) {
-		commit(types.FLASHCARDS_READY, false);
-	},
 	getQuizQuestion({commit}, id) {
 		axios.get(getApiUrl(`quiz_questions/trashed/${id}?include=quiz_answers,slides`))
 			.then((response) => {

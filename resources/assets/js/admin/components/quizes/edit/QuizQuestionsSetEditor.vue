@@ -121,7 +121,6 @@ import WnlSelect from 'js/admin/components/forms/Select';
 import WnlQuizQuestionsSetListItem from 'js/admin/components/quizes/edit/QuizQuestionsSetListItem';
 
 export default {
-	name: 'QuizQuestionsSetEditor',
 	components: {
 		WnlFormInput,
 		WnlQuill,
@@ -138,7 +137,7 @@ export default {
 				lesson_id: null,
 				quiz_questions: [],
 			}),
-			quizQuestionInput: 0,
+			quizQuestionInput: '',
 			loading: false,
 		};
 	},

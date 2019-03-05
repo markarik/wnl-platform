@@ -26,7 +26,6 @@ import WnlQuizQuestionsSetsListItem from 'js/admin/components/quizes/list/QuizQu
 import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
 export default {
-	name: 'QuizQuestionsSetsList',
 	components: {
 		WnlQuizQuestionsSetsListItem,
 		WnlPaginatedList

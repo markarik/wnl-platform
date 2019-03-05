@@ -6,7 +6,6 @@
 
 <script>
 export default {
-	name: 'QuizQuestionsSetsListItem',
 	props: ['id', 'name'],
 	computed: {
 		to() {

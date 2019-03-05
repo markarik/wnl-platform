@@ -30,12 +30,23 @@
 		outline: none
 		transition: color ease-in-out .2s
 		&:hover
-			color: red
+			color: $color-red
 </style>
 
 <script>
 export default {
-	name: 'WnlQuizQuestionsSetListItem',
-	props: ['id', 'content', 'onRemove'],
+	props: {
+		id: {
+			type: Number,
+			require: true
+		},
+		content: {
+			type: String,
+			required: true
+		},
+		onRemove: {
+			type: Function,
+		}
+	}
 };
 </script>

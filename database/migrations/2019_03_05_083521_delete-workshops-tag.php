@@ -14,6 +14,7 @@ class DeleteWorkshopsTag extends Migration
     {
 			$tag = Tag::where(['name' => 'Warsztaty'])->first();
 			if ($tag) {
+				$tag->questions()->delete();
 				$tag->delete();
 			}
     }

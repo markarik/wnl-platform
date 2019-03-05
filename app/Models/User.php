@@ -21,6 +21,7 @@ class User extends Authenticatable
 	const SUBSCRIPTION_STATUS_INACTIVE = 'inactive';
 	const SUBSCRIPTION_STATUS_AWAITING = 'awaiting';
 	const SUBSCRIPTION_STATUS_ACTIVE = 'active';
+	const COURSE_ID = 1;
 
 	protected $casts = [
 		'invoice'            => 'boolean',
@@ -311,19 +312,24 @@ class User extends Authenticatable
 	}
 
 	/**
-	 * @return \Illuminate\Database\Eloquent\Collection|Lesson[]
+	 * @return Collection
 	 */
 	public function getLessonsAvailability()
 	{
 		if (!$this->lessonsAvailabilityLoaded) {
-			$this->lessonsAvailability = $this->userLessons()
-				->get()
-				->merge($this->getProductLessons())
-				->sortBy(function (Lesson $lesson) {
-					// FIXME sort by order defined in course structure
-					return $lesson->order_number;
-				});
+			/** @var \Kalnoy\Nestedset\QueryBuilder $courseStructureNodeBuilder */
+			$courseStructureNodeBuilder = CourseStructureNode::where('course_id', '=', static::COURSE_ID)
+				->where('structurable_type', '=', Lesson::class);
 
+			$courseLessonsOrdered = $courseStructureNodeBuilder->defaultOrder()->get();
+
+			$lessonsAvailability = new Collection();
+			$userLessons = $this->userLessons()->get();
+			$productLessons = $this->getProductLessons();
+
+			$courseLessonsOrdered->each($this->addCourseLessonsToLessonsAvailability($lessonsAvailability, $userLessons, $productLessons));
+
+			$this->lessonsAvailability = $lessonsAvailability;
 			$this->lessonsAvailabilityLoaded = true;
 		}
 		
@@ -468,5 +474,37 @@ class User extends Authenticatable
 			'full_name' => $this->full_name,
 			'profile' => $this->profile,
 		];
+	}
+
+	/**
+	 * @param Collection $lessonsAvailability
+	 * @param \Illuminate\Database\Eloquent\Collection $userLessons
+	 * @param \Illuminate\Database\Eloquent\Collection $productLessons
+	 * @return \Closure
+	 */
+	private function addCourseLessonsToLessonsAvailability(
+		Collection $lessonsAvailability,
+		\Illuminate\Database\Eloquent\Collection $userLessons,
+		\Illuminate\Database\Eloquent\Collection $productLessons
+	): \Closure
+	{
+		return function (CourseStructureNode $node) use ($lessonsAvailability, $userLessons, $productLessons) {
+			$userLesson = $userLessons->first(function ($lesson) use ($node) {
+				return $lesson->id === $node->structurable_id;
+			});
+
+			if ($userLesson) {
+				$lessonsAvailability->push($userLesson);
+				return;
+			}
+
+			$productLesson = $productLessons->first(function ($lesson) use ($node) {
+				return $lesson->id === $node->structurable_id;
+			});
+
+			if ($productLesson) {
+				$lessonsAvailability->push($productLesson);
+			}
+		};
 	}
 }

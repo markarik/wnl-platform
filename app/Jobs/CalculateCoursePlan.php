@@ -154,8 +154,8 @@ class CalculateCoursePlan
 				(clone $this->endDate)->addDay());
 		}
 
-		// FIXME
-		$builder = $this->user->lessonsAvailabilityUnordered()
+		// FIXME possibly use User::getLessonsAvailability, but keep in mind it returns Collection
+		$builder = $this->user->userLessons()
 			->orderBy('group_id')
 			->orderBy('order_number');
 

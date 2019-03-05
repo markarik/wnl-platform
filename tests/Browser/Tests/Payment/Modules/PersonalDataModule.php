@@ -6,41 +6,35 @@ namespace Tests\Browser\Tests\Payment\Modules;
 
 use App\Models\Order;
 use App\Models\User;
-use Faker\Factory;
 use Faker\Generator;
 use Faker\Provider\pl_PL\Person;
-use Illuminate\Foundation\Testing\Concerns\InteractsWithDatabase;
-use Tests\Browser\Pages\Login;
+use Tests\BethinkBrowser;
 use Tests\Browser\Pages\LoginModal;
 use Tests\Browser\Pages\Payment\PersonalDataPage;
 use Tests\Browser\Tests\Payment\SignsUpUsers;
 use PHPUnit\Framework\Assert;
 
-class PersonalDataModule extends TestModule
+class PersonalDataModule
 {
 	use SignsUpUsers;
 
-	public function signUpNoInvoice($browser)
+	public function signUpNoInvoice(BethinkBrowser $browser)
 	{
 		$this->navigate($browser);
 
 		$browser->on(new PersonalDataPage());
 		$this->signUp($browser, false);
-
-		return ConfirmOrderModule::class;
 	}
 
-	public function signUpCustomInvoice($browser)
+	public function signUpCustomInvoice(BethinkBrowser $browser)
 	{
 		$this->navigate($browser);
 
 		$browser->on(new PersonalDataPage());
 		$this->signUp($browser, true);
-
-		return ConfirmOrderModule::class;
 	}
 
-	public function logInUsingModal($browser)
+	public function logInUsingModal(BethinkBrowser $browser)
 	{
 		if (!empty($browser->user)) return __CLASS__;
 
@@ -55,11 +49,9 @@ class PersonalDataModule extends TestModule
 			->click('@login')
 			->on(new LoginModal)
 			->loginAsUser($user->email, 'secret');
-
-		return ConfirmOrderModule::class;
 	}
 
-	protected function navigate($browser)
+	protected function navigate(BethinkBrowser $browser)
 	{
 		// Check if personal-data is current page, if not,
 		// navigate to it using random product.
@@ -68,7 +60,7 @@ class PersonalDataModule extends TestModule
 		}
 	}
 
-	protected function signUp($browser, $invoiceFlag)
+	protected function signUp(BethinkBrowser $browser, $invoiceFlag)
 	{
 		$userData = $this->generateFormData();
 		$this->fillInForm($userData, $browser, $invoiceFlag, !$this->isEdit($browser));
@@ -84,7 +76,7 @@ class PersonalDataModule extends TestModule
 		}
 	}
 
-	protected function isEdit($browser)
+	protected function isEdit(BethinkBrowser $browser)
 	{
 		return str_is('*?edit=true*', $browser->driver->getCurrentUrl());
 	}

@@ -10,7 +10,7 @@ use App\Models\Product;
 class ProductTransformer extends ApiTransformer
 {
 
-	protected $availableIncludes = [];
+	protected $availableIncludes = ['lessons'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -47,5 +47,15 @@ class ProductTransformer extends ApiTransformer
 		}
 
 		return $data;
+	}
+
+	public function includeLessons(Product $product)
+	{
+		$lessons = $product->lessons;
+		$meta = [
+			'products' => $product->id
+		];
+
+		return $this->collection($lessons, new LessonTransformer($meta), 'lessons');
 	}
 }

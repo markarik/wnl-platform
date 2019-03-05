@@ -194,7 +194,7 @@ let routes = [
 	},
 	{
 		name: 'product-edit',
-		path: '/admin/app/products/:id',
+		path: '/admin/app/product/:id',
 		component: ProductEdit,
 		props: true,
 	},

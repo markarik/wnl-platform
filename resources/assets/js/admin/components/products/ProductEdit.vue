@@ -8,29 +8,47 @@
 				:suppress-enter="true"
 				@submitSuccess="onSubmitSucess"
 				@change="onChange"
+				class="product-form"
 		>
 			<h4>Produkt #{{ id }}</h4>
-			<wnl-text name="name">Nazwa</wnl-text>
-			<wnl-text name="slug">Slug</wnl-text>
-			<wnl-text name="price">Cena</wnl-text>
-			<wnl-select name="vat_rate" :options="vatRates">Stawka VAT</wnl-select>
-			<wnl-text name="vat_note">Opis VAT</wnl-text>
-			<wnl-textarea name="invoice_name">Opis na fakturze</wnl-textarea>
 
-			<wnl-text name="quantity">Liczba (obecnie)</wnl-text>
-			<wnl-text name="initial">Liczba (początkowa)</wnl-text>
+			<div class="columns">
+				<div class="column left">
+					<wnl-text name="name">Nazwa</wnl-text>
+					<wnl-text name="slug">Slug</wnl-text>
+					<div class="field is-grouped">
+						<wnl-text name="price">Cena brutto</wnl-text>
+						<wnl-select name="vat_rate" :options="vatRates">Stawka VAT</wnl-select>
+					</div>
+					<wnl-text name="vat_note">Opis VAT</wnl-text>
+					<wnl-textarea name="invoice_name">Opis na fakturze</wnl-textarea>
 
-			<wnl-datepicker name="delivery_date" :config="datepickerConfig">Data dostawy</wnl-datepicker>
+					<wnl-text name="quantity">Liczba (obecnie)</wnl-text>
+					<wnl-text name="initial">Liczba (początkowa)</wnl-text>
+				</div>
 
-			<wnl-datepicker name="course_start" :config="datepickerConfig">Start kursu</wnl-datepicker>
-			<wnl-datepicker name="course_end" :config="datepickerConfig">Koniec kursu</wnl-datepicker>
+				<div class="column">
+					<wnl-datepicker name="course_start" :config="datepickerConfig">Start kursu</wnl-datepicker>
+					<wnl-datepicker name="course_end" :config="datepickerConfig">Koniec kursu</wnl-datepicker>
 
-			<wnl-datepicker name="access_start" :config="datepickerConfig">Początek dostępu</wnl-datepicker>
-			<wnl-datepicker name="access_end" :config="datepickerConfig">Koniec dostępu</wnl-datepicker>
+					<hr>
 
-			<wnl-datepicker name="signups_start" :config="datepickerConfig">Start zapisów</wnl-datepicker>
-			<wnl-datepicker name="signups_end" :config="datepickerConfig">Koniec zapisów</wnl-datepicker>
-			<wnl-datepicker name="signups_close" :config="datepickerConfig">Zamknięcie zapisów</wnl-datepicker>
+					<wnl-datepicker name="access_start" :config="datepickerConfig">Początek dostępu</wnl-datepicker>
+					<wnl-datepicker name="access_end" :config="datepickerConfig">Koniec dostępu</wnl-datepicker>
+
+					<hr>
+
+					<wnl-datepicker name="signups_start" :config="datepickerConfig">Start zapisów</wnl-datepicker>
+					<wnl-datepicker name="signups_end" :config="datepickerConfig">Koniec zapisów</wnl-datepicker>
+					<wnl-datepicker name="signups_close" :config="datepickerConfig">Zamknięcie zapisów</wnl-datepicker>
+
+					<hr>
+
+					<wnl-datepicker name="delivery_date" :config="datepickerConfig">Data dostawy</wnl-datepicker>
+				</div>
+			</div>
+
+
 
 		</wnl-form>
 	</div>
@@ -38,18 +56,15 @@
 </template>
 
 <style lang="sass" scoped>
-	.notification
-		max-width: 900px
+	@import 'resources/assets/sass/variables'
 
-		.message-links-info
-			margin-bottom: 10px
+	.product-form
+		.field.is-grouped
+			.field
+				margin-right: $margin-medium
+		.column.left
+			border-right: $border-light-gray
 
-		.message-arguments
-			list-style: disc
-			margin-bottom: 10px
-
-		.message-argument
-			margin-left: 30px
 </style>
 
 <script>

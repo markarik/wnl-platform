@@ -9,6 +9,20 @@ class Product extends Model
 	protected $fillable = [
 		'name',
 		'invoice_name',
+		'slug',
+		'price',
+		'quantity',
+		'initial',
+		'delivery_date',
+		'course_start',
+		'course_end',
+		'access_start',
+		'access_end',
+		'signups_start',
+		'signups_end',
+		'signups_close',
+		'vat_rate',
+		'vat_note',
 	];
 
 	protected $guarded = [

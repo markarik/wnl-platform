@@ -37,7 +37,7 @@
 				name="description"
 				:options="{ theme: 'snow', placeholder: 'Opis' }"
 				:value="form.description"
-				:uploadEnabled="false"
+				:upload-enabled="false"
 				@input="onDescriptionInput"
 			/>
 			<h4 class="title margin top">Dodaj pytanie</h4>
@@ -166,12 +166,12 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', {setupLessons: 'setup'}),
 		getQuizQuestionContent(questionId) {
-			let question = Object.values(this.form.included.questions).find(question => question.id === questionId)
+			let question = Object.values(this.form.included.questions).find(question => question.id === questionId);
 
 			if (question) {
-				return question.text
+				return question.text;
 			} else {
-				return 'Nowo dodane pytanie'
+				return 'Nowo dodane pytanie';
 			}
 		},
 		populateForm() {
@@ -208,18 +208,18 @@ export default {
 				});
 		},
 		addQuizQuestion(questionId) {
-			let parsedQuestionId = parseInt(questionId)
+			let parsedQuestionId = parseInt(questionId);
 
 			if (!Number.isInteger(parsedQuestionId)) {
 				return this.addAutoDismissableAlert({
 					text: 'Podana wartość nie jest numerem!',
 					type: 'error'
-				})
+				});
 			} else if (parsedQuestionId === 0) {
 				return this.addAutoDismissableAlert({
 					text: 'Podana wartość nie może być zerem!',
 					type: 'error'
-				})
+				});
 			}
 
 			if (!this.form.questions.find(id => id === parsedQuestionId)) {

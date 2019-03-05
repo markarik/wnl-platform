@@ -174,6 +174,9 @@ export default {
 				return 'Nowo dodane pytanie'
 			}
 		},
+		populateForm() {
+			this.form.populate(this.quizQuestionsSetResourceUrl);
+		},
 		onDescriptionInput() {
 			this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
 		},
@@ -193,7 +196,7 @@ export default {
 						text: 'Zestaw pytań zapisany!',
 						type: 'success'
 					});
-					this.form.originalData = this.form.data();
+					this.populateForm();
 				})
 				.catch(exception => {
 					this.loading = false;
@@ -225,6 +228,7 @@ export default {
 					text: 'Udało się dodać pytanie :)',
 					type: 'success'
 				});
+				this.quizQuestionsSetFormSubmit();
 			} else {
 				this.addAutoDismissableAlert({
 					text: 'Pytanie o tym numerze id znajduje się już w tym zestawie!',
@@ -236,7 +240,7 @@ export default {
 	},
 	mounted() {
 		if (this.isEdit) {
-			this.form.populate(this.quizQuestionsSetResourceUrl);
+			this.populateForm();
 		}
 		this.setupLessons();
 	},

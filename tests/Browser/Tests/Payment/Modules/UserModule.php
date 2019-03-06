@@ -10,20 +10,12 @@ use Faker\Provider\Internet;
 use Faker\Provider\pl_PL\Address;
 use Faker\Provider\pl_PL\Person;
 use Faker\Provider\pl_PL\PhoneNumber;
+use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Login;
 
 class UserModule
 {
-	public function newUser($browser)
-	{
-		return [
-			SelectProductModule::class,
-			VoucherModule::class,
-			PersonalDataModule::class,
-		];
-	}
-
-	public function existingUser($browser)
+	public function existingUser(BethinkBrowser $browser)
 	{
 		$faker = new Generator();
 		$faker->addProvider(new Person($faker));
@@ -47,11 +39,5 @@ class UserModule
 		$browser
 			->visit(new Login())
 			->loginAsUser($user->email, 'secret');
-
-		return [
-			SelectProductModule::class,
-			VoucherModule::class,
-			PersonalDataModule::class,
-		];
 	}
 }

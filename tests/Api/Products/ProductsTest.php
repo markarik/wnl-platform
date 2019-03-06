@@ -57,7 +57,7 @@ class ProductsTest extends ApiTestCase
 		$user->roles()->attach(Role::byName('admin'));
 		$product = factory(Product::class)->create();
 
-		$updated = $this->transformProduct(factory(Product::class)->create(['slug' => null]));
+		$updated = $this->transformProduct(factory(Product::class)->make());
 
 		$response = $this
 			->actingAs($user)

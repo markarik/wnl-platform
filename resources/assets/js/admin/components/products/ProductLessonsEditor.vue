@@ -21,7 +21,7 @@
 				<tbody>
 				<tr v-for="productLesson in visibleProductLessons" :key="productLesson.id">
 					<td>{{productLesson.lesson_id}}</td>
-					<td>{{productLesson.lesson}}</td>
+					<td>{{productLesson.lesson_name}}</td>
 					<td>
 						<wnl-datepicker
 							name="start_date"
@@ -135,7 +135,7 @@ export default {
 		addLesson(lesson) {
 			if (!this.productLessons.some(({lesson_id}) => lesson_id === lesson.id)) {
 				this.productLessons.push({
-					lesson: lesson.name,
+					lesson_name: lesson.name,
 					lesson_id: lesson.id,
 					start_date: new Date()
 				});
@@ -169,8 +169,8 @@ export default {
 			return productLessonsList.map(productLesson => {
 				return {
 					...productLesson,
-					start_date: moment.utc(productLesson.start_date.date).toDate(),
-					lesson: included.lessons[productLesson.lesson_id].name
+					start_date: new Date(productLesson.start_date * 1000),
+					lesson_name: included.lessons[productLesson.lesson_id].name
 				};
 			});
 		},

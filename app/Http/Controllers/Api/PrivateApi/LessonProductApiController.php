@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Product\UpdateLessonProduct;
-use App\Models\Lesson;
 use App\Models\LessonProduct;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -31,14 +30,10 @@ class LessonProductApiController extends ApiController
 		}
 
 		foreach ($request->lessons as $lesson) {
-			if ($product->lessons->contains($lesson['lesson_id'])) {
-				$product->lessons()->updateExistingPivot(
-					$lesson['lesson_id'], ['start_date' => Carbon::createFromTimestampUTC($lesson['start_date'])]
-				);
-			} else {
-				$lessonModel = Lesson::find($lesson['lesson_id']);
-				$product->lessons()->save($lessonModel, ['start_date' => Carbon::createFromTimestampUTC($lesson['start_date'])]);
-			}
+			LessonProduct::updateOrCreate([
+				'lesson_id' => $lesson['lesson_id'],
+				'product_id' => $product->id
+			], ['start_date' => Carbon::createFromTimestamp($lesson['start_date'])]);
 		}
 
 		return $this->respondOk();

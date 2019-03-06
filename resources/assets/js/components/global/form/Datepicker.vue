@@ -46,6 +46,7 @@ import {pl} from 'flatpickr/dist/l10n/pl.js';
 
 export default {
 	name: 'Datepicker',
+	mixins: [formInput],
 	props: {
 		config: {
 			default: () => ({}),
@@ -75,7 +76,6 @@ export default {
 			newDate && this.datepicker.setDate(newDate);
 		},
 	},
-	mixins: [formInput],
 	mounted() {
 		if (!this.datepicker) {
 			this.datepicker = new Flatpickr(this.$refs.input, {

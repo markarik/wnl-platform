@@ -31,7 +31,6 @@
 				</tr>
 				</tbody>
 			</table>
-			<a class="button button is-primary is-outlined is-big" @click="submitPlan">Zapisz Zmiany</a>
 		</template>
 		<wnl-text-loader v-else-if="loading">Ładuję plan...</wnl-text-loader>
 		<p v-else>
@@ -56,41 +55,8 @@
 			>
 				<span class="lesson-autocomplete-item" slot-scope="row">{{row.item.id}}. {{row.item.name}}</span>
 			</wnl-autocomplete>
-			<div v-if="selectedLessons.length">
-				<table class="table user-plan__add-lesson">
-					<thead>
-					<tr>
-						<th>ID Lekcji</th>
-						<th>Lekcja</th>
-						<th>Data Startu</th>
-						<th>Akcje</th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr v-for="lesson in selectedLessons" :key="lesson.id">
-						<td>{{lesson.id}}</td>
-						<td>{{lesson.name}}</td>
-						<td>
-							<wnl-datepicker
-								:value="lesson.startDate"
-								@onChange="(payload) => onStartDateChange(payload, lesson)"
-							/>
-						</td>
-						<td>
-							<button
-								class="button is-danger"
-								type="button"
-								@click="unselectLesson(lesson)"
-							>
-								<span class="icon"><i class="fa fa-trash"></i></span>
-							</button>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-				<a class="button button is-primary is-outlined is-big" @click="addLessons">Zapisz</a>
-			</div>
 		</div>
+		<a class="button button is-primary is-outlined is-big" @click="submitPlan">Zapisz</a>
 	</div>
 </template>
 
@@ -103,7 +69,6 @@
 import moment from 'moment';
 import {nextTick} from 'vue';
 import {mapActions} from 'vuex';
-import momentTimezone from 'moment-timezone';
 
 import {getApiUrl} from 'js/utils/env';
 import WnlAutocomplete from 'js/components/global/Autocomplete';
@@ -126,7 +91,6 @@ export default {
 			filterPhrase: '',
 			loading: false,
 			lessons: [],
-			selectedLessons: [],
 			lessonInput: '',
 			datepickerConfig: {
 				altInput: true,
@@ -149,9 +113,8 @@ export default {
 			}
 
 			return this.lessons
-				.filter(lesson => !this.productLessons.find(({lesson_id}) => lesson_id === lesson.id) &&
-						lesson.name.toLowerCase().includes(this.lessonInput.toLowerCase()) &&
-						!this.selectedLessons.find(({id}) => id === lesson.id)
+				.filter(lesson => !this.productLessons.find(({lesson_id}) => lesson_id === lesson.id)
+					&& lesson.name.toLowerCase().includes(this.lessonInput.toLowerCase())
 				)
 				.slice(0, 10);
 		}
@@ -159,29 +122,15 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		addLesson(lesson) {
-			if (!this.selectedLessons.find(({id}) => id === lesson.id)) {
-				this.selectedLessons.push({
-					...lesson,
-					startDate: new Date()
+			if (!this.productLessons.some(({lesson_id}) => lesson_id === lesson.id)) {
+				this.productLessons.push({
+					lesson: lesson.name,
+					lesson_id: lesson.id,
+					start_date: new Date()
 				});
 			}
 
 			this.lessonInput = '';
-		},
-		onStartDateChange(payload, lesson) {
-			this.selectedLessons = this.selectedLessons.map(selectedLesson => {
-				if (lesson.id === selectedLesson.id) {
-					return selectedLesson;
-				}
-				return {
-					...selectedLesson,
-					startDate: payload[0]
-				};
-			});
-		},
-		unselectLesson(lesson) {
-			const index = this.selectedLessons.findIndex(selectedLesson => selectedLesson.id === lesson.id);
-			this.selectedLessons.splice(index, 1);
 		},
 		async getProductLessons() {
 			const productLessonResponse = await axios.get(getApiUrl(`lesson_product/${this.id}?include=lessons`));
@@ -194,7 +143,6 @@ export default {
 			}
 
 			return productLessonsList.map(productLesson => {
-				console.log(productLesson.start_date);
 				return {
 					...productLesson,
 					start_date: moment.utc(productLesson.start_date.date).toDate(),
@@ -203,7 +151,6 @@ export default {
 			});
 		},
 		onDateChange(value, productLesson) {
-			console.log(value);
 			productLesson.start_date = value[0];
 		},
 		async submitPlan() {
@@ -242,7 +189,3 @@ export default {
 	}
 };
 </script>
-
-<style scoped>
-
-</style>

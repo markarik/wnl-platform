@@ -15,9 +15,10 @@ class LessonProductTransformer extends ApiTransformer
 	public function transform(LessonProduct $lessonProduct)
 	{
 		$data = [
+			'id' => $lessonProduct->id,
 			'product_id' => $lessonProduct->product_id,
 			'lesson_id' => $lessonProduct->lesson_id,
-			'start_date' => $lessonProduct->start_date,
+			'start_date' => $lessonProduct->start_date
 		];
 
 		return $data;
@@ -27,8 +28,7 @@ class LessonProductTransformer extends ApiTransformer
 	{
 		return $this->item(
 			$lessonProduct->lesson,
-			new LessonTransformer(['lesson_product' => $lessonProduct->id]),
-			'lesson'
+			new LessonTransformer(['lesson_product' => $lessonProduct->product_id])
 		);
 	}
 }

@@ -2,14 +2,9 @@
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Product\UpdateLessonProduct;
-use App\Http\Requests\User\UpdateLessonsBatch;
-use App\Http\Requests\User\UpdateLessonsPreset;
-use App\Http\Requests\User\UpdateUserLesson;
-use App\Jobs\CalculateCoursePlan;
+use App\Models\Lesson;
 use App\Models\LessonProduct;
 use App\Models\Product;
-use App\Models\User;
-use App\Models\UserLesson;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

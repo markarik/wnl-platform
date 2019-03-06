@@ -15,7 +15,6 @@ class CalculateCoursePlan
 	use Dispatchable;
 
 	const GROUP_ID_WIECEJ_NIZ_LEK = 2;
-	const GROUP_ID_WARSZTATY = 3;
 	const GROUP_ID_POWTORKI = 11;
 	const GROUP_ID_DODATKI = 15;
 	const GROUP_ID_PROBNY_LEK = 14;
@@ -161,7 +160,6 @@ class CalculateCoursePlan
 		$notRequired = (clone $builder)
 			->whereIn('group_id', [
 				self::GROUP_ID_WIECEJ_NIZ_LEK,
-				self::GROUP_ID_WARSZTATY,
 				self::GROUP_ID_DODATKI,
 			])
 			->get();

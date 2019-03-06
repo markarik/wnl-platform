@@ -111,6 +111,7 @@
 import {isEqual} from 'lodash';
 import {mapGetters, mapActions} from 'vuex';
 import WnlDraggable from 'vuedraggable';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 import Form from 'js/classes/forms/Form';
 import {getApiUrl} from 'js/utils/env';
@@ -163,13 +164,7 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', {setupLessons: 'setup'}),
 		getQuizQuestionContent(questionId) {
-			let question = Object.values(this.form.included.quiz_questions).find(question => question.id === questionId);
-
-			if (question) {
-				return question.text;
-			} else {
-				return 'Nowo dodane pytanie';
-			}
+			return Object.values(this.form.included.quiz_questions).find(question => question.id === questionId).text;
 		},
 		populateForm() {
 			this.form.populate(this.quizQuestionsSetResourceUrl);
@@ -181,7 +176,7 @@ export default {
 			let questions = this.form.quiz_questions;
 
 			let index = questions.findIndex(id => id === questionId);
-			questions.splice(index, 1)
+			questions.splice(index, 1);
 		},
 		quizQuestionsSetFormSubmit() {
 			if (!this.hasChanged) {
@@ -194,7 +189,7 @@ export default {
 					this.loading = false;
 					this.addAutoDismissableAlert({
 						text: 'Zestaw pytań zapisany!',
-						type: 'success'
+						type: ALERT_TYPES.SUCCESS
 					});
 					this.populateForm();
 				})
@@ -202,7 +197,7 @@ export default {
 					this.loading = false;
 					this.addAutoDismissableAlert({
 						text: 'Nie udało się :(',
-						type: 'error'
+						type: ALERT_TYPES.ERROR
 					});
 					$wnl.logger.capture(exception);
 				});
@@ -213,29 +208,37 @@ export default {
 			if (!Number.isInteger(parsedQuestionId)) {
 				return this.addAutoDismissableAlert({
 					text: 'Podana wartość nie jest numerem!',
-					type: 'error'
+					type: ALERT_TYPES.ERROR
 				});
 			} else if (parsedQuestionId === 0) {
 				return this.addAutoDismissableAlert({
 					text: 'Podana wartość nie może być zerem!',
-					type: 'error'
+					type: ALERT_TYPES.ERROR
 				});
 			}
 
 			if (!this.form.quiz_questions.find(id => id === parsedQuestionId)) {
-				this.form.quiz_questions.push(parsedQuestionId);
-				this.addAutoDismissableAlert({
-					text: 'Udało się dodać pytanie :)',
-					type: 'success'
-				});
-				// this.quizQuestionsSetFormSubmit();
+
+				axios.get(getApiUrl(`quiz_questions/${questionId}`))
+					.then((response) => {
+						this.form.included.quiz_questions[response.data.id] = response.data;
+						this.form.quiz_questions.push(response.data.id);
+
+						this.addAutoDismissableAlert({
+							text: 'Udało się dodać pytanie :)',
+							type: ALERT_TYPES.SUCCESS
+						});
+					});
 			} else {
 				this.addAutoDismissableAlert({
 					text: 'Pytanie o tym numerze id znajduje się już w tym zestawie!',
-					type: 'error'
+					type: ALERT_TYPES.SUCCESS
 				});
 			}
-			this.quizQuestionInput = 0;
+			this.quizQuestionInput = '';
+		},
+		addParsedQuestionId(id) {
+			this.form.quiz_questions.push(parsedQuestionId);
 		}
 	},
 	mounted() {

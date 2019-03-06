@@ -17,6 +17,7 @@
 			</span>
 
 			<wnl-manual-plan-nodes-list
+				class="nodes-list"
 				v-if="isOpen"
 				:nodes="childrenNodes"
 				@change="$emit('change', $event)"
@@ -89,7 +90,9 @@
 				text-align: center
 				cursor: not-allowed
 				min-width: 260px
-
+	.nodes-list
+		margin-left: $margin-big
+		margin-bottom: $margin-base
 </style>
 
 

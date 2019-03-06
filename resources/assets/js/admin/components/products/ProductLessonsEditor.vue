@@ -15,6 +15,7 @@
 					<th>ID lekcji</th>
 					<th>Lekcja</th>
 					<th>Data otwarcia</th>
+					<th>Akcje</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -24,9 +25,19 @@
 					<td>
 						<wnl-datepicker
 							name="start_date"
+							:key="productLesson.lesson_id"
 							:config="datepickerConfig" :value="productLesson.start_date"
 							@onChange="onDateChange($event, productLesson)"
 						/>
+					</td>
+					<td>
+						<button
+							class="button is-danger"
+							type="button"
+							@click="removeLesson(productLesson)"
+						>
+							<span class="icon"><i class="fa fa-trash"></i></span>
+						</button>
 					</td>
 				</tr>
 				</tbody>
@@ -132,6 +143,19 @@ export default {
 
 			this.lessonInput = '';
 		},
+		async removeLesson(productLesson) {
+			try {
+				await axios.delete(getApiUrl(`lesson_product/${this.id}/${productLesson.lesson_id}`));
+				const index = this.productLessons.findIndex(({lesson_id}) => productLesson.lesson_id === lesson_id);
+				this.productLessons.splice(index, 1);
+			} catch (e) {
+				this.addAutoDismissableAlert({
+					text: 'Nie udało się usunąć lekcji',
+					type: 'error'
+				});
+				$wnl.logger.capture(e);
+			}
+		},
 		async getProductLessons() {
 			const productLessonResponse = await axios.get(getApiUrl(`lesson_product/${this.id}?include=lessons`));
 			const { data: {included, ...productLessons}} = productLessonResponse;
@@ -154,14 +178,26 @@ export default {
 			productLesson.start_date = value[0];
 		},
 		async submitPlan() {
-			await axios.put(getApiUrl(`lesson_product/${this.id}`), {
-				lessons: this.productLessons.map(productLesson => {
-					return {
-						lesson_id: productLesson.lesson_id,
-						start_date: moment.utc(productLesson.start_date).unix()
-					};
-				})
-			});
+			try {
+				await axios.put(getApiUrl(`lesson_product/${this.id}`), {
+					lessons: this.productLessons.map(productLesson => {
+						return {
+							lesson_id: productLesson.lesson_id,
+							start_date: moment.utc(productLesson.start_date).unix()
+						};
+					})
+				});
+				this.addAutoDismissableAlert({
+					text: 'Zapisano!',
+					type: 'success'
+				});
+			} catch (e) {
+				this.addAutoDismissableAlert({
+					text: 'Nie udało się zapisać zmian.',
+					type: 'error'
+				});
+				$wnl.logger.capture(e);
+			}
 		}
 	},
 	async mounted() {

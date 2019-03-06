@@ -43,4 +43,19 @@ class LessonProductApiController extends ApiController
 
 		return $this->respondOk();
 	}
+
+	public function deleteLesson($productId, $lessonId) {
+		$product = Product::find($productId);
+		if (empty($productId)) {
+			return $this->respondNotFound();
+		}
+
+		if (!$product->lessons->contains($lessonId)) {
+			return $this->respondNotFound();
+		}
+
+		$product->lessons()->detach($lessonId);
+
+		return $this->respondOk();
+	}
 }

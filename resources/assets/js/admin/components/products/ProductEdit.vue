@@ -99,6 +99,7 @@ export default {
 				dateFormat: 'U',
 				altFormat: 'Y-m-d H:i',
 				time_24hr: true,
+				defaultDate: null,
 			},
 			vatRates: [],
 		};

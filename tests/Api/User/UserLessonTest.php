@@ -69,22 +69,20 @@ class UserLessonTest extends ApiTestCase
 			$this->assertTrue($lesson->startDate($user)->isToday(), "Start date is not today");
 		};
 
-		$endDate = $response->json()['end_date'];
+		$endDate = $response->json('end_date');
 		$this->assertTrue(Carbon::createFromTimestamp($endDate)->lte(Carbon::now()));
 
-		$response->assertJsonFragment([
-			[
-				'id'=> $lesson->id,
-				'name' => $lesson->name,
-				'group_id' => $lesson->group_id,
-				'groups' => $lesson->group_id,
-				'order_number' => $lesson->order_number,
-				'is_required' => $lesson->is_required,
-				'isAccessible' => $lesson->isAccessible(),
-				'isAvailable' => $lesson->isAvailable(),
-				'startDate' => $endDate,
-			]
-		]);
+		$this->assertContains([
+			'id'=> $lesson->id,
+			'name' => $lesson->name,
+			'group_id' => $lesson->group_id,
+			'groups' => $lesson->group_id,
+			'order_number' => $lesson->order_number,
+			'is_required' => $lesson->is_required,
+			'isAccessible' => $lesson->isAccessible(),
+			'isAvailable' => $lesson->isAvailable(),
+			'startDate' => $endDate,
+		], $response->json('lessons'));
 	}
 
 	/** @test */
@@ -139,10 +137,7 @@ class UserLessonTest extends ApiTestCase
 			]);
 
 		$response->assertStatus(200);
-
-		$expectedJson = [
-			'lessons' => []
-		];
+		$responseLessons = $response->json('lessons');
 
 		foreach ($requiredLessons as $index => $lesson) {
 			$expectedStartDate = $startDate->addDays($expectedDaysInterval[$index]);
@@ -152,7 +147,7 @@ class UserLessonTest extends ApiTestCase
 				'start_date' => $expectedStartDate,
 			]);
 
-			$expectedJson['lessons'][] = [
+			$this->assertContains([
 				'id'=> $lesson->id,
 				'name' => $lesson->name,
 				'group_id' => $lesson->group_id,
@@ -162,13 +157,11 @@ class UserLessonTest extends ApiTestCase
 				'isAccessible' => $lesson->isAccessible(),
 				'isAvailable' => $lesson->isAvailable(),
 				// FIXME it fails because all the start dates are the same
-				// 'startDate' => $expectedStartDate->timestamp
-			];
+				 'startDate' => $expectedStartDate->timestamp
+			], $responseLessons);
 		}
 
-		$response->assertJson($expectedJson);
-
-		$computedEndDate = $response->json()['end_date'];
+		$computedEndDate = $response->json('end_date');
 		$this->assertTrue(
 			Carbon::createFromTimestamp($computedEndDate)->lte($endDate),
 			"Computed End Date is larger than selected end date"
@@ -225,12 +218,8 @@ class UserLessonTest extends ApiTestCase
 			]);
 
 		$response->assertStatus(200);
-
+		$responseLessons = $response->json('lessons');
 		$expectedDaysInterval = [0, 4, 2, 2, 4];
-
-		$expectedJson = [
-			'lessons' => []
-		];
 
 		foreach ($requiredLessons as $index => $lesson) {
 			$expectedStartDate = $startDate->addDays($expectedDaysInterval[$index]);
@@ -241,7 +230,7 @@ class UserLessonTest extends ApiTestCase
 				'start_date' => $expectedStartDate,
 			]);
 
-			$expectedJson['lessons'][] = [
+			$this->assertContains([
 				'id'=> $lesson->id,
 				'name' => $lesson->name,
 				'group_id' => $lesson->group_id,
@@ -252,10 +241,8 @@ class UserLessonTest extends ApiTestCase
 				'isAvailable' => $lesson->isAvailable(),
 				// FIXME it fails because all the start dates are the same
 				// 'startDate' => $expectedStartDate->timestamp
-			];
+			], $responseLessons);
 		}
-
-		$response->assertJson($expectedJson);
 	}
 
 	/** @test */

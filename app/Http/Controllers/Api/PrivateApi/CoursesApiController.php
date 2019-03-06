@@ -21,14 +21,7 @@ class CoursesApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		DB::transaction(function() use ($course, $request) {
-			$course->update($request->all());
-
-			foreach ($course->groups as $group) {
-				$group->order_number = array_search($group->id, $request->groups) + 1;
-				$group->save();
-			}
-		});
+		$course->update($request->all());
 
 		return $this->transformAndRespond($course);
 	}

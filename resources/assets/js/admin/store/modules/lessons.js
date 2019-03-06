@@ -21,9 +21,7 @@ const state = {
 // Getters
 const getters = {
 	isReady: state => state.ready,
-	allLessons: state => {
-		return _.sortBy(state.lessons, (lesson) => lesson.order_number);
-	},
+	allLessons: state => state.lessons,
 };
 
 // Mutations

@@ -37,6 +37,7 @@ const getters = {
 	ready: state => state.ready,
 	courseId: state => state.id,
 	name: state => state.name,
+	getChildrenNodes: state => parentId => state.structure.filter(node => node.parent_id === parentId),
 	groups: state => {
 		return state.structure.filter(node => node.structurable_type === getModelByResource(resources.groups))
 			.map(node => node.model);
@@ -44,10 +45,6 @@ const getters = {
 	getGroup: (state, getters) => groupId => {
 		const castedGroupId = groupId.toString();
 		return getters.groups.find(group => group.id.toString() === castedGroupId) || {};
-	},
-	getLessonsForGroup: (state, getters) => groupId => {
-		const castedGroupId = groupId.toString();
-		return getters.getLessons.filter(lesson => lesson.groups.toString() === castedGroupId);
 	},
 	getLessons: state => {
 		return state.structure.filter(node => node.structurable_type === getModelByResource(resources.lessons))
@@ -136,6 +133,7 @@ const getters = {
 
 			return lesson;
 		} else {
+			// TODO PLAT-1090 don't use order_number on lesson
 			const sortedLessons = getters.getLessons.sort((lessonA, lessonB) => {
 				const byOrderNumber = lessonA.order_number - lessonB.order_number;
 				if (byOrderNumber === 0) {

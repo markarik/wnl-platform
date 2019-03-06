@@ -240,7 +240,7 @@ class UserLessonTest extends ApiTestCase
 				'isAccessible' => $lesson->isAccessible(),
 				'isAvailable' => $lesson->isAvailable(),
 				// FIXME it fails because all the start dates are the same
-				// 'startDate' => $expectedStartDate->timestamp
+				 'startDate' => $expectedStartDate->timestamp
 			], $responseLessons);
 		}
 	}

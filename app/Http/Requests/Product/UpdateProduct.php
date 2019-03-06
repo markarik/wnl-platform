@@ -26,26 +26,27 @@ class UpdateProduct extends FormRequest
     public function rules()
     {
 	    return [
-		    'name'          => 'string|max:255',
-		    'invoice_name'  => 'string|max:255',
+		    'name'          => 'string|max:255|required',
+		    'invoice_name'  => 'string|max:255|required',
 		    'slug'          => [
 		    	'string',
+			    'nullable',
 			    'max:255',
 			    Rule::unique('products', 'slug')->ignore($this->request->get('id'), 'id')
 		    ],
-		    'price'         => 'numeric',
-		    'quantity'      => 'integer',
-		    'initial'       => 'integer',
-		    'delivery_date' => 'integer',
-		    'course_start'  => 'integer',
-		    'course_end'    => 'integer',
-		    'access_start'  => 'integer',
-		    'access_end'    => 'integer',
-		    'signups_start' => 'integer',
-		    'signups_end'   => 'integer',
-		    'signups_close' => 'integer',
-		    'vat_rate'      => 'numeric',
-		    'vat_note'      => 'string|max:255',
+		    'price'         => 'numeric|required',
+		    'quantity'      => 'integer|required',
+		    'initial'       => 'integer|required',
+		    'delivery_date' => 'integer|required',
+		    'course_start'  => 'integer|nullable',
+		    'course_end'    => 'integer|nullable',
+		    'access_start'  => 'integer|nullable',
+		    'access_end'    => 'integer|nullable',
+		    'signups_start' => 'integer|required',
+		    'signups_end'   => 'integer|required',
+		    'signups_close' => 'integer|required',
+		    'vat_rate'      => 'numeric|required',
+		    'vat_note'      => 'string|max:255|nullable',
 	    ];
     }
 }

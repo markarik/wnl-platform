@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Http\Controllers\Api\PrivateApi\CoursesApiController;
 use App\Models\User;
+use App\Models\UserCourseProgress;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\UserLesson;
 use Carbon\Carbon;
@@ -14,12 +14,6 @@ class CalculateCoursePlan
 {
 	use Dispatchable;
 
-	const GROUP_ID_WIECEJ_NIZ_LEK = 2;
-	const GROUP_ID_WARSZTATY = 3;
-	const GROUP_ID_POWTORKI = 11;
-	const GROUP_ID_DODATKI = 15;
-	const GROUP_ID_PROBNY_LEK = 14;
-
 	protected $now;
 	/** @var User */
 	protected $user;
@@ -28,9 +22,8 @@ class CalculateCoursePlan
 	protected $startDate;
 	protected $workDays;
 	protected $workLoad;
-	protected $sortedLessons;
-	protected $openNow;
-	protected $openLastDay;
+	protected $sortedLessonIds;
+	protected $openNowLessonIds;
 	protected $toBeScheduled;
 	protected $daysQuantity;
 
@@ -88,8 +81,8 @@ class CalculateCoursePlan
 			return $this->handleWorkloadZero($plan);
 		}
 
-		foreach ($this->openNow as $lesson) {
-			$plan = $this->addToPlan($plan, $lesson->id, $this->now);
+		foreach ($this->openNowLessonIds as $lessonId) {
+			$plan = $this->addToPlan($plan, $lessonId, $this->now);
 		}
 
 		if ($this->preset === 'dateToDate') {
@@ -137,10 +130,6 @@ class CalculateCoursePlan
 			$startDate = clone($endDate)->addDay();
 		}
 
-		foreach ($this->openLastDay as $lesson) {
-			$plan = $this->addToPlan($plan, $lesson->id, $plan->last()['start_date']);
-		}
-
 		return $plan;
 	}
 
@@ -154,49 +143,28 @@ class CalculateCoursePlan
 				(clone $this->endDate)->addDay());
 		}
 
-		// FIXME possibly use User::getLessonsAvailability, but keep in mind it returns Collection
-		$builder = $this->user->userLessons()
-			->orderBy('group_id')
-			->orderBy('order_number');
+		$userLessons = $this->user->getLessonsAvailability();
+		$userLessonIds = $userLessons->pluck('id')->toArray();
+		$notRequiredLessonIds = $userLessons->filter(function($lesson) { return !$lesson->is_required; })->pluck('id')->toArray();
 
-		$notRequired = (clone $builder)
-			->whereIn('group_id', [
-				self::GROUP_ID_WIECEJ_NIZ_LEK,
-				self::GROUP_ID_WARSZTATY,
-				self::GROUP_ID_DODATKI,
-			])
-			->get();
-
-		$openNow = (clone $builder)
-			->join('user_course_progress', function ($join) {
-				$join->on('lessons.id', '=', 'user_course_progress.lesson_id');
-			})
-			->where('user_course_progress.user_id', $this->user->profile->id)
+		$openNowLessonIds = UserCourseProgress::whereIn('lesson_id', $userLessonIds)
+			->where('user_id', $this->user->profile->id)
 			->whereNull('section_id')
 			->whereNull('screen_id')
 			->where('status', 'complete')
-			->where('group_id', '!=', self::GROUP_ID_POWTORKI)
 			->get()
-			->merge($notRequired);
+			->pluck('lesson_id')
+			->merge($notRequiredLessonIds)
+			->unique()
+			->toArray();
 
-		$openLastDay = (clone $builder)
-			->where('group_id', self::GROUP_ID_POWTORKI)
-			->get();
-
-		$notScheduled = $openNow->merge($openLastDay)->pluck('id')->toArray();
-		$toBeScheduled = (clone $builder)
-			->whereNotIn('lessons.id', $notScheduled)
-			->get();
-
-		$this->sortedLessons = $builder->get();
-		$this->openNow = $openNow;
-		$this->openLastDay = $openLastDay;
-		$this->toBeScheduled = $toBeScheduled;
+		$this->toBeScheduled = $userLessons->filter(function($lesson) use ($openNowLessonIds) { return !in_array($lesson->id, $openNowLessonIds); });
+		$this->sortedLessonIds = $userLessonIds;
+		$this->openNowLessonIds = $openNowLessonIds;
 	}
 
 	protected function handleDefaultPlan($plan)
 	{
-		// TODO remove the custom plan
 		$productsIds = $this->user->orders()->where('paid', 1)->get(['product_id']);
 		$lessonsWithStartDates = \DB::table('lesson_product')
 			->whereIn('product_id', $productsIds)
@@ -213,8 +181,8 @@ class CalculateCoursePlan
 
 	protected function handleWorkloadZero($plan)
 	{
-		foreach ($this->sortedLessons as $lesson) {
-			$plan = $this->addToPlan($plan, $lesson->id, $this->now);
+		foreach ($this->sortedLessonIds as $lessonId) {
+			$plan = $this->addToPlan($plan, $lessonId, $this->now);
 		}
 
 		return $plan;

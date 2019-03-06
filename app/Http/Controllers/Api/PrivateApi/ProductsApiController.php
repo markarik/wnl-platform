@@ -17,7 +17,7 @@ class ProductsApiController extends ApiController
 
 	public function put(UpdateProduct $request)
 	{
-		$productId = $request->get('id');
+		$productId = $request->route('id');
 		$product = Product::find($productId);
 
 		if (is_null($product)) {

@@ -30,6 +30,7 @@ class UpdateProduct extends FormRequest
 		    'invoice_name'  => 'string|max:255',
 		    'slug'          => [
 		    	'string',
+			    'nullable',
 			    'max:255',
 			    Rule::unique('products', 'slug')->ignore($this->request->get('id'), 'id')
 		    ],
@@ -37,10 +38,10 @@ class UpdateProduct extends FormRequest
 		    'quantity'      => 'integer',
 		    'initial'       => 'integer',
 		    'delivery_date' => 'integer',
-		    'course_start'  => 'integer',
-		    'course_end'    => 'integer',
-		    'access_start'  => 'integer',
-		    'access_end'    => 'integer',
+		    'course_start'  => 'integer|nullable',
+		    'course_end'    => 'integer|nullable',
+		    'access_start'  => 'integer|nullable',
+		    'access_end'    => 'integer|nullable',
 		    'signups_start' => 'integer',
 		    'signups_end'   => 'integer',
 		    'signups_close' => 'integer',

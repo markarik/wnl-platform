@@ -9,6 +9,11 @@ use Facebook\WebDriver\WebDriverPoint;
 use \Laravel\Dusk\Browser;
 use Laravel\Dusk\ElementResolver;
 
+/**
+ * @property \App\Models\Coupon coupon
+ * @property \App\Models\Order order
+ * @property \App\Models\StudyBuddy studyBuddy
+ */
 class BethinkBrowser extends Browser
 {
 	/**

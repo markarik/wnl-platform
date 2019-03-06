@@ -94,7 +94,6 @@ class ConfirmOrderController extends Controller
 			$order->transfer_title = $request->get('p24_statement');
 			$order->save();
 		} else {
-			$paymentLog->status = 'error';
 			Log::warning("P24 transaction validation failed - order #{$order->id}");
 		}
 	}

@@ -3,6 +3,7 @@
 namespace Tests\Browser\Pages\Course\Components;
 
 use Laravel\Dusk\Page as BasePage;
+use Tests\BethinkBrowser;
 
 class Chat extends BasePage
 {
@@ -21,14 +22,14 @@ class Chat extends BasePage
 		];
 	}
 
-	public function sendChatMessage($browser, $message)
+	public function sendChatMessage(BethinkBrowser $browser, $message)
 	{
 		$browser
 			->type('@chat_message_input', $message)
 			->click('@chat_message_submit');
 	}
 
-	public function assertMessageFromUser($browser, $userFullName, $message)
+	public function assertMessageFromUser(BethinkBrowser $browser, $userFullName, $message)
 	{
 		$browser->with('@chat_container', function ($chatContainer) use ($userFullName, $message) {
 			$chatContainer

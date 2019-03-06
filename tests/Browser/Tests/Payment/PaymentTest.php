@@ -19,7 +19,6 @@ class PaymentTest extends DuskTestCase
 	public function registerAndPayOnline()
 	{
 		$this->execute([
-			[UserModule::class          , 'newUser'],
 			[SelectProductModule::class , 'onsite'],
 			[PersonalDataModule::class  , 'signUpNoInvoice'],
 			[ConfirmOrderModule::class  , 'payOnline'],
@@ -48,7 +47,6 @@ class PaymentTest extends DuskTestCase
 	public function registerAndPayByInstalments()
 	{
 		$this->execute([
-			[UserModule::class          , 'newUser'],
 			[SelectProductModule::class , 'online'],
 			[PersonalDataModule::class  , 'signUpNoInvoice'],
 			[ConfirmOrderModule::class  , 'payByInstalments'],
@@ -60,7 +58,6 @@ class PaymentTest extends DuskTestCase
 	public function studyBuddy()
 	{
 		$this->execute([
-			[UserModule::class          , 'newUser'],
 			[SelectProductModule::class , 'online'],
 			[PersonalDataModule::class  , 'signUpNoInvoice'],
 			[ConfirmOrderModule::class  , 'payByInstalments'],
@@ -78,7 +75,6 @@ class PaymentTest extends DuskTestCase
 	public function freeCourseCoupon()
 	{
 		$this->execute([
-			[UserModule::class          , 'newUser'],
 			[VoucherModule::class       , 'code100Percent'],
 			[SelectProductModule::class , 'online'],
 			[PersonalDataModule::class  , 'signUpNoInvoice'],

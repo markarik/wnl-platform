@@ -2,9 +2,14 @@
 
 namespace Tests\Api\User;
 
+use App\Models\Course;
+use App\Models\CourseStructureNode;
+use App\Models\LessonProduct;
+use App\Models\Order;
 use App\Models\User;
 use App\Models\Lesson;
 use App\Models\UserLesson;
+use Facades\App\Contracts\CourseProvider;
 use Tests\Api\ApiTestCase;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -18,11 +23,30 @@ class UserLessonTest extends ApiTestCase
 	{
 		/** @var User $user */
 		$user = factory(User::class)->create();
+
+		/** @var Lesson[] $lessons */
 		$lessons = factory(Lesson::class, 10)->create();
 
+		/** @var Order $order */
+		$order = factory(Order::class)->create([
+			'user_id' => $user->id,
+			'paid' => 1,
+		]);
+
+		/** @var Course $course */
+		$course = factory(Course::class)->create();
+
+		CourseProvider::shouldReceive('getCourseId')->andReturn($course->id);
+
 		foreach ($lessons as $lesson) {
-			factory(UserLesson::class)->create([
-				'user_id' => $user->id,
+			factory(CourseStructureNode::class)->create([
+				'course_id' => $course->id,
+				'structurable_type' => Lesson::class,
+				'structurable_id' => $lesson->id
+			]);
+
+			factory(LessonProduct::class)->create([
+				'product_id' => $order->product_id,
 				'lesson_id' => $lesson->id,
 				'start_date' => Carbon::now()->subDays(100)
 			]);

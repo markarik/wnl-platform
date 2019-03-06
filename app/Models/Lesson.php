@@ -86,7 +86,7 @@ class Lesson extends Model implements WithTags
 	 * TODO move it away from Lesson model
 	 *
 	 * @param User|null $user
-	 * @return Carbon
+	 * @return Carbon|null
 	 */
 	public function startDate(User $user = null)
 	{

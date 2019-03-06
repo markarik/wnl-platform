@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CourseProgressStats;
+use Facades\App\Contracts\CourseProvider;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Ramsey\Uuid\Uuid;
@@ -21,7 +22,6 @@ class User extends Authenticatable
 	const SUBSCRIPTION_STATUS_INACTIVE = 'inactive';
 	const SUBSCRIPTION_STATUS_AWAITING = 'awaiting';
 	const SUBSCRIPTION_STATUS_ACTIVE = 'active';
-	const COURSE_ID = 1;
 
 	protected $casts = [
 		'invoice'            => 'boolean',
@@ -318,7 +318,7 @@ class User extends Authenticatable
 	{
 		if (!$this->lessonsAvailabilityLoaded) {
 			/** @var \Kalnoy\Nestedset\QueryBuilder $courseStructureNodeBuilder */
-			$courseStructureNodeBuilder = CourseStructureNode::where('course_id', '=', static::COURSE_ID)
+			$courseStructureNodeBuilder = CourseStructureNode::where('course_id', '=', CourseProvider::getCourseId())
 				->where('structurable_type', '=', Lesson::class);
 
 			$courseLessonsOrdered = $courseStructureNodeBuilder->defaultOrder()->get();

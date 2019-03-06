@@ -4,6 +4,7 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Course\UpdateGroup;
 use App\Models\Group;
+use Facades\App\Contracts\CourseProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +17,7 @@ class GroupsApiController extends ApiController {
 	public function post(UpdateGroup $request) {
 		$group = Group::create([
 			'name' => $request->get('name'),
-			'course_id' => 1,
+			'course_id' => CourseProvider::getCourseId(),
 		]);
 
 		return $this->transformAndRespond($group);

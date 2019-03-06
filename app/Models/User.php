@@ -308,7 +308,10 @@ class User extends Authenticatable
 		return Lesson::where('product_id', '=', $this->getLatestPaidCourseProductId())
 			->whereNotIn('lesson_id', $this->userLessons->pluck('id'))
 			->join('lesson_product', 'lesson_product.lesson_id', '=', 'lessons.id')
-			->get();
+			->get()
+			->each(function (Lesson $lesson) {
+				$lesson->is_default_start_date = true;
+			});
 	}
 
 	/**
@@ -332,7 +335,7 @@ class User extends Authenticatable
 			$this->lessonsAvailability = $lessonsAvailability;
 			$this->lessonsAvailabilityLoaded = true;
 		}
-		
+
 		return $this->lessonsAvailability;
 	}
 

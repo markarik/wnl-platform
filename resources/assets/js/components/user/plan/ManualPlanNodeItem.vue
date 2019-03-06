@@ -30,11 +30,11 @@
 			>{{node.model.name}}</span>
 			<div class="lesson-left-side">
 				<div class="not-accesible" v-if="!node.model.isAccessible">
-					{{ $t('lessonsAvailability.lessonNotAvilable') }}
+					{{ $t('lessonsAvailability.lessonNotAvailable') }}
 				</div>
 				<div class="datepicker" v-else>
 					<wnl-datepicker
-						:class="{'hasColorBackground': isEven}"
+						:class="{'hasColorBackground': isEven, 'is-default-start-date': node.model.isDefaultStartDate}"
 						:value="startDate"
 						:subitem-id="node.model.id"
 						:config="datepickerConfig"
@@ -93,6 +93,9 @@
 	.nodes-list
 		margin-left: $margin-big
 		margin-bottom: $margin-base
+
+	/deep/ .datepicker.is-default-start-date
+		color: $color-gray
 </style>
 
 

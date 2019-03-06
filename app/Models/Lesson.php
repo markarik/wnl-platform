@@ -76,6 +76,17 @@ class Lesson extends Model implements WithTags
 		return !is_null($this->startDate());
 	}
 
+	public function isDefaultStartDate(User $user = null)
+	{
+		$user = $user ?? Auth::user();
+
+		$lesson = $user->getLessonsAvailability()->filter(function ($lesson) {
+			return $lesson->id === $this->id;
+		})->first();
+
+		return $lesson ? (bool) $lesson->is_default_start_date : true;
+	}
+
 	/**
 	 * TODO move it away from Lesson model
 	 *
@@ -90,6 +101,11 @@ class Lesson extends Model implements WithTags
 			return $lesson->id === $this->id;
 		})->first();
 
-		return $lesson ? Carbon::parse($lesson->start_date) : null;
+		if (!$lesson) {
+			return null;
+		}
+
+		// Pivot for UserLesson, no pivot for LessonProduct
+		return Carbon::parse($lesson->start_date ?? $lesson->pivot->start_date);
 	}
 }

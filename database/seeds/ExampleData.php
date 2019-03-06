@@ -8,7 +8,6 @@ class ExampleData
     const ROLES = [
         Role::ROLE_ADMIN,
         Role::ROLE_MODERATOR,
-        'workshop-participant',
     ];
 
     const USERS = [

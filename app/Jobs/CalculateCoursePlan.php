@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\UserLesson;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Support\Collection;
 
 
 class CalculateCoursePlan
@@ -18,12 +19,15 @@ class CalculateCoursePlan
 	/** @var User */
 	protected $user;
 	protected $preset;
+	/** @var Carbon */
 	protected $endDate;
+	/** @var Carbon */
 	protected $startDate;
 	protected $workDays;
 	protected $workLoad;
 	protected $sortedLessonIds;
 	protected $openNowLessonIds;
+	/** @var Collection */
 	protected $toBeScheduled;
 	protected $daysQuantity;
 
@@ -40,6 +44,10 @@ class CalculateCoursePlan
 		$this->preprocessData();
 	}
 
+	/**
+	 * @return Collection
+	 * @throws \Exception
+	 */
 	public function handle()
 	{
 		DB::beginTransaction();
@@ -74,7 +82,7 @@ class CalculateCoursePlan
 		$daysExcess = 0;
 
 		if ($this->preset === 'default') {
-			return $this->handleDefaultPlan($plan);
+			return $this->handleDefaultPlan();
 		}
 
 		if ($this->preset === 'openAll' || $toBeScheduledCount === 0) {
@@ -163,20 +171,11 @@ class CalculateCoursePlan
 		$this->openNowLessonIds = $openNowLessonIds;
 	}
 
-	protected function handleDefaultPlan($plan)
+	protected function handleDefaultPlan()
 	{
-		$productsIds = $this->user->orders()->where('paid', 1)->get(['product_id']);
-		$lessonsWithStartDates = \DB::table('lesson_product')
-			->whereIn('product_id', $productsIds)
-			->orderBy('start_date', 'desc')
-			->get()
-			->unique('lesson_id');
+		dispatch_now(new ArchiveCoursePlan($this->user, true));
 
-		foreach ($lessonsWithStartDates as $entry) {
-			$plan = $this->addToPlan($plan, $entry->lesson_id, Carbon::parse($entry->start_date));
-		}
-
-		return $plan;
+		return Collection::make();
 	}
 
 	protected function handleWorkloadZero($plan)
@@ -188,6 +187,12 @@ class CalculateCoursePlan
 		return $plan;
 	}
 
+	/**
+	 * @param Collection $plan
+	 * @param int $lessonId
+	 * @param Carbon $date
+	 * @return Collection
+	 */
 	protected function addToPlan($plan, $lessonId, $date)
 	{
 		return $plan->push([

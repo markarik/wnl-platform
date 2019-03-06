@@ -31,6 +31,7 @@ class ArchiveCoursePlan
 	 * Execute the job.
 	 *
 	 * @return void
+	 * @throws \Exception
 	 */
 	public function handle()
 	{

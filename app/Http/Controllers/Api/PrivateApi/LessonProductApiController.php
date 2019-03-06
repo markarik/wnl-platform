@@ -49,7 +49,10 @@ class LessonProductApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$product->lessons()->detach($lessonId);
+		LessonProduct::where([
+			'lesson_id' => $lessonId,
+			'product_id' => $product->id
+		])->delete();
 
 		return $this->respondOk();
 	}

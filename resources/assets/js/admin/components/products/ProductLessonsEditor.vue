@@ -22,7 +22,7 @@
 				<tr v-for="productLesson in visibleProductLessons" :key="productLesson.id">
 					<td>{{productLesson.lesson_id}}</td>
 					<td>{{productLesson.lesson_name}}</td>
-					<td>
+					<td class="wnl-table__cell--datepicker">
 						<wnl-datepicker
 							name="start_date"
 							:key="productLesson.lesson_id"
@@ -71,9 +71,9 @@
 	</div>
 </template>
 
-<style lang="sass">
-	.user-plan__add-lesson .datepicker
-		text-align: left
+<style lang="sass" scoped>
+	.wnl-table__cell--datepicker
+		width: 240px
 </style>
 
 <script>

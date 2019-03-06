@@ -18,7 +18,9 @@ class QuizSet extends Model
 			'quiz_question_quiz_set',
 			'quiz_set_id',
 			'quiz_question_id'
-		);
+		)
+			->withPivot('order_number')
+			->orderBy('pivot_order_number');
 	}
 
 	public function syncQuestions($questionsIds)

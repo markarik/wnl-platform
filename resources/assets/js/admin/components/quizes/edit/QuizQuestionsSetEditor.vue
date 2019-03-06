@@ -56,7 +56,7 @@
 			</button>
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="quiz-questions-admin" v-if="form.quiz_questions">
-				<draggable v-model="form.quiz_questions" @start="drag=true" @end="drag=false">
+				<wnl-draggable v-model="form.quiz_questions" @start="drag=true" @end="drag=false">
 					<wnl-quiz-questions-set-list-item
 						v-for="questionId in form.quiz_questions"
 						:key="questionId"
@@ -64,7 +64,7 @@
 						:content="getQuizQuestionContent(questionId)"
 						@remove="removeQuestion(questionId)"
 					/>
-				</draggable>
+				</wnl-draggable>
 			</div>
 		</form>
 	</div>
@@ -110,7 +110,7 @@
 <script>
 import {isEqual} from 'lodash';
 import {mapGetters, mapActions} from 'vuex';
-import draggable from 'vuedraggable';
+import WnlDraggable from 'vuedraggable';
 
 import Form from 'js/classes/forms/Form';
 import {getApiUrl} from 'js/utils/env';
@@ -126,7 +126,7 @@ export default {
 		WnlQuill,
 		WnlSelect,
 		WnlQuizQuestionsSetListItem,
-		draggable,
+		WnlDraggable,
 	},
 	props: ['quizQuestionsSetId'],
 	data() {
@@ -178,7 +178,10 @@ export default {
 			this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
 		},
 		removeQuestion(questionId) {
-			this.form.quiz_questions = this.form.quiz_questions.filter(id => id !== questionId);
+			let questions = this.form.quiz_questions;
+
+			let index = questions.findIndex(id => id === questionId);
+			questions.splice(index, 1)
 		},
 		quizQuestionsSetFormSubmit() {
 			if (!this.hasChanged) {

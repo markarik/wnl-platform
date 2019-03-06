@@ -20,14 +20,14 @@
 				</div>
 				<table class="table is-fullwidth">
 					<tr>
-						<th><abbr title="Lesson name">Lekcja</abbr></th>
-						<th><abbr title="Old date">Stara data</abbr></th>
-						<th><abbr title="New date">Nowa data</abbr></th>
+						<th>Lekcja</th>
+						<th>Stara data</th>
+						<th>Nowa data</th>
 					</tr>
 					<tr v-for="(manualStartDate, index) in sortedManualStartDates" :key="index">
-						<th title="Lesson name">{{ manualStartDate.lessonName }}</th>
-						<th title="Old date">{{ manualStartDate.oldDate }}</th>
-						<th title="New date">{{ manualStartDate.formatedStartDate }}</th>
+						<td>{{ manualStartDate.lessonName }}</td>
+						<td>{{ manualStartDate.oldDate }}</td>
+						<td>{{ manualStartDate.formatedStartDate }}</td>
 					</tr>
 				</table>
 				<div class="accept-plan">

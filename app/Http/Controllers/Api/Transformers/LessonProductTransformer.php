@@ -15,10 +15,9 @@ class LessonProductTransformer extends ApiTransformer
 	public function transform(LessonProduct $lessonProduct)
 	{
 		$data = [
-			'id'                    => $lessonProduct->id,
-			'user_id'               => $lessonProduct->product_id,
-			'lesson_id'             => $lessonProduct->lesson_id,
-			'start_date'            => $lessonProduct->start_date,
+			'product_id' => $lessonProduct->product_id,
+			'lesson_id' => $lessonProduct->lesson_id,
+			'start_date' => $lessonProduct->start_date,
 		];
 
 		return $data;

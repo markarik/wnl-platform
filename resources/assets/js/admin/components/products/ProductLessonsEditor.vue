@@ -21,10 +21,17 @@
 				<tr v-for="productLesson in visibleProductLessons" :key="productLesson.id">
 					<td>{{productLesson.lesson_id}}</td>
 					<td>{{productLesson.lesson}}</td>
-					<td>{{productLesson.start_date}}</td>
+					<td>
+						<wnl-datepicker
+							name="start_date"
+							:config="datepickerConfig" :value="productLesson.start_date"
+							@onChange="onDateChange($event, productLesson)"
+						/>
+					</td>
 				</tr>
 				</tbody>
 			</table>
+			<a class="button button is-primary is-outlined is-big" @click="submitPlan">Zapisz Zmiany</a>
 		</template>
 		<wnl-text-loader v-else-if="loading">Ładuję plan...</wnl-text-loader>
 		<p v-else>
@@ -120,7 +127,14 @@ export default {
 			loading: false,
 			lessons: [],
 			selectedLessons: [],
-			lessonInput: ''
+			lessonInput: '',
+			datepickerConfig: {
+				altInput: true,
+				enableTime: true,
+				dateFormat: 'U',
+				altFormat: 'Y-m-d H:i',
+				time_24hr: true,
+			},
 		};
 	},
 	computed: {
@@ -169,33 +183,6 @@ export default {
 			const index = this.selectedLessons.findIndex(selectedLesson => selectedLesson.id === lesson.id);
 			this.selectedLessons.splice(index, 1);
 		},
-		async addLessons() {
-			try {
-				await axios.put(getApiUrl(`user_lesson/${this.user.id}/batch`), {
-					manual_start_dates: this.selectedLessons.map(lesson => {
-						return {
-							lessonId: lesson.id,
-							startDate: lesson.startDate
-						};
-					}),
-					timezone: momentTimezone.tz.guess(),
-				});
-				this.addAutoDismissableAlert({
-					type: 'success',
-					text: 'Dodano'
-				});
-				this.loading = true;
-				this.productLessons = await this.getProductLessons();
-				this.selectedLessons = [];
-				this.loading = false;
-			} catch (e) {
-				this.addAutoDismissableAlert({
-					type: 'error',
-					text: 'Oho, coś poszłó nie tak. Lekcje nie zostały dodane'
-				});
-				$wnl.logger.capture(e);
-			}
-		},
 		async getProductLessons() {
 			const productLessonResponse = await axios.get(getApiUrl(`lesson_product/${this.id}?include=lessons`));
 			const { data: {included, ...productLessons}} = productLessonResponse;
@@ -207,11 +194,26 @@ export default {
 			}
 
 			return productLessonsList.map(productLesson => {
+				console.log(productLesson.start_date);
 				return {
 					...productLesson,
-					start_date: moment(productLesson.start_date.date).format('ll'),
+					start_date: moment.utc(productLesson.start_date.date).toDate(),
 					lesson: included.lessons[productLesson.lesson_id].name
 				};
+			});
+		},
+		onDateChange(value, productLesson) {
+			console.log(value);
+			productLesson.start_date = value[0];
+		},
+		async submitPlan() {
+			await axios.put(getApiUrl(`lesson_product/${this.id}`), {
+				lessons: this.productLessons.map(productLesson => {
+					return {
+						lesson_id: productLesson.lesson_id,
+						start_date: moment.utc(productLesson.start_date).unix()
+					};
+				})
 			});
 		}
 	},

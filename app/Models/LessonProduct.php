@@ -12,13 +12,4 @@ class LessonProduct extends Pivot
 	public function lesson() {
 		return $this->belongsTo('\App\Models\Lesson');
 	}
-
-	// https://laracasts.com/discuss/channels/laravel/timestamps-error-when-usingpivotmodel
-	public function getCreatedAtColumn() {
-		return 'created_at';
-	}
-
-	public function getUpdatedAtColumn() {
-		return 'updated_at';
-	}
 }

@@ -26,6 +26,7 @@ class UpdateLessonProduct extends FormRequest
     public function rules()
     {
         return [
+            'lessons' => 'array|required',
             'lessons.*.start_date' => 'integer|required',
             'lessons.*.lesson_id' => 'integer|required|exists:lessons,id'
         ];

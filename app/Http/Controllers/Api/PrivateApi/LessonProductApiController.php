@@ -25,7 +25,7 @@ class LessonProductApiController extends ApiController
 	public function putBatch(UpdateLessonProduct $request, $productId)
 	{
 		$product = Product::find($productId);
-		if (empty($productId)) {
+		if (empty($product)) {
 			return $this->respondNotFound();
 		}
 
@@ -41,7 +41,7 @@ class LessonProductApiController extends ApiController
 
 	public function deleteLesson($productId, $lessonId) {
 		$product = Product::find($productId);
-		if (empty($productId)) {
+		if (empty($product)) {
 			return $this->respondNotFound();
 		}
 

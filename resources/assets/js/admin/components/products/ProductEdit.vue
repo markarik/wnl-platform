@@ -7,7 +7,6 @@
 				:resource-route="formResourceRoute"
 				:suppress-enter="true"
 				@submitSuccess="onSubmitSucess"
-				@change="onChange"
 				class="product-form"
 		>
 			<h4>Produkt #{{ id }}</h4>
@@ -134,9 +133,6 @@ export default {
 			if (!this.isEdit) {
 				this.$router.push({name: 'product-edit', params: {id: data.id}});
 			}
-		},
-		escapeArgumentKey(key) {
-			return `{{${key}}}`;
 		},
 	},
 	async mounted() {

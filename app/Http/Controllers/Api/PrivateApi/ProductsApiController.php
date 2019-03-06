@@ -26,14 +26,14 @@ class ProductsApiController extends ApiController
 
 		$product->update($this->transformRequestParams($request));
 
-		return $this->respondOk();
+		return $this->transformAndRespond($product);
 	}
 
 	public function post(CreateProduct $request)
 	{
 		$product = Product::create($this->transformRequestParams($request));
 
-		$this->transformAndRespond($product);
+		return $this->transformAndRespond($product);
 	}
 
 	public function getVatRates()

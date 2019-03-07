@@ -21,7 +21,6 @@ const state = {
 // Getters
 const getters = {
 	isReady: state => state.ready,
-	allLessons: state => state.lessons,
 };
 
 // Mutations
@@ -39,8 +38,8 @@ const mutations = {
 
 // Actions
 const actions = {
-	fetchAllLessons({ commit, getters }) {
-		if (_.isEmpty(getters.allLessons)) {
+	fetchAllLessons({ commit, state }) {
+		if (_.isEmpty(state.lessons)) {
 			axios.get(getApiUrl('lessons/all'))
 				.then((response) => {
 					commit(types.SETUP_LESSONS, response.data);

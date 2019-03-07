@@ -7,8 +7,7 @@
 		<template v-if="isGroup">
 			<span class="item-toggle" @click="isOpen = !isOpen">
 				<span class="icon is-small">
-					<i class="toggle fa fa-angle-down"
-						 :class="{'fa-rotate-180': isOpen}"></i>
+					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
 				</span>
 				<span>{{node.model.name}}</span>
 				<span class="subitems-count">
@@ -34,7 +33,6 @@
 					<wnl-datepicker
 						:class="{'hasColorBackground': isEven}"
 						:value="startDate"
-						:subitem-id="node.model.id"
 						:config="datepickerConfig"
 						@onChange="(payload) => $emit('change', {newStartDate: payload, lesson: node.model})"
 					/>

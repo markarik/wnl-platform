@@ -143,10 +143,6 @@ export default {
 				text: this.$i18n.t('lessonsAvailability.alertError'),
 				type: 'error',
 			},
-			defaultDateConfig: {
-				altInput: true,
-				disableMobile: true,
-			},
 		};
 	},
 	computed: {

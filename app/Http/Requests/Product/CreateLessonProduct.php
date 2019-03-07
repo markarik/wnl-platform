@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Auth;
 use Illuminate\Validation\Rule;
 
-class UpdateLessonProduct extends FormRequest
+class CreateLessonProduct extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -27,6 +27,7 @@ class UpdateLessonProduct extends FormRequest
 	{
 		return [
 			'start_date' => 'integer|required',
+			'lesson_id' => 'integer|required|exists:lessons,id'
 		];
 	}
 }

@@ -21,43 +21,27 @@ class LessonProductTest extends ApiTestCase
 	{
 		$user = factory(User::class)->create();
 		$product = factory(Product::class)->create();
+		$lesson = factory(Lesson::class)->create();
+		LessonProduct::create(['lesson_id' => $lesson->id, 'product_id' => $product->id]);
 
 		$this
 			->actingAs($user)
-			->json('PUT', $this->url("/lesson_product/{$product->id}"))
+			->json('PUT', $this->url("/lesson_product/{$product->id}/{$lesson->id}"))
 			->assertStatus(403);
 	}
 
 	/** @test */
-	public function lessons_array_must_be_set_on_input()
-	{
-		$user = factory(User::class)->create();
-		$user->roles()->attach(Role::byName('admin'));
-		$product = factory(Product::class)->create();
-
-		$this
-			->actingAs($user)
-			->json('PUT', $this->url("/lesson_product/{$product->id}"))
-			->assertStatus(422);
-	}
-
-	/** @test */
-	public function lessons_array_must_contain_existing_lesson()
+	public function update_must_specify_start_date()
 	{
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));
 		$product = factory(Product::class)->create();
 		$lesson = factory(Lesson::class)->create();
-		$nextId = $lesson->id + 1;
+		LessonProduct::create(['lesson_id' => $lesson->id, 'product_id' => $product->id]);
 
 		$this
 			->actingAs($user)
-			->json('PUT', $this->url("/lesson_product/{$product->id}"), [
-				'lessons' => [
-					'lesson_id' => $nextId,
-					'start_date' => '111'
-				]
-			])
+			->json('PUT', $this->url("/lesson_product/{$product->id}/{$lesson->id}"))
 			->assertStatus(422);
 	}
 
@@ -72,10 +56,9 @@ class LessonProductTest extends ApiTestCase
 
 		$this
 			->actingAs($user)
-			->json('PUT', $this->url("/lesson_product/{$product->id}"), [
+			->json('PUT', $this->url("/lesson_product/{$product->id}/{$lesson->id}"), [
 				'lessons' => [
 					[
-						'lesson_id' => $lesson->id,
 						'start_date' => 'hello'
 					]
 				]
@@ -94,89 +77,50 @@ class LessonProductTest extends ApiTestCase
 
 		$this
 			->actingAs($user)
-			->json('PUT', $this->url("/lesson_product/{$nextId}"), [
-				'lessons' => [
-					[
-						'lesson_id' => $lesson->id,
-						'start_date' => '123456'
-					]
-				]
+			->json('PUT', $this->url("/lesson_product/{$nextId}/{$lesson->id}"), [
+				'start_date' => '123456'
 			])
 			->assertStatus(404);
 	}
 
 	/** @test */
-	public function lesson_already_attached_to_product_is_updated()
+	public function only_admin_can_attach_lesson_to_product()
+	{
+		$user = factory(User::class)->create();
+		$product = factory(Product::class)->create();
+		$lesson = factory(Lesson::class)->create();
+		$startDate = '654321';
+
+		$this
+			->actingAs($user)
+			->json('POST', $this->url("/lesson_product/{$product->id}"), [
+				'lesson_id' => $lesson->id,
+				'start_date' => $startDate
+			])
+			->assertStatus(403);
+	}
+
+	/** @test */
+	public function attach_lesson_to_product()
 	{
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));
 		$product = factory(Product::class)->create();
 		$lesson = factory(Lesson::class)->create();
-		$createdLessonProduct = LessonProduct::create(
-			['lesson_id' => $lesson->id, 'product_id' => $product->id, 'start_date' => '123456']
-		);
-		$updatedStartDate = '654321';
+		$startDate = '654321';
 
 		$this
 			->actingAs($user)
-			->json('PUT', $this->url("/lesson_product/{$product->id}"), [
-				'lessons' => [
-					[
-						'lesson_id' => $lesson->id,
-						'start_date' => $updatedStartDate
-					]
-				]
+			->json('POST', $this->url("/lesson_product/{$product->id}"), [
+				'lesson_id' => $lesson->id,
+				'start_date' => $startDate
 			])
 			->assertStatus(200);
 
 		$this->assertDatabaseHas('lesson_product', [
-			'id' => $createdLessonProduct->id,
-			'lesson_id' => $createdLessonProduct->lesson_id,
-			'product_id' => $createdLessonProduct->product_id,
-			'start_date' => Carbon::createFromTimestamp($updatedStartDate)
-		]);
-	}
-
-	/** @test */
-	public function not_attached_lesson_is_added()
-	{
-		$user = factory(User::class)->create();
-		$user->roles()->attach(Role::byName('admin'));
-		$product = factory(Product::class)->create();
-		$lessons = factory(Lesson::class, 2)->create();
-		$createdLessonProduct = LessonProduct::create(
-			['lesson_id' => $lessons[0]->id, 'product_id' => $product->id, 'start_date' => '123456']
-		);
-		$updatedStartDate = '654321';
-
-		$this
-			->actingAs($user)
-			->json('PUT', $this->url("/lesson_product/{$product->id}"), [
-				'lessons' => [
-					[
-						'lesson_id' => $lessons[0]->id,
-						'start_date' => $updatedStartDate
-					],
-					[
-						'lesson_id' => $lessons[1]->id,
-						'start_date' => $updatedStartDate
-					]
-				]
-			])
-			->assertStatus(200);
-
-		$this->assertDatabaseHas('lesson_product', [
-			'id' => $createdLessonProduct->id,
-			'lesson_id' => $createdLessonProduct->lesson_id,
-			'product_id' => $createdLessonProduct->product_id,
-			'start_date' => Carbon::createFromTimestamp($updatedStartDate)
-		]);
-
-		$this->assertDatabaseHas('lesson_product', [
-			'id' => $createdLessonProduct->id + 1,
-			'lesson_id' => $lessons[1]->id,
+			'lesson_id' => $lesson->id,
 			'product_id' => $product->id,
-			'start_date' => Carbon::createFromTimestamp($updatedStartDate)
+			'start_date' => Carbon::createFromTimestamp($startDate)
 		]);
 	}
 

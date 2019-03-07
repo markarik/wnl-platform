@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Requests\Product\CreateLessonProduct;
 use App\Http\Requests\Product\UpdateLessonProduct;
 use App\Models\LessonProduct;
 use App\Models\Product;
@@ -22,21 +23,36 @@ class LessonProductApiController extends ApiController
 		return $this->transformAndRespond($result);
 	}
 
-	public function putBatch(UpdateLessonProduct $request, $productId)
+	public function put(UpdateLessonProduct $request, $productId, $lessonId)
+	{
+		$lessonProduct = LessonProduct::where([
+			'lesson_id' => $lessonId,
+			'product_id' => $productId,
+		])->first();
+
+		if (empty($lessonProduct)) {
+			return $this->respondNotFound();
+		}
+
+		$lessonProduct['start_date'] = Carbon::createFromTimestamp($request['start_date']);
+
+		return $this->transformAndRespond($lessonProduct);
+	}
+
+	public function post(CreateLessonProduct $request, $productId)
 	{
 		$product = Product::find($productId);
 		if (empty($product)) {
 			return $this->respondNotFound();
 		}
 
-		foreach ($request->lessons as $lesson) {
-			LessonProduct::updateOrCreate([
-				'lesson_id' => $lesson['lesson_id'],
-				'product_id' => $product->id
-			], ['start_date' => Carbon::createFromTimestamp($lesson['start_date'])]);
-		}
+		$lessonProduct = LessonProduct::create([
+			'lesson_id' => $request['lesson_id'],
+			'product_id' => $product->id,
+			'start_date' => Carbon::createFromTimestamp($request['start_date'])
+		]);
 
-		return $this->respondOk();
+		return $this->transformAndRespond($lessonProduct);
 	}
 
 	public function deleteLesson($productId, $lessonId) {

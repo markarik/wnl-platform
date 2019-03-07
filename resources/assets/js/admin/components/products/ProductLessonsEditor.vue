@@ -50,29 +50,49 @@
 			<div class="level wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item big strong">
-						Dodaj Lekcje
+						Dodaj Lekcję
 					</div>
 				</div>
 			</div>
+			<label class="label">Nazwa lekcji</label>
 			<wnl-autocomplete
+				v-if="!newLesson.lessonId"
 				class="margin bottom big"
 				v-model="lessonInput"
 				placeholder="wpisz nazwę aby wyszukać..."
-				label="Wyszukaj Lekcję"
 				:items="autocompleteLessonsItems"
-				@change="addLesson"
 				:is-down="false"
+				@change="onNewLessonSelect"
 			>
 				<span class="lesson-autocomplete-item" slot-scope="row">{{row.item.id}}. {{row.item.name}}</span>
 			</wnl-autocomplete>
+			<div v-else>
+				{{newLesson.name}}
+				<span
+					class="icon clickable is-small margin left"
+					@click="newLesson.lessonId = null"
+				><i class="fa fa-close"></i>
+				</span>
+			</div>
+			<label class="label margin top">Data otwarcia</label>
+			<wnl-datepicker
+				class="new-lesson-datepicker"
+				name="start_date"
+				:config="datepickerConfig"
+				:value="newLesson.startDate"
+				@onChange="value => newLesson.startDate = value[0]"
+			/>
 		</div>
-		<a class="button button is-primary is-outlined is-big" @click="submitPlan">Zapisz</a>
+		<button class="button is-primary is-outlined is-big margin top" @click="addLesson" :disabled="!newLesson.lessonId">Dodaj lekcję</button>
 	</div>
 </template>
 
 <style lang="sass" scoped>
 	.wnl-table__cell--datepicker
 		width: 240px
+
+	/deep/ .new-lesson-datepicker
+		width: auto
 </style>
 
 <script>
@@ -129,7 +149,12 @@ export default {
 			activeSort: {
 				activeSortColumnName: 'start_date',
 				sortDirection: 'asc'
-			}
+			},
+			newLesson: {
+				startDate: new Date(),
+				lessonId: null,
+				name: null,
+			},
 		};
 	},
 	computed: {
@@ -159,16 +184,30 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', ['fetchAllLessons']),
-		addLesson(lesson) {
-			if (!this.productLessons.some(({lesson_id}) => lesson_id === lesson.id)) {
-				this.productLessons.push({
-					lesson_name: lesson.name,
-					lesson_id: lesson.id,
-					start_date: new Date()
-				});
-			}
+		onNewLessonSelect(lesson) {
+			this.newLesson.lessonId = lesson.id;
+			this.newLesson.name = lesson.name;
 
 			this.lessonInput = '';
+		},
+		async addLesson() {
+			if (!this.productLessons.some(({lesson_id}) => lesson_id === this.newLesson.lessonId)) {
+				await axios.post(getApiUrl(`lesson_product/${this.id}`), {
+					lesson_id: this.newLesson.lessonId,
+					start_date: moment.utc(this.newLesson.startDate).unix(),
+				});
+				this.productLessons.push({
+					lesson_name: this.newLesson.name,
+					lesson_id: this.newLesson.lessonId,
+					start_date: this.newLesson.startDate,
+				});
+
+				this.newLesson = {
+					startDate: new Date(),
+					lessonId: null,
+					name: null,
+				};
+			}
 		},
 		async removeLesson(productLesson) {
 			try {
@@ -204,24 +243,20 @@ export default {
 				return productLessonA.start_date - productLessonB.start_date;
 			});
 		},
-		onDateChange(value, productLesson) {
-			productLesson.start_date = value[0];
-		},
-		async submitPlan() {
+		async onDateChange(value, productLesson) {
 			try {
-				await axios.put(getApiUrl(`lesson_product/${this.id}`), {
-					lessons: this.productLessons.map(productLesson => {
-						return {
-							lesson_id: productLesson.lesson_id,
-							start_date: moment.utc(productLesson.start_date).unix()
-						};
-					})
+				await axios.put(getApiUrl(`lesson_product/${this.id}/${productLesson.lesson_id}`), {
+					start_date: moment.utc(value[0]).unix(),
 				});
+
+				productLesson.start_date = value[0];
+
 				this.addAutoDismissableAlert({
 					text: 'Zapisano!',
 					type: 'success'
 				});
 			} catch (e) {
+
 				this.addAutoDismissableAlert({
 					text: 'Nie udało się zapisać zmian.',
 					type: 'error'

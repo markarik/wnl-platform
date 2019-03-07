@@ -78,7 +78,7 @@
 <script>
 import moment from 'moment';
 import {nextTick} from 'vue';
-import {mapActions} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 import {orderBy} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
@@ -102,7 +102,6 @@ export default {
 			productLessons: [],
 			filterPhrase: '',
 			loading: false,
-			lessons: [],
 			lessonInput: '',
 			datepickerConfig: {
 				altInput: true,
@@ -134,6 +133,7 @@ export default {
 		};
 	},
 	computed: {
+		...mapState('lessons', ['lessons']),
 		visibleProductLessons() {
 			const {sortDirection: sort, activeSortColumnName: key} = this.activeSort;
 
@@ -158,6 +158,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('lessons', ['fetchAllLessons']),
 		addLesson(lesson) {
 			if (!this.productLessons.some(({lesson_id}) => lesson_id === lesson.id)) {
 				this.productLessons.push({
@@ -193,10 +194,11 @@ export default {
 			}
 
 			return productLessonsList.map(productLesson => {
+				const matchingLesson = this.lessons.find(lesson => productLesson.lesson_id === lesson.id) || {};
 				return {
 					...productLesson,
 					start_date: new Date(productLesson.start_date * 1000),
-					lesson_name: this.lessons.find(lesson => productLesson.lesson_id === lesson.id).name
+					lesson_name: matchingLesson.name
 				};
 			}).sort((productLessonA, productLessonB) => {
 				return productLessonA.start_date - productLessonB.start_date;
@@ -234,8 +236,7 @@ export default {
 	async mounted() {
 		this.loading = true;
 		try {
-			const lessonsResponse = await axios.get(getApiUrl(('lessons/all')));
-			this.lessons = lessonsResponse.data;
+			await this.fetchAllLessons();
 			this.productLessons = await this.getProductLessons();
 
 			nextTick(() => {

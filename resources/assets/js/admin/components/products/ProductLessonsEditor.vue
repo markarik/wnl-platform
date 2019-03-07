@@ -45,53 +45,13 @@
 		<p v-else>
 			Ten produkt nie ma żadynch lekcji
 		</p>
-		<div>
-			<div class="level wnl-screen-title">
-				<div class="level-left">
-					<div class="level-item big strong">
-						Dodaj Lekcję
-					</div>
-				</div>
-			</div>
-			<label class="label">Nazwa lekcji</label>
-			<wnl-autocomplete
-				v-if="!newLesson.lessonId"
-				class="margin bottom big"
-				v-model="lessonInput"
-				placeholder="wpisz nazwę aby wyszukać..."
-				:items="autocompleteLessonsItems"
-				:is-down="false"
-				@change="onNewLessonSelect"
-			>
-				<span class="lesson-autocomplete-item" slot-scope="row">{{row.item.id}}. {{row.item.name}}</span>
-			</wnl-autocomplete>
-			<div v-else>
-				{{newLesson.name}}
-				<span
-					class="icon clickable is-small margin left"
-					@click="newLesson.lessonId = null"
-				><i class="fa fa-close"></i>
-				</span>
-			</div>
-			<label class="label margin top">Data otwarcia</label>
-			<wnl-datepicker
-				class="new-lesson-datepicker"
-				name="start_date"
-				:config="datepickerConfig"
-				:value="newLesson.startDate"
-				@onChange="value => newLesson.startDate = value[0]"
-			/>
-		</div>
-		<button class="button is-primary is-outlined is-big margin top" @click="addLesson" :disabled="!newLesson.lessonId">Dodaj lekcję</button>
+		<wnl-product-lessons-editor-add-lesson :product-lessons="productLessons" @addLesson="onAddLesson" />
 	</div>
 </template>
 
 <style lang="sass" scoped>
 	.wnl-table__cell--datepicker
 		width: 240px
-
-	/deep/ .new-lesson-datepicker
-		width: auto
 </style>
 
 <script>
@@ -102,14 +62,14 @@ import {orderBy} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
 import { swalConfig } from 'js/utils/swal';
-import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlDatepicker from 'js/components/global/Datepicker';
 import WnlSortableTable from 'js/admin/components/lists/SortableTable';
+import WnlProductLessonsEditorAddLesson from 'js/admin/components/products/ProductLessonsEditorAddLesson';
 
 export default {
 	name: 'ProductLessonEditor',
 	components: {
-		WnlAutocomplete, WnlDatepicker, WnlSortableTable
+		WnlDatepicker, WnlSortableTable, WnlProductLessonsEditorAddLesson
 	},
 	props: {
 		id: {
@@ -122,7 +82,6 @@ export default {
 			productLessons: [],
 			filterPhrase: '',
 			loading: false,
-			lessonInput: '',
 			datepickerConfig: {
 				altInput: true,
 				enableTime: true,
@@ -150,11 +109,6 @@ export default {
 				activeSortColumnName: 'start_date',
 				sortDirection: 'asc'
 			},
-			newLesson: {
-				startDate: new Date(),
-				lessonId: null,
-				name: null,
-			},
 		};
 	},
 	computed: {
@@ -169,44 +123,21 @@ export default {
 
 			return orderBy(filteredLessons, key, [sort]);
 		},
-		autocompleteLessonsItems() {
-			if (this.lessonInput === '') {
-				return [];
-			}
-
-			return this.lessons
-				.filter(lesson => !this.productLessons.find(({lesson_id}) => lesson_id === lesson.id)
-					&& lesson.name.toLowerCase().includes(this.lessonInput.toLowerCase())
-				)
-				.slice(0, 10);
-		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', ['fetchAllLessons']),
-		onNewLessonSelect(lesson) {
-			this.newLesson.lessonId = lesson.id;
-			this.newLesson.name = lesson.name;
-
-			this.lessonInput = '';
-		},
-		async addLesson() {
-			if (!this.productLessons.some(({lesson_id}) => lesson_id === this.newLesson.lessonId)) {
+		async onAddLesson(lesson) {
+			if (!this.productLessons.some(({lesson_id}) => lesson_id === lesson.lessonId)) {
 				await axios.post(getApiUrl(`lesson_product/${this.id}`), {
-					lesson_id: this.newLesson.lessonId,
-					start_date: moment.utc(this.newLesson.startDate).unix(),
+					lesson_id: lesson.lessonId,
+					start_date: moment.utc(lesson.startDate).unix(),
 				});
 				this.productLessons.push({
-					lesson_name: this.newLesson.name,
-					lesson_id: this.newLesson.lessonId,
-					start_date: this.newLesson.startDate,
+					lesson_name: lesson.name,
+					lesson_id: lesson.lessonId,
+					start_date: lesson.startDate,
 				});
-
-				this.newLesson = {
-					startDate: new Date(),
-					lessonId: null,
-					name: null,
-				};
 			}
 		},
 		async performLessonRemoval(productLesson) {

@@ -289,3 +289,24 @@ $factory->define(App\Models\TaxonomyTerm::class, function (Faker\Generator $fake
 		},
 	];
 });
+
+$factory->define(App\Models\Product::class, function (Faker\Generator $faker) {
+	return [
+		'name'          => $faker->name,
+		'invoice_name'  => $faker->name,
+		'slug'          => $faker->uuid,
+		'price'         => $faker->randomFloat(2, 100, 5000),
+		'quantity'      => $faker->randomNumber(4),
+		'initial'       => $faker->randomNumber(4),
+		'delivery_date' => $faker->dateTime,
+		'course_start'  => $faker->dateTime,
+		'course_end'    => $faker->dateTime,
+		'access_start'  => $faker->dateTime,
+		'access_end'    => $faker->dateTime,
+		'signups_start' => $faker->dateTime,
+		'signups_end'   => $faker->dateTime,
+		'signups_close' => $faker->dateTime,
+		'vat_rate'      => 23,
+		'vat_note'      => '',
+	];
+});

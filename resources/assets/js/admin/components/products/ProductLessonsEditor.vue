@@ -9,39 +9,38 @@
 		</div>
 		<template v-if="productLessons.length">
 			<input v-model="filterPhrase" class="input margin bottom" placeholder="filtruj..." ref="filterInput">
-			<table class="table is-bordered">
-				<thead>
-				<tr>
-					<th>ID lekcji</th>
-					<th>Lekcja</th>
-					<th>Data otwarcia</th>
-					<th>Akcje</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr v-for="productLesson in visibleProductLessons" :key="productLesson.id">
-					<td>{{productLesson.lesson_id}}</td>
-					<td>{{productLesson.lesson_name}}</td>
-					<td class="wnl-table__cell--datepicker">
-						<wnl-datepicker
-							name="start_date"
-							:key="productLesson.lesson_id"
-							:config="datepickerConfig" :value="productLesson.start_date"
-							@onChange="onDateChange($event, productLesson)"
-						/>
-					</td>
-					<td>
-						<button
-							class="button is-danger"
-							type="button"
-							@click="removeLesson(productLesson)"
-						>
-							<span class="icon"><i class="fa fa-trash"></i></span>
-						</button>
-					</td>
-				</tr>
+			<wnl-sortable-table
+				:columns="tableColumns"
+				:active-sort-column-name="activeSort.activeSortColumnName"
+				:sort-direction="activeSort.sortDirection"
+				:list="visibleProductLessons"
+				@changeOrder="onSort"
+			>
+				<tbody slot-scope="table" slot="tbody">
+					<tr v-for="productLesson in table.list" :key="productLesson.id">
+						<td>{{productLesson.lesson_id}}</td>
+						<td>{{productLesson.lesson_name}}</td>
+						<td class="wnl-table__cell--datepicker">
+							<wnl-datepicker
+									name="start_date"
+									:key="productLesson.lesson_id"
+									:config="datepickerConfig"
+									:value="productLesson.start_date"
+									@onChange="onDateChange($event, productLesson)"
+							/>
+						</td>
+						<td>
+							<button
+									class="button is-danger"
+									type="button"
+									@click="removeLesson(productLesson)"
+							>
+								<span class="icon"><i class="fa fa-trash"></i></span>
+							</button>
+						</td>
+					</tr>
 				</tbody>
-			</table>
+			</wnl-sortable-table>
 		</template>
 		<wnl-text-loader v-else-if="loading">Ładuję plan...</wnl-text-loader>
 		<p v-else>
@@ -80,15 +79,17 @@
 import moment from 'moment';
 import {nextTick} from 'vue';
 import {mapActions} from 'vuex';
+import {orderBy} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlDatepicker from 'js/components/global/Datepicker';
+import WnlSortableTable from 'js/admin/components/lists/SortableTable';
 
 export default {
 	name: 'ProductLessonEditor',
 	components: {
-		WnlAutocomplete, WnlDatepicker
+		WnlAutocomplete, WnlDatepicker, WnlSortableTable
 	},
 	props: {
 		id: {
@@ -111,13 +112,38 @@ export default {
 				altFormat: 'Y-m-d H:i',
 				time_24hr: true,
 			},
+			tableColumns: [
+				{
+					name: 'lesson_id',
+					label: 'ID',
+				}, {
+					name: 'lesson_name',
+					label: 'Nazwa',
+				}, {
+					name: 'start_date',
+					label: 'Data otwarcia'
+				}, {
+					name: 'actions',
+					label: 'Akcje',
+					sortable: false
+				}
+			],
+			activeSort: {
+				activeSortColumnName: 'start_date',
+				sortDirection: 'asc'
+			}
 		};
 	},
 	computed: {
 		visibleProductLessons() {
-			if (!this.filterPhrase) return this.productLessons;
+			const {sortDirection: sort, activeSortColumnName: key} = this.activeSort;
 
-			return this.productLessons.filter(({lesson}) => lesson.toLowerCase().startsWith(this.filterPhrase.toLowerCase()));
+			const filteredLessons = this.filterPhrase ?
+				this.productLessons
+					.filter(({lesson_name}) => lesson_name.toLowerCase().startsWith(this.filterPhrase.toLowerCase()))
+				: this.productLessons;
+
+			return orderBy(filteredLessons, key, [sort]);
 		},
 		autocompleteLessonsItems() {
 			if (this.lessonInput === '') {
@@ -173,6 +199,8 @@ export default {
 					start_date: new Date(productLesson.start_date * 1000),
 					lesson_name: included.lessons[productLesson.lesson_id].name
 				};
+			}).sort((productLessonA, productLessonB) => {
+				return productLessonA.start_date - productLessonB.start_date;
 			});
 		},
 		onDateChange(value, productLesson) {
@@ -201,6 +229,9 @@ export default {
 				});
 				$wnl.logger.capture(e);
 			}
+		},
+		onSort(sort) {
+			this.activeSort = sort;
 		}
 	},
 	async mounted() {

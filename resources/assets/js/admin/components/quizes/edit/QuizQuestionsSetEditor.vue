@@ -260,7 +260,7 @@ export default {
 		if (this.isEdit) {
 			this.populateForm();
 		} else {
-			this.formPopulated = true
+			this.formPopulated = true;
 		}
 		this.setupLessons();
 	},

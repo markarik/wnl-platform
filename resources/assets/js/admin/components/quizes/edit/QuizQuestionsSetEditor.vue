@@ -55,7 +55,7 @@
 			>Dodaj
 			</button>
 			<h4 class="title margin top">Lista pytań</h4>
-			<div class="quiz-questions-admin" v-if="form.quiz_questions">
+			<div class="quiz-questions-admin" v-if="form.quiz_questions && formPopulated">
 				<wnl-draggable v-model="form.quiz_questions" @start="drag=true" @end="drag=false">
 					<wnl-quiz-questions-set-list-item
 						v-for="questionId in form.quiz_questions"
@@ -108,7 +108,7 @@
 </style>
 
 <script>
-import {isEqual} from 'lodash';
+import {isEqual, isEmpty} from 'lodash';
 import {mapGetters, mapActions} from 'vuex';
 import WnlDraggable from 'vuedraggable';
 import {ALERT_TYPES} from 'js/consts/alert';
@@ -138,8 +138,10 @@ export default {
 				lesson_id: null,
 				quiz_questions: [],
 			}),
+			quizQuestionsObjects: {},
 			quizQuestionInput: '',
 			loading: false,
+			formPopulated: false,
 		};
 	},
 	computed: {
@@ -164,10 +166,17 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', {setupLessons: 'setup'}),
 		getQuizQuestionContent(questionId) {
-			return Object.values(this.form.included.quiz_questions).find(question => question.id === questionId).text;
+			return Object.values(this.quizQuestionsObjects).find(question => question.id === questionId).text;
 		},
-		populateForm() {
-			this.form.populate(this.quizQuestionsSetResourceUrl);
+		async populateForm() {
+			const fetchedForm = await this.form.populate(this.quizQuestionsSetResourceUrl);
+
+			let includedQuestions = fetchedForm.included.quiz_questions;
+
+			if (includedQuestions) {
+				Object.assign(this.quizQuestionsObjects, includedQuestions);
+				this.formPopulated = true;
+			}
 		},
 		onDescriptionInput() {
 			this.form.description = this.$refs.descriptionEditor.editor.innerHTML;
@@ -182,6 +191,16 @@ export default {
 		quizQuestionsSetFormSubmit() {
 			if (!this.hasChanged) {
 				return false;
+			} else if (!this.form.lesson_id) {
+				return this.addAutoDismissableAlert({
+					text: 'Lekcja, której dotyczy zestaw nie może być pustym polem.',
+					type: ALERT_TYPES.ERROR
+				});
+			} else if (isEmpty(this.form.quiz_questions)) {
+				return this.addAutoDismissableAlert({
+					text: 'Zestaw musi posiadać chociaż jedno pytanie.',
+					type: ALERT_TYPES.ERROR
+				});
 			}
 
 			this.loading = true;
@@ -220,8 +239,8 @@ export default {
 			}
 
 			if (!this.form.quiz_questions.find(id => id === parsedQuestionId)) {
-				const fetchedQuestion = await axios.get(getApiUrl(`quiz_questions/${questionId}`))
-				this.form.included.quiz_questions[fetchedQuestion.data.id] = fetchedQuestion.data;
+				const fetchedQuestion = await axios.get(getApiUrl(`quiz_questions/${questionId}`));
+				this.quizQuestionsObjects[fetchedQuestion.data.id] = fetchedQuestion.data;
 				this.form.quiz_questions.push(fetchedQuestion.data.id);
 
 				this.addAutoDismissableAlert({
@@ -231,7 +250,7 @@ export default {
 			} else {
 				this.addAutoDismissableAlert({
 					text: 'Pytanie o tym numerze id znajduje się już w tym zestawie!',
-					type: ALERT_TYPES.SUCCESS
+					type: ALERT_TYPES.ERROR
 				});
 			}
 			this.quizQuestionInput = '';
@@ -240,6 +259,8 @@ export default {
 	mounted() {
 		if (this.isEdit) {
 			this.populateForm();
+		} else {
+			this.formPopulated = true
 		}
 		this.setupLessons();
 	},

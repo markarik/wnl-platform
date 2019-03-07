@@ -6,7 +6,7 @@
 			</div>
 		</div>
 		<wnl-upload
-		v-if="uploadEnabled"
+			v-if="uploadEnabled"
 			@success="onUploadSuccess"
 			endpoint="upload"
 			class="upload"

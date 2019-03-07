@@ -287,21 +287,33 @@ $factory->define(App\Models\TaxonomyTerm::class, function () {
 	];
 });
 
+$factory->define(App\Models\Product::class, function (Faker\Generator $faker) {
+	return [
+		'name'          => $faker->name,
+		'invoice_name'  => $faker->name,
+		'slug'          => $faker->uuid,
+		'price'         => $faker->randomFloat(2, 100, 5000),
+		'quantity'      => $faker->randomNumber(4),
+		'initial'       => $faker->randomNumber(4),
+		'delivery_date' => $faker->dateTime,
+		'course_start'  => $faker->dateTime,
+		'course_end'    => $faker->dateTime,
+		'access_start'  => $faker->dateTime,
+		'access_end'    => $faker->dateTime,
+		'signups_start' => $faker->dateTime,
+		'signups_end'   => $faker->dateTime,
+		'signups_close' => $faker->dateTime,
+		'vat_rate'      => 23,
+		'vat_note'      => '',
+	];
+});
+
 $factory->define(App\Models\Order::class, function () {
 	return [
 		'method' => 'transfer',
 		'product_id' => function () {
 			return factory(App\Models\Product::class)->create()->id;
 		}
-	];
-});
-
-$factory->define(App\Models\Product::class, function (Faker\Generator $faker) {
-	return [
-		'name' => $faker->catchPhrase,
-		'invoice_name' => $faker->company,
-		'price' => 1000,
-		'course_start' => \Carbon\Carbon::now()->subDays(100),
 	];
 });
 

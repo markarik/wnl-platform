@@ -16,14 +16,14 @@ class SelectProductController extends Controller
 			$participantCoupon = \Auth::user()->coupons()->where('slug', 'wnl-online-only')->count() > 0;
 		}
 
-		$products = Product::select()->get()->keyBy('slug');
-		$onsite = $products['wnl-online-onsite'];
-		$online = $products['wnl-online'];
+		$products = Product::all()->keyBy('slug');
+		$onsite = $products['wnl-online-onsite'] ?? null;
+		$online = $products['wnl-online'] ?? null;
 
-		return view('payment.select-product', [
-			'onsite' => $onsite,
-			'online' => $online,
-			'participantCoupon' => $participantCoupon
-		]);
+		if (!$onsite || !$online) {
+			return view('payment.no-product');
+		}
+
+		return view('payment.select-product', compact('online', 'onsite', 'participantCoupon'));
 	}
 }

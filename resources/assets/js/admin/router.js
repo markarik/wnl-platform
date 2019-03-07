@@ -28,6 +28,8 @@ import TagEditor from 'js/admin/components/tags/TagEditor';
 import ContentClassifier from 'js/admin/components/contentClassifier/ContentClassifier';
 import TaxonomiesList from 'js/admin/components/taxonomies/TaxonomiesList';
 import TaxonomyEditor from 'js/admin/components/taxonomies/TaxonomyEditor';
+import ProductsList from 'js/admin/components/products/ProductsList';
+import ProductEdit from 'js/admin/components/products/ProductEdit';
 
 Vue.use(Router);
 
@@ -183,6 +185,17 @@ let routes = [
 		name: 'taxonomy-edit',
 		path: '/admin/app/taxonomies/:id',
 		component: TaxonomyEditor,
+		props: true,
+	},
+	{
+		name: 'products',
+		path: '/admin/app/products',
+		component: ProductsList,
+	},
+	{
+		name: 'product-edit',
+		path: '/admin/app/product/:id',
+		component: ProductEdit,
 		props: true,
 	},
 	{

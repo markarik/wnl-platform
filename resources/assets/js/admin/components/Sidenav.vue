@@ -54,6 +54,10 @@
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'orders' }">Lista zamówień</router-link></li>
 		</ul>
+		<p class="menu-label">Produkty</p>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'products' }">Lista produktów</router-link></li>
+		</ul>
 	</aside>
 </template>
 

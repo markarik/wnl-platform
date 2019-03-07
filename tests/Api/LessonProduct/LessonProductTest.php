@@ -16,8 +16,7 @@ class LessonProductTest extends ApiTestCase
 {
 	use DatabaseTransactions;
 
-	/** @test */
-	public function only_admin_can_update_lesson_product()
+	public function testOnlyAdminCanUpdateLessonProduct()
 	{
 		$user = factory(User::class)->create();
 		$product = factory(Product::class)->create();
@@ -30,8 +29,7 @@ class LessonProductTest extends ApiTestCase
 			->assertStatus(403);
 	}
 
-	/** @test */
-	public function update_must_specify_start_date()
+	public function testUpdateMustSpecifyStartDate()
 	{
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));
@@ -45,8 +43,7 @@ class LessonProductTest extends ApiTestCase
 			->assertStatus(422);
 	}
 
-	/** @test */
-	public function lessons_array_must_contain_correct_start_date()
+	public function testLessonsArrayMustContainCorrectStartDate()
 	{
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));
@@ -66,8 +63,7 @@ class LessonProductTest extends ApiTestCase
 			->assertStatus(422);
 	}
 
-	/** @test */
-	public function can_not_update_lessons_for_not_existing_product()
+	public function testCanNotUpdateLessonsForNotExistingProduct()
 	{
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));
@@ -83,8 +79,7 @@ class LessonProductTest extends ApiTestCase
 			->assertStatus(404);
 	}
 
-	/** @test */
-	public function only_admin_can_attach_lesson_to_product()
+	public function testOnlyAdminCanAttachLessonToProduct()
 	{
 		$user = factory(User::class)->create();
 		$product = factory(Product::class)->create();
@@ -100,8 +95,7 @@ class LessonProductTest extends ApiTestCase
 			->assertStatus(403);
 	}
 
-	/** @test */
-	public function attach_lesson_to_product()
+	public function testAttachLessonToProduct()
 	{
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));
@@ -124,8 +118,7 @@ class LessonProductTest extends ApiTestCase
 		]);
 	}
 
-	/** @test */
-	public function only_admin_can_delete_lesson_product()
+	public function testOnlyAdminCanDeleteLessonProduct()
 	{
 		$user = factory(User::class)->create();
 		$product = factory(Product::class)->create();
@@ -137,8 +130,7 @@ class LessonProductTest extends ApiTestCase
 			->assertStatus(403);
 	}
 
-	/** @test */
-	public function can_not_delete_lessons_for_not_existing_product()
+	public function testCanNotDeleteLessonForNotExistingProduct()
 	{
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));
@@ -152,8 +144,7 @@ class LessonProductTest extends ApiTestCase
 			->assertStatus(404);
 	}
 
-	/** @test */
-	public function can_not_delete_lesson_not_attached_to_product()
+	public function testCanNotDeleteLessonNotAttachedToProduct()
 	{
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));
@@ -166,8 +157,7 @@ class LessonProductTest extends ApiTestCase
 			->assertStatus(404);
 	}
 
-	/** @test */
-	public function can_not_delete_not_existing_lesson_from_product()
+	public function testCanNotDeleteNotExistingLessonFromProduct()
 	{
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));
@@ -181,8 +171,7 @@ class LessonProductTest extends ApiTestCase
 			->assertStatus(404);
 	}
 
-	/** @test */
-	public function attached_lesson_is_deleted()
+	public function testAttachedLessonIsDeleted()
 	{
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));

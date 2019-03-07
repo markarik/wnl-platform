@@ -19,20 +19,18 @@
 			<wnl-manual-plan-nodes-list
 				class="nodes-list"
 				v-if="isOpen"
+				:manual-start-dates="manualStartDates"
 				:nodes="childrenNodes"
 				@change="$emit('change', $event)"
 			/>
 		</template>
 
 		<template v-else>
-			<span class="lesson-name label"
-						:class="{'is-grayed-out': !node.model.isAccessible}"
-			>{{node.model.name}}</span>
 			<div class="lesson-left-side">
 				<div class="not-accesible" v-if="!node.model.isAccessible">
-					{{ $t('lessonsAvailability.lessonNotAvilable') }}
+					{{ $t('lessonsAvailability.lessonNotAvailable') }}
 				</div>
-				<div class="datepicker" v-else>
+				<div v-else :class="{'is-default-start-date': isDefaultStartDate}">
 					<wnl-datepicker
 						:class="{'hasColorBackground': isEven}"
 						:value="startDate"
@@ -40,8 +38,13 @@
 						:config="datepickerConfig"
 						@onChange="(payload) => $emit('change', {newStartDate: payload, lesson: node.model})"
 					/>
+					<div v-if="isDefaultStartDate" class="lesson-default-start-date">(domyślna)</div>
 				</div>
 			</div>
+			<span
+				class="lesson-name label"
+				:class="{'is-grayed-out': !node.model.isAccessible}"
+			>{{node.model.name}}</span>
 		</template>
 	</li>
 </template>
@@ -56,8 +59,10 @@
 		text-transform: uppercase
 		margin-bottom: $margin-small
 		width: 100%
+
 		.icon
 			color: $color-darkest-gray
+
 		.subitems-count
 			color: $color-background-gray
 			font-size: $font-size-minus-2
@@ -66,30 +71,45 @@
 		margin-bottom: $margin-base
 
 	.is-lesson
+		align-items: center;
 		display: flex
-		flex-direction: row-reverse
 		justify-content: space-between
+		min-height: 35px
 		padding-bottom: $margin-small
 		padding-top: $margin-small
-		min-height: 35px
+
 		&.is-even
-			background-color: $color-background-lightest-gray
-		.lesson-name
-			align-self: flex-end
-			color: $color-darkest-gray
-			width: 65%
-			&.is-grayed-out
-				color: $color-gray
-		.lesson-left-side
-			align-items: center
-			display: flex
-			margin-right: $margin-small
-			.not-accesible
-				color: $color-gray
-				font-size: $font-size-plus-1
-				text-align: center
-				cursor: not-allowed
-				min-width: 260px
+			background-color: $color-background-lighter-gray
+
+	.lesson-name
+		color: $color-darkest-gray
+		width: 65%
+
+		&.is-grayed-out
+			color: $color-gray
+
+	.lesson-left-side
+		text-align: center
+		display: flex
+		flex-direction: column
+		margin-right: $margin-small
+		min-width: 220px
+
+	.not-accesible
+		color: $color-gray
+		cursor: not-allowed
+		font-size: $font-size-plus-1
+		margin: $margin-medium 0
+		text-align: center
+
+	.lesson-default-start-date
+		color: $color-gray
+		font-size: $font-size-minus-2
+		margin-top: -5px
+
+	/deep/ .is-default-start-date .datepicker
+		font-size: $font-size-minus-1
+
 	.nodes-list
 		margin-left: $margin-big
 		margin-bottom: $margin-base
@@ -113,6 +133,10 @@ export default {
 		};
 	},
 	props: {
+		manualStartDates: {
+			type: Array,
+			default: () => [],
+		},
 		node: {
 			type: Object,
 			required: true,
@@ -131,6 +155,10 @@ export default {
 		]),
 		childrenNodes() {
 			return this.getChildrenNodes(this.node.id);
+		},
+		isDefaultStartDate() {
+			return this.node.model.isDefaultStartDate &&
+				!this.manualStartDates.some((lessonDates) => lessonDates.lessonId === this.node.structurable_id);
 		},
 		isGroup() {
 			return getModelByResource(resources.groups) === this.node.structurable_type;

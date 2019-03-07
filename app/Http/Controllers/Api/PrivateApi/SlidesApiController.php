@@ -239,6 +239,12 @@ class SlidesApiController extends ApiController
 		));
 	}
 
+	/**
+	 * @param string $query
+	 * @param bool $onlyAvailable
+	 * @param \App\Models\User $user
+	 * @return array
+	 */
 	protected function buildQuery($query, $onlyAvailable, $user)
 	{
 		// Right now it's tightly coupled with slides
@@ -329,9 +335,13 @@ class SlidesApiController extends ApiController
 		}
 
 		if ($onlyAvailable) {
-			$usersLessons = $user->lessonsAvailability->filter(function($lesson) use ($user) {
-				return $lesson->isAvailable($user);
-			})->pluck('id')->toArray();
+			$usersLessons = $user->getLessonsAvailability()
+				->filter(function ($lesson) use ($user) {
+					/** @var \App\Models\Lesson $lesson */
+					return $lesson->isAvailable($user);
+				})
+				->pluck('id')
+				->toArray();
 
 			$params['body']['query']['bool']['must'] = [
 				['terms' => ['context.lesson.id' => $usersLessons]]

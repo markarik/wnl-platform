@@ -8,5 +8,7 @@ class LessonProduct extends Pivot
 {
 	protected $fillable = ['lesson_id', 'product_id', 'start_date'];
 
-    protected $dates = ['start_date'];
+	protected $dates = ['start_date'];
+
+	public $timestamps = false;
 }

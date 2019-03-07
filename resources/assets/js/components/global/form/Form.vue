@@ -163,7 +163,14 @@ export default {
 					type: 'warning',
 					text: this.$t('ui.error.notFound'),
 				});
-			} else {
+			}
+			else if (reason.response.status === 422) {
+				this.addAutoDismissableAlert({
+					type: 'warning',
+					text: this.$t('ui.error.validationFailed'),
+				});
+			}
+			else {
 				this.errorFading('Ups, coś nie wyszło... Spróbujesz jeszcze raz?');
 			}
 		},

@@ -10,7 +10,7 @@ use App\Models\LessonProduct;
 
 class LessonProductTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['lessons'];
+	protected $availableIncludes = [];
 
 	public function transform(LessonProduct $lessonProduct)
 	{
@@ -22,13 +22,5 @@ class LessonProductTransformer extends ApiTransformer
 		];
 
 		return $data;
-	}
-
-	public function includeLessons(LessonProduct $lessonProduct)
-	{
-		return $this->item(
-			$lessonProduct->lesson,
-			new LessonTransformer(['lesson_product' => $lessonProduct->id])
-		);
 	}
 }

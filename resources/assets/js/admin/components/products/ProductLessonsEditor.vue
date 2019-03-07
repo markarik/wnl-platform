@@ -191,8 +191,6 @@ export default {
 					start_date: new Date(productLesson.start_date * 1000),
 					lesson_name: matchingLesson.name
 				};
-			}).sort((productLessonA, productLessonB) => {
-				return productLessonA.start_date - productLessonB.start_date;
 			});
 		},
 		async onDateChange(value, productLesson) {

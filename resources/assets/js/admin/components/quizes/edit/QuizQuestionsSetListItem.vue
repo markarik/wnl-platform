@@ -43,9 +43,6 @@ export default {
 		content: {
 			type: String,
 			required: true
-		},
-		onRemove: {
-			type: Function,
 		}
 	}
 };

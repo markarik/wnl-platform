@@ -176,7 +176,8 @@ export default {
 			let questions = this.form.quiz_questions;
 
 			let index = questions.findIndex(id => id === questionId);
-			questions.splice(index, 1);
+
+			if (index > -1 ) questions.splice(index, 1);
 		},
 		quizQuestionsSetFormSubmit() {
 			if (!this.hasChanged) {
@@ -186,7 +187,6 @@ export default {
 			this.loading = true;
 			this.form[this.isEdit ? 'put' : 'post'](this.quizQuestionsSetResourceUrl)
 				.then(response => {
-					this.loading = false;
 					this.addAutoDismissableAlert({
 						text: 'Zestaw pytań zapisany!',
 						type: ALERT_TYPES.SUCCESS
@@ -194,15 +194,17 @@ export default {
 					this.populateForm();
 				})
 				.catch(exception => {
-					this.loading = false;
 					this.addAutoDismissableAlert({
 						text: 'Nie udało się :(',
 						type: ALERT_TYPES.ERROR
 					});
 					$wnl.logger.capture(exception);
+				})
+				.finally(() => {
+					this.loading = false;
 				});
 		},
-		addQuizQuestion(questionId) {
+		async addQuizQuestion(questionId) {
 			let parsedQuestionId = parseInt(questionId);
 
 			if (!Number.isInteger(parsedQuestionId)) {
@@ -218,17 +220,14 @@ export default {
 			}
 
 			if (!this.form.quiz_questions.find(id => id === parsedQuestionId)) {
+				const fetchedQuestion = await axios.get(getApiUrl(`quiz_questions/${questionId}`))
+				this.form.included.quiz_questions[fetchedQuestion.data.id] = fetchedQuestion.data;
+				this.form.quiz_questions.push(fetchedQuestion.data.id);
 
-				axios.get(getApiUrl(`quiz_questions/${questionId}`))
-					.then((response) => {
-						this.form.included.quiz_questions[response.data.id] = response.data;
-						this.form.quiz_questions.push(response.data.id);
-
-						this.addAutoDismissableAlert({
-							text: 'Udało się dodać pytanie :)',
-							type: ALERT_TYPES.SUCCESS
-						});
-					});
+				this.addAutoDismissableAlert({
+					text: 'Udało się dodać pytanie :)',
+					type: ALERT_TYPES.SUCCESS
+				});
 			} else {
 				this.addAutoDismissableAlert({
 					text: 'Pytanie o tym numerze id znajduje się już w tym zestawie!',
@@ -237,9 +236,6 @@ export default {
 			}
 			this.quizQuestionInput = '';
 		},
-		addParsedQuestionId(id) {
-			this.form.quiz_questions.push(parsedQuestionId);
-		}
 	},
 	mounted() {
 		if (this.isEdit) {

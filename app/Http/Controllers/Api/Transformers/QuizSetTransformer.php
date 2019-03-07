@@ -23,7 +23,7 @@ class QuizSetTransformer extends ApiTransformer
 
 	public function includeQuizQuestions(QuizSet $quizSet)
 	{
-		$questions = $quizSet->questions()->orderBy('order_number')->get();
+		$questions = $quizSet->questions()->get();
 
 		return $this->collection(
 			$questions,

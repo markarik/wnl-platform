@@ -103,6 +103,10 @@ export default {
 		id: {
 			required: true,
 			type: [Number, String],
+		},
+		isEdit: {
+			type: Boolean,
+			default: true
 		}
 	},
 	components: {
@@ -118,9 +122,6 @@ export default {
 		},
 		formMethod() {
 			return this.isEdit ? 'put' : 'post';
-		},
-		isEdit() {
-			return this.id !== 'new';
 		},
 	},
 	methods: {

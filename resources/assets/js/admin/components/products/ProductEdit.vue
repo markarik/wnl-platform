@@ -1,26 +1,30 @@
 <template>
 	<div>
-		<h4>Produkt #{{ id }}</h4>
+		<h4>{{headline}}</h4>
 
-		<div class="tabs">
-			<ul>
-				<li :class="{ 'is-active': name === activeTabName }" v-for="(tab, name) in tabs" :key="name">
-					<router-link :to="{ hash: `#${name}` }">{{ tab.text }}</router-link>
-				</li>
-			</ul>
-		</div>
+		<template v-if="isEdit">
+			<div class="tabs">
+				<ul>
+					<li :class="{ 'is-active': name === activeTabName }" v-for="(tab, name) in tabs" :key="name">
+						<router-link :to="{ hash: `#${name}` }">{{ tab.text }}</router-link>
+					</li>
+				</ul>
+			</div>
 
-		<component :is="activeComponent" :id="id"></component>
+			<component :is="activeComponent" :id="id"></component>
+		</template>
+		<wnl-product-details-editor :id="id" :is-edit="isEdit" v-else/>
 	</div>
 
 </template>
 
 <script>
 
-import ProductDetailsEditor from './ProductDetailsEditor';
-import ProductLessonsEditor from './ProductLessonsEditor';
+import WnlProductDetailsEditor from './ProductDetailsEditor';
+import WnlProductLessonsEditor from './ProductLessonsEditor';
 
 export default {
+	components: { WnlProductDetailsEditor },
 	props: {
 		id: {
 			required: true,
@@ -31,17 +35,24 @@ export default {
 		return {
 			tabs: {
 				details: {
-					component: ProductDetailsEditor,
+					component: WnlProductDetailsEditor,
 					text: 'Szczegóły produktu'
 				},
 				lessons: {
-					component: ProductLessonsEditor,
+					component: WnlProductLessonsEditor,
 					text: 'Powiązane lekcje'
 				},
 			}
 		};
 	},
 	computed: {
+		isEdit() {
+			return this.id !== 'new';
+		},
+		headline() {
+			if (this.isEdit) return `Produkt ${this.id}`;
+			return 'Nowy Produkt';
+		},
 		activeComponent() {
 			return this.tabs[this.activeTabName].component;
 		},

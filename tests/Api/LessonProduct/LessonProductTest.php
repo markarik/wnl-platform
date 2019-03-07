@@ -8,11 +8,13 @@ use App\Models\Product;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
 
 
 class LessonProductTest extends ApiTestCase
 {
+	use DatabaseTransactions;
 
 	/** @test */
 	public function only_admin_can_update_lesson_product()

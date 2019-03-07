@@ -189,8 +189,8 @@ export default {
 
 			const productLessonsList = Object.values(productLessons);
 
-			if (!productLessonsList.length) {
-				return;
+			if (!productLessonsList || !productLessonsList.length) {
+				return [];
 			}
 
 			return productLessonsList.map(productLesson => {
@@ -245,7 +245,7 @@ export default {
 			this.productLessons = productLessons;
 
 			nextTick(() => {
-				this.$refs.filterInput.focus();
+				this.$refs.filterInput && this.$refs.filterInput.focus();
 			});
 		} catch (e) {
 			this.addAutoDismissableAlert({

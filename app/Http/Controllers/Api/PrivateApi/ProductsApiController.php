@@ -45,7 +45,7 @@ class ProductsApiController extends ApiController
 		return [
 			'name'          => $request->name,
 			'invoice_name'  => $request->invoice_name,
-			'slug'          => $request->slug,
+			'slug'          => $request->slug ? $request->slug : null,
 			'price'         => $request->price,
 			'quantity'      => $request->quantity,
 			'initial'       => $request->initial,

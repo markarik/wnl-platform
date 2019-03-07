@@ -161,12 +161,7 @@ class QnaQuestionsApiController extends ApiController
 	}
 
 	public function getLatest() {
-		// TODO PLAT-1055 - make code independent of Warsztaty tag
-		$workshopsTag = Tag::where('name', 'Warsztaty')->first();
-
-		$qnaQuestions = QnaQuestion::whereDoesntHave('tags', function($query) use ($workshopsTag) {
-			$query->where('tags.id', $workshopsTag->id);
-		})->limit(10)->orderBy('created_at', 'desc')->get();
+		$qnaQuestions = QnaQuestion::limit(10)->orderBy('created_at', 'desc')->get();
 
 		return $this->transformAndRespond($qnaQuestions);
 	}

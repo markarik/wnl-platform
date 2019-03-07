@@ -5,10 +5,9 @@ namespace App\Console\Commands;
 use App\Mail\JpkReport;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
-class InvoicesJpkSend extends Command
+class InvoicesJpkSend extends CommandWithMonitoring
 {
     /**
      * The name and signature of the console command.
@@ -22,24 +21,14 @@ class InvoicesJpkSend extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Send JPK file to accountant';
 
     /**
      * Execute the console command.
      *
      * @return mixed
      */
-    public function handle()
+    public function handleCommand()
     {
         $dateFrom = Carbon::now()->subMonth()->startOfMonth();
         $dateTo = Carbon::now()->subMonth()->endOfMonth();

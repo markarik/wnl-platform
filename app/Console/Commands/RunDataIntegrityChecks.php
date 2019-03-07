@@ -4,9 +4,8 @@ namespace App\Console\Commands;
 
 use Checks\DataIntegrity\PaymentsCheck;
 use Checks\DataIntegrity\PresentablesOrderNumberCheck;
-use Illuminate\Console\Command;
 
-class RunDataIntegrityChecks extends Command
+class RunDataIntegrityChecks extends CommandWithMonitoring
 {
 	protected $signature = 'data-integrity:check';
 
@@ -22,10 +21,10 @@ class RunDataIntegrityChecks extends Command
 	 *
 	 * @return mixed
 	 */
-	public function handle() {
+	public function handleCommand() {
 		(new PaymentsCheck())->check();
 		(new PresentablesOrderNumberCheck())->check();
 
-		return $this->output->text("Checked!");
+		$this->output->text("Checked!");
 	}
 }

@@ -22,17 +22,17 @@
 						<td>{{productLesson.lesson_name}}</td>
 						<td class="wnl-table__cell--datepicker">
 							<wnl-datepicker
-									name="start_date"
-									:config="datepickerConfig"
-									:value="productLesson.start_date"
-									@onChange="onDateChange($event, productLesson)"
+								name="start_date"
+								:config="datepickerConfig"
+								:value="productLesson.start_date"
+								@onChange="onDateChange($event, productLesson)"
 							/>
 						</td>
 						<td>
 							<button
-									class="button is-danger"
-									type="button"
-									@click="removeLesson(productLesson)"
+								class="button is-danger"
+								type="button"
+								@click="confirmLessonRemoval(productLesson)"
 							>
 								<span class="icon"><i class="fa fa-trash"></i></span>
 							</button>
@@ -209,18 +209,7 @@ export default {
 				};
 			}
 		},
-		async removeLesson(productLesson) {
-			try {
-				await this.$swal(swalConfig({
-					confirmButtonText: this.$t('ui.confirm.yes'),
-					cancelButtonText: this.$t('ui.confirm.no'),
-					html: `Na pewno chcesz usunąć lekcję <strong>${productLesson.lesson_name}?</strong>`,
-					showCancelButton: true,
-					type: 'warning',
-				}));
-			} catch (e) {
-				//
-			}
+		async performLessonRemoval(productLesson) {
 			try {
 				await axios.delete(getApiUrl(`lesson_product/${this.id}/${productLesson.lesson_id}`));
 				const index = this.productLessons.findIndex(({lesson_id}) => productLesson.lesson_id === lesson_id);
@@ -235,6 +224,20 @@ export default {
 					type: 'error'
 				});
 				$wnl.logger.capture(e);
+			}
+		},
+		async confirmLessonRemoval(productLesson) {
+			try {
+				await this.$swal(swalConfig({
+					confirmButtonText: this.$t('ui.confirm.yes'),
+					cancelButtonText: this.$t('ui.confirm.no'),
+					html: `Na pewno chcesz usunąć lekcję <strong>${productLesson.lesson_name}?</strong> z produktu?`,
+					showCancelButton: true,
+					type: 'warning',
+				}));
+				this.performLessonRemoval(productLesson);
+			} catch (e) {
+				//
 			}
 		},
 		async getProductLessons() {

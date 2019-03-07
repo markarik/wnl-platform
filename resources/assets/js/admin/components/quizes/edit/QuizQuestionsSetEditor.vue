@@ -186,7 +186,9 @@ export default {
 
 			let index = questions.findIndex(id => id === questionId);
 
-			if (index > -1 ) questions.splice(index, 1);
+			if (index > -1) {
+				questions.splice(index, 1);
+			}
 		},
 		quizQuestionsSetFormSubmit() {
 			if (!this.hasChanged) {

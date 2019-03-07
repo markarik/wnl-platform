@@ -324,3 +324,10 @@ $factory->define(App\Models\LessonProduct::class, function () {
 $factory->define(App\Models\CourseStructureNode::class, function () {
 	return [];
 });
+
+$factory->define(App\Models\UserSubscription::class, function () {
+	return [
+		'access_start' => \Carbon\Carbon::now()->subDays(100),
+		'access_end' => \Carbon\Carbon::now()->addDays(100),
+	];
+});

@@ -44,6 +44,7 @@
 				</div>
 			</div>
 			<wnl-manual-plan-nodes-list
+				:manual-start-dates="manualStartDates"
 				:nodes="rootNodes"
 				@change="onStartDateChange"
 			/>
@@ -61,9 +62,9 @@
 						<th>Nowa data</th>
 					</tr>
 					<tr v-for="(manualStartDate, index) in sortedManualStartDates" :key="index">
-						<th>{{ manualStartDate.lessonName }}</th>
-						<th>{{ manualStartDate.oldDate }}</th>
-						<th>{{ manualStartDate.formatedStartDate }}</th>
+						<td>{{ manualStartDate.lessonName }}</td>
+						<td>{{ manualStartDate.oldDate }}</td>
+						<td>{{ manualStartDate.formatedStartDate }}</td>
 					</tr>
 				</table>
 			</div>

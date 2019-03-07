@@ -183,8 +183,8 @@ export default {
 			}
 		},
 		async getProductLessons() {
-			const productLessonResponse = await axios.get(getApiUrl(`lesson_product/${this.id}?include=lessons`));
-			const { data: {included, ...productLessons}} = productLessonResponse;
+			const productLessonResponse = await axios.get(getApiUrl(`lesson_product/${this.id}`));
+			const { data: {...productLessons}} = productLessonResponse;
 
 			const productLessonsList = Object.values(productLessons);
 
@@ -196,7 +196,7 @@ export default {
 				return {
 					...productLesson,
 					start_date: new Date(productLesson.start_date * 1000),
-					lesson_name: included.lessons[productLesson.lesson_id].name
+					lesson_name: this.lessons.find(lesson => productLesson.lesson_id === lesson.id).name
 				};
 			}).sort((productLessonA, productLessonB) => {
 				return productLessonA.start_date - productLessonB.start_date;
@@ -234,12 +234,9 @@ export default {
 	async mounted() {
 		this.loading = true;
 		try {
-			const [productLessons, lessonsResponse] = await Promise.all([
-				this.getProductLessons(),
-				axios.get(getApiUrl(('lessons/all')))
-			]);
+			const lessonsResponse = await axios.get(getApiUrl(('lessons/all')));
 			this.lessons = lessonsResponse.data;
-			this.productLessons = productLessons;
+			this.productLessons = await this.getProductLessons();
 
 			nextTick(() => {
 				this.$refs.filterInput && this.$refs.filterInput.focus();

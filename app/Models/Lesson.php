@@ -52,6 +52,10 @@ class Lesson extends Model implements WithTags
 	{
 		$user = $user ?? Auth::user();
 
+		if (is_null($user)) {
+			return false;
+		}
+
 		if ($user->isAdmin() || $user->isModerator()) {
 			return true;
 		}
@@ -69,6 +73,10 @@ class Lesson extends Model implements WithTags
 	{
 		$user = $user ?? Auth::user();
 
+		if (is_null($user)) {
+			return false;
+		}
+
 		if ($user->isAdmin() || $user->isModerator()) {
 			return true;
 		}
@@ -79,6 +87,10 @@ class Lesson extends Model implements WithTags
 	public function isDefaultStartDate(User $user = null)
 	{
 		$user = $user ?? Auth::user();
+
+		if (is_null($user)) {
+			return false;
+		}
 
 		$lesson = $user->getLessonsAvailability()->filter(function ($lesson) {
 			return $lesson->id === $this->id;

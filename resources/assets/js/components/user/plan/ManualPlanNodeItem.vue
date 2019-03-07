@@ -97,9 +97,10 @@
 
 	.not-accesible
 		color: $color-gray
-		font-size: $font-size-plus-1
-		text-align: center
 		cursor: not-allowed
+		font-size: $font-size-plus-1
+		margin: $margin-medium 0
+		text-align: center
 
 	.lesson-default-start-date
 		color: $color-gray

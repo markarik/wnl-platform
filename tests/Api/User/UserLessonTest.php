@@ -72,17 +72,24 @@ class UserLessonTest extends ApiTestCase
 		$endDate = $response->json('end_date');
 		$this->assertTrue(Carbon::createFromTimestamp($endDate)->lte(Carbon::now()));
 
-		$this->assertContains([
-			'id'=> $lesson->id,
-			'name' => $lesson->name,
-			'group_id' => $lesson->group_id,
-			'groups' => $lesson->group_id,
-			'order_number' => $lesson->order_number,
-			'is_required' => $lesson->is_required,
-			'isAccessible' => $lesson->isAccessible(),
-			'isAvailable' => $lesson->isAvailable(),
-			'startDate' => $endDate,
-		], $response->json('lessons'));
+		$resultLesson = array_filter($response->json('lessons'), function($resultLesson) use ($lesson) { return $resultLesson['id'] === $lesson->id; });
+
+		$this->assertCount(1, $resultLesson);
+		$this->assertEquals(
+			[
+				'id'=> $lesson->id,
+				'name' => $lesson->name,
+				'group_id' => $lesson->group_id,
+				'groups' => $lesson->group_id,
+				'order_number' => $lesson->order_number,
+				'is_required' => $lesson->is_required,
+				'isAccessible' => $lesson->isAccessible(),
+				'isAvailable' => $lesson->isAvailable(),
+				'isDefaultStartDate' => false,
+				'startDate' => $endDate,
+			],
+			current($resultLesson)
+		);
 	}
 
 	/** @test */
@@ -147,18 +154,24 @@ class UserLessonTest extends ApiTestCase
 				'start_date' => $expectedStartDate,
 			]);
 
-			$this->assertContains([
-				'id'=> $lesson->id,
-				'name' => $lesson->name,
-				'group_id' => $lesson->group_id,
-				'groups' => $lesson->group_id,
-				'order_number' => $lesson->order_number,
-				'is_required' => $lesson->is_required,
-				'isAccessible' => $lesson->isAccessible(),
-				'isAvailable' => $lesson->isAvailable(),
-				// FIXME it fails because all the start dates are the same
-				 'startDate' => $expectedStartDate->timestamp
-			], $responseLessons);
+			$resultLesson = array_filter($responseLessons, function($resultLesson) use ($lesson) { return $resultLesson['id'] === $lesson->id; });
+
+			$this->assertCount(1, $resultLesson);
+			$this->assertEquals(
+				[
+					'id'=> $lesson->id,
+					'name' => $lesson->name,
+					'group_id' => $lesson->group_id,
+					'groups' => $lesson->group_id,
+					'order_number' => $lesson->order_number,
+					'is_required' => $lesson->is_required,
+					'isAccessible' => $lesson->isAccessible(),
+					'isAvailable' => $lesson->isAvailable(),
+					'isDefaultStartDate' => false,
+					'startDate' => $expectedStartDate->timestamp,
+				],
+				current($resultLesson)
+			);
 		}
 
 		$computedEndDate = $response->json('end_date');
@@ -230,18 +243,24 @@ class UserLessonTest extends ApiTestCase
 				'start_date' => $expectedStartDate,
 			]);
 
-			$this->assertContains([
-				'id'=> $lesson->id,
-				'name' => $lesson->name,
-				'group_id' => $lesson->group_id,
-				'groups' => $lesson->group_id,
-				'order_number' => $lesson->order_number,
-				'is_required' => $lesson->is_required,
-				'isAccessible' => $lesson->isAccessible(),
-				'isAvailable' => $lesson->isAvailable(),
-				// FIXME it fails because all the start dates are the same
-				 'startDate' => $expectedStartDate->timestamp
-			], $responseLessons);
+			$resultLesson = array_filter($responseLessons, function($resultLesson) use ($lesson) { return $resultLesson['id'] === $lesson->id; });
+
+			$this->assertCount(1, $resultLesson);
+			$this->assertEquals(
+				[
+					'id'=> $lesson->id,
+					'name' => $lesson->name,
+					'group_id' => $lesson->group_id,
+					'groups' => $lesson->group_id,
+					'order_number' => $lesson->order_number,
+					'is_required' => $lesson->is_required,
+					'isAccessible' => $lesson->isAccessible(),
+					'isAvailable' => $lesson->isAvailable(),
+					'isDefaultStartDate' => false,
+					'startDate' => $expectedStartDate->timestamp,
+				],
+				current($resultLesson)
+			);
 		}
 	}
 

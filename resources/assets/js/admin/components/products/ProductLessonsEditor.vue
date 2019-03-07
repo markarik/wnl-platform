@@ -100,7 +100,6 @@ export default {
 	data() {
 		return {
 			productLessons: [],
-			deletedLessons: [],
 			filterPhrase: '',
 			loading: false,
 			lessons: [],
@@ -172,7 +171,7 @@ export default {
 		},
 		async removeLesson(productLesson) {
 			try {
-				this.deletedLessons.push(productLesson.lesson_id);
+				await axios.delete(getApiUrl(`lesson_product/${this.id}/${productLesson.lesson_id}`));
 				const index = this.productLessons.findIndex(({lesson_id}) => productLesson.lesson_id === lesson_id);
 				this.productLessons.splice(index, 1);
 			} catch (e) {
@@ -208,8 +207,6 @@ export default {
 		},
 		async submitPlan() {
 			try {
-				await Promise.all(this.deletedLessons.map(lessonId => axios.delete(getApiUrl(`lesson_product/${this.id}/${lessonId}`))));
-				this.deletedLessons = [];
 				await axios.put(getApiUrl(`lesson_product/${this.id}`), {
 					lessons: this.productLessons.map(productLesson => {
 						return {

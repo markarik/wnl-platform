@@ -102,6 +102,7 @@ import {mapActions, mapState} from 'vuex';
 import {orderBy} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
+import { swalConfig } from 'js/utils/swal';
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlDatepicker from 'js/components/global/Datepicker';
 import WnlSortableTable from 'js/admin/components/lists/SortableTable';
@@ -211,9 +212,24 @@ export default {
 		},
 		async removeLesson(productLesson) {
 			try {
+				await this.$swal(swalConfig({
+					confirmButtonText: this.$t('ui.confirm.yes'),
+					cancelButtonText: this.$t('ui.confirm.no'),
+					html: `Na pewno chcesz usunąć lekcję <strong>${productLesson.lesson_name}?</strong>`,
+					showCancelButton: true,
+					type: 'warning',
+				}));
+			} catch (e) {
+				//
+			}
+			try {
 				await axios.delete(getApiUrl(`lesson_product/${this.id}/${productLesson.lesson_id}`));
 				const index = this.productLessons.findIndex(({lesson_id}) => productLesson.lesson_id === lesson_id);
 				this.productLessons.splice(index, 1);
+				this.addAutoDismissableAlert({
+					text: 'Usunięto!',
+					type: 'success'
+				});
 			} catch (e) {
 				this.addAutoDismissableAlert({
 					text: 'Nie udało się usunąć lekcji',

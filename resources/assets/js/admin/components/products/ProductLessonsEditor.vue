@@ -237,7 +237,7 @@ export default {
 				}));
 				this.performLessonRemoval(productLesson);
 			} catch (e) {
-				//
+				// Do nothing, swal throws an exception on cancel
 			}
 		},
 		async getProductLessons() {

@@ -23,7 +23,6 @@
 						<td class="wnl-table__cell--datepicker">
 							<wnl-datepicker
 									name="start_date"
-									:key="productLesson.lesson_id"
 									:config="datepickerConfig"
 									:value="productLesson.start_date"
 									@onChange="onDateChange($event, productLesson)"

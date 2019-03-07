@@ -98,6 +98,11 @@ export default {
 		}
 		this.$watch('config', this.redraw);
 	},
+	watch: {
+		value() {
+			this.setDate(this.value);
+		}
+	},
 	beforeDestroy () {
 		if (this.datepicker) {
 			this.datepicker.destroy();

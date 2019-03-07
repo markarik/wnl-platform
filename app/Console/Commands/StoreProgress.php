@@ -47,9 +47,8 @@ class StoreProgress extends CommandWithMonitoring
 	{
 		// IMPORTANT!!!! user id is in fact profile id
 		$passedUserId = $this->argument('user');
-		$courseId = CourseProvider::getCourseId();
-
-		$this->transaction(function () use ($courseId, $passedUserId) {
+		$this->transaction(function () use ($passedUserId) {
+			$courseId = CourseProvider::getCourseId();
 
 			if (empty($passedUserId)) {
 				$keyPattern = UserStateApiController::getCourseRedisKey('*', $courseId);

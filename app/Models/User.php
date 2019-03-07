@@ -303,7 +303,7 @@ class User extends Authenticatable
 		return $this->productIdForDefaultLessonsStartDates;
 	}
 
-	public function getProductLessons()
+	public function getDefaultLessons()
 	{
 		return Lesson::where('product_id', '=', $this->getLatestPaidCourseProductId())
 			->whereNotIn('lesson_id', $this->userLessons->pluck('id'))
@@ -328,7 +328,7 @@ class User extends Authenticatable
 
 			$lessonsAvailability = new Collection();
 			$userLessons = $this->userLessons()->get();
-			$productLessons = $this->getProductLessons();
+			$productLessons = $this->getDefaultLessons();
 
 			$courseLessonsOrdered->each($this->addCourseLessonsToLessonsAvailability($lessonsAvailability, $userLessons, $productLessons));
 

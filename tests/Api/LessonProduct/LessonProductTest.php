@@ -21,11 +21,11 @@ class LessonProductTest extends ApiTestCase
 		$user = factory(User::class)->create();
 		$product = factory(Product::class)->create();
 		$lesson = factory(Lesson::class)->create();
-		LessonProduct::create(['lesson_id' => $lesson->id, 'product_id' => $product->id]);
+		$lessonProduct = LessonProduct::create(['lesson_id' => $lesson->id, 'product_id' => $product->id]);
 
 		$this
 			->actingAs($user)
-			->json('PUT', $this->url("/lesson_product/{$product->id}/{$lesson->id}"))
+			->json('PUT', $this->url("/lesson_product/{$lessonProduct->id}"))
 			->assertStatus(403);
 	}
 
@@ -35,11 +35,11 @@ class LessonProductTest extends ApiTestCase
 		$user->roles()->attach(Role::byName('admin'));
 		$product = factory(Product::class)->create();
 		$lesson = factory(Lesson::class)->create();
-		LessonProduct::create(['lesson_id' => $lesson->id, 'product_id' => $product->id]);
+		$lessonProduct = LessonProduct::create(['lesson_id' => $lesson->id, 'product_id' => $product->id]);
 
 		$this
 			->actingAs($user)
-			->json('PUT', $this->url("/lesson_product/{$product->id}/{$lesson->id}"))
+			->json('PUT', $this->url("/lesson_product/{$lessonProduct->id}"))
 			->assertStatus(422);
 	}
 
@@ -49,11 +49,11 @@ class LessonProductTest extends ApiTestCase
 		$user->roles()->attach(Role::byName('admin'));
 		$product = factory(Product::class)->create();
 		$lesson = factory(Lesson::class)->create();
-		LessonProduct::create(['lesson_id' => $lesson->id, 'product_id' => $product->id]);
+		$lessonProduct = LessonProduct::create(['lesson_id' => $lesson->id, 'product_id' => $product->id]);
 
 		$this
 			->actingAs($user)
-			->json('PUT', $this->url("/lesson_product/{$product->id}/{$lesson->id}"), [
+			->json('PUT', $this->url("/lesson_product/{$lessonProduct->id}"), [
 				'lessons' => [
 					[
 						'start_date' => 'hello'
@@ -68,12 +68,13 @@ class LessonProductTest extends ApiTestCase
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));
 		$product = factory(Product::class)->create();
-		$nextId = $product->id + 1;
 		$lesson = factory(Lesson::class)->create();
+		$lessonProduct = LessonProduct::create(['lesson_id' => $lesson->id, 'product_id' => $product->id]);
+		$nextId = $lessonProduct->id + 1;
 
 		$this
 			->actingAs($user)
-			->json('PUT', $this->url("/lesson_product/{$nextId}/{$lesson->id}"), [
+			->json('PUT', $this->url("/lesson_product/{$nextId}"), [
 				'start_date' => '123456'
 			])
 			->assertStatus(404);
@@ -88,7 +89,8 @@ class LessonProductTest extends ApiTestCase
 
 		$this
 			->actingAs($user)
-			->json('POST', $this->url("/lesson_product/{$product->id}"), [
+			->json('POST', $this->url("/lesson_product"), [
+				'product_id' => $product->id,
 				'lesson_id' => $lesson->id,
 				'start_date' => $startDate
 			])
@@ -105,7 +107,8 @@ class LessonProductTest extends ApiTestCase
 
 		$this
 			->actingAs($user)
-			->json('POST', $this->url("/lesson_product/{$product->id}"), [
+			->json('POST', $this->url("/lesson_product"), [
+				'product_id' => $product->id,
 				'lesson_id' => $lesson->id,
 				'start_date' => $startDate
 			])
@@ -123,51 +126,26 @@ class LessonProductTest extends ApiTestCase
 		$user = factory(User::class)->create();
 		$product = factory(Product::class)->create();
 		$lesson = factory(Lesson::class)->create();
+		$lessonProduct = LessonProduct::create(['lesson_id' => $lesson->id, 'product_id' => $product->id]);
 
 		$this
 			->actingAs($user)
-			->json('DELETE', $this->url("/lesson_product/{$product->id}/{$lesson->id}"))
+			->json('DELETE', $this->url("/lesson_product/{$lessonProduct->id})"))
 			->assertStatus(403);
 	}
 
-	public function testCanNotDeleteLessonForNotExistingProduct()
-	{
-		$user = factory(User::class)->create();
-		$user->roles()->attach(Role::byName('admin'));
-		$product = factory(Product::class)->create();
-		$nextId = $product->id + 1;
-		$lesson = factory(Lesson::class)->create();
-
-		$this
-			->actingAs($user)
-			->json('DELETE', $this->url("/lesson_product/{$nextId}/{$lesson->id}"))
-			->assertStatus(404);
-	}
-
-	public function testCanNotDeleteLessonNotAttachedToProduct()
+	public function testCanNotDeleteNotExistingUserLesson()
 	{
 		$user = factory(User::class)->create();
 		$user->roles()->attach(Role::byName('admin'));
 		$product = factory(Product::class)->create();
 		$lesson = factory(Lesson::class)->create();
+		$lessonProduct = LessonProduct::create(['lesson_id' => $lesson->id, 'product_id' => $product->id]);
+		$nextId = $lessonProduct->id + 1;
 
 		$this
 			->actingAs($user)
-			->json('DELETE', $this->url("/lesson_product/{$product->id}/{$lesson->id}"))
-			->assertStatus(404);
-	}
-
-	public function testCanNotDeleteNotExistingLessonFromProduct()
-	{
-		$user = factory(User::class)->create();
-		$user->roles()->attach(Role::byName('admin'));
-		$product = factory(Product::class)->create();
-		$lesson = factory(Lesson::class)->create();
-		$nextId = $lesson->id + 1;
-
-		$this
-			->actingAs($user)
-			->json('DELETE', $this->url("/lesson_product/{$product->id}/{$nextId}"))
+			->json('DELETE', $this->url("/lesson_product/{$nextId}"))
 			->assertStatus(404);
 	}
 
@@ -186,14 +164,9 @@ class LessonProductTest extends ApiTestCase
 
 		$this
 			->actingAs($user)
-			->json('DELETE', $this->url("/lesson_product/{$product->id}/{$lesson->id}"))
+			->json('DELETE', $this->url("/lesson_product/{$lessonProduct->id}"))
 			->assertStatus(200);
 
-		$this->assertDatabaseMissing('lesson_product', [
-			'id' => $lessonProduct->id,
-			'lesson_id' => $lessonProduct->lesson_id,
-			'product_id' => $lessonProduct->product_id,
-			'start_date' => $startDate
-		]);
+		$this->assertEmpty(LessonProduct::find($lessonProduct->id), 'lesson product is removed');
 	}
 }

@@ -116,10 +116,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['products']}/.filter", 'ProductsApiController@filter');
 
 		// Lesson Product
-		Route::get("{$r['lesson-product']}/{productId}", 'LessonProductApiController@getForProduct');
-		Route::post("{$r['lesson-product']}/{productId}", 'LessonProductApiController@post');
-		Route::put("{$r['lesson-product']}/{productId}/{lessonId}", 'LessonProductApiController@put');
-		Route::delete("{$r['lesson-product']}/{productId}/{lessonId}", 'LessonProductApiController@deleteLesson');
+		Route::post("{$r['lesson-product']}/query", 'LessonProductApiController@query');
+		Route::post("{$r['lesson-product']}", 'LessonProductApiController@post');
+		Route::put("{$r['lesson-product']}/{lessonProduct}", 'LessonProductApiController@put');
+		Route::delete("{$r['lesson-product']}/{lessonProduct}", 'LessonProductApiController@deleteLesson');
 	});
 
 	// Count

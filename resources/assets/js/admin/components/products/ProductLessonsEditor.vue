@@ -129,7 +129,8 @@ export default {
 		...mapActions('lessons', ['fetchAllLessons']),
 		async onAddLesson(lesson) {
 			if (!this.productLessons.some(({lesson_id}) => lesson_id === lesson.lessonId)) {
-				await axios.post(getApiUrl(`lesson_product/${this.id}`), {
+				await axios.post(getApiUrl('lesson_product'), {
+					product_id: this.id,
 					lesson_id: lesson.lessonId,
 					start_date: moment.utc(lesson.startDate).unix(),
 				});
@@ -142,7 +143,7 @@ export default {
 		},
 		async performLessonRemoval(productLesson) {
 			try {
-				await axios.delete(getApiUrl(`lesson_product/${this.id}/${productLesson.lesson_id}`));
+				await axios.delete(getApiUrl(`lesson_product/${productLesson.id}`));
 				const index = this.productLessons.findIndex(({lesson_id}) => productLesson.lesson_id === lesson_id);
 				this.productLessons.splice(index, 1);
 				this.addAutoDismissableAlert({
@@ -172,7 +173,9 @@ export default {
 			}
 		},
 		async getProductLessons() {
-			const productLessonResponse = await axios.get(getApiUrl(`lesson_product/${this.id}`));
+			const productLessonResponse = await axios.post(getApiUrl('lesson_product/query'), {
+				product_id: this.id
+			});
 			const { data: {...productLessons}} = productLessonResponse;
 
 			const productLessonsList = Object.values(productLessons);
@@ -194,7 +197,7 @@ export default {
 		},
 		async onDateChange(value, productLesson) {
 			try {
-				await axios.put(getApiUrl(`lesson_product/${this.id}/${productLesson.lesson_id}`), {
+				await axios.put(getApiUrl(`lesson_product/${productLesson.id}`), {
 					start_date: moment.utc(value[0]).unix(),
 				});
 
@@ -205,7 +208,6 @@ export default {
 					type: 'success'
 				});
 			} catch (e) {
-
 				this.addAutoDismissableAlert({
 					text: 'Nie udało się zapisać zmian.',
 					type: 'error'

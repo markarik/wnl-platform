@@ -27,6 +27,7 @@ class CreateLessonProduct extends FormRequest
 	{
 		return [
 			'start_date' => 'integer|required',
+			'product_id' => 'integer|required|exists:products,id',
 			'lesson_id' => 'integer|required|exists:lessons,id'
 		];
 	}

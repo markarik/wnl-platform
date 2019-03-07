@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Product\CreateLessonProduct;
 use App\Http\Requests\Product\UpdateLessonProduct;
+use App\Models\Lesson;
 use App\Models\LessonProduct;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -17,58 +18,40 @@ class LessonProductApiController extends ApiController
 		$this->resourceName = config('papi.resources.lesson-product');
 	}
 
-	public function getForProduct(Request $request, $productId) {
+	public function query(Request $request) {
+		$productId = $request['product_id'];
+
 		$result = LessonProduct::where(['product_id' => $productId])->get();
 
 		return $this->transformAndRespond($result);
 	}
 
-	public function put(UpdateLessonProduct $request, $productId, $lessonId)
+	public function put(UpdateLessonProduct $request, LessonProduct $lessonProduct)
 	{
-		$lessonProduct = LessonProduct::where([
-			'lesson_id' => $lessonId,
-			'product_id' => $productId,
-		])->first();
-
-		if (empty($lessonProduct)) {
-			return $this->respondNotFound();
-		}
-
 		$lessonProduct['start_date'] = Carbon::createFromTimestamp($request['start_date']);
+		$lessonProduct->save();
 
 		return $this->transformAndRespond($lessonProduct);
 	}
 
-	public function post(CreateLessonProduct $request, $productId)
+	public function post(CreateLessonProduct $request)
 	{
-		$product = Product::find($productId);
-		if (empty($product)) {
-			return $this->respondNotFound();
-		}
-
 		$lessonProduct = LessonProduct::create([
 			'lesson_id' => $request['lesson_id'],
-			'product_id' => $product->id,
+			'product_id' => $request['product_id'],
 			'start_date' => Carbon::createFromTimestamp($request['start_date'])
 		]);
 
 		return $this->transformAndRespond($lessonProduct);
 	}
 
-	public function deleteLesson($productId, $lessonId) {
-		$product = Product::find($productId);
-		if (empty($product)) {
-			return $this->respondNotFound();
-		}
-
-		if (!$product->lessons->contains($lessonId)) {
-			return $this->respondNotFound();
-		}
-
-		LessonProduct::where([
-			'lesson_id' => $lessonId,
-			'product_id' => $product->id
-		])->delete();
+	/**
+	 * @param LessonProduct $lessonProduct
+	 * @return \Illuminate\Http\JsonResponse
+	 * @throws \Exception
+	 */
+	public function deleteLesson(LessonProduct $lessonProduct) {
+		$lessonProduct->delete();
 
 		return $this->respondOk();
 	}

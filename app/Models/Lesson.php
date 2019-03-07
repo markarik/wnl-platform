@@ -60,7 +60,7 @@ class Lesson extends Model implements WithTags
 			return true;
 		}
 
-		$startDate = $this->startDate();
+		$startDate = $this->getStartDate();
 
 		if (!is_null($startDate)) {
 			return $startDate->isPast();
@@ -81,7 +81,7 @@ class Lesson extends Model implements WithTags
 			return true;
 		}
 
-		return !is_null($this->startDate());
+		return !is_null($this->getStartDate());
 	}
 
 	public function isDefaultStartDate(User $user = null)
@@ -105,7 +105,7 @@ class Lesson extends Model implements WithTags
 	 * @param User|null $user
 	 * @return Carbon|null
 	 */
-	public function startDate(User $user = null)
+	public function getStartDate(User $user = null)
 	{
 		$user = $user ?? Auth::user();
 

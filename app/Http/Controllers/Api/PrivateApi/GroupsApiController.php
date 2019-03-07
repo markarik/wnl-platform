@@ -6,7 +6,6 @@ use App\Http\Requests\Course\UpdateGroup;
 use App\Models\Group;
 use Facades\App\Contracts\CourseProvider;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class GroupsApiController extends ApiController {
 	public function __construct(Request $request) {

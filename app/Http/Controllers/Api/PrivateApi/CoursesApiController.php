@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Course\UpdateCourse;
 use App\Models\Course;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CoursesApiController extends ApiController
 {

@@ -26,6 +26,7 @@
 								:config="datepickerConfig"
 								:value="productLesson.start_date"
 								@onChange="onDateChange($event, productLesson)"
+								@closed="onDatePickerClosed(productLesson)"
 							/>
 						</td>
 						<td>
@@ -187,13 +188,14 @@ export default {
 
 			return productLessonsList.map(this.serializeProductLesson);
 		},
-		async onDateChange(value, productLesson) {
+		onDateChange(value, productLesson) {
+			productLesson.start_date = value[0];
+		},
+		async onDatePickerClosed(productLesson) {
 			try {
 				await axios.put(getApiUrl(`lesson_product/${productLesson.id}`), {
-					start_date: moment.utc(value[0]).unix(),
+					start_date: moment.utc(productLesson.start_date).unix(),
 				});
-
-				productLesson.start_date = value[0];
 
 				this.addAutoDismissableAlert({
 					text: 'Zapisano!',

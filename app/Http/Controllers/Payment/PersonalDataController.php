@@ -55,9 +55,26 @@ class PersonalDataController extends Controller
 
 		session()->flash('url.intended', route('payment-personal-data'));
 
+		$coupon = $this->readCoupon(Auth::user());
+		$productPriceWithCoupon = null;
+		$couponValue = null;
+
+		if (!empty($coupon)) {
+			if ($coupon->is_percentage) {
+				$value = number_format($coupon->value * $product->price / 100, 2, '.', '');
+				$productPriceWithCoupon = $product->price - $value;
+				$couponValue = "- {$coupon->value} %";
+			} else {
+				$productPriceWithCoupon = $product->price - $coupon->value;
+				$couponValue = "- {$coupon->value} zł";
+			}
+		}
+
 		return view('payment.personal-data', [
 			'form'    => $form,
 			'product' => $product,
+			'couponValue' => $couponValue,
+			'productPriceWithCoupon' => $productPriceWithCoupon
 		]);
 
 	}
@@ -113,13 +130,9 @@ class PersonalDataController extends Controller
 			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 		]);
 
-		$userCoupon = $user->coupons->first();
-		if (session()->has('coupon')) {
-			$coupon = session()->get('coupon')->fresh();
-			$this->addCoupon($order, $coupon);
-		} elseif ($userCoupon) {
-			$this->addCoupon($order, $userCoupon);
-		} elseif ($order->product->slug !== 'wnl-album') {
+		$coupon = $this->readCoupon($user);
+
+		if (empty($coupon) && $order->product->slug !== 'wnl-album') {
 			$this->generateStudyBuddy($order);
 		}
 	}
@@ -144,6 +157,15 @@ class PersonalDataController extends Controller
 		$coupon->products()->attach(
 			Product::whereIn('slug', ['wnl-online', 'wnl-online-onsite'])->get()
 		);
+	}
+
+	protected function readCoupon($user) {
+		$userCoupon = $user->coupons->first();
+		if (session()->has('coupon')) {
+			return session()->get('coupon')->fresh();
+		} elseif ($userCoupon) {
+			return $userCoupon;
+		}
 	}
 
 	protected function createAccount($request)
@@ -222,7 +244,7 @@ class PersonalDataController extends Controller
 	protected function updateOrder($user, $request)
 	{
 		Log::notice('Updating order');
-		$order = $user->orders()
+		$user->orders()
 			->recent()
 			->update([
 				'product_id' => Session::get('product')->id,

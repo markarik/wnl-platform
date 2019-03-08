@@ -174,7 +174,7 @@ export default {
 			let includedQuestions = fetchedForm.included.quiz_questions;
 
 			if (includedQuestions) {
-				Object.assign(this.quizQuestionsObjects, includedQuestions);
+				this.quizQuestionsObjects = {...this.quizQuestionsObjects, ...includedQuestions};
 				this.formPopulated = true;
 			}
 		},

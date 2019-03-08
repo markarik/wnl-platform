@@ -5,11 +5,11 @@
 		</label>
 
 		<input class="input datepicker"
-			   :name="name"
-			   ref="input"
-			   :placeholder="placeholder"
-			   v-model="inputValue"
-			   @input="$emit('input', $event.target.value)"
+			:name="name"
+			ref="input"
+			:placeholder="placeholder"
+			v-model="inputValue"
+			@input="onDateInput"
 		/>
 
 		<template v-if="hasErrors">
@@ -46,6 +46,7 @@ import {pl} from 'flatpickr/dist/l10n/pl.js';
 
 export default {
 	name: 'Datepicker',
+	mixins: [formInput],
 	props: {
 		config: {
 			default: () => ({}),
@@ -74,8 +75,11 @@ export default {
 		setDate(newDate, oldDate) {
 			newDate && this.datepicker.setDate(newDate);
 		},
+		onDateInput(event) {
+			this.onInput(event);
+			this.$emit('input', event.target.value);
+		}
 	},
-	mixins: [formInput],
 	mounted() {
 		if (!this.datepicker) {
 			this.datepicker = new Flatpickr(this.$refs.input, {

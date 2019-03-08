@@ -64,7 +64,7 @@ export default {
 				activeSortColumnName: name,
 			});
 
-			this.$router.push({ query: { ...this.$route.query, sortDirection, sort: name }});
+			this.$router.push({ query: { ...this.$route.query, sortDirection, sort: name }, hash: this.$route.hash});
 		},
 	},
 	mounted() {

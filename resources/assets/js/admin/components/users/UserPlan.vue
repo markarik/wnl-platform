@@ -202,8 +202,8 @@ export default {
 
 			const userLessonsList = Object.values(userLessons);
 
-			if (!userLessonsList.length) {
-				return;
+			if (!userLessonsList || !userLessonsList.length) {
+				return [];
 			}
 
 			return userLessonsList.map(userLesson => {

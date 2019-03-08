@@ -197,8 +197,7 @@ export default {
 				$wnl.logger.capture(e);
 			}
 		},
-		async getUserLessons() {
-			const userPlanResponse = await axios.get(getApiUrl(`user_lesson/${this.user.id}`));
+		getUserLessons(userPlanResponse) {
 			const { data: {...userLessons}} = userPlanResponse;
 
 			const userLessonsList = Object.values(userLessons);
@@ -221,9 +220,12 @@ export default {
 	async mounted() {
 		this.loading = true;
 		try {
-			await this.fetchAllLessons();
-			this.userLessons = await this.getUserLessons();
+			const [userPlanResponse] = await Promise.all([
+				axios.get(getApiUrl(`user_lesson/${this.user.id}`)),
+				this.fetchAllLessons()
+			]);
 
+			this.userLessons = this.getUserLessons(userPlanResponse);
 			nextTick(() => {
 				this.$refs.filterInput && this.$refs.filterInput.focus();
 			});

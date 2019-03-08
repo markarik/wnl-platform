@@ -14,7 +14,6 @@ class LessonsTableSeeder extends Seeder
 		DB::table('lessons')->insert([
 			[
 				'name'     => 'Przykładowa lekcja',
-				'group_id' => DB::table('groups')->first()->id,
 			],
 		]);
 	}

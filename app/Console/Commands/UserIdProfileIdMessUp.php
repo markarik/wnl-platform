@@ -124,10 +124,7 @@ class UserIdProfileIdMessUp extends Command
 		$this->info('[MySQL] Gathering data');
 		$lessons = Lesson
 			::select('id')
-			// 11 - Próbny Lek
-			// 14 - Dodatki
-			// 15 - Powtórki
-			->whereNotIn('group_id', [11, 14, 15])
+			->where(['is_required', 1])
 			->get()
 			->pluck('id')
 			->toArray();

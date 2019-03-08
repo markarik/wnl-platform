@@ -103,10 +103,6 @@ $factory->define(App\Models\Screen::class, function (Faker\Generator $faker) {
 $factory->define(App\Models\Lesson::class, function (Faker\Generator $faker) {
 	return [
 		'name' => $faker->catchPhrase,
-		'group_id' => function () {
-			return factory(App\Models\Group::class)->create()->id;
-		},
-		'order_number' => $faker->randomDigitNotNull,
 		'is_required' => (int)$faker->boolean,
 	];
 });

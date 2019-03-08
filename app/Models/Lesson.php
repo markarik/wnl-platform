@@ -13,7 +13,7 @@ class Lesson extends Model implements WithTags
 {
 	use Cached, Searchable;
 
-	protected $fillable = ['name', 'group_id', 'is_required'];
+	protected $fillable = ['name', 'is_required'];
 
 	/** @var Carbon */
 	private $startDate = null;
@@ -25,11 +25,6 @@ class Lesson extends Model implements WithTags
 	public function screens()
 	{
 		return $this->hasMany('\App\Models\Screen');
-	}
-
-	public function group()
-	{
-		return $this->belongsTo('\App\Models\Group');
 	}
 
 	public function tags()

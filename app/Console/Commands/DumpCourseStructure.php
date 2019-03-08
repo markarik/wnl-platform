@@ -25,22 +25,15 @@ class DumpCourseStructure extends Command
 	protected $description = 'Command description';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed
 	 */
 	public function handle()
 	{
+		$this->error('This Command isn\'t ready for tree course structure');
+		return;
+
 		$fileName = $this->argument('file');
 		$action = $this->argument('action');
 

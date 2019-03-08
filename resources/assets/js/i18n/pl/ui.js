@@ -33,6 +33,7 @@ export const ui = {
 		notFound: `Ups, zapisywanie nie powiodło się.
 			Najprawdopodobniej treść do której się odwołujesz została usunięta.
 			W przypadku dalszych problemów odśwież stronę.`,
+		validationFailed: 'Nie udało się zapisać zmian. Formularz zawiera błędy.',
 		somethingWentWrongUnofficial: 'Psayayay coś poszło nie tak. Lepiej odśwież stronę... :(',
 		unauthorized: 'Nie masz uprawnień do tego działania.',
 	},

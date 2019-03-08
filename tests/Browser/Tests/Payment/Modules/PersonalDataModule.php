@@ -54,9 +54,9 @@ class PersonalDataModule
 	protected function navigate(BethinkBrowser $browser)
 	{
 		// Check if personal-data is current page, if not,
-		// navigate to it using random product.
+		// navigate to it using a product.
 		if (!str_is('*personal-data*', $browser->getCurrentPath())) {
-			$browser->visit('payment/personal-data/' . array_random(['wnl-online', 'wnl-online-onsite']));
+			$browser->visit('payment/personal-data/wnl-online');
 		}
 	}
 

@@ -45,12 +45,12 @@ class ExampleData
 
     const PRODUCTS = [
         [
-            'name' => 'Kurs stacjonarny',
-            'invoice_name' => 'Dostęp do platformy e-learningowej oraz udział w spotkaniach warsztatowych w ramach kursu "Więcej niż LEK", przygotowującego do Lekarskiego Egzaminu Końcowego',
-            'price' => 2200.00,
-            'slug' => 'wnl-online-onsite',
-            'quantity' => 50,
-            'initial' => 50,
+            'name' => 'Album map myśli',
+            'invoice_name' => 'Album map myśli - materiały do kursu przygotowującego do Lekarskiego Egzaminu Końcowego',
+            'price' => 300.00,
+            'slug' => 'wnl-album',
+            'quantity' => 100,
+            'initial' => 100,
         ],
         [
             'name' => 'Kurs internetowy',

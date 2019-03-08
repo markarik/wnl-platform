@@ -2,7 +2,10 @@
 	<div class="next-lesson" v-if="nextLessonAvailable || nextLessonDate">
 		<div class="next">{{ next }}</div>
 		<div>
-			<span class="group">{{ groupName }} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> </span>
+			<span class="group"
+				v-for="(groupName, index) in groupNames"
+				:key="index"
+			>{{ groupName }} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> </span>
 			<span class="lesson">{{ lessonName }}</span>
 		</div>
 		<div class="cta">
@@ -69,7 +72,8 @@ export default {
 	mixins: [emits_events],
 	computed: {
 		...mapGetters('course', [
-			'getGroup',
+			'getAncestorNodes',
+			'getNodeByLessonId',
 			'getLessons',
 			'getLesson',
 			'isLessonAvailable',
@@ -89,8 +93,12 @@ export default {
 		courseId() {
 			return this.$route.params.courseId;
 		},
-		groupName() {
-			return this.nextLesson.groups && this.getGroup(this.nextLesson.groups).name;
+		groupNames() {
+			if (!this.nextLesson.id) {
+				return [];
+			}
+
+			return this.getAncestorNodes(this.getNodeByLessonId(this.nextLesson.id).id).map(node => node.model.name);
 		},
 		nextLessonAvailable() {
 			return this.status !== STATUS_NONE;

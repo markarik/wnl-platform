@@ -315,7 +315,7 @@ class User extends Authenticatable
 	}
 
 	/**
-	 * @return Collection
+	 * @return Collection|Lesson[]
 	 */
 	public function getLessonsAvailability()
 	{

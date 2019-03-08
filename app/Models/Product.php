@@ -45,9 +45,14 @@ class Product extends Model
 	public function lessons()
 	{
 		return
-			$this->belongsToMany('App\Models\Lesson')
-				->withPivot('start_date')
-				->using('App\Models\LessonProduct');
+			$this->hasManyThrough(
+				'App\Models\Lesson',
+				'App\Models\LessonProduct',
+				'product_id',
+				'id',
+				'id',
+				'lesson_id'
+			);
 	}
 
 	public function instalments()

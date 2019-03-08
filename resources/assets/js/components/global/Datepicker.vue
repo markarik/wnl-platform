@@ -87,6 +87,7 @@ export default {
 		if (!this.datepicker) {
 			this.config.onChange = this.onChange;
 			this.config.onValueUpdate = this.dateUpdated;
+			this.config.onClose = () => this.$emit('closed', this.selectedDates);
 			this.datepicker = new Flatpickr(this.$el, {
 				...this.config,
 				locale: {
@@ -97,6 +98,11 @@ export default {
 			this.setDate(this.value);
 		}
 		this.$watch('config', this.redraw);
+	},
+	watch: {
+		value() {
+			this.setDate(this.value);
+		}
 	},
 	beforeDestroy () {
 		if (this.datepicker) {

@@ -66,7 +66,7 @@ class UserLessonTest extends ApiTestCase
 		$response->assertStatus(200);
 
 		foreach ($user->getLessonsAvailability() as $lesson) {
-			$this->assertTrue($lesson->startDate($user)->isToday(), "Start date is not today");
+			$this->assertTrue($lesson->getStartDate($user)->isToday(), "Start date is not today");
 		};
 
 		$endDate = $response->json('end_date');

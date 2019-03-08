@@ -104,7 +104,11 @@ class Lesson extends Model implements WithTags
 	{
 		$user = $user ?? Auth::user();
 
-		$lesson = $user->getLessonsAvailability()->filter(function ($lesson) {
+		if (is_null($user)) {
+			return null;
+		}
+
+		$lesson = $user->getLessonsAvailability()->filter(function (Lesson $lesson) {
 			return $lesson->id === $this->id;
 		})->first();
 
@@ -112,7 +116,7 @@ class Lesson extends Model implements WithTags
 			return null;
 		}
 
-		// Pivot for UserLesson, no pivot for LessonProduct
-		return Carbon::parse($lesson->start_date ?? $lesson->pivot->start_date);
+		// No pivot for LessonProduct, pivot for UserLesson
+		return Carbon::parse($lesson->lesson_product_start_date ?? $lesson->pivot->start_date);
 	}
 }

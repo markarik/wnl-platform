@@ -305,7 +305,8 @@ class User extends Authenticatable
 
 	public function getDefaultLessons()
 	{
-		return Lesson::where('product_id', '=', $this->getLatestPaidCourseProductId())
+		return Lesson::select(['lessons.*', 'lesson_product.start_date as lesson_product_start_date'])
+			->where('product_id', '=', $this->getLatestPaidCourseProductId())
 			->whereNotIn('lesson_id', $this->userLessons->pluck('id'))
 			->join('lesson_product', 'lesson_product.lesson_id', '=', 'lessons.id')
 			->get()
@@ -501,7 +502,7 @@ class User extends Authenticatable
 				return;
 			}
 
-			$productLesson = $productLessons->first(function ($lesson) use ($node) {
+			$productLesson = $productLessons->first(function (Lesson $lesson) use ($node) {
 				return $lesson->id === $node->structurable_id;
 			});
 

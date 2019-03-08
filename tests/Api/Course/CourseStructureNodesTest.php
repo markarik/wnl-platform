@@ -56,7 +56,7 @@ class CourseStructureNodesTest extends ApiTestCase
 		//// RUN ////
 		$response = $this
 			->actingAs($user)
-			->json('GET', $this->url('/course_structure_nodes/' . $course->id . '?include=lessons'));
+			->json('GET', $this->url('/course_structure_nodes/' . $course->id . '?include=lessons,structurable'));
 		$responseLessons = $response->json('included.lessons');
 
 		//// ASSERT ////
@@ -78,10 +78,9 @@ class CourseStructureNodesTest extends ApiTestCase
 
 	public function testLessonsWithCustomStartDates() {
 		//// PREPARE ////
-		$now = Carbon::now();
-		$courseStartDate = $now->subDays(50);
-		$defaultLessonStartDate = $now->subDays(40);
-		$customLessonStartDate = $now->subDays(30);
+		$courseStartDate = Carbon::now()->subDays(50);
+		$defaultLessonStartDate = Carbon::now()->subDays(40);
+		$customLessonStartDate = Carbon::now()->subDays(20);
 
 		/** @var User $user */
 		$user = factory(User::class)->create();
@@ -96,7 +95,7 @@ class CourseStructureNodesTest extends ApiTestCase
 
 		/** @var Collection $lessons */
 		$lessons = factory(Lesson::class, 2)->create();
-		$lessons->each(function (Lesson $lesson, $index) use ($course, $product, $defaultLessonStartDate) {
+		$lessons->each(function (Lesson $lesson) use ($course, $product, $defaultLessonStartDate) {
 			$this->addLessonToCourseStructure($course, $lesson);
 			$this->addLessonToProduct($product, $lesson, $defaultLessonStartDate);
 		});
@@ -113,7 +112,7 @@ class CourseStructureNodesTest extends ApiTestCase
 		//// RUN ////
 		$response = $this
 			->actingAs($user)
-			->json('GET', $this->url('/course_structure_nodes/' . $course->id . '?include=lessons'));
+			->json('GET', $this->url('/course_structure_nodes/' . $course->id . '?include=lessons,structurable'));
 		$responseLessons = $response->json('included.lessons');
 
 		//// ASSERT ////

@@ -127,18 +127,22 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', ['fetchAllLessons']),
+		serializeProductLesson(productLesson) {
+			const matchingLesson = this.lessons.find(lesson => productLesson.lesson_id === lesson.id) || {};
+			return {
+				...productLesson,
+				start_date: new Date(productLesson.start_date * 1000),
+				lesson_name: matchingLesson.name
+			};
+		},
 		async onAddLesson(lesson) {
 			if (!this.productLessons.some(({lesson_id}) => lesson_id === lesson.lessonId)) {
-				await axios.post(getApiUrl('lesson_product'), {
+				const {data: productLesson} = await axios.post(getApiUrl('lesson_product'), {
 					product_id: this.id,
 					lesson_id: lesson.lessonId,
 					start_date: moment.utc(lesson.startDate).unix(),
 				});
-				this.productLessons.push({
-					lesson_name: lesson.name,
-					lesson_id: lesson.lessonId,
-					start_date: lesson.startDate,
-				});
+				this.productLessons.push(this.serializeProductLesson(productLesson));
 			}
 		},
 		async performLessonRemoval(productLesson) {
@@ -172,10 +176,7 @@ export default {
 				// Do nothing, swal throws an exception on cancel
 			}
 		},
-		async getProductLessons() {
-			const productLessonResponse = await axios.post(getApiUrl('lesson_product/query'), {
-				product_id: this.id
-			});
+		getProductLessons(productLessonResponse) {
 			const { data: {...productLessons}} = productLessonResponse;
 
 			const productLessonsList = Object.values(productLessons);
@@ -184,14 +185,7 @@ export default {
 				return [];
 			}
 
-			return productLessonsList.map(productLesson => {
-				const matchingLesson = this.lessons.find(lesson => productLesson.lesson_id === lesson.id) || {};
-				return {
-					...productLesson,
-					start_date: new Date(productLesson.start_date * 1000),
-					lesson_name: matchingLesson.name
-				};
-			});
+			return productLessonsList.map(this.serializeProductLesson);
 		},
 		async onDateChange(value, productLesson) {
 			try {
@@ -220,8 +214,13 @@ export default {
 	async mounted() {
 		this.loading = true;
 		try {
-			await this.fetchAllLessons();
-			this.productLessons = await this.getProductLessons();
+			const [productLessonResponse] = await Promise.all([
+				axios.post(getApiUrl('lesson_product/query'), {
+					product_id: this.id
+				}),
+				this.fetchAllLessons()
+			]);
+			this.productLessons = this.getProductLessons(productLessonResponse);
 
 			nextTick(() => {
 				this.$refs.filterInput && this.$refs.filterInput.focus();

@@ -88,14 +88,13 @@ export default {
 
 			return this.lessons
 				.filter(lesson => !this.productLessons.find(({lesson_id}) => lesson_id === lesson.id)
-					&& lesson.name.toLowerCase().includes(this.lessonInput.toLowerCase())
+					&& lesson.name.toLowerCase().startsWith(this.lessonInput.toLowerCase())
 				)
 				.slice(0, 10);
 		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('lessons', ['fetchAllLessons']),
 		onNewLessonSelect(lesson) {
 			this.newLesson.lessonId = lesson.id;
 			this.newLesson.name = lesson.name;

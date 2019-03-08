@@ -11,8 +11,8 @@
 		<div class="columns">
 			<div class="column left">
 				<wnl-text name="name">Nazwa</wnl-text>
-				<wnl-text name="slug">
-					Slug<br>
+				<wnl-text name="name">Nazwa</wnl-text>
+				<wnl-text name="slug">Slug<br>
 					<small>Unikatowy identyfikator kursu, na jego podstawie produkt wyświetla
 						się na stronie sprzedażowej.</small>
 				</wnl-text>
@@ -20,8 +20,7 @@
 					<wnl-text name="price">Cena brutto</wnl-text>
 					<wnl-select name="vat_rate" :options="vatRates">Stawka VAT</wnl-select>
 				</div>
-				<wnl-text name="vat_note">
-					Opis VAT<br>
+				<wnl-text name="vat_note">Opis VAT<br>
 					<small>Notatka dotycząca podstawy zwolnienia z podatku pojawiająca się
 						na fakturze. Zbędna w przypadku stawki 23%.</small>
 				</wnl-text>

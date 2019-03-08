@@ -5,11 +5,11 @@
 		</label>
 
 		<input class="input datepicker"
-			   :name="name"
-			   ref="input"
-			   :placeholder="placeholder"
-			   v-model="inputValue"
-			   @input="$emit('input', $event.target.value)"
+			:name="name"
+			ref="input"
+			:placeholder="placeholder"
+			v-model="inputValue"
+			@input="onDateInput"
 		/>
 
 		<template v-if="hasErrors">
@@ -75,6 +75,10 @@ export default {
 		setDate(newDate, oldDate) {
 			newDate && this.datepicker.setDate(newDate);
 		},
+		onDateInput(event) {
+			this.onInput(event);
+			this.$emit('input', event.target.value);
+		}
 	},
 	mounted() {
 		if (!this.datepicker) {

@@ -41,12 +41,10 @@ const mutations = {
 
 // Actions
 const actions = {
-	fetchAllLessons({ commit, getters }) {
+	async fetchAllLessons({ commit, getters }) {
 		if (_.isEmpty(getters.allLessons)) {
-			axios.get(getApiUrl('lessons/all'))
-				.then((response) => {
-					commit(types.SETUP_LESSONS, response.data);
-				});
+			const response = await axios.get(getApiUrl('lessons/all'));
+			commit(types.SETUP_LESSONS, response.data);
 		}
 	},
 	setup({ commit, dispatch }) {

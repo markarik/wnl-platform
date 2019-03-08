@@ -9,6 +9,7 @@ use App\Models\LessonProduct;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\UserLesson;
 use App\Models\UserSubscription;
 use \Facades\App\Contracts\CourseProvider;
 use Carbon\Carbon;
@@ -19,6 +20,7 @@ use Tests\Api\ApiTestCase;
 class CourseStructureNodesTest extends ApiTestCase
 {
 	public function testLessonsInVariousProducts() {
+		//// PREPARE ////
 		$longTimeAgo = Carbon::now()->subDays(100);
 		$mediumTimeAgo = Carbon::now()->subDays(50);
 		$shortTimeAgo = Carbon::now()->subDays(10);
@@ -51,33 +53,84 @@ class CourseStructureNodesTest extends ApiTestCase
 		$this->addLessonToProduct($oldPaidCourseProduct, $lessonNotInLatestPaidCourseProduct, $longTimeAgo);
 		$this->addLessonToProduct($notPaidCourseProduct, $lessonNotInLatestPaidCourseProduct, $shortTimeAgo);
 
+		//// RUN ////
 		$response = $this
 			->actingAs($user)
 			->json('GET', $this->url('/course_structure_nodes/' . $course->id . '?include=lessons'));
-
-		$response->assertStatus(200);
 		$responseLessons = $response->json('included.lessons');
 
+		//// ASSERT ////
+		$response->assertStatus(200);
 		$this->assertCount(2, $responseLessons);
 
 		// Lesson in latest paid course product
-		$this->assertIsArray($responseLessons[$lessonInLatestPaidCourseProduct->id], 'lesson is not on the list');
-		$this->assertEquals(
-			$mediumTimeAgo->timestamp,
-			$responseLessons[$lessonInLatestPaidCourseProduct->id]['startDate'],
-			'startDate is incorrect'
-		);
-		$this->assertTrue($responseLessons[$lessonInLatestPaidCourseProduct->id]['isAccessible'], 'lesson is not accessible when it should');
-		$this->assertTrue($responseLessons[$lessonInLatestPaidCourseProduct->id]['isAvailable'], 'lesson is not available when it should');
+		$this->assertIsArray($responseLessons[$lessonInLatestPaidCourseProduct->id]);
+		$this->assertEquals($mediumTimeAgo->timestamp, $responseLessons[$lessonInLatestPaidCourseProduct->id]['startDate']);
+		$this->assertTrue($responseLessons[$lessonInLatestPaidCourseProduct->id]['isAccessible']);
+		$this->assertTrue($responseLessons[$lessonInLatestPaidCourseProduct->id]['isAvailable']);
 
 		// Lesson not in latest paid course product
-		$this->assertIsArray($responseLessons[$lessonNotInLatestPaidCourseProduct->id], 'lesson is not on the list');
-		$this->assertNull(
-			$responseLessons[$lessonNotInLatestPaidCourseProduct->id]['startDate'],
-			'startDate should be null'
-		);
-		$this->assertFalse($responseLessons[$lessonNotInLatestPaidCourseProduct->id]['isAccessible'], 'lesson is accessible when it should not');
-		$this->assertFalse($responseLessons[$lessonNotInLatestPaidCourseProduct->id]['isAvailable'], 'lesson is available when it should not');
+		$this->assertIsArray($responseLessons[$lessonNotInLatestPaidCourseProduct->id]);
+		$this->assertNull($responseLessons[$lessonNotInLatestPaidCourseProduct->id]['startDate']);
+		$this->assertFalse($responseLessons[$lessonNotInLatestPaidCourseProduct->id]['isAccessible']);
+		$this->assertFalse($responseLessons[$lessonNotInLatestPaidCourseProduct->id]['isAvailable']);
+	}
+
+	public function testLessonsWithCustomStartDates() {
+		//// PREPARE ////
+		$now = Carbon::now();
+		$courseStartDate = $now->subDays(50);
+		$defaultLessonStartDate = $now->subDays(40);
+		$customLessonStartDate = $now->subDays(30);
+
+		/** @var User $user */
+		$user = factory(User::class)->create();
+		factory(UserSubscription::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$product = $this->createProductWithOrder($user, $courseStartDate, true);
+
+		$course = factory(Course::class)->create();
+		CourseProvider::shouldReceive('getCourseId')->andReturn($course->id);
+
+		/** @var Collection $lessons */
+		$lessons = factory(Lesson::class, 2)->create();
+		$lessons->each(function (Lesson $lesson, $index) use ($course, $product, $defaultLessonStartDate) {
+			$this->addLessonToCourseStructure($course, $lesson);
+			$this->addLessonToProduct($product, $lesson, $defaultLessonStartDate);
+		});
+
+		$lessonWithDefaultStartDate = $lessons->get(0);
+		$lessonWithCustomStartDate = $lessons->get(1);
+
+		factory(UserLesson::class)->create([
+			'user_id' => $user->id,
+			'lesson_id' => $lessonWithCustomStartDate->id,
+			'start_date' => $customLessonStartDate
+		]);
+
+		//// RUN ////
+		$response = $this
+			->actingAs($user)
+			->json('GET', $this->url('/course_structure_nodes/' . $course->id . '?include=lessons'));
+		$responseLessons = $response->json('included.lessons');
+
+		//// ASSERT ////
+		$response->assertStatus(200);
+		$this->assertCount(2, $responseLessons);
+
+		$this->assertIsArray($responseLessons[$lessonWithCustomStartDate->id]);
+		$this->assertEquals($customLessonStartDate->timestamp, $responseLessons[$lessonWithCustomStartDate->id]['startDate']);
+		$this->assertTrue($responseLessons[$lessonWithCustomStartDate->id]['isAccessible']);
+		$this->assertTrue($responseLessons[$lessonWithCustomStartDate->id]['isAvailable']);
+		$this->assertFalse($responseLessons[$lessonWithCustomStartDate->id]['isDefaultStartDate']);
+
+		$this->assertIsArray($responseLessons[$lessonWithDefaultStartDate->id]);
+		$this->assertEquals($defaultLessonStartDate->timestamp, $responseLessons[$lessonWithDefaultStartDate->id]['startDate']);
+		$this->assertTrue($responseLessons[$lessonWithDefaultStartDate->id]['isAccessible']);
+		$this->assertTrue($responseLessons[$lessonWithDefaultStartDate->id]['isAvailable']);
+		$this->assertTrue($responseLessons[$lessonWithDefaultStartDate->id]['isDefaultStartDate']);
 	}
 
 	private function createProductWithOrder(User $user, Carbon $courseStart, bool $paid)

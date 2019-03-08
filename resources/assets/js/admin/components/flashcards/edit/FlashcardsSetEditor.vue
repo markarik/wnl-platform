@@ -144,13 +144,13 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters('lessons', ['allLessons']),
+		...mapState('lessons', ['lessons']),
 		...mapState('flashcards', {
 			allFlashcards: 'flashcards',
 			areFlashcardsReady: 'ready'
 		}),
 		lessonsOptions() {
-			return this.allLessons.map(lesson => ({
+			return this.lessons.map(lesson => ({
 				text: lesson.name,
 				value: lesson.id,
 			}));

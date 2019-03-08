@@ -4,8 +4,8 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Course\UpdateGroup;
 use App\Models\Group;
+use Facades\App\Contracts\CourseProvider;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class GroupsApiController extends ApiController {
 	public function __construct(Request $request) {
@@ -16,7 +16,7 @@ class GroupsApiController extends ApiController {
 	public function post(UpdateGroup $request) {
 		$group = Group::create([
 			'name' => $request->get('name'),
-			'course_id' => 1,
+			'course_id' => CourseProvider::getCourseId(),
 		]);
 
 		return $this->transformAndRespond($group);
@@ -28,14 +28,8 @@ class GroupsApiController extends ApiController {
 		if (empty($group)) {
 			return $this->respondNotFound();
 		}
-		DB::transaction(function() use ($group, $request) {
-			$group->update($request->all());
 
-			foreach ($group->lessons as $lesson) {
-				$lesson->order_number = array_search($lesson->id, $request->lessons) + 1;
-				$lesson->save();
-			}
-		});
+		$group->update($request->all());
 
 		return $this->transformAndRespond($group);
 	}

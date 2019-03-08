@@ -15,11 +15,6 @@
 				name="name"
 				class="margin top bottom"
 		>Nazwa</wnl-form-text>
-
-		<h3>Kolejność grup lekcji</h3>
-		<wnl-sortable name="groups">
-			<template slot-scope="slotProps">{{slotProps.item.name}}</template>
-		</wnl-sortable>
 	</wnl-form>
 </template>
 
@@ -47,7 +42,7 @@
 </style>
 
 <script>
-import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Sortable as WnlSortable} from 'js/components/global/form';
+import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit} from 'js/components/global/form';
 
 export default {
 	name: 'CourseEditor',
@@ -60,14 +55,13 @@ export default {
 			return this.isEdit ? 'put' : 'post';
 		},
 		resourceRoute() {
-			return this.isEdit ? `courses/${this.id}?include=groups` : 'courses?include=groups';
+			return this.isEdit ? `courses/${this.id}` : 'courses';
 		},
 	},
 	components: {
 		WnlFormText,
 		WnlForm,
 		WnlSubmit,
-		WnlSortable,
 	},
 	methods: {
 		onSubmitSuccess(data) {

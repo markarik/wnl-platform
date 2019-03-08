@@ -13,12 +13,22 @@ fi
 P24_STATUS_URL="$NGROK_URL/payment/status" APP_URL="http://nginx" SESSION_DOMAIN="nginx" DEBUG_BAR="false" docker-compose up -d php
 
 printf "=======================================================\n"
+printf "If you want to run specific test use an argument, e.g.:\n"
+printf "         \`payment-tests.sh --filter=studyBuddy\`      \n"
+printf "                                                       \n"
 printf "To see what Selenium is doing open vnc://127.0.0.1:5900\n"
 printf "              The password is \`secret\`               \n"
 printf "              Don't use \`yarn run hot\`               \n"
 printf "=======================================================\n"
 
-docker exec -it php /bin/sh -c 'php artisan dusk tests/Browser/Tests/Payment/PaymentTest.php'
+DUSK_ARGS="tests/Browser/Tests/Payment/PaymentTest.php"
+
+if [[ -n $1 ]]
+then
+    DUSK_ARGS=$1
+fi
+
+docker exec -it php /bin/sh -c "php artisan dusk $DUSK_ARGS"
 
 ./ngrok-disable.sh -r 0
 

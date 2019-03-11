@@ -58,7 +58,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
+		...mapGetters('taxonomyTerms', ['termById', 'getAncestorNodesById']),
 		...mapGetters('taxonomies', ['taxonomyById']),
 		...mapGetters(['getSetting']),
 		...mapState('taxonomies', ['taxonomies']),

@@ -55,7 +55,7 @@ export default {
 			isLoadingTerms: 'isLoading',
 			terms: 'nodes',
 		}),
-		...mapGetters('taxonomyTerms', ['getChildrenByParentId', 'getRootNodes']),
+		...mapGetters('taxonomyTerms', ['getChildrenNodesByParentId', 'getRootNodes']),
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

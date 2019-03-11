@@ -58,7 +58,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters('courseStructure', ['nodeById', 'getAncestorsById']),
+		...mapGetters('courseStructure', ['nodeById', 'getAncestorNodesById']),
 		...mapState('courseStructure', ['selectedNodes', 'isSaving']),
 		node() {
 			if (this.selectedNodes.length === 0) {
@@ -92,7 +92,7 @@ export default {
 	created() {
 		if (!this.node) return;
 
-		this.parent = this.getAncestorsById(this.node.id).slice(-1)[0];
+		this.parent = this.getAncestorNodesById(this.node.id).slice(-1)[0];
 		this.structurable = this.node.structurable;
 	},
 	watch: {
@@ -100,7 +100,7 @@ export default {
 			if (!this.node) return;
 
 			this.structurable = this.node.structurable;
-			this.parent = this.getAncestorsById(this.node.id).slice(-1)[0];
+			this.parent = this.getAncestorNodesById(this.node.id).slice(-1)[0];
 		}
 	}
 };

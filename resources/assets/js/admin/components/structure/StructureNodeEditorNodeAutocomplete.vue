@@ -15,7 +15,7 @@
 			@change="onSelect"
 		>
 			<div slot-scope="slotProps">
-				<div class="autocomplete-parent-node">{{getAncestorsById(slotProps.item.id).map(ancestor => ancestor.structurable.name).join(' > ')}}</div>
+				<div class="autocomplete-parent-node">{{getAncestorNodesById(slotProps.item.id).map(ancestor => ancestor.structurable.name).join(' > ')}}</div>
 
 				<div>
 					<span class="icon is-small">
@@ -72,7 +72,7 @@ export default {
 	},
 	computed: {
 		...mapState('courseStructure', ['nodes']),
-		...mapGetters('courseStructure', ['getAncestorsById', 'getStructurableIcon']),
+		...mapGetters('courseStructure', ['getAncestorNodesById', 'getStructurableIcon']),
 		autocompletenodes() {
 			if (!this.search) {
 				return [];
@@ -85,7 +85,7 @@ export default {
 			return uniqBy(nodes, 'id').slice(0, 25);
 		},
 		ancestors() {
-			return this.getAncestorsById(this.selected.id);
+			return this.getAncestorNodesById(this.selected.id);
 		}
 	},
 	methods: {

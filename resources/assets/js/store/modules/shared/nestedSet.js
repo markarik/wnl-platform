@@ -17,7 +17,7 @@ export const nestedSetGetters = {
 	nodeById: state => id => {
 		return state.nodes.find(node => node.id === id);
 	},
-	getAncestorsById: state => id => {
+	getAncestorNodesById: state => id => {
 		const ancestors = [];
 
 		let current = state.nodes.find(node => node.id === id);
@@ -28,12 +28,12 @@ export const nestedSetGetters = {
 
 		return ancestors;
 	},
-	getChildrenByParentId: state => (parentId) => {
+	getChildrenNodesByParentId: state => (parentId) => {
 		return state.nodes
 			.filter(stateNode => stateNode.parent_id === parentId)
 			.sort((nodeA, nodeB) => nodeA.orderNumber - nodeB.orderNumber);
 	},
-	getRootNodes: (state, getters) => getters.getChildrenByParentId(null),
+	getRootNodes: (state, getters) => getters.getChildrenNodesByParentId(null),
 };
 
 // Mutations
@@ -122,7 +122,7 @@ export const nestedSetActions = {
 			const node = await dispatch('_post', nodeData);
 			commit(types.ADD_NESTED_SET_NODE, node);
 			commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {
-				list: getters.getChildrenByParentId(node.parent_id)
+				list: getters.getChildrenNodesByParentId(node.parent_id)
 			});
 			return node;
 		} catch (error) {
@@ -140,7 +140,7 @@ export const nestedSetActions = {
 			const {parent_id: updatedParentId} = node;
 
 			if (originalParentId !== updatedParentId) {
-				node.orderNumber = getters.getChildrenByParentId(updatedParentId).length;
+				node.orderNumber = getters.getChildrenNodesByParentId(updatedParentId).length;
 			}
 
 			commit(types.UPDATE_NESTED_SET_NODE, {...nodeData, ...node});
@@ -159,7 +159,7 @@ export const nestedSetActions = {
 
 			commit(types.DELETE_NESTED_SET_NODE, node);
 			commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {
-				list: getters.getChildrenByParentId(node.parent_id)
+				list: getters.getChildrenNodesByParentId(node.parent_id)
 			});
 		} catch (error) {
 			throw error;
@@ -182,7 +182,7 @@ export const nestedSetActions = {
 	},
 
 	reorderSiblings({getters, commit}, {node, direction}) {
-		const allSiblings = getters.getChildrenByParentId(node.parent_id);
+		const allSiblings = getters.getChildrenNodesByParentId(node.parent_id);
 		const oldIndex = allSiblings.findIndex(sibling => sibling.id === node.id);
 		const newIndex = oldIndex + direction;
 
@@ -221,7 +221,7 @@ export const nestedSetActions = {
 
 		commit(types.SET_EXPANDED_NESTED_SET, uniq([
 			...state.expandedNodes,
-			...getters.getAncestorsById(node.id).map(ancestor => ancestor.id),
+			...getters.getAncestorNodesById(node.id).map(ancestor => ancestor.id),
 			node.id
 		]));
 	},

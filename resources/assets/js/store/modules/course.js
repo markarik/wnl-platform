@@ -39,7 +39,7 @@ const getters = {
 	name: state => state.name,
 	getNode: state => nodeId => state.structure.find(node => node.id === nodeId),
 	getChildrenNodes: state => parentId => state.structure.filter(node => node.parent_id === parentId),
-	getAncestorNodes: (state, getters) => nodeId => {
+	getAncestorNodesById: (state, getters) => nodeId => {
 		const ancestors = [];
 
 		let currentNode = getters.getNode(nodeId);
@@ -60,7 +60,7 @@ const getters = {
 		return getters.groups.find(group => group.id.toString() === castedGroupId) || {};
 	},
 	getGroupsByLessonId: (state, getters) => lessonId => {
-		return getters.getAncestorNodes(getters.getNodeByLessonId(lessonId).id).map(node => node.model);
+		return getters.getAncestorNodesById(getters.getNodeByLessonId(lessonId).id).map(node => node.model);
 	},
 	getNodeByLessonId: (state) => lessonId => {
 		return state.structure.find(node => node.model.id === lessonId && node.structurable_type === getModelByResource(resources.lessons));

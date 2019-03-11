@@ -71,7 +71,7 @@ export default {
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', {termById: 'nodeById'}),
-		...mapGetters('taxonomyTerms', ['getAncestorsById']),
+		...mapGetters('taxonomyTerms', ['getAncestorNodesById']),
 		...mapState('taxonomyTerms', {selectedTerms: 'selectedNodes', isSaving: 'isSaving'}),
 		parent() {
 			if (this.selectedTerms.length === 0) {

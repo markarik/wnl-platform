@@ -40,15 +40,10 @@ class CouponsAttachProducts extends Command
 	{
 		$coupons = Coupon::all();
 
-		$onlineOnsite = Product::slug('wnl-online-onsite');
 		$online = Product::slug('wnl-online');
 
 		foreach ($coupons as $coupon) {
 			$coupon->products()->attach($online);
-
-			if ($coupon->slug !== 'wnl-online-only') {
-				$coupon->products()->attach($onlineOnsite);
-			}
 		}
 	}
 }

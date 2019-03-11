@@ -156,7 +156,7 @@ class PersonalDataController extends Controller
 
 		$coupon->save();
 		$coupon->products()->attach(
-			Product::whereIn('slug', ['wnl-online', 'wnl-online-onsite'])->get()
+			Product::whereIn('slug', ['wnl-online'])->get()
 		);
 	}
 

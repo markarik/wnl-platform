@@ -12,7 +12,6 @@ class InstalmentsSeeder extends Seeder
 	public function run()
 	{
 		$online = \App\Models\Product::slug('wnl-online');
-		$onsite = \App\Models\Product::slug('wnl-online-onsite');
 		$album = \App\Models\Product::slug('wnl-album');
 		$now = Carbon\Carbon::now();
 
@@ -48,37 +47,6 @@ class InstalmentsSeeder extends Seeder
 				'updated_at' => $now,
 			],
 
-			[
-				'product_id' => $onsite->id,
-				'value_type' => 'percentage',
-				'value' => 50,
-				'due_days' => 7,
-				'due_date' => null,
-				'order_number' => 1,
-				'created_at' => $now,
-				'updated_at' => $now,
-			],
-			[
-				'product_id' => $onsite->id,
-				'value_type' => 'percentage',
-				'value' => 50,
-				'due_days' => null,
-				'due_date' => '2018-06-20',
-				'order_number' => 2,
-				'created_at' => $now,
-				'updated_at' => $now,
-			],
-			[
-				'product_id' => $onsite->id,
-				'value_type' => 'percentage',
-				'value' => 100,
-				'due_days' => null,
-				'due_date' => '2018-07-20',
-				'order_number' => 3,
-				'created_at' => $now,
-				'updated_at' => $now,
-			],
-			
 			[
 				'product_id' => $album->id,
 				'value_type' => 'percentage',

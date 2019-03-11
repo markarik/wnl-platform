@@ -73,7 +73,7 @@ export default {
 	computed: {
 		...mapGetters('taxonomyTerms', {
 			termById: 'nodeById',
-			getAncestorsById: 'getAncestorsById',
+			getAncestorNodesById: 'getAncestorNodesById',
 		}),
 		...mapState('taxonomyTerms', {selectedTerms: 'selectedNodes', isSaving: 'isSaving'}),
 		term() {
@@ -111,7 +111,7 @@ export default {
 
 		this.description = this.term.description;
 		this.tag = this.term.tag;
-		this.parent = this.getAncestorsById(this.term.id).slice(-1)[0];
+		this.parent = this.getAncestorNodesById(this.term.id).slice(-1)[0];
 	},
 	watch: {
 		term() {
@@ -119,7 +119,7 @@ export default {
 
 			this.description = this.term.description;
 			this.tag = this.term.tag;
-			this.parent = this.getAncestorsById(this.term.id).slice(-1)[0];
+			this.parent = this.getAncestorNodesById(this.term.id).slice(-1)[0];
 		}
 	}
 };

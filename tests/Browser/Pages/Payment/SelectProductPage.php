@@ -36,7 +36,6 @@ class SelectProductPage extends Page
 	public function elements()
 	{
 		return [
-			'@onsite-button' => '#btest-wnl-online-onsite-button',
 			'@online-button' => '#btest-wnl-online-button',
 			'@cart' => '.cart'
 		];

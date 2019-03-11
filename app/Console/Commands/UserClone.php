@@ -152,7 +152,7 @@ class UserClone extends Command
 			'value' => 100,
 		]);
 		$order = $user->orders()->create([
-			'product_id' => Product::slug('wnl-onsite')->id,
+			'product_id' => Product::slug('wnl-online')->id,
 			'method' => 'free',
 			'paid_amount' => 0,
 			'paid_at' => Carbon::now(),

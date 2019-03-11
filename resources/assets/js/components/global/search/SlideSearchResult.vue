@@ -2,8 +2,16 @@
 	<wnl-slide-link class="slide-router-link unselectable" :context="context" blank-page="_blank">
 		<div class="slide-context">
 			<div class="group-and-lesson">
-				 <span class="group-name" :title="groupName">{{truncate(groupName, 15)}}</span>
-				<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+					<span
+						v-for="(groupName, index) in groupNames"
+						:key="index"
+						class="group-name"
+						:title="groupName"
+					>
+						{{truncate(groupName, 15)}}
+						<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+					</span>
+
 				<span class="lesson-name" :title="lessonName">{{truncate(lessonName, 30)}}</span>
 			</div>
 			<div class="section-name" :title="sectionName">
@@ -141,15 +149,15 @@ export default {
 		'wnl-slide-link': SlideLink,
 	},
 	computed: {
-		...mapGetters('course', ['getGroup', 'getLesson']),
+		...mapGetters('course', ['getLesson', 'getGroupsByLessonId']),
 		context() {
 			return this.hit._source.context;
 		},
 		content() {
 			return this.hit._source.content;
 		},
-		groupName() {
-			return this.getGroup(this.context.group.id).name;
+		groupNames() {
+			return this.getGroupsByLessonId(this.lessonId).map(group => group.name);
 		},
 		header() {
 			return this.getHighlight(this.hit, 'snippet.header') || this.hit._source.snippet.header;
@@ -157,8 +165,11 @@ export default {
 		id() {
 			return this.hit._source.id;
 		},
+		lessonId() {
+			return this.context.lesson.id;
+		},
 		lessonName() {
-			return this.getLesson(this.context.lesson.id).name;
+			return this.getLesson(this.lessonId).name;
 		},
 		media() {
 			return this.hit._source.snippet && this.hit._source.snippet.media !== null ? mediaMap[this.hit._source.snippet.media] : null;

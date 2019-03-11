@@ -10,6 +10,7 @@ use App\Http\Requests\Qna\UpdateQuestion;
 use App\Models\QnaQuestion;
 use App\Models\Tag;
 use Auth;
+use Facades\App\Contracts\CourseProvider;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 
@@ -92,7 +93,7 @@ class QnaQuestionsApiController extends ApiController
 				'params' => [
 					'screenId' => $screen->id,
 					'lessonId' => $screen->lesson->id,
-					'courseId' => $screen->lesson->group->course->id
+					'courseId' => CourseProvider::getCourseId()
 				]
 			];
 		}

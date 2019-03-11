@@ -179,7 +179,13 @@ class UserStateApiController extends ApiController
 		$qnaAnswersPosted = QnaAnswer::where('user_id', $userId)->count();
 		$quizQuestionsSolved = UserQuizResults::where('user_id', $userId)->groupBy('quiz_question_id')->get(['quiz_question_id'])->count();
 		$numberOfQuizQuestions = QuizQuestion::count();
-		$numberOfLessons = Lesson::whereNotIn('group_id', [3])->count();
+		$numberOfLessons = $user->getLessonsAvailability()->reduce(function (int $count, Lesson $lesson) {
+			if ($lesson->isAccessible()) {
+				$count++;
+			}
+
+			return $count;
+		}, 0);
 		$completedCount = (clone $userCourseProgress)
 			->where('status', 'complete')
 			->count();

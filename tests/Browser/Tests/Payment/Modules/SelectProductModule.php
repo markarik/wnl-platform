@@ -18,15 +18,6 @@ class SelectProductModule
 		$browser->click('@online-button');
 	}
 
-	public function onsite(BethinkBrowser $browser)
-	{
-		$browser->visit(new SelectProductPage);
-
-		$this->assertCart($browser);
-
-		$browser->click('@onsite-button');
-	}
-
 	private function assertCart(BethinkBrowser $browser) {
 		$browser->assertSeeIn('@cart', 'Twój koszyk jest pusty');
 	}

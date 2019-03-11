@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Presentable;
+use Facades\App\Contracts\CourseProvider;
 use Illuminate\Database\Eloquent\Model;
 
 trait EventContextTrait {
@@ -52,7 +53,7 @@ trait EventContextTrait {
 					return [
 						'name' => 'screens',
 						'params' => [
-							'courseId' => $lesson->group->course->id,
+							'courseId' => CourseProvider::getCourseId(),
 							'lessonId' => $lesson->id,
 							'screenId' => $screen->id,
 							'slide'  => $orderNumber + 1

@@ -7,7 +7,8 @@
 		'productPrice' => $product->price,
 		'productAccessEnd' => $product->access_end,
 		'couponValue' => $couponValue,
-		'productPriceWithCoupon' => $productPriceWithCoupon
+		'productPriceWithCoupon' => $productPriceWithCoupon,
+		'hasCoupon' => !empty($couponValue),
 	])
 
 	@include('payment.payment-hero', [

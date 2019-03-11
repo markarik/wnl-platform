@@ -28,13 +28,26 @@ class ConfirmOrderController extends Controller
 		$amount = (int)$order->total_with_coupon * 100;
 		$checksum = $payment::generateChecksum($order->session_id, $amount);
 
+		$productPriceWithCoupon = $order->totalWithCoupon;
+		$couponValue = null;
+
+		if (!empty($coupon)) {
+			if ($coupon->is_percentage) {
+				$couponValue = "- {$coupon->value} %";
+			} else {
+				$couponValue = "- {$coupon->value} zł";
+			}
+		}
+
 		$viewData = [
 			'order' => $order,
 			'user' => $user,
 			'checksum' => $checksum,
 			'amount'      => $amount,
 			'returnUrl'  => $this->getReturnUrl($amount),
-			'instalments' => null
+			'instalments' => null,
+			'couponValue' => $couponValue,
+			'productPriceWithCoupon' => $productPriceWithCoupon
 		];
 
 		$productInstalments = $order->product->paymentMethods

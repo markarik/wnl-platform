@@ -1,6 +1,16 @@
 @extends('payment.layout')
 
 @section('content')
+
+	@include('payment.cart', [
+		'productName' => $order->product->name,
+		'productPrice' => $order->product->price,
+		'productAccessEnd' => $order->product->access_end,
+		'hasCoupon' => $order->product->price !== $productPriceWithCoupon,
+		'couponValue' => $couponValue,
+		'productPriceWithCoupon' => $productPriceWithCoupon
+	])
+
 	@include('payment.payment-hero', [
 		'step' => 3,
 		'title' => trans('payment.confirm-order-title'),

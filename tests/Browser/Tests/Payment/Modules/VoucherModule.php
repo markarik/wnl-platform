@@ -5,6 +5,7 @@ namespace Tests\Browser\Tests\Payment\Modules;
 
 
 use App\Models\Coupon;
+use Carbon\Carbon;
 use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Payment\SelectProductPage;
 use Tests\Browser\Pages\Payment\VoucherPage;
@@ -45,6 +46,7 @@ class VoucherModule
 
 		$coupon = factory(Coupon::class)->create([
 			'value' => $value,
+			'expires_at' => Carbon::tomorrow()
 		]);
 
 		$browser->coupon = $coupon;

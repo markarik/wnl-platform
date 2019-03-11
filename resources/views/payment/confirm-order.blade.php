@@ -22,12 +22,12 @@
 			<div class="box">
 				<p class="title">@lang('payment.confirm-order-heading')</p>
 				<p class="subtitle">{{ $order->product->name }}</p>
-				@if($order->coupon && ($order->coupon->slug !== 'wnl-online-only' || $order->product->slug === 'wnl-online'))
+				@if($hasCoupon)
 					<p class="strikethrough">
-						@lang('payment.confirm-order-price', [ 'price' => $order->product->price ])
+						@lang('payment.confirm-order-price', [ 'price' => $productPrice ])
 					</p>
 					<p class="big strong">
-						@lang('payment.confirm-order-price', [ 'price' => $order->total_with_coupon ])
+						@lang('payment.confirm-order-price', [ 'price' => $productPriceWithCoupon ])
 					</p>
 					<div class="notification margins top">
 						@lang('payment.confirm-order-coupon', [

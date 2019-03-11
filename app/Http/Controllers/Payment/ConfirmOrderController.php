@@ -28,13 +28,18 @@ class ConfirmOrderController extends Controller
 		$amount = (int)$order->total_with_coupon * 100;
 		$checksum = $payment::generateChecksum($order->session_id, $amount);
 
-		$productPriceWithCoupon = $order->totalWithCoupon;
+		$coupon = $this->readCoupon(Auth::user());
+		$product = $order->product;
+		$productPriceWithCoupon = null;
 		$couponValue = null;
 
 		if (!empty($coupon)) {
 			if ($coupon->is_percentage) {
+				$value = number_format($coupon->value * $product->price / 100, 2, '.', '');
+				$productPriceWithCoupon = $product->price - $value;
 				$couponValue = "- {$coupon->value} %";
 			} else {
+				$productPriceWithCoupon = $product->price - $coupon->value;
 				$couponValue = "- {$coupon->value} zł";
 			}
 		}
@@ -64,6 +69,15 @@ class ConfirmOrderController extends Controller
 		}
 
 		return view('payment.confirm-order', $viewData);
+	}
+
+	protected function readCoupon($user) {
+		$userCoupon = $user && $user->coupons->first();
+		if (session()->has('coupon')) {
+			return session()->get('coupon')->fresh();
+		} elseif ($userCoupon) {
+			return $userCoupon;
+		}
 	}
 
 	public function handle(Request $request)

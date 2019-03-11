@@ -30,7 +30,7 @@ export const lessonsAvailability = {
 		paragraphAnnotation: 'Po jej wybraniu wszystkie lekcje zostaną otwarte, zatem przy Twoim pasku postępu zamiast: ',
 		paragraphExplanation: ' Możesz to później zmienić, ustawiając inny plan pracy.',
 	},
-	lessonNotAvilable: 'Lekcja niedostępna',
+	lessonNotAvailable: 'Lekcja niedostępna',
 	allLessons: 'Wszystkie lekcje',
 	allLessonsAnnotation: {
 		header: 'W tym miejscu znajdziesz wszystkie daty otwarcia lekcji, według Twojego aktualnego planu.',

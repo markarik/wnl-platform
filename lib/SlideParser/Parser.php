@@ -12,6 +12,7 @@ use App\Models\Tag;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use Facades\App\Contracts\CourseProvider;
 use Facades\Lib\Bethink\Bethink;
 use Storage;
 
@@ -153,7 +154,7 @@ class Parser
 				if ($courseTag['name'] == 'group') {
 					$group = Group::firstOrCreate([
 						'name'      => $courseTag['value'],
-						'course_id' => 1,
+						'course_id' => CourseProvider::getCourseId(),
 					]);
 					$this->courseModels['group'] = $group;
 					$this->groupTag = Tag::firstOrCreate(['name' => $group->name]);

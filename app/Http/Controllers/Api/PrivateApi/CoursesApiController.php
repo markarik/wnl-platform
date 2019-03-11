@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Course\UpdateCourse;
 use App\Models\Course;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CoursesApiController extends ApiController
 {
@@ -21,14 +20,7 @@ class CoursesApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		DB::transaction(function() use ($course, $request) {
-			$course->update($request->all());
-
-			foreach ($course->groups as $group) {
-				$group->order_number = array_search($group->id, $request->groups) + 1;
-				$group->save();
-			}
-		});
+		$course->update($request->all());
 
 		return $this->transformAndRespond($course);
 	}

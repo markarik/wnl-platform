@@ -31,7 +31,8 @@ class LessonTransformer extends ApiTransformer
 
 		$data['isAccessible'] = $lesson->isAccessible();
 		$data['isAvailable'] = $lesson->isAvailable();
-		$data['startDate'] = $lesson->startDate()->timestamp ?? null;
+		$data['isDefaultStartDate'] = $lesson->isDefaultStartDate();
+		$data['startDate'] = $lesson->getStartDate()->timestamp ?? null;
 
 		if ($this->parent) {
 			$data = array_merge($data, $this->parent);

@@ -180,7 +180,7 @@ class UserStateApiController extends ApiController
 		$quizQuestionsSolved = UserQuizResults::where('user_id', $userId)->groupBy('quiz_question_id')->get(['quiz_question_id'])->count();
 		$numberOfQuizQuestions = QuizQuestion::count();
 		$numberOfLessons = $user->getLessonsAvailability()->reduce(function (int $count, Lesson $lesson) {
-			if ($lesson->isAvailable()) {
+			if ($lesson->isAccessible()) {
 				$count++;
 			}
 

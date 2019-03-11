@@ -21,22 +21,21 @@ class PersonalDataController extends Controller
 {
 	use FormBuilderTrait;
 
-	public function index(FormBuilder $formBuilder, $productSlug = null)
+	public function index(Request $request)
 	{
-		$request = app(Request::class);
-
-		if ($productSlug !== null) {
-			$product = Product::slug($productSlug);
-
-			if ($product instanceof Product) {
-				Session::put('product', $product);
-			}
+		if (Session::has('product')) {
+			$product = Session::get('product');
+		} else {
+			$product = Product::slug($request->route('productSlug') ?? 'wnl-online');
+			Session::put('product', $product);
 		}
 
-		$product = Session::get('product');
-		if (!$product instanceof Product || !$product->available
-			|| $product->signups_close->isPast() || $product->signups_start->isFuture()) {
-			return redirect()->route('payment-select-product');
+		if (!$product instanceof Product ||
+			!$product->available ||
+			$product->signups_close->isPast() ||
+			$product->signups_start->isFuture()
+		) {
+			return view('payment.signups-closed', ['product' => $product]);
 		}
 
 		if (Auth::check() && !$request->edit) {
@@ -59,7 +58,6 @@ class PersonalDataController extends Controller
 			'form'    => $form,
 			'product' => $product,
 		]);
-
 	}
 
 	public function handle(Request $request)

@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Input;
 Auth::routes();
 
 Route::group(['namespace' => 'Payment', 'prefix' => 'payment', /*'middleware' => 'payment'*/], function () {
-	Route::get('select-product', 'SelectProductController@index')->name('payment-select-product');
+	Route::redirect('/select-product', '/payment/personal-data', 302)->name('payment-select-product');
+	Route::redirect('/', '/payment/personal-data', 302);
 
 	Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');
 	Route::post('personal-data', 'PersonalDataController@handle')->name('payment-personal-data-post');
@@ -26,10 +27,6 @@ Route::group(['namespace' => 'Payment', 'prefix' => 'payment', /*'middleware' =>
 
 	Route::get('voucher', 'VoucherController@index')->name('payment-voucher');
 	Route::post('voucher', 'VoucherController@handle')->name('payment-voucher-post');
-
-	Route::get('/', function () {
-		return redirect(route('payment-select-product'));
-	});
 });
 
 Route::group(['middleware' => 'auth'], function () {

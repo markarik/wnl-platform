@@ -34,9 +34,9 @@ class ConfirmOrderController extends Controller
 
 		if (!empty($coupon)) {
 			if ($coupon->is_percentage) {
-				$couponValue = "- {$coupon->value} %";
+				$couponValue = "-{$coupon->value}%";
 			} else {
-				$couponValue = "- {$coupon->value} zł";
+				$couponValue = "-{$coupon->value}zł";
 			}
 		}
 

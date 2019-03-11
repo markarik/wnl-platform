@@ -2,22 +2,32 @@
 <div class="card column cart{{$hasCoupon ? ' has-coupon' : ''}}">
     @if(!empty($productName))
     <header class="card-header">
-        <h3 class="card-header-title">Twoje zamówienie</h3>
+        <h3 class="card-header-title">@lang('payment.cart-header')</h3>
     </header>
     <div class="card-content">
-        <div>Dostęp od momentu wpłaty do {{$productAccessEnd->format('d.m.Y')}}</div>
-        <p><span>Wysyłka:</span><span>Na terenie Polski za darmo</span></p>
+        <p>
+            @lang('payment.cart-access-info', ['date' => $productAccessEnd->format('d.m.Y')])
+        </p>
+        <p>
+            <span>@lang('payment.cart-shipment-label')</span>
+            <span>@lang('payment.cart-shipment-value')</span>
+        </p>
         @if(!empty($hasCoupon))
-            <p><span>Zniżka:</span><span>{{$couponValue}}</span></p>
+            <p>
+                <span>@lang('payment.cart-coupon-label')</span><span>{{$couponValue}}</span>
+            </p>
         @endif
         @if (empty($hasCoupon))
-            <span>Kwota całkowita:</span><span>{{$productPrice}}zł</span>
+            <span>@lang('payment.cart-price-label')</span><span>@lang('payment.cart-price-value', ['value' => $productPrice])</span>
         @else
-            <span>Kwota całkowita:</span><span class="strikethrough">{{$productPrice}}zł</span>
-            <span>{{$productPriceWithCoupon}}zł</span>
+            <span>@lang('payment.cart-price-label')</span>
+            <span class="strikethrough">
+                @lang('payment.cart-price-value', ['value' => $productPrice])
+            </span>
+            <span>@lang('payment.cart-price-value', ['value' => $productPriceWithCoupon])</span>
         @endif
     </div>
     @else
-        <span>Twój koszyk jest pusty</span>
+        <span>@lang('payment.cart-empty')</span>
     @endif
 </div>

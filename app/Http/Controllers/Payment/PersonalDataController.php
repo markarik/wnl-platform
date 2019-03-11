@@ -63,10 +63,10 @@ class PersonalDataController extends Controller
 			if ($coupon->is_percentage) {
 				$value = number_format($coupon->value * $product->price / 100, 2, '.', '');
 				$productPriceWithCoupon = $product->price - $value;
-				$couponValue = "- {$coupon->value} %";
+				$couponValue = "-{$coupon->value}%";
 			} else {
 				$productPriceWithCoupon = $product->price - $coupon->value;
-				$couponValue = "- {$coupon->value} zł";
+				$couponValue = "-{$coupon->value}zł";
 			}
 		}
 

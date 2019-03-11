@@ -131,7 +131,7 @@
 					</div>
 				</div>
 			</section>
-		 <?php /** @var \App\Models\OrderInstalment[] $instalments */ ?>
+			<?php /** @var \App\Models\OrderInstalment[] $instalments */ ?>
 			@if($instalments)
 				 <section class="has-text-centered">
 					<div class="expandable">

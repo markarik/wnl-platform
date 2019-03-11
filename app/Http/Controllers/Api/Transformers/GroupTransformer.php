@@ -9,8 +9,6 @@ use App\Http\Controllers\Api\ApiTransformer;
 
 class GroupTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['lessons'];
-
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -31,15 +29,5 @@ class GroupTransformer extends ApiTransformer
 		}
 
 		return $data;
-	}
-
-	public function includeLessons(Group $group)
-	{
-		$lessons = $group->lessons;
-		$meta = [
-			'groupId' => $group->id,
-		];
-
-		return $this->collection($lessons, new LessonTransformer($meta), 'lessons');
 	}
 }

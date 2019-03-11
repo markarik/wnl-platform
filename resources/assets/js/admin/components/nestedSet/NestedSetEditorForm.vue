@@ -84,7 +84,7 @@ export default {
 			return this.$store.dispatch(`${this.vuexModuleName}/${action}`, payload);
 		},
 		validateParent(parent, source) {
-			if (parent && this.getter('getAncestorsById', parent.id).find(t => t.id === source.id)) {
+			if (parent && this.getter('getAncestorNodesById', parent.id).find(t => t.id === source.id)) {
 				this.addAutoDismissableAlert({
 					text: 'Nie możesz przenieść elementu do jego potomka.',
 					type: ALERT_TYPES.ERROR,

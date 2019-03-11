@@ -14,9 +14,7 @@ class RecreateCourseStructure extends Migration
 	 */
 	public function up()
 	{
-		DB::table('course_structure_nodes')->truncate();
-		// First version of the script messed up the ordering, let's recreate the structure with a fixed script
-		\Artisan::call('data-migration:create-nested-course-structure');
+		// This data migration is not valid anymore
 	}
 
 	/**

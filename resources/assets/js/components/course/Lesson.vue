@@ -94,6 +94,7 @@ export default {
 			'getScreenSectionsCheckpoints',
 			'getSectionSubsectionsCheckpoints',
 			'isLessonAvailable',
+			'getLessons'
 		]),
 		...mapGetters('progress', {
 			getSavedLesson: 'getSavedLesson',
@@ -123,8 +124,7 @@ export default {
 			return this.lesson && this.lesson.name;
 		},
 		lessonNumber() {
-			// TODO PLAT-1090 don't use order_number on lesson
-			return this.lesson.order_number;
+			return this.getLessons.findIndex(({id}) => id === this.lesson.id) + 1;
 		},
 		screens() {
 			return this.getScreensForLesson(this.lessonId);

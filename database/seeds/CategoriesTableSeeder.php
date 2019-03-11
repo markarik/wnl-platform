@@ -15,13 +15,7 @@ class CategoriesTableSeeder extends Seeder
 	    $groups = App\Models\Group::all();
 
         foreach ($groups as $group) {
-            $parent = Category::firstOrCreate(['name' => $group->name]);
-            foreach ($group->lessons as $lesson) {
-                \DB::table('categories')->insert([
-                    'name' => $lesson->name,
-                    'parent_id' => $parent->id
-                ]);
-            }
+            Category::firstOrCreate(['name' => $group->name]);
 	    }
 
 	    \Illuminate\Support\Facades\Artisan::call('tags:fromCategories');

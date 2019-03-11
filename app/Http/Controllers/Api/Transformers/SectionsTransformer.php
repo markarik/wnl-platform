@@ -24,7 +24,6 @@ class SectionsTransformer extends ApiTransformer
 			'name'        => $section->name,
 			'order_number'=> $section->order_number,
 			'lessons'     => $this->parent['lessonId'] ?? $section->screen->lesson_id,
-			'groups'      => $this->parent['groupId'] ?? $section->screen->lesson->group->id,
 			'screens'     => $section->screen_id,
 			'slide'       => $section->first_slide + 1,
 			'slidesCount' => $section->slides_count,

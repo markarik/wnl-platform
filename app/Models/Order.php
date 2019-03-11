@@ -113,14 +113,19 @@ class Order extends Model
 		$totalLeft = 0;
 		$leftFromPaid = $this->paid_amount;
 		$nextPayment = null;
-		$now = Carbon::now();
 
-		// TODO: https://bethink.atlassian.net/browse/PLAT-641
-		$paymentDates = [
-			$this->created_at->addDays(7),
-			Carbon::createFromDate(2018, 11, 20),
-			Carbon::createFromDate(2018, 12, 20),
-		];
+		$orderInstalments = $this->orderInstalments()->get();
+
+		if ($orderInstalments->count() > 0) {
+			$orderInstalments = $this->generatePaymentSchedule();
+		}
+
+		$paymentDates = $orderInstalments
+			->map(function (OrderInstalment $orderInstalment) {
+				return $orderInstalment->due_date;
+			})
+			->toArray();
+
 		$toDistribute = $this->total_with_coupon;
 		$allPaid = $this->paid_amount >= $this->total_with_coupon;
 
@@ -162,37 +167,53 @@ class Order extends Model
 		];
 	}
 
+	/**
+	 * @return OrderInstalment[]|\Illuminate\Support\Collection
+	 */
 	public function generatePaymentSchedule()
 	{
 		$valueToDistribute = $this->total_with_coupon;
 		$paidToDistribute = $this->paid_amount;
 
-		foreach ($this->product->instalments as $instalment) {
-			$num = $instalment->order_number;
-			$amount = $instalment->value;
+		return $this->product->instalments()
+			->get()
+			->map(function (ProductInstalment $instalment) use (&$paidToDistribute, &$valueToDistribute) {
+				$orderNumber = $instalment->order_number;
+				$amount = $instalment->value;
 
-			if ($instalment->value_type === 'percentage') {
-				$amount = $instalment->value * $valueToDistribute / 100;
-			}
+				if ($instalment->value_type === 'percentage') {
+					$amount = $instalment->value * $valueToDistribute / 100;
+				}
 
-			$valueToDistribute -= $amount;
+				$valueToDistribute -= $amount;
 
-			if ($paidToDistribute >= $amount) {
-				$paidAmount = $amount;
-				$paidToDistribute -= $amount;
-			} else {
-				$paidAmount = $paidToDistribute;
-				$paidToDistribute = 0;
-			}
+				if ($paidToDistribute >= $amount) {
+					$paidAmount = $amount;
+					$paidToDistribute -= $amount;
+				} else {
+					$paidAmount = $paidToDistribute;
+					$paidToDistribute = 0;
+				}
 
-			$this->orderInstalments()->updateOrCreate(
-				['order_number' => $num],
-				['due_date'     => $instalment->getDueDate($this),
-				 'amount'       => $amount,
-				 'paid_amount'  => $paidAmount,
-				 'order_number' => $num,]
-			);
-		}
+				return $this->orderInstalments()->firstOrNew(
+					[
+						'order_number' => $orderNumber
+					],
+					[
+						'due_date' => $instalment->getDueDate($this),
+						'amount' => $amount,
+						'paid_amount' => $paidAmount,
+						'order_number' => $orderNumber,
+					]
+				);
+			});
+	}
+
+	public function generateAndSavePaymentSchedule()
+	{
+		$this->generatePaymentSchedule()->each(function (OrderInstalment $orderInstalment) {
+			$orderInstalment->save();
+		});
 	}
 
 	public function getIsOverdueAttribute()

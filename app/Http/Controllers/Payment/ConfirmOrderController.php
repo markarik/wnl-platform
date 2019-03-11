@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Models\Order;
+use App\Models\OrderInstalment;
 use App\Models\Payment as PaymentModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -24,6 +25,7 @@ class ConfirmOrderController extends Controller
 
 		Log::debug('Order confirmation');
 
+		/** @var Order $order */
 		$order = $user->orders()->recent();
 		$amount = (int)$order->total_with_coupon * 100;
 		$checksum = $payment::generateChecksum($order->session_id, $amount);
@@ -37,16 +39,19 @@ class ConfirmOrderController extends Controller
 			'instalments' => null
 		];
 
-		$productInstalments = $order->product->paymentMethods
+		$paymentMethodInstalments = $order->product->paymentMethods
 			->where('slug', 'instalments')
 			->first();
 
-		if (!empty($productInstalments)) {
-			$instalments = $productInstalments->isAvailable() ? $order->instalments['instalments'] : false;
-			$firstInstalmentAmount = (int) ((int) $order->total_with_coupon === 0 ? 0 : $instalments[0]['amount'] * 100);
+		if (!empty($paymentMethodInstalments) && $paymentMethodInstalments->isAvailable()) {
+			$paymentSchedule = $order->generatePaymentSchedule();
+
+			/** @var OrderInstalment $firstInstalment */
+			$firstInstalment = $paymentSchedule->first();
+			$firstInstalmentAmount = (int) ((int) $order->total_with_coupon === 0 ? 0 : $firstInstalment->amount * 100);
 			$instalmentsChecksum = $payment::generateChecksum($order->session_id, $firstInstalmentAmount);
 
-			$viewData['instalments'] = $instalments;
+			$viewData['instalments'] = $paymentSchedule;
 			$viewData['instalmentsChecksum'] = $instalmentsChecksum;
 		}
 

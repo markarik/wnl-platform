@@ -87,9 +87,8 @@ class Slide extends Model implements WithReactions, WithTags
 			$section = $this->sections->first();
 			$screen = $section->screen ?? null;
 			$lesson = $screen->lesson ?? null;
-			$group = $lesson->group ?? null;
 
-			if (!$screen || !$lesson || !$group) {
+			if (!$screen || !$lesson) {
 				// Don't index slide if it doesn't have
 				// a parent lesson or screen.
 				return [];

@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import moment from 'moment';
+import 'moment/locale/pl';
 import 'moment-duration-format';
 
 window.$ = window.jQuery = $;
@@ -55,6 +56,11 @@ $(function () {
 				}
 			}
 		});
+	});
+
+	$('[data-instalment-due-date]').each(function () {
+		let date = moment.unix($(this).attr('data-timestamp'));
+		$(this).html(date.format('D MMMM'));
 	});
 
 	$.ajaxSetup({

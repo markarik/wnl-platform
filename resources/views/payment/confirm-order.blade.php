@@ -131,6 +131,7 @@
 					</div>
 				</div>
 			</section>
+		 <?php /** @var \App\Models\OrderInstalment[] $instalments */ ?>
 			@if($instalments)
 				 <section class="has-text-centered">
 					<div class="expandable">
@@ -140,7 +141,10 @@
 						<div class="expandable-content box">
 							<h4>Płatność w 3 ratach</h4>
 							<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
-							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong> i kolejnych do <strong>20 listopada</strong> i <strong>20 grudnia</strong>.</p>
+							<p class="margin bottom">
+								Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong>
+								i kolejnych do <strong data-instalment-due-date data-timestamp="{{$instalments[1]->due_date->timestamp}}">{{$instalments[1]->due_date->format('d.m.Y')}}</strong>
+								i <strong data-instalment-due-date data-timestamp="{{$instalments[2]->due_date->timestamp}}">{{$instalments[2]->due_date->format('d.m.Y')}}</strong>.</p>
 
 							<table class="table is-bordered margin vertical">
 								<tr>
@@ -150,7 +154,7 @@
 											@if($loop->first)
 												1. rata (do 7 dni po złożeniu zamówienia)
 											@else
-												{{$loop->index + 1}}. rata (do&nbsp;{{$instalment['date']->format('d.m.Y')}})
+												{{$loop->index + 1}}. rata (do&nbsp;{{$instalment->due_date->format('d.m.Y')}})
 											@endif
 										</th>
 									@endforeach

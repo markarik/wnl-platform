@@ -68,7 +68,7 @@ class UserLessonApiController extends ApiController
 
 		$plan = dispatch_now(new CalculateCoursePlan($user, $options));
 
-		$lessons = $user->lessonsAvailability()->get();
+		$lessons = $user->getLessonsAvailability();
 		$controller = new LessonsApiController($request);
 
 		return $this->respondOk([

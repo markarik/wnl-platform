@@ -123,6 +123,7 @@ export default {
 			return this.lesson && this.lesson.name;
 		},
 		lessonNumber() {
+			// TODO PLAT-1090 don't use order_number on lesson
 			return this.lesson.order_number;
 		},
 		screens() {

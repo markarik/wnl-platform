@@ -95,7 +95,7 @@
 <script>
 import moment from 'moment';
 import {nextTick} from 'vue';
-import {mapActions} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 import momentTimezone from 'moment-timezone';
 
 import {getApiUrl} from 'js/utils/env';
@@ -118,12 +118,12 @@ export default {
 			userLessons: [],
 			filterPhrase: '',
 			loading: false,
-			lessons: [],
 			selectedLessons: [],
 			lessonInput: ''
 		};
 	},
 	computed: {
+		...mapState('lessons', ['lessons']),
 		visibleUserLessons() {
 			if (!this.filterPhrase) return this.userLessons;
 
@@ -144,6 +144,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('lessons', ['fetchAllLessons']),
 		addLesson(lesson) {
 			if (!this.selectedLessons.find(({id}) => id === lesson.id)) {
 				this.selectedLessons.push({
@@ -196,21 +197,22 @@ export default {
 				$wnl.logger.capture(e);
 			}
 		},
-		async getUserLessons() {
-			const userPlanResponse = await axios.get(getApiUrl(`user_lesson/${this.user.id}?include=lessons`));
-			const { data: {included, ...userLessons}} = userPlanResponse;
+		getUserLessons(userPlanResponse) {
+			const { data: {...userLessons}} = userPlanResponse;
 
 			const userLessonsList = Object.values(userLessons);
 
-			if (!userLessonsList.length) {
-				return;
+			if (!userLessonsList || !userLessonsList.length) {
+				return [];
 			}
 
 			return userLessonsList.map(userLesson => {
+				const matchingLesson = this.lessons.find(lesson => userLesson.lesson_id === lesson.id) || {};
+				const startDate = userLesson.start_date && userLesson.start_date.date || null;
 				return {
 					...userLesson,
-					start_date: moment(userLesson.start_date.date).format('ll'),
-					lesson: included.lessons[userLesson.lessons[0]].name
+					start_date: moment(startDate).format('ll'),
+					lesson: matchingLesson.name
 				};
 			});
 		}
@@ -218,15 +220,14 @@ export default {
 	async mounted() {
 		this.loading = true;
 		try {
-			const [userLessons, lessonsResponse] = await Promise.all([
-				this.getUserLessons(),
-				axios.get(getApiUrl(('lessons/all')))
+			const [userPlanResponse] = await Promise.all([
+				axios.get(getApiUrl(`user_lesson/${this.user.id}`)),
+				this.fetchAllLessons()
 			]);
-			this.lessons = lessonsResponse.data;
-			this.userLessons = userLessons;
 
+			this.userLessons = this.getUserLessons(userPlanResponse);
 			nextTick(() => {
-				this.$refs.filterInput.focus();
+				this.$refs.filterInput && this.$refs.filterInput.focus();
 			});
 		} catch (e) {
 			this.addAutoDismissableAlert({
@@ -240,7 +241,3 @@ export default {
 	}
 };
 </script>
-
-<style scoped>
-
-</style>

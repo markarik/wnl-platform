@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Scopes\OrderByOrderNumberScope;
 use App\Traits\CourseProgressStats;
+use Facades\App\Contracts\CourseProvider;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Ramsey\Uuid\Uuid;
@@ -55,6 +55,11 @@ class User extends Authenticatable
 	protected $guarded = ['suspended', 'deleted_at'];
 
 	protected $appends = ['subscription_status'];
+
+	private $lessonsAvailability = null;
+	private $lessonsAvailabilityLoaded = false;
+	private $productIdForDefaultLessonsStartDates = null;
+	private $productIdForDefaultLessonsStartDatesLoaded = false;
 
 	/**
 	 * Relationships
@@ -130,17 +135,6 @@ class User extends Authenticatable
 		return $this->hasMany('App\Models\QnaAnswer');
 	}
 
-	public function lessonsAvailability()
-	{
-		return $this->belongsToMany('App\Models\Lesson', 'user_lesson');
-	}
-
-	public function lessonsAvailabilityUnordered()
-	{
-		return $this->belongsToMany('App\Models\Lesson', 'user_lesson')
-			->withoutGlobalScope(OrderByOrderNumberScope::class);
-	}
-
 	public function reactables()
 	{
 		return $this->hasMany('App\Models\Reactable');
@@ -158,6 +152,12 @@ class User extends Authenticatable
 
 	public function userTime() {
 		return $this->hasMany('App\Models\UserTime');
+	}
+
+	public function userLessons()
+	{
+		return $this->belongsToMany('App\Models\Lesson', 'user_lesson')
+			->withPivot(['start_date']);
 	}
 
 	/**
@@ -281,6 +281,63 @@ class User extends Authenticatable
 		$max = $this->subscription ? Carbon::parse($this->subscription->access_end) : null;
 
 		return [$min, $max];
+	}
+
+	public function getLatestPaidCourseProductId() {
+		if (!$this->productIdForDefaultLessonsStartDatesLoaded) {
+			$product = Product::select(['products.id'])
+				->join('orders', 'orders.product_id', '=', 'products.id')
+				->join('lesson_product', 'lesson_product.product_id', '=', 'products.id')
+				->where('orders.user_id', $this->id)
+				->where('orders.paid', 1)
+				->orderBy('course_start', 'desc')
+				->first();
+
+			if ($product) {
+				$this->productIdForDefaultLessonsStartDates = $product->id;
+			}
+
+			$this->productIdForDefaultLessonsStartDatesLoaded = true;
+		}
+
+		return $this->productIdForDefaultLessonsStartDates;
+	}
+
+	public function getDefaultLessons()
+	{
+		return Lesson::select(['lessons.*', 'lesson_product.start_date as lesson_product_start_date'])
+			->where('product_id', '=', $this->getLatestPaidCourseProductId())
+			->whereNotIn('lesson_id', $this->userLessons->pluck('id'))
+			->join('lesson_product', 'lesson_product.lesson_id', '=', 'lessons.id')
+			->get()
+			->each(function (Lesson $lesson) {
+				$lesson->is_default_start_date = true;
+			});
+	}
+
+	/**
+	 * @return Collection|Lesson[]
+	 */
+	public function getLessonsAvailability()
+	{
+		if (!$this->lessonsAvailabilityLoaded) {
+			/** @var \Kalnoy\Nestedset\QueryBuilder $courseStructureNodeBuilder */
+			$courseStructureNodeBuilder = CourseStructureNode::where('course_id', '=', CourseProvider::getCourseId())
+				->where('structurable_type', '=', Lesson::class);
+
+			$courseLessonsOrdered = $courseStructureNodeBuilder->defaultOrder()->get();
+
+			$lessonsAvailability = new Collection();
+			$userLessons = $this->userLessons()->get();
+			$productLessons = $this->getDefaultLessons();
+
+			$courseLessonsOrdered->each($this->addCourseLessonsToLessonsAvailability($lessonsAvailability, $userLessons, $productLessons));
+
+			$this->lessonsAvailability = $lessonsAvailability;
+			$this->lessonsAvailabilityLoaded = true;
+		}
+
+		return $this->lessonsAvailability;
 	}
 
 	/**
@@ -421,5 +478,37 @@ class User extends Authenticatable
 			'full_name' => $this->full_name,
 			'profile' => $this->profile,
 		];
+	}
+
+	/**
+	 * @param Collection $lessonsAvailability
+	 * @param \Illuminate\Database\Eloquent\Collection $userLessons
+	 * @param \Illuminate\Database\Eloquent\Collection $productLessons
+	 * @return \Closure
+	 */
+	private function addCourseLessonsToLessonsAvailability(
+		Collection $lessonsAvailability,
+		\Illuminate\Database\Eloquent\Collection $userLessons,
+		\Illuminate\Database\Eloquent\Collection $productLessons
+	): \Closure
+	{
+		return function (CourseStructureNode $node) use ($lessonsAvailability, $userLessons, $productLessons) {
+			$userLesson = $userLessons->first(function ($lesson) use ($node) {
+				return $lesson->id === $node->structurable_id;
+			});
+
+			if ($userLesson) {
+				$lessonsAvailability->push($userLesson);
+				return;
+			}
+
+			$productLesson = $productLessons->first(function (Lesson $lesson) use ($node) {
+				return $lesson->id === $node->structurable_id;
+			});
+
+			if ($productLesson) {
+				$lessonsAvailability->push($productLesson);
+			}
+		};
 	}
 }

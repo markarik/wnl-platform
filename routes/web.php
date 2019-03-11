@@ -21,17 +21,19 @@ Route::group(['namespace' => 'Payment', 'prefix' => 'payment', /*'middleware' =>
 	Route::get('account', 'AccountController@index')->name('payment-account');
 	Route::post('account', 'AccountController@handleRegister')->name('payment-account-post');
 
-	Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');
-	Route::post('personal-data', 'PersonalDataController@handle')->name('payment-personal-data-post');
-
-	Route::get('confirm-order', 'ConfirmOrderController@index')->name('payment-confirm-order');
-	Route::post('confirm-order', 'ConfirmOrderController@handle')->name('payment-confirm-order-post');
-
 	Route::get('voucher', 'VoucherController@index')->name('payment-voucher');
 	Route::post('voucher', 'VoucherController@handle')->name('payment-voucher-post');
 
 	Route::get('/', function () {
 		return redirect(route('payment-select-product'));
+	});
+
+	Route::group(['middleware' => 'payment-auth'], function () {
+		Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');
+		Route::post('personal-data', 'PersonalDataController@handle')->name('payment-personal-data-post');
+
+		Route::get('confirm-order', 'ConfirmOrderController@index')->name('payment-confirm-order');
+		Route::post('confirm-order', 'ConfirmOrderController@handle')->name('payment-confirm-order-post');
 	});
 });
 

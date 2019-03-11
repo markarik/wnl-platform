@@ -21,7 +21,6 @@
 				@lang('payment.account-name-submit')
 			</a>
 		</div>
-
 	</div>
 
 @endsection

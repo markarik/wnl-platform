@@ -14,7 +14,7 @@ class AccountController
 {
 	use FormBuilderTrait;
 
-	public function index()
+	public function index(Request $request)
 	{
 		$user = Auth::user();
 		if ($user) {
@@ -23,6 +23,7 @@ class AccountController
 			]);
 		}
 
+		$request->session()->flash('url.intended', route('payment-personal-data'));
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',
 			'url'    => route('payment-account-post'),

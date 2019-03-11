@@ -182,6 +182,8 @@ return [
 	'personal-data-edit' => 'Zapisz i przejdź dalej',
 
 	'account-register-heading' => 'Cześć! 👋<br />Najpierw stwórzmy dla Ciebie nowe konto.',
+	'account-register-not-you' => 'Posiadasz już konto na Kurs do LEK?',
+	'account-register-login-button' => 'Zaloguj się',
 	'account-name-heading' => 'Używasz teraz konta:',
 	'account-errors' => 'Ups, jeszcze moment, coś się nie zgadza! Prosimy o poprawienie pól, przy których pojawiły się błędy. Dzięki!',
 

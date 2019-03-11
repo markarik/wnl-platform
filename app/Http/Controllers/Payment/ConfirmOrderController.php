@@ -15,13 +15,6 @@ class ConfirmOrderController extends Controller
 	public function index(Payment $payment)
 	{
 		$user = Auth::user();
-
-		if (!$user) {
-			Log::notice('Auth failed, redirecting...');
-
-			return redirect(route('payment-select-product'));
-		}
-
 		Log::debug('Order confirmation');
 
 		$order = $user->orders()->recent();

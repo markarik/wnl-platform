@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Kris\LaravelFormBuilder\FormBuilder;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
 use App\Rules\ValidatePassportNumber;
 use App\Rules\ValidatePersonalIdentityNumber;
@@ -20,14 +19,8 @@ class PersonalDataController extends Controller
 {
 	use FormBuilderTrait;
 
-	public function index(FormBuilder $formBuilder, $productSlug = null)
+	public function index(Request $request, $productSlug = null)
 	{
-		if (!Auth::check()) {
-			return redirect()->route('payment-account');
-		}
-
-		$request = app(Request::class);
-
 		if ($productSlug !== null) {
 			$product = Product::slug($productSlug);
 
@@ -50,10 +43,9 @@ class PersonalDataController extends Controller
 			'value' => '',
 		]);
 
-		session()->flash('url.intended', route('payment-personal-data'));
-
 		return view('payment.personal-data', [
 			'form'    => $form,
+			// TODO
 			'product' => Product::where(['slug' => 'wnl-online'])->first(),
 		]);
 
@@ -93,7 +85,8 @@ class PersonalDataController extends Controller
 	{
 		\Log::notice('Creating order');
 		$order = $user->orders()->create([
-			'product_id' => Session::get('product')->id,
+			// TODO
+			'product_id' => Product::where(['slug' => 'wnl-online'])->first()->id,
 			'session_id' => str_random(32),
 			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 		]);

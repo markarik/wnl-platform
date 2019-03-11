@@ -12,7 +12,7 @@
 		{!! form_start($form)  !!}
 
 		<section class="section">
-			<div><small>TODO Posiadasz już konto na Kurs do LEK? Zaloguj się</small></div>
+			<div><small>@lang('payment.account-register-not-you') <a class="opens-login-modal">@lang('payment.account-register-login-button')</a></small></div>
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.account-register-heading')</h2>
 			</div>

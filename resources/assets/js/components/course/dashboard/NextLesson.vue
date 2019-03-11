@@ -72,8 +72,7 @@ export default {
 	mixins: [emits_events],
 	computed: {
 		...mapGetters('course', [
-			'getAncestorNodes',
-			'getNodeByLessonId',
+			'getGroupsByLessonId',
 			'getLessons',
 			'getLesson',
 			'isLessonAvailable',
@@ -98,7 +97,7 @@ export default {
 				return [];
 			}
 
-			return this.getAncestorNodes(this.getNodeByLessonId(this.nextLesson.id).id).map(node => node.model.name);
+			return this.getGroupsByLessonId(this.nextLesson.id).map(group => group.name);
 		},
 		nextLessonAvailable() {
 			return this.status !== STATUS_NONE;

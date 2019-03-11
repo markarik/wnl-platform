@@ -59,6 +59,9 @@ const getters = {
 		const castedGroupId = groupId.toString();
 		return getters.groups.find(group => group.id.toString() === castedGroupId) || {};
 	},
+	getGroupsByLessonId: (state, getters) => lessonId => {
+		return getters.getAncestorNodes(getters.getNodeByLessonId(lessonId).id).map(node => node.model);
+	},
 	getNodeByLessonId: (state) => lessonId => {
 		return state.structure.find(node => node.model.id === lessonId && node.structurable_type === getModelByResource(resources.lessons));
 	},

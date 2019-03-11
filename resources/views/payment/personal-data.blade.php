@@ -22,15 +22,6 @@
 		<section class="section">
 
 			<div class="form-header has-text-centered">
-				@if(!Auth::user())
-					<div class="box aligncenter">
-						<h4>@lang('payment.personal-data-account-login-heading')</h4>
-						<p class="margin bottom">@lang('payment.personal-data-account-login-lead')</p>
-						<p class="has-account">
-							<a class="button opens-login-modal">@lang('payment.personal-data-account-login-button')</a>
-						</p>
-					</div>
-				@endif
 				<h2 class="title">@lang('payment.personal-data-account-heading')</h2>
 				<p class="subtitle">@lang('payment.personal-data-account-lead')</p>
 				{{-- <div class="notification is-info">
@@ -49,26 +40,6 @@
 					{!! form_widget($form->last_name) !!}
 					{!! form_errors($form->last_name) !!}
 				</div>
-			</div>
-			<div class="form-group">
-				<div class="control">
-					{!! form_label($form->email) !!}
-					{!! form_widget($form->email) !!}
-					{!! form_errors($form->email) !!}
-				</div>
-
-				@if(!Auth::user())
-					<div class="control">
-						{!! form_label($form->password) !!}
-						{!! form_widget($form->password) !!}
-						{!! form_errors($form->password) !!}
-					</div>
-					<div class="control">
-						{!! form_label($form->password_confirmation) !!}
-						{!! form_widget($form->password_confirmation) !!}
-						{!! form_errors($form->password_confirmation) !!}
-					</div>
-				@endif
 			</div>
 		</section>
 
@@ -168,34 +139,6 @@
 						{!! form_label($form->invoice_country) !!}
 						{!! form_widget($form->invoice_country) !!}
 						{!! form_errors($form->invoice_country) !!}
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<section class="section">
-			<div class="form-header has-text-centered">
-				<h2 class="title">@lang('payment.personal-data-consents-heading')</h2>
-				<p class="subtitle">@lang('payment.personal-data-consents-lead')</p>
-			</div>
-
-			<div class="tou form-group small">
-				<div class="box">
-					<div class="control">
-						{!! form_widget($form->consent_terms) !!}
-						{!! html_entity_decode(form_label($form->consent_terms)) !!}
-						{!! form_errors($form->consent_terms) !!}
-					</div>
-				</div>
-			</div>
-
-			<div class="form-group small">
-				<p class="form-header">@lang('payment.personal-data-consent-newsletter-heading')</p>
-				<div class="box">
-					<div class="control">
-						{!! form_widget($form->consent_newsletter) !!}
-						{!! html_entity_decode(form_label($form->consent_newsletter)) !!}
-						{!! form_errors($form->consent_newsletter) !!}
 					</div>
 				</div>
 			</div>

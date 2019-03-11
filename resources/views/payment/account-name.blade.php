@@ -1,0 +1,27 @@
+@extends('payment.layout')
+
+@section('content')
+
+	<div class="container payment-content">
+		<div class="block has-text-centered">
+			<div><strong>@lang('payment.account-name-heading')</strong></div>
+
+			<div>
+				@if ($user->profile->avatar_url)
+					<img title="{{$user->fullName}}" src="{{$user->profile->avatar_url}}" />
+				@else
+					<div title="{{$user->fullName}}">{{$user->initials}}</div>
+				@endif
+			</div>
+			<div><strong>{{$user->fullName}}</strong></div>
+			<div><small>TODO Nie Ty? Załóż nowe konto</small></div>
+
+
+			<a class="button is-primary" href="{{route('payment-personal-data')}}">
+				@lang('payment.account-name-submit')
+			</a>
+		</div>
+
+	</div>
+
+@endsection

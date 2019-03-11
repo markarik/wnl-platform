@@ -259,6 +259,19 @@ class User extends Authenticatable
 		return "{$addr->street}, {$addr->zip} {$addr->city}";
 	}
 
+	public function getInitialsAttribute() {
+		$initials = '';
+
+		if ($this->first_name) {
+			$initials .= mb_strtoupper($this->first_name[0]);
+		}
+		if ($this->last_name) {
+			$initials .= mb_strtoupper($this->last_name[0]);
+		}
+
+		return $initials;
+	}
+
 	protected function getSubscriptionStatus($dates)
 	{
 		if ($this->hasRole(['admin', 'moderator', 'test'])) return self::SUBSCRIPTION_STATUS_ACTIVE;

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
-use App\Http\Forms\SignUpForm;
+use App\Http\Forms\PersonalDataForm;
 use App\Models\Coupon;
 use App\Models\Product;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +22,10 @@ class PersonalDataController extends Controller
 
 	public function index(FormBuilder $formBuilder, $productSlug = null)
 	{
+		if (!Auth::check()) {
+			return redirect()->route('payment-account');
+		}
+
 		$request = app(Request::class);
 
 		if ($productSlug !== null) {
@@ -33,19 +36,13 @@ class PersonalDataController extends Controller
 			}
 		}
 
-		$product = Session::get('product');
-		if (!$product instanceof Product || !$product->available
-			|| $product->signups_close->isPast() || $product->signups_start->isFuture()) {
-			return redirect()->route('payment-select-product');
-		}
-
 		if (Auth::check() && !$request->edit) {
 			$this->createOrder(Auth::user(), $request);
 
 			return redirect()->route('payment-personal-data', ['?edit=true']);
 		}
 
-		$form = $this->form(SignUpForm::class, [
+		$form = $this->form(PersonalDataForm::class, [
 			'method' => 'POST',
 			'url'    => route('payment-personal-data-post'),
 			'model'  => Auth::user(),
@@ -57,14 +54,14 @@ class PersonalDataController extends Controller
 
 		return view('payment.personal-data', [
 			'form'    => $form,
-			'product' => $product,
+			'product' => Product::where(['slug' => 'wnl-online'])->first(),
 		]);
 
 	}
 
 	public function handle(Request $request)
 	{
-		$form = $this->form(SignUpForm::class);
+		$form = $this->form(PersonalDataForm::class);
 
 		$validator = $this->getIdentityNumberValidator($request->get('identity_number_type'));
 		if (!is_object($validator)) {
@@ -75,16 +72,6 @@ class PersonalDataController extends Controller
 
 		$validations = ['identity_number' => $validator];
 
-		$user = Auth::user();
-		if ($user) {
-			// Don't require email and pass when updating order/account data.
-			$validations = array_merge($validations, [
-				'email'                 => 'email',
-				'password'              => '',
-				'password_confirmation' => ''
-			]);
-		}
-
 		$form->validate($validations);
 
 		if (!$form->isValid()) {
@@ -93,13 +80,11 @@ class PersonalDataController extends Controller
 			return redirect()->back()->withErrors($form->getErrors())->withInput();
 		}
 
-		if ($user) {
-			$this->updateAccount($user, $request);
-			$this->updateOrder($user, $request);
-		} else {
-			$user = $this->createAccount($request);
-			$this->createOrder($user, $request);
-		}
+		$user = Auth::user();
+		$this->updateAccount($user, $request);
+//		TODO fix it
+//			$this->updateOrder($user, $request);
+		 $this->createOrder($user, $request);
 
 		return redirect(route('payment-confirm-order'));
 	}
@@ -146,61 +131,17 @@ class PersonalDataController extends Controller
 		);
 	}
 
-	protected function createAccount($request)
-	{
-		Log::notice('Creating user account');
-		$user = User::create(
-			[
-				'first_name'         => $request->get('first_name'),
-				'last_name'          => $request->get('last_name'),
-				'email'              => $request->get('email'),
-				'password'           => bcrypt($request->get('password')),
-				'invoice'            => $request->get('invoice') ?? 0,
-				'invoice_name'       => $request->get('invoice_name'),
-				'invoice_nip'        => $request->get('invoice_nip'),
-				'invoice_address'    => $request->get('invoice_address'),
-				'invoice_zip'        => $request->get('invoice_zip'),
-				'invoice_city'       => $request->get('invoice_city'),
-				'invoice_country'    => $request->get('invoice_country'),
-				'consent_newsletter' => $request->get('consent_newsletter') ?? 0,
-				'consent_account'    => $request->get('consent_account') ?? 0,
-				'consent_order'      => $request->get('consent_order') ?? 0,
-				'consent_terms'      => $request->get('consent_terms') ?? 0,
-			]
-		);
-
-		$user->userAddress()->create([
-			'street'    => $request->get('address'),
-			'zip'       => $request->get('zip'),
-			'city'      => $request->get('city'),
-			'phone'     => $request->get('phone'),
-			'recipient' => $request->get('recipient'),
-		]);
-
-		$user->personalData()->create(
-			$this->getIdentityNumbersArray($request)
-		);
-
-		Auth::login($user);
-		Log::debug('User automatically logged in after registration.');
-
-		return $user;
-	}
-
 	protected function updateAccount($user, $request)
 	{
 		$user->update([
 			'first_name' => $request->first_name ?? $user->first_name,
 			'last_name' => $request->last_name ?? $user->last_name,
-			'email' => $request->email ?? $user->email,
 			'invoice_name' => $request->invoice_name ?? $user->invoice_name,
 			'invoice_nip' => $request->invoice_nip ?? $user->invoice_nip,
 			'invoice_address' => $request->invoice_address ?? $user->invoice_address,
 			'invoice_zip' => $request->invoice_zip ?? $user->invoice_zip,
 			'invoice_city' => $request->invoice_city ?? $user->invoice_city,
 			'invoice_country' => $request->invoice_country ?? $user->invoice_country,
-			'consent_terms' => $request->consent_terms ?? $user->consent_terms,
-			'consent_newsletter' => $request->consent_newsletter ?? $user->consent_newsletter,
 		]);
 
 		$user->userAddress()->updateOrCreate(

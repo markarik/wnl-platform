@@ -129,11 +129,12 @@ class PersonalDataController extends Controller
 			'session_id' => str_random(32),
 			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 		]);
-
-		$coupon = $this->readCoupon($user);
+		$coupon = $this->readCoupon(Auth::user());
 
 		if (empty($coupon) && $order->product->slug !== 'wnl-album') {
 			$this->generateStudyBuddy($order);
+		} else if (!empty($coupon)) {
+			$this->addCoupon($order, $coupon);
 		}
 	}
 

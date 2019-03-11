@@ -6,7 +6,7 @@
 		'productName' => $order->product->name,
 		'productPrice' => $order->product->price,
 		'productAccessEnd' => $order->product->access_end,
-		'hasCoupon' => $order->product->price !== $productPriceWithCoupon,
+		'hasCoupon' => !empty($couponValue),
 		'couponValue' => $couponValue,
 		'productPriceWithCoupon' => $productPriceWithCoupon
 	])
@@ -22,9 +22,9 @@
 			<div class="box">
 				<p class="title">@lang('payment.confirm-order-heading')</p>
 				<p class="subtitle">{{ $order->product->name }}</p>
-				@if($hasCoupon)
+				@if($order->coupon && ($order->coupon->slug !== 'wnl-online-only' || $order->product->slug === 'wnl-online'))
 					<p class="strikethrough">
-						@lang('payment.confirm-order-price', [ 'price' => $productPrice ])
+						@lang('payment.confirm-order-price', [ 'price' => $order->product->price])
 					</p>
 					<p class="big strong">
 						@lang('payment.confirm-order-price', [ 'price' => $productPriceWithCoupon ])

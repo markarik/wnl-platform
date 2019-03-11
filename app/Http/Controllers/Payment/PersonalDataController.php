@@ -161,7 +161,7 @@ class PersonalDataController extends Controller
 	}
 
 	protected function readCoupon($user) {
-		$userCoupon = $user && $user->coupons->first();
+		$userCoupon = $user ? $user->coupons->first() : null;
 		if (session()->has('coupon')) {
 			return session()->get('coupon')->fresh();
 		} elseif ($userCoupon) {

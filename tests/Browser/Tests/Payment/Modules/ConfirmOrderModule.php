@@ -36,6 +36,8 @@ class ConfirmOrderModule
 	protected function pay(BethinkBrowser $browser, $method)
 	{
 		$this->checkOrder($browser);
+		$this->assertCart($browser);
+
 		if (intval($browser->order->total_with_coupon) === 0) {
 			$browser->xpathClick('.//button[1]');
 
@@ -83,5 +85,16 @@ class ConfirmOrderModule
 			$coupon = $browser->coupon;
 			$browser->assertSee($coupon->name);
 		}
+	}
+
+	protected function assertCart(BethinkBrowser $browser) {
+		$browser->assertVisible('@cart');
+		$browser->assertSeeIn('@cart', 'Wysyłka:Na terenie Polski za darmo');
+		$browser->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do');
+		$browser->assertSeeIn('@cart', 'Kwota całkowita:');
+	}
+
+	protected function assertCouponInCart(BethinkBrowser $browser) {
+		$browser->assertSeeIn('@cart', 'Zniżka:');
 	}
 }

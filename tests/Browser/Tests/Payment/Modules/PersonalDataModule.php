@@ -58,6 +58,8 @@ class PersonalDataModule
 		if (!str_is('*personal-data*', $browser->getCurrentPath())) {
 			$browser->visit('payment/personal-data/' . array_random(['wnl-online', 'wnl-online-onsite']));
 		}
+
+		$this->assertCart($browser);
 	}
 
 	protected function signUp(BethinkBrowser $browser, $invoiceFlag)
@@ -79,5 +81,12 @@ class PersonalDataModule
 	protected function isEdit(BethinkBrowser $browser)
 	{
 		return str_is('*?edit=true*', $browser->driver->getCurrentUrl());
+	}
+
+	protected function assertCart(BethinkBrowser $browser) {
+		$browser->assertVisible('@cart');
+		$browser->assertSeeIn('@cart', 'Wysyłka:Na terenie Polski za darmo');
+		$browser->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do');
+		$browser->assertSeeIn('@cart', 'Kwota całkowita:');
 	}
 }

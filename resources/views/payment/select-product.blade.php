@@ -8,7 +8,9 @@
 	'subtitle' => trans('payment.select-product-subtitle'),
 ])
 
-@include('payment.cart')
+@include('payment.cart', [
+	'hasCoupon' => false
+])
 
 <section class="section select-product">
 	<div class="container">

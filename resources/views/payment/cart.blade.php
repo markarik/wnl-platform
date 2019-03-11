@@ -1,5 +1,5 @@
 
-<div class="section has-text-left">
+<div class="section has-text-left cart{{$hasCoupon ? ' has-coupon' : ''}}">
     @if(!empty($productName))
         <h3>Twoje zamówienie</h3>
         <div>Dostęp od momentu wpłaty do {{$productAccessEnd->format('d.m.Y')}}</div>
@@ -11,7 +11,9 @@
         </div>
         <div class="card">
             <span>Kwota całkowita:</span><span>{{$productPrice}}zł</span>
-            <span>{{$productPriceWithCoupon}}zł</span>
+            @if (!empty($hasCoupon))
+                <span>{{$productPriceWithCoupon}}zł</span>
+            @endif
         </div>
 @else
     <span>Twój koszyk jest pusty</span>

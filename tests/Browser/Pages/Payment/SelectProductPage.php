@@ -38,6 +38,7 @@ class SelectProductPage extends Page
 		return [
 			'@onsite-button' => '#btest-wnl-online-onsite-button',
 			'@online-button' => '#btest-wnl-online-button',
+			'@cart' => '.cart'
 		];
 	}
 

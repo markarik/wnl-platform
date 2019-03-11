@@ -4,7 +4,7 @@
 			<div class="quiz-questions-set-editor-header">
 				<h3 class="title">
 					Edycja zestawu pytań zamkniętych
-					<span v-if="isEdit">(Id: {{quizQuestionsSetId}})</span>
+					<span v-if="isEdit">(Id: {{setId}})</span>
 				</h3>
 				<button class="button is-small is-success"
 					:class="{'is-loading': loading}"
@@ -132,6 +132,7 @@ export default {
 	props: ['quizQuestionsSetId'],
 	data() {
 		return {
+			setId: this.quizQuestionsSetId,
 			form: new Form({
 				name: '',
 				description: '',
@@ -153,10 +154,10 @@ export default {
 			}));
 		},
 		isEdit() {
-			return this.quizQuestionsSetId !== 'new';
+			return this.setId !== 'new';
 		},
 		quizQuestionsSetResourceUrl() {
-			return getApiUrl(this.isEdit ? `quiz_sets/${this.quizQuestionsSetId}?include=quiz_questions` : 'quiz_sets');
+			return getApiUrl(this.isEdit ? `quiz_sets/${this.setId}?include=quiz_questions` : 'quiz_sets');
 		},
 		hasChanged() {
 			return !isEqual(this.form.originalData, this.form.data());
@@ -205,14 +206,20 @@ export default {
 				});
 			}
 
-			this.loading = true;
+			this.loading = true
+
 			this.form[this.isEdit ? 'put' : 'post'](this.quizQuestionsSetResourceUrl)
 				.then(response => {
 					this.addAutoDismissableAlert({
 						text: 'Zestaw pytań zapisany!',
 						type: ALERT_TYPES.SUCCESS
 					});
-					this.populateForm();
+					if (response.id) {
+						this.setId = response.id;
+					} else {
+						this.populateForm();
+					}
+
 				})
 				.catch(exception => {
 					this.addAutoDismissableAlert({
@@ -241,14 +248,28 @@ export default {
 			}
 
 			if (!this.form.quiz_questions.find(id => id === parsedQuestionId)) {
-				const fetchedQuestion = await axios.get(getApiUrl(`quiz_questions/${questionId}`));
-				this.quizQuestionsObjects[fetchedQuestion.data.id] = fetchedQuestion.data;
-				this.form.quiz_questions.push(fetchedQuestion.data.id);
+				try {
+					const fetchedQuestion = await axios.get(getApiUrl(`quiz_questions/${questionId}`));
+					this.quizQuestionsObjects[fetchedQuestion.data.id] = fetchedQuestion.data;
+					this.form.quiz_questions.push(fetchedQuestion.data.id);
 
-				this.addAutoDismissableAlert({
-					text: 'Udało się dodać pytanie :)',
-					type: ALERT_TYPES.SUCCESS
-				});
+					this.addAutoDismissableAlert({
+						text: 'Udało się dodać pytanie :)',
+						type: ALERT_TYPES.SUCCESS
+					});
+				} catch (error) {
+					if (error.response.status === 404) {
+						this.addAutoDismissableAlert({
+							text: 'Nie ma pytania o podanym numerze id!',
+							type: ALERT_TYPES.ERROR
+						});
+					} else {
+						this.addAutoDismissableAlert({
+							text: 'Nie udało się zapisać pytania!',
+							type: ALERT_TYPES.ERROR
+						});
+					}
+				}
 			} else {
 				this.addAutoDismissableAlert({
 					text: 'Pytanie o tym numerze id znajduje się już w tym zestawie!',

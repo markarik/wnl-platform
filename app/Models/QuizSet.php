@@ -20,7 +20,7 @@ class QuizSet extends Model
 			'quiz_question_id'
 		)
 			->withPivot('order_number')
-			->orderBy('pivot_order_number');
+			->orderBy('order_number');
 	}
 
 	public function syncQuestions($questionsIds)

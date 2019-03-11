@@ -4,7 +4,7 @@
 			<div class="quiz-questions-set-editor-header">
 				<h3 class="title">
 					Edycja zestawu pytań zamkniętych
-					<span v-if="isEdit">(Id: {{setId}})</span>
+					<span v-if="isEdit">(Id: {{quizQuestionsSetId}})</span>
 				</h3>
 				<button class="button is-small is-success"
 					:class="{'is-loading': loading}"
@@ -132,7 +132,6 @@ export default {
 	props: ['quizQuestionsSetId'],
 	data() {
 		return {
-			setId: this.quizQuestionsSetId,
 			form: new Form({
 				name: '',
 				description: '',
@@ -154,10 +153,10 @@ export default {
 			}));
 		},
 		isEdit() {
-			return this.setId !== 'new';
+			return this.quizQuestionsSetId !== 'new';
 		},
 		quizQuestionsSetResourceUrl() {
-			return getApiUrl(this.isEdit ? `quiz_sets/${this.setId}?include=quiz_questions` : 'quiz_sets');
+			return getApiUrl(this.isEdit ? `quiz_sets/${this.quizQuestionsSetId}?include=quiz_questions` : 'quiz_sets');
 		},
 		hasChanged() {
 			return !isEqual(this.form.originalData, this.form.data());
@@ -214,12 +213,17 @@ export default {
 						text: 'Zestaw pytań zapisany!',
 						type: ALERT_TYPES.SUCCESS
 					});
-					if (response.id) {
-						this.setId = response.id;
+
+					if (!this.isEdit) {
+						this.$router.push({
+							name: 'quiz-sets-edit',
+							params: {
+								quizQuestionsSetId: response.id
+							}
+						});
 					} else {
 						this.populateForm();
 					}
-
 				})
 				.catch(exception => {
 					this.addAutoDismissableAlert({

@@ -17,13 +17,12 @@ class SelectProductController extends Controller
 		}
 
 		$products = Product::all()->keyBy('slug');
-		$onsite = $products['wnl-online-onsite'] ?? null;
 		$online = $products['wnl-online'] ?? null;
 
-		if (!$onsite || !$online) {
+		if (!$online) {
 			return view('payment.no-product');
 		}
 
-		return view('payment.select-product', compact('online', 'onsite', 'participantCoupon'));
+		return view('payment.select-product', compact('online', 'participantCoupon'));
 	}
 }

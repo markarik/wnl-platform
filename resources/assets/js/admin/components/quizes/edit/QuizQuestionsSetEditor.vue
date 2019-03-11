@@ -109,7 +109,7 @@
 
 <script>
 import {isEqual, isEmpty} from 'lodash';
-import {mapGetters, mapActions} from 'vuex';
+import {mapState, mapActions} from 'vuex';
 import WnlDraggable from 'vuedraggable';
 import {ALERT_TYPES} from 'js/consts/alert';
 
@@ -146,9 +146,9 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters('lessons', ['allLessons']),
+		...mapState('lessons', ['lessons']),
 		lessonsOptions() {
-			return this.allLessons.map(lesson => ({
+			return this.lessons.map(lesson => ({
 				text: lesson.name,
 				value: lesson.id,
 			}));

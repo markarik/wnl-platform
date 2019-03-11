@@ -8,7 +8,7 @@
 		<textarea
 					class="textarea normal"
 					:name="name"
-					@input="$emit('input', $event.target.value)"
+					@input="onTextInput"
 					:placeholder="placeholder"
 					v-model="inputValue"
 					@keydown.enter.stop
@@ -40,6 +40,12 @@ export default {
 		default() {
 			return '';
 		},
+	},
+	methods: {
+		onTextInput(event) {
+			this.onInput(event);
+			this.$emit('input', event.target.value);
+		}
 	}
 };
 </script>

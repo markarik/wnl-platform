@@ -2,7 +2,7 @@
 	<div class="current-term margin bottom">
 		<p class="margin right"><slot></slot></p>
 		<wnl-taxonomy-term-with-ancestors
-			:ancestors="getAncestorsById(term.id)"
+			:ancestors="getAncestorNodesById(term.id)"
 			:term="term"
 			is-bordered
 		/>
@@ -36,7 +36,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters('taxonomyTerms', ['getAncestorsById']),
+		...mapGetters('taxonomyTerms', ['getAncestorNodesById']),
 	},
 };
 </script>

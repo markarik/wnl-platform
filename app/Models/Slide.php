@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\Cached;
 use App\Models\Contracts\WithReactions;
 use App\Models\Contracts\WithTags;
+use Facades\App\Contracts\CourseProvider;
 use Lib\SlideParser\Parser;
 use Illuminate\Database\Eloquent\Model;
 use ScoutEngines\Elasticsearch\Searchable;
@@ -86,9 +87,8 @@ class Slide extends Model implements WithReactions, WithTags
 			$section = $this->sections->first();
 			$screen = $section->screen ?? null;
 			$lesson = $screen->lesson ?? null;
-			$group = $lesson->group ?? null;
 
-			if (!$screen || !$lesson || !$group) {
+			if (!$screen || !$lesson) {
 				// Don't index slide if it doesn't have
 				// a parent lesson or screen.
 				return [];
@@ -103,8 +103,7 @@ class Slide extends Model implements WithReactions, WithTags
 			$model['context']['section']['id'] = $section->id;
 			$model['context']['screen']['id'] = $screen->id;
 			$model['context']['lesson']['id'] = $lesson->id;
-			$model['context']['group']['id'] = $lesson->group->id;
-			$model['context']['course']['id'] = $lesson->group->course->id;
+			$model['context']['course']['id'] = CourseProvider::getCourseId();
 			$model['context']['orderNumber'] = $orderNumber;
 			$model['context']['id'] = $this->id;
 		} else {

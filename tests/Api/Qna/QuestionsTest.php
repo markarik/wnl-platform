@@ -9,6 +9,7 @@ use App\Models\QnaQuestion;
 use App\Models\Screen;
 use App\Models\Tag;
 use App\Models\User;
+use Facades\App\Contracts\CourseProvider;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Api\ApiTestCase;
 
@@ -68,7 +69,7 @@ class QuestionsTest extends ApiTestCase
 				'params' => [
 					'screenId' => $screen->id,
 					'lessonId' => $screen->lesson->id,
-					'courseId' => $screen->lesson->group->course->id
+					'courseId' => CourseProvider::getCourseId()
 				]
 			]);
 	}

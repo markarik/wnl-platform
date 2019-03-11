@@ -205,7 +205,7 @@ export default {
 				});
 			}
 
-			this.loading = true
+			this.loading = true;
 
 			this.form[this.isEdit ? 'put' : 'post'](this.quizQuestionsSetResourceUrl)
 				.then(response => {

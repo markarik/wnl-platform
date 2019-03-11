@@ -84,6 +84,7 @@ class ConfirmOrderModule
 		if (!empty($browser->coupon)) {
 			$coupon = $browser->coupon;
 			$browser->assertSee($coupon->name);
+			$this->assertCouponInCart($browser);
 		}
 	}
 

@@ -20,8 +20,6 @@ class CreateCourseStructureNodesTable extends Migration
 	        $table->nestedSet();
 	        $table->timestamps();
         });
-
-	    \Artisan::call('data-migration:create-nested-course-structure');
     }
 
     /**

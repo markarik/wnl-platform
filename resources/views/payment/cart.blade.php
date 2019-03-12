@@ -6,7 +6,10 @@
 		</header>
 		<div class="card-content">
 			<p>
-				@lang('payment.cart-access-info', ['date' => $productAccessEnd->format('d.m.Y')])
+				<h4>{{$productName}}</h4>
+				@if (!empty($productAccessEnd))
+					@lang('payment.cart-access-info', ['date' => $productAccessEnd->format('d.m.Y')])
+				@endif
 			</p>
 			<p>
 				<span>@lang('payment.cart-shipment-label')</span>

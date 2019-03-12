@@ -114,6 +114,12 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::put("{$r['products']}/{id}", 'ProductsApiController@put');
 		Route::post("{$r['products']}", 'ProductsApiController@post');
 		Route::post("{$r['products']}/.filter", 'ProductsApiController@filter');
+
+		// Lesson Product
+		Route::post("{$r['lesson-product']}/query", 'LessonProductApiController@query');
+		Route::post("{$r['lesson-product']}", 'LessonProductApiController@post');
+		Route::put("{$r['lesson-product']}/{lessonProduct}", 'LessonProductApiController@put');
+		Route::delete("{$r['lesson-product']}/{lessonProduct}", 'LessonProductApiController@deleteLesson');
 	});
 
 	// Count

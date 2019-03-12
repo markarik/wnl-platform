@@ -15,7 +15,6 @@ class GroupsTableSeeder extends Seeder
 			[
 				'name'          => 'Przykładowa grupa lekcji',
 				'course_id'     => DB::table('courses')->first()->id,
-				'order_number'  => 1001,
 			],
 		]);
 	}

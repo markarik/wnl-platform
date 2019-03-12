@@ -2,9 +2,14 @@
 
 namespace Tests\Api\User;
 
+use App\Models\Course;
+use App\Models\CourseStructureNode;
+use App\Models\LessonProduct;
+use App\Models\Order;
 use App\Models\User;
 use App\Models\Lesson;
 use App\Models\UserLesson;
+use Facades\App\Contracts\CourseProvider;
 use Tests\Api\ApiTestCase;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -16,12 +21,32 @@ class UserLessonTest extends ApiTestCase
 	/** @test */
 	public function openAllLessons()
 	{
+		/** @var User $user */
 		$user = factory(User::class)->create();
+
+		/** @var Lesson[] $lessons */
 		$lessons = factory(Lesson::class, 10)->create();
 
+		/** @var Order $order */
+		$order = factory(Order::class)->create([
+			'user_id' => $user->id,
+			'paid' => 1,
+		]);
+
+		/** @var Course $course */
+		$course = factory(Course::class)->create();
+
+		CourseProvider::shouldReceive('getCourseId')->andReturn($course->id);
+
 		foreach ($lessons as $lesson) {
-			factory(UserLesson::class)->create([
-				'user_id' => $user->id,
+			factory(CourseStructureNode::class)->create([
+				'course_id' => $course->id,
+				'structurable_type' => Lesson::class,
+				'structurable_id' => $lesson->id
+			]);
+
+			factory(LessonProduct::class)->create([
+				'product_id' => $order->product_id,
 				'lesson_id' => $lesson->id,
 				'start_date' => Carbon::now()->subDays(100)
 			]);
@@ -40,45 +65,61 @@ class UserLessonTest extends ApiTestCase
 
 		$response->assertStatus(200);
 
-		foreach($user->lessonsAvailability as $lesson) {
-			$this->assertTrue($lesson->startDate($user)->isToday(), "Start date is not today");
+		foreach ($user->getLessonsAvailability() as $lesson) {
+			$this->assertTrue($lesson->getStartDate($user)->isToday(), "Start date is not today");
 		};
 
-		$endDate = $response->json()['end_date'];
+		$endDate = $response->json('end_date');
 		$this->assertTrue(Carbon::createFromTimestamp($endDate)->lte(Carbon::now()));
 
-		$response->assertJsonFragment([
+		$resultLesson = array_filter($response->json('lessons'), function($resultLesson) use ($lesson) { return $resultLesson['id'] === $lesson->id; });
+
+		$this->assertCount(1, $resultLesson);
+		$this->assertEquals(
 			[
 				'id'=> $lesson->id,
 				'name' => $lesson->name,
-				'group_id' => $lesson->group_id,
-				'groups' => $lesson->group_id,
-				'order_number' => $lesson->order_number,
 				'is_required' => $lesson->is_required,
 				'isAccessible' => $lesson->isAccessible(),
 				'isAvailable' => $lesson->isAvailable(),
+				'isDefaultStartDate' => false,
 				'startDate' => $endDate,
-			]
-		]);
+			],
+			current($resultLesson)
+		);
 	}
 
 	/** @test */
 	public function insertDateToDatePlan()
 	{
+		/** @var User $user */
 		$user = factory(User::class)->create();
-		$requiredLessons = [];
 
-		for ($i = 1; $i < 6; $i++) {
-			$requiredLessons[] = factory(Lesson::class)->create([
-				'is_required' => 1,
-				'group_id' => 5,
-				'order_number' => $i,
-			]);
-		}
+		/** @var Order $order */
+		$order = factory(Order::class)->create([
+			'user_id' => $user->id,
+			'paid' => 1,
+		]);
+
+		/** @var Course $course */
+		$course = factory(Course::class)->create();
+
+		CourseProvider::shouldReceive('getCourseId')->andReturn($course->id);
+
+		/** @var Lesson[] $requiredLessons */
+		$requiredLessons = factory(Lesson::class, 5)->create([
+			'is_required' => 1,
+		]);
 
 		foreach ($requiredLessons as $lesson) {
-			factory(UserLesson::class)->create([
-				'user_id' => $user->id,
+			factory(CourseStructureNode::class)->create([
+				'course_id' => $course->id,
+				'structurable_type' => Lesson::class,
+				'structurable_id' => $lesson->id
+			]);
+
+			factory(LessonProduct::class)->create([
+				'product_id' => $order->product_id,
 				'lesson_id' => $lesson->id,
 				'start_date' => Carbon::now()->subDays(100)
 			]);
@@ -100,6 +141,7 @@ class UserLessonTest extends ApiTestCase
 			]);
 
 		$response->assertStatus(200);
+		$responseLessons = $response->json('lessons');
 
 		foreach ($requiredLessons as $index => $lesson) {
 			$expectedStartDate = $startDate->addDays($expectedDaysInterval[$index]);
@@ -109,20 +151,24 @@ class UserLessonTest extends ApiTestCase
 				'start_date' => $expectedStartDate,
 			]);
 
-			$response->assertJsonFragment([
-				'id'=> $lesson->id,
-				'name' => $lesson->name,
-				'group_id' => $lesson->group_id,
-				'groups' => $lesson->group_id,
-				'order_number' => $lesson->order_number,
-				'is_required' => $lesson->is_required,
-				'isAccessible' => $lesson->isAccessible(),
-				'isAvailable' => $lesson->isAvailable(),
-				'startDate' => $expectedStartDate->timestamp
-			]);
+			$resultLesson = array_filter($responseLessons, function($resultLesson) use ($lesson) { return $resultLesson['id'] === $lesson->id; });
+
+			$this->assertCount(1, $resultLesson);
+			$this->assertEquals(
+				[
+					'id'=> $lesson->id,
+					'name' => $lesson->name,
+					'is_required' => $lesson->is_required,
+					'isAccessible' => $lesson->isAccessible(),
+					'isAvailable' => $lesson->isAvailable(),
+					'isDefaultStartDate' => false,
+					'startDate' => $expectedStartDate->timestamp,
+				],
+				current($resultLesson)
+			);
 		}
 
-		$computedEndDate = $response->json()['end_date'];
+		$computedEndDate = $response->json('end_date');
 		$this->assertTrue(
 			Carbon::createFromTimestamp($computedEndDate)->lte($endDate),
 			"Computed End Date is larger than selected end date"
@@ -132,21 +178,34 @@ class UserLessonTest extends ApiTestCase
 	/** @test */
 	public function insertPreset()
 	{
+		/** @var User $user */
 		$user = factory(User::class)->create();
-		$requiredLessons = [];
-		$userLessons = [];
 
-		for ($i = 1; $i < 6; $i++) {
-			$requiredLessons[] = factory(Lesson::class)->create([
-				'is_required' => 1,
-				'group_id' => 5,
-				'order_number' => $i,
-			]);
-		}
+		/** @var Order $order */
+		$order = factory(Order::class)->create([
+			'user_id' => $user->id,
+			'paid' => 1,
+		]);
+
+		/** @var Course $course */
+		$course = factory(Course::class)->create();
+
+		CourseProvider::shouldReceive('getCourseId')->andReturn($course->id);
+
+		/** @var Lesson[] $requiredLessons */
+		$requiredLessons = factory(Lesson::class, 5)->create([
+			'is_required' => 1,
+		]);
 
 		foreach ($requiredLessons as $lesson) {
-			$userLessons[] = factory(UserLesson::class)->create([
-				'user_id' => $user->id,
+			factory(CourseStructureNode::class)->create([
+				'course_id' => $course->id,
+				'structurable_type' => Lesson::class,
+				'structurable_id' => $lesson->id
+			]);
+
+			factory(LessonProduct::class)->create([
+				'product_id' => $order->product_id,
 				'lesson_id' => $lesson->id,
 				'start_date' => Carbon::now()->subDays(100)
 			]);
@@ -166,7 +225,7 @@ class UserLessonTest extends ApiTestCase
 			]);
 
 		$response->assertStatus(200);
-
+		$responseLessons = $response->json('lessons');
 		$expectedDaysInterval = [0, 4, 2, 2, 4];
 
 		foreach ($requiredLessons as $index => $lesson) {
@@ -178,17 +237,21 @@ class UserLessonTest extends ApiTestCase
 				'start_date' => $expectedStartDate,
 			]);
 
-			$response->assertJsonFragment([
-				'id'=> $lesson->id,
-				'name' => $lesson->name,
-				'group_id' => $lesson->group_id,
-				'groups' => $lesson->group_id,
-				'order_number' => $lesson->order_number,
-				'is_required' => $lesson->is_required,
-				'isAccessible' => $lesson->isAccessible(),
-				'isAvailable' => $lesson->isAvailable(),
-				'startDate' => $expectedStartDate->timestamp
-			]);
+			$resultLesson = array_filter($responseLessons, function($resultLesson) use ($lesson) { return $resultLesson['id'] === $lesson->id; });
+
+			$this->assertCount(1, $resultLesson);
+			$this->assertEquals(
+				[
+					'id'=> $lesson->id,
+					'name' => $lesson->name,
+					'is_required' => $lesson->is_required,
+					'isAccessible' => $lesson->isAccessible(),
+					'isAvailable' => $lesson->isAvailable(),
+					'isDefaultStartDate' => false,
+					'startDate' => $expectedStartDate->timestamp,
+				],
+				current($resultLesson)
+			);
 		}
 	}
 
@@ -199,14 +262,10 @@ class UserLessonTest extends ApiTestCase
 
 		$requiredLessonOne = factory(Lesson::class)->create([
 			'is_required' => 1,
-			'group_id' => 5,
-			'order_number' => 1,
 		]);
 
 		$requiredLessonTwo = factory(Lesson::class)->create([
 			'is_required' => 1,
-			'group_id' => 5,
-			'order_number' => 2,
 		]);
 
 		$userLessonOne = factory(UserLesson::class)->create([

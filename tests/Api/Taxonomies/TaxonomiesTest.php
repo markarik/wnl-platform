@@ -34,7 +34,7 @@ class TaxonomiesTest extends ApiTestCase
 
 		$response
 			->assertStatus(200)
-			->assertJsonFragment([
+			->assertJson([
 				'name' => $taxonomyName,
 				'description' => $taxonomyDescription,
 				'color' => $taxonomyColor

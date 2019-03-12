@@ -19,7 +19,7 @@ class PaymentTest extends DuskTestCase
 	public function registerAndPayOnline()
 	{
 		$this->execute([
-			[SelectProductModule::class , 'onsite'],
+			[SelectProductModule::class , 'online'],
 			[PersonalDataModule::class  , 'signUpNoInvoice'],
 			[ConfirmOrderModule::class  , 'payOnline'],
 			[OnlinePaymentModule::class , 'successfulPayment'],
@@ -63,7 +63,7 @@ class PaymentTest extends DuskTestCase
 			[ConfirmOrderModule::class  , 'payByInstalments'],
 			[MyOrdersModule::class      , 'studyBuddy'],
 			[VoucherModule::class       , 'default'],
-			[SelectProductModule::class , 'onsite'],
+			[SelectProductModule::class , 'online'],
 			[PersonalDataModule::class  , 'signUpNoInvoice'],
 			[ConfirmOrderModule::class  , 'payOnline'],
 			[OnlinePaymentModule::class , 'successfulPayment'],

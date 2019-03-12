@@ -10,7 +10,7 @@ use App\Models\UserLesson;
 
 class UserLessonTransformer extends ApiTransformer
 {
-	protected $availableIncludes = ['lessons'];
+	protected $availableIncludes = [];
 
 	public function transform(UserLesson $userLesson)
 	{
@@ -22,14 +22,5 @@ class UserLessonTransformer extends ApiTransformer
 		];
 
 		return $data;
-	}
-
-	public function includeLessons(UserLesson $userLesson)
-	{
-		return $this->item(
-			$userLesson->lesson,
-			new LessonTransformer(['user_lesson' => $userLesson->id]),
-			'lesson'
-		);
 	}
 }

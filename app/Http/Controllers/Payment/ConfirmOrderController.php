@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Payment;
 
-use App\Models\Order;
 use App\Models\Payment as PaymentModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Lib\Przelewy24\Client as Payment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class ConfirmOrderController extends Controller
 {
@@ -54,7 +54,7 @@ class ConfirmOrderController extends Controller
 		$order->method = $request->input('method');
 		$order->save();
 
-		session()->forget(['coupon', 'product']);
+		Session::forget(['coupon', 'product', 'orderId']);
 
 		$amount = (int)$order->total_with_coupon * 100;
 		return redirect($this->getReturnUrl($amount));

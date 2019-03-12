@@ -36,12 +36,6 @@ class PersonalDataController extends Controller
 			return view('payment.signups-closed', ['product' => $product]);
 		}
 
-		if (Auth::check() && !$request->edit) {
-			$this->createOrder(Auth::user(), $request);
-
-			return redirect()->route('payment-personal-data', ['?edit=true']);
-		}
-
 		$form = $this->form(PersonalDataForm::class, [
 			'method' => 'POST',
 			'url'    => route('payment-personal-data-post'),
@@ -79,9 +73,12 @@ class PersonalDataController extends Controller
 
 		$user = Auth::user();
 		$this->updateAccount($user, $request);
-//		TODO fix it
-//			$this->updateOrder($user, $request);
-		 $this->createOrder($user, $request);
+
+		if (!!Session::get('orderId')) {
+			$this->updateOrder($user, $request);
+		} else {
+			$this->createOrder($user, $request);
+		}
 
 		return redirect(route('payment-confirm-order'));
 	}
@@ -94,6 +91,7 @@ class PersonalDataController extends Controller
 			'session_id' => str_random(32),
 			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 		]);
+		Session::put('orderId', $order->id);
 
 		$userCoupon = $user->coupons->first();
 		if (session()->has('coupon')) {

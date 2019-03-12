@@ -147,11 +147,7 @@
 		<section class="form-end">
 			<div class="block has-text-centered">
 				<button class="button is-primary">
-					@if(request()->has('edit'))
-						@lang('payment.personal-data-edit')
-					@else
 						@lang('payment.personal-data-submit')
-					@endif
 				</button>
 			</div>
 		</section>

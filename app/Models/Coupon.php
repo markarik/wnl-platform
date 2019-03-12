@@ -16,6 +16,11 @@ class Coupon extends Model
 		'expires_at',
 	];
 
+	const TYPE_GROUP = 'group';
+	const TYPE_STUDY_BUDDY = 'study_buddy';
+	const TYPE_VOUCHER = 'voucher';
+	const TYPE_PARTICIPANT = 'participant';
+
 	protected $dispatchesEvents = [
 		'created' => CouponCreated::class,
 		'updated' => CouponUpdated::class,

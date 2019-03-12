@@ -72,6 +72,7 @@ class PersonalDataController extends Controller
 		}
 
 		$user = Auth::user();
+		// TODO block updating first_name, last_name, pesel for paid order users
 		$this->updateAccount($user, $request);
 
 		if (!!Session::get('orderId')) {

@@ -21,9 +21,6 @@ const state = {
 // Getters
 const getters = {
 	isReady: state => state.ready,
-	allLessons: state => {
-		return _.sortBy(state.lessons, (lesson) => lesson.order_number);
-	},
 };
 
 // Mutations
@@ -41,8 +38,8 @@ const mutations = {
 
 // Actions
 const actions = {
-	async fetchAllLessons({ commit, getters }) {
-		if (_.isEmpty(getters.allLessons)) {
+	async fetchAllLessons({ commit, state }) {
+		if (_.isEmpty(state.lessons)) {
 			const response = await axios.get(getApiUrl('lessons/all'));
 			commit(types.SETUP_LESSONS, response.data);
 		}

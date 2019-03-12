@@ -17,11 +17,28 @@ class QuizSetsApiController extends ApiController
 
 	public function post(UpdateQuizSet $request)
 	{
-		$screen = QuizSet::create($request->all());
+		$quizSet = QuizSet::create($request->all());
 
-		$resource = new Item($screen, new QuizSetTransformer, $this->resourceName);
-		$data = $this->fractal->createData($resource)->toArray();
+		if (is_array($request->quiz_questions)) {
+			$quizSet->syncQuestions($request->quiz_questions);
+		}
 
-		return $this->respondOk($data);
+		return $this->transformAndRespond($quizSet);
+	}
+	public function put(UpdateQuizSet $request)
+	{
+		$quizSet = QuizSet::find($request->route('id'));
+
+		if (!$quizSet) {
+			return $this->respondNotFound();
+		}
+
+		$quizSet->update($request->all());
+
+		if (is_array($request->quiz_questions)) {
+			$quizSet->syncQuestions($request->quiz_questions);
+		}
+
+		return $this->transformAndRespond($quizSet);
 	}
 }

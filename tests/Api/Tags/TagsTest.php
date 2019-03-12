@@ -41,13 +41,14 @@ class TagsTest extends ApiTestCase
 			->actingAs($user)
 			->json('POST', $this->url('/tags/byName'), $data);
 
-		$response
-			->assertStatus(200);
+		$response->assertStatus(200);
 
-		$response->assertJsonFragment([
+		$this->assertContains([
 			'id' => $matchingTag->id,
-			'name' => $matchingTag->name
-		]);
+			'name' => $matchingTag->name,
+			'description' => null,
+			'color' => null
+		], $response->json());
 
 		$response->assertJsonMissing($excludedTags->map(function ($tag) {
 			return [

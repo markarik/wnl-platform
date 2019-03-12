@@ -197,7 +197,6 @@ import WnlContentItemClassifierEditor from 'js/components/global/contentClassifi
 import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
-	name: 'QuizesEditor',
 	components: {
 		WnlContentItemClassifierEditor,
 		WnlForm,

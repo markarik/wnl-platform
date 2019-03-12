@@ -200,6 +200,11 @@ let routes = [
 				name: 'satisfaction-guarantee',
 				path: 'guarantee',
 				component: Page,
+			},
+			{
+				name: 'key-shortcuts',
+				path: 'shortcuts',
+				component: Page,
 			}
 		]
 	},

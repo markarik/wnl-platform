@@ -16,19 +16,20 @@ class QuizSetTransformer extends ApiTransformer
 		return [
 			'id'   => $quizSet->id,
 			'name' => $quizSet->name,
+			'description' => $quizSet->description,
+			'lesson_id' => $quizSet->lesson_id,
 		];
 	}
 
 	public function includeQuizQuestions(QuizSet $quizSet)
 	{
-		$questions = $quizSet->questions()->with(['answers'])->get();
+		$questions = $quizSet->questions()->get();
 
 		return $this->collection(
 			$questions,
 			new QuizQuestionTransformer([
 				'quiz_sets' => $quizSet->id,
-			]),
-			'quiz_questions'
+			])
 		);
 	}
 }

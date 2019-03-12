@@ -58,7 +58,7 @@
 					<a
 						class="small"
 						target="_blank"
-						:href="`/admin/app/quizes/edit/${question.id}`"
+						:href="`/admin/app/quiz/edit/${question.id}`"
 					>
 						{{$t('questions.question.edit')}}
 						<span class="icon is-small">

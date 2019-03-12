@@ -107,12 +107,12 @@ export default {
 	},
 	computed: {
 		...mapState('courseStructure', ['expandedNodes', 'selectedNodes', 'isSaving']),
-		...mapGetters('courseStructure', ['getChildrenByParentId', 'getStructurableIcon']),
+		...mapGetters('courseStructure', ['getChildrenNodesByParentId', 'getStructurableIcon']),
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},
 		childNodes() {
-			return this.getChildrenByParentId(this.node.id);
+			return this.getChildrenNodesByParentId(this.node.id);
 		},
 		isSelected() {
 			return this.selectedNodes.includes(this.node.id);

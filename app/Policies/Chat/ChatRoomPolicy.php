@@ -71,6 +71,11 @@ class ChatRoomPolicy
 		return false;
 	}
 
+	/**
+	 * @param User $user
+	 * @param ChatRoom $chatRoom
+	 * @return bool
+	 */
 	protected function checkLessonAccess($user, $chatRoom)
 	{
 		foreach ($chatRoom->lessons as $lesson) {

@@ -105,12 +105,12 @@ export default {
 			selectedTerms: 'selectedNodes',
 			isSaving: 'isSaving',
 		}),
-		...mapGetters('taxonomyTerms', ['getChildrenByParentId']),
+		...mapGetters('taxonomyTerms', ['getChildrenNodesByParentId']),
 		chevronTitle() {
 			return this.isExpanded ? 'Zwiń' : 'Rozwiń';
 		},
 		childTerms() {
-			return this.getChildrenByParentId(this.term.id);
+			return this.getChildrenNodesByParentId(this.term.id);
 		},
 		isSelected() {
 			return this.selectedTerms.includes(this.term.id);

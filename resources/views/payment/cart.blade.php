@@ -29,7 +29,8 @@
 					<span>@lang('payment.cart-price-value', ['value' => $productPriceWithCoupon])</span>
 				</p>
 			@else
-				<span>@lang('payment.cart-price-label')</span><span>@lang('payment.cart-price-value', ['value' => $productPrice])</span>
+				<span>@lang('payment.cart-price-label')</span>
+				<span>@lang('payment.cart-price-value', ['value' => $productPrice])</span>
 			@endif
 		</div>
 	@else

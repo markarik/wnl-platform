@@ -90,7 +90,8 @@ class ConfirmOrderModule
 
 	protected function assertCart(BethinkBrowser $browser) {
 		$browser->assertVisible('@cart');
-		$browser->assertSeeIn('@cart', 'Wysyłka:Na terenie Polski za darmo');
+		$browser->assertSeeIn('@cart', 'Wysyłka:');
+		$browser->assertSeeIn('@cart', 'Na terenie Polski za darmo');
 		$browser->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do');
 		$browser->assertSeeIn('@cart', 'Kwota całkowita:');
 	}

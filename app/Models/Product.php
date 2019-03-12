@@ -75,7 +75,7 @@ class Product extends Model
 			->first();
 	}
 
-	public function getPriceWithCoupon($coupon) {
+	public function getPriceWithCoupon(Coupon $coupon = null) {
 		if (empty($coupon)) {
 			return $this->price;
 		}

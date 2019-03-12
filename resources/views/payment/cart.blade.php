@@ -14,7 +14,12 @@
         </p>
         @if(!empty($hasCoupon))
             <p>
-                <span>@lang('payment.cart-coupon-label')</span><span>{{$couponValue}}</span>
+                <span>@lang('payment.cart-coupon-label')</span>
+                <span>
+                    -{{$couponIsPercentage
+                    ? trans('payment.voucher-percentage', ['value' => $couponValue])
+                    : trans('payment.voucher-amount', ['value' => $couponValue])}}
+                </span>
             </p>
         @endif
         @if (empty($hasCoupon))

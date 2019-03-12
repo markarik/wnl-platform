@@ -25,20 +25,13 @@ class ConfirmOrderController extends Controller
 		Log::debug('Order confirmation');
 
 		$order = $user->orders()->recent();
-		$amount = (int)$order->total_with_coupon * 100;
-		$checksum = $payment::generateChecksum($order->session_id, $amount);
 
 		$coupon = $order->coupon;
 		$productPriceWithCoupon = $order->totalWithCoupon;
 		$couponValue = null;
 
-		if (!empty($coupon)) {
-			if ($coupon->is_percentage) {
-				$couponValue = "-{$coupon->value}%";
-			} else {
-				$couponValue = "-{$coupon->value}zł";
-			}
-		}
+		$amount = (int)$productPriceWithCoupon * 100;
+		$checksum = $payment::generateChecksum($order->session_id, $amount);
 
 		$viewData = [
 			'order' => $order,
@@ -47,7 +40,8 @@ class ConfirmOrderController extends Controller
 			'amount'      => $amount,
 			'returnUrl'  => $this->getReturnUrl($amount),
 			'instalments' => null,
-			'couponValue' => $couponValue,
+			'couponValue' => $coupon->value,
+			'couponIsPercentage' => $coupon->isPercentage,
 			'productPriceWithCoupon' => $productPriceWithCoupon
 		];
 

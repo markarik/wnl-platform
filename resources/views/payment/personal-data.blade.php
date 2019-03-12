@@ -8,6 +8,7 @@
 		'productAccessEnd' => $product->access_end,
 		'couponValue' => $couponValue,
 		'productPriceWithCoupon' => $productPriceWithCoupon,
+		'couponIsPercentage' => $couponIsPercentage,
 		'hasCoupon' => !empty($couponValue),
 	])
 

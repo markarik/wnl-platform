@@ -57,24 +57,22 @@ class PersonalDataController extends Controller
 
 		$coupon = $this->readCoupon(Auth::user());
 		$productPriceWithCoupon = null;
-		$couponValue = null;
 
 		if (!empty($coupon)) {
 			if ($coupon->is_percentage) {
 				$value = number_format($coupon->value * $product->price / 100, 2, '.', '');
 				$productPriceWithCoupon = $product->price - $value;
-				$couponValue = "-{$coupon->value}%";
 			} else {
 				$productPriceWithCoupon = $product->price - $coupon->value;
-				$couponValue = "-{$coupon->value}zł";
 			}
 		}
 
 		return view('payment.personal-data', [
 			'form'    => $form,
 			'product' => $product,
-			'couponValue' => $couponValue,
-			'productPriceWithCoupon' => $productPriceWithCoupon
+			'couponValue' => $coupon->value,
+			'productPriceWithCoupon' => $productPriceWithCoupon,
+			'couponIsPercentage' => $coupon->isPercentage
 		]);
 
 	}

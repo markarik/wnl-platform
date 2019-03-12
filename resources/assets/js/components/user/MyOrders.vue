@@ -6,6 +6,13 @@
 					Twoje zamówienia
 				</div>
 			</div>
+			<div v-if="displayAlbumLink && hasOrders">
+				<a :href="orderAlbumUrl" title="Zamów album map myśli">
+					<span class="icon is-small status-icon">
+						<i class="fa fa-shopping-cart"></i>
+					</span> Zamów album map myśli
+				</a>
+			</div>
 		</div>
 		<div class="level" v-if="currentUserSubscriptionActive">
 			<div class="level-left">
@@ -69,7 +76,22 @@ export default {
 		},
 		userFriendlySubscriptionDate() {
 			return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL');
-		}
+		},
+		displayAlbumLink() {
+			const prolongationOrders = this.orders.filter(order =>
+				order.product.slug === 'wnl-online' &&
+				order.coupon.value === 50 &&
+				order.coupon.type === 'percentage' &&
+				!order.canceled
+			);
+
+			const albumOrders = this.orders.filter(order => order.product.slug === 'wnl-album');
+
+			return albumOrders.length === 0 && prolongationOrders.length > 0;
+		},
+		orderAlbumUrl() {
+			return getUrl('payment/personal-data/wnl-album');
+		},
 	},
 	methods: {
 		getOrders() {

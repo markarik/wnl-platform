@@ -16,17 +16,14 @@ use Illuminate\Support\Facades\Input;
 Auth::routes();
 
 Route::group(['namespace' => 'Payment', 'prefix' => 'payment', /*'middleware' => 'payment'*/], function () {
-	Route::get('select-product', 'SelectProductController@index')->name('payment-select-product');
+	Route::redirect('/select-product', '/payment/account', 302)->name('payment-select-product');
+	Route::redirect('/', '/payment/account', 302);
 
 	Route::get('account', 'AccountController@index')->name('payment-account');
 	Route::post('account', 'AccountController@handleRegister')->name('payment-account-post');
 
 	Route::get('voucher', 'VoucherController@index')->name('payment-voucher');
 	Route::post('voucher', 'VoucherController@handle')->name('payment-voucher-post');
-
-	Route::get('/', function () {
-		return redirect(route('payment-select-product'));
-	});
 
 	Route::group(['middleware' => 'payment-auth'], function () {
 		Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');

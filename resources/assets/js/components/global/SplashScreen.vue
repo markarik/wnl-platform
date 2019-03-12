@@ -23,7 +23,7 @@
 				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.
 			</p>
 			<p class="margin vertical">
-				<a href="http://wiecejnizlek.pl/zapisy" class="button is-primary is-outlined">
+				<a :href="paymentUrl" class="button is-primary is-outlined">
 					Zapisz się na najbliższą edycję
 				</a>
 			</p>
@@ -63,7 +63,7 @@
 
 <script>
 import moment from 'moment';
-import { getImageUrl } from 'js/utils/env';
+import { getImageUrl, getUrl } from 'js/utils/env';
 import { set } from 'vue';
 import { mapGetters } from 'vuex';
 import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
@@ -80,6 +80,9 @@ export default {
 		},
 		startDate() {
 			return moment(new Date(this.currentUserSubscriptionDates.min * 1000)).format('LL');
+		},
+		paymentUrl() {
+			return getUrl('payment/select-product');
 		},
 	},
 };

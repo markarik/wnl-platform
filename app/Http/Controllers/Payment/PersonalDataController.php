@@ -19,14 +19,21 @@ class PersonalDataController extends Controller
 {
 	use FormBuilderTrait;
 
-	public function index(Request $request, $productSlug = null)
+	public function index(Request $request)
 	{
-		if ($productSlug !== null) {
-			$product = Product::slug($productSlug);
+		if (Session::has('product')) {
+			$product = Session::get('product');
+		} else {
+			$product = Product::slug($request->route('productSlug') ?? 'wnl-online');
+			Session::put('product', $product);
+		}
 
-			if ($product instanceof Product) {
-				Session::put('product', $product);
-			}
+		if (!$product instanceof Product ||
+			!$product->available ||
+			$product->signups_close->isPast() ||
+			$product->signups_start->isFuture()
+		) {
+			return view('payment.signups-closed', ['product' => $product]);
 		}
 
 		if (Auth::check() && !$request->edit) {
@@ -45,10 +52,8 @@ class PersonalDataController extends Controller
 
 		return view('payment.personal-data', [
 			'form'    => $form,
-			// TODO
-			'product' => Product::where(['slug' => 'wnl-online'])->first(),
+			'product' => $product,
 		]);
-
 	}
 
 	public function handle(Request $request)
@@ -85,8 +90,7 @@ class PersonalDataController extends Controller
 	{
 		\Log::notice('Creating order');
 		$order = $user->orders()->create([
-			// TODO
-			'product_id' => Product::where(['slug' => 'wnl-online'])->first()->id,
+			'product_id' => Session::get('product')->id,
 			'session_id' => str_random(32),
 			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 		]);

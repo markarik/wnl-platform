@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTypeToCoupons extends Migration
+class AddKindToCoupons extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -14,7 +14,7 @@ class AddTypeToCoupons extends Migration
 	public function up()
 	{
 		Schema::table('coupons', function (Blueprint $table) {
-			$table->enum('coupon_type', ['group', 'voucher', 'participant', 'study_buddy'])->nullable();
+			$table->enum('kind', ['group', 'voucher', 'participant', 'study_buddy'])->nullable();
 		});
 	}
 
@@ -26,7 +26,7 @@ class AddTypeToCoupons extends Migration
 	public function down()
 	{
 		Schema::table('coupons', function (Blueprint $table) {
-			$table->dropColumn('coupon_type');
+			$table->dropColumn('kind');
 		});
 	}
 }

@@ -60,7 +60,7 @@ class CouponsGenerateVouchers extends Command
 				'times_usable' => 1,
 				'created_at'   => $now,
 				'updated_at'   => $now,
-				'coupon_type'  => Coupon::TYPE_VOUCHER
+				'kind'  => Coupon::TYPE_VOUCHER
 			];
 		}
 

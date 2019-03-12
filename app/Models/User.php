@@ -365,6 +365,26 @@ class User extends Authenticatable
 		$this->notify(new ResetPasswordNotification($token));
 	}
 
+	public static function createWithProfileAndBilling($userData) {
+		$user = static::create($userData);
+
+		$user->profile()->firstOrCreate([
+			'first_name' => $user->first_name,
+			'last_name'  => $user->last_name,
+		]);
+
+		$user->billing()->firstOrCreate([
+			'company_name' => $user->invoice_name,
+			'vat_id'       => $user->invoice_nip,
+			'address'      => $user->invoice_address,
+			'zip'          => $user->invoice_zip,
+			'city'         => $user->invoice_city,
+			'country'      => $user->invoice_country,
+		]);
+
+		return $user;
+	}
+
 	/**
 	 * Get the current user or find by id.
 	 *

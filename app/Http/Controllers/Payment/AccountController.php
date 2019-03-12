@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Payment;
 
 
 use App\Http\Forms\SignUpForm;
+use App\Mail\SignUpConfirmation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
 
 class AccountController
@@ -52,6 +54,8 @@ class AccountController
 				'consent_terms'      => 1,
 			]
 		);
+
+		Mail::to($user)->send(new SignUpConfirmation($user));
 
 		Auth::login($user);
 		Log::debug('User automatically logged in after registration.');

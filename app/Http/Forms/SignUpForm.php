@@ -19,7 +19,7 @@ class SignUpForm extends Form
 			])
 			->add('password', 'password', [
 				'label' => trans('payment.password'),
-				'rules' => 'required|confirmed|min:6',
+				'rules' => 'required|min:6',
 				'attr'  => [
 					'class' => 'input',
 					'placeholder' => trans('payment.password'),

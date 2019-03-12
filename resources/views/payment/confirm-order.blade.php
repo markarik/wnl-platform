@@ -73,7 +73,7 @@
 
 		<section class="subsection">
 			<p class="has-text-centered edit-personal-data">
-				<a href="{{ route('payment-personal-data') }}?edit=true">@lang('payment.confirm-change-order')</a>
+				<a href="{{ route('payment-personal-data') }}">@lang('payment.confirm-change-order')</a>
 			</p>
 		</section>
 

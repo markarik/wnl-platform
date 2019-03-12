@@ -22,7 +22,7 @@ class UserModule
 		$faker->addProvider(new Address($faker));
 		$faker->addProvider(new Internet($faker));
 		$faker->addProvider(new PhoneNumber($faker));
-		$user = User::create([
+		$user = User::createWithProfileAndBilling([
 			'first_name' => $faker->firstName,
 			'last_name'  => $faker->lastName,
 			'email'      => $faker->unique()->safeEmail,

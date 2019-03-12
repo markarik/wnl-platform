@@ -139,6 +139,26 @@ class PersonalDataController extends Controller
 			'invoice_country' => $request->invoice_country ?? $user->invoice_country,
 		]);
 
+		$user->profile()->updateOrCreate(
+			['user_id' => $user->id],
+			[
+				'first_name' => $user->first_name,
+				'last_name'  => $user->last_name,
+			]
+		);
+
+		$user->billing()->updateOrCreate(
+			['user_id' => $user->id],
+			[
+				'company_name' => $user->invoice_name,
+				'vat_id'       => $user->invoice_nip,
+				'address'      => $user->invoice_address,
+				'zip'          => $user->invoice_zip,
+				'city'         => $user->invoice_city,
+				'country'      => $user->invoice_country,
+			]
+		);
+
 		$user->userAddress()->updateOrCreate(
 		['user_id' => $user->id],
 		[

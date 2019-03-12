@@ -46,7 +46,7 @@
 					</span>
 
 					<div class="nav-right nav-menu">
-						<form method="post" action="/logout" id="logout-form">
+						<form method="post" action="{{route('logout', ['redirectToRoute' => $logoutRedirectToRoute ?? null])}}" id="logout-form">
 							{{ csrf_field() }}
 						</form>
 						<a href="{{ url('payment/select-product') }}" class="nav-item">

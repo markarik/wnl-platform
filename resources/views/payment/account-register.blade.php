@@ -12,7 +12,7 @@
 		{!! form_start($form)  !!}
 
 		<section class="section">
-			<div><small>@lang('payment.account-register-not-you') <a class="opens-login-modal">@lang('payment.account-register-login-button')</a></small></div>
+			<div><small>@lang('payment.account-register-login-text') <a class="opens-login-modal">@lang('payment.account-register-login-button')</a></small></div>
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.account-register-heading')</h2>
 			</div>

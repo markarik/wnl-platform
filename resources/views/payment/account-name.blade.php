@@ -14,7 +14,7 @@
 				@endif
 			</div>
 			<div><strong>{{$user->fullName}}</strong></div>
-			<div><small>TODO Nie Ty? Załóż nowe konto</small></div>
+			<div><small>@lang('payment.account-wrong-account-text') <a class="logout-link">@lang('payment.account-wrong-account-register-text')</a></small></div>
 
 
 			<a class="button is-primary" href="{{route('payment-personal-data')}}">

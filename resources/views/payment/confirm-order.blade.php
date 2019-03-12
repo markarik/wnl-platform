@@ -6,8 +6,8 @@
 		'productName' => $order->product->name,
 		'productPrice' => $order->product->price,
 		'productAccessEnd' => $order->product->access_end,
+		'productPriceWithCoupon' => $productPriceWithCoupon,
 		'coupon' => $coupon,
-		'productPriceWithCoupon' => $productPriceWithCoupon
 	])
 
 	@include('payment.payment-hero', [

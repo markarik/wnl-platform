@@ -312,7 +312,7 @@ export default {
 		},
 		async onDelete() {
 			try {
-				await this.deleteQuizQuestion(this.questionId);
+				await this.deleteQuizQuestion(this.quizQuestionId);
 				this.addAutoDismissableAlert({
 					text: 'Poszło!',
 					type: 'success',
@@ -320,14 +320,14 @@ export default {
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
-					text: 'Niestety coś poszło nie tak :( Daj znać Wujowi',
+					text: 'Niestety coś poszło nie tak :( Daj znać Damianowi',
 					type: 'error',
 				});
 			}
 		},
 		async onUndelete() {
 			try {
-				await this.undeleteQuizQuestion(this.questionId);
+				await this.undeleteQuizQuestion(this.quizQuestionId);
 				this.addAutoDismissableAlert({
 					text: 'Poszło!',
 					type: 'success',
@@ -335,7 +335,7 @@ export default {
 			} catch (error) {
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert({
-					text: 'Niestety coś poszło nie tak :( Daj znać Wujowi',
+					text: 'Niestety coś poszło nie tak :( Daj znać Damianowi',
 					type: 'error',
 				});
 			}

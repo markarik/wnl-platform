@@ -6,6 +6,7 @@
 			</div>
 		</div>
 		<wnl-upload
+			v-if="uploadEnabled"
 			@success="onUploadSuccess"
 			endpoint="upload"
 			class="upload"
@@ -60,6 +61,10 @@ export default {
 		form: Object,
 		name: String,
 		value: String,
+		uploadEnabled: {
+			type: Boolean,
+			default: true
+		}
 	},
 	data () {
 		return {

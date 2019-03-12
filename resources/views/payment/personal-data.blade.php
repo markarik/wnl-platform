@@ -6,10 +6,8 @@
 		'productName' => $product->name,
 		'productPrice' => $product->price,
 		'productAccessEnd' => $product->access_end,
-		'couponValue' => $couponValue,
+		'coupon' => $coupon,
 		'productPriceWithCoupon' => $productPriceWithCoupon,
-		'couponIsPercentage' => $couponIsPercentage,
-		'hasCoupon' => !empty($couponValue),
 	])
 
 	@include('payment.payment-hero', [

@@ -27,7 +27,7 @@ class ConfirmOrderController extends Controller
 		$order = $user->orders()->recent();
 
 		$coupon = $order->coupon;
-		$productPriceWithCoupon = $order->totalWithCoupon;
+		$productPriceWithCoupon = $order->total_with_coupon;
 		$couponValue = null;
 
 		$amount = (int)$productPriceWithCoupon * 100;
@@ -40,8 +40,7 @@ class ConfirmOrderController extends Controller
 			'amount'      => $amount,
 			'returnUrl'  => $this->getReturnUrl($amount),
 			'instalments' => null,
-			'couponValue' => $coupon->value,
-			'couponIsPercentage' => $coupon->isPercentage,
+			'coupon' => $coupon,
 			'productPriceWithCoupon' => $productPriceWithCoupon
 		];
 

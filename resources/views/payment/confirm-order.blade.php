@@ -6,8 +6,7 @@
 		'productName' => $order->product->name,
 		'productPrice' => $order->product->price,
 		'productAccessEnd' => $order->product->access_end,
-		'hasCoupon' => !empty($couponValue),
-		'couponValue' => $couponValue,
+		'coupon' => $coupon,
 		'productPriceWithCoupon' => $productPriceWithCoupon
 	])
 

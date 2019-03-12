@@ -58,21 +58,11 @@ class PersonalDataController extends Controller
 		$coupon = $this->readCoupon(Auth::user());
 		$productPriceWithCoupon = null;
 
-		if (!empty($coupon)) {
-			if ($coupon->is_percentage) {
-				$value = number_format($coupon->value * $product->price / 100, 2, '.', '');
-				$productPriceWithCoupon = $product->price - $value;
-			} else {
-				$productPriceWithCoupon = $product->price - $coupon->value;
-			}
-		}
-
 		return view('payment.personal-data', [
 			'form'    => $form,
 			'product' => $product,
-			'couponValue' => $coupon->value,
-			'productPriceWithCoupon' => $productPriceWithCoupon,
-			'couponIsPercentage' => $coupon->isPercentage
+			'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
+			'coupon' => $coupon
 		]);
 
 	}
@@ -129,10 +119,10 @@ class PersonalDataController extends Controller
 		]);
 		$coupon = $this->readCoupon(Auth::user());
 
-		if (empty($coupon) && $order->product->slug !== 'wnl-album') {
-			$this->generateStudyBuddy($order);
-		} else if (!empty($coupon)) {
+		if (!empty($coupon)) {
 			$this->addCoupon($order, $coupon);
+		} else if ($order->product->slug !== 'wnl-album') {
+			$this->generateStudyBuddy($order);
 		}
 	}
 
@@ -162,7 +152,7 @@ class PersonalDataController extends Controller
 		$userCoupon = $user ? $user->coupons->first() : null;
 		if (session()->has('coupon')) {
 			return session()->get('coupon')->fresh();
-		} elseif ($userCoupon) {
+		} else if ($userCoupon) {
 			return $userCoupon;
 		}
 	}

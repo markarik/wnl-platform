@@ -152,7 +152,7 @@ class PersonalDataController extends Controller
 		$userCoupon = $user ? $user->coupons->first() : null;
 		if (session()->has('coupon')) {
 			return session()->get('coupon')->fresh();
-		} else if ($userCoupon) {
+		} else {
 			return $userCoupon;
 		}
 	}

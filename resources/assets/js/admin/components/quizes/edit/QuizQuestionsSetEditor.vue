@@ -171,12 +171,13 @@ export default {
 		async populateForm() {
 			const fetchedForm = await this.form.populate(this.quizQuestionsSetResourceUrl);
 
-			let includedQuestions = fetchedForm.included.quiz_questions;
-
-			if (includedQuestions) {
-				this.quizQuestionsObjects = {...this.quizQuestionsObjects, ...includedQuestions};
-				this.formPopulated = true;
+			if (fetchedForm.included && fetchedForm.included.quiz_questions) {
+				this.quizQuestionsObjects = {...fetchedForm.included.quiz_questions};
+			} else {
+				this.quizQuestionsObjects = {};
 			}
+
+			this.formPopulated = true;
 		},
 		onDescriptionInput() {
 			this.form.description = this.$refs.descriptionEditor.editor.innerHTML;

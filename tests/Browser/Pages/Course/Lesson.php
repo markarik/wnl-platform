@@ -5,6 +5,7 @@ namespace Tests\Browser\Pages\Course;
 use Facebook\WebDriver\WebDriverBy;
 use Laravel\Dusk\Page as BasePage;
 use PHPUnit\Framework\Assert as PHPUnit;
+use Tests\BethinkBrowser;
 use Tests\Browser\Lib\Wait;
 
 class Lesson extends BasePage
@@ -49,29 +50,29 @@ class Lesson extends BasePage
 			'@navigate_right' => self::CSS_NAVIGATE_RIGHT,
 			'@navigate_left' => self::CSS_NAVIGATE_LEFT,
 			'@sections' => self::CSS_SECTIONS,
-			'@side_nav' => '.wnl-sidenav',
+			'@side_nav' => '.course-sidenav',
 			'@loading_overlay' => '.wnl-overlay'
 		];
 	}
 
-	public function switchToLessonFrame($browser)
+	public function switchToLessonFrame(BethinkBrowser $browser)
 	{
 		$browser->switchToIframeBySrc('/slideshow-builder/1');
 	}
 
-	public function nextSlide($browser)
+	public function nextSlide(BethinkBrowser $browser)
 	{
 		$browser->click('@navigate_right');
 	}
 
-	public function assertNextSlide($browser)
+	public function assertNextSlide(BethinkBrowser $browser)
 	{
 		$browser->waitFor('@navigate_left');
 		$nextSlideContent = $this->getSlideContent($browser);
 		$this->assertSlideContentChanged($nextSlideContent);
 	}
 
-	public function goThroughSlides($browser)
+	public function goThroughSlides(BethinkBrowser $browser)
 	{
 		$hasNextSlide = $browser->elementPresent(self::CSS_NAVIGATE_RIGHT);;
 		while ($hasNextSlide) {
@@ -80,13 +81,13 @@ class Lesson extends BasePage
 		}
 	}
 
-	public function assertLastSlide($browser)
+	public function assertLastSlide(BethinkBrowser $browser)
 	{
 		PHPUnit::assertFalse($browser->elementPresent(self::CSS_NAVIGATE_RIGHT));
 		PHPUnit::assertTrue($browser->elementPresent(self::CSS_NAVIGATE_LEFT));
 	}
 
-	public function completeLesson($browser) {
+	public function completeLesson(BethinkBrowser $browser) {
 		$sections = $browser->driver->findElements(WebDriverBy::cssSelector(self::CSS_SECTIONS));
 
 		for ($i = 0; $i < count($sections); $i++) {
@@ -96,7 +97,7 @@ class Lesson extends BasePage
 		}
 	}
 
-	public function goThroughSections($browser)
+	public function goThroughSections(BethinkBrowser $browser)
 	{
 		$sections = $browser->driver->findElements(WebDriverBy::cssSelector(self::CSS_SECTIONS));
 
@@ -125,7 +126,7 @@ class Lesson extends BasePage
 		}
 	}
 
-	public function assertSectionsVisited($browser)
+	public function assertSectionsVisited(BethinkBrowser $browser)
 	{
 		$numberOfSections = count($browser->driver->findElements(WebDriverBy::cssSelector(self::CSS_SECTIONS)));
 		$numberOfActiveSections = count($browser->driver->findElements(WebDriverBy::cssSelector(self::CSS_SECTIONS_VISITED)));
@@ -133,24 +134,24 @@ class Lesson extends BasePage
 		PHPUnit::assertTrue($numberOfSections === $numberOfActiveSections);
 	}
 
-	public function goToSection($browser, $sectionIndex)
+	public function goToSection(BethinkBrowser $browser, $sectionIndex)
 	{
 		$section = $this->findSectionByIndex($browser, $sectionIndex);
 		$section->click();
 	}
 
-	public function assertExpectedSectionActive($browser, $sectionIndex)
+	public function assertExpectedSectionActive(BethinkBrowser $browser, $sectionIndex)
 	{
 		$section = $this->findSectionByIndex($browser, $sectionIndex);
 		$this->assertSectionActiveByRoute($browser, $section);
 	}
 
-	private function getSlideContent($browser)
+	private function getSlideContent(BethinkBrowser $browser)
 	{
 		return $this->getPresentSlide($browser)->getAttribute('innerHTML');
 	}
 
-	private function getPresentSlide($browser)
+	private function getPresentSlide(BethinkBrowser $browser)
 	{
 		return $browser->driver->findElement(WebDriverBy::cssSelector('.present'));
 	}
@@ -160,7 +161,7 @@ class Lesson extends BasePage
 		PHPUnit::assertTrue(strpos($section->getAttribute('class'), 'is-active') !== false);
 	}
 
-	private function assertSectionActiveByRoute($browser, $section)
+	private function assertSectionActiveByRoute(BethinkBrowser $browser, $section)
 	{
 		$elementPresent = Wait::waitForElementHasClass($browser->driver, $section, 'router-link-exact-active');
 		PHPUnit::assertTrue($elementPresent, 'Expected class not present in element');
@@ -177,7 +178,7 @@ class Lesson extends BasePage
 		PHPUnit::assertEquals($this->slideContent, $nextSlideContent);
 	}
 
-	private function findSectionByIndex($browser, $index)
+	private function findSectionByIndex(BethinkBrowser $browser, $index)
 	{
 		$sectionSelector = sprintf(self::TEMPLATE_NTH_SECTION_SELECTOR, $index + self::SECTIONS_OFFSET);
 		return $browser->driver->findElement(WebDriverBy::cssSelector($sectionSelector));

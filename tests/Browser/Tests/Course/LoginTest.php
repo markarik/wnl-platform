@@ -19,7 +19,7 @@ class LoginTest extends DuskTestCase
 	private $email;
 	private $userName;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 

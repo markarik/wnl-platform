@@ -8,7 +8,6 @@
 
 <script>
 export default {
-	name: 'QuizQuestionListItem',
 	props: {
 		id: {
 			type: Number,
@@ -24,7 +23,7 @@ export default {
 			return {
 				name: 'quiz-editor',
 				params: {
-					quizId: this.id,
+					quizQuestionId: this.id,
 				},
 			};
 		},

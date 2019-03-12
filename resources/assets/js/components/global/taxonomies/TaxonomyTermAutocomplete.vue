@@ -20,7 +20,7 @@
 		>
 			<wnl-taxonomy-term-with-ancestors
 				:term="slotProps.item"
-				:ancestors="getAncestorsById(slotProps.item.id)"
+				:ancestors="getAncestorNodesById(slotProps.item.id)"
 				slot-scope="slotProps"
 			/>
 		</wnl-autocomplete>
@@ -82,7 +82,7 @@ export default {
 	},
 	computed: {
 		...mapState('taxonomyTerms', {terms: 'nodes'}),
-		...mapGetters('taxonomyTerms', ['getAncestorsById']),
+		...mapGetters('taxonomyTerms', ['getAncestorNodesById']),
 		autocompleteTerms() {
 			if (!this.search) {
 				return [];
@@ -95,7 +95,7 @@ export default {
 			return uniqBy(terms, 'id').slice(0, 25);
 		},
 		ancestors() {
-			return this.getAncestorsById(this.selected.id);
+			return this.getAncestorNodesById(this.selected.id);
 		}
 	},
 	methods: {

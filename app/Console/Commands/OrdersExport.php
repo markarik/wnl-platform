@@ -70,7 +70,7 @@ class OrdersExport extends Command
 		$invoicesList = '';
 
 		foreach($invoices as $invoice) {
-			if ($invoice->series !== 'PROFORMA') {
+			if ($invoice->series !== config('invoice.proforma_series')) {
 				$invoicesList .= $invoice->series . '/' . $invoice->number . ' ';
 			}
 		}

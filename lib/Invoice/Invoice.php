@@ -17,11 +17,6 @@ use Illuminate\Support\Facades\Storage;
 
 class Invoice
 {
-	const PROFORMA_SERIES_NAME = 'PROFORMA';
-	const ADVANCE_SERIES_NAME = 'F-ZAL';
-	const FINAL_SERIES_NAME = 'FK';
-	const VAT_SERIES_NAME = 'FV';
-	const CORRECTIVE_SERIES_NAME = 'KOR';
 	const VAT_THRESHOLD = 159452.00;
 	const VAT_ZERO = 0.0;
 	const VAT_NORMAL = 0.23;
@@ -29,7 +24,7 @@ class Invoice
 
 	public function vatInvoice(Order $order, $invoice = null)
 	{
-		$builder = $order->invoices()->where('series', self::VAT_SERIES_NAME);
+		$builder = $order->invoices()->where('series', config('invoice.vat_series'));
 		if ($invoice) $builder->where('id', '<', $invoice->id);
 		$previousAdvances = $builder->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
@@ -37,8 +32,8 @@ class Invoice
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
-				'number' => $this->nextNumberInSeries(self::VAT_SERIES_NAME),
-				'series' => self::VAT_SERIES_NAME,
+				'number' => $this->nextNumberInSeries(config('invoice.vat_series')),
+				'series' => config('invoice.vat_series'),
 				'amount' => $recentSettlement,
 				'type'   => 'vat',
 			]);
@@ -121,8 +116,8 @@ class Invoice
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
-				'number' => $this->nextNumberInSeries(self::PROFORMA_SERIES_NAME),
-				'series' => self::PROFORMA_SERIES_NAME,
+				'number' => $this->nextNumberInSeries(config('invoice.proforma_series')),
+				'series' => config('invoice.proforma_series'),
 				'amount' => $order->total_with_coupon,
 				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
 				'type'   => 'pro-forma',
@@ -185,7 +180,7 @@ class Invoice
 
 	public function advance(Order $order, $invoice = null)
 	{
-		$builder = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME);
+		$builder = $order->invoices()->where('series', config('invoice.advance_series'));
 		if ($invoice) $builder->where('id', '<', $invoice->id);
 		$previousAdvances = $builder->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
@@ -194,8 +189,8 @@ class Invoice
 		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
-				'number' => $this->nextNumberInSeries(self::ADVANCE_SERIES_NAME),
-				'series' => self::ADVANCE_SERIES_NAME,
+				'number' => $this->nextNumberInSeries(config('invoice.advance_series')),
+				'series' => config('invoice.advance_series'),
 				'amount' => $recentSettlement,
 				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
 				'type'   => 'advance',
@@ -272,8 +267,8 @@ class Invoice
 	public function finalInvoice(Order $order, $invoice = null)
 	{
 		$previousAdvances = $order->invoices()->whereIn('series', [
-			self::ADVANCE_SERIES_NAME,
-			self::CORRECTIVE_SERIES_NAME,
+			config('invoice.advance_series'),
+			config('invoice.corrective_series'),
 		])->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
 		$vatValue = $this->getVatValue($recentSettlement);
@@ -281,8 +276,8 @@ class Invoice
 		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
-				'number' => $this->nextNumberInSeries(self::FINAL_SERIES_NAME),
-				'series' => self::FINAL_SERIES_NAME,
+				'number' => $this->nextNumberInSeries(config('invoice.final_series')),
+				'series' => config('invoice.final_series'),
 				'amount' => $recentSettlement,
 				'vat'    => $vatValue === self::VAT_ZERO ? 'zw' : '23',
 				'type'   => 'final',
@@ -384,15 +379,15 @@ class Invoice
 
 	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference, bool $refund = true)
 	{
-		$previousAdvances = $order->invoices()->where('series', self::ADVANCE_SERIES_NAME)->get();
-		$previousCorrectives = $order->invoices()->where('series', self::CORRECTIVE_SERIES_NAME)->get();
+		$previousAdvances = $order->invoices()->where('series', config('invoice.advance_series'))->get();
+		$previousCorrectives = $order->invoices()->where('series', config('invoice.corrective_series'))->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
 		$vatValue = $corrected->vat === '23' ? 0.23 : 0;
 		$vatString = $this->getVatString($vatValue);
 		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
 		$invoice = $order->invoices()->create([
-			'number' => $this->nextNumberInSeries(self::CORRECTIVE_SERIES_NAME),
-			'series' => self::CORRECTIVE_SERIES_NAME,
+			'number' => $this->nextNumberInSeries(config('invoice.corrective_series')),
+			'series' => config('invoice.corrective_series'),
 			'amount' => $difference,
 			'vat'    => $corrected->vat,
 			'corrected_invoice_id' => $corrected->id,
@@ -579,7 +574,7 @@ class Invoice
 	private function advanceInvoiceSum()
 	{
 		$orders = Order::whereHas('invoices', function ($query) {
-			$query->where('series', self::ADVANCE_SERIES_NAME);
+			$query->where('series', config('invoice.advance_series'));
 		})->get();
 
 		return $orders->sum('paid_amount');

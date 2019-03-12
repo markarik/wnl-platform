@@ -32,6 +32,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev.php
+    environment:
+      # Required for browser tests
+      - APP_URL
+      - SESSION_DOMAIN
+      # Required for ngrok
+      - P24_STATUS_URL
     ports:
       - "9000:9000"
     volumes:
@@ -40,7 +46,9 @@ services:
 
   default-queue-worker:
     container_name: default-queue-worker
-    image: php:7.3.2-fpm-alpine3.9
+    build:
+      context: .
+      dockerfile: Dockerfile.dev.php
     volumes:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
     command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:work --queue=default --tries=3 --daemon
@@ -49,7 +57,9 @@ services:
 
   notifications-queue-worker:
     container_name: notifications-queue-worker
-    image: php:7.3.2-fpm-alpine3.9
+    build:
+      context: .
+      dockerfile: Dockerfile.dev.php
     volumes:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
     command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:work --queue=notifications --tries=3 --daemon
@@ -58,7 +68,9 @@ services:
 
   chat-queue-worker:
       container_name: chat-queue-worker
-      image: php:7.3.2-fpm-alpine3.9
+      build:
+        context: .
+        dockerfile: Dockerfile.dev.php
       volumes:
         - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
       command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan chat:process-queue
@@ -75,6 +87,7 @@ services:
     tty: true
     volumes:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
+    working_dir: ${CONTAINER_CODE_PATH}/wnl-platform
 
   echo:
     container_name: echo
@@ -89,6 +102,8 @@ services:
     image: nginx:1.15.0-alpine
     ports:
       - "80:80"
+      # Required for ngrok
+      - "0.0.0.0:4040:4040"
     volumes:
       - ${LOCAL_DEV_PATH}/nginx/:/etc/nginx/conf.d:ro
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
@@ -121,6 +136,15 @@ services:
     image: rabbitmq:3.7.6-management-alpine
     ports:
       - "5672:5672"
+
+  selenium:
+    container_name: selenium
+    image: selenium/standalone-chrome-debug
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "4444:4444"
+      - "5900:5900"
 
 volumes:
   nfsmount:

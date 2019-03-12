@@ -4,43 +4,36 @@
 namespace Tests\Browser\Tests\Payment\Modules;
 
 
+use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Payment\ConfirmOrderPage;
 
 class ConfirmOrderModule
 {
-	public function editData($browser)
+	public function editData(BethinkBrowser $browser)
 	{
 		$browser->on(new ConfirmOrderPage);
 		$browser->click('@edit-persona-data');
-
-		return PersonalDataModule::class;
 	}
 
-	public function payByTransfer($browser)
+	public function payByTransfer(BethinkBrowser $browser)
 	{
 		$browser->on(new ConfirmOrderPage);
 		$this->pay($browser, 'transfer');
-
-		return MyOrdersModule::class;
 	}
 
-	public function payOnline($browser)
+	public function payOnline(BethinkBrowser $browser)
 	{
 		$browser->on(new ConfirmOrderPage);
 		$this->pay($browser, 'online');
-
-		return OnlinePaymentModule::class;
 	}
 
-	public function payByInstalments($browser)
+	public function payByInstalments(BethinkBrowser $browser)
 	{
 		$browser->on(new ConfirmOrderPage);
 		$this->pay($browser, 'instalments');
-
-		return MyOrdersModule::class;
 	}
 
-	protected function pay($browser, $method)
+	protected function pay(BethinkBrowser $browser, $method)
 	{
 		$this->checkOrder($browser);
 		if (intval($browser->order->total_with_coupon) === 0) {
@@ -67,11 +60,11 @@ class ConfirmOrderModule
 		if ($method === 'online') {
 			$browser
 				->press('#p24-submit-full-payment')
-				->waitForText('Wybierz formę płatności', 300);
+				->waitFor('a[data-search="Płać z ING 112"]', 100);
 		}
 	}
 
-	protected function checkOrder($browser)
+	protected function checkOrder(BethinkBrowser $browser)
 	{
 		if (empty($browser->order)) {
 			$browser->order = $browser->user->orders()->recent();

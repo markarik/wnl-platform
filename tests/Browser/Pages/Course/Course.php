@@ -5,6 +5,7 @@ namespace Tests\Browser\Pages\Course;
 use Facebook\WebDriver\WebDriverBy;
 use Laravel\Dusk\Page as BasePage;
 use PHPUnit\Framework\Assert as PHPUnit;
+use Tests\BethinkBrowser;
 
 class Course extends BasePage
 {
@@ -29,21 +30,21 @@ class Course extends BasePage
 		return [
 			'@welcome_message_container' => '.scrollable-main-container',
 			'@start_first_lesson_button' => 'a[href="/app/courses/1/lessons/1"]',
-			'@side_nav' => '.wnl-sidenav'
+			'@side_nav' => '.course-sidenav'
 		];
 	}
 
-	public function startFirstLesson($browser)
+	public function startFirstLesson(BethinkBrowser $browser)
 	{
 		$browser->click('@start_first_lesson_button');
 	}
 
-	public function waitTillLoaded($browser)
+	public function waitTillLoaded(BethinkBrowser $browser)
 	{
 		$browser->waitFor('.scrollable-main-container', 15);
 	}
 
-	public function goToLesson($browser, $lessonIndex)
+	public function goToLesson(BethinkBrowser $browser, $lessonIndex)
 	{
 		$driver = $browser->driver;
 		$lessonSelector = sprintf(self::TEMPLATE_NTH_LESSON_ANCHOR, $lessonIndex + self::LESSON_OFFSET);
@@ -51,7 +52,7 @@ class Course extends BasePage
 		$lesson->click();
 	}
 
-	public function assertExpectedLessonMarked($browser, $lessonIndex)
+	public function assertExpectedLessonMarked(BethinkBrowser $browser, $lessonIndex)
 	{
 		$driver = $browser->driver;
 		$lessonSelector = sprintf(self::TEMPLATE_NTH_LESSON_SELECTOR, $lessonIndex + self::LESSON_OFFSET);

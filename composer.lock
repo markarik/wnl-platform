@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "389a33261a4a11b534f4ab13bd10b07d",
+    "content-hash": "19e6b49fc925137c2542bada2b193a19",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.87.16",
+            "version": "3.87.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "b6954b03e1c212b849ecf103e5f593b15b06b058"
+                "reference": "2f38294b8c0ce62278e53b060f488516eb4e9163"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b6954b03e1c212b849ecf103e5f593b15b06b058",
-                "reference": "b6954b03e1c212b849ecf103e5f593b15b06b058",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2f38294b8c0ce62278e53b060f488516eb4e9163",
+                "reference": "2f38294b8c0ce62278e53b060f488516eb4e9163",
                 "shasum": ""
             },
             "require": {
@@ -86,7 +86,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-02-21T19:16:06+00:00"
+            "time": "2019-02-22T19:34:32+00:00"
         },
         {
             "name": "barryvdh/laravel-dompdf",
@@ -186,6 +186,74 @@
                 "php"
             ],
             "time": "2019-01-09T09:21:15+00:00"
+        },
+        {
+            "name": "box/spout",
+            "version": "v2.7.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/box/spout.git",
+                "reference": "3681a3421a868ab9a65da156c554f756541f452b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/box/spout/zipball/3681a3421a868ab9a65da156c554f756541f452b",
+                "reference": "3681a3421a868ab9a65da156c554f756541f452b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xmlreader": "*",
+                "ext-zip": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.0"
+            },
+            "suggest": {
+                "ext-iconv": "To handle non UTF-8 CSV files (if \"php-intl\" is not already installed or is too limited)",
+                "ext-intl": "To handle non UTF-8 CSV files (if \"iconv\" is not already installed)"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Box\\Spout\\": "src/Spout"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Adrien Loison",
+                    "email": "adrien@box.com"
+                }
+            ],
+            "description": "PHP Library to read and write spreadsheet files (CSV, XLSX and ODS), in a fast and scalable way",
+            "homepage": "https://www.github.com/box/spout",
+            "keywords": [
+                "OOXML",
+                "csv",
+                "excel",
+                "memory",
+                "odf",
+                "ods",
+                "office",
+                "open",
+                "php",
+                "read",
+                "scale",
+                "spreadsheet",
+                "stream",
+                "write",
+                "xlsx"
+            ],
+            "time": "2017-09-25T19:44:35+00:00"
         },
         {
             "name": "bschmitt/laravel-amqp",
@@ -1097,16 +1165,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.86",
+            "version": "v0.87",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "84496e256a7cac3a7817db7ba534829a370a3201"
+                "reference": "26e0bf604e0b6e253f5217ef7e7fe39d976a69f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/84496e256a7cac3a7817db7ba534829a370a3201",
-                "reference": "84496e256a7cac3a7817db7ba534829a370a3201",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/26e0bf604e0b6e253f5217ef7e7fe39d976a69f7",
+                "reference": "26e0bf604e0b6e253f5217ef7e7fe39d976a69f7",
                 "shasum": ""
             },
             "require": {
@@ -1130,7 +1198,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2019-02-20T02:10:11+00:00"
+            "time": "2019-02-25T00:22:55+00:00"
         },
         {
             "name": "google/auth",
@@ -3715,6 +3783,65 @@
             "time": "2018-07-19T23:38:55+00:00"
         },
         {
+            "name": "rap2hpoutre/fast-excel",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rap2hpoutre/fast-excel.git",
+                "reference": "10d37b67ac41a895433b4711cf511bb81e8fbdfb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rap2hpoutre/fast-excel/zipball/10d37b67ac41a895433b4711cf511bb81e8fbdfb",
+                "reference": "10d37b67ac41a895433b4711cf511bb81e8fbdfb",
+                "shasum": ""
+            },
+            "require": {
+                "box/spout": "^2.7",
+                "illuminate/database": "5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "illuminate/support": "5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.*",
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Rap2hpoutre\\FastExcel\\Providers\\FastExcelServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Rap2hpoutre\\FastExcel\\": "src/"
+                },
+                "files": [
+                    "src/functions/fastexcel.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "rap2h",
+                    "email": "raphaelht@gmail.com"
+                }
+            ],
+            "description": "Fast Excel import/export for Laravel",
+            "keywords": [
+                "csv",
+                "excel",
+                "laravel",
+                "xls",
+                "xlsx"
+            ],
+            "time": "2019-01-09T08:24:19+00:00"
+        },
+        {
             "name": "react/promise",
             "version": "v2.7.1",
             "source": {
@@ -5156,6 +5283,7 @@
                     "name": "Barry vd. Heuvel",
                     "email": "barryvdh@gmail.com"
                 }
+          
             ],
             "description": "PHP Debugbar integration for Laravel",
             "keywords": [
@@ -5916,21 +6044,21 @@
         },
         {
             "name": "johnkary/phpunit-speedtrap",
-            "version": "v3.0.0",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/johnkary/phpunit-speedtrap.git",
-                "reference": "5f1ede99bd53fd0e5ff72669877420e801256d90"
+                "reference": "dac11b8640d4be7a70f336616947fa84f169835a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnkary/phpunit-speedtrap/zipball/5f1ede99bd53fd0e5ff72669877420e801256d90",
-                "reference": "5f1ede99bd53fd0e5ff72669877420e801256d90",
+                "url": "https://api.github.com/repos/johnkary/phpunit-speedtrap/zipball/dac11b8640d4be7a70f336616947fa84f169835a",
+                "reference": "dac11b8640d4be7a70f336616947fa84f169835a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1",
-                "phpunit/phpunit": "^7.0"
+                "phpunit/phpunit": "^7.0 || ^8.0"
             },
             "type": "library",
             "extra": {
@@ -5960,7 +6088,7 @@
                 "profile",
                 "slow"
             ],
-            "time": "2018-02-24T18:55:28+00:00"
+            "time": "2019-02-24T02:40:12+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -6030,35 +6158,35 @@
         },
         {
             "name": "laravel/dusk",
-            "version": "v4.0.5",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/dusk.git",
-                "reference": "c30c8a01d35661e253a7d3ea7ae6a79faf3f8d92"
+                "reference": "590480abf75bf052873d7ff16deb5736cf749a55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/dusk/zipball/c30c8a01d35661e253a7d3ea7ae6a79faf3f8d92",
-                "reference": "c30c8a01d35661e253a7d3ea7ae6a79faf3f8d92",
+                "url": "https://api.github.com/repos/laravel/dusk/zipball/590480abf75bf052873d7ff16deb5736cf749a55",
+                "reference": "590480abf75bf052873d7ff16deb5736cf749a55",
                 "shasum": ""
             },
             "require": {
-                "facebook/webdriver": "~1.3",
-                "illuminate/console": "~5.6",
-                "illuminate/support": "~5.6",
-                "nesbot/carbon": "~1.20",
+                "facebook/webdriver": "^1.3",
+                "illuminate/console": "~5.7.0|~5.8.0",
+                "illuminate/support": "~5.7.0|~5.8.0",
+                "nesbot/carbon": "^1.20|^2.0",
                 "php": ">=7.1.0",
-                "symfony/console": "~4.0",
-                "symfony/process": "~4.0"
+                "symfony/console": "^4.0",
+                "symfony/process": "^4.0"
             },
             "require-dev": {
-                "mockery/mockery": "~1.0",
-                "phpunit/phpunit": "~7.0"
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^7.0|^8.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.0-dev"
+                    "dev-master": "5.0-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -6087,7 +6215,7 @@
                 "testing",
                 "webdriver"
             ],
-            "time": "2019-01-10T14:22:35+00:00"
+            "time": "2019-02-12T14:17:11+00:00"
         },
         {
             "name": "maximebf/debugbar",

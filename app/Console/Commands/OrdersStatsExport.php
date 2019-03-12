@@ -5,9 +5,8 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Google_Service_Sheets_ValueRange;
 use App\Models\Order;
-use Illuminate\Console\Command;
 
-class OrdersStatsExport extends Command
+class OrdersStatsExport extends CommandWithMonitoring
 {
 	/**
 	 * The name and signature of the console command.
@@ -21,23 +20,14 @@ class OrdersStatsExport extends Command
 	 *
 	 * @var string
 	 */
-	protected $description = 'Command description';
-
-	/**
-	 * Create a new command instance.
-	 *
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
+	protected $description = 'Export orders stats to google doc';
 
 	/**
 	 * Execute the console command.
 	 *
 	 * @return mixed
 	 */
-	public function handle()
+	public function handleCommand()
 	{
 		$setOne = $this->stats(Carbon::parse('2018-09-24 23:59'), Carbon::now(),
 			['date', 'orders_count', 'value', 'paid', 'albums', '50%', '']);
@@ -58,8 +48,6 @@ class OrdersStatsExport extends Command
 		}
 
 		$this->writeRange($rows->toArray());
-
-		return 42;
 	}
 
 	protected function stats($startDate, $endDate, $fields)

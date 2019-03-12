@@ -9,6 +9,11 @@ use Facebook\WebDriver\WebDriverPoint;
 use \Laravel\Dusk\Browser;
 use Laravel\Dusk\ElementResolver;
 
+/**
+ * @property \App\Models\Coupon coupon
+ * @property \App\Models\Order order
+ * @property \App\Models\StudyBuddy studyBuddy
+ */
 class BethinkBrowser extends Browser
 {
 	/**
@@ -194,7 +199,7 @@ class BethinkBrowser extends Browser
 		return $this;
 	}
 
-	public function click($selector)
+	public function click($selector = null)
 	{
 		$element = $this->resolver->findOrFail($selector);
 		$this->scrollToElement($element);

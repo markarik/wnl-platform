@@ -38,6 +38,11 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['flashcards']}/.filter", 'FlashcardsApiController@filter');
 		Route::post("{$r['flashcards-sets']}/.filter", 'FlashcardsSetsApiController@filter');
 
+		// Quiz Questions admin
+		Route::post("{$r['quiz-sets']}", 'QuizSetsApiController@post');
+		Route::post("{$r['quiz-sets']}/.filter", 'QuizSetsApiController@filter');
+		Route::put("{$r['quiz-sets']}/{id}", 'QuizSetsApiController@put');
+
 		//Users admin
 		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
 		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
@@ -107,6 +112,19 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// Slides
 		Route::post("{$r['slides']}/.filter", 'SlidesApiController@filter');
+
+		// Products
+		Route::get("{$r['products']}/getVatRates", 'ProductsApiController@getVatRates');
+		Route::get("{$r['products']}/{id}", 'ProductsApiController@get');
+		Route::put("{$r['products']}/{id}", 'ProductsApiController@put');
+		Route::post("{$r['products']}", 'ProductsApiController@post');
+		Route::post("{$r['products']}/.filter", 'ProductsApiController@filter');
+
+		// Lesson Product
+		Route::post("{$r['lesson-product']}/query", 'LessonProductApiController@query');
+		Route::post("{$r['lesson-product']}", 'LessonProductApiController@post');
+		Route::put("{$r['lesson-product']}/{lessonProduct}", 'LessonProductApiController@put');
+		Route::delete("{$r['lesson-product']}/{lessonProduct}", 'LessonProductApiController@deleteLesson');
 	});
 
 	// Count

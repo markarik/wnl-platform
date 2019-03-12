@@ -4,13 +4,13 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\Api\PrivateApi\UserStateApiController;
 use App\Models\UserCourseProgress;
+use Facades\App\Contracts\CourseProvider;
 use Closure;
 use Exception;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
-class StoreProgress extends Command
+class StoreProgress extends CommandWithMonitoring
 {
 	/**
 	* The name and signature of the console command.
@@ -43,15 +43,15 @@ class StoreProgress extends Command
 	*
 	* @return mixed
 	*/
-	public function handle()
+	public function handleCommand()
 	{
 		// IMPORTANT!!!! user id is in fact profile id
 		$passedUserId = $this->argument('user');
-
 		$this->transaction(function () use ($passedUserId) {
+			$courseId = CourseProvider::getCourseId();
 
 			if (empty($passedUserId)) {
-				$keyPattern = UserStateApiController::getCourseRedisKey('*', 1);
+				$keyPattern = UserStateApiController::getCourseRedisKey('*', $courseId);
 				$allKeys = $this->redis->keys($keyPattern);
 				$bar = $this->output->createProgressBar(count($allKeys));
 
@@ -62,7 +62,7 @@ class StoreProgress extends Command
 					}
 				}
 			} else {
-				$key = UserStateApiController::getCourseRedisKey($passedUserId, 1);
+				$key = UserStateApiController::getCourseRedisKey($passedUserId, $courseId);
 				$bar = $this->output->createProgressBar(1);
 				$this->storeProgress($key, $passedUserId, $bar);
 			}

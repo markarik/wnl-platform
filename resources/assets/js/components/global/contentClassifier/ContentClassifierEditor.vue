@@ -2,7 +2,7 @@
 	<div
 		:class="{
 			'content-classifier__editor': true,
-			'is-loading': isLoading,
+			'wnl-is-loading': isLoading,
 		}"
 		tabindex="-1"
 		@keydown="onKeyDown"
@@ -147,7 +147,7 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters('taxonomyTerms', ['termById', 'getAncestorsById']),
+		...mapGetters('taxonomyTerms', ['termById', 'getAncestorNodesById']),
 		...mapGetters('taxonomies', ['taxonomyById']),
 		allItemsCount() {
 			return this.items.length;
@@ -225,7 +225,7 @@ export default {
 				const termToAdd = {
 					...term,
 					taxonomy: term.taxonomy || this.taxonomyById(taxonomyId),
-					ancestors: term.ancestors || this.getAncestorsById(term.id),
+					ancestors: term.ancestors || this.getAncestorNodesById(term.id),
 				};
 				this.$emit('taxonomyTermAttached', termToAdd);
 				contentClassifierStore.set(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM, termToAdd);

@@ -6,7 +6,6 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Models\UserSubscription;
 use Carbon\Carbon;
-use Mail;
 use Tests\Api\ApiTestCase;
 
 class UserNotificationsTest extends ApiTestCase
@@ -79,15 +78,17 @@ class UserNotificationsTest extends ApiTestCase
 				'older_than' => Carbon::now()->timestamp
 			]);
 
-		$expectedResponse = $notificationsUnread
+		$responseJson = $response->json();
+
+		$notificationsUnread
 			->concat($notificationsMonthOld)
-			->each(function ($notification) use ($response) {
-				$response->assertJsonFragment([
+			->each(function ($notification) use ($responseJson) {
+				$this->assertContains([
 					'id'      => $notification->id,
 					'read_at' => $notification->read_at->timestamp ?? null,
 					'seen_at' => $notification->seen_at->timestamp ?? null,
 					'channel' => $notification->channel,
-				]);
+				], $responseJson);
 			});
 	}
 }

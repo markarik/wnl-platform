@@ -57,6 +57,8 @@ class GenerateCouponsForUsers extends Command
 		$expires = Carbon::now()->addYears(10);
 
 		foreach ($users as $user) {
+			// We don't want to dispatch events and sync coupons for participants from previous edition
+			Coupon::flushEventListeners();
 			Coupon::create([
 				'user_id'    => $user->id,
 				'name'       => 'Zniżka -50% na Kurs internetowy dla uczestników poprzednich edycji kursu Więcej niż LEK',

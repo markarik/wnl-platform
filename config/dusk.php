@@ -15,7 +15,7 @@ return [
 	],
 
 	'desktop_size'     => [
-		'width'  => env('DUSK_WINDOW_WIDTH', 1920),
+		'width'  => env('DUSK_WINDOW_WIDTH', 1280),
 		'height' => env('DUSK_WINDOW_HEIGHT', 1080),
 	],
 

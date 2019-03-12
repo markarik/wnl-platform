@@ -14,7 +14,7 @@
 			<header class="question-form-header">
 				<h4 v-if="isEdit">
 					Edycja pytania
-					<strong>{{$route.params.quizId}}</strong>
+					<strong>{{quizQuestionId}}</strong>
 					<strong class="has-text-danger" v-if="questionIsDeleted">Usunięte</strong>
 				</h4>
 				<h4 v-else>Tworzenie nowego pytania</h4>
@@ -72,6 +72,19 @@
 				<legend class="question-form-legend">Tagi</legend>
 				<wnl-tags :default-tags="questionTags" ref="tags"></wnl-tags>
 			</fieldset>
+			<wnl-content-item-classifier-editor
+				v-if="isEdit"
+				class="margin bottom"
+				:is-always-active="true"
+				:content-item-id="quizQuestionId"
+				:content-item-type="CONTENT_TYPES.QUIZ_QUESTION"
+			/>
+			<div v-else class="notification is-info">
+				<span class="icon">
+					<i class="fa fa-info-circle"></i>
+				</span>
+				Zapisz pytanie, aby przypisać do niego pojęcia
+			</div>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Powiązane slajdy</legend>
 				<wnl-slide-ids :default-slides="questionSlides" ref="slides"></wnl-slide-ids>
@@ -169,28 +182,42 @@
 </style>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import { Quill, Form, Tags, SlideIds } from 'js/components/global/form';
 import { nextTick } from 'vue';
+import { mapActions, mapGetters } from 'vuex';
 import _ from 'lodash';
-import {getApiUrl} from 'js/utils/env';
+
+import {
+	Form as WnlForm,
+	Quill as WnlQuill,
+	SlideIds as WnlSlideIds,
+	Tags as WnlTags,
+} from 'js/components/global/form';
+import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
+
+import {CONTENT_TYPES} from 'js/consts/contentClassifier';
 
 export default {
-	name: 'QuizesEditor',
 	components: {
-		'wnl-form': Form,
-		'wnl-quill': Quill,
-		'wnl-tags': Tags,
-		'wnl-slide-ids': SlideIds
+		WnlContentItemClassifierEditor,
+		WnlForm,
+		WnlQuill,
+		WnlSlideIds,
+		WnlTags,
 	},
 	data: function () {
 		return {
 			questionQuillContent: '',
 			explanationQuillContent: '',
-			attach: {}
+			attach: {},
+			CONTENT_TYPES,
 		};
 	},
-	props: ['isEdit'],
+	props: {
+		quizQuestionId: {
+			type: [Number, String],
+			default: null,
+		}
+	},
 	computed: {
 		...mapGetters([
 			'questionText',
@@ -198,20 +225,22 @@ export default {
 			'questionAnswers',
 			'questionSlides',
 			'questionAnswersMap',
-			'questionId',
 			'questionIsDeleted',
 			'questionTags',
 			'preserveOrder'
 		]),
 		formResourceRoute() {
-			if (!this.isEdit) {
-				return 'quiz_questions?include=quiz_answers';
+			if (this.isEdit) {
+				return `quiz_questions/${this.quizQuestionId}?include=quiz_answers`;
 			} else {
-				return `quiz_questions/${this.$route.params.quizId}?include=quiz_answers`;
+				return 'quiz_questions?include=quiz_answers';
 			}
 		},
 		formMethod() {
 			return this.isEdit ? 'put' : 'post';
+		},
+		isEdit() {
+			return !!this.quizQuestionId;
 		}
 	},
 	methods: {
@@ -221,7 +250,9 @@ export default {
 			'undeleteQuizQuestion',
 			'setupFreshQuestion',
 			'addAutoDismissableAlert',
+			'setupCurrentUser',
 		]),
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		onQuestionInput() {
 			this.questionQuillContent = this.$refs.questionEditor.editor.innerHTML;
 		},
@@ -270,11 +301,11 @@ export default {
 		},
 		onSubmitSuccess(data) {
 			if (this.isEdit) {
-				this.getQuizQuestion(this.$route.params.quizId);
+				this.getQuizQuestion(this.quizQuestionId);
 			} else {
 				//Timeout for the user to see the success banner
 				setTimeout(() => {
-					this.$router.push({name: 'quiz-editor', params: { quizId: data.id }});
+					this.$router.push({name: 'quiz-editor', params: { quizQuestionId: data.id }});
 				}, 2000);
 			}
 		},
@@ -307,10 +338,7 @@ export default {
 					type: 'error',
 				});
 			}
-
-
 		}
-
 	},
 	watch: {
 		questionText(val) {
@@ -319,15 +347,22 @@ export default {
 		questionExplanation(val) {
 			if (val) this.$refs.explanationEditor.editor.innerHTML = val;
 		},
-		'$route.params.quizId'(quizId) {
-			this.getQuizQuestion(this.$route.params.quizId);
+		quizQuestionId(quizQuestionId) {
+			this.getQuizQuestion(quizQuestionId);
+			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [quizQuestionId]});
 		}
 	},
 	created() {
 		if (this.isEdit) {
-			this.getQuizQuestion(this.$route.params.quizId);
+			this.getQuizQuestion(this.quizQuestionId);
 		} else {
 			this.setupFreshQuestion();
+		}
+	},
+	async mounted() {
+		if (this.isEdit) {
+			await this.setupCurrentUser();
+			await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [this.quizQuestionId]});
 		}
 	},
 };

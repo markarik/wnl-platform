@@ -57,7 +57,7 @@ export default {
 	},
 	computed: {
 		...mapState('courseStructure', ['isLoading', 'nodes']),
-		...mapGetters('courseStructure', ['getChildrenByParentId', 'getRootNodes']),
+		...mapGetters('courseStructure', ['getChildrenNodesByParentId', 'getRootNodes']),
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

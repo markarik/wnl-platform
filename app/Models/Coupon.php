@@ -10,16 +10,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Coupon extends Model
 {
-	protected $fillable = ['name', 'slug', 'code', 'type', 'value', 'expires_at', 'user_id', 'times_usable'];
+	protected $fillable = ['name', 'slug', 'code', 'type', 'value', 'expires_at', 'user_id', 'times_usable', 'kind'];
 
 	protected $dates = [
 		'expires_at',
 	];
 
-	const TYPE_GROUP = 'group';
-	const TYPE_STUDY_BUDDY = 'study_buddy';
-	const TYPE_VOUCHER = 'voucher';
-	const TYPE_PARTICIPANT = 'participant';
+	const KIND_GROUP = 'group';
+	const KIND_STUDY_BUDDY = 'study_buddy';
+	const KIND_VOUCHER = 'voucher';
+	const KIND_PARTICIPANT = 'participant';
 
 	protected $dispatchesEvents = [
 		'created' => CouponCreated::class,

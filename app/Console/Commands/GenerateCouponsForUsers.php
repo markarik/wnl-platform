@@ -66,7 +66,7 @@ class GenerateCouponsForUsers extends Command
 				'slug'       => 'wnl-online-only',
 				'value'      => 50,
 				'expires_at' => $expires,
-				'kind' => Coupon::TYPE_PARTICIPANT,
+				'kind' => Coupon::KIND_PARTICIPANT,
 			]);
 		}
 

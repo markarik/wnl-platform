@@ -53,7 +53,7 @@ class CouponsGenerateFromFbComments extends Command
 				'value'        => 10,
 				'expires_at'   => $expires,
 				'times_usable' => 1,
-				'kind' => Coupon::TYPE_VOUCHER
+				'kind' => Coupon::KIND_VOUCHER
 			]);
 		}
 	}

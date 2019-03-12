@@ -36,13 +36,7 @@ class PersonalDataController extends Controller
 			return view('payment.signups-closed', ['product' => $product]);
 		}
 
-		$form = $this->form(PersonalDataForm::class, [
-			'method' => 'POST',
-			'url'    => route('payment-personal-data-post'),
-			'model'  => Auth::user(),
-		])->modify('password', 'password', [
-			'value' => '',
-		]);
+		$form = $this->setupForm();
 
 		return view('payment.personal-data', [
 			'form'    => $form,
@@ -52,16 +46,20 @@ class PersonalDataController extends Controller
 
 	public function handle(Request $request)
 	{
-		$form = $this->form(PersonalDataForm::class);
+		$form = $this->setupForm();
 
+		$validations = [];
 		$validator = $this->getIdentityNumberValidator($request->get('identity_number_type'));
 		if (!is_object($validator)) {
-			// Very strange situation,
-			// somebody probably tried to do something nasty.
-			return redirect()->back()->withInput();
+			if (!$form->getField('identity_number')->getOption('disabled')) {
+				// Very strange situation,
+				// somebody probably tried to do something nasty.
+				return redirect()->back()->withInput();
+			}
+		} else {
+			$validations['identity_number'] = $validator;
 		}
 
-		$validations = ['identity_number' => $validator];
 
 		$form->validate($validations);
 
@@ -72,8 +70,8 @@ class PersonalDataController extends Controller
 		}
 
 		$user = Auth::user();
-		// TODO block updating first_name, last_name, pesel for paid order users
-		$this->updateAccount($user, $request);
+
+		$this->updateAccount($user, $request, $form);
 
 		if (!!Session::get('orderId')) {
 			$this->updateOrder($user, $request);
@@ -82,6 +80,32 @@ class PersonalDataController extends Controller
 		}
 
 		return redirect(route('payment-confirm-order'));
+	}
+
+	protected function setupForm() {
+		$user = Auth::user();
+		$form = $this->form(PersonalDataForm::class, [
+			'method' => 'POST',
+			'url'    => route('payment-personal-data-post'),
+			'model'  => $user,
+		]);
+
+		if ($user && $user->orders()->where(['paid' => 1])->exists()) {
+			if ($user->first_name) {
+				$form->getField('first_name')->disable()->setOption('rules', '');
+			}
+			if ($user->last_name) {
+				$form->getField('last_name')->disable()->setOption('rules', '');
+			}
+
+			$personalData = $user->personalData->first();
+			if ($personalData && ($personalData->personal_identity_number || $personalData->identity_card_number || $personalData->passport_number)) {
+				$form->getField('identity_number_type')->disable();
+				$form->getField('identity_number')->disable()->setOption('rules', '');
+			}
+		}
+
+		return $form;
 	}
 
 	protected function createOrder($user, $request)
@@ -127,9 +151,9 @@ class PersonalDataController extends Controller
 		);
 	}
 
-	protected function updateAccount($user, $request)
+	protected function updateAccount($user, $request, $form)
 	{
-		$user->update([
+		$userData = [
 			'first_name' => $request->first_name ?? $user->first_name,
 			'last_name' => $request->last_name ?? $user->last_name,
 			'invoice_name' => $request->invoice_name ?? $user->invoice_name,
@@ -138,7 +162,17 @@ class PersonalDataController extends Controller
 			'invoice_zip' => $request->invoice_zip ?? $user->invoice_zip,
 			'invoice_city' => $request->invoice_city ?? $user->invoice_city,
 			'invoice_country' => $request->invoice_country ?? $user->invoice_country,
-		]);
+		];
+
+		if (!$form->getField('first_name')->getOption('disabled')) {
+			$userData['first_name'] = $request->first_name ?? $user->first_name;
+		}
+
+		if (!$form->getField('last_name')->getOption('disabled')) {
+			$userData['last_name'] = $request->last_name ?? $user->last_name;
+		}
+
+		$user->update($userData);
 
 		$user->profile()->updateOrCreate(
 			['user_id' => $user->id],
@@ -170,10 +204,12 @@ class PersonalDataController extends Controller
 			'recipient' => $request->get('recipient'),
 		]);
 
-		$user->personalData()->updateOrCreate(
-			['user_id' => $user->id],
-			$this->getIdentityNumbersArray($request)
-		);
+		if (!$form->getField('identity_number')->getOption('disabled')) {
+			$user->personalData()->updateOrCreate(
+				['user_id' => $user->id],
+				$this->getIdentityNumbersArray($request)
+			);
+		}
 	}
 
 	protected function updateOrder($user, $request)

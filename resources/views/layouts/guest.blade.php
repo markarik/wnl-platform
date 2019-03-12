@@ -49,7 +49,7 @@
 						<form method="post" action="{{route('logout', ['redirectToRoute' => $logoutRedirectToRoute ?? null])}}" id="logout-form">
 							{{ csrf_field() }}
 						</form>
-						<a href="{{ url('payment/select-product') }}" class="nav-item">
+						<a href="{{ url('payment/account') }}" class="nav-item">
 							Zapisz się na kurs
 						</a>
 						<a href="@lang('common.course-website-link')" class="nav-item">

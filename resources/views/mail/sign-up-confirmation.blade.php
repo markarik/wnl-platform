@@ -20,7 +20,7 @@
 			</a>
 		</li>
 		<li>
-			<a href="https://platforma.wiecejnizlek.pl/payment/select-product">
+			<a href="https://platforma.wiecejnizlek.pl/payment/account">
 				Wróć do procesu zakupowego
 			</a>
 		</li>

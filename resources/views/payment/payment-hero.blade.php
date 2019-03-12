@@ -4,10 +4,10 @@
 			<div class="container">
 				<div id="payment-steps" class="columns is-mobile">
 					<div class="column is-one-third">
-						@if ($step > 1) <a href="{{ route('payment-select-product') }}"> @endif
+						@if ($step > 1) <a href="{{ route('payment-account') }}"> @endif
 							<div class="payment-step @if ($step > 0) is-active @endif @if ($step === 1) is-current @endif">
-								<span class="payment-step-count">@lang('payment.payment-steps-select-product-count')</span>
-								<span class="payment-step-text is-hidden-mobile">@lang('payment.payment-steps-select-product')</span>
+								<span class="payment-step-count">@lang('payment.payment-steps-account-count')</span>
+								<span class="payment-step-text is-hidden-mobile">@lang('payment.payment-steps-account')</span>
 							</div>
 						@if ($step > 1) </a> @endif
 					</div>

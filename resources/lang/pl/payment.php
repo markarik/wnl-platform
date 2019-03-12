@@ -28,9 +28,9 @@ return [
 	/**
 	 * Payment Steps Menu
 	 */
-	'payment-steps-select-product' => 'Wybór wariantu kursu',
-	'payment-steps-select-product-count' => '1',
-	'payment-steps-personal-data' => 'Twoje dane i konto',
+	'payment-steps-account' => 'Twoje konto',
+	'payment-steps-account-count' => '1',
+	'payment-steps-personal-data' => 'Twoje dane',
 	'payment-steps-personal-data-count' => '2',
 	'payment-steps-confirm-order' => 'Potwierdzenie zamówienia',
 	'payment-steps-confirm-order-count' => '3',

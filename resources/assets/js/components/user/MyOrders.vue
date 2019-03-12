@@ -66,7 +66,7 @@ export default {
 	computed: {
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
 		paymentUrl() {
-			return getUrl('payment/select-product');
+			return getUrl('payment/account');
 		},
 		hasOrders() {
 			return !_.isEmpty(this.orders);

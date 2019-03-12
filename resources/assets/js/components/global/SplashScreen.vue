@@ -82,7 +82,7 @@ export default {
 			return moment(new Date(this.currentUserSubscriptionDates.min * 1000)).format('LL');
 		},
 		paymentUrl() {
-			return getUrl('payment/select-product');
+			return getUrl('payment/account');
 		},
 	},
 };

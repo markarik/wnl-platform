@@ -1,6 +1,11 @@
 @extends('payment.layout')
 
 @section('content')
+	@include('payment.payment-hero', [
+		'step' => 1,
+		'title' => 'Lorem ipsum',
+		'subtitle' => 'Bacon ipsum',
+	])
 
 	<div class="container payment-content">
 		@if (!$errors->isEmpty())

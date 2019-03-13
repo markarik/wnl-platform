@@ -34,22 +34,6 @@ class PaymentMethodsSeeder extends Seeder
 				'payment_method_id' => 3,
 				'end_date' => '2018-05-22'
 			],
-			// Online course + workshops
-			[
-				'product_id' => 9,
-				'payment_method_id' => 1,
-				'end_date' => null,
-			],
-			[
-				'product_id' => 9,
-				'payment_method_id' => 2,
-				'end_date' => null,
-			],
-			[
-				'product_id' => 9,
-				'payment_method_id' => 3,
-				'end_date' => '2018-05-22',
-			],
 			// Online course
 			[
 				'product_id' => 10,

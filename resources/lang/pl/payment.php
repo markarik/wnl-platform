@@ -45,7 +45,6 @@ return [
 	'select-product-title' => 'Witaj!',
 	'select-product-subtitle' => 'Wybierz wariant kursu, na który chcesz się zapisać.',
 	'select-product-coupon' => ':valuezł dla zapisanych na listę mailingową przed 1 kwietnia',
-	'select-product-onsite-heading' => 'Kurs internetowy + warsztaty',
 	'select-product-online-description' => '
 		<li class="list-group-item">
 			<strong>14 tygodni codziennej nauki</strong> pod opieką moderatorów, którzy odpowiedzą na każde Twoje pytanie!
@@ -93,32 +92,9 @@ return [
 			<strong>Jesteś na 6. roku?</strong> Kurs pomoże Ci w przygotowaniu do egzaminów!
 		</li>
 	',
-	'select-product-onsite-description' => '
-		<li class="list-group-item">
-			Uczestnictwo w 4 warsztatach weekendowych w Poznaniu - spotykamy się i pracujemy razem!
-			<ul class="sublist-group">
-				<li>
-					“Jak się uczyć?”- nasz przepis na LEK, czyli wprowadzenie do kursu i metody efektywnej nauki
-				</li>
-				<li>
-					Stany nagłe - lek. Michał Szemień
-				</li>
-				<li>
-					Prawo medyczne - dr n. praw. Radosław Tymiński
-				</li>
-				<li>
-					Perspektywy zawodowe, wybór specjalizacji oraz możliwe ścieżki rozwoju po studiach medycznych
-				</li>
-			</ul>
-		</li>
-		<li>Na warsztatach związanych z zakresem materiału do LEK-u - odpowiedzi na pytania zadawane poprzez platformę, wspólne rozwiązywanie przypadków oraz “godzina z mentorem”</li>
-	',
-	'select-product-onsite-button-label' => 'Wybieram kurs internetowy + warsztaty',
 	'select-product-online-heading' => 'Kurs internetowy',
 	'select-product-online-button-label' => 'Wybieram kurs internetowy',
 	'select-product-features-bonus-knowledge' => 'Indywidualne spotkania z prowadzącymi kurs',
-	'select-product-workshops-heading' => 'O warsztatach',
-	'select-product-workshops-description' => '<a href="https://wiecejnizlek.pl/o-warsztatach" target="_blank">Warsztaty</a> w ramach naszego kursu, to doskonała okazja do lepszego przygotowania się do pierwszych kroków w praktyce zawodowej! Poruszane tematy mają w zamyśle przygotować Was lepiej do pracy oraz nauki w trakcie specjalizacji.',
 	'select-product-q-and-a-heading' => 'Masz wątpliwości?',
 	'select-product-q-and-a-description' => 'Na podstronie <a href="https://wiecejnizlek.pl/o-kursie" target="_blank">O kursie</a> odpowiadamy na wszystkie pytania dotyczące kursu. Od dat i planu zajęć, przez opis metodyki i materiałów, po misję, która motywuje nas do działania - wszystko w jednym miejscu. :) Jeżeli nie rozwiejemy Twoich wątpliwości, napisz do nas, a na pewno dodamy odpowiedź do strony!',
 	'select-product-read-more' => 'Przeczytaj więcej',

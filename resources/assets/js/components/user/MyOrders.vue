@@ -10,7 +10,7 @@
 				<a :href="orderAlbumUrl" title="Zamów album map myśli">
 					<span class="icon is-small status-icon">
 						<i class="fa fa-shopping-cart"></i>
-					</span> Zamów album map myśli
+					</span> Zamów album map myśli ({{albumInfo.price}}zł)
 				</a>
 			</div>
 		</div>
@@ -60,7 +60,8 @@ export default {
 	data () {
 		return {
 			loaded: false,
-			orders: []
+			orders: [],
+			albumInfo: {},
 		};
 	},
 	computed: {
@@ -119,12 +120,17 @@ export default {
 				})
 				.catch(exception => $wnl.logger.capture(exception));
 		},
+		async getAlbumInfo() {
+			const {data} = await axios.get(getApiUrl('products/bySlug/wnl-album'));
+			this.albumInfo = data;
+		},
 		isConfirmed(order) {
 			return !_.isEmpty(order.method);
 		},
 	},
 	mounted() {
 		this.getOrders();
+		this.getAlbumInfo();
 	},
 	created() {
 		if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {

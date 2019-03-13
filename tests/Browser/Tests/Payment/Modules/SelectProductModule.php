@@ -15,11 +15,4 @@ class SelectProductModule
 			->visit(new SelectProductPage)
 			->click('@online-button');
 	}
-
-	public function onsite(BethinkBrowser $browser)
-	{
-		$browser
-			->visit(new SelectProductPage)
-			->click('@onsite-button');
-	}
 }

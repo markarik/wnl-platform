@@ -25,7 +25,6 @@ class UpdateLesson extends FormRequest
 	{
 		return [
 			'name' => 'required|string',
-			'group_id' => 'nullable|numeric|exists:groups,id',
 			'is_required' => 'boolean',
 		];
 	}

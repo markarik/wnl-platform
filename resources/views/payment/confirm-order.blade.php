@@ -40,7 +40,7 @@
 			</div>
 		</section>
 
-		@if($order->coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
+		@if(empty($order->coupon) || $order->coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
 			<section class="subsection">
 				<div class="box">
 					<p class="title">@lang('payment.confirm-personal-data-heading')</p>
@@ -82,7 +82,7 @@
 			</section>
 		@endif
 
-		@if($user->invoice || $order->coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
+		@if($user->invoice || empty($order->coupon) || $order->coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
 			<section class="subsection">
 				<p class="has-text-centered edit-personal-data">
 					<a href="{{ route('payment-personal-data') }}?edit=true">@lang('payment.confirm-change-order')</a>

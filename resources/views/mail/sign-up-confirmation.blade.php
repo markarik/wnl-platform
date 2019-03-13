@@ -7,21 +7,16 @@
 
 	<p>Jeśli wszystko poszło po naszej myśli, mail potwierdzający zamówienie zaraz pojawi się w Twojej skrzynce! :)</p>
 
-	<p style="font-size: 1.1rem; font-weight: bold;">Przydatne linki</p>
+	<p style="font-size: 1.1rem; font-weight: bold;">Przydatne linki:</p>
 	<ul>
 		<li>
-			<a href="https://platforma.wiecejnizlek.pl/login">
+			<a href="{{url('login')}}">
 				Zaloguj się na platformie
 			</a>
 		</li>
 		<li>
-			<a href="https://platforma.wiecejnizlek.pl/app/myself/orders">
+			<a href="{{url('app/myself/orders')}}">
 				Konto > Twoje zamówienia
-			</a>
-		</li>
-		<li>
-			<a href="https://platforma.wiecejnizlek.pl/payment/select-product">
-				Wróć do procesu zakupowego
 			</a>
 		</li>
 	</ul>

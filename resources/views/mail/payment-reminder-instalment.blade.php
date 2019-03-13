@@ -16,9 +16,9 @@
 	</p>
 
 	@if($instalment->order_number === 1)
-		<p>Brak opłacenia pierwszej raty spowoduje anulowanie zamówienia. 😉</p>
+		<p>Brak opłacenia pierwszej raty spowoduje anulowanie zamówienia.</p>
 	@else
-		<p>Pamiętaj, że brak opłacenia raty w terminie będzie się wiązał z <strong>zawieszeniem dostępu do platformy</strong>, ale zostanie on przywrócony zaraz po porawnym zakończeniu płatności. 😉</p>
+		<p>Pamiętaj, że brak opłacenia raty w terminie będzie się wiązał z <strong>zawieszeniem dostępu do platformy</strong>. Zostanie on przywrócony zaraz po poprawnym zakończeniu płatności. 😉</p>
 	@endif
 
 	<p>W razie pytań pisz śmiało na info@wiecejnizlek.pl! 🙂</p>

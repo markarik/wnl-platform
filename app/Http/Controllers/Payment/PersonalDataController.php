@@ -36,9 +36,14 @@ class PersonalDataController extends Controller
 
 		$form = $this->setupForm();
 
+		$coupon = $this->readCoupon(Auth::user());
+		$productPriceWithCoupon = null;
+
 		return view('payment.personal-data', [
 			'form'    => $form,
 			'product' => $product,
+			'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
+			'coupon' => $coupon
 		]);
 	}
 
@@ -83,15 +88,14 @@ class PersonalDataController extends Controller
 			'session_id' => str_random(32),
 			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 		]);
+
 		Session::put('orderId', $order->id);
 
-		$userCoupon = $user->coupons->first();
-		if (session()->has('coupon')) {
-			$coupon = session()->get('coupon')->fresh();
+		$coupon = $this->readCoupon(Auth::user());
+
+		if (!empty($coupon)) {
 			$this->addCoupon($order, $coupon);
-		} elseif ($userCoupon) {
-			$this->addCoupon($order, $userCoupon);
-		} elseif ($order->product->slug !== 'wnl-album') {
+		} else if ($order->product->slug !== 'wnl-album') {
 			$this->generateStudyBuddy($order);
 		}
 	}
@@ -116,6 +120,15 @@ class PersonalDataController extends Controller
 		$coupon->products()->attach(
 			Product::whereIn('slug', ['wnl-online'])->get()
 		);
+	}
+
+	protected function readCoupon($user) {
+		$userCoupon = $user ? $user->coupons->first() : null;
+		if (session()->has('coupon')) {
+			return session()->get('coupon')->fresh();
+		} else {
+			return $userCoupon;
+		}
 	}
 
 	protected function updateAccount($user, $request, $form)
@@ -180,7 +193,7 @@ class PersonalDataController extends Controller
 	protected function updateOrder($user, $request)
 	{
 		Log::notice('Updating order');
-		$order = $user->orders()
+		$user->orders()
 			->recent()
 			->update([
 				'product_id' => Session::get('product')->id,

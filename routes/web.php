@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Input;
 Auth::routes();
 
 Route::group(['namespace' => 'Payment', 'prefix' => 'payment', /*'middleware' => 'payment'*/], function () {
-	Route::redirect('/select-product', '/payment/account', 302)->name('payment-select-product');
-	Route::redirect('/', '/payment/account', 302);
+	Route::redirect('/select-product', '/payment/account', 301)->name('payment-select-product');
+	Route::redirect('/', '/payment/account', 301);
 
 	Route::get('account', 'AccountController@index')->name('payment-account');
 	Route::post('account', 'AccountController@handleRegister')->name('payment-account-post');

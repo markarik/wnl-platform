@@ -72,7 +72,7 @@ class PersonalDataController extends Controller
 	{
 		$user = Auth::user();
 
-		$form = $this->form(SignUpForm::class, null, [
+		$form = $this->form(SignUpForm::class, [], [
 			'coupon' => $this->readCoupon($user)
 		]);
 

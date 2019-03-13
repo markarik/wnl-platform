@@ -40,55 +40,52 @@
 			</div>
 		</section>
 
-		@if(empty($order->coupon) || $order->coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
-			<section class="subsection">
-				<div class="box">
-					<p class="title">@lang('payment.confirm-personal-data-heading')</p>
-					<p class="big">{{ $user->full_name }}</p>
-					<p><strong>{{ $user->email }}</strong></p>
+		@if($user->invoice || empty($order->coupon) || $order->coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
+			@if (empty($order->coupon) || $order->coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
+				<section class="subsection">
+					<div class="box">
+						<p class="title">@lang('payment.confirm-personal-data-heading')</p>
+						<p class="big">{{ $user->full_name }}</p>
+						<p><strong>{{ $user->email }}</strong></p>
 
-					<p class="margin top big">@lang('payment.confirm-personal-data-private')</p>
+						<p class="margin top big">@lang('payment.confirm-personal-data-private')</p>
 
-					@if(is_array($user->identityNumbers))
-						<p>
-							<strong>
-								{{ trans('payment.identity_number_' . $user->identityNumbers[0]['type']) }}:
-								{{ $user->identityNumbers[0]['value'] }}
-							</strong>
-						</p>
-					@endif
+						@if(is_array($user->identityNumbers))
+							<p>
+								<strong>
+									{{ trans('payment.identity_number_' . $user->identityNumbers[0]['type']) }}:
+									{{ $user->identityNumbers[0]['value'] }}
+								</strong>
+							</p>
+						@endif
 
-					<p class="margin top big">@lang('payment.confirm-personal-data-address')</p>
-					<ul>
-						<li>{{ $user->userAddress->recipient }}</li>
-						<li>{{ $user->userAddress->street }}</li>
-						<li>{{ $user->userAddress->zip }}, {{ $user->userAddress->city }}</li>
-					</ul>
-				</div>
-			</section>
-		@else
+						<p class="margin top big">@lang('payment.confirm-personal-data-address')</p>
+						<ul>
+							<li>{{ $user->userAddress->recipient }}</li>
+							<li>{{ $user->userAddress->street }}</li>
+							<li>{{ $user->userAddress->zip }}, {{ $user->userAddress->city }}</li>
+						</ul>
+					</div>
+				</section>
+			@endif
 			<section>
 				<p>
 					@lang('payment.confirm-no-album-info')
 				</p>
 			</section>
-		@endif
-
-		@if($user->invoice)
-			<section class="subsection">
-				<div class="box">
-					<p class="title">@lang('payment.personal-data-invoice-heading')</p>
-					<ul>
-						<li><strong>{{ $user->invoice_name }}</strong></li>
-						<li>{{ $user->invoice_address }}</li>
-						<li>{{ $user->invoice_zip }}, {{ $user->invoice_city }}</li>
-						<li>{{ $user->invoice_country }}</li>
-					</ul>
-				</div>
-			</section>
-		@endif
-
-		@if($user->invoice || empty($order->coupon) || $order->coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
+			@if($user->invoice)
+				<section class="subsection">
+					<div class="box">
+						<p class="title">@lang('payment.personal-data-invoice-heading')</p>
+						<ul>
+							<li><strong>{{ $user->invoice_name }}</strong></li>
+							<li>{{ $user->invoice_address }}</li>
+							<li>{{ $user->invoice_zip }}, {{ $user->invoice_city }}</li>
+							<li>{{ $user->invoice_country }}</li>
+						</ul>
+					</div>
+				</section>
+			@endif
 			<section class="subsection">
 				<p class="has-text-centered edit-personal-data">
 					<a href="{{ route('payment-personal-data') }}?edit=true">@lang('payment.confirm-change-order')</a>

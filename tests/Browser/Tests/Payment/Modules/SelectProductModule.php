@@ -11,8 +11,14 @@ class SelectProductModule
 {
 	public function online(BethinkBrowser $browser)
 	{
-		$browser
-			->visit(new SelectProductPage)
-			->click('@online-button');
+		$browser->visit(new SelectProductPage);
+
+		$this->assertCart($browser);
+
+		$browser->click('@online-button');
+	}
+
+	private function assertCart(BethinkBrowser $browser) {
+		$browser->assertSeeIn('@cart', 'Twój koszyk jest pusty');
 	}
 }

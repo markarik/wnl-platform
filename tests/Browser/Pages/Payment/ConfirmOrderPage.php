@@ -39,6 +39,7 @@ class ConfirmOrderPage extends BasePage
 			'@edit-persona-data'     => '.edit-personal-data a',
 			'@expand-instalments'    => '#expand-instalments',
 			'@instalments-button'    => '#instalments-button',
+			'@cart' => '.cart'
 		];
 	}
 }

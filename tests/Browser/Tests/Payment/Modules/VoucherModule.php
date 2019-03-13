@@ -44,7 +44,7 @@ class VoucherModule
 		}
 
 		$coupon = factory(Coupon::class)->create([
-			'value' => $value,
+			'value' => $value
 		]);
 
 		$browser->coupon = $coupon;

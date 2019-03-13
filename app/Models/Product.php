@@ -75,6 +75,19 @@ class Product extends Model
 			->first();
 	}
 
+	public function getPriceWithCoupon(Coupon $coupon = null) {
+		if (empty($coupon)) {
+			return $this->price;
+		}
+
+		if ($coupon->is_percentage) {
+			$value = $this->price - $coupon->value * $this->price / 100;
+		} else {
+			$value = $this->price - $coupon->value;
+		}
+		return round($value, 2);
+	}
+
 	public function getAvailableAttribute()
 	{
 		return

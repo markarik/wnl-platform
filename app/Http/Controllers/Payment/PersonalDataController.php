@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
-use App\Rules\ValidatePassportNumber;
-use App\Rules\ValidatePersonalIdentityNumber;
 
 class PersonalDataController extends Controller
 {
@@ -48,21 +46,6 @@ class PersonalDataController extends Controller
 	{
 		$form = $this->setupForm();
 
-		$validations = [];
-		$validator = $this->getIdentityNumberValidator($request->get('identity_number_type'));
-		if (!is_object($validator)) {
-			if (!$form->getField('identity_number')->getOption('attr.disabled')) {
-				// Very strange situation,
-				// somebody probably tried to do something nasty.
-				return redirect()->back()->withInput();
-			}
-		} else {
-			$validations['identity_number'] = $validator;
-		}
-
-
-		$form->validate($validations);
-
 		if (!$form->isValid()) {
 			Log::notice('Sing up form invalid, redirecting...');
 
@@ -89,22 +72,6 @@ class PersonalDataController extends Controller
 			'url'    => route('payment-personal-data-post'),
 			'model'  => $user,
 		]);
-
-		if ($user && $user->orders()->where(['paid' => 1])->exists()) {
-			if ($user->first_name) {
-				$form->getField('first_name')->disable()->setOption('rules', '');
-			}
-			if ($user->last_name) {
-				$form->getField('last_name')->disable()->setOption('rules', '');
-			}
-
-			$personalData = $user->personalData;
-			if ($personalData && ($personalData->personal_identity_number || $personalData->identity_card_number || $personalData->passport_number)) {
-				$form->getField('identity_number_type')->disable();
-				$form->getField('identity_number')->disable()->setOption('rules', '');
-			}
-		}
-
 		return $form;
 	}
 
@@ -162,11 +129,11 @@ class PersonalDataController extends Controller
 			'invoice_country' => $request->invoice_country ?? $user->invoice_country,
 		];
 
-		if (!$form->getField('first_name')->getOption('attr.disabled')) {
+		if (!$form->first_name->getOption('attr.disabled')) {
 			$userData['first_name'] = $request->first_name ?? $user->first_name;
 		}
 
-		if (!$form->getField('last_name')->getOption('attr.disabled')) {
+		if (!$form->last_name->getOption('attr.disabled')) {
 			$userData['last_name'] = $request->last_name ?? $user->last_name;
 		}
 
@@ -202,7 +169,7 @@ class PersonalDataController extends Controller
 			'recipient' => $request->get('recipient'),
 		]);
 
-		if (!$form->getField('identity_number')->getOption('attr.disabled')) {
+		if (!$form->identity_number->getOption('attr.disabled')) {
 			$user->personalData()->updateOrCreate(
 				['user_id' => $user->id],
 				$this->getIdentityNumbersArray($request)
@@ -237,19 +204,6 @@ class PersonalDataController extends Controller
 		}
 
 		$order->attachCoupon($coupon);
-	}
-
-	protected function getIdentityNumberValidator($identityNumberType) {
-		$validators = [
-			'passport_number' => new ValidatePassportNumber,
-			'personal_identity_number' => new ValidatePersonalIdentityNumber,
-		];
-
-		if (!array_key_exists($identityNumberType, $validators)) {
-			return false;
-		}
-
-		return $validators[$identityNumberType];
 	}
 
 	protected function getIdentityNumbersArray(Request $request) {

@@ -3,11 +3,23 @@
 namespace App\Http\Forms;
 
 use Kris\LaravelFormBuilder\Form;
+use Illuminate\Contracts\Validation\Validator;
+use App\Rules\ValidatePassportNumber;
+use App\Rules\ValidatePersonalIdentityNumber;
 
 class PersonalDataForm extends Form
 {
 	public function buildForm()
 	{
+		$user = $this->getModel();
+		$userHasPaidOrder = $user && $user->orders()->where(['paid' => 1])->exists();
+		$firstNameDisabled = $userHasPaidOrder && $user->first_name;
+		$lastNameDisabled = $userHasPaidOrder && $user->last_name;
+		$personalData = $userHasPaidOrder ? $user->personalData : null;
+
+		$identityNumberDisabled = $personalData &&
+			($personalData->personal_identity_number || $personalData->identity_card_number || $personalData->passport_number);
+
 		$this
 			->add('phone', 'text', [
 				'label' => trans('payment.phone'),
@@ -27,31 +39,39 @@ class PersonalDataForm extends Form
 				'expanded' => true,
 				'selected' => ['personal_identity_number'],
 				'multiple' => false,
+				'choice_options' => [
+					'attr' => [
+						'disabled' => $identityNumberDisabled
+					],
+				],
 			])
 			->add('identity_number', 'text', [
 				'label' => trans('payment.identity_number'),
-				'rules' => 'required',
+				'rules' => $identityNumberDisabled ? '' : 'required',
 				'attr'  => [
 					'class' => 'input',
 					'placeholder' => trans('payment.identity_number'),
+					'disabled' => $identityNumberDisabled
 				],
 			])
 
 			// Personal data
 			->add('first_name', 'text', [
 				'label' => trans('payment.first-name'),
-				'rules' => 'required',
+				'rules' => $firstNameDisabled ? '' : 'required',
 				'attr'  => [
 					'class' => 'input',
 					'placeholder' => trans('payment.first-name'),
+					'disabled' => $firstNameDisabled,
 				],
 			])
 			->add('last_name', 'text', [
 				'label' => trans('payment.last-name'),
-				'rules' => 'required',
+				'rules' => $lastNameDisabled ? '' : 'required',
 				'attr'  => [
 					'class' => 'input',
 					'placeholder' => trans('payment.last-name'),
+					'disabled' => $lastNameDisabled,
 				],
 			])
 			->add('recipient', 'text', [
@@ -161,5 +181,42 @@ class PersonalDataForm extends Form
 					'placeholder' => trans('payment.invoice-country'),
 				],
 			]);
+	}
+
+
+	/**
+	 * Validate the form.
+	 *
+	 * @param array $validationRules
+	 * @param array $messages
+	 * @return Validator
+	 */
+	public function validate($validationRules = [], $messages = [])
+	{
+		$validator = $this->getIdentityNumberValidator($this->getRequest()->get('identity_number_type'));
+		if (!is_object($validator)) {
+			if (!$this->identity_number->getOption('attr.disabled')) {
+				// Very strange situation,
+				// somebody probably tried to do something nasty.
+				return redirect()->back()->withInput();
+			}
+		} else {
+			$validationRules['identity_number'] = $validator;
+		}
+
+		return parent::validate($validationRules, $messages);
+	}
+
+	protected function getIdentityNumberValidator($identityNumberType) {
+		$validators = [
+			'passport_number' => new ValidatePassportNumber,
+			'personal_identity_number' => new ValidatePersonalIdentityNumber,
+		];
+
+		if (!array_key_exists($identityNumberType, $validators)) {
+			return false;
+		}
+
+		return $validators[$identityNumberType];
 	}
 }

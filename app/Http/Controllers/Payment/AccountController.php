@@ -20,7 +20,7 @@ class AccountController
 	{
 		$user = Auth::user();
 		if ($user) {
-			if ($user->hasAccess) {
+			if ($user->signUpComplete) {
 				return view('payment.account-name', [
 					'user' => $user,
 				]);

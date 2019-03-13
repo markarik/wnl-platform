@@ -10,7 +10,7 @@ class AppController extends Controller
 	public function index()
 	{
 		$user = Auth::user();
-		if (!$user->hasAccess) {
+		if (!$user->signUpComplete) {
 			return redirect()->route('payment-account');
 		}
 

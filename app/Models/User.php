@@ -272,13 +272,13 @@ class User extends Authenticatable
 		return $initials;
 	}
 
-	public function getHasAccessAttribute() {
+	public function getSignUpCompleteAttribute() {
 		return !($this->first_name === null || $this->last_name === null);
 	}
 
 	protected function getSubscriptionStatus($dates)
 	{
-		if ($this->hasRole([Role::ROLE_ADMIN, Role::ROLE_MODERATOR, 'test'])) {
+		if ($this->hasRole([Role::ROLE_ADMIN, Role::ROLE_MODERATOR, Role::ROLE_TEST])) {
 			return self::SUBSCRIPTION_STATUS_ACTIVE;
 		}
 

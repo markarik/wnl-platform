@@ -6,29 +6,29 @@ use Illuminate\Database\Migrations\Migration;
 
 class UserNameNullable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-			Schema::table('users', function (Blueprint $table) {
-				$table->longText('first_name')->nullable()->change();
-				$table->longText('last_name')->nullable()->change();
-			});
-    }
+	/**
+	 * Run the migrations.
+	 *
+	 * @return void
+	 */
+	public function up()
+	{
+		Schema::table('users', function (Blueprint $table) {
+			$table->longText('first_name')->nullable()->change();
+			$table->longText('last_name')->nullable()->change();
+		});
+	}
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-			Schema::table('users', function (Blueprint $table) {
-				$table->longText('first_name')->change();
-				$table->longText('last_name')->change();
-			});
-    }
+	/**
+	 * Reverse the migrations.
+	 *
+	 * @return void
+	 */
+	public function down()
+	{
+		Schema::table('users', function (Blueprint $table) {
+			$table->longText('first_name')->change();
+			$table->longText('last_name')->change();
+		});
+	}
 }

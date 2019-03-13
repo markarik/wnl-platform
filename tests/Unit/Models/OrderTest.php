@@ -51,8 +51,8 @@ class OrderTest extends TestCase
 		/** @var OrderInstalment $nextPayment */
 		$nextPayment = $order->instalments['nextPayment'];
 
-		$this->assertTrue($expectedNextPayment['due_date']->isSameDay($nextPayment['date']));
-		$this->assertEquals($expectedNextPayment['left'], $nextPayment['amount']);
+		$this->assertTrue($expectedNextPayment['due_date']->isSameDay($nextPayment->due_date));
+		$this->assertEquals($expectedNextPayment['left'], $nextPayment->left_amount);
 
 		$this->assertEquals(false, $order->instalments['allPaid']);
 		$this->assertEquals($expectedTotalLeft, $order->instalments['total']);
@@ -96,11 +96,11 @@ class OrderTest extends TestCase
 		return $order;
 	}
 
-	private function assertInstalmentData(Carbon $expectedDate, float $expectedAmount, float $expectedLeft, array $instalment): void
+	private function assertInstalmentData(Carbon $expectedDate, float $expectedAmount, float $expectedLeft, OrderInstalment $instalment): void
 	{
-		$this->assertTrue($expectedDate->isSameDay($instalment['date']));
-		$this->assertEquals($expectedAmount, $instalment['amount']);
-		$this->assertEquals($expectedLeft, $instalment['left']);
+		$this->assertTrue($expectedDate->isSameDay($instalment->due_date));
+		$this->assertEquals($expectedAmount, $instalment->amount);
+		$this->assertEquals($expectedLeft, $instalment->left_amount);
 	}
 
 	public function getInstalmentsAttributeDataProvider()

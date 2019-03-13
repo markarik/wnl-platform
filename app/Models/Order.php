@@ -109,53 +109,34 @@ class Order extends Model
 
 	public function getInstalmentsAttribute()
 	{
-		$instalments = [];
-		$totalLeft = 0;
-		$leftFromPaid = $this->paid_amount;
-		$nextPayment = null;
-
-		// TODO: https://bethink.atlassian.net/browse/PLAT-641
-		$paymentDates = [
-			$this->created_at->addDays(7),
-			Carbon::createFromDate(2018, 11, 20),
-			Carbon::createFromDate(2018, 12, 20),
-		];
-		$toDistribute = $this->total_with_coupon;
-		$allPaid = $this->paid_amount >= $this->total_with_coupon;
-
-		if ($allPaid) {
+		if ($this->paid_amount >= $this->total_with_coupon) {
 			return [
 				'allPaid'     => true,
-				'instalments' => $instalments,
+				'instalments' => [],
 			];
 		}
 
-		end($paymentDates);
-		$lastKey = key($paymentDates);
-		reset($paymentDates);
+		$orderInstalments = $this->orderInstalments()->get();
 
-		for ($i = 0; $i <= $lastKey; $i++) {
-			$date = $paymentDates[$i];
-
-			$instalment = ['date' => $paymentDates[$i]];
-			$instalment['amount'] = $i === $lastKey ? $toDistribute : 0.5 * $toDistribute;
-			$instalment['left'] = $leftFromPaid > $instalment['amount'] ? 0 : $instalment['amount'] - max($leftFromPaid, 0);
-			$instalments[] = $instalment;
-
-			$toDistribute = $toDistribute - $instalment['amount'];
-			$leftFromPaid = $leftFromPaid - $instalment['amount'];
-			if ($nextPayment === null && $instalment['left'] > 0) {
-				$nextPayment = [
-					'amount' => $instalment['left'],
-					'date'   => $date,
-				];
-			}
-			$totalLeft += $instalment['left'];
+		if ($orderInstalments->count() === 0) {
+			$orderInstalments = $this->generatePaymentSchedule();
 		}
+
+		$nextPayment = $orderInstalments
+			->sort(function (OrderInstalment $a, OrderInstalment $b) {
+				return $a->order_number - $b->order_number;
+			})
+			->first(function (OrderInstalment $orderInstalment) {
+				return $orderInstalment->paid !== true;
+			});
+
+		$totalLeft = $orderInstalments->reduce(function (float $left, OrderInstalment $orderInstalment) {
+			return $left + $orderInstalment->left_amount;
+		}, 0.0);
 
 		return [
 			'allPaid'     => false,
-			'instalments' => $instalments,
+			'instalments' => $orderInstalments,
 			'nextPayment' => $nextPayment,
 			'total'       => $totalLeft,
 		];

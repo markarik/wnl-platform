@@ -51,7 +51,7 @@ class PersonalDataController extends Controller
 		$validations = [];
 		$validator = $this->getIdentityNumberValidator($request->get('identity_number_type'));
 		if (!is_object($validator)) {
-			if (!$form->getField('identity_number')->getOption('disabled')) {
+			if (!$form->getField('identity_number')->getOption('attr.disabled')) {
 				// Very strange situation,
 				// somebody probably tried to do something nasty.
 				return redirect()->back()->withInput();
@@ -154,8 +154,6 @@ class PersonalDataController extends Controller
 	protected function updateAccount($user, $request, $form)
 	{
 		$userData = [
-			'first_name' => $request->first_name ?? $user->first_name,
-			'last_name' => $request->last_name ?? $user->last_name,
 			'invoice_name' => $request->invoice_name ?? $user->invoice_name,
 			'invoice_nip' => $request->invoice_nip ?? $user->invoice_nip,
 			'invoice_address' => $request->invoice_address ?? $user->invoice_address,
@@ -164,11 +162,11 @@ class PersonalDataController extends Controller
 			'invoice_country' => $request->invoice_country ?? $user->invoice_country,
 		];
 
-		if (!$form->getField('first_name')->getOption('disabled')) {
+		if (!$form->getField('first_name')->getOption('attr.disabled')) {
 			$userData['first_name'] = $request->first_name ?? $user->first_name;
 		}
 
-		if (!$form->getField('last_name')->getOption('disabled')) {
+		if (!$form->getField('last_name')->getOption('attr.disabled')) {
 			$userData['last_name'] = $request->last_name ?? $user->last_name;
 		}
 
@@ -204,7 +202,7 @@ class PersonalDataController extends Controller
 			'recipient' => $request->get('recipient'),
 		]);
 
-		if (!$form->getField('identity_number')->getOption('disabled')) {
+		if (!$form->getField('identity_number')->getOption('attr.disabled')) {
 			$user->personalData()->updateOrCreate(
 				['user_id' => $user->id],
 				$this->getIdentityNumbersArray($request)

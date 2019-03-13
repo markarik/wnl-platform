@@ -6,7 +6,7 @@
 					Twoje zamówienia
 				</div>
 			</div>
-			<div v-if="displayAlbumLink && hasOrders">
+			<div v-if="displayAlbumLink">
 				<a :href="orderAlbumUrl" title="Zamów album map myśli">
 					<span class="icon is-small status-icon">
 						<i class="fa fa-shopping-cart"></i>

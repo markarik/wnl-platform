@@ -15,8 +15,7 @@ class PaymentTest extends DuskTestCase
 {
 	use ExecutesScenarios;
 
-	/** @test */
-	public function registerAndPayOnline()
+	public function testRegisterAndPayOnline()
 	{
 		$this->execute([
 			[AccountModule::class       , 'signUp'],
@@ -27,8 +26,18 @@ class PaymentTest extends DuskTestCase
 		]);
 	}
 
-	/** @test */
-	public function logInEditDataAndOrder()
+	public function testLoginAndPayOnline()
+	{
+		$this->execute([
+			[AccountModule::class       , 'logInUsingModal'],
+			[PersonalDataModule::class  , 'submitNoInvoice'],
+			[ConfirmOrderModule::class  , 'payOnline'],
+			[OnlinePaymentModule::class , 'successfulPayment'],
+			[MyOrdersModule::class      , 'end'],
+		]);
+	}
+
+	public function testLogInEditDataAndOrder()
 	{
 		$this->execute([
 			[UserModule::class          , 'existingUser'],
@@ -42,8 +51,7 @@ class PaymentTest extends DuskTestCase
 		]);
 	}
 
-	/** @test */
-	public function registerAndPayByInstalments()
+	public function testRegisterAndPayByInstalments()
 	{
 		$this->execute([
 			[AccountModule::class       , 'signUp'],
@@ -53,8 +61,7 @@ class PaymentTest extends DuskTestCase
 		]);
 	}
 
-	/** @test */
-	public function studyBuddy()
+	public function testStudyBuddy()
 	{
 		$this->execute([
 			[AccountModule::class       , 'signUp'],
@@ -70,8 +77,7 @@ class PaymentTest extends DuskTestCase
 		]);
 	}
 
-	/** @test */
-	public function freeCourseCoupon()
+	public function testFreeCourseCoupon()
 	{
 		$this->execute([
 			[VoucherModule::class       , 'code100Percent'],
@@ -79,6 +85,14 @@ class PaymentTest extends DuskTestCase
 			[PersonalDataModule::class  , 'submitNoInvoice'],
 			[ConfirmOrderModule::class  , 'payByTransfer'],
 			[MyOrdersModule::class      , 'end'],
+		]);
+	}
+
+	public function testRegisterAndDontOrderPlatformForbidden()
+	{
+		$this->execute([
+			[AccountModule::class, 'signUp'],
+			[AccountModule::class, 'assertNoAccessToPlatform'],
 		]);
 	}
 }

@@ -48,21 +48,13 @@ class PersonalDataModule
 	{
 		$userData = $this->generatePersonalFormData();
 		$this->fillInPersonalDataForm($userData, $browser, $invoiceFlag);
-		$browser->userData = $userData;
 
 		$browser->xpathClick('.//button[@class="button is-primary"]');
 
-		if (!$this->isEdit($browser)) {
-			$browser->user = User::where('email', $browser->accountData['email'])->first();
-			$browser->order = $browser->user->orders()->recent();
-			Assert::assertTrue($browser->user instanceof User);
-			Assert::assertTrue($browser->order instanceof Order);
-		}
-	}
-
-	protected function isEdit(BethinkBrowser $browser)
-	{
-		return str_is('*?edit=true*', $browser->driver->getCurrentUrl());
+		$browser->user = User::where('email', $browser->accountData['email'])->first();
+		$browser->order = $browser->user->orders()->recent();
+		Assert::assertTrue($browser->user instanceof User);
+		Assert::assertTrue($browser->order instanceof Order);
 	}
 
 	protected function assertCart(BethinkBrowser $browser) {

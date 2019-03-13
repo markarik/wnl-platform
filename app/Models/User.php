@@ -372,6 +372,7 @@ class User extends Authenticatable
 	}
 
 	public static function createWithProfileAndBilling($userData) {
+		/** @var User $user */
 		$user = static::create($userData);
 
 		$user->profile()->firstOrCreate([

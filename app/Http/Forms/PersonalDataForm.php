@@ -38,6 +38,7 @@ class PersonalDataForm extends Form
 				'expanded' => true,
 				'selected' => ['personal_identity_number'],
 				'multiple' => false,
+				'rules' => $identityNumberDisabled ? '' : 'required|in:personal_identity_number,passport_number',
 				'choice_options' => [
 					'attr' => [
 						'disabled' => $identityNumberDisabled
@@ -185,13 +186,8 @@ class PersonalDataForm extends Form
 	public function validate($validationRules = [], $messages = [])
 	{
 		$validator = $this->getIdentityNumberValidator($this->getRequest()->get('identity_number_type'));
-		if (!is_object($validator)) {
-			if (!$this->identity_number->getOption('attr.disabled')) {
-				// Very strange situation,
-				// somebody probably tried to do something nasty.
-				return redirect()->back()->withInput();
-			}
-		} else {
+
+		if ($validator && !$this->getField('identity_number')->getOption('attr.disabled')) {
 			$validationRules['identity_number'] = $validator;
 		}
 

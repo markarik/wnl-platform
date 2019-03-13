@@ -37,6 +37,7 @@ class SelectProductPage extends Page
 	{
 		return [
 			'@online-button' => '#btest-wnl-online-button',
+			'@cart' => '.cart'
 		];
 	}
 

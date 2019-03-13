@@ -195,4 +195,16 @@ return [
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
 	'personal-data-invoice-heading' => 'Dane do faktury',
+
+	/**
+	 * CART
+	 */
+	'cart-header' => 'Twoje zamówienie',
+	'cart-access-info' => 'Dostęp od momentu wpłaty do :date',
+	'cart-shipment-label' => 'Wysyłka:',
+	'cart-shipment-value' => 'Na terenie Polski za darmo',
+	'cart-coupon-label' => 'Zniżka:',
+	'cart-price-label' => 'Kwota całkowita:',
+	'cart-price-value' => ':valuezł',
+	'cart-empty' => 'Twój koszyk jest pusty.'
 ];

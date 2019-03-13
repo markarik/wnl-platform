@@ -98,7 +98,7 @@ class PersonalDataController extends Controller
 				$form->getField('last_name')->disable()->setOption('rules', '');
 			}
 
-			$personalData = $user->personalData->first();
+			$personalData = $user->personalData;
 			if ($personalData && ($personalData->personal_identity_number || $personalData->identity_card_number || $personalData->passport_number)) {
 				$form->getField('identity_number_type')->disable();
 				$form->getField('identity_number')->disable()->setOption('rules', '');

@@ -163,7 +163,6 @@ class Parser
 				if ($courseTag['name'] == 'lesson') {
 					$lesson = Lesson::firstOrCreate([
 						'name'     => $courseTag['value'],
-						'group_id' => $this->courseModels['group']->id,
 					]);
 					$this->lessonTag = Tag::firstOrCreate(['name' => $lesson->name]);
 

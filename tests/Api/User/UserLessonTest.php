@@ -79,9 +79,6 @@ class UserLessonTest extends ApiTestCase
 			[
 				'id'=> $lesson->id,
 				'name' => $lesson->name,
-				'group_id' => $lesson->group_id,
-				'groups' => $lesson->group_id,
-				'order_number' => $lesson->order_number,
 				'is_required' => $lesson->is_required,
 				'isAccessible' => $lesson->isAccessible(),
 				'isAvailable' => $lesson->isAvailable(),
@@ -161,9 +158,6 @@ class UserLessonTest extends ApiTestCase
 				[
 					'id'=> $lesson->id,
 					'name' => $lesson->name,
-					'group_id' => $lesson->group_id,
-					'groups' => $lesson->group_id,
-					'order_number' => $lesson->order_number,
 					'is_required' => $lesson->is_required,
 					'isAccessible' => $lesson->isAccessible(),
 					'isAvailable' => $lesson->isAvailable(),
@@ -250,9 +244,6 @@ class UserLessonTest extends ApiTestCase
 				[
 					'id'=> $lesson->id,
 					'name' => $lesson->name,
-					'group_id' => $lesson->group_id,
-					'groups' => $lesson->group_id,
-					'order_number' => $lesson->order_number,
 					'is_required' => $lesson->is_required,
 					'isAccessible' => $lesson->isAccessible(),
 					'isAvailable' => $lesson->isAvailable(),
@@ -271,14 +262,10 @@ class UserLessonTest extends ApiTestCase
 
 		$requiredLessonOne = factory(Lesson::class)->create([
 			'is_required' => 1,
-			'group_id' => 5,
-			'order_number' => 1,
 		]);
 
 		$requiredLessonTwo = factory(Lesson::class)->create([
 			'is_required' => 1,
-			'group_id' => 5,
-			'order_number' => 2,
 		]);
 
 		$userLessonOne = factory(UserLesson::class)->create([

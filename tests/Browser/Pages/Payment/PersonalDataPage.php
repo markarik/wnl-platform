@@ -39,6 +39,7 @@ class PersonalDataPage extends BasePage
 	{
 		return [
 			'@login' => '.has-account a',
+			'@cart' => '.cart',
 		];
 	}
 }

@@ -2,15 +2,6 @@
 	<div class="lesson-editor">
 		<form @submit.prevent="lessonFormSubmit">
 			<div class="field is-grouped">
-				<div class="control">
-					<span class="select">
-						<wnl-select :form="form"
-							:options="groups"
-							name="group_id"
-							v-model="form.group_id"
-						></wnl-select>
-					</span>
-				</div>
 				<wnl-input :form="form"
 					name="name"
 					v-model="form.name"
@@ -58,7 +49,6 @@ import { getApiUrl } from 'js/utils/env';
 
 import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue';
 import Input from 'js/admin/components/forms/Input.vue';
-import Select from 'js/admin/components/forms/Select.vue';
 import Checkbox from 'js/admin/components/forms/Checkbox.vue';
 import {ALERT_TYPES} from 'js/consts/alert';
 
@@ -68,17 +58,14 @@ export default {
 	components: {
 		'wnl-screens-editor': ScreensEditor,
 		'wnl-input': Input,
-		'wnl-select': Select,
 		'wnl-form-checkbox': Checkbox,
 	},
 	data() {
 		return {
 			form: new Form({
-				group_id: null,
 				name: null,
 				is_required: false,
 			}),
-			groups: [],
 			loading: false,
 		};
 	},
@@ -100,17 +87,6 @@ export default {
 		...mapActions([
 			'addAutoDismissableAlert',
 		]),
-		fetchGroups() {
-			return axios.get(getApiUrl('groups/all'))
-				.then((response) => {
-					_.forEach(response.data, (group) => {
-						this.groups.push({
-							text: group.name,
-							value: group.id,
-						});
-					});
-				});
-		},
 		lessonFormSubmit() {
 			if (!this.hasChanged) {
 				return false;
@@ -141,12 +117,9 @@ export default {
 		}
 	},
 	mounted() {
-		this.fetchGroups()
-			.then(() => {
-				if (this.isEdit) {
-					this.form.populate(this.resourceUrl);
-				}
-			});
+		if (this.isEdit) {
+			this.form.populate(this.resourceUrl);
+		}
 	}
 };
 </script>

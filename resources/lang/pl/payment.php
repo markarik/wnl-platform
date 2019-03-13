@@ -173,6 +173,10 @@ return [
 	'account-register-submit' => 'Załóż konto',
 	'account-name-submit' => 'Użyj aktualnego konta',
 
+	'account-continue-heading' => 'Dokończ swoje zamówienie, aby korzystać z platformy.',
+	'account-continue-submit' => 'Dokończ zamówienie',
+	'account-continue-back-link' => 'Wróć do strony głównej',
+
 	/**
 	 * Personal data verification step
 	 */

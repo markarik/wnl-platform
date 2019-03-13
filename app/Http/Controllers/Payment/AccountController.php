@@ -20,9 +20,13 @@ class AccountController
 	{
 		$user = Auth::user();
 		if ($user) {
-			return view('payment.account-name', [
-				'user' => $user,
-			]);
+			if ($user->hasAccess) {
+				return view('payment.account-name', [
+					'user' => $user,
+				]);
+			} else {
+				return view('payment.account-continue');
+			}
 		}
 
 		$request->session()->flash('url.intended', route('payment-personal-data'));

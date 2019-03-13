@@ -2,6 +2,14 @@
 
 @section('content')
 
+	@include('payment.cart', [
+		'productName' => $product->name,
+		'productPrice' => $product->price,
+		'productAccessEnd' => $product->access_end,
+		'productPriceWithCoupon' => $productPriceWithCoupon,
+		'coupon' => $coupon,
+	])
+
 	@include('payment.payment-hero', [
 		'step' => 2,
 		'title' => trans('payment.personal-data-title'),

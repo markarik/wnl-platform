@@ -27,7 +27,12 @@ class ConfirmOrderController extends Controller
 
 		/** @var Order $order */
 		$order = $user->orders()->recent();
-		$amount = (int)$order->total_with_coupon * 100;
+
+		$coupon = $order->coupon;
+		$productPriceWithCoupon = $order->total_with_coupon;
+		$couponValue = null;
+
+		$amount = (int)$productPriceWithCoupon * 100;
 		$checksum = $payment::generateChecksum($order->session_id, $amount);
 
 		$viewData = [
@@ -36,7 +41,9 @@ class ConfirmOrderController extends Controller
 			'checksum' => $checksum,
 			'amount'      => $amount,
 			'returnUrl'  => $this->getReturnUrl($amount),
-			'instalments' => null
+			'instalments' => null,
+			'coupon' => $coupon,
+			'productPriceWithCoupon' => $productPriceWithCoupon
 		];
 
 		$paymentMethodInstalments = $order->product->paymentMethods

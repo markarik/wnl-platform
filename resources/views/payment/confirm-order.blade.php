@@ -1,6 +1,15 @@
 @extends('payment.layout')
 
 @section('content')
+
+	@include('payment.cart', [
+		'productName' => $order->product->name,
+		'productPrice' => $order->product->price,
+		'productAccessEnd' => $order->product->access_end,
+		'productPriceWithCoupon' => $productPriceWithCoupon,
+		'coupon' => $coupon,
+	])
+
 	@include('payment.payment-hero', [
 		'step' => 3,
 		'title' => trans('payment.confirm-order-title'),
@@ -14,10 +23,10 @@
 				<p class="subtitle">{{ $order->product->name }}</p>
 				@if($order->coupon && ($order->coupon->slug !== 'wnl-online-only' || $order->product->slug === 'wnl-online'))
 					<p class="strikethrough">
-						@lang('payment.confirm-order-price', [ 'price' => $order->product->price ])
+						@lang('payment.confirm-order-price', [ 'price' => $order->product->price])
 					</p>
 					<p class="big strong">
-						@lang('payment.confirm-order-price', [ 'price' => $order->total_with_coupon ])
+						@lang('payment.confirm-order-price', [ 'price' => $productPriceWithCoupon ])
 					</p>
 					<div class="notification margins top">
 						@lang('payment.confirm-order-coupon', [

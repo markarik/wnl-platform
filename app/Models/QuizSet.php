@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Models\Concerns\Cached;
 use Illuminate\Database\Eloquent\Model;
+use ScoutEngines\Elasticsearch\Searchable;
 
 class QuizSet extends Model
 {
-	use Cached;
+	use Cached, Searchable;
 
 	protected $fillable = ['name', 'description', 'lesson_id'];
 

@@ -165,6 +165,16 @@ class BethinkBrowser extends Browser
 		return true;
 	}
 
+	public function typeIfNotDisabled($field, $value)
+	{
+		$element = $this->driver->findElement(WebDriverBy::name($field));
+		if (!$element->getAttribute('disabled')) {
+			return $this->type($field, $value);
+		}
+
+		return $this;
+	}
+
 	public function scrollToSelector($selector)
 	{
 		$this->executeScript('return document.querySelector(arguments[0]).scrollIntoView(true)', [$selector]);

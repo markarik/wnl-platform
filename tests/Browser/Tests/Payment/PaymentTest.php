@@ -95,4 +95,15 @@ class PaymentTest extends DuskTestCase
 			[AccountModule::class, 'assertNoAccessToPlatform'],
 		]);
 	}
+
+	public function testOrderWithPaidOrder()
+	{
+		$this->execute([
+			[UserModule::class          , 'existingUserWithOrder'],
+			[PersonalDataModule::class  , 'submitNoInvoiceExistingOrder'],
+			[ConfirmOrderModule::class  , 'payOnline'],
+			[OnlinePaymentModule::class , 'successfulPayment'],
+			[MyOrdersModule::class      , 'end'],
+		]);
+	}
 }

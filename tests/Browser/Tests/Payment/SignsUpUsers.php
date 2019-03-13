@@ -62,6 +62,7 @@ trait SignsUpUsers
 		$data = [
 			'firstName'        => $faker->firstName,
 			'lastName'         => $faker->lastName,
+			'recipient'        => "{$faker->firstName} {$faker->lastName}",
 			'address'          => $faker->streetAddress,
 			'phoneNumber'      => $faker->phoneNumber,
 			'postcode'         => $faker->postcode,
@@ -104,13 +105,14 @@ trait SignsUpUsers
 	protected function fillInPersonalDataForm($user, $browser, $invoice = false)
 	{
 		$browser->type('phone', $user['phoneNumber'])
-			->type('first_name', $user['firstName'])
-			->type('last_name', $user['lastName'])
+			->typeIfNotDisabled('first_name', $user['firstName'])
+			->typeIfNotDisabled('last_name', $user['lastName'])
+			->type('recipient', $user['recipient'])
 			->type('address', $user['address'])
 			->type('zip', $user['postcode'])
 			->type('city', $user['city']);
 
-		$browser->type('identity_number', $user['identity_number']);
+		$browser->typeIfNotDisabled('identity_number', $user['identity_number']);
 
 		if ($invoice) {
 			$browser

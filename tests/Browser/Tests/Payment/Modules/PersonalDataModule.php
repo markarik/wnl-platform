@@ -23,6 +23,15 @@ class PersonalDataModule
 		$this->submit($browser, false);
 	}
 
+	public function submitNoInvoiceExistingOrder(BethinkBrowser $browser)
+	{
+		$this->navigate($browser);
+
+		$browser->on(new PersonalDataPage());
+		$this->assertPersonalDataDisabled($browser);
+		$this->submit($browser, false);
+	}
+
 	public function submitCustomInvoice(BethinkBrowser $browser)
 	{
 		$this->navigate($browser);
@@ -57,11 +66,19 @@ class PersonalDataModule
 		Assert::assertTrue($browser->order instanceof Order);
 	}
 
-	protected function assertCart(BethinkBrowser $browser) {
+	protected function assertCart(BethinkBrowser $browser)
+	{
 		$browser->assertVisible('@cart');
 		$browser->assertSeeIn('@cart', 'Wysyłka:');
 		$browser->assertSeeIn('@cart', 'Na terenie Polski za darmo');
 		$browser->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do');
 		$browser->assertSeeIn('@cart', 'Kwota całkowita:');
+	}
+
+	protected function assertPersonalDataDisabled(BethinkBrowser $browser)
+	{
+		$browser->assertDisabled('first_name');
+		$browser->assertDisabled('last_name');
+		$browser->assertDisabled('identity_number');
 	}
 }

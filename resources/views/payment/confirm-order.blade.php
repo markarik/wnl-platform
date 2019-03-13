@@ -66,6 +66,12 @@
 					</ul>
 				</div>
 			</section>
+		@else
+			<section>
+				<p>
+					@lang('payment.confirm-no-album-info')
+				</p>
+			</section>
 		@endif
 
 		@if($user->invoice)

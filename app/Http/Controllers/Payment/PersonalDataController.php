@@ -45,17 +45,18 @@ class PersonalDataController extends Controller
 			return redirect()->route('payment-personal-data', ['?edit=true']);
 		}
 
+		$coupon = $this->readCoupon(Auth::user());
+
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',
 			'url'    => route('payment-personal-data-post'),
 			'model'  => Auth::user(),
-		])->modify('password', 'password', [
+		], ['coupon' => $coupon])->modify('password', 'password', [
 			'value' => '',
 		]);
 
 		session()->flash('url.intended', route('payment-personal-data'));
 
-		$coupon = $this->readCoupon(Auth::user());
 		$productPriceWithCoupon = null;
 
 		return view('payment.personal-data', [
@@ -69,7 +70,11 @@ class PersonalDataController extends Controller
 
 	public function handle(Request $request)
 	{
-		$form = $this->form(SignUpForm::class);
+		$user = Auth::user();
+
+		$form = $this->form(SignUpForm::class, null, [
+			'coupon' => $this->readCoupon($user)
+		]);
 
 		$validator = $this->getIdentityNumberValidator($request->get('identity_number_type'));
 		if (!is_object($validator)) {
@@ -80,7 +85,6 @@ class PersonalDataController extends Controller
 
 		$validations = ['identity_number' => $validator];
 
-		$user = Auth::user();
 		if ($user) {
 			// Don't require email and pass when updating order/account data.
 			$validations = array_merge($validations, [

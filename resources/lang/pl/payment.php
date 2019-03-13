@@ -194,6 +194,7 @@ return [
 	'confirm-order-free' => 'Potwierdź zamówienie, aby skorzystać ze 100% zniżki',
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
+	'confirm-no-album-info'         => 'Przedłużenie dostępu z 50% zniżką nie obejmuje nowego albumu map myśli. Nowy album możesz jednokrotnie zamówić po zalogowaniu na platformę, w zakładce KONTO > Twoje zamówienia.',
 	'personal-data-invoice-heading' => 'Dane do faktury',
 
 	/**

@@ -2,12 +2,14 @@
 
 namespace App\Http\Forms;
 
+use App\Models\Coupon;
 use Kris\LaravelFormBuilder\Form;
 
 class SignUpForm extends Form
 {
 	public function buildForm()
 	{
+		$coupon = $this->getData('coupon');
 		$this
 			->add('email', 'email', [
 				'label' => trans('payment.email'),
@@ -15,14 +17,6 @@ class SignUpForm extends Form
 				'attr'  => [
 					'class' => 'input',
 					'placeholder' => trans('payment.email'),
-				],
-			])
-			->add('phone', 'text', [
-				'label' => trans('payment.phone'),
-				'rules' => 'required',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.phone'),
 				],
 			])
 			->add('password', 'password', [
@@ -60,8 +54,6 @@ class SignUpForm extends Form
 					'placeholder' => trans('payment.identity_number'),
 				],
 			])
-
-			// Personal data
 			->add('first_name', 'text', [
 				'label' => trans('payment.first-name'),
 				'rules' => 'required',
@@ -77,43 +69,54 @@ class SignUpForm extends Form
 					'class' => 'input',
 					'placeholder' => trans('payment.last-name'),
 				],
-			])
-			->add('recipient', 'text', [
-				'label' => trans('payment.recipient'),
-				'rules' => 'required',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.recipient'),
-				],
-			])
-			->add('address', 'text', [
-				'label' => trans('payment.address'),
-				'rules' => 'required',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.address'),
-				],
-			])
-			->add('zip', 'text', [
-				'label' => trans('payment.zip'),
-				'rules' => 'required',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.zip'),
-				],
-			])
-			->add('city', 'text', [
-				'label' => trans('payment.city'),
-				'rules' => 'required',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.city'),
-				],
-			])
+			]);
+
+			if (empty($coupon) || $coupon->kind !== Coupon::KIND_PARTICIPANT) {
+				// Personal data
+				$this->add('recipient', 'text', [
+					'label' => trans('payment.recipient'),
+					'rules' => 'required',
+					'attr'  => [
+						'class' => 'input',
+						'placeholder' => trans('payment.recipient'),
+					],
+				])
+				->add('address', 'text', [
+					'label' => trans('payment.address'),
+					'rules' => 'required',
+					'attr'  => [
+						'class' => 'input',
+						'placeholder' => trans('payment.address'),
+					],
+				])
+				->add('zip', 'text', [
+					'label' => trans('payment.zip'),
+					'rules' => 'required',
+					'attr'  => [
+						'class' => 'input',
+						'placeholder' => trans('payment.zip'),
+					],
+				])
+				->add('city', 'text', [
+					'label' => trans('payment.city'),
+					'rules' => 'required',
+					'attr'  => [
+						'class' => 'input',
+						'placeholder' => trans('payment.city'),
+					],
+				])
+				->add('phone', 'text', [
+					'label' => trans('payment.phone'),
+					'rules' => 'required',
+					'attr'  => [
+						'class' => 'input',
+						'placeholder' => trans('payment.phone'),
+					],
+				]);
+			}
 
 			// Invoice
-
-			->add('invoice', 'checkbox', [
+			$this->add('invoice', 'checkbox', [
 				'label' => trans('payment.invoice'),
 				'attr' => [
 					'class' => 'checkbox',

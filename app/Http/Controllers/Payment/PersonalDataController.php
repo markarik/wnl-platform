@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Http\Forms\AddressForm;
 use App\Http\Forms\SignUpForm;
 use App\Models\Coupon;
 use App\Models\Product;
@@ -51,9 +52,13 @@ class PersonalDataController extends Controller
 			'method' => 'POST',
 			'url'    => route('payment-personal-data-post'),
 			'model'  => Auth::user(),
-		], ['coupon' => $coupon])->modify('password', 'password', [
+		])->modify('password', 'password', [
 			'value' => '',
 		]);
+
+		if (empty($coupon) || $coupon->kind !== Coupon::KIND_PARTICIPANT) {
+			$form->compose(AddressForm::class);
+		}
 
 		session()->flash('url.intended', route('payment-personal-data'));
 
@@ -71,10 +76,14 @@ class PersonalDataController extends Controller
 	public function handle(Request $request)
 	{
 		$user = Auth::user();
-
-		$form = $this->form(SignUpForm::class, [], [
-			'coupon' => $this->readCoupon($user)
+		$coupon = $this->readCoupon($user);
+		$form = $this->form(SignUpForm::class, [
+			'coupon' => $coupon,
 		]);
+
+		if (empty($coupon) || $coupon->kind !== Coupon::KIND_PARTICIPANT) {
+			$form->compose(AddressForm::class);
+		}
 
 		$validator = $this->getIdentityNumberValidator($request->get('identity_number_type'));
 		if (!is_object($validator)) {

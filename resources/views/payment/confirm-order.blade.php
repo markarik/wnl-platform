@@ -67,12 +67,13 @@
 						</ul>
 					</div>
 				</section>
-			@endif
+			@else
 			<section>
 				<p>
 					@lang('payment.confirm-no-album-info')
 				</p>
 			</section>
+			@endif
 			@if($user->invoice)
 				<section class="subsection">
 					<div class="box">

@@ -114,18 +114,12 @@ class Order extends Model
 		$leftFromPaid = $this->paid_amount;
 		$nextPayment = null;
 
-		$orderInstalments = $this->orderInstalments()->get();
-
-		if ($orderInstalments->count() > 0) {
-			$orderInstalments = $this->generatePaymentSchedule();
-		}
-
-		$paymentDates = $orderInstalments
-			->map(function (OrderInstalment $orderInstalment) {
-				return $orderInstalment->due_date;
-			})
-			->toArray();
-
+		// TODO: https://bethink.atlassian.net/browse/PLAT-641
+		$paymentDates = [
+			$this->created_at->addDays(7),
+			Carbon::createFromDate(2018, 11, 20),
+			Carbon::createFromDate(2018, 12, 20),
+		];
 		$toDistribute = $this->total_with_coupon;
 		$allPaid = $this->paid_amount >= $this->total_with_coupon;
 

@@ -81,7 +81,7 @@ export default {
 		displayAlbumLink() {
 			const prolongationOrders = this.orders.filter(order =>
 				order.product.slug === 'wnl-online' &&
-				order.coupon.value === 50 &&
+				order.coupon && order.coupon.value === 50 &&
 				order.coupon.type === 'percentage' &&
 				!order.canceled
 			);

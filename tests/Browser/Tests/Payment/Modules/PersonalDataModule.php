@@ -6,10 +6,7 @@ namespace Tests\Browser\Tests\Payment\Modules;
 
 use App\Models\Order;
 use App\Models\User;
-use Faker\Generator;
-use Faker\Provider\pl_PL\Person;
 use Tests\BethinkBrowser;
-use Tests\Browser\Pages\LoginModal;
 use Tests\Browser\Pages\Payment\PersonalDataPage;
 use Tests\Browser\Tests\Payment\SignsUpUsers;
 use PHPUnit\Framework\Assert;
@@ -18,37 +15,20 @@ class PersonalDataModule
 {
 	use SignsUpUsers;
 
-	public function signUpNoInvoice(BethinkBrowser $browser)
+	public function submitNoInvoice(BethinkBrowser $browser)
 	{
 		$this->navigate($browser);
 
 		$browser->on(new PersonalDataPage());
-		$this->signUp($browser, false);
+		$this->submit($browser, false);
 	}
 
-	public function signUpCustomInvoice(BethinkBrowser $browser)
+	public function submitCustomInvoice(BethinkBrowser $browser)
 	{
 		$this->navigate($browser);
 
 		$browser->on(new PersonalDataPage());
-		$this->signUp($browser, true);
-	}
-
-	public function logInUsingModal(BethinkBrowser $browser)
-	{
-		if (!empty($browser->user)) return __CLASS__;
-
-		$faker = new Generator();
-		$faker->addProvider(new Person($faker));
-		$user = factory(\App\Models\User::class)->create();
-		$browser->user = $user;
-
-		$this->navigate($browser);
-		$browser->on(new PersonalDataPage());
-		$browser
-			->click('@login')
-			->on(new LoginModal)
-			->loginAsUser($user->email, 'secret');
+		$this->submit($browser, true);
 	}
 
 	protected function navigate(BethinkBrowser $browser)
@@ -56,22 +36,24 @@ class PersonalDataModule
 		// Check if personal-data is current page, if not,
 		// navigate to it using a product.
 		if (!str_is('*personal-data*', $browser->getCurrentPath())) {
-			$browser->visit('payment/personal-data/wnl-online');
+			$browser->visit('payment/personal-data');
 		}
+
+		$browser->on(new PersonalDataPage());
 
 		$this->assertCart($browser);
 	}
 
-	protected function signUp(BethinkBrowser $browser, $invoiceFlag)
+	protected function submit(BethinkBrowser $browser, $invoiceFlag)
 	{
-		$userData = $this->generateFormData();
-		$this->fillInForm($userData, $browser, $invoiceFlag, !$this->isEdit($browser));
+		$userData = $this->generatePersonalFormData();
+		$this->fillInPersonalDataForm($userData, $browser, $invoiceFlag);
 		$browser->userData = $userData;
 
 		$browser->xpathClick('.//button[@class="button is-primary"]');
 
 		if (!$this->isEdit($browser)) {
-			$browser->user = User::where('email', $userData['email'])->first();
+			$browser->user = User::where('email', $browser->accountData['email'])->first();
 			$browser->order = $browser->user->orders()->recent();
 			Assert::assertTrue($browser->user instanceof User);
 			Assert::assertTrue($browser->order instanceof Order);

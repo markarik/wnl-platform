@@ -35,6 +35,7 @@ class UserModule
 			'city'       => $faker->city,
 		]);
 		$browser->user = $user;
+		$browser->accountData = $user;
 
 		$browser
 			->visit(new Login())

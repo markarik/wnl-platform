@@ -24,13 +24,33 @@ use Faker\Provider\pl_PL\Person;
 trait SignsUpUsers
 {
 	/**
-	 * Generate user data needed for filling in the sign-up form
+	 * Generate user account data needed for filling in the sign-up form
 	 *
 	 * @param Factory $faker
 	 *
 	 * @return array
 	 */
-	protected function generateFormData()
+	protected function generateAccountFormData()
+	{
+		$faker = new Generator();
+		$faker->addProvider(new Internet($faker));
+
+		$data = [
+			'password' => $faker->password,
+			'email'    => str_random() . '@bethink.pl',
+		];
+
+		return $data;
+	}
+
+	/**
+	 * Generate user personal data needed for filling in the sign-up form
+	 *
+	 * @param Factory $faker
+	 *
+	 * @return array
+	 */
+	protected function generatePersonalFormData()
 	{
 		$faker = new Generator();
 		$faker->addProvider(new Person($faker));
@@ -40,8 +60,6 @@ trait SignsUpUsers
 		$faker->addProvider(new Company($faker));
 
 		$data = [
-			'password'         => $faker->password,
-			'email'            => str_random() . '@bethink.pl',
 			'firstName'        => $faker->firstName,
 			'lastName'         => $faker->lastName,
 			'address'          => $faker->streetAddress,
@@ -60,6 +78,7 @@ trait SignsUpUsers
 		return $data;
 	}
 
+
 	/**
 	 * Fill in sign-up form
 	 *
@@ -68,14 +87,22 @@ trait SignsUpUsers
 	 * @param bool $invoice
 	 * @param bool $password
 	 */
-	protected function fillInForm($user, $browser, $invoice = false, $password = true)
+	protected function fillInAccountForm($user, $browser)
 	{
-		$browser->type('email', $user['email']);
-		if ($password) {
-			$browser
-				->type('password', $user['password'])
-				->type('password_confirmation', $user['password']);
-		}
+		$browser->type('email', $user['email'])
+			->type('password', $user['password']);
+	}
+
+	/**
+	 * Fill in personal-data form
+	 *
+	 * @param $user
+	 * @param $browser
+	 * @param bool $invoice
+	 * @param bool $password
+	 */
+	protected function fillInPersonalDataForm($user, $browser, $invoice = false)
+	{
 		$browser->type('phone', $user['phoneNumber'])
 			->type('first_name', $user['firstName'])
 			->type('last_name', $user['lastName'])
@@ -95,8 +122,5 @@ trait SignsUpUsers
 				->type('invoice_city', $user['invoice_city'])
 				->type('invoice_country', $user['invoice_country']);
 		}
-
-		$browser->check('consent_newsletter');
-		$browser->check('consent_terms');
 	}
 }

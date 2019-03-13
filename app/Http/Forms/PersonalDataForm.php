@@ -3,7 +3,6 @@
 namespace App\Http\Forms;
 
 use Kris\LaravelFormBuilder\Form;
-use Illuminate\Contracts\Validation\Validator;
 use App\Rules\ValidatePassportNumber;
 use App\Rules\ValidatePersonalIdentityNumber;
 
@@ -183,14 +182,6 @@ class PersonalDataForm extends Form
 			]);
 	}
 
-
-	/**
-	 * Validate the form.
-	 *
-	 * @param array $validationRules
-	 * @param array $messages
-	 * @return Validator
-	 */
 	public function validate($validationRules = [], $messages = [])
 	{
 		$validator = $this->getIdentityNumberValidator($this->getRequest()->get('identity_number_type'));

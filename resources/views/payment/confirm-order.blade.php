@@ -40,8 +40,8 @@
 			</div>
 		</section>
 
-		@if($user->invoice || empty($order->coupon) || $order->coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
-			@if (empty($order->coupon) || $order->coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
+		@if($user->invoice || $order->has_shipment)
+			@if ($order->has_shipment)
 				<section class="subsection">
 					<div class="box">
 						<p class="title">@lang('payment.confirm-personal-data-heading')</p>

@@ -26,7 +26,7 @@ Route::group(['namespace' => 'Payment', 'prefix' => 'payment', /*'middleware' =>
 	Route::post('voucher', 'VoucherController@handle')->name('payment-voucher-post');
 
 	Route::group(['middleware' => 'payment-auth'], function () {
-		Route::get('personal-data/{product?}', 'PersonalDataController@index')->name('payment-personal-data');
+		Route::get('personal-data/{productSlug?}', 'PersonalDataController@index')->name('payment-personal-data');
 		Route::post('personal-data', 'PersonalDataController@handle')->name('payment-personal-data-post');
 
 		Route::get('confirm-order', 'ConfirmOrderController@index')->name('payment-confirm-order');

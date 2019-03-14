@@ -2,10 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Http\Controllers\Api\PrivateApi\CoursesApiController;
 use App\Models\Order;
 use App\Models\User;
-use App\Models\UserLesson;
 use App\Models\UserSubscription;
 use Illuminate\Bus\Queueable;
 use Lib\Invoice\Invoice;
@@ -96,7 +94,7 @@ class OrderPaid implements ShouldQueue
 			: $product->access_start;
 		$accessEnd = max([$subscriptionAccessEnd, $product->access_end]);
 
-		$subscription = UserSubscription::updateOrCreate(
+		UserSubscription::updateOrCreate(
 			['user_id' => $user->id],
 			['access_start' => $accessStart, 'access_end' => $accessEnd]
 		);

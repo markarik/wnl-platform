@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use ScoutEngines\Elasticsearch\Searchable;
 
 class Order extends Model
@@ -112,11 +113,11 @@ class Order extends Model
 		if ($this->paid_amount >= $this->total_with_coupon) {
 			return [
 				'allPaid'     => true,
-				'instalments' => [],
+				'instalments' => Collection::make(),
 			];
 		}
 
-		$orderInstalments = $this->orderInstalments()->get();
+		$orderInstalments = $this->orderInstalments;
 
 		if ($orderInstalments->count() === 0) {
 			$orderInstalments = $this->generatePaymentSchedule();
@@ -220,9 +221,14 @@ class Order extends Model
 	public function paidAmountSufficient()
 	{
 		if ($this->method === 'instalments') {
+			/** @var Collection $instalments */
+			$instalments = $this->instalments['instalments'];
+			/** @var OrderInstalment $firstInstalment */
+			$firstInstalment = $instalments->get(0);
+
 			return
 				$this->instalments['allPaid'] ||
-				$this->instalments['instalments'][0]['amount'] <= $this->paid_amount;
+				$firstInstalment->amount <= $this->paid_amount;
 		}
 
 		return $this->paid_amount >= $this->total_with_coupon;

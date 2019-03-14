@@ -4,6 +4,7 @@
 namespace Tests\Browser\Tests\Payment\Modules;
 
 use App;
+use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert;
 use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Course\Components\Navigation;
@@ -61,7 +62,11 @@ class MyOrdersModule
 	{
 		$browser->order = $browser->order->fresh();
 		if ($browser->order->method === 'instalments') {
-			$browser->order->paid_amount = $browser->order->instalments['instalments'][0]['left'];
+			/** @var Collection $instalments */
+			$instalments = $browser->order->instalments['instalments'];
+			/** @var App\Models\OrderInstalment $firstInstalment */
+			$firstInstalment = $instalments->get(0);
+			$browser->order->paid_amount = $firstInstalment->left_amount;
 			$browser->order->save();
 		}
 

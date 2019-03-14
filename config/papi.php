@@ -51,6 +51,7 @@ return [
 		'user-personal-data'      => 'personal_data',
 		'flashcards'              => 'flashcards',
 		'flashcards-sets'         => 'flashcards_sets',
+		'quiz-sets'               => 'quiz_sets',
 		'site-wide-messages'      => 'site_wide_messages',
 		'user-flashcards-results' => 'user_flashcards_results',
 		'discussions'             => 'discussions',

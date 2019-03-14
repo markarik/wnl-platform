@@ -3,10 +3,11 @@
 /vendor
 /.idea
 /.vscode
+!.env.travis
 .env
-.env.backup
-.env.dusk.*
+.env.*
 env*/
+**/*.swp
 public/css/*
 public/js/*
 public/fonts/*

@@ -147,12 +147,6 @@ class Order extends Model
 		$valueToDistribute = $this->total_with_coupon;
 		$paidToDistribute = $this->paid_amount;
 
-		\Log::debug('Generating payment schedule for order', [
-			'order_id' => $this->id,
-			'value_to_distribute' => $valueToDistribute,
-			'paid_to_distribute' => $paidToDistribute
-		]);
-
 		return $this->product->instalments()
 			->get()
 			->map(function (ProductInstalment $instalment) use (&$paidToDistribute, &$valueToDistribute) {
@@ -173,14 +167,6 @@ class Order extends Model
 					$paidToDistribute = 0;
 				}
 
-				\Log::debug('Creating or updating order instalment', [
-					'order_id' => $this->id,
-					'due_date' => $instalment->getDueDate($this),
-					'amount' => $amount,
-					'paid_amount' => $paidAmount,
-					'order_number' => $orderNumber,
-				]);
-
 				/** @var OrderInstalment $orderInstalment */
 				$orderInstalment = $this->orderInstalments()->firstOrNew(['order_number' => $orderNumber]);
 				$orderInstalment->due_date = $instalment->getDueDate($this);
@@ -195,7 +181,6 @@ class Order extends Model
 	public function generateAndSavePaymentSchedule()
 	{
 		return $this->generatePaymentSchedule()->each(function (OrderInstalment $orderInstalment) {
-			\Log::debug('Saving order instalment', $orderInstalment->toArray());
 			$orderInstalment->save();
 		});
 	}

@@ -64,7 +64,10 @@ $factory->define(App\Models\UserLesson::class, function (Faker\Generator $faker)
 
 $factory->define(App\Models\QuizSet::class, function (Faker\Generator $faker) {
 	return [
-		'name' => $faker->name,
+		'lesson_id' => function () {
+			return factory(App\Models\Lesson::class)->create()->id;
+		},
+		'name'       => $faker->name,
 		'created_at' => $faker->dateTime,
 		'updated_at' => $faker->dateTime,
 	];

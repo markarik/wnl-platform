@@ -70,42 +70,44 @@
 		</section>
 
 		<section id="personal-data" class="section">
-			<div class="form-header has-text-centered">
-				<h2 class="title">@lang('payment.personal-data-heading')</h2>
-				<p class="subtitle">@lang('payment.personal-data-lead')</p>
-			</div>
-
-			<div class="form-group">
-				<div class="control">
-					{!! form_label($form->recipient) !!}
-					{!! form_widget($form->recipient) !!}
-					{!! form_errors($form->recipient) !!}
+			@if(empty($coupon) || $coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
+				<div class="form-header has-text-centered">
+					<h2 class="title">@lang('payment.personal-data-heading')</h2>
+					<p class="subtitle">@lang('payment.personal-data-lead')</p>
 				</div>
 
-				<div class="control">
-					{!! form_label($form->phone) !!}
-					{!! form_widget($form->phone) !!}
-					{!! form_errors($form->phone) !!}
-				</div>
+				<div class="form-group">
+					<div class="control">
+						{!! form_label($form->recipient) !!}
+						{!! form_widget($form->recipient) !!}
+						{!! form_errors($form->recipient) !!}
+					</div>
 
-				<div class="control">
-					{!! form_label($form->address) !!}
-					{!! form_widget($form->address) !!}
-					{!! form_errors($form->address) !!}
-				</div>
+					<div class="control">
+						{!! form_label($form->phone) !!}
+						{!! form_widget($form->phone) !!}
+						{!! form_errors($form->phone) !!}
+					</div>
 
-				<div class="control">
-					{!! form_label($form->zip) !!}
-					{!! form_widget($form->zip) !!}
-					{!! form_errors($form->zip) !!}
-				</div>
+					<div class="control">
+						{!! form_label($form->address) !!}
+						{!! form_widget($form->address) !!}
+						{!! form_errors($form->address) !!}
+					</div>
 
-				<div class="control">
-					{!! form_label($form->city) !!}
-					{!! form_widget($form->city) !!}
-					{!! form_errors($form->city) !!}
+					<div class="control">
+						{!! form_label($form->zip) !!}
+						{!! form_widget($form->zip) !!}
+						{!! form_errors($form->zip) !!}
+					</div>
+
+					<div class="control">
+						{!! form_label($form->city) !!}
+						{!! form_widget($form->city) !!}
+						{!! form_errors($form->city) !!}
+					</div>
 				</div>
-			</div>
+			@endif
 
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.personal-data-invoice-data-heading')</h2>

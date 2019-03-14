@@ -2,12 +2,14 @@
 
 namespace App\Http\Forms;
 
+use App\Models\Coupon;
 use Kris\LaravelFormBuilder\Form;
 
 class SignUpForm extends Form
 {
 	public function buildForm()
 	{
+		$coupon = $this->getData('coupon');
 		$this
 			->add('email', 'email', [
 				'label' => trans('payment.email'),

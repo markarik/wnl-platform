@@ -20,15 +20,6 @@ class PersonalDataForm extends Form
 			($personalData->personal_identity_number || $personalData->identity_card_number || $personalData->passport_number);
 
 		$this
-			->add('phone', 'text', [
-				'label' => trans('payment.phone'),
-				'rules' => 'required',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.phone'),
-				],
-			])
-
 			// Identity number
 			->add('identity_number_type', 'choice', [
 				'choices' => [
@@ -72,38 +63,6 @@ class PersonalDataForm extends Form
 					'class' => 'input',
 					'placeholder' => trans('payment.last-name'),
 					'disabled' => $lastNameDisabled,
-				],
-			])
-			->add('recipient', 'text', [
-				'label' => trans('payment.recipient'),
-				'rules' => 'required',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.recipient'),
-				],
-			])
-			->add('address', 'text', [
-				'label' => trans('payment.address'),
-				'rules' => 'required',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.address'),
-				],
-			])
-			->add('zip', 'text', [
-				'label' => trans('payment.zip'),
-				'rules' => 'required',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.zip'),
-				],
-			])
-			->add('city', 'text', [
-				'label' => trans('payment.city'),
-				'rules' => 'required',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.city'),
 				],
 			])
 

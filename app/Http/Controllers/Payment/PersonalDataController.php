@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Http\Forms\AddressForm;
+use App\Http\Forms\SignUpForm;
 use App\Http\Forms\PersonalDataForm;
 use App\Models\Coupon;
 use App\Models\Product;
@@ -34,9 +36,10 @@ class PersonalDataController extends Controller
 			return view('payment.signups-closed', ['product' => $product]);
 		}
 
-		$form = $this->setupForm();
+		$user = Auth::user();
+		$coupon = $this->readCoupon($user);
+		$form = $this->setupForm($coupon, $user);
 
-		$coupon = $this->readCoupon(Auth::user());
 		$productPriceWithCoupon = null;
 
 		return view('payment.personal-data', [
@@ -49,7 +52,9 @@ class PersonalDataController extends Controller
 
 	public function handle(Request $request)
 	{
-		$form = $this->setupForm();
+		$user = Auth::user();
+		$coupon = $this->readCoupon($user);
+		$form = $this->setupForm($coupon, $user);
 
 		if (!$form->isValid()) {
 			Log::notice('Sing up form invalid, redirecting...');
@@ -70,13 +75,17 @@ class PersonalDataController extends Controller
 		return redirect(route('payment-confirm-order'));
 	}
 
-	protected function setupForm() {
-		$user = Auth::user();
+	protected function setupForm($coupon, $user) {
 		$form = $this->form(PersonalDataForm::class, [
 			'method' => 'POST',
 			'url'    => route('payment-personal-data-post'),
 			'model'  => $user,
 		]);
+
+		if (empty($coupon) || $coupon->kind !== Coupon::KIND_PARTICIPANT) {
+			$form->compose(AddressForm::class);
+		}
+
 		return $form;
 	}
 

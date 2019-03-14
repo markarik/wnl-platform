@@ -20,9 +20,9 @@ class Navigation extends BasePage
 
 	public function logoutUser(BethinkBrowser $browser)
 	{
-		$browser->waitUntilMissing('.wnl-overlay');
-		$browser->click('@dropdown_trigger');
-		$browser->click('@logout');
+		$browser->waitUntilMissing('.wnl-overlay')
+			->click('@dropdown_trigger')
+			->click('@logout');
 	}
 
 	public function url()
@@ -30,7 +30,8 @@ class Navigation extends BasePage
 		// navigation doesn't have it's own URL
 	}
 
-	public function assertUserLoggedIn(BethinkBrowser $browser, $userName) {
+	public function assertUserLoggedIn(BethinkBrowser $browser, $userName)
+	{
 		$browser
 			->click('@dropdown_trigger')
 			->assertSeeIn('@dropdown_username', strtoupper($userName));

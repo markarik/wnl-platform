@@ -13,6 +13,7 @@ use Laravel\Dusk\ElementResolver;
  * @property \App\Models\Coupon coupon
  * @property \App\Models\Order order
  * @property \App\Models\StudyBuddy studyBuddy
+ * @property bool payLater
  */
 class BethinkBrowser extends Browser
 {

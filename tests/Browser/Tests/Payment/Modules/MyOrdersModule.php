@@ -4,46 +4,13 @@
 namespace Tests\Browser\Tests\Payment\Modules;
 
 use App;
-use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert;
 use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Course\Components\Navigation;
 
 class MyOrdersModule
 {
-	public function end(BethinkBrowser $browser)
-	{
-		$this->assertOrderPlaced($browser);
-		$this->assertPaid($browser);
-		if (!empty($browser->studyBuddy)) {
-			$this->assertStudyBuddy($browser);
-		}
-	}
-
-	public function studyBuddy(BethinkBrowser $browser)
-	{
-		if (!empty($browser->studyBuddy)) {
-			$this->assertStudyBuddy($browser);
-
-			return;
-		}
-
-		$this->assertOrderPlaced($browser);
-		$this->assertPaid($browser);
-
-		$order = $browser->order;
-		$studyBuddy = $order->studyBuddy;
-		Assert::assertTrue($studyBuddy instanceof App\Models\StudyBuddy);
-
-		$browser->studyBuddy = $studyBuddy;
-		$browser->waitForText($studyBuddy->code, 60);
-
-		$browser
-			->on(new Navigation)
-			->logoutUser();
-	}
-
-	protected function assertOrderPlaced(BethinkBrowser $browser)
+	public function assertOrderPlaced(BethinkBrowser $browser)
 	{
 		$order = $browser->order;
 
@@ -58,39 +25,52 @@ class MyOrdersModule
 		}
 	}
 
-	protected function assertPaid(BethinkBrowser $browser)
+	public function assertPaid(BethinkBrowser $browser)
 	{
-		$browser->order = $browser->order->fresh();
-		if ($browser->order->method === 'instalments') {
-			/** @var Collection $instalments */
-			$instalments = $browser->order->instalments['instalments'];
-			/** @var App\Models\OrderInstalment $firstInstalment */
-			$firstInstalment = $instalments->get(0);
-			$browser->order->paid_amount = $firstInstalment->left_amount;
-			$browser->order->save();
-		}
-
-		if ($browser->order->method === 'transfer') {
-			$browser->order->paid = 1;
-			$browser->order->paid_amount = $browser->order->total_with_coupon;
-			$browser->order->save();
-		}
-
-		$browser->refresh();
 		$browser->waitForText('Wpłacono', 60);
 	}
 
-	protected function assertStudyBuddy(BethinkBrowser $browser)
+	public function assertNotPaid(BethinkBrowser $browser)
+	{
+		$order = $browser->order->fresh();
+		$browser->assertSeeIn('.order[data-order-id="' . $order->id . '"] .current-payment', 'KWOTA DO ZAPŁATY: 1500ZŁ');
+	}
+
+	public function assertInstalmentPaid(BethinkBrowser $browser)
+	{
+		$order = $browser->order->fresh();
+		$browser->assertSeeIn('.order[data-order-id="' . $order->id . '"] .instalment-amount', '750zł / 750zł');
+	}
+
+	public function assertInstalmentNotPaid(BethinkBrowser $browser)
+	{
+		$order = $browser->order->fresh();
+		$browser->assertSeeIn('.order[data-order-id="' . $order->id . '"] .instalment-amount', '0zł / 750zł');
+	}
+
+	public function studyBuddyInitiator(BethinkBrowser $browser)
+	{
+		$order = $browser->order;
+		$studyBuddy = $order->studyBuddy;
+		Assert::assertTrue($studyBuddy instanceof App\Models\StudyBuddy);
+
+		$browser->studyBuddy = $studyBuddy;
+		$browser->waitForText($studyBuddy->code, 60);
+
+		$browser
+			->on(new Navigation)
+			->logoutUser();
+	}
+
+	public function assertStudyBuddyAwaitingRefund(BethinkBrowser $browser)
 	{
 		$studyBuddy = $browser->studyBuddy->fresh();
-		$originalOrder = $studyBuddy->order;
+		Assert::assertEquals('awaiting-refund', $studyBuddy->status, 'Study buddy status is awaiting refund');
+	}
 
-		if ($originalOrder->method === 'instalments') {
-			Assert::assertEquals('refunded', $studyBuddy->status, 'Study buddy status is refunded');
-
-			return;
-		}
-
-		Assert::assertEquals('awaiting-refund', $studyBuddy->status, 'Study buddy status is refunded');
+	public function assertStudyBuddyRefunded(BethinkBrowser $browser)
+	{
+		$studyBuddy = $browser->studyBuddy->fresh();
+		Assert::assertEquals('refunded', $studyBuddy->status, 'Study buddy status is refunded');
 	}
 }

@@ -1,5 +1,5 @@
 <template>
-	<div class="card">
+	<div class="card order" :data-order-id="order.id">
 		<div class="card-content">
 			<div class="media">
 				<div class="media-left">
@@ -128,7 +128,7 @@
 									<td>
 										{{ instalmentDate(instalment.due_date) }}
 									</td>
-									<td>
+									<td class="instalment-amount">
 										{{instalment.amount - instalment.left_amount}}zł / {{instalment.amount}}zł
 									</td>
 								</tr>

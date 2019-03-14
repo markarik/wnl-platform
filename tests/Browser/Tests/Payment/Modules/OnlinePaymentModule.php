@@ -26,10 +26,14 @@ class OnlinePaymentModule
 	{
 		$browser
 			->on(new P24ChooseBank)
-			->click('@ing-logo');
+			->click('@ing-logo')
+			->waitForReload();
 
-		$browser
-			->waitFor('@login-button', 40)
-			->press('@login-button');
+		// On second payment user is already logged in
+		if ($browser->getCurrentPath() === '/pl/login') {
+			$browser
+				->waitFor('@login-button')
+				->press('@login-button');
+		}
 	}
 }

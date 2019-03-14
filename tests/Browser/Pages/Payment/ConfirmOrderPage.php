@@ -35,11 +35,15 @@ class ConfirmOrderPage extends BasePage
 	public function elements()
 	{
 		return [
-			'@online-payment-button' => 'button.p24-submit',
-			'@edit-persona-data'     => '.edit-personal-data a',
-			'@expand-instalments'    => '#expand-instalments',
-			'@instalments-button'    => '#instalments-button',
-			'@cart' => '.cart'
+			'@pay-online-now' => '[data-button="pay-online-now"]',
+			'@pay-online-later' => '[data-button="pay-online-later"]',
+			'@pay-instalments-now' => '[data-button="pay-instalments-now"]',
+			'@pay-instalments-later' => '[data-button="pay-instalments-later"]',
+			'@pay-free' => '[data-button="pay-free"]',
+			'@edit-personal-data' => '.edit-personal-data a',
+			'@expand-instalments' => '#expand-instalments',
+			'@cart' => '.cart',
+			'@p24-ing' => 'a[data-search="Płać z ING 112"]'
 		];
 	}
 }

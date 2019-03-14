@@ -95,7 +95,7 @@
 					{!! csrf_field() !!}
 					<input type="hidden" name="method" value="free"/>
 
-					<button class="button is-primary">
+					<button class="button is-primary" data-button="pay-free">
 						@lang('payment.confirm-method-free-button')
 					</button>
 				</form>
@@ -127,7 +127,7 @@
 							<input type="hidden" name="p24_encoding" value="UTF-8"/>
 						</form>
 						<button class="button is-primary p24-submit" data-id="full_payment_p24_form"
-						id="p24-submit-full-payment"
+						data-button="pay-online-now"
 						data-payment="online">@lang('payment.confirm-method-online-payment-button')</button>
 					</div>
 					 <div class="column">
@@ -135,7 +135,7 @@
 							{!! csrf_field() !!}
 							<input type="hidden" name="method" value="online"/>
 
-							<button type="submit" class="button">@lang('payment.confirm-deferred-payment-button')</button>
+							<button type="submit" class="button" data-button="pay-online-later">@lang('payment.confirm-deferred-payment-button')</button>
 						</form>
 					</div>
 				</div>
@@ -207,7 +207,7 @@
 										<input type="hidden" name="p24_sign" value="{{ $instalmentsChecksum }}"/>
 										<input type="hidden" name="p24_encoding" value="UTF-8"/>
 									</form>
-									<button class="button is-primary p24-submit" data-id="instalments_p24_form"
+									<button class="button is-primary p24-submit" data-id="instalments_p24_form" data-button="pay-instalments-now"
 									 data-payment="instalments">@lang('payment.confirm-method-instalments-online-button')</button>
 								</div>
 
@@ -215,7 +215,7 @@
 									<form action="{{route('payment-confirm-order-post')}}" method="post">
 										{!! csrf_field() !!}
 										<input type="hidden" name="method" value="instalments"/>
-										<button type="submit" class="button margin top" id="instalments-button">
+										<button type="submit" class="button margin top" data-button="pay-instalments-later">
 											@lang('payment.confirm-method-instalments-button')
 										</button>
 									</form>

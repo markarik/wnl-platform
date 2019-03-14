@@ -21,11 +21,11 @@ class PersonalDataController extends Controller
 
 	public function index(Request $request)
 	{
-		if (Session::has('product')) {
-			$product = Session::get('product');
+		if (Session::has('productId')) {
+			$product = Product::find(Session::get('productId'));
 		} else {
 			$product = Product::slug($request->route('productSlug') ?? 'wnl-online');
-			Session::put('product', $product);
+			Session::put('productId', $product->id);
 		}
 
 		if (!$product instanceof Product ||
@@ -93,7 +93,7 @@ class PersonalDataController extends Controller
 	{
 		\Log::notice('Creating order');
 		$order = $user->orders()->create([
-			'product_id' => Session::get('product')->id,
+			'product_id' => Session::get('productId'),
 			'session_id' => str_random(32),
 			'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 		]);
@@ -205,7 +205,7 @@ class PersonalDataController extends Controller
 		$user->orders()
 			->recent()
 			->update([
-				'product_id' => Session::get('product')->id,
+				'product_id' => Session::get('productId'),
 				'session_id' => str_random(32),
 				'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 			]);

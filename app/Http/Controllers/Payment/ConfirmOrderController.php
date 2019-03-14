@@ -61,7 +61,7 @@ class ConfirmOrderController extends Controller
 		$order->method = $request->input('method');
 		$order->save();
 
-		Session::forget(['coupon', 'product', 'orderId']);
+		Session::forget(['coupon', 'productId', 'orderId']);
 
 		$amount = (int)$order->total_with_coupon * 100;
 		return redirect($this->getReturnUrl($amount));

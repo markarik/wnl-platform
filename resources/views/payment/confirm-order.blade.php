@@ -40,7 +40,7 @@
 			</div>
 		</section>
 
-		@if($user->invoice || $order->has_shipment)
+		@if($order->has_shipment)
 			@if ($order->has_shipment)
 				<section class="subsection">
 					<div class="box">
@@ -74,26 +74,27 @@
 					</p>
 				</section>
 			@endif
-			@if($user->invoice)
-				<section class="subsection">
-					<div class="box">
-						<p class="title">@lang('payment.personal-data-invoice-heading')</p>
-						<ul>
-							<li><strong>{{ $user->invoice_name }}</strong></li>
-							<li>{{ $user->invoice_address }}</li>
-							<li>{{ $user->invoice_zip }}, {{ $user->invoice_city }}</li>
-							<li>{{ $user->invoice_country }}</li>
-						</ul>
-					</div>
-				</section>
-			@endif
+		@endif
+
+		@if($user->invoice)
+			<section class="subsection">
+				<div class="box">
+					<p class="title">@lang('payment.personal-data-invoice-heading')</p>
+					<ul>
+						<li><strong>{{ $user->invoice_name }}</strong></li>
+						<li>{{ $user->invoice_address }}</li>
+						<li>{{ $user->invoice_zip }}, {{ $user->invoice_city }}</li>
+						<li>{{ $user->invoice_country }}</li>
+					</ul>
+				</div>
+			</section>
+		@endif
 
 		<section class="subsection">
 			<p class="has-text-centered edit-personal-data">
 				<a href="{{ route('payment-personal-data') }}">@lang('payment.confirm-change-order')</a>
 			</p>
 		</section>
-		@endif
 		@if($order->coupon && (int) $order->total_with_coupon === 0)
 			<section class="subsection has-text-centered margin top">
 				<p class="subtitle">

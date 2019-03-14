@@ -143,6 +143,7 @@ class PersonalDataController extends Controller
 	protected function updateAccount($user, $request, $form)
 	{
 		$userData = [
+			'invoice' => (bool) $request->invoice,
 			'invoice_name' => $request->invoice_name ?? $user->invoice_name,
 			'invoice_nip' => $request->invoice_nip ?? $user->invoice_nip,
 			'invoice_address' => $request->invoice_address ?? $user->invoice_address,

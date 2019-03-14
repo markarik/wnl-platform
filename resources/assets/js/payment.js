@@ -19,6 +19,10 @@ $(function () {
 		lastNameInput = $('#last_name'),
 		recipientInput = $('#recipient');
 
+	if(toggleCheckbox.find('input')[0].checked) {
+		invoiceForm.toggleClass('show').toggleClass('hidden');
+	}
+
 	lastNameInput.on('change', () => {
 		if (recipientInput.val() === '') {
 			recipientInput.val(`${firstNameInput.val()} ${lastNameInput.val()}`);

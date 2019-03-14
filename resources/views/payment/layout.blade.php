@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('layouts.checkout')
 
 @section('scripts')
 	<script src="{{ mix('js/payment.js') }}"></script>

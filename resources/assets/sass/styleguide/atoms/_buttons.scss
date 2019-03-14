@@ -1,0 +1,10 @@
+.a-button {
+  border-radius: 100px;
+  padding: $space-s $space-m;
+  text-transform: uppercase;
+  font-family: $font-family-rubik;
+
+  &.-primary {
+    background: $blue-chill;
+  }
+}

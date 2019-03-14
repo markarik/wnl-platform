@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Rubik'), local('Rubik'), url(../../../fonts/rubik/rubik-v8-latin_latin-ext-700.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Rubik Bold'), local('Rubik-Bold'), url(../../../fonts/rubik/rubik-v8-latin_latin-ext-700.woff2) format('woff2');
+}
+
+$font-family-rubik: 'Rubik';
+
+.-underline {
+  text-decoration: underline;
+}

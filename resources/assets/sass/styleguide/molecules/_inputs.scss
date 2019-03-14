@@ -1,0 +1,18 @@
+.m-input {
+  display: flex;
+  flex-direction: column;
+  font-size: $font-size-minus;
+  font-family: $font-family-rubik;
+
+  &__label {
+    color: $ebony-clay;
+    margin-bottom: $space-xxs;
+  }
+
+  &__input {
+    background-color: $white;
+    border: 1px solid $mischka;
+    border-radius: 2px;
+    color: $storm-gray;
+  }
+}

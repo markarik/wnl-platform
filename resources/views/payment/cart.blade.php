@@ -1,22 +1,30 @@
 
-<div class="card column cart{{!empty($coupon) ? ' has-coupon' : ''}}">
+<div class="cart o-cart{{!empty($coupon) ? ' has-coupon' : ''}}">
 	@if(!empty($productName))
-		<header class="card-header">
-			<h3 class="card-header-title">@lang('payment.cart-header')</h3>
+		<header class="o-cart__headline -centeredSpread">
+			<span class="-textBase">@lang('payment.cart-header')</span>
+			<span class="icon -stormGrey">
+				<i class="fa fa-times a-icon -small"></i>
+			</span>
 		</header>
-		<div class="card-content">
-			<p>
-				<h4>{{$productName}}</h4>
+		<section class="o-cart__card -shadowMedium">
+			<img src="{{ asset('/images/lek-product-logo.svg') }}" class="o-cart__card__logo">
+			<p class="o-cart__card__text">
+				<span class="-textBase">{{$productName}}</span>
 				@if (!empty($productAccessEnd))
-					@lang('payment.cart-access-info', ['date' => $productAccessEnd->format('d.m.Y')])
+					<span class="-textMinus2">
+						@lang('payment.cart-access-info', ['date' => $productAccessEnd->format('d.m.Y')])
+					</span>
 				@endif
 			</p>
-			<p>
+		</section>
+		<section class="o-cart__details -stormGrey -textMinus1">
+			<p class="o-cart__details__item -centeredSpread">
 				<span>@lang('payment.cart-shipment-label')</span>
 				<span>@lang('payment.cart-shipment-value')</span>
 			</p>
 			@if(!empty($coupon))
-				<p>
+				<p class="o-cart__details__item -centeredSpread">
 					<span>@lang('payment.cart-coupon-label')</span>
 					<span>
 						-{{$coupon->is_percentage
@@ -24,7 +32,11 @@
 						: trans('payment.voucher-amount', ['value' => $coupon->value])}}
 					</span>
 				</p>
-				<p>
+			@endif
+		</section>
+		<section class="-catalinaBlue -textBase">
+			@if(!empty($coupon))
+				<p class="-centeredSpread">
 					<span>@lang('payment.cart-price-label')</span>
 					<span class="strikethrough">
 						@lang('payment.cart-price-value', ['value' => $productPrice])
@@ -32,10 +44,12 @@
 					<span>@lang('payment.cart-price-value', ['value' => $productPriceWithCoupon])</span>
 				</p>
 			@else
-				<span>@lang('payment.cart-price-label')</span>
-				<span>@lang('payment.cart-price-value', ['value' => $productPrice])</span>
+				<p class="-centeredSpread">
+					<span>@lang('payment.cart-price-label')</span>
+					<span>@lang('payment.cart-price-value', ['value' => $productPrice])</span>
+				</p>
 			@endif
-		</div>
+		</section>
 	@else
 		<span>@lang('payment.cart-empty')</span>
 	@endif

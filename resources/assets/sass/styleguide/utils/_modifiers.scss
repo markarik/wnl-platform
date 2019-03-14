@@ -1,0 +1,22 @@
+.-centeredSpread {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.-layoutColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.-textUnderline {
+  text-decoration: underline;
+}
+
+.-textBold {
+  font-weight: 700;
+}
+
+.-textUppercase {
+  text-transform: uppercase;
+}

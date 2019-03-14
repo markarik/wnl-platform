@@ -2,6 +2,8 @@
 @import 'settings/spacings';
 @import 'settings/typography';
 @import 'settings/fonts';
+@import 'settings/layout';
+@import 'settings/shadows';
 
 @import 'atoms/buttons';
 @import 'atoms/icons';
@@ -10,3 +12,6 @@
 
 @import 'organisms/navigation';
 @import 'organisms/footer';
+@import 'organisms/cart';
+
+@import 'utils/modifiers';

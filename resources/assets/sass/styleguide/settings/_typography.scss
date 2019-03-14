@@ -1,11 +1,11 @@
 $font-size-base: 16px;
 $line-height-base: 26px;
 
-$font-size-minus: 14px;
-$line-height-minus: 18px;
+$font-size-minus-1: 14px;
+$line-height-minus-1: 18px;
 
-$font-size-minus-1: 12px;
-$line-height-minus-1: 16px;
+$font-size-minus-2: 12px;
+$line-height-minus-2: 16px;
 
 $font-size-plus-1: 18px;
 $line-height-plus-1: 26px;
@@ -30,3 +30,18 @@ $line-height-plus-7: 68px;
 
 $font-size-plus-8: 84px;
 $line-height-plus-8: 98px;
+
+.-textBase {
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+}
+
+.-textMinus1 {
+  font-size: $font-size-minus-1;
+  line-height: $line-height-minus-1;
+}
+
+.-textMinus2 {
+  font-size: $font-size-minus-2;
+  line-height: $line-height-minus-2;
+}

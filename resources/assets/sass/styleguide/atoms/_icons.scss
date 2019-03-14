@@ -1,20 +1,39 @@
+$icon-xs: 16px;
+$icon-s: 24px;
+$icon-m: 32px;
+$icon-l: 48px;
+$icon-xl: 64px;
+
 .a-icon {
   &.-x-large {
-    font-size: 64px;
+    font-size: $icon-xl;
   }
 
   &.-large {
-    font-size: 48px;
+    font-size: $icon-l;
   }
+
   &.-medium {
-    font-size: $font-size-plus-5;
+    font-size: $icon-m;
+
+    &.-touchable {
+      padding: #{$min-touchable-size - $icon-m / 2}
+    }
   }
 
   &.-small {
-    font-size: $font-size-plus-3;
+    font-size: $icon-s;
+
+    &.-touchable {
+      padding: #{$min-touchable-size - $icon-s / 2}
+    }
   }
 
   &.-x-small {
-    font-size: $font-size-base;
+    font-size: $icon-xs;
+
+    &.-touchable {
+      padding: #{$min-touchable-size - $icon-xs / 2}
+    }
   }
 }

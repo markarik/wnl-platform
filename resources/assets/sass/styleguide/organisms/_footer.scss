@@ -4,8 +4,9 @@
   margin-top: $space-l;
   display: flex;
   flex-direction: column;
-  font-size: $font-size-minus;
-  line-height: $line-height-minus;
+  font-size: $font-size-minus-1;
+  line-height: $line-height-minus-1;
+  font-family: $font-family-rubik;
 
   &__block {
     padding: $space-m 0;

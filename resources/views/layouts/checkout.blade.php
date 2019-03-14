@@ -41,7 +41,7 @@
 
 					<div class="nav-right">
 						<div class="nav-item">
-							<span class="icon has-text-info -storm-grey">
+							<span class="icon -stormGrey">
 								<i class="fa fa-shopping-cart a-icon -small"></i>
 							</span>
 						</div>
@@ -55,13 +55,13 @@
 					<span>
 						Bezpieczna transakcja realizowana przez Przelewy24
 					</span>
-					<span class="icon has-text-info -mischka">
+					<span class="icon -mischka">
 						<i class="fa fa-shield a-icon -medium"></i>
 					</span>
 				</p>
 				<p class="o-footer__block">
 					<span>
-						W razie problemów napisz do nas na Messengerze lub wyślij maila na adres: <a href="mailto:info@wiecejnizlek.pl" class="-white -underline">info@wiecejnizlek.pl</a>
+						W razie problemów napisz do nas na Messengerze lub wyślij maila na adres: <a href="mailto:info@wiecejnizlek.pl" class="-white -textUnderline">info@wiecejnizlek.pl</a>
 					</span>
 				</p>
 			</footer>

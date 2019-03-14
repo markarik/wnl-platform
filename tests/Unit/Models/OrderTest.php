@@ -7,6 +7,7 @@ use App\Models\OrderInstalment;
 use App\Models\Product;
 use App\Models\ProductInstalment;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 class OrderTest extends TestCase
@@ -16,7 +17,7 @@ class OrderTest extends TestCase
 
 		$this->assertEquals([
 			'allPaid' => true,
-			'instalments' => []
+			'instalments' => Collection::make()
 		], $order->instalments);
 	}
 
@@ -36,15 +37,16 @@ class OrderTest extends TestCase
 			factory(OrderInstalment::create(array_merge($orderInstalment, ['order_id' => $order->id])));
 		}
 
+		/** @var Collection $instalments */
 		$instalments = $order->instalments['instalments'];
 		$this->assertCount(3, $instalments);
 
-		for ($i = 0; $i < count($instalments); $i++) {
+		for ($i = 0; $i < $instalments->count(); $i++) {
 			$this->assertInstalmentData(
 				$expectedInstalments[$i]['due_date'],
 				$expectedInstalments[$i]['amount'],
 				$expectedInstalments[$i]['left'],
-				$instalments[$i]
+				$instalments->get($i)
 			);
 		}
 

@@ -117,11 +117,7 @@ class Order extends Model
 			];
 		}
 
-		$orderInstalments = $this->orderInstalments;
-
-		if ($orderInstalments->count() === 0) {
-			$orderInstalments = $this->generatePaymentSchedule();
-		}
+		$orderInstalments = $this->generateAndSavePaymentSchedule();
 
 		$nextPayment = $orderInstalments
 			->sort(function (OrderInstalment $a, OrderInstalment $b) {
@@ -151,6 +147,12 @@ class Order extends Model
 		$valueToDistribute = $this->total_with_coupon;
 		$paidToDistribute = $this->paid_amount;
 
+		\Log::debug('Generating payment schedule for order', [
+			'order_id' => $this->id,
+			'value_to_distribute' => $valueToDistribute,
+			'paid_to_distribute' => $paidToDistribute
+		]);
+
 		return $this->product->instalments()
 			->get()
 			->map(function (ProductInstalment $instalment) use (&$paidToDistribute, &$valueToDistribute) {
@@ -171,23 +173,29 @@ class Order extends Model
 					$paidToDistribute = 0;
 				}
 
-				return $this->orderInstalments()->firstOrNew(
-					[
-						'order_number' => $orderNumber
-					],
-					[
-						'due_date' => $instalment->getDueDate($this),
-						'amount' => $amount,
-						'paid_amount' => $paidAmount,
-						'order_number' => $orderNumber,
-					]
-				);
+				\Log::debug('Creating or updating order instalment', [
+					'order_id' => $this->id,
+					'due_date' => $instalment->getDueDate($this),
+					'amount' => $amount,
+					'paid_amount' => $paidAmount,
+					'order_number' => $orderNumber,
+				]);
+
+				/** @var OrderInstalment $orderInstalment */
+				$orderInstalment = $this->orderInstalments()->firstOrNew(['order_number' => $orderNumber]);
+				$orderInstalment->due_date = $instalment->getDueDate($this);
+				$orderInstalment->amount = $amount;
+				$orderInstalment->paid_amount = $paidAmount;
+				$orderInstalment->order_number = $orderNumber;
+
+				return $orderInstalment;
 			});
 	}
 
 	public function generateAndSavePaymentSchedule()
 	{
-		$this->generatePaymentSchedule()->each(function (OrderInstalment $orderInstalment) {
+		return $this->generatePaymentSchedule()->each(function (OrderInstalment $orderInstalment) {
+			\Log::debug('Saving order instalment', $orderInstalment->toArray());
 			$orderInstalment->save();
 		});
 	}

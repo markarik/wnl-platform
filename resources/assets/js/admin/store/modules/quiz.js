@@ -14,7 +14,7 @@ const state = {
 	question: null,
 	questionId: null,
 	answers: null,
-	slides: null
+	slides: null,
 };
 
 function getSlideshowId(screenId) {

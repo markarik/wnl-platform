@@ -209,6 +209,15 @@ export default {
 					});
 					this.invalidateFlashcardsSetsCache();
 					this.form.originalData = this.form.data();
+
+					if (!this.isEdit) {
+						this.$router.push({
+							name: 'flashcards-sets-edit',
+							params: {
+								flashcardsSetId: response.id
+							}
+						});
+					}
 				})
 				.catch(exception => {
 					this.loading = false;

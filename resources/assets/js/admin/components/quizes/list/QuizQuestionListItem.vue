@@ -8,7 +8,6 @@
 
 <script>
 export default {
-	name: 'QuizQuestionListItem',
 	props: {
 		id: {
 			type: Number,

@@ -31,20 +31,21 @@
 			Pytania
 		</p>
 		<ul class="menu-list">
-			<li><router-link :to="{ name: 'quizes' }">Edytuj pytania zamknięte</router-link></li>
+			<li><router-link :to="{ name: 'quiz-sets'}">Edycja zestawu pytań zamkniętych</router-link></li>
+			<li><router-link :to="{ name: 'quiz' }">Edycja pytań zamkniętych</router-link></li>
+		</ul>
+		<p class="menu-label">
+			Powtórki
+		</p>
+		<ul class="menu-list">
+			<li><router-link :to="{ name: 'flashcards-sets' }">Edycja zestawu pytań otwartych</router-link></li>
+			<li><router-link :to="{ name: 'flashcards' }">Edycja pytań otwartych</router-link></li>
 		</ul>
 		<p class="menu-label">
 			Użytkownicy
 		</p>
 		<ul class="menu-list">
 			<li><router-link :to="{ name: 'users' }">Lista użytkowników</router-link></li>
-		</ul>
-		<p class="menu-label">
-			Powtórki
-		</p>
-		<ul class="menu-list">
-			<li><router-link :to="{ name: 'flashcards-sets' }">Edycja zestawu pytań</router-link></li>
-			<li><router-link :to="{ name: 'flashcards' }">Edycja pytań</router-link></li>
 		</ul>
 		<p class="menu-label">Newsy</p>
 		<ul class="menu-list">

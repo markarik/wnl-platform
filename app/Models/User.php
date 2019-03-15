@@ -375,12 +375,12 @@ class User extends Authenticatable
 		/** @var User $user */
 		$user = static::create($userData);
 
-		$user->profile()->firstOrCreate([
+		$user->profile()->create([
 			'first_name' => $user->first_name,
 			'last_name'  => $user->last_name,
 		]);
 
-		$user->billing()->firstOrCreate([
+		$user->billing()->create([
 			'company_name' => $user->invoice_name,
 			'vat_id'       => $user->invoice_nip,
 			'address'      => $user->invoice_address,

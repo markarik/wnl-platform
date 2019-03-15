@@ -26,9 +26,6 @@ class UserNameNullable extends Migration
 	 */
 	public function down()
 	{
-		Schema::table('users', function (Blueprint $table) {
-			$table->longText('first_name')->change();
-			$table->longText('last_name')->change();
-		});
+		// This change is irreversible.
 	}
 }

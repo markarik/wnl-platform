@@ -2,7 +2,7 @@
 <div class="cart o-cart{{!empty($coupon) ? ' has-coupon' : ''}}">
 	@if(!empty($productName))
 		<header class="o-cart__headline -centeredSpread">
-			<span class="-textBase">@lang('payment.cart-header')</span>
+			<span>@lang('payment.cart-header')</span>
 			<span class="icon -stormGrey">
 				<i class="fa fa-times a-icon -small"></i>
 			</span>
@@ -10,7 +10,7 @@
 		<section class="o-cart__card -shadowMedium">
 			<img src="{{ asset('/images/lek-product-logo.svg') }}" class="o-cart__card__logo">
 			<p class="o-cart__card__text">
-				<span class="-textBase">{{$productName}}</span>
+				<span>{{$productName}}</span>
 				@if (!empty($productAccessEnd))
 					<span class="-textMinus2">
 						@lang('payment.cart-access-info', ['date' => $productAccessEnd->format('d.m.Y')])
@@ -34,7 +34,7 @@
 				</p>
 			@endif
 		</section>
-		<section class="-catalinaBlue -textBase">
+		<section class="-catalinaBlue">
 			@if(!empty($coupon))
 				<p class="-centeredSpread">
 					<span>@lang('payment.cart-price-label')</span>

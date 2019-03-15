@@ -6,7 +6,6 @@
   flex-direction: column;
   font-size: $font-size-minus-1;
   line-height: $line-height-minus-1;
-  font-family: $font-family-rubik;
 
   @media #{$breakpoint-s} {
     flex-direction: row;

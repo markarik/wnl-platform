@@ -20,7 +20,7 @@ $(function () {
 		recipientInput = $('#recipient');
 
 	if(toggleCheckbox.find('input').length && toggleCheckbox.find('input')[0].checked) {
-		invoiceForm.toggleClass('show').toggleClass('hidden');
+		invoiceForm.addClass('show').removeClass('hidden');
 	}
 
 	lastNameInput.on('change', () => {

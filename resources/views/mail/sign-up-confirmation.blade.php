@@ -10,7 +10,7 @@
 	<p style="font-size: 1.1rem; font-weight: bold;">Przydatne linki</p>
 	<ul>
 		<li>
-			<a href="https://platforma.wiecejnizlek.pl/payment/account">
+			<a href="{{url('payment/account')}}">
 				Wróć do procesu zakupowego
 			</a>
 		</li>

@@ -21,19 +21,8 @@
 			<div class="form-header has-text-centered">
 				<h2 class="title">@lang('payment.account-register-heading')</h2>
 			</div>
-			<div class="form-group">
-				<div class="control">
-					{!! form_label($form->email) !!}
-					{!! form_widget($form->email) !!}
-					{!! form_errors($form->email) !!}
-				</div>
-
-				<div class="control">
-					{!! form_label($form->password) !!}
-					{!! form_widget($form->password) !!}
-					{!! form_errors($form->password) !!}
-				</div>
-			</div>
+			{!! form_row($form->email) !!}
+			{!! form_row($form->password) !!}
 		</section>
 
 		<section class="form-end">

@@ -36,19 +36,8 @@
 					<p class="strong">@lang('payment.personal-data-email-info')</p>
 				</div> --}}
 			</div>
-			<div class="form-group">
-				<div class="control">
-					{!! form_label($form->first_name) !!}
-					{!! form_widget($form->first_name) !!}
-					{!! form_errors($form->first_name) !!}
-				</div>
-
-				<div class="control">
-					{!! form_label($form->last_name) !!}
-					{!! form_widget($form->last_name) !!}
-					{!! form_errors($form->last_name) !!}
-				</div>
-			</div>
+			{!! form_row($form->first_name) !!}
+			{!! form_row($form->last_name) !!}
 		</section>
 
 		<section class="section">
@@ -57,15 +46,13 @@
 				<div class="content">@lang('payment.personal-data-id-lead')</div>
 			</div>
 
-			<div class="form-group">
-				<div class="control">
-					<h4>{!! form_label($form->identity_number) !!}</h4>
-					<div class="identity-number-select">
-						{!! form_widget($form->identity_number_type) !!}
-					</div>
-					{!! form_widget($form->identity_number) !!}
-					{!! form_errors($form->identity_number) !!}
+			<div class="m-form-group">
+				<h4>{!! form_label($form->identity_number) !!}</h4>
+				<div class="identity-number-select">
+					{!! form_widget($form->identity_number_type) !!}
 				</div>
+				{!! form_widget($form->identity_number) !!}
+				{!! form_errors($form->identity_number) !!}
 			</div>
 		</section>
 
@@ -76,37 +63,11 @@
 					<p class="subtitle">@lang('payment.personal-data-lead')</p>
 				</div>
 
-				<div class="form-group">
-					<div class="control">
-						{!! form_label($form->recipient) !!}
-						{!! form_widget($form->recipient) !!}
-						{!! form_errors($form->recipient) !!}
-					</div>
-
-					<div class="control">
-						{!! form_label($form->phone) !!}
-						{!! form_widget($form->phone) !!}
-						{!! form_errors($form->phone) !!}
-					</div>
-
-					<div class="control">
-						{!! form_label($form->address) !!}
-						{!! form_widget($form->address) !!}
-						{!! form_errors($form->address) !!}
-					</div>
-
-					<div class="control">
-						{!! form_label($form->zip) !!}
-						{!! form_widget($form->zip) !!}
-						{!! form_errors($form->zip) !!}
-					</div>
-
-					<div class="control">
-						{!! form_label($form->city) !!}
-						{!! form_widget($form->city) !!}
-						{!! form_errors($form->city) !!}
-					</div>
-				</div>
+				{!! form_row($form->recipient) !!}
+				{!! form_row($form->phone) !!}
+				{!! form_row($form->address) !!}
+				{!! form_row($form->zip) !!}
+				{!! form_row($form->city) !!}
 			@endif
 
 			<div class="form-header has-text-centered">
@@ -114,43 +75,16 @@
 			</div>
 			<div class="box">
 				<div id="personal-data-invoice-toggle">
-					{!! form_widget($form->invoice) !!}
-					{!! form_label($form->invoice) !!}
-					{!! form_errors($form->invoice) !!}
+					{!! form_row($form->invoice) !!}
 				</div>
 				<div id="personal-data-invoice-form"
-					 class="form-group @if (Session::get('_old_input.invoice')) show @else hidden @endif">
-					<div class="control">
-						{!! form_label($form->invoice_name) !!}
-						{!! form_widget($form->invoice_name) !!}
-						{!! form_errors($form->invoice_name) !!}
-					</div>
-					<div class="control">
-						{!! form_label($form->invoice_nip) !!}
-						{!! form_widget($form->invoice_nip) !!}
-						{!! form_errors($form->invoice_nip) !!}
-					</div>
-					<div class="control">
-						{!! form_label($form->invoice_address) !!}
-						{!! form_widget($form->invoice_address) !!}
-						{!! form_errors($form->invoice_address) !!}
-					</div>
-					<div class="control">
-						{!! form_label($form->invoice_zip) !!}
-						{!! form_widget($form->invoice_zip) !!}
-						{!! form_errors($form->invoice_zip) !!}
-					</div>
-					<div class="control">
-						{!! form_label($form->invoice_city) !!}
-						{!! form_widget($form->invoice_city) !!}
-						{!! form_errors($form->invoice_city) !!}
-					</div>
-					<div class="control">
-						{!! form_label($form->invoice_country) !!}
-						{!! form_widget($form->invoice_country) !!}
-						{!! form_errors($form->invoice_country) !!}
-					</div>
-				</div>
+					 class="@if (Session::get('_old_input.invoice')) show @else hidden @endif">
+				{!! form_row($form->invoice_name) !!}
+				{!! form_row($form->invoice_nip) !!}
+				{!! form_row($form->invoice_address) !!}
+				{!! form_row($form->invoice_zip) !!}
+				{!! form_row($form->invoice_city) !!}
+				{!! form_row($form->invoice_country) !!}
 			</div>
 		</section>
 

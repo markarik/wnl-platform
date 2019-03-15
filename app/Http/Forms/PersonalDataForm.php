@@ -40,8 +40,6 @@ class PersonalDataForm extends Form
 				'label' => trans('payment.identity_number'),
 				'rules' => $identityNumberDisabled ? '' : 'required',
 				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.identity_number'),
 					'disabled' => $identityNumberDisabled
 				],
 			])
@@ -51,8 +49,6 @@ class PersonalDataForm extends Form
 				'label' => trans('payment.first-name'),
 				'rules' => $firstNameDisabled ? '' : 'required',
 				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.first-name'),
 					'disabled' => $firstNameDisabled,
 				],
 			])
@@ -60,8 +56,6 @@ class PersonalDataForm extends Form
 				'label' => trans('payment.last-name'),
 				'rules' => $lastNameDisabled ? '' : 'required',
 				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.last-name'),
 					'disabled' => $lastNameDisabled,
 				],
 			])
@@ -80,10 +74,6 @@ class PersonalDataForm extends Form
 				],
 				'label' => trans('payment.invoice-name'),
 				'rules' => 'required_with:invoice',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.invoice-name'),
-				],
 			])
 			->add('invoice_nip', 'text', [
 				'error_messages' => [
@@ -91,10 +81,6 @@ class PersonalDataForm extends Form
 				],
 				'label' => trans('payment.invoice-nip'),
 				'rules' => 'required_with:invoice',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.invoice-nip'),
-				],
 			])
 			->add('invoice_address', 'text', [
 				'error_messages' => [
@@ -102,10 +88,6 @@ class PersonalDataForm extends Form
 				],
 				'label' => trans('payment.invoice-address'),
 				'rules' => 'required_with:invoice',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.invoice-address'),
-				],
 			])
 			->add('invoice_zip', 'text', [
 				'error_messages' => [
@@ -113,10 +95,6 @@ class PersonalDataForm extends Form
 				],
 				'label' => trans('payment.invoice-zip'),
 				'rules' => 'required_with:invoice',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.invoice-zip'),
-				],
 			])
 			->add('invoice_city', 'text', [
 				'error_messages' => [
@@ -124,10 +102,6 @@ class PersonalDataForm extends Form
 				],
 				'label' => trans('payment.invoice-city'),
 				'rules' => 'required_with:invoice',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.invoice-city'),
-				],
 			])
 			->add('invoice_country', 'text', [
 				'error_messages' => [
@@ -135,10 +109,6 @@ class PersonalDataForm extends Form
 				],
 				'label' => trans('payment.invoice-country'),
 				'rules' => 'required_with:invoice',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.invoice-country'),
-				],
 			]);
 	}
 

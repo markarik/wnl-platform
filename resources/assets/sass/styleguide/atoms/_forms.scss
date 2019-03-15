@@ -1,0 +1,40 @@
+.a-input {
+  background-color: $white;
+  border: 1px solid $cadet-blue;
+  border-radius: 2px;
+  color: $catalina-blue;
+  outline: none;
+  padding: $space-xxxs $space-xs;
+  transition: color ease-in-out .3s, border-color ease-in-out .3s;
+  width: 100%;
+
+  &:focus, &:active {
+    border-color: $blue-chill;
+  }
+
+  &:disabled {
+    border-color: $mischka;
+    color: $storm-gray;
+  }
+
+  &:invalid, &.-error {
+    border-color: $alizarin-crimson;
+  }
+}
+
+.a-label {
+  color: $ebony-clay;
+  font-size: $font-size-minus-1;
+  line-height: $line-height-minus-1;
+
+  &.-required::after {
+    color: $blue-chill;
+    content: "*";
+  }
+}
+
+.a-error {
+  color: $alizarin-crimson;
+  font-size: $font-size-minus-2;
+  line-height: $line-height-minus-2;
+}

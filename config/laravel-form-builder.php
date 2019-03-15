@@ -2,13 +2,13 @@
 
 return [
     'defaults'      => [
-        'wrapper_class'       => 'form-group',
-        'wrapper_error_class' => 'has-error',
-        'label_class'         => 'control-label',
-        'field_class'         => 'form-control',
+        'wrapper_class'       => 'm-form-group',
+        'wrapper_error_class' => '-error',
+        'label_class'         => 'a-label',
+        'field_class'         => 'm-form-control',
         'help_block_class'    => 'help-block',
-        'error_class'         => 'text-danger',
-        'required_class'      => 'required'
+        'error_class'         => '.a-error',
+        'required_class'      => '-required'
 
         // Override a class from a field.
         //'text'                => [

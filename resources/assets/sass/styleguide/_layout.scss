@@ -1,6 +1,8 @@
 html, body {
-  // TODO limit styles to checkout only
-  font-family: $font-family-rubik;
-  font-size: $font-size-base;
-  line-height: $line-height-base;
+  &.styleguide {
+    color: $catalina-blue;
+    font-family: $font-family-rubik;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+  }
 }

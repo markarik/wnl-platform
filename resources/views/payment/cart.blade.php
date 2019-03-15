@@ -34,7 +34,7 @@
 				</p>
 			@endif
 		</section>
-		<section class="-catalinaBlue">
+		<section>
 			@if(!empty($coupon))
 				<p class="-centeredSpread">
 					<span>@lang('payment.cart-price-label')</span>

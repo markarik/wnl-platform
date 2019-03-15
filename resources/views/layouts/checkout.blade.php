@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="styleguide">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,7 +29,7 @@
 		</script>
 		@include('tracking')
 	</head>
-	<body data-base="{{ env('APP_URL') }}">
+	<body data-base="{{ env('APP_URL') }}" class="styleguide">
 		<div id="app">
 			<nav class="nav o-navigation">
 				<div class="container">

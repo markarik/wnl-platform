@@ -43,7 +43,6 @@ class ConfirmOrderPage extends BasePage
 			'@edit-personal-data' => '.edit-personal-data a',
 			'@expand-instalments' => '#expand-instalments',
 			'@cart' => '.cart',
-			'@p24-ing' => 'a[data-search="Płać z ING 112"]'
 		];
 	}
 }

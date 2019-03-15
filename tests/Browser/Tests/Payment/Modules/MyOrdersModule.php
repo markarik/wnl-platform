@@ -10,6 +10,26 @@ use Tests\Browser\Pages\Course\Components\Navigation;
 
 class MyOrdersModule
 {
+	public function studyBuddyInitiator(BethinkBrowser $browser)
+	{
+		$order = $browser->order;
+		$studyBuddy = $order->studyBuddy;
+		Assert::assertTrue($studyBuddy instanceof App\Models\StudyBuddy);
+
+		$browser->studyBuddy = $studyBuddy;
+		$browser->waitForText($studyBuddy->code, 60);
+
+		$browser
+			->on(new Navigation)
+			->logoutUser();
+	}
+
+	public function payNextInstalment(BethinkBrowser $browser)
+	{
+		$order = $browser->order;
+		$browser->click('.order[data-order-id="' . $order->id . '"] [data-button="pay-next-instalment"]');
+	}
+
 	public function assertOrderPlaced(BethinkBrowser $browser)
 	{
 		$order = $browser->order;
@@ -25,47 +45,21 @@ class MyOrdersModule
 		}
 	}
 
-	public function assertPaid(BethinkBrowser $browser)
+	public function assertPaid(BethinkBrowser $browser, string $expectedAmount)
 	{
-		$browser->waitForText('Wpłacono', 60);
+		$browser->waitForText('Wpłacono ' . $expectedAmount);
 	}
 
 	public function assertNotPaid(BethinkBrowser $browser)
 	{
-		$order = $browser->order->fresh();
+		$order = $browser->order;
 		$browser->assertSeeIn('.order[data-order-id="' . $order->id . '"] .current-payment', 'KWOTA DO ZAPŁATY: 1500ZŁ');
 	}
 
-	public function assertInstalmentPaid(BethinkBrowser $browser)
-	{
-		if (!empty($browser->coupon) && $browser->coupon->is_percentage && $browser->coupon->value === 10) {
-			$instalmentAmount = '675zł / 675zł';
-		} else {
-			$instalmentAmount = '750zł / 750zł';
-		}
-
-		$order = $browser->order->fresh();
-		$browser->assertSeeIn('.order[data-order-id="' . $order->id . '"] .instalment-amount', $instalmentAmount);
-	}
-
-	public function assertInstalmentNotPaid(BethinkBrowser $browser)
-	{
-		$order = $browser->order->fresh();
-		$browser->assertSeeIn('.order[data-order-id="' . $order->id . '"] .instalment-amount', '0zł / 750zł');
-	}
-
-	public function studyBuddyInitiator(BethinkBrowser $browser)
+	public function assertInstalment(BethinkBrowser $browser, int $instalmentNumber, string $expectedText)
 	{
 		$order = $browser->order;
-		$studyBuddy = $order->studyBuddy;
-		Assert::assertTrue($studyBuddy instanceof App\Models\StudyBuddy);
-
-		$browser->studyBuddy = $studyBuddy;
-		$browser->waitForText($studyBuddy->code, 60);
-
-		$browser
-			->on(new Navigation)
-			->logoutUser();
+		$browser->assertSeeIn('.order[data-order-id="' . $order->id . '"] .instalment-amount[data-instalment="' . $instalmentNumber . '"]', $expectedText);
 	}
 
 	public function assertStudyBuddyAwaitingRefund(BethinkBrowser $browser)

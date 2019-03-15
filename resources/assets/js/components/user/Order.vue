@@ -103,6 +103,7 @@
 
 							<p class="aligncenter margin top">
 								<button
+									data-button="pay-next-instalment"
 									:class="{
 									'button': true,
 									'is-primary': true,
@@ -128,7 +129,7 @@
 									<td>
 										{{ instalmentDate(instalment.due_date) }}
 									</td>
-									<td class="instalment-amount">
+									<td class="instalment-amount" :data-instalment="index + 1">
 										{{instalment.amount - instalment.left_amount}}zł / {{instalment.amount}}zł
 									</td>
 								</tr>

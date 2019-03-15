@@ -24,8 +24,7 @@ class ConfirmOrderModule
 	{
 		$this->payNow($browser);
 		$browser->on(new ConfirmOrderPage)
-			->press('@pay-online-now')
-			->waitFor('@p24-ing', 60);
+			->press('@pay-online-now');
 	}
 
 	public function payOnlineLater(BethinkBrowser $browser)
@@ -44,8 +43,7 @@ class ConfirmOrderModule
 
 		$this->assertInstalments($browser);
 
-		$browser->press('@pay-instalments-now')
-			->waitFor('@p24-ing', 60);
+		$browser->press('@pay-instalments-now');
 	}
 
 	public function payByInstalmentsLater(BethinkBrowser $browser)

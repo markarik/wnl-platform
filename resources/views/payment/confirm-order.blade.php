@@ -169,12 +169,12 @@
 									@endforeach
 									<th>Razem</th>
 								</tr>
-								<tr>
+								<tr id="instalments-amounts">
 									<td>{{ $order->product->name }}</td>
 									@for ($i = 0; $i < count($instalments); $i++)
-										<th>
+										<td>
 											{{ $instalments[$i]['amount'] }}zł
-										</th>
+										</td>
 									@endfor
 									<td>{{ $order->total_with_coupon }}zł</td>
 								</tr>

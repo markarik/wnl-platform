@@ -25,7 +25,7 @@ class ConfirmOrderModule
 		$this->payNow($browser);
 		$browser->on(new ConfirmOrderPage)
 			->press('@pay-online-now')
-			->waitFor('@p24-ing', 15);
+			->waitFor('@p24-ing', 60);
 	}
 
 	public function payOnlineLater(BethinkBrowser $browser)
@@ -40,9 +40,12 @@ class ConfirmOrderModule
 		$this->payNow($browser);
 		$browser->on(new ConfirmOrderPage)
 			->click('@expand-instalments')
-			->pause(500)
-			->press('@pay-instalments-now')
-			->waitFor('@p24-ing', 15);
+			->pause(500);
+
+		$this->assertInstalments($browser);
+
+		$browser->press('@pay-instalments-now')
+			->waitFor('@p24-ing', 60);
 	}
 
 	public function payByInstalmentsLater(BethinkBrowser $browser)
@@ -50,8 +53,11 @@ class ConfirmOrderModule
 		$this->payLater($browser);
 		$browser->on(new ConfirmOrderPage)
 			->click('@expand-instalments')
-			->pause(500)
-			->press('@pay-instalments-later');
+			->pause(500);
+
+		$this->assertInstalments($browser);
+
+		$browser->press('@pay-instalments-later');
 	}
 
 	public function payByCoupon100Percent(BethinkBrowser $browser)
@@ -91,8 +97,7 @@ class ConfirmOrderModule
 			->assertSee($order->total_with_coupon);
 
 		if (!empty($browser->coupon)) {
-			$coupon = $browser->coupon;
-			$browser->assertSee($coupon->name);
+			$browser->assertSee($browser->coupon->name);
 			$this->assertCouponInCart($browser);
 		}
 	}
@@ -107,5 +112,25 @@ class ConfirmOrderModule
 
 	protected function assertCouponInCart(BethinkBrowser $browser) {
 		$browser->assertSeeIn('@cart', 'Zniżka:');
+	}
+
+	private function assertInstalments(BethinkBrowser $browser)
+	{
+		if (!empty($browser->coupon) && $browser->coupon->is_percentage && $browser->coupon->value === 10) {
+			$firstInstalmentAmount = '675zł';
+			$secondInstalmentAmount = '337.5zł';
+			$thirdInstalmentAmount = '337.5zł';
+			$totalAmount = '1350zł';
+		} else {
+			$firstInstalmentAmount = '750zł';
+			$secondInstalmentAmount = '375zł';
+			$thirdInstalmentAmount = '375zł';
+			$totalAmount = '1500zł';
+		}
+
+		$browser->assertSeeIn('#instalments-amounts td:nth-child(2)', $firstInstalmentAmount);
+		$browser->assertSeeIn('#instalments-amounts td:nth-child(3)', $secondInstalmentAmount);
+		$browser->assertSeeIn('#instalments-amounts td:nth-child(4)', $thirdInstalmentAmount);
+		$browser->assertSeeIn('#instalments-amounts td:nth-child(5)', $totalAmount);
 	}
 }

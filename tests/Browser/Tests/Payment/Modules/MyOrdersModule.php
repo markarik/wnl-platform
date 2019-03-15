@@ -38,8 +38,14 @@ class MyOrdersModule
 
 	public function assertInstalmentPaid(BethinkBrowser $browser)
 	{
+		if (!empty($browser->coupon) && $browser->coupon->is_percentage && $browser->coupon->value === 10) {
+			$instalmentAmount = '675zł / 675zł';
+		} else {
+			$instalmentAmount = '750zł / 750zł';
+		}
+
 		$order = $browser->order->fresh();
-		$browser->assertSeeIn('.order[data-order-id="' . $order->id . '"] .instalment-amount', '750zł / 750zł');
+		$browser->assertSeeIn('.order[data-order-id="' . $order->id . '"] .instalment-amount', $instalmentAmount);
 	}
 
 	public function assertInstalmentNotPaid(BethinkBrowser $browser)

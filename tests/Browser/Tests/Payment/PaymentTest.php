@@ -84,6 +84,21 @@ class PaymentTest extends DuskTestCase
 	}
 
 	/** @test */
+	public function useCouponAndPayByInstalmentsNow()
+	{
+		$this->execute([
+			[VoucherModule::class       , 'code10Percent'],
+			[SelectProductModule::class , 'online'],
+			[PersonalDataModule::class  , 'signUpNoInvoice'],
+			[ConfirmOrderModule::class  , 'payByInstalmentsNow'],
+			[OnlinePaymentModule::class , 'successfulPayment'],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertPaid'],
+			[MyOrdersModule::class      , 'assertInstalmentPaid'],
+		]);
+	}
+
+	/** @test */
 	public function studyBuddyOriginalOrderPaidOnline()
 	{
 		$this->execute([
@@ -94,7 +109,7 @@ class PaymentTest extends DuskTestCase
 			[MyOrdersModule::class      , 'assertOrderPlaced'],
 			[MyOrdersModule::class      , 'assertPaid'],
 			[MyOrdersModule::class      , 'studyBuddyInitiator'],
-			[VoucherModule::class       , 'default'],
+			[VoucherModule::class       , 'codeStudyBuddy'],
 			[SelectProductModule::class , 'online'],
 			[PersonalDataModule::class  , 'signUpNoInvoice'],
 			[ConfirmOrderModule::class  , 'payOnlineNow'],
@@ -116,7 +131,7 @@ class PaymentTest extends DuskTestCase
 			[MyOrdersModule::class      , 'assertPaid'],
 			[MyOrdersModule::class      , 'assertInstalmentPaid'],
 			[MyOrdersModule::class      , 'studyBuddyInitiator'],
-			[VoucherModule::class       , 'default'],
+			[VoucherModule::class       , 'codeStudyBuddy'],
 			[SelectProductModule::class , 'online'],
 			[PersonalDataModule::class  , 'signUpNoInvoice'],
 			[ConfirmOrderModule::class  , 'payOnlineNow'],

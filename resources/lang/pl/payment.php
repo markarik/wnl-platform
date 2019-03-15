@@ -131,9 +131,9 @@ return [
 	'address' => 'Ulica i numer domu / mieszkania',
 	'zip' => 'Kod pocztowy',
 	'city' => 'Miasto',
-	'email' => 'Twój e-mail*',
+	'email' => 'Twój e-mail',
 	'phone' => 'Numer telefonu',
-	'password' => 'Hasło do logowania - minimum 6 znaków*',
+	'password' => 'Hasło do logowania - minimum 6 znaków',
 
 	'invoice' => 'Zaznacz, jeżeli chcesz podać inne dane do faktury',
 	'invoice-name' => 'Nazwa firmy',

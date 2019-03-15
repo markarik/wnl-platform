@@ -65,7 +65,7 @@ class PersonalDataForm extends Form
 			->add('invoice', 'checkbox', [
 				'label' => trans('payment.invoice'),
 				'attr' => [
-					'class' => 'checkbox',
+					'class' => 'a-checkbox',
 				]
 			])
 			->add('invoice_name', 'text', [

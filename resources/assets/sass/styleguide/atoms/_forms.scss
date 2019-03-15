@@ -24,6 +24,12 @@
   }
 }
 
+.a-checkbox {
+  height: 24px;
+  width: 24px;
+  -webkit-appearance: none;
+}
+
 .a-label {
   color: $ebony-clay;
   font-size: $font-size-minus-1;

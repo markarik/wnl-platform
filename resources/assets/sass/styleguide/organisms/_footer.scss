@@ -8,14 +8,37 @@
   line-height: $line-height-minus-1;
   font-family: $font-family-rubik;
 
+  @media #{$breakpoint-s} {
+    flex-direction: row;
+    padding: $space-m 0;
+  }
+
   &__block {
     padding: $space-m 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
 
+    @media #{$breakpoint-s} {
+      flex: 0 1 auto;
+      padding: 0 0 0 $space-m;
+      max-width: 346px;
+    }
+
+    .a-icon {
+      @media #{$breakpoint-s} {
+        margin-left: $space-s;
+        margin-right: $space-m;
+      }
+    }
+
     &.-first {
       border-bottom: 1px solid $cadet-blue;
+
+      @media #{$breakpoint-s} {
+        border-bottom: none;
+        border-right: 1px solid $cadet-blue;
+      }
     }
   }
 }

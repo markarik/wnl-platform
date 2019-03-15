@@ -62,8 +62,6 @@ class PersonalDataController extends Controller
 			return redirect()->back()->withErrors($form->getErrors())->withInput();
 		}
 
-		$user = Auth::user();
-
 		$this->updateAccount($user, $request, $form);
 
 		if (!!Session::get('orderId')) {

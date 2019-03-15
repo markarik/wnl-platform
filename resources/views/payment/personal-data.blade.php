@@ -10,14 +10,6 @@
 		'coupon' => $coupon,
 	])
 
-	@include('payment.payment-hero', [
-		'step' => 2,
-		'title' => trans('payment.personal-data-title'),
-		'subtitle' => trans('payment.personal-data-subtitle', [
-				'name' => $product->name, 'price' => $product->price
-			]),
-	])
-
 	<div class="container payment-content">
 		@if (!$errors->isEmpty())
 			<section class="subsection">

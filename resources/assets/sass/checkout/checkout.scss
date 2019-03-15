@@ -1,0 +1,7 @@
+@import 'organisms/cart';
+
+.p-checkout__content {
+  @media #{$breakpoint-m} {
+    display: flex;
+  }
+}

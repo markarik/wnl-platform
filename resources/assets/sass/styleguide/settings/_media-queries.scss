@@ -1,3 +1,21 @@
 $breakpoint-s: (min-width: 760px);
 $breakpoint-m: (min-width: 980px);
 $breakpoint-l: (min-width: 1280px);
+
+.-hiddenSAndUp {
+  @media #{$breakpoint-s} {
+    display: none;
+  }
+}
+
+.-hiddenMAndUp {
+  @media #{$breakpoint-m} {
+    display: none;
+  }
+}
+
+.-hiddenLAndUp {
+  @media #{$breakpoint-l} {
+    display: none;
+  }
+}

@@ -159,6 +159,8 @@ class PersonalDataForm extends Form
 			'personal_identity_number' => new ValidatePersonalIdentityNumber,
 		];
 
+		// If someone sends invalid `identity_number_type` then disable `identity_number` validator
+		// Request will fail anyway
 		if (!array_key_exists($identityNumberType, $validators)) {
 			return false;
 		}

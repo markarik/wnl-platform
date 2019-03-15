@@ -29,6 +29,7 @@ class AccountController
 			}
 		}
 
+		// Set intended url after successful login
 		$request->session()->flash('url.intended', route('payment-personal-data'));
 		$form = $this->form(SignUpForm::class, [
 			'method' => 'POST',

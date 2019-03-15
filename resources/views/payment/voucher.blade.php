@@ -14,7 +14,7 @@
 				<div class="notification has-text-centered">
 					@lang('payment.voucher-already-has', [ 'name' => Auth::user()->coupons[0]['name'] ])
 					<p>
-						<a href="{{ route('payment-select-product') }}">
+						<a href="{{ route('payment-account') }}">
 							@lang('payment.voucher-skip')
 						</a>
 					</p>
@@ -35,7 +35,7 @@
 						</button>
 					</p>
 					<p class="voucher-skip has-text-centered">
-						<a href="{{ route('payment-select-product') }}">
+						<a href="{{ route('payment-account') }}">
 							@lang('payment.voucher-skip')
 						</a>
 					</p>

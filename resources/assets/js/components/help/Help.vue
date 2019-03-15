@@ -162,6 +162,18 @@ export default {
 					method: 'push',
 					iconClass: 'fa-diamond',
 					iconTitle: 'Gwarancja satysfakcji',
+				},
+				{
+					text: 'Skróty klawiszowe',
+					itemClass: 'has-icon',
+					to: {
+						name: 'key-shortcuts',
+						params: {},
+					},
+					isDisabled: false,
+					method: 'push',
+					iconClass: 'fa-key',
+					iconTitle: 'Skróty klawiszowe',
 				}
 			];
 		},

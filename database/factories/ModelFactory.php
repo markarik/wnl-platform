@@ -25,6 +25,16 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 		'consent_terms' => 1
 	];
 });
+$factory->define(App\Models\UserProfile::class, function (Faker\Generator $faker) {
+	return [
+		'first_name' => $faker->firstName,
+		'last_name' => $faker->lastName,
+	];
+});
+
+$factory->afterCreating(App\Models\User::class, function (App\Models\User $user) {
+	$user->profile()->save(factory(App\Models\UserProfile::class)->make());
+});
 
 $factory->define(App\Models\UserQuizResults::class, function () {
 	return [
@@ -54,7 +64,10 @@ $factory->define(App\Models\UserLesson::class, function (Faker\Generator $faker)
 
 $factory->define(App\Models\QuizSet::class, function (Faker\Generator $faker) {
 	return [
-		'name' => $faker->name,
+		'lesson_id' => function () {
+			return factory(App\Models\Lesson::class)->create()->id;
+		},
+		'name'       => $faker->name,
 		'created_at' => $faker->dateTime,
 		'updated_at' => $faker->dateTime,
 	];

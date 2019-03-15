@@ -6,8 +6,8 @@ $(window).on('unload', function(){});
 $(function() {
 	var navToggle = $('.nav-toggle'),
 		navMenu = $('.nav-menu'),
-		logoutLink = navMenu.find('.logout-link'),
-		logoutForm = navMenu.find('#logout-form'),
+		logoutLink = $('.logout-link'),
+		logoutForm = $('#logout-form'),
 		form = $('form'),
 		buttons = $('.button'),
 		modalsContainer = $('.modals'),
@@ -44,6 +44,7 @@ $(function() {
 		});
 	}
 
+	console.log(logoutLink);
 	if (logoutLink.length) {
 		logoutLink.click((event) => {
 			logoutForm.submit();

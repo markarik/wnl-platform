@@ -22,6 +22,6 @@ class VoucherController extends Controller
 		$coupon = Coupon::validCode($code);
 		session()->put('coupon', $coupon);
 
-		return redirect()->route('payment-select-product');
+		return redirect()->route('payment-account');
 	}
 }

@@ -15,7 +15,9 @@ class QuizSeeder extends Seeder
     public function run()
     {
         \DB::table('quiz_sets')->insert([
-            'name' => 'Example quiz set'
+            'name' => 'Example quiz set',
+            'lesson_id' => 1,
+            'description' => 'Example description',
         ]);
 
         \DB::table('quiz_questions')->insert([

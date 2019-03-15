@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use JavaScript;
 
 class AppController extends Controller
 {
 	public function index()
 	{
+		$user = Auth::user();
+		if (!$user->signUpComplete) {
+			return redirect()->route('payment-account');
+		}
+
+
 		JavaScript::put([
 			'env'    => [
 				'appDebug'           => env('APP_DEBUG'),

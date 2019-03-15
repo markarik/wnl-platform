@@ -1,7 +1,7 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Cześć {{ $user->first_name or '{first_name}' }}!</h3>
+	<h3>Cześć!</h3>
 	<p style="font-size: 1.1rem;">Witaj w społeczności "Więcej niż LEK"! Niezmiernie cieszymy się, że do nas dołączysz!</p>
 	<p>Ten mail jest potwierdzeniem założenia konta na naszej platformie e-learningowej. Ta wiadomość pomoże nam sprawnie obsłużyć Twoje zamówienie. :)</p>
 
@@ -10,17 +10,7 @@
 	<p style="font-size: 1.1rem; font-weight: bold;">Przydatne linki</p>
 	<ul>
 		<li>
-			<a href="https://platforma.wiecejnizlek.pl/login">
-				Zaloguj się na platformie
-			</a>
-		</li>
-		<li>
-			<a href="https://platforma.wiecejnizlek.pl/app/myself/orders">
-				Konto > Twoje zamówienia
-			</a>
-		</li>
-		<li>
-			<a href="https://platforma.wiecejnizlek.pl/payment/select-product">
+			<a href="{{url('payment/account')}}">
 				Wróć do procesu zakupowego
 			</a>
 		</li>

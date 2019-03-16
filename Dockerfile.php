@@ -4,10 +4,16 @@
 
 FROM composer:1.8.4 AS php-build
 
-ADD . /src
-WORKDIR /src
+RUN composer global require hirak/prestissimo
 
-RUN composer install --no-scripts --no-dev
+WORKDIR /src
+COPY composer.json composer.json
+COPY composer.lock composer.lock
+
+RUN composer install --no-scripts --no-dev --no-autoloader
+
+COPY . ./
+RUN composer dump-autoload --no-scripts --no-dev --optimize
 
 #
 # Install JS dependencies & run webpack build

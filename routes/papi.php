@@ -120,6 +120,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		Route::post("{$r['products']}", 'ProductsApiController@post');
 		Route::post("{$r['products']}/.filter", 'ProductsApiController@filter');
 
+		// Payment methods
+		Route::get("{$r['payment-methods']}/{id}", 'PaymentMethodsApiController@get');
+
 		// Lesson Product
 		Route::post("{$r['lesson-product']}/query", 'LessonProductApiController@query');
 		Route::post("{$r['lesson-product']}", 'LessonProductApiController@post');

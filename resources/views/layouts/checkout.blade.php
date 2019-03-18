@@ -43,12 +43,16 @@
 					<span class="o-navigation__item icon -hiddenMAndUp" id="cartIcon">
 						<i class="fa fa-shopping-cart a-icon -small"></i>
 					</span>
-					@if(Auth::user())
-						@if (!empty(Auth::user()->profile->avatar_url))
-							<img src="{{Auth::user()->profile->avatar_url}}" class="a-avatar"/>
+					@php
+					/** @var \App\Models\User $user */
+					$user = Auth::user();
+					@endphp
+					@if ($user)
+						@if (!empty($user->profile->avatar_url))
+							<img src="{{$user->profile->avatar_url}}" class="a-avatar"/>
 						@else
 							<span class="o-navigation__item a-avatar -isAutomatic">
-								{{Auth::user()->initials}}
+								{{$user->initials}}
 							</span>
 						@endif
 					@endif

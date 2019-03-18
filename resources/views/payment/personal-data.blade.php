@@ -29,12 +29,9 @@
 			<h3 class="title">@lang('payment.personal-data-id-heading')</h3>
 
 			<div class="m-form-group">
-				<h4>{!! form_label($form->identity_number) !!}</h4>
-				<div class="identity-number-select">
-					{!! form_widget($form->identity_number_type) !!}
-				</div>
-				{!! form_widget($form->identity_number) !!}
-				{!! form_errors($form->identity_number) !!}
+				{!! form_row($form->personal_identity_number) !!}
+				{!! form_row($form->passport_number) !!}
+				{!! form_row($form->no_identity_number) !!}
 			</div>
 		</section>
 

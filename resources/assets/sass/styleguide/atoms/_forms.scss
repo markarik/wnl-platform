@@ -55,6 +55,11 @@
   &:hover {
     background-color: $surfie-green;
   }
+
+  &:disabled {
+    border-color: $athens-grey;
+    pointer-events: none;
+  }
 }
 
 .a-label {

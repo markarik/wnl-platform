@@ -49,9 +49,9 @@ return [
 	"regex"                => "Ten format jest nieprawidłowy",
 	"required"             => "To pole jest polem wymaganym.",
 	"required_if"          => "To pole jest polem wymaganym, gdy :other ma wartość :value.",
-	"required_with"        => "To pole jest polem wymaganym, gdy :values są zdefiniowane.",
+	"required_with"        => "To pole jest polem wymaganym, gdy :values jest zdefiniowane.",
 	"required_with_all"    => "To pole jest polem wymaganym, gdy :values są zdefiniowane.",
-	"required_without"     => "To pole jest polem wymaganym, gdy :values nie są zdefiniowane.",
+	"required_without"     => "To pole jest polem wymaganym, gdy :values nie jest zdefiniowane.",
 	"required_without_all" => "To pole jest polem wymaganym, gdy żadne z :values nie są zdefiniowane.",
 	"same"                 => "Te pola muszą być takie same.",
 	"size"                 => [

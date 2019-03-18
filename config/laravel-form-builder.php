@@ -13,6 +13,7 @@ return [
 //         Override a class from a field.
         'checkbox'                => [
             'wrapper_class'   => 'm-form-group -checkbox',
+						'field_class'     => 'a-checkbox',
         ],
         // Override a class from a field.
         //'text'                => [

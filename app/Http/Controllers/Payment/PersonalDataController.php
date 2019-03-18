@@ -41,6 +41,7 @@ class PersonalDataController extends Controller
 
 		$productPriceWithCoupon = null;
 
+//		TODO fix updating the form
 		return view('payment.personal-data', [
 			'form'    => $form,
 			'product' => $product,
@@ -189,10 +190,13 @@ class PersonalDataController extends Controller
 			'recipient' => $request->get('recipient'),
 		]);
 
-		if (!$form->identity_number->getOption('attr.disabled')) {
+		if (!$form->personal_identity_number->getOption('attr.disabled')) {
 			$user->personalData()->updateOrCreate(
 				['user_id' => $user->id],
-				$this->getIdentityNumbersArray($request)
+				[
+					'passport_number' => $request->get('passport_number'),
+					'personal_identity_number' => $request->get('personal_identity_number'),
+				]
 			);
 		}
 	}
@@ -224,18 +228,5 @@ class PersonalDataController extends Controller
 		}
 
 		$order->attachCoupon($coupon);
-	}
-
-	protected function getIdentityNumbersArray(Request $request) {
-		$identityNumbers = [
-			'passport_number' => null,
-			'personal_identity_number' => null,
-		];
-
-		if (array_key_exists($request->get('identity_number_type'), $identityNumbers)) {
-			$identityNumbers[$request->get('identity_number_type')] = $request->get('identity_number');
-		}
-
-		return $identityNumbers;
 	}
 }

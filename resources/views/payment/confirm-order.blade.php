@@ -46,7 +46,8 @@
 					@if(is_array($user->identityNumbers))
 						<p>
 							<strong>
-								{{ trans('payment.identity_number_' . $user->identityNumbers[0]['type']) }}:
+								{{--TODO fix label--}}
+								{{ trans('payment.personal_identity_number') }}:
 								{{ $user->identityNumbers[0]['value'] }}
 							</strong>
 						</p>

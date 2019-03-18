@@ -1,6 +1,8 @@
 @import 'organisms/cart';
 
 .t-checkout {
+  flex-grow: 1;
+
   @media #{$breakpoint-m} {
     display: flex;
   }

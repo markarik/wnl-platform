@@ -33,7 +33,7 @@
 		<form method="post" action="{{route('logout', ['redirectToRoute' => 'payment-account' ?? null])}}" id="logout-form">
 			{{ csrf_field() }}
 		</form>
-		<div id="app">
+		<div class="t-app">
 			<nav class="nav o-navigation">
 				<div class="container">
 					<div class="nav-left">

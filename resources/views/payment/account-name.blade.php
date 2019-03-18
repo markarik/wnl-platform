@@ -16,7 +16,7 @@
 			<div><small>@lang('payment.account-wrong-account-text') <a class="logout-link">@lang('payment.account-wrong-account-register-text')</a></small></div>
 
 
-			<a class="button is-primary" href="{{route('payment-personal-data')}}" data-button="account-continue">
+			<a class="a-button -big" href="{{route('payment-personal-data')}}" data-button="account-continue">
 				@lang('payment.account-name-submit')
 			</a>
 		</div>

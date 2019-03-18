@@ -10,12 +10,13 @@
   padding: $space-s $space-m;
   text-transform: uppercase;
   transition: color ease-in-out .3s, border-color ease-in-out .3s, background-color ease-in-out .3s, box-shadow ease-in-out .3s;
-  width: 100%;
 
-  @media #{$breakpoint-s} {
-    width: auto;
 
-    &.-big {
+  &.-big {
+    width: 100%;
+
+    @media #{$breakpoint-s} {
+      width: auto;
       padding: $space-s $space-xxxxl;
     }
   }
@@ -24,17 +25,16 @@
     background-color: $athens-grey;
     color: $storm-gray;
     cursor: not-allowed;
+    pointer-events: none;
   }
 
-  &:enabled {
-    &:hover, &.-hovered {
-      background-color: $surfie-green;
-    }
+  &:hover, &.-hovered {
+    background-color: $surfie-green;
+  }
 
-    &:focus, &.-focused {
-      background-color: $surfie-green;
-      box-shadow: inset 0 0 0 2px $surfie-green, inset 0 0 0 4px $white;
-    }
+  &:focus, &.-focused {
+    background-color: $surfie-green;
+    box-shadow: inset 0 0 0 2px $surfie-green, inset 0 0 0 4px $white;
   }
 
   &.-secondary {
@@ -42,15 +42,13 @@
     border: 2px solid $ebony-clay;
     color: $ebony-clay;
 
-    &:enabled {
-      &:hover, &.-hovered {
-        background-color: $white;
-      }
+    &:hover, &.-hovered {
+      background-color: $white;
+    }
 
-      &:focus, &.-focus {
-        background-color: $white;
-        box-shadow: inset 0 0 0 2px $white, inset 0 0 0 4px $ebony-clay;
-      }
+    &:focus, &.-focus {
+      background-color: $white;
+      box-shadow: inset 0 0 0 2px $white, inset 0 0 0 4px $ebony-clay;
     }
 
     &:disabled, &.-disabled {

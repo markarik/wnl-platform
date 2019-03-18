@@ -6,11 +6,10 @@ namespace Tests\Browser\Tests\Payment\Modules;
 use App;
 use PHPUnit\Framework\Assert;
 use Tests\BethinkBrowser;
-use Tests\Browser\Pages\Course\Components\Navigation;
 
 class MyOrdersModule
 {
-	public function studyBuddyInitiator(BethinkBrowser $browser)
+	public function studyBuddyInitiator(BethinkBrowser $browser): App\Models\StudyBuddy
 	{
 		$order = $browser->order;
 		$studyBuddy = $order->studyBuddy;
@@ -19,9 +18,7 @@ class MyOrdersModule
 		$browser->studyBuddy = $studyBuddy;
 		$browser->waitForText($studyBuddy->code, 60);
 
-		$browser
-			->on(new Navigation)
-			->logoutUser();
+		return $studyBuddy;
 	}
 
 	public function payNextInstalment(BethinkBrowser $browser)
@@ -64,13 +61,11 @@ class MyOrdersModule
 
 	public function assertStudyBuddyAwaitingRefund(BethinkBrowser $browser)
 	{
-		$studyBuddy = $browser->studyBuddy->fresh();
-		Assert::assertEquals('awaiting-refund', $studyBuddy->status, 'Study buddy status is awaiting refund');
-	}
+		$order = $browser->order;
 
-	public function assertStudyBuddyRefunded(BethinkBrowser $browser)
-	{
-		$studyBuddy = $browser->studyBuddy->fresh();
-		Assert::assertEquals('refunded', $studyBuddy->status, 'Study buddy status is refunded');
+		$browser
+			->refresh()
+			->waitForText('Twoje zamówienia')
+			->assertSeeIn('.order[data-order-id="' . $order->id . '"]', 'Twój Study Buddy dołączył już do kursu!');
 	}
 }

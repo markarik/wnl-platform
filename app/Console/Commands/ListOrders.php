@@ -3,8 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Models\Order;
+use App\Models\OrderInstalment;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class ListOrders extends Command
 {
@@ -95,9 +97,12 @@ class ListOrders extends Command
 					$order->method === 'instalments' &&
 					$order->instalments['allPaid'] === false
 				) {
-					$firstNotPaid = array_first($order->instalments['instalments'], function ($value, $key) use ($now) {
-						return $value['left'] > 0 && $now->gt($value['date']);
-					}, false);
+					/** @var Collection $instalments */
+					$instalments = $order->instalments['instalments'];
+
+					$firstNotPaid = $instalments->first(function (OrderInstalment $orderInstalment) use ($now) {
+						return $orderInstalment->left_amount > 0 && $now->gt($orderInstalment->due_date);
+					});
 
 					return (bool) $firstNotPaid;
 				}

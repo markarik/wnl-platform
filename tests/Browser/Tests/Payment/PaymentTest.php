@@ -15,25 +15,37 @@ class PaymentTest extends DuskTestCase
 {
 	use ExecutesScenarios;
 
-	public function testRegisterAndPayOnline()
+	public function testRegisterAndPayOnlineNow()
 	{
 		$this->execute([
 			[AccountModule::class       , 'signUp'],
 			[PersonalDataModule::class  , 'submitNoInvoice'],
-			[ConfirmOrderModule::class  , 'payOnline'],
-			[OnlinePaymentModule::class , 'successfulPayment'],
-			[MyOrdersModule::class      , 'end'],
+			[ConfirmOrderModule::class  , 'payOnlineNow'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['1500.00']],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertPaid', ['1500zł / 1500zł']],
 		]);
 	}
 
-	public function testLoginAndPayOnline()
+	public function testRegisterAndPayOnlineLater()
+	{
+		$this->execute([
+			[AccountModule::class       , 'signUp'],
+			[PersonalDataModule::class  , 'submitNoInvoice'],
+			[ConfirmOrderModule::class  , 'payOnlineLater'],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertNotPaid'],
+		]);
+	}
+
+	public function testLoginAndPayOnlineLater()
 	{
 		$this->execute([
 			[AccountModule::class       , 'logInUsingModal'],
 			[PersonalDataModule::class  , 'submitNoInvoice'],
-			[ConfirmOrderModule::class  , 'payOnline'],
-			[OnlinePaymentModule::class , 'successfulPayment'],
-			[MyOrdersModule::class      , 'end'],
+			[ConfirmOrderModule::class  , 'payOnlineLater'],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertNotPaid'],
 		]);
 	}
 
@@ -45,35 +57,123 @@ class PaymentTest extends DuskTestCase
 			[PersonalDataModule::class  , 'submitNoInvoice'],
 			[ConfirmOrderModule::class  , 'editData'],
 			[PersonalDataModule::class  , 'submitCustomInvoice'],
-			[ConfirmOrderModule::class  , 'payOnline'],
-			[OnlinePaymentModule::class , 'successfulPayment'],
-			[MyOrdersModule::class      , 'end'],
+			[ConfirmOrderModule::class  , 'payOnlineNow'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['1500.00']],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertPaid', ['1500zł / 1500zł']],
 		]);
 	}
 
-	public function testRegisterAndPayByInstalments()
+	public function testRegisterAndPayByInstalmentsLater()
 	{
 		$this->execute([
 			[AccountModule::class       , 'signUp'],
 			[PersonalDataModule::class  , 'submitNoInvoice'],
-			[ConfirmOrderModule::class  , 'payByInstalments'],
-			[MyOrdersModule::class      , 'end'],
+			[ConfirmOrderModule::class  , 'payByInstalmentsLater'],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertInstalment', [1, '0zł / 750zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [2, '0zł / 375zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [3, '0zł / 375zł']],
+			[MyOrdersModule::class      , 'payNextInstalment'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['750.00']],
+			[MyOrdersModule::class      , 'assertInstalment', [1, '750zł / 750zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [2, '0zł / 375zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [3, '0zł / 375zł']],
+			[MyOrdersModule::class      , 'payNextInstalment'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['375.00']],
+			[MyOrdersModule::class      , 'assertInstalment', [1, '750zł / 750zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [2, '375zł / 375zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [3, '0zł / 375zł']],
+			[MyOrdersModule::class      , 'payNextInstalment'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['375.00']],
+			[MyOrdersModule::class      , 'assertPaid', ['1500zł / 1500zł']],
 		]);
 	}
 
-	public function testStudyBuddy()
+	/** @test */
+	public function registerAndPayByInstalmentsNow()
 	{
 		$this->execute([
 			[AccountModule::class       , 'signUp'],
 			[PersonalDataModule::class  , 'submitNoInvoice'],
-			[ConfirmOrderModule::class  , 'payByInstalments'],
-			[MyOrdersModule::class      , 'studyBuddy'],
-			[VoucherModule::class       , 'default'],
+			[ConfirmOrderModule::class  , 'payByInstalmentsNow'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['750.00']],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertPaid', ['750zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [1, '750zł / 750zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [2, '0zł / 375zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [3, '0zł / 375zł']],
+			[MyOrdersModule::class      , 'payNextInstalment'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['375.00']],
+			[MyOrdersModule::class      , 'assertInstalment', [1, '750zł / 750zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [2, '375zł / 375zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [3, '0zł / 375zł']],
+			[MyOrdersModule::class      , 'payNextInstalment'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['375.00']],
+			[MyOrdersModule::class      , 'assertPaid', ['1500zł / 1500zł']],
+		]);
+	}
+
+	public function testUseCouponAndPayByInstalmentsNow()
+	{
+		$this->execute([
+			[VoucherModule::class       , 'code10Percent'],
 			[AccountModule::class       , 'signUp'],
 			[PersonalDataModule::class  , 'submitNoInvoice'],
-			[ConfirmOrderModule::class  , 'payOnline'],
-			[OnlinePaymentModule::class , 'successfulPayment'],
-			[MyOrdersModule::class      , 'end'],
+			[ConfirmOrderModule::class  , 'payByInstalmentsNow'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['675.00']],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertPaid', ['675zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [1, '675zł / 675zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [2, '0zł / 337.5zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [3, '0zł / 337.5zł']],
+			[MyOrdersModule::class      , 'payNextInstalment'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['337.50']],
+			[MyOrdersModule::class      , 'assertInstalment', [1, '675zł / 675zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [2, '337.5zł / 337.5zł']],
+			[MyOrdersModule::class      , 'assertInstalment', [3, '0zł / 337.5zł']],
+			[MyOrdersModule::class      , 'payNextInstalment'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['337.50']],
+			[MyOrdersModule::class      , 'assertPaid', ['1350zł / 1350zł']],
+		]);
+	}
+
+	public function testStudyBuddyOriginalOrderPaidOnline()
+	{
+		$this->execute([
+			[AccountModule::class       , 'signUp'],
+			[PersonalDataModule::class  , 'submitNoInvoice'],
+			[ConfirmOrderModule::class  , 'payOnlineNow'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['1500.00']],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertPaid', ['1500zł / 1500zł']],
+			[MyOrdersModule::class      , 'studyBuddyInitiator'],
+			[VoucherModule::class       , 'codeStudyBuddy'],
+			[AccountModule::class       , 'signUp'],
+			[PersonalDataModule::class  , 'submitNoInvoice'],
+			[ConfirmOrderModule::class  , 'payOnlineNow'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['1400.00']],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertStudyBuddyAwaitingRefund'],
+		]);
+	}
+
+	public function testStudyBuddyOriginalOrderPaidByInstalments()
+	{
+		$this->execute([
+			[AccountModule::class       , 'signUp'],
+			[PersonalDataModule::class  , 'submitNoInvoice'],
+			[ConfirmOrderModule::class  , 'payByInstalmentsNow'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['750.00']],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'studyBuddyInitiator'],
+			[VoucherModule::class       , 'codeStudyBuddy'],
+			[AccountModule::class       , 'signUp'],
+			[PersonalDataModule::class  , 'submitNoInvoice'],
+			[ConfirmOrderModule::class  , 'payOnlineNow'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['1400.00']],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertStudyBuddyRefunded'],
 		]);
 	}
 
@@ -83,8 +183,8 @@ class PaymentTest extends DuskTestCase
 			[VoucherModule::class       , 'code100Percent'],
 			[AccountModule::class       , 'signUp'],
 			[PersonalDataModule::class  , 'submitNoInvoice'],
-			[ConfirmOrderModule::class  , 'payByTransfer'],
-			[MyOrdersModule::class      , 'end'],
+			[ConfirmOrderModule::class  , 'payByCoupon100Percent'],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
 		]);
 	}
 
@@ -101,9 +201,10 @@ class PaymentTest extends DuskTestCase
 		$this->execute([
 			[UserModule::class          , 'existingUserWithOrder'],
 			[PersonalDataModule::class  , 'submitNoInvoiceExistingOrder'],
-			[ConfirmOrderModule::class  , 'payOnline'],
-			[OnlinePaymentModule::class , 'successfulPayment'],
-			[MyOrdersModule::class      , 'end'],
+			[ConfirmOrderModule::class  , 'payOnlineNow'],
+			[OnlinePaymentModule::class , 'successfulPayment', ['1500.00']],
+			[MyOrdersModule::class      , 'assertOrderPlaced'],
+			[MyOrdersModule::class      , 'assertPaid', ['1500zł / 1500zł']],
 		]);
 	}
 }

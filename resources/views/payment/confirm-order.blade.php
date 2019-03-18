@@ -1,3 +1,13 @@
+@php
+/**
+ * @var App\Models\Coupon $coupon
+ * @var App\Models\Order $order
+ * @var App\Models\OrderInstalment[] $instalments
+ * @var App\Models\PaymentMethod $paymentMethodInstalments
+ * @var App\Models\User $user
+ */
+@endphp
+
 @extends('payment.layout')
 
 @section('content')
@@ -143,8 +153,7 @@
 					</div>
 				</div>
 			</section>
-			<?php /** @var \App\Models\OrderInstalment[] $instalments */ ?>
-			@if($instalments)
+			@if ($instalments)
 				 <section class="has-text-centered">
 					<div class="expandable">
 						<div class="margin vertical">
@@ -232,7 +241,11 @@
 			@else
 				<section class="has-text-centered">
 					<div class="strong margin top">
-						Ze względu na zbliżający się start kursu, płatność na raty nie jest już dostępna.
+						@if (empty($paymentMethodInstalments))
+							Płatność na raty nie jest dostępna dla tego produktu.
+						@else
+							Ze względu na zbliżający się start kursu, płatność na raty nie jest już dostępna.
+						@endif
 					</div>
 				</section>
 			@endif

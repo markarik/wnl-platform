@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Payment;
 use App\Models\Order;
 use App\Models\OrderInstalment;
 use App\Models\Payment as PaymentModel;
+use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -29,6 +30,11 @@ class ConfirmOrderController extends Controller
 		$amount = (int)$productPriceWithCoupon * 100;
 		$checksum = $payment::generateChecksum($order->session_id, $amount);
 
+		/** @var PaymentMethod $paymentMethodInstalments */
+		$paymentMethodInstalments = $order->product->paymentMethods
+			->where('slug', 'instalments')
+			->first();
+
 		$viewData = [
 			'order' => $order,
 			'user' => $user,
@@ -37,12 +43,9 @@ class ConfirmOrderController extends Controller
 			'returnUrl'  => $this->getReturnUrl($amount),
 			'instalments' => null,
 			'coupon' => $coupon,
-			'productPriceWithCoupon' => $productPriceWithCoupon
+			'productPriceWithCoupon' => $productPriceWithCoupon,
+			'paymentMethodInstalments' => $paymentMethodInstalments,
 		];
-
-		$paymentMethodInstalments = $order->product->paymentMethods
-			->where('slug', 'instalments')
-			->first();
 
 		if (!empty($paymentMethodInstalments) && $paymentMethodInstalments->isAvailable()) {
 			$paymentSchedule = $order->generatePaymentSchedule();

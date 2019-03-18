@@ -23,6 +23,15 @@
 
     }
   }
+
+  &.-checkbox {
+    display: flex;
+    align-items: center;
+
+    .a-label {
+      margin-bottom: 0;
+    }
+  }
 }
 
 @media #{$breakpoint-s} {

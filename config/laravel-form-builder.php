@@ -8,14 +8,18 @@ return [
         'field_class'         => 'a-input',
         'help_block_class'    => 'help-block',
         'error_class'         => 'a-error',
-        'required_class'      => '-required'
+        'required_class'      => '-required',
 
+//         Override a class from a field.
+        'checkbox'                => [
+            'wrapper_class'   => 'm-form-group -checkbox',
+        ],
         // Override a class from a field.
         //'text'                => [
         //    'wrapper_class'   => 'form-field-text',
         //    'label_class'     => 'form-field-text-label',
         //    'field_class'     => 'form-field-text-field',
-        //]
+        //],
         //'radio'               => [
         //    'choice_options'  => [
         //        'wrapper'     => ['class' => 'form-radio'],

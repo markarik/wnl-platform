@@ -10,6 +10,10 @@
   transition: color ease-in-out .3s, border-color ease-in-out .3s;
   width: 100%;
 
+  &:hover, &.-hovered {
+    border-color: $surfie-green;
+  }
+
   &:focus, &:active {
     border-color: $blue-chill;
   }
@@ -28,22 +32,34 @@
   background-color: $white;
   border: 2px solid $cadet-blue;
   border-radius: 2px;
+  cursor: pointer;
   font-size: $font-size-plus-3;
   line-height: $line-height-base;
   height: 24px;
   outline: none;
   text-align: center;
+  transition: background-color ease-in-out .3s;
   width: 24px;
   -webkit-appearance: none;
 
-  &:checked:before {
-    color: $blue-chill;
-    content: "✔";
+  &:checked {
+    background-color: $blue-chill;
+    border-width: 0;
+
+    &:before {
+      color: $white;
+      content: "✔";
+    }
+  }
+
+  &:hover {
+    background-color: $surfie-green;
   }
 }
 
 .a-label {
   color: $ebony-clay;
+  cursor: pointer;
   display: inline-block;
   font-size: $font-size-minus-1;
   line-height: $line-height-minus-1;

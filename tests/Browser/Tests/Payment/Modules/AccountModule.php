@@ -25,7 +25,7 @@ class AccountModule
 		$this->fillInAccountForm($accountData, $browser);
 		$browser->accountData = $accountData;
 
-		$browser->xpathClick('.//button[@class="button is-primary"]');
+		$browser->click('@continue-button');
 	}
 
 	public function logInUsingModal(BethinkBrowser $browser)
@@ -35,7 +35,7 @@ class AccountModule
 		$faker = new Generator();
 		$faker->addProvider(new Person($faker));
 		$user = factory(\App\Models\User::class)->create();
-		$browser->accountData = $user;
+		$browser->accountData = $user->toArray();
 
 		$this->navigate($browser);
 		$browser->on(new AccountPage());
@@ -55,8 +55,6 @@ class AccountModule
 
 	protected function navigate(BethinkBrowser $browser)
 	{
-		// Check if personal-data is current page, if not,
-		// navigate to it using a product.
 		if (!str_is('*account*', $browser->getCurrentPath())) {
 			$browser->visit('payment/account');
 		}

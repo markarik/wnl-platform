@@ -5,23 +5,21 @@ namespace App\Http\Controllers\Payment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\UseCoupon;
 use App\Models\Product;
+use App\Traits\CheckoutTrait;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Coupon;
-use Illuminate\Support\Facades\Session;
 
 class VoucherController extends Controller
 {
+	use CheckoutTrait;
+
 	public function index(Request $request)
 	{
-		if (Session::has('productId')) {
-			$product = Product::find(Session::get('productId'));
-		} else {
-			$product = Product::slug($request->route('productSlug') ?? Product::SLUG_WNL_ONLINE);
-			Session::put('productId', $product->id);
-		}
+		$product = $this->getProduct($request);
 
-		if (!$product instanceof Product ||
+		if (
+			!$product instanceof Product ||
 			!$product->available ||
 			$product->signups_close->isPast() ||
 			$product->signups_start->isFuture()

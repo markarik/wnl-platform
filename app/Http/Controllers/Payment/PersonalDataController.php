@@ -7,6 +7,7 @@ use App\Http\Forms\AddressForm;
 use App\Http\Forms\PersonalDataForm;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Traits\CheckoutTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,18 +17,15 @@ use Kris\LaravelFormBuilder\FormBuilderTrait;
 
 class PersonalDataController extends Controller
 {
+	use CheckoutTrait;
 	use FormBuilderTrait;
 
 	public function index(Request $request)
 	{
-		if (Session::has('productId')) {
-			$product = Product::find(Session::get('productId'));
-		} else {
-			$product = Product::slug($request->route('productSlug') ?? Product::SLUG_WNL_ONLINE);
-			Session::put('productId', $product->id);
-		}
+		$product = $this->getProduct($request);
 
-		if (!$product instanceof Product ||
+		if (
+			!$product instanceof Product ||
 			!$product->available ||
 			$product->signups_close->isPast() ||
 			$product->signups_start->isFuture()

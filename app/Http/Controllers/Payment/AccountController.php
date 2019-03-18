@@ -7,28 +7,25 @@ use App\Http\Forms\SignUpForm;
 use App\Mail\SignUpConfirmation;
 use App\Models\Product;
 use App\Models\User;
+use App\Traits\CheckoutTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
-use Illuminate\Support\Facades\Session;
 
 class AccountController
 {
+	use CheckoutTrait;
 	use FormBuilderTrait;
 
 	public function index(Request $request)
 	{
 		$user = Auth::user();
-		if (Session::has('productId')) {
-			$product = Product::find(Session::get('productId'));
-		} else {
-			$product = Product::slug($request->route('productSlug') ?? Product::SLUG_WNL_ONLINE);
-			Session::put('productId', $product->id);
-		}
+		$product = $this->getProduct($request);
 
-		if (!$product instanceof Product ||
+		if (
+			!$product instanceof Product ||
 			!$product->available ||
 			$product->signups_close->isPast() ||
 			$product->signups_start->isFuture()

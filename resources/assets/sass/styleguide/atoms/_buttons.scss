@@ -4,6 +4,7 @@
   border-radius: 100px;
   color: $white;
   cursor: pointer;
+  display: inline-block;
   font-size: $font-size-minus-1;
   font-weight: 500;
   outline: none;
@@ -30,6 +31,7 @@
 
   &:hover, &.-hovered {
     background-color: $surfie-green;
+    color: $white;
   }
 
   &:focus, &.-focused {

@@ -34,21 +34,24 @@
 			{{ csrf_field() }}
 		</form>
 		<div class="t-app">
-			<nav class="nav o-navigation">
-				<div class="container">
-					<div class="nav-left">
-						<a class="nav-item" href="https://wiecejnizlek.pl">
-							<img src="{{ asset('/images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
-						</a>
-					</div>
+			<nav class="o-navigation">
+				<a class="o-navigation__item" href="https://wiecejnizlek.pl">
+					<img src="{{ asset('/images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
+				</a>
 
-					<div class="nav-right">
-						<div class="nav-item">
-							<span class="icon -stormGrey -hiddenMAndUp" id="cartIcon">
-								<i class="fa fa-shopping-cart a-icon -small"></i>
+				<div class="o-navigation__right -stormGrey">
+					<span class="o-navigation__item icon -hiddenMAndUp" id="cartIcon">
+						<i class="fa fa-shopping-cart a-icon -small"></i>
+					</span>
+					@if(Auth::user())
+						@if (!empty(Auth::user()->profile->avatar_url))
+							<img src="{{Auth::user()->profile->avatar_url}}" class="a-avatar"/>
+						@else
+							<span class="o-navigation__item a-avatar -isAutomatic">
+								{{Auth::user()->initials}}
 							</span>
-						</div>
-					</div>
+						@endif
+					@endif
 				</div>
 			</nav>
 

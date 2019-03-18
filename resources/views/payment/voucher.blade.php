@@ -2,12 +2,6 @@
 
 @section('content')
 
-	@include('payment.payment-hero', [
-		'step' => 0,
-		'title' => trans('payment.voucher-title'),
-		'subtitle' => trans('payment.voucher-subtitle'),
-	])
-
 	<section class="section">
 		<div class="container">
 			@if (Auth::user() && Auth::user()->coupons->count() > 0)

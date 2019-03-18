@@ -26,16 +26,6 @@ return [
 	'product-coupon-too-late' => 'Niestety już nie można dodawać kuponów do tego produktu.',
 
 	/**
-	 * Payment Steps Menu
-	 */
-	'payment-steps-account' => 'Twoje konto',
-	'payment-steps-account-count' => '1',
-	'payment-steps-personal-data' => 'Twoje dane',
-	'payment-steps-personal-data-count' => '2',
-	'payment-steps-confirm-order' => 'Potwierdzenie zamówienia',
-	'payment-steps-confirm-order-count' => '3',
-
-	/**
 	 * 1. Select Product step
 	 */
 

@@ -316,51 +316,6 @@ section.voucher {
 	}
 }
 
-#payment-steps {
-	margin-bottom: 3em;
-}
-
-.payment-step {
-	align-items: center;
-	border-color: $color-white-transparent;
-	color: $color-white-transparent;
-	display: flex;
-	flex-direction: column;
-	text-align: center;
-
-	&.is-active {
-		border-color: $color-white;
-		color: $color-white;
-	}
-
-	&.is-current {
-
-		.payment-step-count {
-			@include glow;
-		}
-
-		.payment-step-text {
-			font-weight: $font-weight-black;
-		}
-	}
-}
-
-.payment-step-count {
-	border: 2px solid;
-	border-radius: $border-radius-full;
-	display: block;
-	font-size: $font-size-plus-5;
-	font-weight: $font-weight-black;
-	line-height: 1.5em;
-	margin-bottom: 10px;
-	height: 1.7em;
-	width: 1.7em;
-}
-
-.payment-step-text {
-	font-size: $font-size-minus-1;
-}
-
 .onsite-plus {
 	display: block;
 	font-size: $font-size-plus-7;

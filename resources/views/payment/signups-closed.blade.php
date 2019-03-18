@@ -2,12 +2,6 @@
 
 @section('content')
 
-@include('payment.payment-hero', [
-	'step' => 1,
-	'title' => trans('payment.select-product-title'),
-	'subtitle' => trans('payment.select-product-subtitle'),
-])
-
 <section class="section select-product">
 	<div class="container">
 		@if(!$product || $product->signups_close->isPast())

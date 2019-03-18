@@ -6,7 +6,7 @@
 			<div><strong>@lang('payment.account-continue-heading')</strong></div>
 
 			<div>
-				<a class="button is-primary" href="{{route('payment-personal-data')}}">
+				<a class="button is-primary" href="{{route('payment-personal-data')}}" data-button="account-continue">
 					@lang('payment.account-continue-submit')
 				</a>
 			</div>

@@ -39,6 +39,7 @@ class AccountPage extends BasePage
 	{
 		return [
 			'@login' => '.opens-login-modal',
+			'@continue-button' => '[data-button="account-continue"]'
 		];
 	}
 }

@@ -20,7 +20,7 @@ class UserModule
 	{
 		$user = $this->createUser();
 		$browser->user = $user;
-		$browser->accountData = $user;
+		$browser->accountData = $user->toArray();
 
 		$browser
 			->visit(new Login())
@@ -38,7 +38,7 @@ class UserModule
 		$order->save();
 
 		$browser->user = $user;
-		$browser->accountData = $user;
+		$browser->accountData = $user->toArray();
 
 		$browser
 			->visit(new Login())

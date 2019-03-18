@@ -10,14 +10,7 @@
 
 <section class="section select-product">
 	<div class="container">
-		@if(!$product)
-			<div class="column">
-				<div class="notification has-text-centered strong">
-					Zapisy zostały zakończone. <a href="https://wiecejnizlek.pl/rezerwacja/">Kliknij i zostaw swój e-mail</a>, aby zarezerwować miejsce na kolejnej edycji!
-				</div>
-			</div>
-		@endif
-		@if($product->signups_close->isPast())
+		@if(!$product || $product->signups_close->isPast())
 			<div class="column">
 				<div class="notification has-text-centered strong">
 					Zapisy zostały zakończone. <a href="https://wiecejnizlek.pl/rezerwacja/">Kliknij i zostaw swój e-mail</a>, aby zarezerwować miejsce na kolejnej edycji!

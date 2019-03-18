@@ -9,20 +9,15 @@ trait ExecutesScenarios
 {
 	protected function execute($scenario)
 	{
-		try {
-			$this->browse(function (BethinkBrowser $browser) use ($scenario) {
-				foreach ($scenario as $scenarioArgs) {
-					$module = $scenarioArgs[0];
-					$method = $scenarioArgs[1];
-					$methodArgs = $scenarioArgs[2] ?? [];
+		$this->browse(function (BethinkBrowser $browser) use ($scenario) {
+			foreach ($scenario as $scenarioArgs) {
+				$module = $scenarioArgs[0];
+				$method = $scenarioArgs[1];
+				$methodArgs = $scenarioArgs[2] ?? [];
 
-					array_unshift($methodArgs, $browser);
-					call_user_func_array([(new $module), $method], $methodArgs);
-				}
-			});
-		} finally {
-			// We set various properties on browser instance, so let's prevent leaking them between tests
-			$this->closeAll();
-		}
+				array_unshift($methodArgs, $browser);
+				call_user_func_array([(new $module), $method], $methodArgs);
+			}
+		});
 	}
 }

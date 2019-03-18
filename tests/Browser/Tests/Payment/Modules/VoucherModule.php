@@ -5,6 +5,7 @@ namespace Tests\Browser\Tests\Payment\Modules;
 
 
 use App\Models\Coupon;
+use App\Models\StudyBuddy;
 use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Payment\AccountPage;
 use Tests\Browser\Pages\Payment\VoucherPage;
@@ -48,15 +49,13 @@ class VoucherModule
 			);
 	}
 
-	public function codeStudyBuddy(BethinkBrowser $browser)
+	public function codeStudyBuddy(BethinkBrowser $browser, StudyBuddy $studyBuddy)
 	{
-		$studyBuddy = $browser->studyBuddy;
-
 		$browser->coupon = $studyBuddy->coupon;
 
 		$browser
 			->visit(new VoucherPage)
-			->type('code', $browser->studyBuddy->code)
+			->type('code', $studyBuddy->code)
 			->click('@use')
 			->assertPathIs(
 				(new AccountPage)->url()

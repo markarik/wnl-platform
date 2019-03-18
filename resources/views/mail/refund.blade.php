@@ -1,7 +1,7 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Cześć {{ $user->first_name or '{first_name}' }}!</h3>
+	<h3>Cześć {{ $user->first_name ?? '{first_name}' }}!</h3>
 
 	<p style="font-size: 1.25em;">Wykonaliśmy zwrot {{ $value ?? '{value}' }}zł na Twoje konto!</p>
 

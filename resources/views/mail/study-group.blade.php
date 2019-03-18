@@ -8,7 +8,7 @@
 		Cieszymy się, że Ty i Twoja grupa dołączacie do nas! :)
 	</p>
 
-	<p class="has-text-centered" style="text-transform: uppercase;">Twój kod Study Group o wartości {{ $coupon->value_with_unit or '{value_with_unit}' }}, to:</p>
+	<p class="has-text-centered" style="text-transform: uppercase;">Twój kod Study Group o wartości {{ $coupon->value_with_unit ?? '{value_with_unit}' }}, to:</p>
 
 	<h3 class="has-text-centered" style="text-transform: uppercase;">{{ $coupon->code ?? '{code}' }}</h3>
 

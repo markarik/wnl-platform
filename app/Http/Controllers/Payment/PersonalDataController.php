@@ -7,6 +7,7 @@ use App\Http\Forms\AddressForm;
 use App\Http\Forms\PersonalDataForm;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\User;
 use App\Traits\CheckoutTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ class PersonalDataController extends Controller
 		}
 
 		$user = Auth::user();
-		$coupon = $this->readCoupon($user);
+		$coupon = $this->readCoupon($product, $user);
 		$form = $this->setupForm($coupon, $user);
 
 		$productPriceWithCoupon = null;
@@ -50,8 +51,9 @@ class PersonalDataController extends Controller
 
 	public function handle(Request $request)
 	{
+		$product = $this->getProduct($request);
 		$user = Auth::user();
-		$coupon = $this->readCoupon($user);
+		$coupon = $this->readCoupon($product, $user);
 		$form = $this->setupForm($coupon, $user);
 
 		if (!$form->isValid()) {
@@ -63,9 +65,9 @@ class PersonalDataController extends Controller
 		$this->updateAccount($user, $request, $form);
 
 		if (!!Session::get('orderId')) {
-			$this->updateOrder($user, $request);
+			$this->updateOrder($product, $user, $request);
 		} else {
-			$this->createOrder($user, $request);
+			$this->createOrder($product, $user, $request);
 		}
 
 		return redirect(route('payment-confirm-order'));
@@ -85,7 +87,7 @@ class PersonalDataController extends Controller
 		return $form;
 	}
 
-	protected function createOrder($user, $request)
+	protected function createOrder(Product $product, User $user, Request $request)
 	{
 		\Log::notice('Creating order');
 		$order = $user->orders()->create([
@@ -96,7 +98,7 @@ class PersonalDataController extends Controller
 
 		Session::put('orderId', $order->id);
 
-		$coupon = $this->readCoupon(Auth::user());
+		$coupon = $this->readCoupon($product, $user);
 
 		if (!empty($coupon)) {
 			$this->addCoupon($order, $coupon);
@@ -125,15 +127,6 @@ class PersonalDataController extends Controller
 		$coupon->products()->attach(
 			Product::whereIn('slug', [Product::SLUG_WNL_ONLINE])->get()
 		);
-	}
-
-	protected function readCoupon($user) {
-		$userCoupon = $user ? $user->coupons->first() : null;
-		if (session()->has('coupon')) {
-			return session()->get('coupon')->fresh();
-		} else {
-			return $userCoupon;
-		}
 	}
 
 	protected function updateAccount($user, $request, $form)
@@ -199,13 +192,13 @@ class PersonalDataController extends Controller
 		}
 	}
 
-	protected function updateOrder($user, $request)
+	protected function updateOrder(Product $product, User $user, Request $request)
 	{
 		Log::notice('Updating order');
 		$user->orders()
 			->recent()
 			->update([
-				'product_id' => Session::get('productId'),
+				'product_id' => $product->id,
 				'session_id' => str_random(32),
 				'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 			]);

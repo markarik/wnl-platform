@@ -25,7 +25,7 @@
 			<div class="box">
 				<p class="title">@lang('payment.confirm-order-heading')</p>
 				<p class="subtitle">{{ $order->product->name }}</p>
-				@if($order->coupon && ($order->coupon->slug !== \App\Models\Coupon::SLUG_WNL_ONLINE_ONLY || $order->product->slug === \App\Models\Product::SLUG_WNL_ONLINE))
+				@if ($order->coupon && $order->coupon->isApplicableForProduct($order->product))
 					<p class="strikethrough">
 						@lang('payment.confirm-order-price', [ 'price' => $order->product->price])
 					</p>

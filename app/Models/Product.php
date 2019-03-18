@@ -92,9 +92,8 @@ class Product extends Model
 		return round($value, 2);
 	}
 
-	public function getAvailableAttribute()
+	public function getAvailableAttribute(): bool
 	{
-		return
-			$this->quantity > 0;
+		return $this->quantity > 0;
 	}
 }

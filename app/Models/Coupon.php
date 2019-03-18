@@ -69,4 +69,9 @@ class Coupon extends Model
 			'value' => $this->value,
 		]);
 	}
+
+	public function isApplicableForProduct(Product $product): bool
+	{
+		return $this->products->count() === 0 || $this->products->contains($product);
+	}
 }

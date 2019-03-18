@@ -2,7 +2,9 @@
 
 namespace App\Traits;
 
+use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -23,5 +25,26 @@ trait CheckoutTrait
 		}
 
 		return $product;
+	}
+
+	private function readCoupon(Product $product, User $user): ?Coupon {
+		/** @var Coupon $coupon */
+		$coupon = $user ? $user->coupons->first() : null;
+
+		if (session()->has('coupon')) {
+			$sessionCoupon = session()->get('coupon');
+
+			if (!$sessionCoupon instanceof Coupon) {
+				$coupon = null;
+			} else {
+				$coupon = session()->get('coupon')->fresh();
+			}
+		}
+
+		if ($coupon instanceof Coupon && !$coupon->isApplicableForProduct($product)) {
+			$coupon = null;
+		}
+
+		return $coupon;
 	}
 }

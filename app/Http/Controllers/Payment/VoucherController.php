@@ -28,7 +28,7 @@ class VoucherController extends Controller
 		}
 
 		$user = Auth::user();
-		$coupon = $this->readCoupon($user);
+		$coupon = $this->readCoupon($product, $user);
 
 		$productPriceWithCoupon = null;
 
@@ -46,14 +46,5 @@ class VoucherController extends Controller
 		session()->put('coupon', $coupon);
 
 		return redirect()->route('payment-account');
-	}
-
-	protected function readCoupon($user) {
-		$userCoupon = $user ? $user->coupons->first() : null;
-		if (session()->has('coupon')) {
-			return session()->get('coupon')->fresh();
-		} else {
-			return $userCoupon;
-		}
 	}
 }

@@ -19,13 +19,13 @@
 					@endif
 				</p>
 			</section>
-			<section class="o-cart__details -stormGrey -textMinus1">
-				<p class="m-cart__listItem -centeredSpread">
+			<section class="o-cart__details -stormGrey">
+				<p class="m-cart__listItem -centeredSpread -textLight -textMinus1">
 					<span>@lang('payment.cart-shipment-label')</span>
 					<span>@lang('payment.cart-shipment-value')</span>
 				</p>
 				@if(!empty($coupon))
-					<p class="m-cart__listItem -centeredSpread">
+					<p class="m-cart__listItem -centeredSpread -textLight  -textMinus1">
 						<span>@lang('payment.cart-coupon-label')</span>
 						<span>
 						-{{$coupon->is_percentage

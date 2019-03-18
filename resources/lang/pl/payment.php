@@ -109,6 +109,7 @@ return [
 	'personal_identity_number' => 'Twój numer PESEL',
 	'passport_number' => 'Twój numer paszportu',
 	'no_identity_number' => 'Nie posiadam numeru PESEL',
+	'passport_number_required' => 'Number paszportu jest wymagany gdy nie posiadasz numeru PESEL.',
 
 	'personal-data-heading' => 'Na jaki adres mamy nadać przesyłkę? 🎁 ',
 	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami.',

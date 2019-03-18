@@ -14,34 +14,35 @@ class PersonalDataForm extends Form
 		$userHasPaidOrder = $user && $user->orders()->where(['paid' => 1])->exists();
 		$firstNameDisabled = $userHasPaidOrder && $user->first_name;
 		$lastNameDisabled = $userHasPaidOrder && $user->last_name;
-		$personalData = $userHasPaidOrder ? $user->personalData : null;
-
-		$identityNumberDisabled = $personalData &&
-			($personalData->personal_identity_number || $personalData->identity_card_number || $personalData->passport_number);
+		$identityNumberDisabled = $userHasPaidOrder && ($user->personal_identity_number || $user->passport_number);
 
 		$this
-			// Identity number
 			->add('passport_number', 'text', [
 				'label' => trans('payment.passport_number'),
 				'rules' => $identityNumberDisabled ? '' : ['required_with:no_identity_number', new ValidatePassportNumber],
 				'attr'  => [
-					'disabled' => $identityNumberDisabled
+					'disabled' => $identityNumberDisabled,
 				],
-				'value' => $personalData ? $personalData->passport_number : null
+				'error_messages' => [
+					'passport_number.required_with' => trans('payment.passport_number_required')
+				],
 			])
 			->add('personal_identity_number', 'text', [
 				'label' => trans('payment.personal_identity_number'),
 				'rules' => $identityNumberDisabled ? '' : ['required_without:no_identity_number', new ValidatePersonalIdentityNumber],
 				'attr'  => [
-					'disabled' => $identityNumberDisabled
+					'disabled' => $identityNumberDisabled,
 				],
-				'value' => $personalData ? $personalData->personal_identity_number : null
+				'error_messages' => [
+					'personal_identity_number.required_without' => trans('validation.required')
+				],
 			])
 			->add('no_identity_number', 'checkbox', [
 				'label' => trans('payment.no_identity_number'),
 				'attr'  => [
-					'disabled' => $identityNumberDisabled
+					'disabled' => $identityNumberDisabled,
 				],
+				'checked' => !empty($user->passport_number),
 			])
 
 			// Personal data

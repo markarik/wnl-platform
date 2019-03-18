@@ -28,11 +28,9 @@
 		<section class="section">
 			<h3 class="title">@lang('payment.personal-data-id-heading')</h3>
 
-			<div class="m-form-group">
-				{!! form_row($form->personal_identity_number) !!}
-				{!! form_row($form->passport_number) !!}
-				{!! form_row($form->no_identity_number) !!}
-			</div>
+			{!! form_row($form->personal_identity_number, ['wrapper' => ['id' => 'personalIdentityNumberGroup']]) !!}
+			{!! form_row($form->passport_number, ['wrapper' => ['id' => 'passportNumberGroup']]) !!}
+			{!! form_row($form->no_identity_number) !!}
 		</section>
 
 		<section id="personal-data" class="section">

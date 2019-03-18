@@ -53,12 +53,19 @@
 
 					<p class="margin top big">@lang('payment.confirm-personal-data-private')</p>
 
-					@if(is_array($user->identityNumbers))
+					@if(!empty($user->personal_identity_number))
 						<p>
 							<strong>
-								{{--TODO fix label--}}
 								{{ trans('payment.personal_identity_number') }}:
-								{{ $user->identityNumbers[0]['value'] }}
+								{{ $user->personal_identity_number }}
+							</strong>
+						</p>
+					@endif
+					@if(!empty($user->passport_number))
+						<p>
+							<strong>
+								{{ trans('payment.passport_number') }}:
+								{{ $user->passport_number }}
 							</strong>
 						</p>
 					@endif

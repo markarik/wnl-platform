@@ -23,9 +23,27 @@ $(function () {
 	const cartClose = document.getElementById('cartClose');
 	const cartIcon = document.getElementById('cartIcon');
 	const cartBox = document.getElementById('cartBox');
+	const noIdentityNumberCheckbox = document.getElementById('no_identity_number');
+	const passportNumberGroup = document.getElementById('passportNumberGroup');
+	const personalIdentityNumberGroup = document.getElementById('personalIdentityNumberGroup');
 
 	if(toggleCheckbox.find('input').length && toggleCheckbox.find('input')[0].checked) {
 		invoiceForm.addClass('show').removeClass('hidden');
+	}
+
+	const toggleIdentityNumber = showIdentityNumber  => {
+		if (showIdentityNumber) {
+			passportNumberGroup.classList.add('-dNone');
+			personalIdentityNumberGroup.classList.remove('-dNone');
+		} else {
+			passportNumberGroup.classList.remove('-dNone');
+			personalIdentityNumberGroup.classList.add('-dNone');
+		}
+	};
+
+	if (noIdentityNumberCheckbox) {
+		noIdentityNumberCheckbox.addEventListener('click', e => toggleIdentityNumber(!e.target.checked));
+		toggleIdentityNumber(!noIdentityNumberCheckbox.checked);
 	}
 
 	cartClose && cartClose.addEventListener('click', () => {

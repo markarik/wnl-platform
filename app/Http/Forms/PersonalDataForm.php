@@ -27,6 +27,7 @@ class PersonalDataForm extends Form
 				'attr'  => [
 					'disabled' => $identityNumberDisabled
 				],
+				'value' => $personalData ? $personalData->passport_number : null
 			])
 			->add('personal_identity_number', 'text', [
 				'label' => trans('payment.personal_identity_number'),
@@ -34,6 +35,7 @@ class PersonalDataForm extends Form
 				'attr'  => [
 					'disabled' => $identityNumberDisabled
 				],
+				'value' => $personalData ? $personalData->personal_identity_number : null
 			])
 			->add('no_identity_number', 'checkbox', [
 				'label' => trans('payment.no_identity_number'),

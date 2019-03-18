@@ -25,13 +25,26 @@
 }
 
 .a-checkbox {
+  background-color: $white;
+  border: 1px solid $cadet-blue;
+  border-radius: 2px;
+  font-size: $font-size-plus-3;
+  line-height: $line-height-base;
   height: 24px;
+  outline: none;
+  text-align: center;
   width: 24px;
   -webkit-appearance: none;
+
+  &:checked:before {
+    color: $blue-chill;
+    content: "✔";
+  }
 }
 
 .a-label {
   color: $ebony-clay;
+  display: inline-block;
   font-size: $font-size-minus-1;
   line-height: $line-height-minus-1;
 

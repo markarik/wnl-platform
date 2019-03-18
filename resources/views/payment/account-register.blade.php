@@ -1,12 +1,6 @@
 @extends('payment.layout')
 
 @section('content')
-	@include('payment.payment-hero', [
-		'step' => 1,
-		'title' => 'Lorem ipsum',
-		'subtitle' => 'Bacon ipsum',
-	])
-
 	<div class="container payment-content">
 		@if (!$errors->isEmpty())
 			<section class="subsection">
@@ -17,17 +11,15 @@
 		{!! form_start($form)  !!}
 
 		<section class="section">
-			<div><small>@lang('payment.account-register-login-text') <a class="opens-login-modal">@lang('payment.account-register-login-button')</a></small></div>
-			<div class="form-header has-text-centered">
-				<h2 class="title">@lang('payment.account-register-heading')</h2>
-			</div>
+			<p>@lang('payment.account-register-login-text') <a class="opens-login-modal">@lang('payment.account-register-login-button')</a></p>
+			<h2 class="title">@lang('payment.account-register-heading')</h2>
 			{!! form_row($form->email) !!}
 			{!! form_row($form->password) !!}
 		</section>
 
 		<section class="form-end">
-			<div class="block has-text-centered">
-				<button class="button is-primary">
+			<div class="block">
+				<button class="a-button -primary">
 					@lang('payment.account-register-submit')
 				</button>
 			</div>

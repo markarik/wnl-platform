@@ -107,8 +107,7 @@ return [
 	'personal-data-subtitle' => 'Zapisujesz się na kurs :name w&nbsp;cenie <strong>:pricezł</strong> brutto.',
 	'personal-data-email-info' => 'Jeżeli wcześniej zostawiłaś/-eś swój e-mail na naszej stronie, użyj go teraz do rejestracji, aby skorzystać z 200zł zniżki!',
 
-	'personal-data-account-heading' => 'Twoje konto',
-	'personal-data-account-lead' => 'Najpierw prosimy o&nbsp;podanie imienia i&nbsp;nazwiska oraz maila i&nbsp;hasła, których będziesz używać do logowania.',
+	'personal-data-account-heading' => 'Potwierdzona tożsamość uczestników gwarantuje bezpieczeństwo i wyjątkową atmosferę na kursie 🙂',
 
 	'personal-data-account-login-heading' => 'Zapisujesz się ponownie?',
 	'personal-data-account-login-lead' => 'Zaloguj się, aby skorzystać z 50% zniżki na Kurs internetowy dla uczestników poprzedniej edycji!',
@@ -121,9 +120,9 @@ return [
 	'identity_number_personal_identity_number' => 'PESEL',
 	'identity_number_passport_number' => 'Paszport',
 
-	'personal-data-heading' => 'Adres do wysyłki materiałów',
+	'personal-data-heading' => 'Na jaki adres mamy nadać przesyłkę? 🎁 ',
 	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami.',
-	'personal-data-invoice-data-heading' => 'Dane do faktury',
+	'personal-data-invoice-data-heading' => 'Twoje dane na fakturze.',
 
 	'first-name' => 'Imię',
 	'last-name' => 'Nazwisko',

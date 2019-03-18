@@ -1,6 +1,25 @@
 .m-form-group {
-  .a-label, .a-input {
+  margin-bottom: $space-xs;
+
+  .a-label {
     margin-bottom: $space-xxxs;
   }
+
+  .a-checkbox {
+    margin-right: $space-s;
+  }
+
+  .-grouped & {
+    flex: 1;
+
+    &:not(:last-child) {
+      margin-right: $space-m;
+    }
+
+  }
+
 }
 
+.-grouped {
+  display: flex;
+}

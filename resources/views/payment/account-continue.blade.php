@@ -1,12 +1,6 @@
 @extends('payment.layout')
 
 @section('content')
-	@include('payment.payment-hero', [
-		'step' => 1,
-		'title' => 'Lorem ipsum',
-		'subtitle' => 'Bacon ipsum',
-	])
-
 	<div class="container payment-content">
 		<div class="block has-text-centered">
 			<div><strong>@lang('payment.account-continue-heading')</strong></div>

@@ -6,7 +6,7 @@ namespace Tests\Browser\Tests\Payment\Modules;
 
 use App\Models\Coupon;
 use Tests\BethinkBrowser;
-use Tests\Browser\Pages\Payment\SelectProductPage;
+use Tests\Browser\Pages\Payment\AccountPage;
 use Tests\Browser\Pages\Payment\VoucherPage;
 
 class VoucherModule
@@ -27,7 +27,7 @@ class VoucherModule
 			->visit(new VoucherPage())
 			->click('@skip')
 			->assertPathIs(
-				(new SelectProductPage)->url()
+				(new AccountPage)->url()
 			);
 	}
 
@@ -44,7 +44,7 @@ class VoucherModule
 			->type('code', $coupon->code)
 			->click('@use')
 			->assertPathIs(
-				(new SelectProductPage)->url()
+				(new AccountPage)->url()
 			);
 	}
 
@@ -59,7 +59,7 @@ class VoucherModule
 			->type('code', $browser->studyBuddy->code)
 			->click('@use')
 			->assertPathIs(
-				(new SelectProductPage)->url()
+				(new AccountPage)->url()
 			);
 	}
 }

@@ -4,10 +4,10 @@
 			<div class="container">
 				<div id="payment-steps" class="columns is-mobile">
 					<div class="column is-one-third">
-						@if ($step > 1) <a href="{{ route('payment-select-product') }}"> @endif
+						@if ($step > 1) <a href="{{ route('payment-account') }}"> @endif
 							<div class="payment-step @if ($step > 0) is-active @endif @if ($step === 1) is-current @endif">
-								<span class="payment-step-count">@lang('payment.payment-steps-select-product-count')</span>
-								<span class="payment-step-text is-hidden-mobile">@lang('payment.payment-steps-select-product')</span>
+								<span class="payment-step-count">@lang('payment.payment-steps-account-count')</span>
+								<span class="payment-step-text is-hidden-mobile">@lang('payment.payment-steps-account')</span>
 							</div>
 						@if ($step > 1) </a> @endif
 					</div>
@@ -51,27 +51,6 @@
 			<p>Jeżeli jednak planujesz naukę do LEK-u we wrześniu 2019r., możesz zapisać się i zacząć już teraz, a w kwietniu przedłużysz dostęp wykupując 5. edycję za 50% ceny.</p>
 
 			<p>Cieszymy się, że chcesz do nas dołączyć, ale zależy nam na tym, aby była to w pełni świadoma decyzja. 🙂</p>
-		</section>
-	@endif
-
-	@if (Session::has('coupon'))
-		<section class="voucher notification is-info has-text-centered">
-			@lang('payment.voucher-current', [
-				'name' => session('coupon')['name'],
-				'value' => trans('payment.voucher-' . session('coupon')['type'], [
-					'value' => session('coupon')['value'],
-				])
-			])
-		</section>
-	@elseif (Auth::user() && Auth::user()->coupons->count() !== 0)
-		<section class="voucher notification is-info has-text-centered">
-			@lang('payment.voucher-current', [
-				'name' => Auth::user()->coupons[0]['name'],
-				'value' => trans('payment.voucher-' . Auth::user()->coupons[0]['type'], [
-					'value' => Auth::user()->coupons[0]['value'],
-				])
-			])
-			<p>@lang('payment.voucher-current-explanation')</p>
 		</section>
 	@endif
 </div>

@@ -259,9 +259,28 @@ class User extends Authenticatable
 		return "{$addr->street}, {$addr->zip} {$addr->city}";
 	}
 
+	public function getInitialsAttribute() {
+		$initials = '';
+
+		if ($this->first_name) {
+			$initials .= mb_strtoupper($this->first_name[0]);
+		}
+		if ($this->last_name) {
+			$initials .= mb_strtoupper($this->last_name[0]);
+		}
+
+		return $initials;
+	}
+
+	public function getSignUpCompleteAttribute() {
+		return !($this->first_name === null || $this->last_name === null);
+	}
+
 	protected function getSubscriptionStatus($dates)
 	{
-		if ($this->hasRole(['admin', 'moderator', 'test'])) return self::SUBSCRIPTION_STATUS_ACTIVE;
+		if ($this->hasRole([Role::ROLE_ADMIN, Role::ROLE_MODERATOR, Role::ROLE_TEST])) {
+			return self::SUBSCRIPTION_STATUS_ACTIVE;
+		}
 
 		list ($min, $max) = $dates;
 
@@ -350,6 +369,27 @@ class User extends Authenticatable
 	public function sendPasswordResetNotification($token)
 	{
 		$this->notify(new ResetPasswordNotification($token));
+	}
+
+	public static function createWithProfileAndBilling($userData) {
+		/** @var User $user */
+		$user = static::create($userData);
+
+		$user->profile()->create([
+			'first_name' => $user->first_name,
+			'last_name'  => $user->last_name,
+		]);
+
+		$user->billing()->create([
+			'company_name' => $user->invoice_name,
+			'vat_id'       => $user->invoice_nip,
+			'address'      => $user->invoice_address,
+			'zip'          => $user->invoice_zip,
+			'city'         => $user->invoice_city,
+			'country'      => $user->invoice_country,
+		]);
+
+		return $user;
 	}
 
 	/**

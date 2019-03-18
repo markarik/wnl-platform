@@ -62,6 +62,7 @@ class CreateGroupDiscount implements ShouldQueue
 				'updated_at' => $now,
 				'times_usable' => 1,
 				'expires_at' => $this->couponAttributes['expires'],
+				'kind' => Coupon::KIND_GROUP
 			]);
 
 			Mail::to($email)->send(new StudyGroup($coupon));

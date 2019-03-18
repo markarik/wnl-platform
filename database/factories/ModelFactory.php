@@ -25,6 +25,16 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 		'consent_terms' => 1
 	];
 });
+$factory->define(App\Models\UserProfile::class, function (Faker\Generator $faker) {
+	return [
+		'first_name' => $faker->firstName,
+		'last_name' => $faker->lastName,
+	];
+});
+
+$factory->afterCreating(App\Models\User::class, function (App\Models\User $user) {
+	$user->profile()->save(factory(App\Models\UserProfile::class)->make());
+});
 
 $factory->define(App\Models\UserQuizResults::class, function () {
 	return [

@@ -198,6 +198,10 @@ class Order extends Model
 		return $this->created_at->diffInDays($now) > 7;
 	}
 
+	public function getHasShipmentAttribute() {
+		return empty($this->coupon) || $this->coupon->kind !== Coupon::KIND_PARTICIPANT;
+	}
+
 	public function cancel()
 	{
 		$this->canceled = true;

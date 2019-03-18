@@ -28,9 +28,9 @@ return [
 	/**
 	 * Payment Steps Menu
 	 */
-	'payment-steps-select-product' => 'Wybór wariantu kursu',
-	'payment-steps-select-product-count' => '1',
-	'payment-steps-personal-data' => 'Twoje dane i konto',
+	'payment-steps-account' => 'Twoje konto',
+	'payment-steps-account-count' => '1',
+	'payment-steps-personal-data' => 'Twoje dane',
 	'payment-steps-personal-data-count' => '2',
 	'payment-steps-confirm-order' => 'Potwierdzenie zamówienia',
 	'payment-steps-confirm-order-count' => '3',
@@ -131,10 +131,9 @@ return [
 	'address' => 'Ulica i numer domu / mieszkania',
 	'zip' => 'Kod pocztowy',
 	'city' => 'Miasto',
-	'email' => 'Adres e-mail',
+	'email' => 'Twój e-mail*',
 	'phone' => 'Numer telefonu',
-	'password' => 'Twoje nowe hasło',
-	'password-confirm' => 'Potwierdź hasło',
+	'password' => 'Hasło do logowania - minimum 6 znaków*',
 
 	'invoice' => 'Zaznacz, jeżeli chcesz podać inne dane do faktury',
 	'invoice-name' => 'Nazwa firmy',
@@ -155,17 +154,28 @@ return [
 	'personal-data-consent-newsletter-heading' => 'Druga zgoda nie jest obowiązkowa, ale pozwoli Ci otrzymywać informacje o kursie, nowych wpisach na blogu i nowych produktach. Nie obawiaj się spamu! Będziemy pisać tylko z wartościowymi wiadomościami. :)',
 	'personal-data-consent-newsletter' => 'Wyrażam zgodę na otrzymywanie za pomocą środków komunikacji elektronicznej, w szczególności poczty elektronicznej oraz SMS, na podany przeze mnie adres email oraz numer telefonu informacji handlowych od  BETHINK SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ (ul. Henryka Sienkiewicza 8/1, 60-817 Poznań) zgodnie z ustawą z dnia 18 lipca 2002 r. o  świadczeniu usług drogą elektroniczną (Dz.U. Nr 144, poz. 1204 ze zm.)',
 
-	'personal-data-tou-heading' => 'Ostatni krok to akceptacja naszego regulaminu, definiującego warunki umowy, którą zawieramy.',
-	'personal-data-tou-content' => 'Znam i akceptuję treść dokumentów <a class="tou-open-modal-link" href=":tou-link-href" target="_blank">:tou-link-content</a> oraz <a class="privacy-policy-open-modal-link" href=":privacy-link-href" target="_blank">:privacy-link-content</a>.',
-	'personal-data-tou-link-content' => 'Regulamin Serwisu',
+	'personal-data-submit' => 'Zapisz i przejdź dalej',
+
+	'account-register-heading' => 'Cześć! 👋<br />Najpierw stwórzmy dla Ciebie nowe konto.',
+	'account-register-login-text' => 'Posiadasz już konto na Kurs do LEK?',
+	'account-register-login-button' => 'Zaloguj się',
+	'account-wrong-account-text' => 'Nie ty?',
+	'account-wrong-account-register-text' => 'Załóż nowe konto',
+	'account-name-heading' => 'Używasz teraz konta:',
+	'account-errors' => 'Ups, jeszcze moment, coś się nie zgadza! Prosimy o poprawienie pól, przy których pojawiły się błędy. Dzięki!',
+
+	'account-tou-content' => 'Poprzez kliknięcie akceptujesz <a class="tou-open-modal-link" href=":tou-link-href" target="_blank">:tou-link-content</a> oraz <a class="privacy-policy-open-modal-link" href=":privacy-link-href" target="_blank">:privacy-link-content</a>.',
+	'account-tou-link-content' => 'Regulamin',
 	'tou-link-href' => 'https://wiecejnizlek.pl/documents/RegulaminSerwisuWiecejnizlekPl.pdf',
 	'privacy-link-href' => 'https://wiecejnizlek.pl/documents/PolitykaPrywatnosciWiecejNizLEK.pdf',
-	'personal-data-privacy-link-content' => 'Polityka Prywatności',
-	'personal-data-tou-title' => 'Regulamin Serwisu portalu wiecejnizlek.pl',
-	'personal-data-privacy-title' => 'Polityka Prywatności portalu wiecejnizlek.pl',
+	'account-privacy-link-content' => 'Polityka Prywatności',
 
-	'personal-data-submit' => 'Załóż konto i przejdź dalej',
-	'personal-data-edit' => 'Zapisz i przejdź dalej',
+	'account-register-submit' => 'Załóż konto',
+	'account-name-submit' => 'Użyj aktualnego konta',
+
+	'account-continue-heading' => 'Dokończ swoje zamówienie, aby korzystać z platformy.',
+	'account-continue-submit' => 'Dokończ zamówienie',
+	'account-continue-back-link' => 'Wróć do strony głównej',
 
 	/**
 	 * Personal data verification step
@@ -194,6 +204,7 @@ return [
 	'confirm-order-free' => 'Potwierdź zamówienie, aby skorzystać ze 100% zniżki',
 
 	'confirm-change-order'          => 'Chcę poprawić dane',
+	'confirm-no-album-info'         => 'Przedłużenie dostępu z 50% zniżką nie obejmuje nowego albumu map myśli. Nowy album możesz jednokrotnie zamówić po zalogowaniu na platformę, w zakładce KONTO > Twoje zamówienia.',
 	'personal-data-invoice-heading' => 'Dane do faktury',
 
 	/**

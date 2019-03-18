@@ -6,7 +6,7 @@ $(window).on('unload', function(){});
 $(function() {
 	var navToggle = $('.nav-toggle'),
 		navMenu = $('.nav-menu'),
-		logoutLink = navMenu.find('.logout-link'),
+		logoutLink = $('.logout-link'),
 		logoutForm = navMenu.find('#logout-form'),
 		form = $('form'),
 		buttons = $('.button'),

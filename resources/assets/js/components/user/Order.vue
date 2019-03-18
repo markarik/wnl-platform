@@ -114,7 +114,7 @@
 								</button>
 							</p>
 							<p class="metadata aligncenter margin vertical">
-								Kolejna rata: <strong>{{ order.instalments.nextPayment.amount }}zł do
+								Kolejna rata: <strong>{{ order.instalments.nextPayment.left_amount }}zł do
 								{{ instalmentDate(order.instalments.nextPayment.due_date) }}</strong>
 							</p>
 
@@ -503,7 +503,7 @@ export default {
 		},
 		amountToBePaidNext() {
 			if (this.order.method === 'instalments') {
-				return this.order.instalments.nextPayment.amount;
+				return this.order.instalments.nextPayment.left_amount;
 			}
 
 			return this.order.total;

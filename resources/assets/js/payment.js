@@ -19,9 +19,21 @@ $(function () {
 		lastNameInput = $('#last_name'),
 		recipientInput = $('#recipient');
 
+	const cartClose = document.getElementById('cartClose');
+	const cartIcon = document.getElementById('cartIcon');
+	const cartBox = document.getElementById('cartBox');
+
 	if(toggleCheckbox.find('input').length && toggleCheckbox.find('input')[0].checked) {
 		invoiceForm.addClass('show').removeClass('hidden');
 	}
+
+	cartClose && cartClose.addEventListener('click', () => {
+		cartBox.classList.add('-dNone');
+	});
+
+	cartIcon && cartIcon.addEventListener('click', () => {
+		cartBox.classList.toggle('-dNone');
+	});
 
 	lastNameInput.on('change', () => {
 		if (recipientInput.val() === '') {

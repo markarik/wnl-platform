@@ -1,12 +1,12 @@
 
-<div class="t-checkout__cart cart o-cart{{!empty($coupon) ? ' has-coupon' : ''}}">
+<div class="t-checkout__cart cart o-cart{{!empty($coupon) ? ' has-coupon' : ''}} -dNone" id="cartBox">
 	<div class="o-cart__content">
 		@if(!empty($productName))
 			<header class="o-cart__headline -centeredSpread">
 				<span>@lang('payment.cart-header')</span>
-				<span class="icon -stormGrey -hiddenMAndUp">
-				<i class="fa fa-times a-icon -small"></i>
-			</span>
+				<span class="icon -stormGrey -hiddenMAndUp" id="cartClose">
+					<i class="fa fa-times a-icon -small"></i>
+				</span>
 			</header>
 			<section class="o-cart__card -shadowMedium">
 				<img src="{{ asset('/images/lek-product-logo.svg') }}" class="o-cart__card__logo">
@@ -37,10 +37,12 @@
 				<p class="m-cart__summaryItem -centeredSpread -catalinaBlue">
 					<span>@lang('payment.cart-price-label')</span>
 					@if(!empty($coupon))
-						<span class="strikethrough">
+						<span>
+							<span class="strikethrough -textMinus1">
 								@lang('payment.cart-price-value', ['value' => $productPrice])
 							</span>
-						<span>@lang('payment.cart-price-value', ['value' => $productPriceWithCoupon])</span>
+							<span>@lang('payment.cart-price-value', ['value' => $productPriceWithCoupon])</span>
+						</span>
 					@else
 						<span>@lang('payment.cart-price-value', ['value' => $productPrice])</span>
 					@endif

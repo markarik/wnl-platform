@@ -1,9 +1,15 @@
 @extends('payment.layout')
 
 @section('content')
-
-	<section class="section">
-		<div class="container">
+	@include('payment.cart', [
+		'productName' => $product->name,
+		'productPrice' => $product->price,
+		'productAccessEnd' => $product->access_end,
+		'productPriceWithCoupon' => $productPriceWithCoupon,
+		'coupon' => $coupon,
+	])
+	<section class="section t-checkout__content">
+		<div>
 			@if (Auth::user() && Auth::user()->coupons->count() > 0)
 				<div class="notification has-text-centered">
 					@lang('payment.voucher-already-has', [ 'name' => Auth::user()->coupons[0]['name'] ])

@@ -21,16 +21,6 @@ class AccountController
 	public function index(Request $request)
 	{
 		$user = Auth::user();
-		if ($user) {
-			if ($user->signUpComplete) {
-				return view('payment.account-name', [
-					'user' => $user,
-				]);
-			} else {
-				return view('payment.account-continue');
-			}
-		}
-
 		if (Session::has('productId')) {
 			$product = Product::find(Session::get('productId'));
 		} else {
@@ -46,10 +36,24 @@ class AccountController
 			return view('payment.signups-closed', ['product' => $product]);
 		}
 
-		$user = Auth::user();
 		$coupon = $this->readCoupon($user);
 
-		$productPriceWithCoupon = null;
+		if ($user) {
+			if ($user->signUpComplete) {
+				return view('payment.account-name', [
+					'user' => $user,
+					'product' => $product,
+					'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
+					'coupon' => $coupon,
+				]);
+			} else {
+				return view('payment.account-continue', [
+					'product' => $product,
+					'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
+					'coupon' => $coupon,
+				]);
+			}
+		}
 
 		// Set intended url after successful login
 		$request->session()->flash('url.intended', route('payment-personal-data'));

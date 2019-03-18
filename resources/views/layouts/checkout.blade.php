@@ -44,7 +44,7 @@
 
 					<div class="nav-right">
 						<div class="nav-item">
-							<span class="icon -stormGrey">
+							<span class="icon -stormGrey -hiddenMAndUp" id="cartIcon">
 								<i class="fa fa-shopping-cart a-icon -small"></i>
 							</span>
 						</div>

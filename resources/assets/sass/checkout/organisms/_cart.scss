@@ -5,6 +5,10 @@
 
   @media #{$breakpoint-m} {
     padding: $space-xxl $space-m $space-l $space-m;
+
+    &.-dNone {
+      display: initial;
+    }
   }
 
   &__content {
@@ -77,7 +81,7 @@
 }
 
 .m-cart__listItem {
-  padding-bottom: $space-xxs;
+  padding: $space-xxs 0;
   border-bottom: 1px solid $mischka;
 }
 

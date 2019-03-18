@@ -11,8 +11,13 @@ trait ExecutesScenarios
 	{
 		try {
 			$this->browse(function (BethinkBrowser $browser) use ($scenario) {
-				foreach ($scenario as list($module, $method)) {
-					(new $module)->$method($browser);
+				foreach ($scenario as $scenarioArgs) {
+					$module = $scenarioArgs[0];
+					$method = $scenarioArgs[1];
+					$methodArgs = $scenarioArgs[2] ?? [];
+
+					array_unshift($methodArgs, $browser);
+					call_user_func_array([(new $module), $method], $methodArgs);
 				}
 			});
 		} finally {

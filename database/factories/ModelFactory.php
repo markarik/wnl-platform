@@ -322,6 +322,9 @@ $factory->define(App\Models\Order::class, function () {
 		'method' => 'transfer',
 		'product_id' => function () {
 			return factory(App\Models\Product::class)->create()->id;
+		},
+		'user_id' => function () {
+			return factory(App\Models\User::class)->create()->id;
 		}
 	];
 });
@@ -340,3 +343,10 @@ $factory->define(App\Models\UserSubscription::class, function () {
 		'access_end' => \Carbon\Carbon::now()->addDays(100),
 	];
 });
+
+$factory->define(App\Models\ProductInstalment::class, function () {
+	return [
+		'value_type' => 'percentage'
+	];
+});
+

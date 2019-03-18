@@ -585,6 +585,10 @@ class Invoice
 		return number_format($number, 2, ',', ' ');
 	}
 
+	/**
+	 * @param Order $order
+	 * @return string
+	 */
 	private function getInstalmentsNote($order)
 	{
 		if (empty($order->product->access_start) || empty($order->product->access_end)) {

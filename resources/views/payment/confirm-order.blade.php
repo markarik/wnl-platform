@@ -96,7 +96,7 @@
 					{!! csrf_field() !!}
 					<input type="hidden" name="method" value="free"/>
 
-					<button class="a-button -big">
+					<button class="a-button -big" data-button="pay-free">
 						@lang('payment.confirm-method-free-button')
 					</button>
 				</form>
@@ -129,6 +129,7 @@
 						</form>
 						<button class="a-button -big p24-submit" data-id="full_payment_p24_form"
 						id="p24-submit-full-payment"
+                        data-button="pay-online-now"
 						data-payment="online">@lang('payment.confirm-method-online-payment-button')</button>
 					</div>
 					 <div class="column">
@@ -136,11 +137,12 @@
 							{!! csrf_field() !!}
 							<input type="hidden" name="method" value="online"/>
 
-							<button type="submit" class="a-button -big -secondary">@lang('payment.confirm-deferred-payment-button')</button>
+							<button type="submit" class="a-button -big -secondary" data-button="pay-online-later">@lang('payment.confirm-deferred-payment-button')</button>
 						</form>
 					</div>
 				</div>
 			</section>
+			<?php /** @var \App\Models\OrderInstalment[] $instalments */ ?>
 			@if($instalments)
 				 <section class="has-text-centered">
 					<div class="expandable">
@@ -150,7 +152,10 @@
 						<div class="expandable-content box">
 							<h4>Płatność w 3 ratach</h4>
 							<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
-							<p class="margin bottom">Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong> i kolejnych do <strong>20 listopada</strong> i <strong>20 grudnia</strong>.</p>
+							<p class="margin bottom">
+								Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong>
+								i kolejnych do <strong data-instalment-due-date data-timestamp="{{$instalments[1]->due_date->timestamp}}">{{$instalments[1]->due_date->format('d.m.Y')}}</strong>
+								i <strong data-instalment-due-date data-timestamp="{{$instalments[2]->due_date->timestamp}}">{{$instalments[2]->due_date->format('d.m.Y')}}</strong>.</p>
 
 							<table class="table is-bordered margin vertical">
 								<tr>
@@ -160,18 +165,18 @@
 											@if($loop->first)
 												1. rata (do 7 dni po złożeniu zamówienia)
 											@else
-												{{$loop->index + 1}}. rata (do&nbsp;{{$instalment['date']->format('d.m.Y')}})
+												{{$loop->index + 1}}. rata (do&nbsp;{{$instalment->due_date->format('d.m.Y')}})
 											@endif
 										</th>
 									@endforeach
 									<th>Razem</th>
 								</tr>
-								<tr>
+								<tr id="instalments-amounts">
 									<td>{{ $order->product->name }}</td>
 									@for ($i = 0; $i < count($instalments); $i++)
-										<th>
+										<td>
 											{{ $instalments[$i]['amount'] }}zł
-										</th>
+										</td>
 									@endfor
 									<td>{{ $order->total_with_coupon }}zł</td>
 								</tr>
@@ -204,7 +209,7 @@
 										<input type="hidden" name="p24_sign" value="{{ $instalmentsChecksum }}"/>
 										<input type="hidden" name="p24_encoding" value="UTF-8"/>
 									</form>
-									<button class="button is-primary p24-submit" data-id="instalments_p24_form"
+									<button class="button is-primary p24-submit" data-id="instalments_p24_form" data-button="pay-instalments-now"
 									 data-payment="instalments">@lang('payment.confirm-method-instalments-online-button')</button>
 								</div>
 
@@ -212,7 +217,7 @@
 									<form action="{{route('payment-confirm-order-post')}}" method="post">
 										{!! csrf_field() !!}
 										<input type="hidden" name="method" value="instalments"/>
-										<button type="submit" class="button margin top" id="instalments-button">
+										<button type="submit" class="button margin top" data-button="pay-instalments-later">
 											@lang('payment.confirm-method-instalments-button')
 										</button>
 									</form>

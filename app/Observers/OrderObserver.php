@@ -68,7 +68,7 @@ class OrderObserver
 		}
 	}
 
-	protected function handlePaymentMethodSet($order)
+	protected function handlePaymentMethodSet(Order $order)
 	{
 		\Log::debug('Order payment method set, decrementing product quantity.');
 		$this->dispatch(new OrderConfirmed($order));
@@ -88,13 +88,13 @@ class OrderObserver
 		}
 
 		if ($order->method === 'instalments') {
-			$order->generatePaymentSchedule();
+			$order->generateAndSavePaymentSchedule();
 		}
 
 		$this->notify(new OrderCreated($order));
 	}
 
-	protected function handleCouponChange($order)
+	protected function handleCouponChange(Order $order)
 	{
 		\Log::debug('Order coupon changed.');
 		if ($order->studyBuddy) {
@@ -102,7 +102,7 @@ class OrderObserver
 		}
 
 		if ($order->method === 'instalments') {
-			$order->generatePaymentSchedule();
+			$order->generateAndSavePaymentSchedule();
 		}
 	}
 }

@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\UseCoupon;
 use App\Models\Product;
 use Auth;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Coupon;
 use Illuminate\Support\Facades\Session;
-use Validator;
 
 class VoucherController extends Controller
 {
@@ -19,7 +17,7 @@ class VoucherController extends Controller
 		if (Session::has('productId')) {
 			$product = Product::find(Session::get('productId'));
 		} else {
-			$product = Product::slug($request->route('productSlug') ?? 'wnl-online');
+			$product = Product::slug($request->route('productSlug') ?? Product::SLUG_WNL_ONLINE);
 			Session::put('productId', $product->id);
 		}
 

@@ -8,6 +8,11 @@ class Product extends Model
 {
 	const VAT_RATES = [0, 5, 8 , 23];
 
+	const SLUG_WNL_ALBUM = 'wnl-album';
+	const SLUG_WNL_ONLINE = 'wnl-online';
+	const SLUG_WNL_ONLINE_ONLY = 'wnl-online-only';
+	const SLUG_WNL_ONLINE_ONSITE = 'wnl-online-onsite';
+
 	protected $fillable = [
 		'name',
 		'invoice_name',

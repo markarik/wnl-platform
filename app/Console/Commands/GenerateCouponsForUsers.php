@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Coupon;
+use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -63,7 +64,7 @@ class GenerateCouponsForUsers extends Command
 				'user_id'    => $user->id,
 				'name'       => 'Zniżka -50% na Kurs internetowy dla uczestników poprzednich edycji kursu Więcej niż LEK',
 				'type'       => 'percentage',
-				'slug'       => 'wnl-online-only',
+				'slug'       => Product::SLUG_WNL_ONLINE_ONLY,
 				'value'      => 50,
 				'expires_at' => $expires,
 				'kind' => Coupon::KIND_PARTICIPANT,

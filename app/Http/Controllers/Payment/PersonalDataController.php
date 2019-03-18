@@ -23,7 +23,7 @@ class PersonalDataController extends Controller
 		if (Session::has('productId')) {
 			$product = Product::find(Session::get('productId'));
 		} else {
-			$product = Product::slug($request->route('productSlug') ?? 'wnl-online');
+			$product = Product::slug($request->route('productSlug') ?? Product::SLUG_WNL_ONLINE);
 			Session::put('productId', $product->id);
 		}
 
@@ -102,7 +102,7 @@ class PersonalDataController extends Controller
 
 		if (!empty($coupon)) {
 			$this->addCoupon($order, $coupon);
-		} else if ($order->product->slug !== 'wnl-album') {
+		} else if ($order->product->slug !== Product::SLUG_WNL_ALBUM) {
 			$this->generateStudyBuddy($order);
 		}
 	}
@@ -125,7 +125,7 @@ class PersonalDataController extends Controller
 
 		$coupon->save();
 		$coupon->products()->attach(
-			Product::whereIn('slug', ['wnl-online'])->get()
+			Product::whereIn('slug', [Product::SLUG_WNL_ONLINE])->get()
 		);
 	}
 

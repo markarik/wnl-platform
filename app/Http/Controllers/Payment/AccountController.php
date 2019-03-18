@@ -24,7 +24,7 @@ class AccountController
 		if (Session::has('productId')) {
 			$product = Product::find(Session::get('productId'));
 		} else {
-			$product = Product::slug($request->route('productSlug') ?? 'wnl-online');
+			$product = Product::slug($request->route('productSlug') ?? Product::SLUG_WNL_ONLINE);
 			Session::put('productId', $product->id);
 		}
 

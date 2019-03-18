@@ -27,7 +27,7 @@ trait CheckoutTrait
 		return $product;
 	}
 
-	private function readCoupon(Product $product, User $user): ?Coupon {
+	private function readCoupon(Product $product, ?User $user): ?Coupon {
 		/** @var Coupon $coupon */
 		$coupon = $user ? $user->coupons->first() : null;
 

@@ -164,8 +164,8 @@
 							<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
 							<p class="margin bottom">
 								Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong>
-								i kolejnych do <strong data-instalment-due-date data-timestamp="{{$instalments[1]->due_date->timestamp}}">{{$instalments[1]->due_date->format('d.m.Y')}}</strong>
-								i <strong data-instalment-due-date data-timestamp="{{$instalments[2]->due_date->timestamp}}">{{$instalments[2]->due_date->format('d.m.Y')}}</strong>.</p>
+								i kolejnych do <strong data-date-format="D MMMM" data-timestamp="{{$instalments[1]->due_date->timestamp}}">{{$instalments[1]->due_date->format('d.m.Y')}}</strong>
+								i <strong data-date-format="D MMMM" data-timestamp="{{$instalments[2]->due_date->timestamp}}">{{$instalments[2]->due_date->format('d.m.Y')}}</strong>.</p>
 
 							<table class="table is-bordered margin vertical">
 								<tr>

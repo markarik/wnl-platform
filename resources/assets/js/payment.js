@@ -74,9 +74,12 @@ $(function () {
 		});
 	});
 
-	$('[data-instalment-due-date]').each(function () {
-		let date = moment.unix($(this).attr('data-timestamp'));
-		$(this).html(date.format('D MMMM'));
+	$('[data-date-format]').each(function () {
+		const $this = $(this);
+		const date = moment.unix($this.attr('data-timestamp'));
+		const format = $this.attr('data-date-format');
+
+		$this.html(date.format(format));
 	});
 
 	$.ajaxSetup({

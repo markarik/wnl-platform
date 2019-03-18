@@ -14,8 +14,10 @@
 					<span>{{$productName}}</span>
 					@if (!empty($productAccessEnd))
 						<span class="-textMinus2">
-						@lang('payment.cart-access-info', ['date' => $productAccessEnd->format('d.m.Y')])
-					</span>
+							@lang('payment.cart-access-info', [
+								'date' => '<span data-date-format="D MMMM Y" data-timestamp="' . $productAccessEnd->timestamp . '">' . $productAccessEnd->format('d.m.Y') . '</span>'
+							])
+						</span>
 					@endif
 				</p>
 			</section>

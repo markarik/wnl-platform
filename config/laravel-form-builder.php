@@ -7,7 +7,7 @@ return [
         'label_class'         => 'a-label',
         'field_class'         => 'a-input',
         'help_block_class'    => 'help-block',
-        'error_class'         => '.a-error',
+        'error_class'         => 'a-error',
         'required_class'      => '-required'
 
         // Override a class from a field.

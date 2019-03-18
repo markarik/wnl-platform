@@ -66,15 +66,14 @@
 						{!! form_row($form->invoice_city) !!}
 					</div>
 					{!! form_row($form->invoice_country ) !!}
+				</div>
 			</div>
 		</section>
 
 		<section class="form-end">
-			<div class="block has-text-centered">
-				<button class="button is-primary">
-						@lang('payment.personal-data-submit')
-				</button>
-			</div>
+			<button class="a-button -big">
+					@lang('payment.personal-data-submit')
+			</button>
 		</section>
 
 		<input type="hidden" name="edit" value="{{ request('edit') }}">

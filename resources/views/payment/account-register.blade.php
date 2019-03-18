@@ -25,8 +25,8 @@
 		</section>
 
 		<section class="form-end">
-			<div class="block has-text-centered">
-				<button class="button is-primary" data-button="account-continue">
+			<div class="block">
+				<button class="a-button -big" data-button="account-continue">
 					@lang('payment.account-register-submit')
 				</button>
 			</div>

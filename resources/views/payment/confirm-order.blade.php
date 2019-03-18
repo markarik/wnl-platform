@@ -10,12 +10,6 @@
 		'coupon' => $coupon,
 	])
 
-	@include('payment.payment-hero', [
-		'step' => 3,
-		'title' => trans('payment.confirm-order-title'),
-		'subtitle' => trans('payment.confirm-order-subtitle'),
-	])
-
 	<div class="container">
 		<section class="subsection">
 			<div class="box">
@@ -102,7 +96,7 @@
 					{!! csrf_field() !!}
 					<input type="hidden" name="method" value="free"/>
 
-					<button class="button is-primary">
+					<button class="a-button -big">
 						@lang('payment.confirm-method-free-button')
 					</button>
 				</form>
@@ -133,7 +127,7 @@
 							<input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
 							<input type="hidden" name="p24_encoding" value="UTF-8"/>
 						</form>
-						<button class="button is-primary p24-submit" data-id="full_payment_p24_form"
+						<button class="a-button -big p24-submit" data-id="full_payment_p24_form"
 						id="p24-submit-full-payment"
 						data-payment="online">@lang('payment.confirm-method-online-payment-button')</button>
 					</div>
@@ -142,7 +136,7 @@
 							{!! csrf_field() !!}
 							<input type="hidden" name="method" value="online"/>
 
-							<button type="submit" class="button">@lang('payment.confirm-deferred-payment-button')</button>
+							<button type="submit" class="a-button -big -secondary">@lang('payment.confirm-deferred-payment-button')</button>
 						</form>
 					</div>
 				</div>

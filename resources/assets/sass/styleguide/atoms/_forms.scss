@@ -1,6 +1,6 @@
 .a-input {
   background-color: $white;
-  border: 1px solid $cadet-blue;
+  border: 2px solid $mischka;
   border-radius: 2px;
   color: $catalina-blue;
   font-size: $font-size-base;
@@ -15,18 +15,18 @@
   }
 
   &:disabled {
-    border-color: $mischka;
+    border-color: $athens-grey;
     color: $storm-gray;
   }
 
-  &:invalid, &.-error {
+  &:focus:invalid, &.-error {
     border-color: $alizarin-crimson;
   }
 }
 
 .a-checkbox {
   background-color: $white;
-  border: 1px solid $cadet-blue;
+  border: 2px solid $cadet-blue;
   border-radius: 2px;
   font-size: $font-size-plus-3;
   line-height: $line-height-base;

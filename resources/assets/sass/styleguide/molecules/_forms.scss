@@ -5,21 +5,28 @@
     margin-bottom: $space-xxxs;
   }
 
+  .a-error {
+    margin-top: $space-xxxxs;
+  }
+
   .a-checkbox {
     margin-right: $space-s;
   }
 
-  .-grouped & {
-    flex: 1;
+  @media #{$breakpoint-s} {
+    .-grouped & {
+      flex: 1;
 
-    &:not(:last-child) {
-      margin-right: $space-m;
+      &:not(:last-child) {
+        margin-right: $space-m;
+      }
+
     }
-
   }
-
 }
 
-.-grouped {
-  display: flex;
+@media #{$breakpoint-s} {
+  .-grouped {
+    display: flex;
+  }
 }

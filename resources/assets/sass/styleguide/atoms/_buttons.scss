@@ -1,13 +1,61 @@
 .a-button {
+  background: $blue-chill;
   border: 0;
   border-radius: 100px;
   color: $white;
+  cursor: pointer;
   font-size: $font-size-minus-1;
+  font-weight: 500;
   outline: none;
   padding: $space-s $space-m;
   text-transform: uppercase;
+  transition: color ease-in-out .3s, border-color ease-in-out .3s, background-color ease-in-out .3s, box-shadow ease-in-out .3s;
+  width: 100%;
 
-  &.-primary {
-    background: $blue-chill;
+  @media #{$breakpoint-s} {
+    width: auto;
+
+    &.-big {
+      padding: $space-s $space-xxxxl;
+    }
+  }
+
+  &:disabled, &.-disabled {
+    background-color: $athens-grey;
+    color: $storm-gray;
+    cursor: not-allowed;
+  }
+
+  &:enabled {
+    &:hover, &.-hovered {
+      background-color: $surfie-green;
+    }
+
+    &:focus, &.-focused {
+      background-color: $surfie-green;
+      box-shadow: inset 0 0 0 2px $surfie-green, inset 0 0 0 4px $white;
+    }
+  }
+
+  &.-secondary {
+    background-color: $white;
+    border: 2px solid $ebony-clay;
+    color: $ebony-clay;
+
+    &:enabled {
+      &:hover, &.-hovered {
+        background-color: $white;
+      }
+
+      &:focus, &.-focus {
+        background-color: $white;
+        box-shadow: inset 0 0 0 2px $white, inset 0 0 0 4px $ebony-clay;
+      }
+    }
+
+    &:disabled, &.-disabled {
+      border-color: $cadet-blue;
+      color: $mischka;
+    }
   }
 }

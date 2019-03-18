@@ -20,6 +20,7 @@ class Coupon extends Model
 	const KIND_STUDY_BUDDY = 'study_buddy';
 	const KIND_VOUCHER = 'voucher';
 	const KIND_PARTICIPANT = 'participant';
+	const SLUG_WNL_ONLINE_ONLY = 'wnl-online-only';
 
 	protected $dispatchesEvents = [
 		'created' => CouponCreated::class,

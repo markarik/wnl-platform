@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Console\Command;
@@ -66,7 +67,7 @@ class OrdersStats extends Command
 		$coupons = $orders->where('coupon', true)->count();
 		$online = $orders->where('product.slug', Product::SLUG_WNL_ONLINE)->count();
 		$onsite = $orders->where('product.slug', Product::SLUG_WNL_ONLINE_ONSITE)->count();
-		$coupons50 = $orders->where('coupon.slug', Product::SLUG_WNL_ONLINE_ONLY)->count();
+		$coupons50 = $orders->where('coupon.slug', Coupon::SLUG_WNL_ONLINE_ONLY)->count();
 		$couponsSb = $orders->where('coupon.name', 'Study Buddy')->count();
 
 		$headers = ['Orders', 'Total value', 'Paid amount', 'Coupons', '50% Coupons', 'Study Buddy', 'Online', 'Onsite'];

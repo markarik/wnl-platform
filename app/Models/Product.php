@@ -10,7 +10,6 @@ class Product extends Model
 
 	const SLUG_WNL_ALBUM = 'wnl-album';
 	const SLUG_WNL_ONLINE = 'wnl-online';
-	const SLUG_WNL_ONLINE_ONLY = 'wnl-online-only';
 	const SLUG_WNL_ONLINE_ONSITE = 'wnl-online-onsite';
 
 	protected $fillable = [

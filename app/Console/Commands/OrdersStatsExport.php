@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Product;
+use App\Models\Coupon;
 use Carbon\Carbon;
 use Google_Service_Sheets_ValueRange;
 use App\Models\Order;
@@ -112,8 +112,8 @@ class OrdersStatsExport extends CommandWithMonitoring
 			'value'        => $orders->sum('total_with_coupon'),
 			'paid'         => $orders->sum('paid_amount'),
 			'coupons'      => $orders->where('coupon', true)->count(),
-			'albums'       => $orders->whereNotIn('coupon.slug', [Product::SLUG_WNL_ONLINE_ONLY])->count(),
-			'50%'          => $orders->where('coupon.slug', Product::SLUG_WNL_ONLINE_ONLY)->count(),
+			'albums'       => $orders->whereNotIn('coupon.slug', [Coupon::SLUG_WNL_ONLINE_ONLY])->count(),
+			'50%'          => $orders->where('coupon.slug', Coupon::SLUG_WNL_ONLINE_ONLY)->count(),
 			''             => '',
 		];
 

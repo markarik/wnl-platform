@@ -6,6 +6,13 @@
 					Twoje zamówienia
 				</div>
 			</div>
+			<div v-if="displayAlbumLink">
+				<a :href="orderAlbumUrl" title="Zamów album map myśli">
+					<span class="icon is-small status-icon">
+						<i class="fa fa-shopping-cart"></i>
+					</span> Zamów album map myśli ({{albumInfo.price}}zł)
+				</a>
+			</div>
 		</div>
 		<div class="level" v-if="currentUserSubscriptionActive">
 			<div class="level-left">
@@ -53,13 +60,14 @@ export default {
 	data () {
 		return {
 			loaded: false,
-			orders: []
+			orders: [],
+			albumInfo: {},
 		};
 	},
 	computed: {
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
 		paymentUrl() {
-			return getUrl('payment/select-product');
+			return getUrl('payment/account');
 		},
 		hasOrders() {
 			return !_.isEmpty(this.orders);
@@ -69,7 +77,22 @@ export default {
 		},
 		userFriendlySubscriptionDate() {
 			return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL');
-		}
+		},
+		displayAlbumLink() {
+			const prolongationOrders = this.orders.filter(order =>
+				order.product.slug === 'wnl-online' &&
+				order.coupon && order.coupon.value === 50 &&
+				order.coupon.type === 'percentage' &&
+				!order.canceled
+			);
+
+			const albumOrders = this.orders.filter(order => order.product.slug === 'wnl-album');
+
+			return albumOrders.length === 0 && prolongationOrders.length > 0;
+		},
+		orderAlbumUrl() {
+			return getUrl('payment/personal-data/wnl-album');
+		},
 	},
 	methods: {
 		getOrders() {
@@ -97,12 +120,17 @@ export default {
 				})
 				.catch(exception => $wnl.logger.capture(exception));
 		},
+		async getAlbumInfo() {
+			const {data} = await axios.get(getApiUrl('products/bySlug/wnl-album'));
+			this.albumInfo = data;
+		},
 		isConfirmed(order) {
 			return !_.isEmpty(order.method);
 		},
 	},
 	mounted() {
 		this.getOrders();
+		this.getAlbumInfo();
 	},
 	created() {
 		if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {

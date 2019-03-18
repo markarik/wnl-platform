@@ -40,31 +40,39 @@
 			</div>
 		</section>
 
-		<section class="subsection">
-			<div class="box">
-				<p class="title">@lang('payment.confirm-personal-data-heading')</p>
-				<p class="big">{{ $user->full_name }}</p>
-				<p><strong>{{ $user->email }}</strong></p>
+		@if ($order->has_shipment)
+			<section class="subsection">
+				<div class="box">
+					<p class="title">@lang('payment.confirm-personal-data-heading')</p>
+					<p class="big">{{ $user->full_name }}</p>
+					<p><strong>{{ $user->email }}</strong></p>
 
-				<p class="margin top big">@lang('payment.confirm-personal-data-private')</p>
+					<p class="margin top big">@lang('payment.confirm-personal-data-private')</p>
 
-				@if(is_array($user->identityNumbers))
-					<p>
-						<strong>
-							{{ trans('payment.identity_number_' . $user->identityNumbers[0]['type']) }}:
-							{{ $user->identityNumbers[0]['value'] }}
-						</strong>
-					</p>
-				@endif
+					@if(is_array($user->identityNumbers))
+						<p>
+							<strong>
+								{{ trans('payment.identity_number_' . $user->identityNumbers[0]['type']) }}:
+								{{ $user->identityNumbers[0]['value'] }}
+							</strong>
+						</p>
+					@endif
 
-				<p class="margin top big">@lang('payment.confirm-personal-data-address')</p>
-				<ul>
-					<li>{{ $user->userAddress->recipient }}</li>
-					<li>{{ $user->userAddress->street }}</li>
-					<li>{{ $user->userAddress->zip }}, {{ $user->userAddress->city }}</li>
-				</ul>
-			</div>
-		</section>
+					<p class="margin top big">@lang('payment.confirm-personal-data-address')</p>
+					<ul>
+						<li>{{ $user->userAddress->recipient }}</li>
+						<li>{{ $user->userAddress->street }}</li>
+						<li>{{ $user->userAddress->zip }}, {{ $user->userAddress->city }}</li>
+					</ul>
+				</div>
+			</section>
+		@else
+			<section>
+				<p>
+					@lang('payment.confirm-no-album-info')
+				</p>
+			</section>
+		@endif
 
 		@if($user->invoice)
 			<section class="subsection">
@@ -82,10 +90,9 @@
 
 		<section class="subsection">
 			<p class="has-text-centered edit-personal-data">
-				<a href="{{ route('payment-personal-data') }}?edit=true">@lang('payment.confirm-change-order')</a>
+				<a href="{{ route('payment-personal-data') }}">@lang('payment.confirm-change-order')</a>
 			</p>
 		</section>
-
 		@if($order->coupon && (int) $order->total_with_coupon === 0)
 			<section class="subsection has-text-centered margin top">
 				<p class="subtitle">

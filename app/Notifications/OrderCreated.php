@@ -50,7 +50,7 @@ class OrderCreated extends Notification implements ShouldQueue
 			->to('#wnl-platforma')
 			->content(str_repeat($this->parrot(), 7))
 			->attachment(function ($attachment) {
-				$attachment->title('Zamówienie #' . $this->order->id, route('payment-select-product'))
+				$attachment->title('Zamówienie #' . $this->order->id, url("admin/app/users/{$this->order->user->id}#orders"))
 					->fields([
 						'Wariant'          => $this->order->product->name,
 						'Od'               => $this->order->user->full_name,

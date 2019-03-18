@@ -4,9 +4,7 @@
   font-family: $font-family-rubik;
 
   @media #{$breakpoint-m} {
-    order: 100;
     padding: $space-xxl $space-m $space-l $space-m;
-    min-width: 360px;
   }
 
   &__content {
@@ -27,6 +25,8 @@
     @media #{$breakpoint-m} {
       padding: 0;
       flex-direction: column;
+      max-width: 500px;
+      margin: 0 auto;
     }
   }
 

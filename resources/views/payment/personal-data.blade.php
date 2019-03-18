@@ -10,7 +10,7 @@
 		'coupon' => $coupon,
 	])
 
-	<div class="container payment-content">
+	<div class="payment-content t-checkout__content">
 		@if (!$errors->isEmpty())
 			<section class="subsection">
 				<div class="notification is-warning has-text-centered">@lang('payment.personal-data-errors')</div>

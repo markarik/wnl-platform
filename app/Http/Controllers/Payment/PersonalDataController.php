@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Forms\AddressForm;
-use App\Http\Forms\SignUpForm;
 use App\Http\Forms\PersonalDataForm;
 use App\Models\Coupon;
 use App\Models\Product;

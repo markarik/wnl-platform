@@ -1,7 +1,25 @@
 @import 'organisms/cart';
 
-.p-checkout__content {
+.t-checkout {
   @media #{$breakpoint-m} {
     display: flex;
+  }
+}
+
+.t-checkout__content {
+  width: 100%;
+
+  @media #{$breakpoint-m} {
+    min-width: 620px;
+  }
+}
+
+.t-checkout__cart {
+  width: 100%;
+
+  @media #{$breakpoint-m} {
+    order: 2;
+    min-width: 360px;
+    max-width: 660px;
   }
 }

@@ -1,7 +1,14 @@
 @extends('payment.layout')
 
 @section('content')
-	<div class="container payment-content">
+	@include('payment.cart', [
+		'productName' => $product->name,
+		'productPrice' => $product->price,
+		'productAccessEnd' => $product->access_end,
+		'productPriceWithCoupon' => $productPriceWithCoupon,
+		'coupon' => $coupon,
+	])
+	<div class="payment-content t-checkout__content">
 		@if (!$errors->isEmpty())
 			<section class="subsection">
 				<div class="notification is-warning has-text-centered">@lang('payment.account-errors')</div>

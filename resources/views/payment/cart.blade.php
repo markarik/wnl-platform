@@ -1,5 +1,5 @@
 
-<div class="cart o-cart{{!empty($coupon) ? ' has-coupon' : ''}}">
+<div class="t-checkout__cart cart o-cart{{!empty($coupon) ? ' has-coupon' : ''}}">
 	<div class="o-cart__content">
 		@if(!empty($productName))
 			<header class="o-cart__headline -centeredSpread">

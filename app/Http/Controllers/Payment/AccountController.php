@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Forms\SignUpForm;
 use App\Mail\SignUpConfirmation;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
+use Illuminate\Support\Facades\Session;
 
 class AccountController
 {
@@ -29,6 +31,26 @@ class AccountController
 			}
 		}
 
+		if (Session::has('productId')) {
+			$product = Product::find(Session::get('productId'));
+		} else {
+			$product = Product::slug($request->route('productSlug') ?? 'wnl-online');
+			Session::put('productId', $product->id);
+		}
+
+		if (!$product instanceof Product ||
+			!$product->available ||
+			$product->signups_close->isPast() ||
+			$product->signups_start->isFuture()
+		) {
+			return view('payment.signups-closed', ['product' => $product]);
+		}
+
+		$user = Auth::user();
+		$coupon = $this->readCoupon($user);
+
+		$productPriceWithCoupon = null;
+
 		// Set intended url after successful login
 		$request->session()->flash('url.intended', route('payment-personal-data'));
 		$form = $this->form(SignUpForm::class, [
@@ -37,6 +59,9 @@ class AccountController
 		]);
 
 		return view('payment.account-register', [
+			'product' => $product,
+			'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
+			'coupon' => $coupon,
 			'form'    => $form,
 		]);
 	}
@@ -67,5 +92,15 @@ class AccountController
 
 
 		return redirect(route('payment-personal-data'));
+	}
+
+	protected function readCoupon($user)
+	{
+		$userCoupon = $user ? $user->coupons->first() : null;
+		if (session()->has('coupon')) {
+			return session()->get('coupon')->fresh();
+		} else {
+			return $userCoupon;
+		}
 	}
 }

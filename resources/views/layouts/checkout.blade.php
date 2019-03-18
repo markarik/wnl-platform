@@ -52,7 +52,7 @@
 				</div>
 			</nav>
 
-			<div class="p-checkout__content">
+			<div class="t-checkout">
 				@yield('content')
 			</div>
 			<footer class="o-footer -white">

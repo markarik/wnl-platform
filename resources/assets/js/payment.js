@@ -11,9 +11,8 @@ function getTimeLeft(date) {
 
 $(function () {
 	let inputs         = $('.input'),
-		personalData   = $('#personal-data'),
-		toggleCheckbox = personalData.find('#personal-data-invoice-toggle'),
-		invoiceForm    = personalData.find('#personal-data-invoice-form'),
+		toggleCheckbox = $('#personal-data-invoice-toggle'),
+		invoiceForm    = $('#personal-data-invoice-form'),
 		countdown      = $('.signups-countdown'),
 		theDate        = countdown.data('start'), // ;)
 		firstNameInput = $('#first_name'),

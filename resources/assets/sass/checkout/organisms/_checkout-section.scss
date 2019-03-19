@@ -1,0 +1,21 @@
+.o-checkoutSection {
+  margin-bottom: $space-xxl;
+
+  &__header {
+    font-size: $font-size-plus-3;
+    line-height: $line-height-plus-3;
+    margin-bottom: $space-m;
+  }
+
+  &__subheader {
+    color: $storm-gray;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    text-transform: uppercase;
+    margin-bottom: $space-s;
+  }
+
+  &__info {
+    margin-bottom: $space-s;
+  }
+}

@@ -12,30 +12,33 @@
 
 	<div class="payment-content t-checkout__content">
 		@if (!$errors->isEmpty())
-			<section class="subsection">
+			<section>
 				<div class="notification is-warning has-text-centered">@lang('payment.personal-data-errors')</div>
 			</section>
 		@endif
 
 		{!! form_start($form)  !!}
 
-		<section class="section">
-			<h2 class="title">@lang('payment.personal-data-account-heading')</h2>
+		<section class="o-checkoutSection">
+			<h2 class="o-checkoutSection__header">@lang('payment.personal-data-account-heading')</h2>
 			{!! form_row($form->first_name) !!}
 			{!! form_row($form->last_name) !!}
 		</section>
 
-		<section class="section">
-			<h3 class="title">@lang('payment.personal-data-id-heading')</h3>
+		<section class="o-checkoutSection">
+			<h3 class="o-checkoutSection__subheader">@lang('payment.personal-data-id-heading')</h3>
+
+			{{--TODO tooltip --}}
+			<p class="o-checkoutSection__info    ">@lang('payment.personal-data-id-info')</p>
 
 			{!! form_row($form->personal_identity_number, ['wrapper' => ['id' => 'personalIdentityNumberGroup']]) !!}
 			{!! form_row($form->passport_number, ['wrapper' => ['id' => 'passportNumberGroup']]) !!}
 			{!! form_row($form->no_identity_number) !!}
 		</section>
 
-		<section id="personal-data" class="section">
+		<section class="o-checkoutSection">
 			@if(empty($coupon) || $coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
-				<h2 class="title">@lang('payment.personal-data-heading')</h2>
+				<h2 class="o-checkoutSection__header">@lang('payment.personal-data-heading')</h2>
 
 				{!! form_row($form->recipient) !!}
 				{!! form_row($form->address) !!}
@@ -45,8 +48,9 @@
 				</div>
 				{!! form_row($form->phone) !!}
 			@endif
-
-			<h2 class="title">@lang('payment.personal-data-invoice-data-heading')</h2>
+		</section>
+		<section class="o-checkoutSection">
+			<h2 class="o-checkoutSection__header">@lang('payment.personal-data-invoice-data-heading')</h2>
 			<div class="box">
 				<div id="personal-data-invoice-toggle">
 					{!! form_row($form->invoice) !!}
@@ -65,11 +69,9 @@
 			</div>
 		</section>
 
-		<section class="form-end">
-			<button class="a-button -big">
-					@lang('payment.personal-data-submit')
-			</button>
-		</section>
+		<button class="a-button -big">
+				@lang('payment.personal-data-submit')
+		</button>
 
 		<input type="hidden" name="edit" value="{{ request('edit') }}">
 		{!! form_end($form, false)  !!}

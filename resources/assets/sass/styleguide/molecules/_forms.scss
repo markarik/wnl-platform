@@ -1,5 +1,7 @@
 .m-form-group {
-  margin-bottom: $space-xs;
+  &:not(:last-child) {
+    margin-bottom: $space-xs;
+  }
 
   .a-label {
     margin-bottom: $space-xxxs;
@@ -34,8 +36,14 @@
   }
 }
 
-@media #{$breakpoint-s} {
-  .-grouped {
+.-grouped {
+  &:not(:last-child) {
+    margin-bottom: $space-xs;
+  }
+
+  @media #{$breakpoint-s} {
     display: flex;
+    margin-bottom: 0;
+
   }
 }

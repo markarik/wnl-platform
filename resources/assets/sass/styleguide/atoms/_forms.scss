@@ -33,6 +33,7 @@
   border: 2px solid $cadet-blue;
   border-radius: 2px;
   cursor: pointer;
+  flex-shrink: 0;
   font-size: $font-size-plus-3;
   line-height: $line-height-base;
   height: 24px;

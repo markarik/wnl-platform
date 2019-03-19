@@ -56,7 +56,7 @@
 					@if(!empty($user->personal_identity_number))
 						<p>
 							<strong>
-								{{ trans('payment.personal_identity_number') }}:
+								{{ trans('payment.personal-identity-number') }}:
 								{{ $user->personal_identity_number }}
 							</strong>
 						</p>
@@ -64,7 +64,7 @@
 					@if(!empty($user->passport_number))
 						<p>
 							<strong>
-								{{ trans('payment.passport_number') }}:
+								{{ trans('payment.passport-number') }}:
 								{{ $user->passport_number }}
 							</strong>
 						</p>

@@ -21,6 +21,7 @@ $(function () {
 	const lastNameInput = $('#last_name');
 	const recipientInput = $('#recipient');
 	const personalIdentityNumberModal = $('#personal-identity-number-modal');
+	const instalmentsModal = $('#instalments-modal');
 	const cartClose = document.getElementById('cartClose');
 	const cartIcon = document.getElementById('cartIcon');
 	const cartBox = document.getElementById('cartBox');
@@ -126,6 +127,16 @@ $(function () {
 	$('#personal-identity-number-modal-closer').on('mousedown touchstart', function (event) {
 		event.preventDefault();
 		personalIdentityNumberModal.removeClass('is-active');
+	});
+
+	$('#instalments-modal-opener').on('mousedown touchstart', function (event) {
+		event.preventDefault();
+		instalmentsModal.addClass('is-active');
+	});
+
+	$('#instalments-modal-closer').on('mousedown touchstart', function (event) {
+		event.preventDefault();
+		instalmentsModal.removeClass('is-active');
 	});
 
 	$('[data-date-format]').each(function () {

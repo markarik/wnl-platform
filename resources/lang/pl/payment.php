@@ -162,11 +162,12 @@ return [
 	'account-name-heading' => 'Używasz teraz konta:',
 	'account-errors' => 'Ups, jeszcze moment, coś się nie zgadza! Prosimy o poprawienie pól, przy których pojawiły się błędy. Dzięki!',
 
-	'account-tou-content' => 'Poprzez kliknięcie akceptujesz <a class="tou-open-modal-link" href=":tou-link-href" target="_blank">:tou-link-content</a> oraz <a class="privacy-policy-open-modal-link" href=":privacy-link-href" target="_blank">Politykę Prywatności</a>.',
+	'account-tou-content' => 'Poprzez kliknięcie akceptujesz <a href=":tou-link-href" target="_blank">:tou-link-content</a> oraz <a href=":privacy-link-href" target="_blank">Politykę Prywatności</a>.',
 	'account-tou-link-content' => 'Regulamin',
 	'account-privacy-link-content' => 'Polityka Prywatności',
 	'tou-link-href' => 'https://wiecejnizlek.pl/documents/RegulaminSerwisuWiecejnizlekPl.pdf',
 	'privacy-link-href' => 'https://wiecejnizlek.pl/documents/PolitykaPrywatnosciWiecejNizLEK.pdf',
+	'pricing-link-href' => 'https://wiecejnizlek.pl/cennik/',
 
 	'account-register-submit' => 'Załóż konto',
 	'account-name-submit' => 'Użyj aktualnego konta',
@@ -201,8 +202,8 @@ return [
 	'confirm-order-payment-method-free-label' => 'Kupuję i płacę w ciągu 7 dni',
 	'confirm-order-payment-method-free-info' => 'Zarezerwuj sobie miejsce w kursie',
 	'confirm-order-payment-method-instalments-label' => 'Kupuję kurs na raty',
-	'confirm-order-instalments-not-avaialble-for-product-text' => 'Płatność na raty nie jest dostępna dla tego produktu.',
-	'confirm-order-instalments-not-avaialble-text' => 'Ze względu na zbliżający się start kursu, płatność na raty nie jest już dostępna.',
+	'confirm-order-instalments-not-available-for-product-text' => 'Płatność na raty nie jest dostępna dla tego produktu.',
+	'confirm-order-instalments-not-available-text' => 'Ze względu na zbliżający się start kursu, płatność na raty nie jest już dostępna.',
 
 	/**
 	 * CART
@@ -224,4 +225,19 @@ return [
 	<p>Posłużą one tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!</p>
 	<p>Jeżeli nie posiadasz numeru PESEL, możesz podać numer paszportu.</p>',
 	'personal-identity-number-modal-button' => 'Rozumiem',
+
+	/**
+	 * Instalments modal
+	 */
+	'instalments-modal-header' => 'Płatność w 3 ratach',
+	'instalments-modal-intro' => 'Potrzebujesz rozłożyć płatność na raty? Nie ma problemu! Możesz zapłacić w 3 ratach.',
+	'instalments-modal-instalment-header' => ':number rata',
+	'instalments-modal-due-date-label' => 'Termin',
+	'instalments-modal-due-date-first-instalment' => 'Do 7 dni po złożeniu zamówienia',
+	'instalments-modal-due-date' => 'Do :date',
+	'instalments-modal-amount-label' => 'Kwota',
+	'instalments-modal-amount' => ':amountzł',
+	'instalments-modal-total-amount' => 'Łącznie do zapłaty',
+	'instalments-modal-tou' => 'Więcej informacji na temat rat znajdziesz w <a href=":pricing-link-href" target="_blank">Cenniku</a> i <a href=":tou-link-href" target="_blank">Regulaminie</a>',
+	'instalments-modal-button' => 'Rozumiem',
 ];

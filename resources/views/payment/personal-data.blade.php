@@ -32,6 +32,14 @@
 				@lang('payment.personal-data-id-info')
 				<span class="a-icon -cadetBlue" id="personal-identity-number-modal-opener"><i class="fa fa-info-circle"></i></span>
 			</p>
+			<div id="personal-identity-number-modal" class="modal">
+				<div class="modal-background"></div>
+				<div class="modal-card">
+					<section class="modal-card-body content">
+						@include('payment.personal-identity-number-modal')
+					</section>
+				</div>
+			</div>
 
 			{!! form_row($form->personal_identity_number, ['wrapper' => [
 				'id' => 'personalIdentityNumberGroup',

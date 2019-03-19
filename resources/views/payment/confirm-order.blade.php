@@ -90,8 +90,16 @@
 					<div class="m-formGroup -checkbox -withIcon">
 						<input type="checkbox" name="instalments" id="instalments" class="a-checkbox"/>
 						<label class="a-label" for="instalments">@lang('payment.confirm-order-payment-method-instalments-label')</label>
-						<span class="a-icon -cadetBlue"><i class="fa fa-info-circle"></i></span>
-						{{--TODO modal--}}
+						<span class="a-icon -cadetBlue" id="instalments-modal-opener"><i class="fa fa-info-circle"></i></span>
+
+						<div id="instalments-modal" class="modal">
+							<div class="modal-background"></div>
+							<div class="modal-card">
+								<section class="modal-card-body content">
+									@include('payment.instalments-modal', ['instalments' => $instalments, 'order' => $order])
+								</section>
+							</div>
+						</div>
 
 						<form action="{{ config('przelewy24.transaction_url') }}" method="post" id="instalmentsP24Form">
 							<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
@@ -115,9 +123,9 @@
 						</form>
 					</div>
 				@elseif (empty($paymentMethodInstalments))
-					@lang('payment.confirm-order-instalments-not-avaialble-for-product-text')
+					@lang('payment.confirm-order-instalments-not-available-for-product-text')
 				@else
-					@lang('payment.confirm-order-instalments-not-avaialble-text')
+					@lang('payment.confirm-order-instalments-not-available-text')
 				@endif
 				</div>
 			</div>

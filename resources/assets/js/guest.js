@@ -13,7 +13,7 @@ $(function() {
 	const loginModal = modalsContainer.find('#login-modal');
 	const loginCloseModalButton = loginModal.find('.delete');
 	const expandable = $('.expandable');
-	const logoutLink = document.getElementById('logoutLink');
+	const logoutLinks = document.getElementsByClassName('logout-link');
 	const logoutForm = document.getElementById('logoutForm');
 	const accountDropdown = document.getElementById('accountDropdown');
 	const accountDropdownTrigger = document.getElementById('accountDropdownTrigger');

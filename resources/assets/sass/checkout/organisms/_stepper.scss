@@ -1,6 +1,7 @@
 .o-stepper {
   display: flex;
   width: 100%;
+  margin-bottom: $space-m;
 
   .o-stepper__step {
     border-top: 4px solid $mischka;

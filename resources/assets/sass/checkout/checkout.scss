@@ -22,6 +22,10 @@
     min-width: 620px;
     padding: 0 $space-xxxxl $space-xxxl $space-xxxl;
   }
+
+  .t-checkout__content__row {
+    margin-bottom: $space-l;
+  }
 }
 
 .t-checkout__cart {

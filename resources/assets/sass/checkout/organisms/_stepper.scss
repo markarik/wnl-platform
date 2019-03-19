@@ -4,30 +4,21 @@
 
   .o-stepper__step {
     border-top: 4px solid $mischka;
-    color: $storm-gray;
+    color: $cadet-blue;
+    flex: 1 0 auto;
     font-size: $font-size-minus-2;
     padding-right: $space-l;
-    white-space: nowrap;
-    flex: 1 0 auto;
-    text-align: center;
+    text-align: left;
     text-transform: uppercase;
-    cursor: auto;
+    white-space: nowrap;
 
     a {
-      cursor: inherit;
       color: inherit;
-    }
-
-    &:first-child {
-      text-align: left;
-    }
-
-    &:last-child {
-      text-align: right;
-      padding-right: 0;
+      cursor: inherit;
     }
 
     &.-isDone a {
+      color: $storm-gray;
       cursor: pointer;
     }
 

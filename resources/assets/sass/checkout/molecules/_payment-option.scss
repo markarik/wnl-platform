@@ -13,8 +13,11 @@
 
   &__info {
     color: $storm-gray;
-    font-size: $font-size-minus-1;
-    line-height: $line-height-minus-1;
+
+    @media #{$breakpoint-s} {
+      font-size: $font-size-minus-1;
+      line-height: $line-height-minus-1;
+    }
   }
 
   &.-active {

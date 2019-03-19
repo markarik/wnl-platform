@@ -152,7 +152,7 @@ return [
 	'personal-data-consent-newsletter-heading' => 'Druga zgoda nie jest obowiązkowa, ale pozwoli Ci otrzymywać informacje o kursie, nowych wpisach na blogu i nowych produktach. Nie obawiaj się spamu! Będziemy pisać tylko z wartościowymi wiadomościami. :)',
 	'personal-data-consent-newsletter' => 'Wyrażam zgodę na otrzymywanie za pomocą środków komunikacji elektronicznej, w szczególności poczty elektronicznej oraz SMS, na podany przeze mnie adres email oraz numer telefonu informacji handlowych od  BETHINK SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ (ul. Henryka Sienkiewicza 8/1, 60-817 Poznań) zgodnie z ustawą z dnia 18 lipca 2002 r. o  świadczeniu usług drogą elektroniczną (Dz.U. Nr 144, poz. 1204 ze zm.)',
 
-	'personal-data-submit' => 'Zapisz i przejdź dalej',
+	'personal-data-submit' => 'Dalej do potwierdzenia',
 
 	'account-register-heading' => 'Cześć! 👋<br />Najpierw stwórzmy dla Ciebie nowe konto.',
 	'account-register-login-text' => 'Posiadasz już konto na Kurs do LEK?',

@@ -73,21 +73,49 @@ $(function () {
 		$(event.target).siblings('.text-danger').remove();
 	});
 
-	$('button.p24-submit').click(function () {
-		let formId = $(this).data('id');
-		let payment = $(this).data('payment');
+
+	// Confirm order
+	const paymentOptions = $('.m-paymentOption');
+	paymentOptions.click(function() {
+		paymentOptions.removeClass('-active');
+		$(this)
+			.addClass('-active')
+			.find('input').prop('checked', true);
+	});
+
+
+	$('#confirmOrderSubmit').click(function () {
+		const isFreePayment = $('input[name=payment_method]').length === 0;
+		const paymentMethod = $('input[name=payment_method]:checked').val();
+		const instalmentsSelected = $('#instalments:checked').length > 0;
+
+		let customPaymentMethod;
+		if (isFreePayment) {
+			customPaymentMethod = 'free';
+		} else if (instalmentsSelected) {
+			customPaymentMethod = 'instalments';
+		} else {
+			customPaymentMethod = 'online';
+		}
+
+		// TODO implement loading state
 		$(this).addClass('is-loading');
 
 		$.ajax({
 			data: {
 				controller: 'PaymentAjaxController',
 				method: 'setPaymentMethod',
-				payment: payment,
+				payment: customPaymentMethod,
 				sess_id: $('[name="p24_session_id"]').val()
 			},
 			success: function (response) {
 				if (response.status === 'success') {
-					$(`#${formId}`).submit();
+					if (paymentMethod === 'now') {
+						$(instalmentsSelected ? '#instalmentsP24Form' : '#fullPaymentP24Form').submit();
+					} else {
+						$('#customPaymentMethodInput').val(customPaymentMethod);
+						$('#customPaymentForm').submit();
+					}
 				}
 			}
 		});

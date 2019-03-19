@@ -190,22 +190,19 @@ return [
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 
-	'confirm-method-heading'               => 'Aby ostatecznie potwierdzić zamówienie wybierz metodę płatności',
-	'confirm-method-lead'                  => 'Wybierając płatność przelewem bankowym, masz 7 dni na opłacenie zamówienia, zanim zostanie ono anulowane.',
-	'confirm-method-bank-transfer-button'  => 'Kupuję i płacę przelewem bankowym',
-	'confirm-deferred-payment-button'  => 'Kupuję i płacę w ciągu 7 dni',
-	'confirm-method-instalments-button'    => 'Kupuję i płacę pierwszą ratę w ciągu 7 dni',
-	'confirm-method-instalments-online-button'    => 'Kupuję i płacę pierwszą ratę teraz',
-	'confirm-method-online-payment-button' => 'Kupuję i płacę teraz',
-	'confirm-method-free-button' => 'Kupuję korzystając ze 100% zniżki',
-
-	'confirm-order-free' => 'Potwierdź zamówienie, aby skorzystać ze 100% zniżki',
-
 	'confirm-change-order'          => 'Edytuj',
 	'confirm-order-nip'             => 'Nip:',
-	'confirm-no-album-info'         => 'Przedłużenie dostępu z 50% zniżką nie obejmuje nowego albumu map myśli. Nowy album możesz jednokrotnie zamówić po zalogowaniu na platformę, w zakładce KONTO > Twoje zamówienia.',
 	'personal-data-invoice-heading' => 'Dane do faktury',
 	'confirm-order-submit' => 'Składam zamówienie',
+	'confirm-order-payment-method-now-label' => 'Dostęp do platformy od razu',
+	'confirm-order-payment-method-now-info' => 'Skupisz się już tylko na nauce',
+	'confirm-order-payment-method-later-label' => 'Kupuję i płacę w ciągu 7 dni',
+	'confirm-order-payment-method-later-info' => 'Zarezerwuj sobie miejsce w kursie',
+	'confirm-order-payment-method-free-label' => 'Kupuję i płacę w ciągu 7 dni',
+	'confirm-order-payment-method-free-info' => 'Zarezerwuj sobie miejsce w kursie',
+	'confirm-order-payment-method-instalments-label' => 'Kupuję kurs na raty',
+	'confirm-order-instalments-not-avaialble-for-product-text' => 'Płatność na raty nie jest dostępna dla tego produktu.',
+	'confirm-order-instalments-not-avaialble-text' => 'Ze względu na zbliżający się start kursu, płatność na raty nie jest już dostępna.',
 
 	/**
 	 * CART

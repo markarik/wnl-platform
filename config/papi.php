@@ -60,5 +60,6 @@ return [
 		'products'                => 'products',
 		'lesson-product'          => 'lesson_product',
 		'payment-methods'         => 'payment_methods',
+		'product-instalments'     => 'product_instalments',
 	],
 ];

@@ -4,18 +4,18 @@ $breakpoint-l: (min-width: 1280px);
 
 .-hiddenSAndUp {
   @media #{$breakpoint-s} {
-    display: none;
+    display: none !important;
   }
 }
 
 .-hiddenMAndUp {
   @media #{$breakpoint-m} {
-    display: none;
+    display: none !important;
   }
 }
 
 .-hiddenLAndUp {
   @media #{$breakpoint-l} {
-    display: none;
+    display: none !important;
   }
 }

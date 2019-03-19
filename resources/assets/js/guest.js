@@ -6,8 +6,6 @@ $(window).on('unload', function(){});
 $(function() {
 	var navToggle = $('.nav-toggle'),
 		navMenu = $('.nav-menu'),
-		logoutLink = $('.logout-link'),
-		logoutForm = $('#logout-form'),
 		form = $('form'),
 		buttons = $('.button'),
 		modalsContainer = $('.modals'),
@@ -17,6 +15,11 @@ $(function() {
 		expandable = $('.expandable');
 
 	buttons.removeClass('is-disabled').removeClass('is-loading');
+
+	const logoutLink = document.getElementById('logoutLink');
+	const logoutForm = document.getElementById('logoutForm');
+	const accountDropdown = document.getElementById('accountDropdown');
+	const accountDropdownTrigger = document.getElementById('accountDropdownTrigger');
 
 	navToggle.click((event) => {
 		navToggle.toggleClass('is-active');
@@ -44,10 +47,19 @@ $(function() {
 		});
 	}
 
-	console.log(logoutLink);
-	if (logoutLink.length) {
-		logoutLink.click((event) => {
-			logoutForm.submit();
-		});
-	}
+	logoutLink && logoutLink.addEventListener('click', () => {
+		logoutForm && logoutForm.submit();
+	});
+
+	accountDropdownTrigger && accountDropdownTrigger.addEventListener('click', () => {
+		accountDropdown && accountDropdown.classList.toggle('-isActive');
+	});
+
+	const clickHandler = ({target}) => {
+		if (accountDropdown.classList.contains('-isActive') && !accountDropdown.contains(target)) {
+			accountDropdown.classList.remove('-isActive');
+		}
+	};
+
+	document.addEventListener('click', clickHandler);
 });

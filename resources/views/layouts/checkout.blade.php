@@ -31,7 +31,7 @@
 		@include('tracking')
 	</head>
 	<body data-base="{{ env('APP_URL') }}" class="styleguide">
-		<form method="post" action="{{route('logout', ['redirectToRoute' => 'payment-account' ?? null])}}" id="logout-form">
+		<form method="post" action="{{route('logout', ['redirectToRoute' => 'payment-account' ?? null])}}" id="logoutForm">
 			{{ csrf_field() }}
 		</form>
 		<div class="t-app">
@@ -41,7 +41,7 @@
 				</a>
 
 				<div class="o-navigation__right -stormGrey">
-					<span class="o-navigation__item icon -hiddenMAndUp" id="cartIcon">
+					<span class="o-navigation__item icon -hiddenMAndUp -isTouchable" id="cartIcon">
 						<i class="fa fa-shopping-cart a-icon -small"></i>
 					</span>
 					@php
@@ -49,13 +49,24 @@
 					$user = Auth::user();
 					@endphp
 					@if ($user)
-						@if (!empty($user->profile->avatar_url))
-							<img src="{{$user->profile->avatar_url}}" class="a-avatar"/>
-						@else
-							<span class="o-navigation__item a-avatar -isAutomatic">
-								{{$user->initials}}
-							</span>
-						@endif
+						<div class="o-navigation__item o-dropdown" id="accountDropdown">
+							<div class="o-dropdown__trigger" id="accountDropdownTrigger">
+									@if (!empty($user->profile->avatar_url))
+										<img src="{{$user->profile->avatar_url}}" class="a-avatar"/>
+									@elseif (!empty($user->initials))
+										<span class="a-avatar -isAutomatic">
+											{{$user->initials}}
+										</span>
+									@else
+										<span class="o-navigation__item icon a-avatar">
+											<i class="fa fa-user a-icon -small"></i>
+										</span>
+									@endif
+							</div>
+							<div class="o-dropdown__menu -shadowLarge">
+								<span class="o-dropdown__item" id="logoutLink">Wyloguj</span>
+							</div>
+						</div>
 					@endif
 				</div>
 			</nav>

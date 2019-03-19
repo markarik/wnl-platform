@@ -4,7 +4,7 @@
 		@if(!empty($productName))
 			<header class="o-cart__headline -centeredSpread">
 				<span>@lang('payment.cart-header')</span>
-				<span class="icon -stormGrey -hiddenMAndUp" id="cartClose">
+				<span class="icon -stormGrey -hiddenMAndUp -isTouchable" id="cartClose">
 					<i class="fa fa-times a-icon -small"></i>
 				</span>
 			</header>

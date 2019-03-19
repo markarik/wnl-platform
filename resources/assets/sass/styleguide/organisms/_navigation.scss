@@ -1,17 +1,21 @@
 .o-navigation {
   border-bottom: 1px solid $athens-grey;
-  padding: $space-xxs $space-l;
+  padding: 0 $space-l;
   display: flex;
   align-items: center;
+  height: 55px;
 
   &__right {
+    height: 100%;
     flex: 1 0 auto;
     display: flex;
     justify-content: flex-end;
   }
 
   &__item {
-    max-height: 24px;
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
     margin-right: $space-m;
 
     &:last-child {
@@ -19,7 +23,7 @@
     }
 
     img {
-      max-height: inherit;
+      max-height: 24px;
     }
   }
 }

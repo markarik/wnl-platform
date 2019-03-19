@@ -1,0 +1,29 @@
+.o-dropdown {
+  position: relative;
+  display: inline-flex;
+
+  &.-isActive {
+    .o-dropdown__menu {
+      display: initial;
+    }
+  }
+
+  .o-dropdown__menu {
+    display: none;
+    padding: $space-xxs $space-m;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 100;
+    background-color: $white;
+  }
+
+  .o-dropdown__trigger {
+    cursor: pointer;
+    line-height: 0;
+  }
+
+  .o-dropdown__item {
+    cursor: pointer;
+  }
+}

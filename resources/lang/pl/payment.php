@@ -107,11 +107,11 @@ return [
 	'personal-data-id-info' => 'Do czego jest on nam potrzebny?',
 
 	'personal-identity-number' => 'Twój numer PESEL',
-	'personal-identity-number-placeholder' => 'Twój numer PESEL',
+	'personal-identity-number-placeholder' => 'PESEL',
 	'passport-number' => 'Twój numer paszportu',
 	'passport-number-placeholder' => 'Numer paszportu',
 	'no-identity-number' => 'Nie posiadam numeru PESEL',
-	'passport-number-required' => 'Number paszportu jest wymagany gdy nie posiadasz numeru PESEL.',
+	'passport-number-required' => 'Numer paszportu jest wymagany gdy nie posiadasz numeru PESEL.',
 
 	'personal-data-heading' => 'Na jaki adres mamy nadać przesyłkę? 🎁 ',
 	'personal-data-lead' => 'Na podany adres otrzymasz paczkę z albumem map myśli, przyborami i&nbsp;innymi gadżetami.',
@@ -121,7 +121,7 @@ return [
 	'first-name-placeholder' => 'Imię',
 	'last-name' => 'Twoje nazwisko',
 	'last-name-placeholder' => 'Nazwisko',
-	'recipient' => 'Osoba odbierająca przesyłkę',
+	'recipient' => 'Osoba odbierająca paczkę',
 	'address' => 'Ulica i numer domu / mieszkania',
 	'zip' => 'Kod pocztowy',
 	'zip-placeholder' => 'Format zapisu: 60-579',
@@ -131,8 +131,9 @@ return [
 	'phone-placeholder' => 'Format zapisu: 000-000-000',
 	'password' => 'Hasło do logowania - minimum 6 znaków',
 
-	'invoice' => 'Zaznacz, jeżeli chcesz podać inne dane do faktury',
-	'invoice-name' => 'Nazwa firmy',
+	'invoice' => 'Chcę podać inne dane do faktury',
+	'invoice-info' => 'Pamiętaj! Refundacja Izby Lekarskiej może wymagać Twoich osobistych danych na fakturze.',
+	'invoice-name' => 'Nazwa firmy lub imię i nazwisko',
 	'invoice-nip' => 'NIP',
 	'invoice-address' => 'Ulica i numer domu / mieszkania',
 	'invoice-zip' => 'Kod pocztowy',
@@ -161,11 +162,11 @@ return [
 	'account-name-heading' => 'Używasz teraz konta:',
 	'account-errors' => 'Ups, jeszcze moment, coś się nie zgadza! Prosimy o poprawienie pól, przy których pojawiły się błędy. Dzięki!',
 
-	'account-tou-content' => 'Poprzez kliknięcie akceptujesz <a class="tou-open-modal-link" href=":tou-link-href" target="_blank">:tou-link-content</a> oraz <a class="privacy-policy-open-modal-link" href=":privacy-link-href" target="_blank">:privacy-link-content</a>.',
+	'account-tou-content' => 'Poprzez kliknięcie akceptujesz <a class="tou-open-modal-link" href=":tou-link-href" target="_blank">:tou-link-content</a> oraz <a class="privacy-policy-open-modal-link" href=":privacy-link-href" target="_blank">Politykę Prywatności</a>.',
 	'account-tou-link-content' => 'Regulamin',
+	'account-privacy-link-content' => 'Polityka Prywatności',
 	'tou-link-href' => 'https://wiecejnizlek.pl/documents/RegulaminSerwisuWiecejnizlekPl.pdf',
 	'privacy-link-href' => 'https://wiecejnizlek.pl/documents/PolitykaPrywatnosciWiecejNizLEK.pdf',
-	'account-privacy-link-content' => 'Polityka Prywatności',
 
 	'account-register-submit' => 'Załóż konto',
 	'account-name-submit' => 'Użyj aktualnego konta',
@@ -211,10 +212,10 @@ return [
 	 */
 	'cart-header' => 'Twoje zamówienie',
 	'cart-access-info' => 'Dostęp od momentu wpłaty do :date',
-	'cart-shipment-label' => 'Wysyłka:',
+	'cart-shipment-label' => 'Wysyłka',
 	'cart-shipment-value' => 'Na terenie Polski za darmo',
-	'cart-coupon-label' => 'Zniżka:',
-	'cart-price-label' => 'Kwota całkowita:',
+	'cart-coupon-label' => 'Zniżka',
+	'cart-price-label' => 'Kwota całkowita',
 	'cart-price-value' => ':valuezł',
 	'cart-empty' => 'Twój koszyk jest pusty.'
 ];

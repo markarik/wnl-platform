@@ -38,7 +38,6 @@
 			@lang('payment.account-tou-content', [
 				'tou-link-content' => trans('payment.account-tou-link-content'),
 				'tou-link-href' => trans('payment.tou-link-href'),
-				'privacy-link-content' => trans('payment.account-privacy-link-content'),
 				'privacy-link-href' => trans('payment.privacy-link-href'),
 			])
 

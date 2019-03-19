@@ -2,6 +2,8 @@ import $ from 'jquery';
 import moment from 'moment';
 import 'moment/locale/pl';
 import 'moment-duration-format';
+// FIXME remove before merging to master
+import 'sass/app.scss';
 
 window.$ = window.jQuery = $;
 

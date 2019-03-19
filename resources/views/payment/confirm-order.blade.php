@@ -137,7 +137,7 @@
 				<h2 class="o-checkoutSection__subheader">@lang('payment.personal-data-invoice-heading')</h2>
 				@if($user->invoice)
 					<ul class="o-checkoutSection__info">
-						<li><strong>{{ $user->invoice_name }}</strong></li>
+						<li>{{ $user->invoice_name }}</li>
 						<li>{{ $user->invoice_address }}</li>
 						<li>{{ $user->invoice_zip }} {{ $user->invoice_city }}</li>
 						<li>{{ $user->invoice_country }}</li>
@@ -145,7 +145,7 @@
 					</ul>
 				@else
 					<ul class="o-checkoutSection__info">
-						<li><strong>{{ $user->first_name }} {{ $user->last_name }}</strong></li>
+						<li>{{ $user->first_name }} {{ $user->last_name }}</li>
 						<li>{{ $user->userAddress->street }}</li>
 						<li>{{ $user->userAddress->zip }} {{ $user->userAddress->city }}</li>
 					</ul>

@@ -51,19 +51,20 @@
 		</section>
 		<section class="o-checkoutSection">
 			<h2 class="o-checkoutSection__header">@lang('payment.personal-data-invoice-data-heading')</h2>
-			<div class="box">
-					{!! form_row($form->invoice) !!}
-				<div id="personal-data-invoice-form"
-					 class="@if (Session::get('_old_input.invoice')) show @else hidden @endif">
-					{!! form_row($form->invoice_name) !!}
-					{!! form_row($form->invoice_nip) !!}
-					{!! form_row($form->invoice_address) !!}
-					<div class="-grouped">
-						{!! form_row($form->invoice_zip) !!}
-						{!! form_row($form->invoice_city) !!}
-					</div>
-					{!! form_row($form->invoice_country ) !!}
+			{!! form_row($form->invoice) !!}
+			<p>@lang('payment.invoice-info')</p>
+			<div
+				id="personal-data-invoice-form"
+				class="@if (Session::get('_old_input.invoice')) show @else hidden @endif"
+			>
+				{!! form_row($form->invoice_name) !!}
+				{!! form_row($form->invoice_nip) !!}
+				{!! form_row($form->invoice_address) !!}
+				<div class="-grouped">
+					{!! form_row($form->invoice_zip) !!}
+					{!! form_row($form->invoice_city) !!}
 				</div>
+				{!! form_row($form->invoice_country ) !!}
 			</div>
 		</section>
 

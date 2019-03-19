@@ -52,9 +52,7 @@
 		<section class="o-checkoutSection">
 			<h2 class="o-checkoutSection__header">@lang('payment.personal-data-invoice-data-heading')</h2>
 			<div class="box">
-				<div id="personal-data-invoice-toggle">
 					{!! form_row($form->invoice) !!}
-				</div>
 				<div id="personal-data-invoice-form"
 					 class="@if (Session::get('_old_input.invoice')) show @else hidden @endif">
 					{!! form_row($form->invoice_name) !!}

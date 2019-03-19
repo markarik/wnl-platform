@@ -11,7 +11,7 @@ function getTimeLeft(date) {
 
 $(function () {
 	let inputs         = $('.input'),
-		toggleCheckbox = $('#personal-data-invoice-toggle'),
+		toggleCheckbox = $('#invoice'),
 		invoiceForm    = $('#personal-data-invoice-form'),
 		countdown      = $('.signups-countdown'),
 		theDate        = countdown.data('start'), // ;)
@@ -26,7 +26,7 @@ $(function () {
 	const passportNumberGroup = document.getElementById('passportNumberGroup');
 	const personalIdentityNumberGroup = document.getElementById('personalIdentityNumberGroup');
 
-	if(toggleCheckbox.find('input').length && toggleCheckbox.find('input')[0].checked) {
+	if(toggleCheckbox.length && toggleCheckbox[0].checked) {
 		invoiceForm.addClass('show').removeClass('hidden');
 	}
 

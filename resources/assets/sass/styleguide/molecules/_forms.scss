@@ -43,7 +43,9 @@
 
   @media #{$breakpoint-s} {
     display: flex;
-    margin-bottom: 0;
 
+    &:not(:last-child) {
+      margin-bottom: 0;
+    }
   }
 }

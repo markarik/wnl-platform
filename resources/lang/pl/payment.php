@@ -185,7 +185,7 @@ return [
 
 	'confirm-personal-data-heading' => 'Twoje dane',
 	'confirm-personal-data-private' => 'Dane do celów statystycznych:',
-	'confirm-personal-data-address' => 'Twój adres do wysyłki i osoba do odbioru:',
+	'confirm-personal-data-address-header' => 'Dane do wysyłki',
 
 	'confirm-invoice-heading' => 'Dane do faktury',
 
@@ -200,7 +200,8 @@ return [
 
 	'confirm-order-free' => 'Potwierdź zamówienie, aby skorzystać ze 100% zniżki',
 
-	'confirm-change-order'          => 'Chcę poprawić dane',
+	'confirm-change-order'          => 'Edytuj',
+	'confirm-order-nip'             => 'Nip:',
 	'confirm-no-album-info'         => 'Przedłużenie dostępu z 50% zniżką nie obejmuje nowego albumu map myśli. Nowy album możesz jednokrotnie zamówić po zalogowaniu na platformę, w zakładce KONTO > Twoje zamówienia.',
 	'personal-data-invoice-heading' => 'Dane do faktury',
 

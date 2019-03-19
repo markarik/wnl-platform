@@ -2,6 +2,7 @@
 
 @section('content')
 	<div class="container payment-content">
+		@include('payment.stepper', ['currentStep' => 0])
 		<div class="block has-text-centered">
 			<div><strong>@lang('payment.account-name-heading')</strong></div>
 

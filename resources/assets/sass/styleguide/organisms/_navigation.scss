@@ -5,6 +5,10 @@
   align-items: center;
   height: 55px;
 
+  @media #{$breakpoint-m} {
+    padding: 0 $space-xxxl;
+  }
+
   &__right {
     height: 100%;
     flex: 1 0 auto;

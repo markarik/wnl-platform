@@ -9,6 +9,7 @@
 		'coupon' => $coupon,
 	])
 	<div class="payment-content t-checkout__content">
+		@include('payment.stepper', ['currentStep' => 0])
 		@if (!$errors->isEmpty())
 			<section class="subsection">
 				<div class="notification is-warning has-text-centered">@lang('payment.account-errors')</div>

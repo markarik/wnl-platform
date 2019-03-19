@@ -1,0 +1,42 @@
+.o-stepper {
+  display: flex;
+  width: 100%;
+
+  .o-stepper__step {
+    border-top: 4px solid $mischka;
+    color: $storm-gray;
+    font-size: $font-size-minus-2;
+    padding-right: $space-l;
+    white-space: nowrap;
+    flex: 1 0 auto;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: auto;
+
+    a {
+      cursor: inherit;
+      color: inherit;
+    }
+
+    &:first-child {
+      text-align: left;
+    }
+
+    &:last-child {
+      text-align: right;
+      padding-right: 0;
+    }
+
+    &.-isDone {
+      cursor: pointer;
+    }
+
+    &.-isDone, &.-isActive {
+      border-color: $blue-chill;
+    }
+
+    &.-isActive {
+      color: $blue-chill;
+    }
+  }
+}

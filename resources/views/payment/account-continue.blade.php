@@ -9,6 +9,7 @@
 		'coupon' => $coupon,
 	])
 	<div class="payment-content t-checkout__content">
+		@include('payment.stepper', ['currentStep' => 0])
 		<div class="block has-text-centered">
 			<div><strong>@lang('payment.account-continue-heading')</strong></div>
 

@@ -71,11 +71,11 @@
   justify-content: center;
 
   .t-account__row {
-    padding-bottom: $space-s;
+    margin-bottom: $space-s;
     text-align: center;
 
     &.-largeSpace {
-      padding-bottom: $space-l;
+      margin-bottom: $space-l;
     }
   }
 }

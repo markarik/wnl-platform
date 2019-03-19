@@ -1,0 +1,27 @@
+.m-paymentOption {
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  padding: $space-m;
+
+  &__label {
+    display: block;
+    font-size: $font-size-plus-1;
+    line-height: $line-height-plus-1;
+  }
+
+  &__info {
+    color: $storm-gray;
+    font-size: $font-size-minus-1;
+    line-height: $line-height-minus-1;
+  }
+
+  &.-active {
+    background-color: $athens-grey;
+  }
+
+  .a-icon {
+    color: $storm-gray;
+  }
+}

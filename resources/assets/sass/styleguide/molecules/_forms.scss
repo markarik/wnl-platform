@@ -1,5 +1,5 @@
-.m-form-group {
-  &:not(:last-child) {
+.m-formGroup {
+  &:not(:last-child):not(.-marginLess) {
     margin-bottom: $space-xs;
   }
 
@@ -11,7 +11,7 @@
     margin-top: $space-xxxxs;
   }
 
-  .a-checkbox {
+  .a-checkbox, .a-radio {
     margin-right: $space-s;
   }
 

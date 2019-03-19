@@ -2,7 +2,7 @@
 
 return [
     'defaults'      => [
-        'wrapper_class'       => 'm-form-group',
+        'wrapper_class'       => 'm-formGroup',
         'wrapper_error_class' => '-error',
         'label_class'         => 'a-label',
         'field_class'         => 'a-input',
@@ -12,7 +12,7 @@ return [
 
 //         Override a class from a field.
         'checkbox'                => [
-            'wrapper_class'   => 'm-form-group -checkbox',
+            'wrapper_class'   => 'm-formGroup -checkbox',
 						'field_class'     => 'a-checkbox',
         ],
         // Override a class from a field.

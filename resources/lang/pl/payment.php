@@ -179,7 +179,7 @@ return [
 	 */
 	'confirm-order-title' => 'Czy wszystko się zgadza?',
 	'confirm-order-subtitle' => 'Na wszelki wypadek sprawdźmy jeszcze Twoje dane przed dokonaniem płatności.',
-	'confirm-order-heading' => 'Twoje zamówienie',
+	'confirm-order-heading' => 'Już prawie koniec. Wybierz sposób płatności.',
 	'confirm-order-price' => ':pricezł brutto',
 	'confirm-order-coupon' => 'Korzystasz ze zniżki <strong>:name</strong> o wartości <strong>:value</strong>.',
 
@@ -204,6 +204,7 @@ return [
 	'confirm-order-nip'             => 'Nip:',
 	'confirm-no-album-info'         => 'Przedłużenie dostępu z 50% zniżką nie obejmuje nowego albumu map myśli. Nowy album możesz jednokrotnie zamówić po zalogowaniu na platformę, w zakładce KONTO > Twoje zamówienia.',
 	'personal-data-invoice-heading' => 'Dane do faktury',
+	'confirm-order-submit' => 'Składam zamówienie',
 
 	/**
 	 * CART

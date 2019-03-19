@@ -25,33 +25,66 @@
 			<h2 class="o-checkoutSection__header">@lang('payment.confirm-order-heading')</h2>
 			{{-- TODO payment options--}}
 
+			<div class="m-paymentOption -active">
+				<div class="m-formGroup -checkbox -marginLess">
+					<input type="radio" name="payment_method" value="now" id="paymentMethodNow" class="a-radio"/>
+					<div>
+						<label for="paymentMethodNow" class="m-paymentOption__label">Dostęp do platformy od razu</label>
+						<span class="m-paymentOption__info">Skupisz się już tylko na nauce</span>
+					</div>
+				</div>
+				<i class="a-icon -medium fa fa-thumbs-up"></i>
+			</div>
+
+			<div class="m-paymentOption">
+				<div class="m-formGroup -checkbox -marginLess">
+					<input type="radio" name="payment_method" value="7days" id="paymentMethod7days" class="a-radio"/>
+					<div>
+						<label for="paymentMethodNow" class="m-paymentOption__label">Dostęp do platformy od razu</label>
+						<span class="m-paymentOption__info">Skupisz się już tylko na nauce</span>
+					</div>
+				</div>
+				<i class="a-icon -medium fa fa-calendar"></i>
+			</div>
+
+			<div class="m-formGroup -checkbox">
+				<input type="checkbox" name="instalments" id="instalments" class="a-checkbox"/>
+				<label class="a-label" for="instalments">Kupuję kurs na raty</label>
+				{{--TODO modal--}}
+			</div>
+
 			@if ($order->has_shipment)
-				<h2 class="o-checkoutSection__subheader">@lang('payment.confirm-personal-data-address-header')</h2>
-				<ul class="o-checkoutSection__info">
-					<li>{{ $user->userAddress->recipient }}</li>
-					<li>{{ $user->userAddress->street }}</li>
-					<li>{{ $user->userAddress->zip }} {{ $user->userAddress->city }}</li>
-				</ul>
-				<a class="o-checkoutSection__editLink" href="{{ route('payment-personal-data') }}">@lang('payment.confirm-change-order')</a>
+				<div>
+					<h2 class="o-checkoutSection__subheader">@lang('payment.confirm-personal-data-address-header')</h2>
+					<ul class="o-checkoutSection__info">
+						<li>{{ $user->userAddress->recipient }}</li>
+						<li>{{ $user->userAddress->street }}</li>
+						<li>{{ $user->userAddress->zip }} {{ $user->userAddress->city }}</li>
+					</ul>
+					<a class="o-checkoutSection__editLink" href="{{ route('payment-personal-data') }}">@lang('payment.confirm-change-order')</a>
+				</div>
 			@endif
 
-			<h2 class="o-checkoutSection__subheader">@lang('payment.confirm-personal-data-address-header')</h2>
-			@if($user->invoice)
-				<ul class="o-checkoutSection__info">
-					<li><strong>{{ $user->invoice_name }}</strong></li>
-					<li>{{ $user->invoice_address }}</li>
-					<li>{{ $user->invoice_zip }} {{ $user->invoice_city }}</li>
-					<li>{{ $user->invoice_country }}</li>
-					<li>@lang('payment.confirm-order-nip') {{ $user->invoice_nip }}</li>
-				</ul>
-			@else
-				<ul class="o-checkoutSection__info">
-					<li><strong>{{ $user->first_name }} {{ $user->last_name }}</strong></li>
-					<li>{{ $user->userAddress->street }}</li>
-					<li>{{ $user->userAddress->zip }} {{ $user->userAddress->city }}</li>
-				</ul>
-			@endif
-			<a class="o-checkoutSection__editLink" href="{{ route('payment-personal-data') }}">@lang('payment.confirm-change-order')</a>
+			<div>
+				<h2 class="o-checkoutSection__subheader">@lang('payment.personal-data-invoice-heading')</h2>
+				@if($user->invoice)
+					<ul class="o-checkoutSection__info">
+						<li><strong>{{ $user->invoice_name }}</strong></li>
+						<li>{{ $user->invoice_address }}</li>
+						<li>{{ $user->invoice_zip }} {{ $user->invoice_city }}</li>
+						<li>{{ $user->invoice_country }}</li>
+						<li>@lang('payment.confirm-order-nip') {{ $user->invoice_nip }}</li>
+					</ul>
+				@else
+					<ul class="o-checkoutSection__info">
+						<li><strong>{{ $user->first_name }} {{ $user->last_name }}</strong></li>
+						<li>{{ $user->userAddress->street }}</li>
+						<li>{{ $user->userAddress->zip }} {{ $user->userAddress->city }}</li>
+					</ul>
+				@endif
+				<a class="o-checkoutSection__editLink" href="{{ route('payment-personal-data') }}">@lang('payment.confirm-change-order')</a>
+			</div>
+			<button class="a-button -big">@lang('payment.confirm-order-submit')</button>
 		</section>
 
 		@if($order->coupon && (int) $order->total_with_coupon === 0)

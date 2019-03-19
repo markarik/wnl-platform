@@ -5,6 +5,12 @@ $icon-l: 48px;
 $icon-xl: 64px;
 
 .a-icon {
+  font-size: $icon-s;
+
+  &.-touchable {
+    padding: #{$min-touchable-size - $icon-s / 2}
+  }
+
   &.-x-large {
     font-size: $icon-xl;
   }
@@ -18,14 +24,6 @@ $icon-xl: 64px;
 
     &.-touchable {
       padding: #{$min-touchable-size - $icon-m / 2}
-    }
-  }
-
-  &.-small {
-    font-size: $icon-s;
-
-    &.-touchable {
-      padding: #{$min-touchable-size - $icon-s / 2}
     }
   }
 

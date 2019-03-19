@@ -8,19 +8,19 @@ import 'sass/app.scss';
 window.$ = window.jQuery = $;
 
 function getTimeLeft(date) {
-	return moment.duration(moment(date*1000).diff(moment(), 'seconds'), 'seconds').format('d[d] h[h] m[m] s[s]');
+	return moment.duration(moment(date * 1000).diff(moment(), 'seconds'), 'seconds').format('d[d] h[h] m[m] s[s]');
 }
 
 $(function () {
-	let inputs         = $('.input'),
-		toggleCheckbox = $('#invoice'),
-		invoiceForm    = $('#personal-data-invoice-form'),
-		countdown      = $('.signups-countdown'),
-		theDate        = countdown.data('start'), // ;)
-		firstNameInput = $('#first_name'),
-		lastNameInput = $('#last_name'),
-		recipientInput = $('#recipient');
-
+	const inputs = $('.input');
+	const toggleCheckbox = $('#invoice');
+	const invoiceForm = $('#personal-data-invoice-form');
+	const countdown = $('.signups-countdown');
+	const theDate = countdown.data('start');
+	const firstNameInput = $('#first_name');
+	const lastNameInput = $('#last_name');
+	const recipientInput = $('#recipient');
+	const personalIdentityNumberModal = $('#personal-identity-number-modal');
 	const cartClose = document.getElementById('cartClose');
 	const cartIcon = document.getElementById('cartIcon');
 	const cartBox = document.getElementById('cartBox');
@@ -28,11 +28,11 @@ $(function () {
 	const passportNumberGroup = document.getElementById('passportNumberGroup');
 	const personalIdentityNumberGroup = document.getElementById('personalIdentityNumberGroup');
 
-	if(toggleCheckbox.length && toggleCheckbox[0].checked) {
+	if (toggleCheckbox.length && toggleCheckbox[0].checked) {
 		invoiceForm.addClass('show').removeClass('hidden');
 	}
 
-	const toggleIdentityNumber = showIdentityNumber  => {
+	const toggleIdentityNumber = showIdentityNumber => {
 		if (showIdentityNumber) {
 			passportNumberGroup.classList.add('-dNone');
 			personalIdentityNumberGroup.classList.remove('-dNone');
@@ -60,7 +60,7 @@ $(function () {
 		}
 	});
 
-	window.setInterval(function() {
+	window.setInterval(function () {
 		countdown.html(getTimeLeft(theDate));
 	}, 1000);
 
@@ -75,7 +75,7 @@ $(function () {
 
 	// Confirm order
 	const paymentOptions = $('.m-paymentOption');
-	paymentOptions.click(function() {
+	paymentOptions.click(function () {
 		paymentOptions.removeClass('-active');
 		$(this)
 			.addClass('-active')
@@ -116,6 +116,16 @@ $(function () {
 				}
 			}
 		});
+	});
+
+	$('#personal-identity-number-modal-opener').on('mousedown touchstart', function (event) {
+		event.preventDefault();
+		personalIdentityNumberModal.addClass('is-active');
+	});
+
+	$('#personal-identity-number-modal-closer').on('mousedown touchstart', function (event) {
+		event.preventDefault();
+		personalIdentityNumberModal.removeClass('is-active');
 	});
 
 	$('[data-date-format]').each(function () {

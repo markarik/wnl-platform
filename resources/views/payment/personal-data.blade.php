@@ -29,7 +29,8 @@
 			<h3 class="o-checkoutSection__subheader">@lang('payment.personal-data-id-heading')</h3>
 
 			<p class="o-checkoutSection__info">
-				@lang('payment.personal-data-id-info') <span class="a-icon -cadetBlue"><i class="fa fa-info-circle"></i></span>
+				@lang('payment.personal-data-id-info')
+				<span class="a-icon -cadetBlue" id="personal-identity-number-modal-opener"><i class="fa fa-info-circle"></i></span>
 			</p>
 
 			{!! form_row($form->personal_identity_number, ['wrapper' => [

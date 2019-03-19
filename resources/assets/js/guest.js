@@ -4,22 +4,21 @@ window.$ = window.jQuery = $;
 $(window).on('unload', function(){});
 
 $(function() {
-	var navToggle = $('.nav-toggle'),
-		navMenu = $('.nav-menu'),
-		form = $('form'),
-		buttons = $('.button'),
-		modalsContainer = $('.modals'),
-		loginModalButton = $('.opens-login-modal'),
-		loginModal = modalsContainer.find('#login-modal'),
-		loginCloseModalButton = loginModal.find('.delete'),
-		expandable = $('.expandable');
-
-	buttons.removeClass('is-disabled').removeClass('is-loading');
-
+	const navToggle = $('.nav-toggle');
+	const navMenu = $('.nav-menu');
+	const form = $('form');
+	const buttons = $('.button');
+	const modalsContainer = $('.modals');
+	const loginModalButton = $('.opens-login-modal');
+	const loginModal = modalsContainer.find('#login-modal');
+	const loginCloseModalButton = loginModal.find('.delete');
+	const expandable = $('.expandable');
 	const logoutLink = document.getElementById('logoutLink');
 	const logoutForm = document.getElementById('logoutForm');
 	const accountDropdown = document.getElementById('accountDropdown');
 	const accountDropdownTrigger = document.getElementById('accountDropdownTrigger');
+
+	buttons.removeClass('is-disabled').removeClass('is-loading');
 
 	navToggle.click((event) => {
 		navToggle.toggleClass('is-active');

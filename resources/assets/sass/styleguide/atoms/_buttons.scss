@@ -9,9 +9,9 @@
   font-weight: 500;
   outline: none;
   padding: $space-s $space-m;
+  position: relative;
   text-transform: uppercase;
   transition: color ease-in-out .3s, border-color ease-in-out .3s, background-color ease-in-out .3s, box-shadow ease-in-out .3s;
-
 
   &.-big {
     width: 100%;
@@ -20,6 +20,26 @@
       width: auto;
       padding: $space-s $space-xxxxl;
     }
+  }
+
+  &.-loading {
+    color: transparent;
+    pointer-events: none;
+
+    &:after {
+      animation: a-spinAround 500ms infinite linear;
+      border: 2px solid $white;
+      border-color: transparent transparent $white $white;
+      border-radius: 100%;
+      content: "";
+      display: block;
+      height: 1em;
+      left: calc(50% - (1em / 2));
+      position: absolute;
+      top: calc(50% - (1em / 2));
+      width: 1em;
+    }
+
   }
 
   &:disabled, &.-disabled {

@@ -98,9 +98,7 @@ $(function () {
 			customPaymentMethod = 'online';
 		}
 
-		// TODO implement loading state
-		$(this).addClass('is-loading');
-
+		$(this).addClass('-loading');
 		$.ajax({
 			data: {
 				controller: 'PaymentAjaxController',

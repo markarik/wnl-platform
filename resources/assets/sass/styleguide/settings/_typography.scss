@@ -31,6 +31,11 @@ $line-height-plus-7: 68px;
 $font-size-plus-8: 84px;
 $line-height-plus-8: 98px;
 
+.-textPlus1 {
+  font-size: $font-size-plus-1;
+  line-height: $line-height-plus-1;
+}
+
 .-textMinus1 {
   font-size: $font-size-minus-1;
   line-height: $line-height-minus-1;

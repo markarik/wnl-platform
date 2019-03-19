@@ -4,7 +4,7 @@
 		@if(!empty($productName))
 			<header class="o-cart__headline -centeredSpread">
 				<span>@lang('payment.cart-header')</span>
-				<span class="icon -stormGrey -hiddenMAndUp -touchable" id="cartClose">
+				<span class="icon -stormGray -hiddenMAndUp -touchable" id="cartClose">
 					<i class="fa fa-times a-icon -small"></i>
 				</span>
 			</header>
@@ -21,7 +21,7 @@
 					@endif
 				</p>
 			</section>
-			<section class="o-cart__details -stormGrey">
+			<section class="o-cart__details -stormGray">
 				<p class="m-cart__listItem -centeredSpread -textLight -textMinus1">
 					<span>@lang('payment.cart-shipment-label')</span>
 					<span>@lang('payment.cart-shipment-value')</span>

@@ -1,0 +1,47 @@
+.o-checkoutModal {
+  &__header {
+    align-items: center;
+    display: flex;
+    font-size: $font-size-plus-2;
+    justify-content: space-between;
+    line-height: $line-height-plus-2;
+    margin-bottom: $space-l;
+
+    .a-icon {
+      color: $cadet-blue;
+    }
+  }
+
+  &__intro {
+    margin-bottom: $space-m;
+  }
+
+  &__instalment {
+    margin-bottom: $space-m;
+  }
+
+  &__instalmentHeader {
+    margin-bottom: $space-xs;
+  }
+
+  &__instalmentDetail {
+    border-bottom: 1px solid $mischka;
+    color: $storm-gray;
+    font-size: $font-size-minus-1;
+    line-height: 1em;
+    padding: $space-xxs 0;
+
+    &__value {
+      text-align: right;
+    }
+  }
+
+
+  &__instalmentsTotalAmount {
+    margin-bottom: $space-l;
+  }
+
+  &__tou {
+    margin-bottom: $space-l;
+  }
+}

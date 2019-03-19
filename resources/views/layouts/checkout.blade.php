@@ -40,7 +40,7 @@
 					<img src="{{ asset('/images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
 				</a>
 
-				<div class="o-navigation__right -stormGrey">
+				<div class="o-navigation__right -stormGray">
 					<span class="o-navigation__item icon -hiddenMAndUp -touchable" id="cartIcon">
 						<i class="fa fa-shopping-cart a-icon -small"></i>
 					</span>

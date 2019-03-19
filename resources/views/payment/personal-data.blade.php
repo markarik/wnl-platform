@@ -35,7 +35,7 @@
 			<div id="personal-identity-number-modal" class="modal">
 				<div class="modal-background"></div>
 				<div class="modal-card">
-					<section class="modal-card-body content">
+					<section class="modal-card-body">
 						@include('payment.personal-identity-number-modal')
 					</section>
 				</div>

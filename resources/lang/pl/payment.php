@@ -221,9 +221,9 @@ return [
 	 * Personal identity number modal
 	 */
 	'personal-identity-number-modal-header' => 'Po co nam Twój numer identyfikacyjny?',
-	'personal-identity-number-modal-body' => '<p>Nasz kurs staje się lepszy dlatego, że oceniamy wyniki naszych działań. Jako pierwsi otwarcie mówimy o wynikach naszych kursantów. Podjęliśmy też oficjalną współpracę z Centrum Egzaminów Medycznych, któremu również zależy na ewaluacji polskiej edukacji medycznej. Żeby jednak zmiany mogły nastąpić, potrzebujemy rzetelnych danych.</p>
-	<p>Posłużą one tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!</p>
-	<p>Jeżeli nie posiadasz numeru PESEL, możesz podać numer paszportu.</p>',
+	'personal-identity-number-modal-body' => 'Nasz kurs staje się lepszy dlatego, że oceniamy wyniki naszych działań. Jako pierwsi otwarcie mówimy o wynikach naszych kursantów. Podjęliśmy też oficjalną współpracę z Centrum Egzaminów Medycznych, któremu również zależy na ewaluacji polskiej edukacji medycznej. Żeby jednak zmiany mogły nastąpić, potrzebujemy rzetelnych danych.<br/><br/>
+	Posłużą one tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!<br/><br/>
+	Jeżeli nie posiadasz numeru PESEL, możesz podać numer paszportu.',
 	'personal-identity-number-modal-button' => 'Rozumiem',
 
 	/**

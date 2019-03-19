@@ -16,6 +16,16 @@
   }
 
   &__info {
+    align-items: center;
+    display: flex;
+    margin-bottom: $space-s;
+
+    .a-icon {
+      margin-left: 10px;
+    }
+  }
+
+  &__dataReadOnly {
     margin-bottom: $space-s;
   }
 

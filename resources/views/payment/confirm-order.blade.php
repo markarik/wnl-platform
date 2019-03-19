@@ -87,9 +87,10 @@
 
 				<div class="o-paymentOptions__instalments">
 				@if ($instalments)
-					<div class="m-formGroup -checkbox">
+					<div class="m-formGroup -checkbox -withIcon">
 						<input type="checkbox" name="instalments" id="instalments" class="a-checkbox"/>
 						<label class="a-label" for="instalments">@lang('payment.confirm-order-payment-method-instalments-label')</label>
+						<span class="a-icon -cadetBlue"><i class="fa fa-info-circle"></i></span>
 						{{--TODO modal--}}
 
 						<form action="{{ config('przelewy24.transaction_url') }}" method="post" id="instalmentsP24Form">
@@ -124,7 +125,7 @@
 			@if ($order->has_shipment)
 				<div>
 					<h2 class="o-checkoutSection__subheader">@lang('payment.confirm-personal-data-address-header')</h2>
-					<ul class="o-checkoutSection__info">
+					<ul class="o-checkoutSection__dataReadOnly">
 						<li>{{ $user->userAddress->recipient }}</li>
 						<li>{{ $user->userAddress->street }}</li>
 						<li>{{ $user->userAddress->zip }} {{ $user->userAddress->city }}</li>
@@ -135,8 +136,8 @@
 
 			<div>
 				<h2 class="o-checkoutSection__subheader">@lang('payment.personal-data-invoice-heading')</h2>
-				@if($user->invoice)
-					<ul class="o-checkoutSection__info">
+				@if ($user->invoice)
+					<ul class="o-checkoutSection__dataReadOnly">
 						<li>{{ $user->invoice_name }}</li>
 						<li>{{ $user->invoice_address }}</li>
 						<li>{{ $user->invoice_zip }} {{ $user->invoice_city }}</li>
@@ -144,7 +145,7 @@
 						<li>@lang('payment.confirm-order-nip') {{ $user->invoice_nip }}</li>
 					</ul>
 				@else
-					<ul class="o-checkoutSection__info">
+					<ul class="o-checkoutSection__dataReadOnly">
 						<li>{{ $user->first_name }} {{ $user->last_name }}</li>
 						<li>{{ $user->userAddress->street }}</li>
 						<li>{{ $user->userAddress->zip }} {{ $user->userAddress->city }}</li>

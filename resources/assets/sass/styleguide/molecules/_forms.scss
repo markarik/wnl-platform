@@ -34,6 +34,12 @@
       margin-bottom: 0;
     }
   }
+
+  &.-withIcon {
+    .a-icon {
+      margin-left: 10px;
+    }
+  }
 }
 
 .-grouped {

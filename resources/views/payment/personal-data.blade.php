@@ -28,8 +28,9 @@
 		<section class="o-checkoutSection">
 			<h3 class="o-checkoutSection__subheader">@lang('payment.personal-data-id-heading')</h3>
 
-			{{--TODO tooltip --}}
-			<p class="o-checkoutSection__info    ">@lang('payment.personal-data-id-info')</p>
+			<p class="o-checkoutSection__info">
+				@lang('payment.personal-data-id-info') <span class="a-icon -cadetBlue"><i class="fa fa-info-circle"></i></span>
+			</p>
 
 			{!! form_row($form->personal_identity_number, ['wrapper' => ['id' => 'personalIdentityNumberGroup']]) !!}
 			{!! form_row($form->passport_number, ['wrapper' => ['id' => 'passportNumberGroup']]) !!}

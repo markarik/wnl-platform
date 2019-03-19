@@ -64,16 +64,15 @@
 									@endif
 							</div>
 							<div class="o-dropdown__menu -shadowLarge">
-								<span class="o-dropdown__item" id="logoutLink">Wyloguj</span>
+								{{-- logout link is identified by class because on some pages we have more than one logout link --}}
+								<span class="o-dropdown__item logout-link">Wyloguj</span>
 							</div>
 						</div>
 					@endif
 				</div>
 			</nav>
 
-			<div class="t-checkout">
-				@yield('content')
-			</div>
+			@yield('content')
 			<footer class="o-footer -white">
 				<p class="o-footer__block -first">
 					<span>

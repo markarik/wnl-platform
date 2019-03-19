@@ -1,7 +1,7 @@
 @extends('payment.layout')
 
 @section('content')
-
+	<div class="t-checkout">
 	@include('payment.cart', [
 		'productName' => $product->name,
 		'productPrice' => $product->price,
@@ -92,5 +92,5 @@
 		{!! form_end($form, false)  !!}
 
 	</div>
-
+	</div>
 @endsection

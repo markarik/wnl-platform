@@ -1,21 +1,26 @@
 @extends('payment.layout')
 
 @section('content')
-	<div class="payment-content t-checkout__content">
-		<div><strong>@lang('payment.account-name-heading')</strong></div>
-
-		<div>
-			@if ($user->profile->avatar_url)
-				<img title="{{$user->fullName}}" src="{{$user->profile->avatar_url}}" />
+	<div class="payment-content t-account">
+		<div class="t-account__row -catalinaBlue">@lang('payment.account-name-heading')</div>
+		<div class="t-account__row">
+			@if (!empty($user->profile->avatar_url))
+				<img src="{{$user->profile->avatar_url}}" class="a-avatar -large"/>
+			@elseif (!empty($user->initials))
+				<span class="a-avatar -isAutomatic -large">
+					{{$user->initials}}
+				</span>
 			@else
-				<div title="{{$user->fullName}}">{{$user->initials}}</div>
+				<span class="o-navigation__item icon a-avatar -large">
+					<i class="fa fa-user a-icon -small"></i>
+				</span>
 			@endif
 		</div>
-		<div><strong>{{$user->fullName}}</strong></div>
-		<div><small>@lang('payment.account-wrong-account-text') <a class="logout-link">@lang('payment.account-wrong-account-register-text')</a></small></div>
+		<div class="t-account__row -textPlus2">{{$user->fullName}}</div>
+		<div class="t-account__row -textMinus1 -largeSpace">@lang('payment.account-wrong-account-text') <a class="logout-link">@lang('payment.account-wrong-account-register-text')</a></div>
 
 
-		<a class="a-button -big" href="{{route('payment-personal-data')}}" data-button="account-continue">
+		<a class="a-button -big t-account__row" href="{{route('payment-personal-data')}}" data-button="account-continue">
 			@lang('payment.account-name-submit')
 		</a>
 	</div>

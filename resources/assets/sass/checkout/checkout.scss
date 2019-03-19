@@ -44,6 +44,34 @@
     justify-content: center;
     background-color: $storm-gray;
     color: $color-white;
-    font-size: $font-size-minus-1;
+    font-size: $font-size-minus-2;
+
+    &.-large {
+      font-size: $font-size-plus-5;
+    }
+  }
+
+  &.-large {
+    width: $icon-xl;
+    height: $icon-xl;
+  }
+}
+
+.t-account {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  max-width: 345px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+
+  .t-account__row {
+    padding-bottom: $space-s;
+    text-align: center;
+
+    &.-largeSpace {
+      padding-bottom: $space-l;
+    }
   }
 }

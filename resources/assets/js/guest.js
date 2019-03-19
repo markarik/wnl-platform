@@ -46,15 +46,16 @@ $(function() {
 		});
 	}
 
-	logoutLink && logoutLink.addEventListener('click', () => {
-		logoutForm && logoutForm.submit();
-	});
+	for (let i = 0; i < logoutLinks.length; i++) {
+		logoutLinks[i].addEventListener('click', () => logoutForm && logoutForm.submit());
+	}
 
 	accountDropdownTrigger && accountDropdownTrigger.addEventListener('click', () => {
 		accountDropdown && accountDropdown.classList.toggle('-active');
 	});
 
 	const clickHandler = ({target}) => {
+		if (!accountDropdown) return;
 		if (accountDropdown.classList.contains('-active') && !accountDropdown.contains(target)) {
 			accountDropdown.classList.remove('-active');
 		}

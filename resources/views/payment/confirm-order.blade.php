@@ -11,7 +11,7 @@
 @extends('payment.layout')
 
 @section('content')
-
+	<div class="t-checkout">
 	@include('payment.cart', [
 		'productName' => $order->product->name,
 		'productPrice' => $order->product->price,
@@ -163,6 +163,7 @@
 			</div>
 			<button class="a-button -big" id="confirmOrderSubmit">@lang('payment.confirm-order-submit')</button>
 		</section>
+	</div>
 	</div>
 @endsection
 

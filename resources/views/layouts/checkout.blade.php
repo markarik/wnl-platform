@@ -41,7 +41,7 @@
 				</a>
 
 				<div class="o-navigation__right -stormGrey">
-					<span class="o-navigation__item icon -hiddenMAndUp -isTouchable" id="cartIcon">
+					<span class="o-navigation__item icon -hiddenMAndUp -touchable" id="cartIcon">
 						<i class="fa fa-shopping-cart a-icon -small"></i>
 					</span>
 					@php
@@ -54,7 +54,7 @@
 									@if (!empty($user->profile->avatar_url))
 										<img src="{{$user->profile->avatar_url}}" class="a-avatar"/>
 									@elseif (!empty($user->initials))
-										<span class="a-avatar -isAutomatic">
+										<span class="a-avatar -automatic">
 											{{$user->initials}}
 										</span>
 									@else

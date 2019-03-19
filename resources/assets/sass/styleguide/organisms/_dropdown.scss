@@ -2,7 +2,7 @@
   position: relative;
   display: inline-flex;
 
-  &.-isActive {
+  &.-active {
     .o-dropdown__menu {
       display: initial;
     }

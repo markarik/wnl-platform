@@ -17,16 +17,16 @@
       cursor: inherit;
     }
 
-    &.-isDone a {
+    &.-done a {
       color: $storm-gray;
       cursor: pointer;
     }
 
-    &.-isDone, &.-isActive {
+    &.-done, &.-active {
       border-color: $blue-chill;
     }
 
-    &.-isActive {
+    &.-active {
       color: $blue-chill;
     }
   }

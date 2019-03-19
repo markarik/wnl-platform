@@ -52,12 +52,12 @@ $(function() {
 	});
 
 	accountDropdownTrigger && accountDropdownTrigger.addEventListener('click', () => {
-		accountDropdown && accountDropdown.classList.toggle('-isActive');
+		accountDropdown && accountDropdown.classList.toggle('-active');
 	});
 
 	const clickHandler = ({target}) => {
-		if (accountDropdown.classList.contains('-isActive') && !accountDropdown.contains(target)) {
-			accountDropdown.classList.remove('-isActive');
+		if (accountDropdown.classList.contains('-active') && !accountDropdown.contains(target)) {
+			accountDropdown.classList.remove('-active');
 		}
 	};
 

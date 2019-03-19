@@ -44,7 +44,6 @@ $(function () {
 
 	if (noIdentityNumberCheckbox) {
 		noIdentityNumberCheckbox.addEventListener('click', e => toggleIdentityNumber(!e.target.checked));
-		toggleIdentityNumber(!noIdentityNumberCheckbox.checked);
 	}
 
 	cartClose && cartClose.addEventListener('click', () => {

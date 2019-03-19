@@ -32,8 +32,14 @@
 				@lang('payment.personal-data-id-info') <span class="a-icon -cadetBlue"><i class="fa fa-info-circle"></i></span>
 			</p>
 
-			{!! form_row($form->personal_identity_number, ['wrapper' => ['id' => 'personalIdentityNumberGroup']]) !!}
-			{!! form_row($form->passport_number, ['wrapper' => ['id' => 'passportNumberGroup']]) !!}
+			{!! form_row($form->personal_identity_number, ['wrapper' => [
+				'id' => 'personalIdentityNumberGroup',
+				'class' => $form->no_identity_number->getValue() ? '-dNone m-formGroup' : 'm-formGroup',
+			]]) !!}
+			{!! form_row($form->passport_number, ['wrapper' => [
+				'id' => 'passportNumberGroup',
+				'class' => $form->no_identity_number->getValue() ? 'm-formGroup' : '-dNone  m-formGroup',
+			]]) !!}
 			{!! form_row($form->no_identity_number) !!}
 		</section>
 

@@ -30,7 +30,7 @@
 
 			<p class="o-checkoutSection__info">
 				@lang('payment.personal-data-id-info')
-				<i class="a-icon -cadetBlue fa-info-circle" id="personal-identity-number-modal-opener"></i>
+				<i class="a-icon -cadetBlue fa-info-circle -touchable" id="personal-identity-number-modal-opener"></i>
 			</p>
 			<div id="personal-identity-number-modal" class="modal">
 				<div class="modal-background"></div>

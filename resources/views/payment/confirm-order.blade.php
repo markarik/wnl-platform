@@ -90,7 +90,7 @@
 					<div class="m-formGroup -checkbox -withIcon">
 						<input type="checkbox" name="instalments" id="instalments" class="a-checkbox"/>
 						<label class="a-label" for="instalments">@lang('payment.confirm-order-payment-method-instalments-label')</label>
-						<i class="a-icon -cadetBlue fa-info-circle" id="instalments-modal-opener"></i>
+						<i class="a-icon -cadetBlue fa-info-circle -touchable" id="instalments-modal-opener"></i>
 
 						<div id="instalments-modal" class="modal">
 							<div class="modal-background"></div>

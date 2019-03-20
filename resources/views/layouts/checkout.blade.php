@@ -41,16 +41,14 @@
 				</a>
 
 				<div class="o-navigation__right -stormGray">
-					<span class="o-navigation__item icon -hiddenMAndUp -touchable" id="cartIcon">
-						<i class="fa fa-shopping-cart a-icon -small"></i>
-					</span>
+					<i class="o-navigation__item -hiddenMAndUp -touchable fa-shopping-cart a-icon -small" id="cartIcon"></i>
 					@php
 					/** @var \App\Models\User $user */
 					$user = Auth::user();
 					@endphp
 					@if ($user)
 						<div class="o-navigation__item o-dropdown" id="accountDropdown">
-							<div class="o-dropdown__trigger" id="accountDropdownTrigger">
+							<div class="o-dropdown__trigger o-navigation__avatar" id="accountDropdownTrigger">
 									@if (!empty($user->profile->avatar_url))
 										<img src="{{$user->profile->avatar_url}}" class="a-avatar"/>
 									@elseif (!empty($user->initials))
@@ -58,9 +56,7 @@
 											{{$user->initials}}
 										</span>
 									@else
-										<span class="o-navigation__item icon a-avatar">
-											<i class="fa fa-user a-icon -small"></i>
-										</span>
+										<i class="o-navigation__item fa-user a-icon -small"></i>
 									@endif
 							</div>
 							<div class="o-dropdown__menu -shadowLarge">

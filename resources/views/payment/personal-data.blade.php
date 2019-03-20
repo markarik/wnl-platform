@@ -9,7 +9,7 @@
 		'productPriceWithCoupon' => $productPriceWithCoupon,
 		'coupon' => $coupon,
 	])
-	<div class="payment-content t-checkout__content">
+	<div class="t-checkout__content">
 		@include('payment.stepper', ['currentStep' => 1])
 		@if (!$errors->isEmpty())
 			<section>

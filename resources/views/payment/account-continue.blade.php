@@ -9,7 +9,7 @@
 			'productPriceWithCoupon' => $productPriceWithCoupon,
 			'coupon' => $coupon,
 		])
-		<div class="payment-content t-checkout__content t-account">
+		<div class="t-checkout__content t-account">
 			<i class="-mischka t-account__row -x-large a-icon -largeSpace fa-shopping-cart"></i>
 			<h2 class="t-account__row -textPlus2 -largeSpace">@lang('payment.account-continue-heading')</h2>
 			<div class="m-buttonWithNote t-account__row">

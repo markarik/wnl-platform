@@ -1,7 +1,7 @@
 @extends('payment.layout')
 
 @section('content')
-	<div class="payment-content t-account">
+	<div class="t-account">
 		<div class="t-account__row -catalinaBlue">@lang('payment.account-name-heading')</div>
 		<div class="t-account__row">
 			@if (!empty($user->profile->avatar_url))

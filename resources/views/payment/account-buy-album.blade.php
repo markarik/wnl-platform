@@ -23,7 +23,7 @@
 				<span>@lang('payment.account-product-bought-info')</span>
 				<span class="-textMedium">@lang('payment.account-buy-album-confirmation')</span>
 			</div>
-			<a class="a-button -big t-account__row" href="{{route('payment-personal-data', ['slug' => 'wnl-album'])}}" data-button="account-continue">
+			<a class="a-button -big t-account__row" href="{{route('payment-personal-data', ['slug' => \App\Models\Product::SLUG_WNL_ALBUM])}}" data-button="account-continue">
 				@lang('payment.account-buy-album')
 			</a>
 		</div>

@@ -40,7 +40,7 @@ class AccountController
 			$hasCurrentProduct = $user->getLatestPaidCourseProductId() === $product->id;
 			$hasParticipantCoupon = !empty($coupon) && $coupon->kind === Coupon::KIND_PARTICIPANT;
 			$hasBoughtAlbum = $user->orders->filter(function($order) {
-				return $order->product->slug === 'wnl-album';
+				return $order->product->slug === Product::SLUG_WNL_ALBUM;
 			})->count() > 0;
 
 			if (!$hasBoughtAlbum && $hasParticipantCoupon && $hasCurrentProduct) {

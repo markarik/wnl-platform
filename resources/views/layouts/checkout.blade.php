@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<meta property="og:url" content="{{env('APP_URL')}}/login">
+		<meta property="og:url" content="{{env('APP_URL')}}/payment/account">
 		<meta property="og:type" content="website">
 		<meta property="og:title" content="@lang('common.app-title')">
 		<meta property="og:description" content="Zapisy otwarte!">
@@ -31,7 +31,7 @@
 		@include('tracking')
 	</head>
 	<body data-base="{{ env('APP_URL') }}" class="styleguide">
-		<form method="post" action="{{route('logout', ['redirectToRoute' => 'payment-account' ?? null])}}" id="logoutForm">
+		<form method="post" action="{{route('logout', ['redirectToRoute' => 'payment-account'])}}" id="logoutForm">
 			{{ csrf_field() }}
 		</form>
 		<div class="t-app">

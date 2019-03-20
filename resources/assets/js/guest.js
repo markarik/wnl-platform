@@ -12,7 +12,6 @@ $(function() {
 	const loginModalButton = $('.opens-login-modal');
 	const loginModal = modalsContainer.find('#login-modal');
 	const loginCloseModalButton = loginModal.find('.delete');
-	const expandable = $('.expandable');
 	const logoutLinks = document.getElementsByClassName('logout-link');
 	const logoutForm = document.getElementById('logoutForm');
 	const accountDropdown = document.getElementById('accountDropdown');
@@ -40,12 +39,6 @@ $(function() {
 		buttons.addClass('is-disabled');
 		$(event.target).find('.button:submit').removeClass('is-disabled').addClass('is-loading');
 	});
-
-	if (expandable.length > 0) {
-		expandable.find('.expand').on('mousedown touchstart', function (event) {
-			expandable.find('.expandable-content').slideDown();
-		});
-	}
 
 	for (let i = 0; i < logoutLinks.length; i++) {
 		logoutLinks[i].addEventListener('click', () => logoutForm && logoutForm.submit());

@@ -36,10 +36,12 @@ $(function () {
 	const toggleIdentityNumber = showIdentityNumber => {
 		if (showIdentityNumber) {
 			passportNumberGroup.classList.add('-dNone');
+			passportNumberGroup.querySelector('input').value = '';
 			personalIdentityNumberGroup.classList.remove('-dNone');
 		} else {
 			passportNumberGroup.classList.remove('-dNone');
 			personalIdentityNumberGroup.classList.add('-dNone');
+			personalIdentityNumberGroup.querySelector('input').value = '';
 		}
 	};
 

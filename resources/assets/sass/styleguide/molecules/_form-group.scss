@@ -15,6 +15,17 @@
     margin-right: $space-s;
   }
 
+  &__inputWrapper {
+    position: relative;
+
+    .a-icon {
+      color: $color-storm-gray;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
+
   &.-checkbox {
     display: flex;
     align-items: center;

@@ -28,7 +28,14 @@
 			<h2 class="-textPlus3 t-checkout__content__row">@lang('payment.account-register-heading')</h2>
 			<div class="t-checkout__content__row">
 				{!! form_row($form->email) !!}
-				{!! form_row($form->password) !!}
+				<div class="m-formGroup">
+					{!! form_label($form->password) !!}
+					<div class="m-formGroup__inputWrapper">
+						{!! form_widget($form->password) !!}
+						<i class="a-icon fa-eye -touchable" id="passwordVisibilityToggle"></i>
+					</div>
+					{!! form_errors($form->password) !!}
+				</div>
 			</div>
 
 			<div class="m-buttonWithNote t-checkout__content__row">

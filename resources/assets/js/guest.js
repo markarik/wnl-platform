@@ -17,6 +17,7 @@ $(function() {
 	const logoutForm = document.getElementById('logoutForm');
 	const accountDropdown = document.getElementById('accountDropdown');
 	const accountDropdownTrigger = document.getElementById('accountDropdownTrigger');
+	const passwordVisibilityToggle = document.getElementById('passwordVisibilityToggle');
 
 	buttons.removeClass('is-disabled').removeClass('is-loading');
 
@@ -62,4 +63,20 @@ $(function() {
 	};
 
 	document.addEventListener('click', clickHandler);
+
+	passwordVisibilityToggle && passwordVisibilityToggle.addEventListener('click', (e) => {
+		const toggle = e.target;
+		const input = e.target.parentNode.querySelector('input');
+
+		if (input.type === 'password') {
+			input.type = 'text';
+			toggle.classList.add('fa-eye-slash');
+			toggle.classList.remove('fa-eye');
+		} else {
+			input.type = 'password';
+			toggle.classList.remove('fa-eye-slash');
+			toggle.classList.add('fa-eye');
+		}
+		input.focus();
+	});
 });

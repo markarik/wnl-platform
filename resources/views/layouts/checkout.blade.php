@@ -76,9 +76,7 @@
 					<span>
 						Bezpieczna transakcja realizowana przez Przelewy24
 					</span>
-					<span class="-mischka">
-						<i class="fa fa-shield a-icon -medium"></i>
-					</span>
+					<i class="fa-shield a-icon -medium -mischka"></i>
 				</p>
 				<p class="o-footer__block">
 					<span>

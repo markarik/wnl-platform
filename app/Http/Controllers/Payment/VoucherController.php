@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\UseCoupon;
-use App\Models\Product;
 use App\Traits\CheckoutTrait;
 use Auth;
 use Illuminate\Http\Request;
@@ -18,12 +17,7 @@ class VoucherController extends Controller
 	{
 		$product = $this->getProduct($request);
 
-		if (
-			!$product instanceof Product ||
-			!$product->available ||
-			$product->signups_close->isPast() ||
-			$product->signups_start->isFuture()
-		) {
+		if ($this->isSignupForProductClosed($product)) {
 			return view('payment.signups-closed', ['product' => $product]);
 		}
 

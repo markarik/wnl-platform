@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Session;
 
 trait CheckoutTrait
 {
-	private function getProduct(Request $request): Product
+	private function getProduct(Request $request): ?Product
 	{
 		$productSlugParam = $request->route('productSlug');
 
@@ -25,6 +25,14 @@ trait CheckoutTrait
 		}
 
 		return $product;
+	}
+
+	private function isSignupForProductClosed(?Product $product): bool
+	{
+		return !$product instanceof Product ||
+			!$product->available ||
+			$product->signups_close->isPast() ||
+			$product->signups_start->isFuture();
 	}
 
 	private function readCoupon(Product $product, ?User $user): ?Coupon {

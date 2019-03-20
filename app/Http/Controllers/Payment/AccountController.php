@@ -25,12 +25,7 @@ class AccountController
 		$user = Auth::user();
 		$product = $this->getProduct($request);
 
-		if (
-			!$product instanceof Product ||
-			!$product->available ||
-			$product->signups_close->isPast() ||
-			$product->signups_start->isFuture()
-		) {
+		if ($this->isSignupForProductClosed($product)) {
 			return view('payment.signups-closed', ['product' => $product]);
 		}
 

@@ -45,7 +45,7 @@ class MyOrdersModule
 
 	public function assertPaid(BethinkBrowser $browser, string $expectedAmount)
 	{
-		$browser->waitForText('Wpłacono ' . $expectedAmount);
+		$browser->waitForText('Wpłacono ' . $expectedAmount, 60);
 	}
 
 	public function assertNotPaid(BethinkBrowser $browser)

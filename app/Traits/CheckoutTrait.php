@@ -6,7 +6,6 @@ use App\Exceptions\SignupForProductIsClosedException;
 use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -20,21 +19,20 @@ trait CheckoutTrait
 	 */
 	private function getProduct(Request $request): ?Product
 	{
+		$product = null;
 		$productSlugParam = $request->route('productSlug');
 
-		try {
-			if ($productSlugParam) {
-				$product = Product::where('slug', '=', $productSlugParam)->firstOrFail();
-			} else if (Session::has('productId')) {
-				$product = Product::findOrFail(Session::get('productId'));
-			} else {
-				$product = Product::slug(Product::SLUG_WNL_ONLINE);
-			}
-		} catch (ModelNotFoundException $e) {
-			$product = Product::slug(Product::SLUG_WNL_ONLINE);
-		} finally {
-			Session::put('productId', $product->id);
+		if ($productSlugParam) {
+			$product = Product::slug($productSlugParam);
+		} else if (Session::has('productId')) {
+			$product = Product::find(Session::get('productId'));
 		}
+
+		if (!$product) {
+			$product = Product::slug(Product::SLUG_WNL_ONLINE);
+		}
+
+		Session::put('productId', $product->id);
 
 		if ($this->isSignupForProductClosed($product)) {
 			throw new SignupForProductIsClosedException(

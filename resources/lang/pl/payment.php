@@ -161,7 +161,7 @@ return [
 	'account-wrong-account-register-text' => 'Załóż nowe konto',
 	'account-buy-album' => 'Zamów nowy album',
 	'account-product-bought-info' => 'Posiadasz już zamówienie na najbliższą edycję.',
-	'account-buy-new-product-confirmation' => 'Czy chcesz złożyć nowe zamówienie?',
+	'account-buy-new-product-confirmation' => 'Czy chcesz stworzyć nowe konto i&nbsp;złożyć zamówienie?',
 	'account-create-account' => 'Załóż nowe konto',
 	'account-buy-album-confirmation' => 'Czy chcesz zamówić nowy album?',
 	'account-name-heading' => 'Używasz teraz konta:',

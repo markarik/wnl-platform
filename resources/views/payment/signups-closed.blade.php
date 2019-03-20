@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section class="section">
+<section class="section t-checkout">
 	<div class="container">
 		@if(!$product || $product->signups_close->isPast())
 			<div class="column">

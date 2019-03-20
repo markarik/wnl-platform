@@ -7,7 +7,7 @@
 				<i class="a-icon -stormGray -hiddenMAndUp -touchable fa-times -small"  id="cartClose"></i>
 			</header>
 			<section class="o-cart__card -shadowMedium">
-				<img src="{{ asset('/images/lek-product-logo.svg') }}" class="o-cart__card__logo">
+				<img src="{{ asset(config('course.product_logo')) }}" class="o-cart__card__logo">
 				<p class="o-cart__card__text">
 					<span>{{$productName}}</span>
 					@if (!empty($productAccessEnd))

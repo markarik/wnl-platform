@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
-class AnnotationsApiController extends ApiController
+class ProductInstalmentsApiController extends ApiController
 {
 	public function __construct(Request $request)
 	{

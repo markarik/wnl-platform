@@ -19,13 +19,13 @@
 				<wnl-datepicker
 						name="start_date"
 						:config="datepickerConfig"
-						:value="method.start_date"
+						:value="getDate(method.id, 'start_date')"
 						@closed="onDatePickerClosed($event, method.id, 'start_date')"
 				/>
 				<wnl-datepicker
 						name="end_date"
 						:config="datepickerConfig"
-						:value="method.end_date"
+						:value="getDate(method.id, 'end_date')"
 						@closed="onDatePickerClosed($event, method.id, 'end_date')"
 				/>
 			</div>
@@ -72,7 +72,8 @@ export default {
 	data() {
 		return {
 			loading: false,
-			methods: {},
+			methods: [],
+			selectedMethods: [],
 			loadingMethods: false,
 			loadingInstalments: false,
 			datepickerConfig: {
@@ -93,20 +94,39 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 
+		getDate(id, date) {
+			const method = this.selectedMethods.find(item => item.id === id);
+			if (!method) return null;
+			return method[date];
+		},
+
 		methodEnabled(id) {
-			return this.methods[id].enabled;
+			return !!this.selectedMethods.filter(item => item.id === id).length;
 		},
 
 		toggleMethod(event, id) {
-			this.methods[id].enabled = event.target.checked;
+			if(event.target.checked) {
+				const method = this.methods.find(item => item.id === id);
+				this.selectedMethods.push({
+					id: method.id,
+					start_date: null,
+					end_date: null,
+				});
+			} else {
+				this.selectedMethods = this.selectedMethods.filter(item => item.id !== id);
+			}
 		},
 
 		onDatePickerClosed(value, id, date){
-			this.methods[id][date] = value;
+			this.selectedMethods = this.selectedMethods.map(item => {
+				if (item.id === id) item[date] = value;
+				return item;
+			});
 		},
 
 		async save() {
-			await axios.post(getApiUrl(`products/${this.id}/syncPaymentMethods`), this.methods);
+			const data = {payment_methods: this.selectedMethods};
+			await axios.put(getApiUrl(`products/${this.id}/syncPaymentMethods`), data);
 		},
 
 		async getPaymentMethods() {
@@ -132,16 +152,8 @@ export default {
 			const methods = await this.getPaymentMethods();
 			const {product, productMethods} = await this.getProduct();
 
-			this.methods = Object.assign({}, ...methods.map(item => (
-				{
-					[item.id]: {
-						...item,
-						enabled: product.payment_methods.includes(item.id),
-						start_date: productMethods[item.id].start_date * 1000 || null,
-						end_date: productMethods[item.id].end_date * 1000 || null,
-					}
-				}
-			)));
+			this.methods = methods;
+			this.selectedMethods = Object.values(productMethods);
 
 		} catch (e) {
 			this.addAutoDismissableAlert({

@@ -41,6 +41,18 @@ class ProductsApiController extends ApiController
 		return $this->respondOk(['vat_rates' => Product::VAT_RATES]);
 	}
 
+	public function syncPaymentMethods(Product $product, Request $request)
+	{
+		$data = collect($request->payment_methods)->map(function($item){
+			return [
+				'payment_method_id' => $item['id'],
+				'start_date' => $this->getDate($item['start_date']),
+				'end_date' => $this->getDate($item['end_date']),
+			];
+		})->keyBy('payment_method_id');
+		$product->paymentMethods()->sync($data);
+	}
+
 	private function transformRequestParams($request) {
 		return [
 			'name'          => $request->name,

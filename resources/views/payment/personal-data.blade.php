@@ -64,7 +64,7 @@
 
 				{!! form_row($form->recipient) !!}
 				{!! form_row($form->address) !!}
-				<div class="-grouped">
+				<div class="o-formGroups">
 					{!! form_row($form->zip) !!}
 					{!! form_row($form->city) !!}
 				</div>
@@ -82,7 +82,7 @@
 				{!! form_row($form->invoice_name) !!}
 				{!! form_row($form->invoice_nip) !!}
 				{!! form_row($form->invoice_address) !!}
-				<div class="-grouped">
+				<div class="o-formGroups">
 					{!! form_row($form->invoice_zip) !!}
 					{!! form_row($form->invoice_city) !!}
 				</div>

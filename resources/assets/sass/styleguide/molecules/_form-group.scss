@@ -15,17 +15,6 @@
     margin-right: $space-s;
   }
 
-  @media #{$breakpoint-s} {
-    .-grouped & {
-      flex: 1;
-
-      &:not(:last-child) {
-        margin-right: $space-m;
-      }
-
-    }
-  }
-
   &.-checkbox {
     display: flex;
     align-items: center;
@@ -40,20 +29,6 @@
   &.-withIcon {
     .a-icon {
       margin-left: 10px;
-    }
-  }
-}
-
-.-grouped {
-  &:not(:last-child) {
-    margin-bottom: $space-xs;
-  }
-
-  @media #{$breakpoint-s} {
-    display: flex;
-
-    &:not(:last-child) {
-      margin-bottom: 0;
     }
   }
 }

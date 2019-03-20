@@ -1,0 +1,48 @@
+.-textLight {
+  font-weight: 300;
+}
+
+.-textRegular {
+  font-weight: 400;
+}
+
+.-textMedium {
+  font-weight: 500;
+}
+
+.-textBold {
+  font-weight: 700;
+}
+
+.-textUnderline {
+  text-decoration: underline;
+}
+
+.-textUppercase {
+  text-transform: uppercase;
+}
+
+.-textMinus2 {
+  font-size: $font-size-minus-2;
+  line-height: $line-height-minus-2;
+}
+
+.-textMinus1 {
+  font-size: $font-size-minus-1;
+  line-height: $line-height-minus-1;
+}
+
+.-textPlus1 {
+  font-size: $font-size-plus-1;
+  line-height: $line-height-plus-1;
+}
+
+.-textPlus2 {
+  font-size: $font-size-plus-2;
+  line-height: $line-height-plus-2;
+}
+
+.-textPlus3 {
+  font-size: $font-size-plus-3;
+  line-height: $line-height-plus-3;
+}

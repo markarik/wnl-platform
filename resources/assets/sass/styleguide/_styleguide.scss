@@ -1,25 +1,36 @@
+// Settings
 @import 'settings/colors';
+@import 'settings/fonts';
+@import 'settings/icons';
+@import 'settings/media-queries';
 @import 'settings/spacings';
 @import 'settings/typography';
-@import 'settings/fonts';
-@import 'settings/layout';
-@import 'settings/shadows';
-@import 'settings/media-queries';
 
+// Atoms
 @import 'atoms/animations';
 @import 'atoms/buttons';
 @import 'atoms/icons';
 @import 'atoms/forms';
 
-@import 'molecules/forms';
-@import 'molecules/molecules';
+// Molecules
+@import 'molecules/button-with-note';
+@import 'molecules/form-group';
 
-@import 'organisms/navigation';
-@import 'organisms/footer';
+// Organisms
 @import 'organisms/dropdown';
+@import 'organisms/footer';
+@import 'organisms/form-groups';
+@import 'organisms/navigation';
 
+// Templates
 @import 'templates/app';
 
-@import 'utils/modifiers';
+// Modifiers
+@import 'modifiers/colors';
+@import 'modifiers/layout';
+@import 'modifiers/media-queries';
+@import 'modifiers/shadows';
+@import 'modifiers/typography';
 
+// Other
 @import 'layout';

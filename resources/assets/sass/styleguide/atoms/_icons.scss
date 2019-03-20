@@ -1,14 +1,12 @@
-$icon-xs: 16px;
-$icon-s: 24px;
-$icon-m: 32px;
-$icon-l: 48px;
-$icon-xl: 64px;
-
 .a-icon {
   display: inline-block;
   font: normal normal normal $icon-s/1 FontAwesome;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
+
+  &.-touchable {
+    cursor: pointer;
+  }
 
   &.-touchable:not(.-x-large):not(.-large) {
     padding: #{($min-touchable-size - $icon-s) / 2}

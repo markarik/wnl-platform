@@ -34,7 +34,7 @@ class AccountController
 			return view('payment.signups-closed', ['product' => $product]);
 		}
 
-		$coupon = $this->readCoupon($user);
+		$coupon = $this->readCoupon($product, $user);
 
 		if ($user) {
 			$hasCurrentProduct = $user->getLatestPaidCourseProductId() === $product->id;
@@ -112,15 +112,5 @@ class AccountController
 
 
 		return redirect(route('payment-personal-data'));
-	}
-
-	protected function readCoupon($user)
-	{
-		$userCoupon = $user ? $user->coupons->first() : null;
-		if (session()->has('coupon')) {
-			return session()->get('coupon')->fresh();
-		} else {
-			return $userCoupon;
-		}
 	}
 }

@@ -261,7 +261,7 @@ return [
 	/**
 	 * Signups closed
 	 */
-	'signups-closed-past' => 'Zapisy zostały zakończone. <a href="https://wiecejnizlek.pl/rezerwacja/">Kliknij i zostaw swój e-mail</a>, aby zarezerwować miejsce na kolejnej edycji!',
+	'signups-closed-past' => 'Zapisy zostały zakończone.',
 	'signups-closed-countdown' => 'Do otwarcia zapisów pozostało:',
 	'signups-closed-countdown-loading' => 'sprawdzam zegarek...',
 	'signups-closed-leave-email' => '<a href="https://wiecejnizlek.pl/rezerwacja/">Kliknij i zostaw swój e-mail</a>, aby zarezerwować miejsce na kolejnej edycji!',

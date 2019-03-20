@@ -6,7 +6,7 @@
 	<div class="container">
 		@if(!$product || $product->signups_close->isPast())
 			<div class="column">
-				<div class="notification has-text-centered strong">@lang('payment.signups-closed-past')</div>
+				<div class="notification has-text-centered strong">@lang('payment.signups-closed-past') @lang('payment.signups-closed-leave-email')</div>
 			</div>
 		@endif
 		@if($product->signups_start->isFuture())

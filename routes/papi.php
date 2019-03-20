@@ -124,9 +124,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 		// Payment methods
 		Route::get("{$r['payment-methods']}/{id}", 'PaymentMethodsApiController@get');
 
-		// Product instalments
-		Route::get("{$r['product-instalments']}/byProduct/{product}", 'ProductInstalmentsApiController@getByProduct');
-
 		// Lesson Product
 		Route::post("{$r['lesson-product']}/query", 'LessonProductApiController@query');
 		Route::post("{$r['lesson-product']}", 'LessonProductApiController@post');

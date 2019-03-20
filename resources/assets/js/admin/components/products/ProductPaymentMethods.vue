@@ -7,32 +7,51 @@
 				</div>
 			</div>
 		</div>
-		<wnl-text-loader v-if="loadingMethods">Ładuję...</wnl-text-loader>
-		<div v-else>
-			<div v-for="method in methods" :key="method.id">
-				<input type="checkbox"
-				       :checked="methodEnabled(method.id)"
-				       :id="method.id"
-				       @change="toggleMethod($event, method.id)"
-				/>
-				<label :for="method.id">{{ method.slug }}</label>
-				<wnl-datepicker
-						name="start_date"
-						:config="datepickerConfig"
-						:value="getDate(method.id, 'start_date')"
-						@closed="onDatePickerClosed($event, method.id, 'start_date')"
-				/>
-				<wnl-datepicker
-						name="end_date"
-						:config="datepickerConfig"
-						:value="getDate(method.id, 'end_date')"
-						@closed="onDatePickerClosed($event, method.id, 'end_date')"
-				/>
-			</div>
-		</div>
 
-		<div>
-			<div class="level wnl-screen-title" v-if="showInstalmentsSchedule">
+		<wnl-text-loader v-if="loadingMethods">Ładuję...</wnl-text-loader>
+		<table v-else class="table">
+			<thead>
+				<th>Dostępna</th>
+				<th>Metoda płatności</th>
+				<th>Dostępna od</th>
+				<th>Dostępna do</th>
+			</thead>
+			<tbody>
+				<tr v-for="method in methods" :key="method.id">
+					<td>
+						<input type="checkbox"
+						       :checked="methodEnabled(method.id)"
+						       :id="method.id"
+						       @change="toggleMethod($event, method.id)"
+						/>
+					</td>
+					<td>
+						<label :for="method.id">{{ method.slug }}</label>
+					</td>
+					<td>
+						<wnl-datepicker
+								v-if="methodEnabled(method.id)"
+								name="start_date"
+								:config="datepickerConfig"
+								:value="getDate(method.id, 'start_date')"
+								@closed="onDatePickerClosed($event, method.id, 'start_date')"
+						/>
+					</td>
+					<td>
+						<wnl-datepicker
+								v-if="methodEnabled(method.id)"
+								name="end_date"
+								:config="datepickerConfig"
+								:value="getDate(method.id, 'end_date')"
+								@closed="onDatePickerClosed($event, method.id, 'end_date')"
+						/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div v-if="showInstalmentsSchedule">
+			<div class="level wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item big strong">
 						Domyślny harmonogram rat dla produktu
@@ -40,7 +59,32 @@
 				</div>
 			</div>
 			<wnl-text-loader v-if="loadingInstalments">Ładuję...</wnl-text-loader>
-			<table></table>
+			<table class="table">
+				<thead>
+					<th>Numer raty</th>
+					<th>Rodzaj</th>
+					<th>Wartość</th>
+					<th>Termin (dni od zamówienia)</th>
+					<th>Termin (data)</th>
+				</thead>
+				<tbody>
+					<tr v-for="(instalment, index) in instalments" :key="index">
+						<td>{{ instalment.order_number }}</td>
+						<td>{{ instalment.value_type }}</td>
+						<td>{{ instalment.value }}</td>
+						<td>{{ instalment.due_days }}</td>
+						<td>
+							<wnl-datepicker
+									v-if="!instalment.due_days"
+									name="end_date"
+									:config="datepickerConfig"
+									:value="instalment.due_date"
+									@closed="dueDateUpdated($event, instalment.order_number)"
+							/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 
 		<a class="button is-primary is-wide" v-if="!loadingInstalments && !loadingMethods" @click="save">Zapisz</a>
@@ -83,12 +127,37 @@ export default {
 				altFormat: 'Y-m-d H:i',
 				time_24hr: true,
 			},
+			instalments: [
+				{
+					order_number: 1,
+					product_id: this.id,
+					value_type: 'percentage',
+					value: 50,
+					due_days: 7,
+					due_date: null,
+				},
+				{
+					order_number: 2,
+					product_id: this.id,
+					value_type: 'percentage',
+					value: 50,
+					due_days: null,
+					due_date: null,
+				},
+				{
+					order_number: 3,
+					product_id: this.id,
+					value_type: 'percentage',
+					value: 100,
+					due_days: null,
+					due_date: null,
+				},
+			],
 		};
 	},
 	computed: {
 		showInstalmentsSchedule() {
-			return !isEmpty(this.methods)
-				&& Object.values(this.methods).filter(method => method.slug === 'instalments')[0].enabled;
+			return !!this.selectedMethods.filter(item => item.slug === 'instalments').length;
 		},
 	},
 	methods: {
@@ -109,6 +178,7 @@ export default {
 				const method = this.methods.find(item => item.id === id);
 				this.selectedMethods.push({
 					id: method.id,
+					slug: method.slug,
 					start_date: null,
 					end_date: null,
 				});
@@ -134,15 +204,12 @@ export default {
 			return data;
 		},
 
-		async getProductInstalments() {
-
-		},
-
 		async getProduct() {
-			const url = getApiUrl(`products/${this.id}?include=payment_methods`);
+			const url = getApiUrl(`products/${this.id}?include=payment_methods,instalments`);
 			const {data: {included, ...product}} = await axios.get(url);
 			const productMethods = included.payment_methods;
-			return {product, productMethods};
+			const instalments = included.instalments;
+			return {product, productMethods, instalments};
 		}
 
 	},
@@ -150,8 +217,9 @@ export default {
 		this.loadingMethods = true;
 		try {
 			const methods = await this.getPaymentMethods();
-			const {product, productMethods} = await this.getProduct();
+			const {product, productMethods, instalments} = await this.getProduct();
 
+			// this.instalments = instalments;
 			this.methods = methods;
 			this.selectedMethods = Object.values(productMethods);
 

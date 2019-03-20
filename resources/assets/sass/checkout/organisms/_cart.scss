@@ -1,6 +1,6 @@
 .o-cart {
   padding: $space-xs 0 $space-l 0;
-  background-color: $alabaster;
+  background-color: $color-alabaster;
   font-family: $font-family-rubik;
 
   @media #{$breakpoint-m} {
@@ -43,7 +43,7 @@
   }
 
   &__card {
-    background-color: $white;
+    background-color: $color-white;
     display: flex;
     padding: $space-xxs $space-xs $space-s $space-xs;
     border-radius: 5px;
@@ -82,7 +82,7 @@
 
 .m-cart__listItem {
   padding: $space-xxs 0;
-  border-bottom: 1px solid $mischka;
+  border-bottom: 1px solid $color-mischka;
 }
 
 .m-cart__summaryItem {

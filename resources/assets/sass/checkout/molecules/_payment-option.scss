@@ -14,7 +14,7 @@
   }
 
   &__info {
-    color: $storm-gray;
+    color: $color-storm-gray;
 
     @media #{$breakpoint-s} {
       font-size: $font-size-minus-1;
@@ -23,10 +23,10 @@
   }
 
   &.-active {
-    background-color: $athens-grey;
+    background-color: $color-athens-grey;
   }
 
   .a-icon {
-    color: $storm-gray;
+    color: $color-storm-gray;
   }
 }

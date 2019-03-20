@@ -1,5 +1,5 @@
 .o-footer {
-  background-color: $catalina-blue;
+  background-color: $color-catalina-blue;
   padding: 0 $space-m;
   display: flex;
   flex-direction: column;
@@ -31,11 +31,11 @@
     }
 
     &.-first {
-      border-bottom: 1px solid $cadet-blue;
+      border-bottom: 1px solid $color-cadet-blue;
 
       @media #{$breakpoint-s} {
         border-bottom: none;
-        border-right: 1px solid $cadet-blue;
+        border-right: 1px solid $color-cadet-blue;
       }
     }
   }

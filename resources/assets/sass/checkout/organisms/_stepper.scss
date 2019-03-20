@@ -4,8 +4,8 @@
   margin-bottom: $space-m;
 
   .o-stepper__step {
-    border-top: 4px solid $mischka;
-    color: $cadet-blue;
+    border-top: 4px solid $color-mischka;
+    color: $color-cadet-blue;
     flex: 1 0 auto;
     font-size: $font-size-minus-2;
     padding-right: $space-l;
@@ -19,20 +19,20 @@
     }
 
     &.-done a {
-      color: $storm-gray;
+      color: $color-storm-gray;
       cursor: pointer;
 
       &:hover {
-        color: $blue-chill;
+        color: $color-blue-chill;
       }
     }
 
     &.-done, &.-active {
-      border-color: $blue-chill;
+      border-color: $color-blue-chill;
     }
 
     &.-active {
-      color: $blue-chill;
+      color: $color-blue-chill;
     }
   }
 }

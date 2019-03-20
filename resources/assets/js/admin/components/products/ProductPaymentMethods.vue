@@ -207,8 +207,8 @@ export default {
 		async getProduct() {
 			const url = getApiUrl(`products/${this.id}?include=payment_methods,instalments`);
 			const {data: {included, ...product}} = await axios.get(url);
-			const productMethods = included.payment_methods;
-			const instalments = included.instalments;
+			const productMethods = Object.values(included.payment_methods);
+			const instalments = Object.values(included.instalments);
 			return {product, productMethods, instalments};
 		}
 
@@ -217,11 +217,22 @@ export default {
 		this.loadingMethods = true;
 		try {
 			const methods = await this.getPaymentMethods();
-			const {product, productMethods, instalments} = await this.getProduct();
+			const {productMethods, instalments} = await this.getProduct();
 
-			// this.instalments = instalments;
+			this.instalments = this.instalments.map(item => {
+				const instalment = instalments.find(instalment => instalment.order_number === item.order_number);
+				if(instalment){
+					item.due_date = instalment.due_date * 1000;
+				}
+				return item;
+			});
 			this.methods = methods;
-			this.selectedMethods = Object.values(productMethods);
+			this.selectedMethods = productMethods.map(method => ({
+				...method,
+				start_date: method.start_date * 1000 || null,
+				end_date: method.end_date * 1000 || null,
+			}));
+			console.log(this.selectedMethods);
 
 		} catch (e) {
 			this.addAutoDismissableAlert({

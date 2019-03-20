@@ -10,19 +10,23 @@
 		<wnl-text-loader v-if="loadingMethods">Ładuję...</wnl-text-loader>
 		<div v-else>
 			<div v-for="method in methods" :key="method.id">
-				<input type="checkbox" :checked="methodEnabled(method.id)" :id="method.id"/>
+				<input type="checkbox"
+				       :checked="methodEnabled(method.id)"
+				       :id="method.id"
+				       @change="toggleMethod($event, method.id)"
+				/>
 				<label :for="method.id">{{ method.slug }}</label>
 				<wnl-datepicker
 						name="start_date"
 						:config="datepickerConfig"
 						:value="method.start_date"
-						@closed="onDatePickerClosed($event, method.id)"
+						@closed="onDatePickerClosed($event, method.id, 'start_date')"
 				/>
 				<wnl-datepicker
 						name="end_date"
 						:config="datepickerConfig"
 						:value="method.end_date"
-						@closed="onDatePickerClosed($event, method.id)"
+						@closed="onDatePickerClosed($event, method.id, 'end_date')"
 				/>
 			</div>
 		</div>
@@ -39,6 +43,7 @@
 			<table></table>
 		</div>
 
+		<a class="button is-primary is-wide" v-if="!loadingInstalments && !loadingMethods" @click="save">Zapisz</a>
 	</div>
 </template>
 
@@ -92,12 +97,16 @@ export default {
 			return this.methods[id].enabled;
 		},
 
-		toggleMethod(id) {
-			this.methods[id].enabled = !this.methods[id].enabled;
+		toggleMethod(event, id) {
+			this.methods[id].enabled = event.target.checked;
 		},
 
-		onDatePickerClosed(value, id){
-			console.log(value);
+		onDatePickerClosed(value, id, date){
+			this.methods[id][date] = value;
+		},
+
+		async save() {
+			await axios.post(getApiUrl(`products/${this.id}/syncPaymentMethods`), this.methods);
 		},
 
 		async getPaymentMethods() {
@@ -112,7 +121,8 @@ export default {
 		async getProduct() {
 			const url = getApiUrl(`products/${this.id}?include=payment_methods`);
 			const {data: {included, ...product}} = await axios.get(url);
-			return {product, included};
+			const productMethods = included.payment_methods;
+			return {product, productMethods};
 		}
 
 	},
@@ -120,15 +130,15 @@ export default {
 		this.loadingMethods = true;
 		try {
 			const methods = await this.getPaymentMethods();
-			const {product, included} = await this.getProduct();
+			const {product, productMethods} = await this.getProduct();
 
 			this.methods = Object.assign({}, ...methods.map(item => (
 				{
 					[item.id]: {
 						...item,
 						enabled: product.payment_methods.includes(item.id),
-						start_date: null,
-						end_date: null
+						start_date: productMethods[item.id].start_date * 1000 || null,
+						end_date: productMethods[item.id].end_date * 1000 || null,
 					}
 				}
 			)));

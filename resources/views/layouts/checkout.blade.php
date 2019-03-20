@@ -80,7 +80,7 @@
 				</p>
 				<p class="o-footer__block">
 					<span>
-						W razie problemów napisz do nas na Messengerze lub wyślij maila na adres: <a href="mailto:info@wiecejnizlek.pl" class="-white -textUnderline">info@wiecejnizlek.pl</a>
+						W razie problemów napisz do nas na Messengerze lub wyślij maila na adres: <a href="mailto:info@wiecejnizlek.pl" class="a-linkInText">info@wiecejnizlek.pl</a>
 					</span>
 				</p>
 			</footer>

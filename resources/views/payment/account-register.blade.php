@@ -23,7 +23,7 @@
 
 			<p class="t-checkout__content__row">
 				@lang('payment.account-register-login-text')
-				<a class="opens-login-modal">@lang('payment.account-register-login-button')</a>
+				<a class="opens-login-modal a-link">@lang('payment.account-register-login-button')</a>
 			</p>
 			<h2 class="-textPlus3 t-checkout__content__row">@lang('payment.account-register-heading')</h2>
 			<div class="t-checkout__content__row">
@@ -46,7 +46,7 @@
 					@lang('payment.account-tou-content', [
 						'tou-link-content' => trans('payment.account-tou-link-content'),
 						'tou-link-href' => trans('payment.tou-link-href'),
-						'privacy-link-href' => trans('payment.privacy-link-href'),
+						'privacy-link-href' => trans('payment.privacy-link-href')
 					])
 				</p>
 			</div>

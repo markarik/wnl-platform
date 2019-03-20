@@ -16,7 +16,7 @@
 				@endif
 			</div>
 			<div class="t-account__row -textPlus2">{{$user->fullName}}</div>
-			<div class="t-account__row -textMinus1 -largeSpace">@lang('payment.account-wrong-account-text') <a class="logout-link">@lang('payment.account-wrong-account-register-text')</a></div>
+			<div class="t-account__row -textMinus1 -largeSpace">@lang('payment.account-wrong-account-text') <a class="logout-link a-link">@lang('payment.account-wrong-account-register-text')</a></div>
 
 			<div class="t-account__row -divider -largeSpace"></div>
 			<div class="t-account__row">

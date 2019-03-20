@@ -50,7 +50,7 @@ class AccountController
 			}
 
 			if ($hasBoughtAlbum || (!$hasParticipantCoupon && $hasCurrentProduct)) {
-				return view('payment.account-no-available-product', [
+				return view('payment.account-buy-album', [
 					'user' => $user,
 				]);
 			}

@@ -15,7 +15,9 @@
 			@endif
 		</div>
 		<div class="t-account__row -textPlus2">{{$user->fullName}}</div>
-		<div class="t-account__row -textMinus1 -largeSpace">@lang('payment.account-wrong-account-text') <a class="logout-link">@lang('payment.account-wrong-account-register-text')</a></div>
+		<div class="t-account__row -textMinus1 -largeSpace">@lang('payment.account-wrong-account-text')
+			<a class="logout-link a-link">@lang('payment.account-wrong-account-register-text')</a>
+		</div>
 
 
 		<a class="a-button -big t-account__row" href="{{route('payment-personal-data')}}" data-button="account-continue">

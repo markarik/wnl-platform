@@ -10,10 +10,12 @@ use \Laravel\Dusk\Browser;
 use Laravel\Dusk\ElementResolver;
 
 /**
+ * @property  array accountData
  * @property \App\Models\Coupon coupon
  * @property \App\Models\Order order
- * @property \App\Models\StudyBuddy studyBuddy
  * @property bool payLater
+ * @property \App\Models\StudyBuddy studyBuddy
+ * @property \App\Models\User user
  */
 class BethinkBrowser extends Browser
 {

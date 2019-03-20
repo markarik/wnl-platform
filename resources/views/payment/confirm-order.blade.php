@@ -138,7 +138,7 @@
 						<li>{{ $user->userAddress->street }}</li>
 						<li>{{ $user->userAddress->zip }} {{ $user->userAddress->city }}</li>
 					</ul>
-					<a class="o-checkoutSection__editLink" href="{{ route('payment-personal-data') }}">@lang('payment.confirm-change-order')</a>
+					<a class="o-checkoutSection__editLink" href="{{ route('payment-personal-data') }}" data-link="edit-personal-data">@lang('payment.confirm-change-order')</a>
 				</div>
 			@endif
 

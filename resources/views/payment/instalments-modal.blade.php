@@ -10,7 +10,7 @@
 </h3>
 <p class="o-checkoutModal__intro -textMinus1 -stormGray">@lang('payment.instalments-modal-intro')</p>
 @foreach ($instalments as $instalment)
-	<div class="o-checkoutModal__instalment">
+	<div class="o-checkoutModal__instalment" data-instalment-number="{{$instalment->order_number}}">
 		<p class="o-checkoutModal__instalmentHeader">@lang('payment.instalments-modal-instalment-header', ['number' => $instalment->order_number])</p>
 		<div class="o-checkoutModal__instalmentDetail -centeredSpread">
 			<span>@lang('payment.instalments-modal-due-date-label')</span>

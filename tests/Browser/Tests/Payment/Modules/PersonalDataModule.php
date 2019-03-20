@@ -58,7 +58,7 @@ class PersonalDataModule
 		$userData = $this->generatePersonalFormData();
 		$this->fillInPersonalDataForm($userData, $browser, $invoiceFlag);
 
-		$browser->xpathClick('.//button[@class="button is-primary"]');
+		$browser->click('@submit-personal-data');
 
 		$browser->user = User::where('email', $browser->accountData['email'])->first();
 		$browser->order = $browser->user->orders()->recent();
@@ -69,16 +69,16 @@ class PersonalDataModule
 	protected function assertCart(BethinkBrowser $browser)
 	{
 		$browser->assertVisible('@cart');
-		$browser->assertSeeIn('@cart', 'Wysyłka:');
+		$browser->assertSeeIn('@cart', 'Wysyłka');
 		$browser->assertSeeIn('@cart', 'Na terenie Polski za darmo');
 		$browser->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do');
-		$browser->assertSeeIn('@cart', 'Kwota całkowita:');
+		$browser->assertSeeIn('@cart', 'Kwota całkowita');
 	}
 
 	protected function assertPersonalDataDisabled(BethinkBrowser $browser)
 	{
 		$browser->assertDisabled('first_name');
 		$browser->assertDisabled('last_name');
-		$browser->assertDisabled('identity_number');
+		$browser->assertDisabled('personal_identity_number');
 	}
 }

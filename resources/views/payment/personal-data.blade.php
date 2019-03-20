@@ -90,7 +90,7 @@
 			</div>
 		</section>
 
-		<button class="a-button -big">
+		<button class="a-button -big" data-button="submit-personal-data">
 				@lang('payment.personal-data-submit')
 		</button>
 

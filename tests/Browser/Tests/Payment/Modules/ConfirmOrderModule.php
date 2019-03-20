@@ -22,113 +22,87 @@ class ConfirmOrderModule
 
 	public function payOnlineNow(BethinkBrowser $browser)
 	{
-		$this->payNow($browser);
-		$browser->on(new ConfirmOrderPage)
-			->press('@pay-online-now');
+		$this->assertCart($browser);
+		$browser
+			->on(new ConfirmOrderPage)
+			->click('@payment-method-now')
+			->click('@submit-confirm-order');
 	}
 
 	public function payOnlineLater(BethinkBrowser $browser)
 	{
-		$this->payLater($browser);
-		$browser->on(new ConfirmOrderPage)
-			->press('@pay-online-later');
+		$this->assertCart($browser);
+
+		$browser
+			->on(new ConfirmOrderPage)
+			->click('@payment-method-later')
+			->click('@submit-confirm-order');
 	}
 
 	public function payByInstalmentsNow(BethinkBrowser $browser)
 	{
-		$this->payNow($browser);
-		$browser->on(new ConfirmOrderPage)
-			->click('@expand-instalments')
-			->pause(500);
+		$this->assertCart($browser);
 
-		$this->assertInstalments($browser);
-
-		$browser->press('@pay-instalments-now');
+		$browser
+			->on(new ConfirmOrderPage)
+			->click('@payment-method-now')
+			->click('@select-instalments')
+			->click('@submit-confirm-order');
 	}
 
 	public function payByInstalmentsLater(BethinkBrowser $browser)
 	{
-		$this->payLater($browser);
-		$browser->on(new ConfirmOrderPage)
-			->click('@expand-instalments')
-			->pause(500);
+		$this->assertCart($browser);
 
-		$this->assertInstalments($browser);
-
-		$browser->press('@pay-instalments-later');
+		$browser
+			->on(new ConfirmOrderPage)
+			->click('@payment-method-later')
+			->click('@select-instalments')
+			->click('@submit-confirm-order');
 	}
 
 	public function payByCoupon100Percent(BethinkBrowser $browser)
 	{
-		$this->payNow($browser);
-		$browser->on(new ConfirmOrderPage)
-			->press('@pay-free');
-	}
-
-	protected function payNow(BethinkBrowser $browser)
-	{
-		$this->checkOrder($browser);
 		$this->assertCart($browser);
-		$browser->payLater = false;
-	}
-
-	protected function payLater(BethinkBrowser $browser)
-	{
-		$this->checkOrder($browser);
-		$this->assertCart($browser);
-		$browser->payLater = true;
-	}
-
-	protected function checkOrder(BethinkBrowser $browser)
-	{
-		if (empty($browser->order)) {
-			$browser->order = $browser->user->orders()->recent();
-		}
-
-		$user = $browser->user;
-		$order = $browser->order;
-		$product = $order->product;
 
 		$browser
-			->assertSee($user->email)
-			->assertSee($product->name)
-			->assertSee($order->total_with_coupon);
-
-		if (!empty($browser->coupon)) {
-			$browser->assertSee($browser->coupon->name);
-			$this->assertCouponInCart($browser);
-		}
+			->on(new ConfirmOrderPage)
+			->press('@submit-confirm-order');
 	}
 
 	protected function assertCart(BethinkBrowser $browser) {
-		$browser->assertVisible('@cart');
-		$browser->assertSeeIn('@cart', 'Wysyłka:');
-		$browser->assertSeeIn('@cart', 'Na terenie Polski za darmo');
-		$browser->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do');
-		$browser->assertSeeIn('@cart', 'Kwota całkowita:');
-	}
+		$order = $browser->order;
 
-	protected function assertCouponInCart(BethinkBrowser $browser) {
-		$browser->assertSeeIn('@cart', 'Zniżka:');
-	}
+		$browser
+			->assertVisible('@cart')
+			->assertSeeIn('@cart', $order->product->name)
+			->assertSeeIn('@cart', 'Wysyłka')
+			->assertSeeIn('@cart', 'Na terenie Polski za darmo')
+			->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do')
+			->assertSeeIn('@cart', 'Kwota całkowita')
+			->assertSeeIn('@cart', $order->total_with_coupon);
 
-	private function assertInstalments(BethinkBrowser $browser)
-	{
-		if (!empty($browser->coupon) && $browser->coupon->is_percentage && $browser->coupon->value === 10) {
-			$firstInstalmentAmount = '675zł';
-			$secondInstalmentAmount = '337.5zł';
-			$thirdInstalmentAmount = '337.5zł';
-			$totalAmount = '1350zł';
-		} else {
-			$firstInstalmentAmount = '750zł';
-			$secondInstalmentAmount = '375zł';
-			$thirdInstalmentAmount = '375zł';
-			$totalAmount = '1500zł';
+		if (!empty($browser->coupon)) {
+			$browser->assertSeeIn('@cart', 'Zniżka');
 		}
+	}
 
-		$browser->assertSeeIn('#instalments-amounts td:nth-child(2)', $firstInstalmentAmount);
-		$browser->assertSeeIn('#instalments-amounts td:nth-child(3)', $secondInstalmentAmount);
-		$browser->assertSeeIn('#instalments-amounts td:nth-child(4)', $thirdInstalmentAmount);
-		$browser->assertSeeIn('#instalments-amounts td:nth-child(5)', $totalAmount);
+	public function assertInstalments(
+		BethinkBrowser $browser,
+		string $firstInstalmentAmount = '750zł',
+		string $secondInstalmentAmount = '375zł',
+		string $thirdInstalmentAmount = '375zł',
+		string $totalAmount = '1500zł'
+	)
+	{
+		$browser
+			->on(new ConfirmOrderPage)
+			->click('@open-instalments-modal')
+			->pause(100)
+			->assertSeeIn('[data-instalment-number="1"]', $firstInstalmentAmount)
+			->assertSeeIn('[data-instalment-number="2"]', $secondInstalmentAmount)
+			->assertSeeIn('[data-instalment-number="3"]', $thirdInstalmentAmount)
+			->assertSeeIn('@instalments-total-amount', $totalAmount)
+			->click('@close-instalments-modal');
 	}
 }

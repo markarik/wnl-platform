@@ -35,14 +35,17 @@ class ConfirmOrderPage extends BasePage
 	public function elements()
 	{
 		return [
-			'@pay-online-now' => '[data-button="pay-online-now"]',
-			'@pay-online-later' => '[data-button="pay-online-later"]',
-			'@pay-instalments-now' => '[data-button="pay-instalments-now"]',
-			'@pay-instalments-later' => '[data-button="pay-instalments-later"]',
-			'@pay-free' => '[data-button="pay-free"]',
-			'@edit-personal-data' => '.edit-personal-data a',
-			'@expand-instalments' => '#expand-instalments',
+			'@payment-method-now' => '#paymentMethodNow',
+			'@payment-method-later' => '#paymentMethod7days',
+
+			'@select-instalments' => '#instalments',
+			'@open-instalments-modal' => '#instalments-modal-opener',
+			'@close-instalments-modal' => '#instalments-modal-closer',
+			'@instalments-total-amount' => '.o-checkoutModal__instalmentsTotalAmount',
+
+			'@edit-personal-data' => '[data-link="edit-personal-data"]',
 			'@cart' => '.cart',
+			'@submit-confirm-order' => '#confirmOrderSubmit',
 		];
 	}
 }

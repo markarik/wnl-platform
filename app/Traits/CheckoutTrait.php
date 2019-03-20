@@ -28,7 +28,7 @@ trait CheckoutTrait
 			$product = Product::find(Session::get('productId'));
 		}
 
-		if (!$product) {
+		if (!$product || !$product->exists()) {
 			$product = Product::slug(Product::SLUG_WNL_ONLINE);
 		}
 

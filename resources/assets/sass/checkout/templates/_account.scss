@@ -8,11 +8,24 @@
   justify-content: center;
 
   .t-account__row {
-    margin-bottom: $space-s;
+    padding-bottom: $space-s;
     text-align: center;
+    width: 100%;
+
+    &.-divider {
+      width: 100%;
+
+      &:after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 1px;
+        background-color: $mischka;
+      }
+    }
 
     &.-largeSpace {
-      margin-bottom: $space-l;
+      padding-bottom: $space-l;
     }
   }
 }

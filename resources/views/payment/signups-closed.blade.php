@@ -1,4 +1,4 @@
-@extends('payment.layout')
+@extends('layouts.checkout', ['disableCart' => true])
 
 @section('content')
 

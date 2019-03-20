@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Forms\SignUpForm;
 use App\Mail\SignUpConfirmation;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\User;
 use App\Traits\CheckoutTrait;
@@ -36,6 +37,24 @@ class AccountController
 		$coupon = $this->readCoupon($user);
 
 		if ($user) {
+			$hasCurrentProduct = $user->getLatestPaidCourseProductId() === $product->id;
+			$hasParticipantCoupon = !empty($coupon) && $coupon->kind === Coupon::KIND_PARTICIPANT;
+			$hasBoughtAlbum = $user->orders->filter(function($order) {
+				return $order->product->slug === 'wnl-album';
+			})->count() === 0;
+
+			if (!$hasBoughtAlbum && $hasParticipantCoupon && $hasCurrentProduct) {
+				return view('payment.account-buy-album', [
+					'user' => $user
+				]);
+			}
+
+			if ($hasBoughtAlbum || (!$hasParticipantCoupon && $hasCurrentProduct)) {
+				return view('payment.account-no-available-product', [
+					'user' => $user,
+				]);
+			}
+
 			if ($user->signUpComplete) {
 				return view('payment.account-name', [
 					'user' => $user,
@@ -43,13 +62,13 @@ class AccountController
 					'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
 					'coupon' => $coupon,
 				]);
-			} else {
-				return view('payment.account-continue', [
-					'product' => $product,
-					'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
-					'coupon' => $coupon,
-				]);
 			}
+
+			return view('payment.account-continue', [
+				'product' => $product,
+				'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
+				'coupon' => $coupon,
+			]);
 		}
 
 		// Set intended url after successful login

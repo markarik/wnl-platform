@@ -41,7 +41,9 @@
 				</a>
 
 				<div class="o-navigation__right -stormGray">
-					<i class="o-navigation__item -hiddenMAndUp -touchable fa-shopping-cart a-icon -small" id="cartIcon"></i>
+					@if(empty($disableCart))
+						<i class="o-navigation__item -hiddenMAndUp -touchable fa-shopping-cart a-icon -small" id="cartIcon"></i>
+					@endif
 					@php
 					/** @var \App\Models\User $user */
 					$user = Auth::user();
@@ -103,6 +105,8 @@
 		</div>
 		<!-- Scripts -->
 		<script src="{{ mix('js/guest.js') }}"></script>
+		<script src="{{ mix('js/payment.js') }}"></script>
+		@yield('payment-scripts')
 		@yield('scripts')
 	</body>
 </html>

@@ -8,7 +8,7 @@
  */
 @endphp
 
-@extends('payment.layout')
+@extends('layouts.checkout')
 
 @section('content')
 	<div class="t-checkout">

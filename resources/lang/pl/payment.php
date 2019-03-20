@@ -159,6 +159,11 @@ return [
 	'account-register-login-button' => 'Zaloguj się',
 	'account-wrong-account-text' => 'Nie ty?',
 	'account-wrong-account-register-text' => 'Załóż nowe konto',
+	'account-buy-album' => 'Zamów nowy album',
+	'account-product-bought-info' => 'Posiadasz już zamówienie na najbliższą edycję.',
+	'account-buy-new-product-confirmation' => 'Czy chcesz złożyć nowe zamówienie?',
+	'account-create-account' => 'Załóż nowe konto',
+	'account-buy-album-confirmation' => 'Czy chcesz zamówić nowy album?',
 	'account-name-heading' => 'Używasz teraz konta:',
 	'account-errors' => 'Ups, jeszcze moment, coś się nie zgadza! Prosimy o poprawienie pól, przy których pojawiły się błędy. Dzięki!',
 

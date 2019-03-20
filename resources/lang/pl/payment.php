@@ -166,11 +166,11 @@ return [
 	'account-name-heading' => 'Używasz teraz konta:',
 	'account-errors' => 'Ups, jeszcze moment, coś się nie zgadza! Prosimy o poprawienie pól, przy których pojawiły się błędy. Dzięki!',
 
-	'account-tou-content' => 'Poprzez kliknięcie akceptujesz <a class="a-linkInText -textMedium" href=":tou-link-href" target="_blank">:tou-link-content</a> oraz <a class="a-linkInText -textMedium" href=":privacy-link-href" target="_blank">Politykę Prywatności</a>.',
+	'account-tou-content' => 'Poprzez kliknięcie akceptujesz <a class="a-linkInText -textMedium" href=":tou-link-href" target="_blank">:tou-link-content</a> oraz <a class="a-linkInText -textMedium" href=":privacy-policy-link-href" target="_blank">Politykę Prywatności</a>.',
 	'account-tou-link-content' => 'Regulamin',
-	'account-privacy-link-content' => 'Polityka Prywatności',
+	'account-privacy-policy-link-content' => 'Polityka Prywatności',
 	'tou-link-href' => 'https://wiecejnizlek.pl/documents/RegulaminSerwisuWiecejnizlekPl.pdf',
-	'privacy-link-href' => 'https://wiecejnizlek.pl/documents/PolitykaPrywatnosciWiecejNizLEK.pdf',
+	'privacy-policy-link-href' => 'https://wiecejnizlek.pl/documents/PolitykaPrywatnosciWiecejNizLEK.pdf',
 	'pricing-link-href' => 'https://wiecejnizlek.pl/cennik/',
 
 	'account-register-submit' => 'Załóż konto',

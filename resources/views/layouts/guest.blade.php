@@ -84,7 +84,7 @@
 						</a>
 						&nbsp;|&nbsp;
 						<a target="_blank" href="@lang('payment.privacy-policy-link-href')">
-							@lang('payment.account-privacy-link-content')
+							@lang('payment.account-privacy-policy-link-content')
 						</a>
 					</small>
 				</p>

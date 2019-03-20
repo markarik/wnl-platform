@@ -4,6 +4,11 @@
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
 
+  &:before {
+    display: block;
+    margin: 0 auto;
+  }
+
   &.-touchable {
     cursor: pointer;
   }

@@ -41,7 +41,7 @@ class AccountController
 			$hasParticipantCoupon = !empty($coupon) && $coupon->kind === Coupon::KIND_PARTICIPANT;
 			$hasBoughtAlbum = $user->orders->filter(function($order) {
 				return $order->product->slug === 'wnl-album';
-			})->count() === 0;
+			})->count() > 0;
 
 			if (!$hasBoughtAlbum && $hasParticipantCoupon && $hasCurrentProduct) {
 				return view('payment.account-buy-album', [

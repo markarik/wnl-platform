@@ -1,7 +1,7 @@
 @extends('layouts.checkout')
 
 @section('content')
-	<div class="t-checkout">
+	<div class="t-checkout p-account">
 		@include('payment.cart', [
 			'productName' => $product->name,
 			'productPrice' => $product->price,

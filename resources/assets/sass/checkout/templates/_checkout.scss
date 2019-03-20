@@ -1,6 +1,9 @@
 .t-checkout {
   flex-grow: 1;
-  display: flex;
+
+  @media #{$breakpoint-m} {
+    display: flex;
+  }
 
   .t-checkout__cart {
     width: 100%;

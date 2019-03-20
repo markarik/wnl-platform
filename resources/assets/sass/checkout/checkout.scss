@@ -1,3 +1,5 @@
+@import 'atoms/avatar';
+
 @import 'molecules/payment-option';
 
 @import 'organisms/cart';
@@ -6,76 +8,5 @@
 @import 'organisms/stepper';
 @import 'organisms/payment-options';
 
-.t-checkout {
-  flex-grow: 1;
-
-  @media #{$breakpoint-m} {
-    display: flex;
-  }
-}
-
-.t-checkout__content {
-  width: 100%;
-  padding: 0 $space-m $space-l $space-m;
-
-  @media #{$breakpoint-m} {
-    min-width: 620px;
-    padding: 0 $space-xxxxl $space-xxxl $space-xxxl;
-  }
-
-  .t-checkout__content__row {
-    margin-bottom: $space-l;
-  }
-}
-
-.t-checkout__cart {
-  width: 100%;
-
-  @media #{$breakpoint-m} {
-    order: 2;
-    min-width: 360px;
-    max-width: 660px;
-  }
-}
-
-.a-avatar {
-  width: $icon-s;
-  height: $icon-s;
-
-  &.-automatic {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: $storm-gray;
-    color: $color-white;
-    font-size: $font-size-minus-2;
-
-    &.-large {
-      font-size: $font-size-plus-5;
-    }
-  }
-
-  &.-large {
-    width: $icon-xl;
-    height: $icon-xl;
-  }
-}
-
-.t-account {
-  display: flex;
-  flex: 1 0 auto;
-  flex-direction: column;
-  max-width: 345px;
-  margin: 0 auto;
-  align-items: center;
-  justify-content: center;
-
-  .t-account__row {
-    margin-bottom: $space-s;
-    text-align: center;
-
-    &.-largeSpace {
-      margin-bottom: $space-l;
-    }
-  }
-}
+@import 'templates/account';
+@import 'templates/checkout';

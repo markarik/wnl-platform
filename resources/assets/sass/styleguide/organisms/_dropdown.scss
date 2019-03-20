@@ -16,6 +16,7 @@
     right: 0;
     z-index: 100;
     background-color: $white;
+    min-width: 244px;
   }
 
   .o-dropdown__trigger {
@@ -25,5 +26,13 @@
 
   .o-dropdown__item {
     cursor: pointer;
+    display: inline-block;
+    width: 100%;
+    padding: $space-xxxxs 0 $space-xxxxs $space-xxxs;
+
+    &:hover {
+      background-color: $alabaster;
+      color: $blue-chill;
+    }
   }
 }

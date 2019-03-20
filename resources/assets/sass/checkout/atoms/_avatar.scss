@@ -1,0 +1,22 @@
+.a-avatar {
+  width: $icon-s;
+  height: $icon-s;
+
+  &.-automatic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $storm-gray;
+    color: $color-white;
+    font-size: $font-size-minus-2;
+
+    &.-large {
+      font-size: $font-size-plus-5;
+    }
+  }
+
+  &.-large {
+    width: $icon-xl;
+    height: $icon-xl;
+  }
+}

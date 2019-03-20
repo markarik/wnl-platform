@@ -1,0 +1,18 @@
+.t-account {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  max-width: 345px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+
+  .t-account__row {
+    margin-bottom: $space-s;
+    text-align: center;
+
+    &.-largeSpace {
+      margin-bottom: $space-l;
+    }
+  }
+}

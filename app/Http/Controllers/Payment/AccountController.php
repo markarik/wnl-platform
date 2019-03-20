@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payment;
 
 
+use App\Http\Controllers\Controller;
 use App\Http\Forms\SignUpForm;
 use App\Mail\SignUpConfirmation;
 use App\Models\Coupon;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
 
-class AccountController
+class AccountController extends Controller
 {
 	use CheckoutTrait;
 	use FormBuilderTrait;
@@ -24,11 +25,6 @@ class AccountController
 	{
 		$user = Auth::user();
 		$product = $this->getProduct($request);
-
-		if ($this->isSignupForProductClosed($product)) {
-			return view('payment.signups-closed', ['product' => $product]);
-		}
-
 		$coupon = $this->readCoupon($product, $user);
 
 		if ($user) {

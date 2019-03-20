@@ -15,13 +15,8 @@ class VoucherController extends Controller
 
 	public function index(Request $request)
 	{
-		$product = $this->getProduct($request);
-
-		if ($this->isSignupForProductClosed($product)) {
-			return view('payment.signups-closed', ['product' => $product]);
-		}
-
 		$user = Auth::user();
+		$product = $this->getProduct($request);
 		$coupon = $this->readCoupon($product, $user);
 
 		$productPriceWithCoupon = null;

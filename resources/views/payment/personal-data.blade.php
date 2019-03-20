@@ -41,14 +41,20 @@
 				</div>
 			</div>
 
-			{!! form_row($form->personal_identity_number, ['wrapper' => [
-				'id' => 'personalIdentityNumberGroup',
-				'class' => $form->no_identity_number->getValue() ? '-dNone m-formGroup' : 'm-formGroup',
-			]]) !!}
-			{!! form_row($form->passport_number, ['wrapper' => [
-				'id' => 'passportNumberGroup',
-				'class' => $form->no_identity_number->getValue() ? 'm-formGroup' : '-dNone  m-formGroup',
-			]]) !!}
+			{!! form_row($form->personal_identity_number, [
+				'wrapper' => [
+					'id' => 'personalIdentityNumberGroup',
+					'class' => $form->no_identity_number->getValue() ? '-dNone m-formGroup' : 'm-formGroup',
+				],
+				'label_attr' => ['class' => 'a-label -required'],
+			]) !!}
+			{!! form_row($form->passport_number, [
+				'wrapper' => [
+					'id' => 'passportNumberGroup',
+					'class' => $form->no_identity_number->getValue() ? 'm-formGroup' : '-dNone  m-formGroup',
+				],
+				'label_attr' => ['class' => 'a-label -required'],
+			]) !!}
 			{!! form_row($form->no_identity_number) !!}
 		</section>
 

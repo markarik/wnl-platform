@@ -4,9 +4,7 @@
 		@if(!empty($productName))
 			<header class="o-cart__headline -centeredSpread">
 				<span>@lang('payment.cart-header')</span>
-				<span class="icon -stormGray -hiddenMAndUp -touchable" id="cartClose">
-					<i class="fa fa-times a-icon -small"></i>
-				</span>
+				<i class="a-icon -stormGray -hiddenMAndUp -touchable fa-times -small"  id="cartClose"></i>
 			</header>
 			<section class="o-cart__card -shadowMedium">
 				<img src="{{ asset('/images/lek-product-logo.svg') }}" class="o-cart__card__logo">

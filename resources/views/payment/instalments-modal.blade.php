@@ -6,7 +6,7 @@
 @endphp
 <h3 class="o-checkoutModal__header">
 	@lang('payment.instalments-modal-header')
-	<span class="a-icon"><i class="fa fa-info-circle"></i></span>
+	<i class="a-icon fa-info-circle"></i>
 </h3>
 <p class="o-checkoutModal__intro -textMinus1 -stormGray">@lang('payment.instalments-modal-intro')</p>
 @foreach ($instalments as $instalment)

@@ -5,10 +5,13 @@ $icon-l: 48px;
 $icon-xl: 64px;
 
 .a-icon {
-  font-size: $icon-s;
+  display: inline-block;
+  font: normal normal normal $icon-s/1 FontAwesome;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
 
-  &.-touchable {
-    padding: #{$min-touchable-size - $icon-s / 2}
+  &.-touchable:not(.-x-large):not(.-large) {
+    padding: #{($min-touchable-size - $icon-s) / 2}
   }
 
   &.-x-large {
@@ -23,7 +26,7 @@ $icon-xl: 64px;
     font-size: $icon-m;
 
     &.-touchable {
-      padding: #{$min-touchable-size - $icon-m / 2}
+      padding: #{($min-touchable-size - $icon-m) / 2}
     }
   }
 
@@ -31,7 +34,7 @@ $icon-xl: 64px;
     font-size: $icon-xs;
 
     &.-touchable {
-      padding: #{$min-touchable-size - $icon-xs / 2}
+      padding: #{($min-touchable-size - $icon-xs) / 2}
     }
   }
 }

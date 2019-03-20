@@ -38,7 +38,7 @@
 								<span class="m-paymentOption__info">@lang('payment.confirm-order-payment-method-free-info')</span>
 							</div>
 						</div>
-						<i class="a-icon -medium fa fa-gift"></i>
+						<i class="a-icon -medium fa-gift"></i>
 					</div>
 				@else
 					<div class="m-paymentOption -active">
@@ -49,7 +49,7 @@
 								<span class="m-paymentOption__info">@lang('payment.confirm-order-payment-method-now-info')</span>
 							</div>
 						</div>
-						<i class="a-icon -medium fa fa-thumbs-up"></i>
+						<i class="a-icon -medium fa-thumbs-up"></i>
 					</div>
 
 					<div class="m-paymentOption">
@@ -60,7 +60,7 @@
 								<span class="m-paymentOption__info">@lang('payment.confirm-order-payment-method-later-info')</span>
 							</div>
 						</div>
-						<i class="a-icon -medium fa fa-calendar"></i>
+						<i class="a-icon -medium fa-calendar"></i>
 					</div>
 
 					<form action="{{ config('przelewy24.transaction_url') }}" method="post" id="fullPaymentP24Form">
@@ -90,7 +90,7 @@
 					<div class="m-formGroup -checkbox -withIcon">
 						<input type="checkbox" name="instalments" id="instalments" class="a-checkbox"/>
 						<label class="a-label" for="instalments">@lang('payment.confirm-order-payment-method-instalments-label')</label>
-						<span class="a-icon -cadetBlue" id="instalments-modal-opener"><i class="fa fa-info-circle"></i></span>
+						<i class="a-icon -cadetBlue fa-info-circle" id="instalments-modal-opener"></i>
 
 						<div id="instalments-modal" class="modal">
 							<div class="modal-background"></div>

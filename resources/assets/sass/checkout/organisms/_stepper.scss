@@ -21,6 +21,10 @@
     &.-done a {
       color: $storm-gray;
       cursor: pointer;
+
+      &:hover {
+        color: $blue-chill;
+      }
     }
 
     &.-done, &.-active {

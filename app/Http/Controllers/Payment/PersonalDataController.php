@@ -40,7 +40,6 @@ class PersonalDataController extends Controller
 
 		$productPriceWithCoupon = null;
 
-//		TODO fix updating the form
 		return view('payment.personal-data', [
 			'form'    => $form,
 			'product' => $product,

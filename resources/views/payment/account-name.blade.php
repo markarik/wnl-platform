@@ -11,9 +11,7 @@
 					{{$user->initials}}
 				</span>
 			@else
-				<span class="o-navigation__item icon a-avatar -large">
-					<i class="fa fa-user a-icon -small"></i>
-				</span>
+				<i class="o-navigation__item a-icon a-avatar -large fa-user"></i>
 			@endif
 		</div>
 		<div class="t-account__row -textPlus2">{{$user->fullName}}</div>

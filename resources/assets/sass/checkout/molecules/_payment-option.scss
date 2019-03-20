@@ -1,4 +1,5 @@
 .m-paymentOption {
+  align-items: center;
   border-radius: 10px;
   cursor: pointer;
   display: flex;
@@ -6,6 +7,7 @@
   padding: $space-m;
 
   &__label {
+    cursor: pointer;
     display: block;
     font-size: $font-size-plus-1;
     line-height: $line-height-plus-1;

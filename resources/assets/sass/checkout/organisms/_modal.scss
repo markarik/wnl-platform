@@ -1,10 +1,9 @@
 .o-checkoutModal {
   &__header {
+    @include textPlus2;
     align-items: center;
     display: flex;
-    font-size: $font-size-plus-2;
     justify-content: space-between;
-    line-height: $line-height-plus-2;
     margin-bottom: $space-l;
 
     .a-icon {

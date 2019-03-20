@@ -1,11 +1,11 @@
 .a-button {
+  @include textMinus1;
   background: $color-blue-chill;
   border: 0;
   border-radius: 100px;
   color: $color-white;
   cursor: pointer;
   display: inline-block;
-  font-size: $font-size-minus-1;
   font-weight: 500;
   outline: none;
   padding: $space-s $space-m;

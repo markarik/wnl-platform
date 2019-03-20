@@ -7,18 +7,16 @@
   padding: $space-m;
 
   &__label {
+    @include textPlus1;
     cursor: pointer;
     display: block;
-    font-size: $font-size-plus-1;
-    line-height: $line-height-plus-1;
   }
 
   &__info {
     color: $color-storm-gray;
 
     @media #{$breakpoint-s} {
-      font-size: $font-size-minus-1;
-      line-height: $line-height-minus-1;
+      @include textMinus1;
     }
   }
 

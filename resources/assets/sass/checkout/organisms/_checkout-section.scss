@@ -2,15 +2,13 @@
   margin-bottom: $space-xxl;
 
   &__header {
-    font-size: $font-size-plus-3;
-    line-height: $line-height-plus-3;
+    @include textPlus3;
     margin-bottom: $space-m;
   }
 
   &__subheader {
+    @include textBase;
     color: $color-storm-gray;
-    font-size: $font-size-base;
-    line-height: $line-height-base;
     text-transform: uppercase;
     margin-bottom: $space-s;
   }
@@ -23,6 +21,12 @@
     .a-icon {
       margin-left: 10px;
     }
+  }
+
+  &__secondaryInfo {
+    @include textMinus1;
+    color: $color-storm-gray;
+    margin-bottom: $space-s;
   }
 
   &__dataReadOnly {

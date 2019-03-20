@@ -7,8 +7,7 @@
   }
 
   .m-buttonWithNote__note {
-    font-size: $font-size-minus-2;
-    line-height: $line-height-minus-2;
+    @include textMinus2;
     max-width: 80%;
     margin: 0 auto;
     text-align: center;

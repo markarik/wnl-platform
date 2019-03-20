@@ -1,10 +1,9 @@
 .a-input {
+  @include textBase;
   background-color: $color-white;
   border: 2px solid $color-mischka;
   border-radius: 2px;
   color: $color-catalina-blue;
-  font-size: $font-size-base;
-  line-height: $line-height-base;
   outline: none;
   padding: $space-xxxs $space-xs;
   transition: color ease-in-out .3s, border-color ease-in-out .3s;
@@ -77,11 +76,11 @@
 }
 
 .a-label {
+  @include textMinus1;
+
   color: $color-ebony-clay;
   cursor: pointer;
   display: inline-block;
-  font-size: $font-size-minus-1;
-  line-height: $line-height-minus-1;
 
   &.-required::after {
     color: $color-blue-chill;
@@ -90,7 +89,7 @@
 }
 
 .a-error {
+  @include textMinus2;
+
   color: $color-alizarin-crimson;
-  font-size: $font-size-minus-2;
-  line-height: $line-height-minus-2;
 }

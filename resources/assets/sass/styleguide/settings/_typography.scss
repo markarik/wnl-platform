@@ -30,3 +30,58 @@ $line-height-plus-7: 68px;
 
 $font-size-plus-8: 84px;
 $line-height-plus-8: 98px;
+
+@mixin textBase {
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+}
+
+@mixin textMinus1 {
+  font-size: $font-size-minus-1;
+  line-height: $line-height-minus-1;
+}
+
+@mixin textMinus2 {
+  font-size: $font-size-minus-2;
+  line-height: $line-height-minus-2;
+}
+
+@mixin textPlus1 {
+  font-size: $font-size-plus-1;
+  line-height: $line-height-plus-1;
+}
+
+@mixin textPlus2 {
+  font-size: $font-size-plus-2;
+  line-height: $line-height-plus-2;
+}
+
+@mixin textPlus3 {
+  font-size: $font-size-plus-3;
+  line-height: $line-height-plus-3;
+}
+
+@mixin textPlus4 {
+  font-size: $font-size-plus-4;
+  line-height: $line-height-plus-4;
+}
+
+@mixin textPlus5 {
+  font-size: $font-size-plus-5;
+  line-height: $line-height-plus-5;
+}
+
+@mixin textPlus6 {
+  font-size: $font-size-plus-6;
+  line-height: $line-height-plus-6;
+}
+
+@mixin textPlus7 {
+  font-size: $font-size-plus-7;
+  line-height: $line-height-plus-7;
+}
+
+@mixin textPlus8 {
+  font-size: $font-size-plus-8;
+  line-height: $line-height-plus-8;
+}

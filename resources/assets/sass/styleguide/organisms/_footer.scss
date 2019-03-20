@@ -1,10 +1,9 @@
 .o-footer {
+  @include textMinus1;
   background-color: $color-catalina-blue;
   padding: 0 $space-m;
   display: flex;
   flex-direction: column;
-  font-size: $font-size-minus-1;
-  line-height: $line-height-minus-1;
 
   @media #{$breakpoint-s} {
     flex-direction: row;

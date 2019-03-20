@@ -23,26 +23,21 @@
 }
 
 .-textMinus2 {
-  font-size: $font-size-minus-2;
-  line-height: $line-height-minus-2;
+  @include textMinus2;
 }
 
 .-textMinus1 {
-  font-size: $font-size-minus-1;
-  line-height: $line-height-minus-1;
+  @include textMinus1;
 }
 
 .-textPlus1 {
-  font-size: $font-size-plus-1;
-  line-height: $line-height-plus-1;
+  @include textPlus1;
 }
 
 .-textPlus2 {
-  font-size: $font-size-plus-2;
-  line-height: $line-height-plus-2;
+  @include textPlus2;
 }
 
 .-textPlus3 {
-  font-size: $font-size-plus-3;
-  line-height: $line-height-plus-3;
+  @include textPlus3;
 }

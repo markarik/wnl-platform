@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section class="section select-product">
+<section class="section">
 	<div class="container">
 		@if(!$product || $product->signups_close->isPast())
 			<div class="column">

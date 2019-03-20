@@ -6,26 +6,25 @@
 	<div class="container">
 		@if(!$product || $product->signups_close->isPast())
 			<div class="column">
-				<div class="notification has-text-centered strong">
-					Zapisy zostały zakończone. <a href="https://wiecejnizlek.pl/rezerwacja/">Kliknij i zostaw swój e-mail</a>, aby zarezerwować miejsce na kolejnej edycji!
-				</div>
+				<div class="notification has-text-centered strong">@lang('payment.signups-closed-past')</div>
 			</div>
 		@endif
 		@if($product->signups_start->isFuture())
 			<div class="notification has-text-centered strong">
-				Do otwarcia zapisów pozostało:
+				@lang('payment.signups-closed-countdown')
 				<div class="signups-countdown" data-start="{{ $product->signups_start->timestamp }}">
-					sprawdzam zegarek...
+					@lang('payment.signups-closed-countdown-loading')
 				</div>
 			</div>
 			<div class="notification has-text-centered strong">
-				<a href="https://wiecejnizlek.pl/rezerwacja/">Kliknij i zostaw swój e-mail</a>, aby zarezerwować miejsce na kolejnej edycji!
+				@lang('payment.signups-closed-leave-email')
 			</div>
 		@endif
 		@if(!$product->available)
 			<div class="column">
 				<div class="notification has-text-centered strong">
-					Brak miejsc :(<br> <a href="https://wiecejnizlek.pl/rezerwacja/">Kliknij i zostaw swój e-mail</a>, aby zarezerwować miejsce na kolejnej edycji!
+					<p>@lang('payment.signups-closed-not-available')</p>
+					<p>@lang('payment.signups-closed-leave-email')</p>
 				</div>
 			</div>
 		@endif

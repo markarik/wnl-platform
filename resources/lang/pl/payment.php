@@ -181,7 +181,7 @@ return [
 	'account-continue-back-link' => 'Wróć do strony głównej',
 
 	/**
-	 * Personal data verification step
+	 * 3. Confirm order step
 	 */
 	'confirm-order-title' => 'Czy wszystko się zgadza?',
 	'confirm-order-subtitle' => 'Na wszelki wypadek sprawdźmy jeszcze Twoje dane przed dokonaniem płatności.',
@@ -210,7 +210,7 @@ return [
 	'confirm-order-instalments-not-available-text' => 'Ze względu na zbliżający się start kursu, płatność na raty nie jest już dostępna.',
 
 	/**
-	 * CART
+	 * Cart
 	 */
 	'cart-header' => 'Twoje zamówienie',
 	'cart-access-info' => 'Dostęp od momentu wpłaty do :date',
@@ -244,4 +244,26 @@ return [
 	'instalments-modal-total-amount' => 'Łącznie do zapłaty',
 	'instalments-modal-tou' => 'Więcej informacji na temat rat znajdziesz w <a href=":pricing-link-href" target="_blank">Cenniku</a> i <a href=":tou-link-href" target="_blank">Regulaminie</a>',
 	'instalments-modal-button' => 'Rozumiem',
+
+	/**
+	 * Stepper
+	 */
+	'stepper-account' => 'Konto',
+	'stepper-personal-data' => 'Dane osobowe',
+	'stepper-confirm-order' => 'Podsumowanie',
+
+	/**
+	 * Footer
+	 */
+	'footer-safe-transaction' => 'Bezpieczna transakcja realizowana przez Przelewy24',
+	'footer-help' => 'W razie problemów napisz do nas na Messengerze lub wyślij maila na adres: <a href="mailto:info@wiecejnizlek.pl" class="a-linkInText">info@wiecejnizlek.pl</a>',
+
+	/**
+	 * Signups closed
+	 */
+	'signups-closed-past' => 'Zapisy zostały zakończone. <a href="https://wiecejnizlek.pl/rezerwacja/">Kliknij i zostaw swój e-mail</a>, aby zarezerwować miejsce na kolejnej edycji!',
+	'signups-closed-countdown' => 'Do otwarcia zapisów pozostało:',
+	'signups-closed-countdown-loading' => 'sprawdzam zegarek...',
+	'signups-closed-leave-email' => '<a href="https://wiecejnizlek.pl/rezerwacja/">Kliknij i zostaw swój e-mail</a>, aby zarezerwować miejsce na kolejnej edycji!',
+	'signups-closed-not-available' => 'Brak miejsc :(',
 ];

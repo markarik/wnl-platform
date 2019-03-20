@@ -73,15 +73,11 @@
 			@yield('content')
 			<footer class="o-footer -white">
 				<p class="o-footer__block -first">
-					<span>
-						Bezpieczna transakcja realizowana przez Przelewy24
-					</span>
+					<span>@lang('payment.footer-safe-transaction')</span>
 					<i class="fa-shield a-icon -medium -mischka"></i>
 				</p>
 				<p class="o-footer__block">
-					<span>
-						W razie problemów napisz do nas na Messengerze lub wyślij maila na adres: <a href="mailto:info@wiecejnizlek.pl" class="a-linkInText">info@wiecejnizlek.pl</a>
-					</span>
+					<span>@lang('payment.footer-help')</span>
 				</p>
 			</footer>
 		</div>

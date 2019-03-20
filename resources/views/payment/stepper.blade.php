@@ -1,8 +1,8 @@
 <div class="o-stepper">
 	@foreach([
-		['text' => 'Konto', 'route' => route('payment-account')],
-		['text' => 'Dane osobowe', 'route' => route('payment-personal-data')],
-		['text' => 'Podsumowanie', 'route' => route('payment-confirm-order')]
+		['text' => trans('payment.stepper-account'), 'route' => route('payment-account')],
+		['text' => trans('payment.stepper-personal-data'), 'route' => route('payment-personal-data')],
+		['text' => trans('payment.stepper-confirm-order'), 'route' => route('payment-confirm-order')]
 	] as $step)
 		@php
 			$isDone = $loop->index < $currentStep;

@@ -99,24 +99,24 @@ $(function () {
 		}
 
 		$(this).addClass('-loading');
-		$.ajax({
-			data: {
-				controller: 'PaymentAjaxController',
-				method: 'setPaymentMethod',
-				payment: customPaymentMethod,
-				sess_id: $('[name="p24_session_id"]').val()
-			},
-			success: function (response) {
-				if (response.status === 'success') {
-					if (paymentMethod === 'now') {
+		if (paymentMethod === 'now') {
+			$.ajax({
+				data: {
+					controller: 'PaymentAjaxController',
+					method: 'setPaymentMethod',
+					payment: customPaymentMethod,
+					sess_id: $('[name="p24_session_id"]').val()
+				},
+				success: function (response) {
+					if (response.status === 'success') {
 						$(instalmentsSelected ? '#instalmentsP24Form' : '#fullPaymentP24Form').submit();
-					} else {
-						$('#customPaymentMethodInput').val(customPaymentMethod);
-						$('#customPaymentForm').submit();
 					}
 				}
-			}
-		});
+			});
+		} else {
+			$('#customPaymentMethodInput').val(customPaymentMethod);
+			$('#customPaymentForm').submit();
+		}
 	});
 
 	$('#personal-identity-number-modal-opener').on('mousedown touchstart', function (event) {

@@ -128,7 +128,7 @@ return [
 	'city' => 'Miasto',
 	'email' => 'Twój e-mail',
 	'phone' => 'Numer telefonu',
-	'phone-placeholder' => 'Format zapisu: 000-000-000',
+	'phone-placeholder' => 'Format zapisu: 000 000 000',
 	'password' => 'Hasło do logowania - minimum 6 znaków',
 
 	'invoice' => 'Chcę podać inne dane do faktury',

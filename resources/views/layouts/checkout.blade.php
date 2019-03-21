@@ -81,24 +81,7 @@
 				</p>
 			</footer>
 		</div>
-		<div class="modals">
-			@if(request()->route())
-				<div id="login-modal" class="modal">
-					<div class="modal-background"></div>
-					<div class="modal-card">
-						<header class="modal-card-head">
-							<p class="modal-card-title"></p>
-							<button class="delete"></button>
-						</header>
-						<section class="modal-card-body content">
-							@include('auth.login-modal')
-						</section>
-					</div>
-				</div>
-			@endif
-		</div>
 		<!-- Scripts -->
-		<script src="{{ mix('js/guest.js') }}"></script>
 		<script src="{{ mix('js/payment.js') }}"></script>
 		@yield('payment-scripts')
 		@yield('scripts')

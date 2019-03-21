@@ -312,6 +312,13 @@ class User extends Authenticatable
 			});
 	}
 
+	public function getProducts() {
+		return $this->orders()->join('products', 'orders.product_id', '=', 'products.id')
+			->where('paid', 1)
+			->where('canceled', 0)
+			->get();
+	}
+
 	/**
 	 * @return Collection|Lesson[]
 	 */

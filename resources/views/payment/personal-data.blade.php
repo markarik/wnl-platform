@@ -73,14 +73,14 @@
 				id="personal-data-invoice-form"
 				class="@if (Session::get('_old_input.invoice')) show @else hidden @endif"
 			>
-				{!! form_row($form->invoice_name) !!}
-				{!! form_row($form->invoice_nip) !!}
-				{!! form_row($form->invoice_address) !!}
+				{!! form_row($form->invoice_name, ['label_attr' => ['class' => 'a-label -required']]) !!}
+				{!! form_row($form->invoice_nip, ['label_attr' => ['class' => 'a-label -required']]) !!}
+				{!! form_row($form->invoice_address, ['label_attr' => ['class' => 'a-label -required']]) !!}
 				<div class="o-formGroups">
-					{!! form_row($form->invoice_zip) !!}
-					{!! form_row($form->invoice_city) !!}
+					{!! form_row($form->invoice_zip, ['label_attr' => ['class' => 'a-label -required']]) !!}
+					{!! form_row($form->invoice_city, ['label_attr' => ['class' => 'a-label -required']]) !!}
 				</div>
-				{!! form_row($form->invoice_country ) !!}
+				{!! form_row($form->invoice_country, ['label_attr' => ['class' => 'a-label -required']]) !!}
 			</div>
 		</section>
 

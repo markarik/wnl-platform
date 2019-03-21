@@ -25,7 +25,6 @@ class ConfirmOrderController extends Controller
 
 		$coupon = $order->coupon;
 		$productPriceWithCoupon = $order->total_with_coupon;
-		$couponValue = null;
 
 		$amount = (int)$productPriceWithCoupon * 100;
 		$checksum = $payment::generateChecksum($order->session_id, $amount);

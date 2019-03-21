@@ -28,8 +28,6 @@ class PersonalDataController extends Controller
 		$coupon = $this->readCoupon($product, $user);
 		$form = $this->setupForm($coupon, $user);
 
-		$productPriceWithCoupon = null;
-
 		return view('payment.personal-data', [
 			'form'    => $form,
 		]);

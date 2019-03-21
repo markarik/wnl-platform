@@ -54,6 +54,7 @@ import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env';
 import {mapGetters} from 'vuex';
 import Order from './Order';
 import moment from 'moment';
+import {envValue} from 'js/utils/env';
 
 export default {
 	name: 'MyOrders',
@@ -135,7 +136,7 @@ export default {
 	created() {
 		if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {
 			const {payment, amount, ...query} = this.$route.query;
-			typeof fbq === 'function' && fbq('track', 'Purchase', {value: amount / 100, currency: 'PLN'});
+			typeof fbq === 'function' && fbq('track', 'Purchase', {value: amount / 100, currency: 'PLN', platform: envValue('appInstanceName')});
 			this.$router.push({
 				...this.$route,
 				query

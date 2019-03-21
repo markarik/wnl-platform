@@ -94,3 +94,7 @@
 	</div>
 	</div>
 @endsection
+
+@section('payment-scripts')
+	<script>typeof fbq === 'function' && fbq('track', 'AddToCart', {platform: '{{config('app.instance_name')}}'})</script>
+@endsection

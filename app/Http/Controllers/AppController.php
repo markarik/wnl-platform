@@ -28,6 +28,7 @@ class AppController extends Controller
 				'SENTRY_DSN_VUE_PUB' => env('SENTRY_DSN_VUE_PUB'),
 				'MODERATORS_CHANNEL' => env('MODERATORS_CHANNEL', 3),
 				'appVersion'         => config('app.version'),
+				'appInstanceName'    => config('app.instance_name'),
 				'sadHost'            => env('SAD_HOST'),
 				'sadPort'            => env('SAD_PORT')
 			],

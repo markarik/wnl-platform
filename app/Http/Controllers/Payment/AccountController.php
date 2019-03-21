@@ -49,17 +49,10 @@ class AccountController extends Controller
 			if ($user->signUpComplete) {
 				return view('payment.account-name', [
 					'user' => $user,
-					'product' => $product,
-					'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
-					'coupon' => $coupon,
 				]);
 			}
 
-			return view('payment.account-continue', [
-				'product' => $product,
-				'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
-				'coupon' => $coupon,
-			]);
+			return view('payment.account-continue');
 		}
 
 		// Set intended url after successful login
@@ -70,9 +63,6 @@ class AccountController extends Controller
 		]);
 
 		return view('payment.account-register', [
-			'product' => $product,
-			'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
-			'coupon' => $coupon,
 			'form'    => $form,
 		]);
 	}

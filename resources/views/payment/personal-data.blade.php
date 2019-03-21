@@ -2,13 +2,7 @@
 
 @section('content')
 	<div class="t-checkout">
-	@include('payment.cart', [
-		'productName' => $product->name,
-		'productPrice' => $product->price,
-		'productAccessEnd' => $product->access_end,
-		'productPriceWithCoupon' => $productPriceWithCoupon,
-		'coupon' => $coupon,
-	])
+	@include('payment.cart')
 	<div class="t-checkout__content">
 		@include('payment.stepper', ['currentStep' => 1])
 		@if (!$errors->isEmpty())

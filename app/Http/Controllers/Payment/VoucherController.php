@@ -4,28 +4,13 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\UseCoupon;
-use App\Traits\CheckoutTrait;
-use Auth;
-use Illuminate\Http\Request;
 use App\Models\Coupon;
 
 class VoucherController extends Controller
 {
-	use CheckoutTrait;
-
-	public function index(Request $request)
+	public function index()
 	{
-		$user = Auth::user();
-		$product = $this->getProduct($request);
-		$coupon = $this->readCoupon($product, $user);
-
-		$productPriceWithCoupon = null;
-
-		return view('payment.voucher', [
-			'product' => $product,
-			'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
-			'coupon' => $coupon
-		]);
+		return view('payment.voucher');
 	}
 
 	public function handle(UseCoupon $request)

@@ -1,13 +1,7 @@
 @extends('layouts.checkout')
 
 @section('content')
-	@include('payment.cart', [
-		'productName' => $product->name,
-		'productPrice' => $product->price,
-		'productAccessEnd' => $product->access_end,
-		'productPriceWithCoupon' => $productPriceWithCoupon,
-		'coupon' => $coupon,
-	])
+	@include('payment.cart')
 	<section class="section t-checkout__content">
 		<div>
 			@if (Auth::user() && Auth::user()->coupons->count() > 0)

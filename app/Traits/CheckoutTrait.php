@@ -2,7 +2,6 @@
 
 namespace App\Traits;
 
-use App\Exceptions\SignupForProductIsClosedException;
 use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\User;
@@ -15,7 +14,6 @@ trait CheckoutTrait
 	 * @param Request $request
 	 * @return Product|null
 	 * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-	 * @throws SignupForProductIsClosedException
 	 */
 	private function getProduct(Request $request): ?Product
 	{
@@ -34,20 +32,7 @@ trait CheckoutTrait
 
 		Session::put('productId', $product->id);
 
-		if ($this->isSignupForProductClosed($product)) {
-			throw new SignupForProductIsClosedException(
-				response(view('payment.signups-closed', ['product' => $product]))
-			);
-		}
-
 		return $product;
-	}
-
-	private function isSignupForProductClosed(Product $product): bool
-	{
-		return !$product->available ||
-			$product->signups_close->isPast() ||
-			$product->signups_start->isFuture();
 	}
 
 	private function readCoupon(Product $product, ?User $user): ?Coupon {

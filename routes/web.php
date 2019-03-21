@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Input;
 
 Auth::routes();
 
-Route::group(['namespace' => 'Payment', 'prefix' => 'payment', /*'middleware' => 'payment'*/], function () {
+Route::group(['namespace' => 'Payment', 'prefix' => 'payment', 'middleware' => 'signups-open'], function () {
 	Route::redirect('/select-product', '/payment/account', 301)->name('payment-select-product');
 	Route::redirect('/', '/payment/account', 301);
 

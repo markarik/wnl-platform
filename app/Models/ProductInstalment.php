@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductInstalment extends Model
 {
+	protected $fillable = ['due_date', 'order_number', 'product_id', 'value_type', 'value', 'due_days'];
+
 	protected $dates = ['due_date'];
 
 	public function getDueDate(Order $order)
@@ -19,5 +21,5 @@ class ProductInstalment extends Model
 		}
 
 		return $this->due_date ?? $order->created_at->addDays($this->due_days);
-    }
+	}
 }

@@ -115,6 +115,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		// Products
 		Route::put("{$r['products']}/{product}/syncPaymentMethods", 'ProductsApiController@syncPaymentMethods');
+		Route::put("{$r['products']}/{product}/syncInstalments", 'ProductsApiController@syncInstalments');
 		Route::get("{$r['products']}/getVatRates", 'ProductsApiController@getVatRates');
 		Route::get("{$r['products']}/{id}", 'ProductsApiController@get');
 		Route::put("{$r['products']}/{id}", 'ProductsApiController@put');

@@ -58,7 +58,6 @@
 					</div>
 				</div>
 			</div>
-			<wnl-text-loader v-if="loadingInstalments">Ładuję...</wnl-text-loader>
 			<table class="table">
 				<thead>
 					<th>Numer raty</th>
@@ -87,7 +86,7 @@
 			</table>
 		</div>
 
-		<a class="button is-primary is-wide" v-if="!loadingInstalments && !loadingMethods" @click="save">Zapisz</a>
+		<a class="button is-primary is-wide" v-if="!loadingMethods" @click="save">Zapisz</a>
 	</div>
 </template>
 
@@ -119,7 +118,6 @@ export default {
 			methods: [],
 			selectedMethods: [],
 			loadingMethods: false,
-			loadingInstalments: false,
 			datepickerConfig: {
 				altInput: true,
 				enableTime: true,
@@ -165,8 +163,7 @@ export default {
 
 		getDate(id, date) {
 			const method = this.selectedMethods.find(item => item.id === id);
-			if (!method) return null;
-			return method[date];
+			return method[date] * 1000 || null;
 		},
 
 		methodEnabled(id) {
@@ -194,9 +191,32 @@ export default {
 			});
 		},
 
+		dueDateUpdated(value, instalmentNumber) {
+			this.instalments = this.instalments.map(item => {
+				if (item.order_number === instalmentNumber) item.due_date = value;
+				return item;
+			});
+		},
+
 		async save() {
-			const data = {payment_methods: this.selectedMethods};
-			await axios.put(getApiUrl(`products/${this.id}/syncPaymentMethods`), data);
+			try{
+				await axios.put(getApiUrl(`products/${this.id}/syncPaymentMethods`), {
+					payment_methods: this.selectedMethods
+				});
+				await axios.put(getApiUrl(`products/${this.id}/syncInstalments`), {
+					instalments: this.instalments
+				});
+				this.addAutoDismissableAlert({
+					text: 'OK 👍',
+					type: 'success'
+				});
+			} catch (e) {
+				this.addAutoDismissableAlert({
+					text: 'Nie udało się pobrać dostępnych metod płatności',
+					type: 'error'
+				});
+				$wnl.logger.capture(e);
+			}
 		},
 
 		async getPaymentMethods() {
@@ -207,8 +227,8 @@ export default {
 		async getProduct() {
 			const url = getApiUrl(`products/${this.id}?include=payment_methods,instalments`);
 			const {data: {included, ...product}} = await axios.get(url);
-			const productMethods = Object.values(included.payment_methods);
-			const instalments = Object.values(included.instalments);
+			const productMethods = included ? Object.values(included.payment_methods) : [];
+			const instalments = included ? Object.values(included.instalments) : [];
 			return {product, productMethods, instalments};
 		}
 
@@ -229,11 +249,9 @@ export default {
 			this.methods = methods;
 			this.selectedMethods = productMethods.map(method => ({
 				...method,
-				start_date: method.start_date * 1000 || null,
-				end_date: method.end_date * 1000 || null,
+				start_date: method.start_date || null,
+				end_date: method.end_date || null,
 			}));
-			console.log(this.selectedMethods);
-
 		} catch (e) {
 			this.addAutoDismissableAlert({
 				text: 'Nie udało się pobrać dostępnych metod płatności',

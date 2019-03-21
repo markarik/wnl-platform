@@ -41,7 +41,7 @@ class ConfirmOrderPage extends BasePage
 			'@select-instalments' => '#instalments',
 			'@open-instalments-modal' => '#instalments-modal-opener',
 			'@close-instalments-modal' => '#instalments-modal-closer',
-			'@instalments-total-amount' => '.o-checkoutModal__instalmentsTotalAmount',
+			'@instalments-total-amount' => '.o-checkoutInstalmentsModal .m-checkoutTotalAmount',
 
 			'@edit-personal-data' => '[data-link="edit-personal-data"]',
 			'@cart' => '.cart',

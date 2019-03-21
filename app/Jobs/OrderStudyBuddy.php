@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\StudyBuddyUsage;
 use Mail;
 use App\Models\Order;
 use App\Mail\StudyBuddy;
@@ -43,6 +44,7 @@ class OrderStudyBuddy implements ShouldQueue
 			$studyBuddy->coupon->save();
 			$studyBuddy->status = 'active';
 			$studyBuddy->save();
+			Mail::to($order->user)->send(new StudyBuddyUsage($order));
 		}
 
 		// Check if order has SB code and handle the refund

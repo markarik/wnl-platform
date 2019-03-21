@@ -242,7 +242,7 @@ return [
 	'instalments-modal-amount-label' => 'Kwota',
 	'instalments-modal-amount' => ':amountzł',
 	'instalments-modal-total-amount' => 'Łącznie do zapłaty',
-	'instalments-modal-tou' => 'Więcej informacji na temat rat znajdziesz w <a href=":pricing-link-href" target="_blank">Cenniku</a> i <a href=":tou-link-href" target="_blank">Regulaminie</a>',
+	'instalments-modal-tou' => 'Więcej informacji na temat rat znajdziesz w <a href=":pricing-link-href" target="_blank" class="a-linkInText">Cenniku</a> i <a href=":tou-link-href" target="_blank" class="a-linkInText">Regulaminie</a>',
 	'instalments-modal-button' => 'Rozumiem',
 
 	/**

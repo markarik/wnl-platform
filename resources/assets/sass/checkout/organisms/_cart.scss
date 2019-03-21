@@ -78,13 +78,8 @@
       padding: 0;
     }
   }
-}
 
-.m-cart__listItem {
-  padding: $space-xxs 0;
-  border-bottom: 1px solid $color-mischka;
-}
-
-.m-cart__summaryItem {
-  margin-top: $space-s;
+  .m-checkoutTotalAmount {
+    margin-top: $space-s;
+  }
 }

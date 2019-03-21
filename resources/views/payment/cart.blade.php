@@ -19,32 +19,32 @@
 					@endif
 				</p>
 			</section>
-			<section class="o-cart__details -stormGray">
-				<p class="m-cart__listItem -centeredSpread -textLight -textMinus1">
+			<section class="o-cart__details">
+				<p class="m-checkoutListItem">
 					<span>@lang('payment.cart-shipment-label')</span>
-					<span>@lang('payment.cart-shipment-value')</span>
+					<span class="m-checkoutListItem__value">@lang('payment.cart-shipment-value')</span>
 				</p>
 				@if(!empty($coupon))
-					<p class="m-cart__listItem -centeredSpread -textLight  -textMinus1">
+					<p class="m-checkoutListItem">
 						<span>@lang('payment.cart-coupon-label')</span>
-						<span>
+						<span class="m-checkoutListItem__value">
 						-{{$coupon->is_percentage
 						? trans('payment.voucher-percentage', ['value' => $coupon->value])
 						: trans('payment.voucher-amount', ['value' => $coupon->value])}}
 					</span>
 					</p>
 				@endif
-				<p class="m-cart__summaryItem -centeredSpread -catalinaBlue">
+				<p class="m-checkoutTotalAmount">
 					<span>@lang('payment.cart-price-label')</span>
 					@if(!empty($coupon))
 						<span>
-							<span class="strikethrough -textMinus1">
+							<span class="m-checkoutTotalAmount__preCoupon">
 								@lang('payment.cart-price-value', ['value' => $productPrice])
 							</span>
-							<span>@lang('payment.cart-price-value', ['value' => $productPriceWithCoupon])</span>
+							<span class="m-checkoutTotalAmount__final">@lang('payment.cart-price-value', ['value' => $productPriceWithCoupon])</span>
 						</span>
 					@else
-						<span>@lang('payment.cart-price-value', ['value' => $productPrice])</span>
+						<span class="m-checkoutTotalAmount__final">@lang('payment.cart-price-value', ['value' => $productPrice])</span>
 					@endif
 				</p>
 			</section>

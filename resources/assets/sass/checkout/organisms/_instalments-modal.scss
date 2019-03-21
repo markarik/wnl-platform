@@ -1,0 +1,25 @@
+.o-checkoutInstalmentsModal {
+  &__intro {
+    @include textMinus1;
+    color: $color-storm-gray;
+    margin-bottom: $space-m;
+  }
+
+  &__instalment {
+    margin-bottom: $space-m;
+  }
+
+  &__instalmentHeader {
+    margin-bottom: $space-xs;
+  }
+
+  .m-checkoutTotalAmount {
+    margin-bottom: $space-l;
+  }
+
+  &__tou {
+    @include textMinus2;
+    color: $color-storm-gray;
+    margin-bottom: $space-l;
+  }
+}

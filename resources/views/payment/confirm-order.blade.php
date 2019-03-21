@@ -95,7 +95,7 @@
 						<div id="instalments-modal" class="modal">
 							<div class="modal-background"></div>
 							<div class="modal-card">
-								<section class="modal-card-body">
+								<section class="modal-card-body o-checkoutInstalmentsModal">
 									@include('payment.instalments-modal', ['instalments' => $instalments, 'order' => $order])
 								</section>
 							</div>

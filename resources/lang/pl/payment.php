@@ -155,7 +155,7 @@ return [
 	'personal-data-submit' => 'Dalej do potwierdzenia',
 
 	'account-register-heading' => 'Cześć! 👋<br />Najpierw stwórzmy dla Ciebie nowe konto.',
-	'account-register-login-text' => 'Posiadasz już konto na Kurs do LEK?',
+	'account-register-login-text' => 'Posiadasz już konto na portalu Więcej niż LEK?',
 	'account-register-login-button' => 'Zaloguj się',
 	'account-wrong-account-text' => 'Nie ty?',
 	'account-wrong-account-register-text' => 'Załóż nowe konto',

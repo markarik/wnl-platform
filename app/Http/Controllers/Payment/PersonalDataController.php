@@ -51,7 +51,7 @@ class PersonalDataController extends Controller
 		if (!!Session::get('orderId')) {
 			$this->updateOrder($product, $user, $request, $coupon);
 		} else {
-			$this->createOrder($product, $user, $request);
+			$this->createOrder($product, $user, $request, $coupon);
 		}
 
 		return redirect(route('payment-confirm-order'));
@@ -71,7 +71,7 @@ class PersonalDataController extends Controller
 		return $form;
 	}
 
-	protected function createOrder(Product $product, User $user, Request $request)
+	protected function createOrder(Product $product, User $user, Request $request, ?Coupon $coupon)
 	{
 		\Log::notice('Creating order');
 		$order = $user->orders()->create([
@@ -81,8 +81,6 @@ class PersonalDataController extends Controller
 		]);
 
 		Session::put('orderId', $order->id);
-
-		$coupon = $this->readCoupon($product, $user);
 
 		if (!empty($coupon)) {
 			$this->addCoupon($order, $coupon);

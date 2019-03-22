@@ -5,6 +5,7 @@
 		@include('payment.cart')
 		<div class="t-checkout__content">
 			<div class="o-voucher o-column">
+				<img src="{{ asset('images/voucher_page_hero.svg') }}" class="o-column__row -largeSpace"/>
 				<header class="o-column__row">
 					<h2 class="o-voucher__headline">Mask kod? Super 🎉</h2>
 					<h2 class="o-voucher__headline">Wpisz go poniżej, aby wykorzystać zniżkę.</h2>
@@ -17,7 +18,6 @@
 							type="text"
 							id="code"
 							name="code"
-							placeholder="XXXXXXXX"
 							value="{{ request('code') ?? session('_old_input.code') ?? '' }}"
 							class="a-input"
 						>

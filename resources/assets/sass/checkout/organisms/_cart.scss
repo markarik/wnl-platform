@@ -1,9 +1,11 @@
 .o-cart {
+  animation: cartSlideDown .8s;
   padding: $space-xs 0 $space-l 0;
   background-color: $color-alabaster;
   font-family: $font-family-rubik;
 
   @media #{$breakpoint-m} {
+    animation: none;
     padding: $space-xxl $space-m $space-l $space-m;
 
     &.-dNone {
@@ -81,5 +83,18 @@
 
   .m-checkoutTotalAmount {
     margin-top: $space-s;
+  }
+}
+
+@keyframes cartSlideDown {
+  from {
+    max-height: 0;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  to {
+    max-height: 500px;
   }
 }

@@ -3,6 +3,7 @@
 
   @media #{$breakpoint-m} {
     display: flex;
+    justify-content: space-between;
   }
 
   .t-checkout__cart {
@@ -20,8 +21,9 @@
     padding: 0 $space-m $space-l $space-m;
 
     @media #{$breakpoint-m} {
+      max-width: 740px;
       min-width: 620px;
-      padding: 0 $space-xxxxl $space-xxxl $space-xxxl;
+      padding: 0 $space-xxxl $space-xxxl;
     }
 
     .t-checkout__content__row {

@@ -19,8 +19,7 @@
 		<link rel="icon" href="{{ url('favicon.png') }}">
 
 		<!-- Styles -->
-		<!-- // FIXME uncomment before merging to master -->
-		<!-- <link href="{{ mix('css/app.css') }}" rel="stylesheet"> -->
+		<link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
 		<!-- Scripts -->
 		<script>

@@ -21,7 +21,7 @@ class SignupsOpen
 	{
 		$product = $this->getProduct($request);
 		if ($this->isSignupForProductClosed($product)) {
-				return response(view('payment.signups-closed', ['product' => $product]));
+			return response(view('payment.signups-closed', ['product' => $product]));
 		}
 
 		return $next($request);

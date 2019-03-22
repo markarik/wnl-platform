@@ -41,7 +41,7 @@
 
 				<div class="o-navigation__right -stormGray">
 					@if(empty($disableCart))
-						<i class="o-navigation__item -hiddenMAndUp -touchable fa-shopping-cart a-icon -small" id="cartIcon"></i>
+						<i class="o-navigation__item -hiddenMAndUp -touchable fa-shopping-cart a-icon" id="cartIcon"></i>
 					@endif
 					@php
 					/** @var \App\Models\User $user */
@@ -57,7 +57,7 @@
 											{{$user->initials}}
 										</span>
 									@else
-										<i class="o-navigation__item fa-user a-icon -small"></i>
+										<i class="o-navigation__item fa-user a-icon"></i>
 									@endif
 							</div>
 							<div class="o-dropdown__menu -shadowLarge">

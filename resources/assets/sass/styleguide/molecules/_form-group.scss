@@ -27,8 +27,8 @@
   }
 
   &.-checkbox {
-    display: flex;
     align-items: center;
+    display: flex;
 
     .a-label {
       @include textBase;

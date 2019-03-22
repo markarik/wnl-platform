@@ -6,7 +6,7 @@
 @endphp
 <h3 class="o-checkoutModal__header">
 	@lang('payment.instalments-modal-header')
-	<i class="a-icon fa-info-circle"></i>
+	<i class="a-icon fa-info-circle -medium"></i>
 </h3>
 <p class="o-checkoutInstalmentsModal__intro">@lang('payment.instalments-modal-intro')</p>
 @foreach ($instalments as $instalment)
@@ -38,6 +38,6 @@
 	'pricing-link-href' => trans('payment.pricing-link-href'),
 	'tou-link-href' => trans('payment.tou-link-href'),
 ])</p>
-<button id="instalments-modal-closer" class="button is-primary is-wide">
+<button id="instalments-modal-closer" class="a-button -big">
 	@lang('payment.instalments-modal-button')
 </button>

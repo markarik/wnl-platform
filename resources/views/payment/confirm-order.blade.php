@@ -168,5 +168,5 @@
 @endsection
 
 @section('payment-scripts')
-	<script>typeof fbq === 'function' && fbq('track', 'InitiateCheckout')</script>
+	<script>typeof fbq === 'function' && fbq('track', 'InitiateCheckout', {platform: '{{config('app.instance_name')}}'})</script>
 @endsection

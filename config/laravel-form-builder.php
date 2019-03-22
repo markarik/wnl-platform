@@ -1,54 +1,54 @@
 <?php
 
 return [
-    'defaults'      => [
-        'wrapper_class'       => 'm-formGroup',
-        'wrapper_error_class' => '-error',
-        'label_class'         => 'a-label',
-        'field_class'         => 'a-input',
-        'help_block_class'    => 'help-block',
-        'error_class'         => 'a-error',
-        'required_class'      => '-required',
+	'defaults' => [
+		'wrapper_class'       => 'm-formGroup',
+		'wrapper_error_class' => '-error',
+		'label_class'         => 'a-label',
+		'field_class'         => 'a-input',
+		'help_block_class'    => 'help-block',
+		'error_class'         => 'a-error',
+		'required_class'      => '-required',
 
-//         Override a class from a field.
-        'checkbox'                => [
-            'wrapper_class'   => 'm-formGroup -checkbox',
-						'field_class'     => 'a-checkbox',
-        ],
-        // Override a class from a field.
-        //'text'                => [
-        //    'wrapper_class'   => 'form-field-text',
-        //    'label_class'     => 'form-field-text-label',
-        //    'field_class'     => 'form-field-text-field',
-        //],
-        //'radio'               => [
-        //    'choice_options'  => [
-        //        'wrapper'     => ['class' => 'form-radio'],
-        //        'label'       => ['class' => 'form-radio-label'],
-        //        'field'       => ['class' => 'form-radio-field'],
-        //],
-    ],
-    // Templates
-    'form'          => 'laravel-form-builder::form',
-    'text'          => 'laravel-form-builder::text',
-    'textarea'      => 'laravel-form-builder::textarea',
-    'button'        => 'laravel-form-builder::button',
-    'buttongroup'   => 'laravel-form-builder::buttongroup',
-    'radio'         => 'laravel-form-builder::radio',
-    'checkbox'      => 'laravel-form-builder::checkbox',
-    'select'        => 'laravel-form-builder::select',
-    'choice'        => 'laravel-form-builder::choice',
-    'repeated'      => 'laravel-form-builder::repeated',
-    'child_form'    => 'laravel-form-builder::child_form',
-    'collection'    => 'laravel-form-builder::collection',
-    'static'        => 'laravel-form-builder::static',
+		//Override a class from a field.
+		'checkbox' => [
+			'wrapper_class'   => 'm-formGroup -checkbox',
+			'field_class'     => 'a-checkbox',
+		],
+		// Override a class from a field.
+		//'text'                => [
+		//    'wrapper_class'   => 'form-field-text',
+		//    'label_class'     => 'form-field-text-label',
+		//    'field_class'     => 'form-field-text-field',
+		//],
+		//'radio'               => [
+		//    'choice_options'  => [
+		//        'wrapper'     => ['class' => 'form-radio'],
+		//        'label'       => ['class' => 'form-radio-label'],
+		//        'field'       => ['class' => 'form-radio-field'],
+		//],
+	],
+	// Templates
+	'form'          => 'laravel-form-builder::form',
+	'text'          => 'laravel-form-builder::text',
+	'textarea'      => 'laravel-form-builder::textarea',
+	'button'        => 'laravel-form-builder::button',
+	'buttongroup'   => 'laravel-form-builder::buttongroup',
+	'radio'         => 'laravel-form-builder::radio',
+	'checkbox'      => 'laravel-form-builder::checkbox',
+	'select'        => 'laravel-form-builder::select',
+	'choice'        => 'laravel-form-builder::choice',
+	'repeated'      => 'laravel-form-builder::repeated',
+	'child_form'    => 'laravel-form-builder::child_form',
+	'collection'    => 'laravel-form-builder::collection',
+	'static'        => 'laravel-form-builder::static',
 
-    // Remove the laravel-form-builder:: prefix above when using template_prefix
-    'template_prefix'   => '',
+	// Remove the laravel-form-builder:: prefix above when using template_prefix
+	'template_prefix'   => '',
 
-    'default_namespace' => '',
+	'default_namespace' => '',
 
-    'custom_fields' => [
+	'custom_fields' => [
 //        'datetime' => App\Forms\Fields\Datetime::class
-    ]
+	]
 ];

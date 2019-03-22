@@ -5,15 +5,7 @@
 		<div class="payment-content t-account">
 			<div class="t-account__row -catalinaBlue">@lang('payment.account-name-heading')</div>
 			<div class="t-account__row">
-				@if (!empty($user->profile->avatar_url))
-					<img src="{{$user->profile->avatar_url}}" class="a-avatar -large"/>
-				@elseif (!empty($user->initials))
-					<span class="a-avatar -automatic -large">
-					{{$user->initials}}
-				</span>
-				@else
-					<i class="o-navigation__item a-icon a-avatar -large fa-user"></i>
-				@endif
+				@include('payment.avatar-large-with-defaults', ['user' => $user])
 			</div>
 			<div class="t-account__row -textPlus2">{{$user->fullName}}</div>
 			<div class="t-account__row -textMinus1 -largeSpace">@lang('payment.account-wrong-account-text')

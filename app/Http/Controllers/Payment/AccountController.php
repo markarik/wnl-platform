@@ -30,8 +30,8 @@ class AccountController extends Controller
 		if ($user) {
 			$hasCurrentProduct = $user->getLatestPaidCourseProductId() === $product->id;
 			$hasParticipantCoupon = !empty($coupon) && $coupon->kind === Coupon::KIND_PARTICIPANT;
-			$hasBoughtAlbum = $user->orders->filter(function($order) {
-				return $order->product->slug === Product::SLUG_WNL_ALBUM;
+			$hasBoughtAlbum = $user->getProducts()->filter(function($product) {
+				return $product->slug === Product::SLUG_WNL_ALBUM;
 			})->count() > 0;
 
 			if (!$hasBoughtAlbum && $hasParticipantCoupon && $hasCurrentProduct) {

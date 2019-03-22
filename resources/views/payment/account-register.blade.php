@@ -64,3 +64,7 @@
 	</div>
 
 @endsection
+
+@section('payment-scripts')
+	<script>typeof fbq === 'function' && fbq('track', 'Lead', {platform: '{{config('app.instance_name')}}'})</script>
+@endsection

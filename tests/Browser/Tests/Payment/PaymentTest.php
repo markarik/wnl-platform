@@ -235,4 +235,16 @@ class PaymentTest extends DuskTestCase
 			(new MyOrdersModule())->assertPaid($browser, '1500zł / 1500zł');
 		});
 	}
+
+	public function testProlongingUser()
+	{
+		$this->browse(function (BethinkBrowser $browser) {
+			(new UserModule())->existingProlongingUser($browser);
+			(new PersonalDataModule())->submitNoAddress($browser);
+			(new ConfirmOrderModule())->payOnlineNow($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '750.00');
+			(new MyOrdersModule())->assertOrderPlaced($browser);
+			(new MyOrdersModule())->assertPaid($browser, '750zł / 750zł');
+		});
+	}
 }

@@ -35,7 +35,9 @@ class MyOrdersModule
 			->waitForText('Twoje zamówienia', 60)
 			->waitForText('Zamówienie numer ' . $order->id);
 
-		if (empty($browser->coupon)) {
+		if (empty($browser->coupon) ||
+			(!empty($browser->coupon) && $browser->coupon->kind !== App\Models\Coupon::KIND_PARTICIPANT)
+		) {
 			$browser->waitForText('Study Buddy');
 		} else {
 			$coupon = $browser->coupon;

@@ -53,7 +53,7 @@
 		</section>
 
 		<section class="o-checkoutSection">
-			@if(empty($coupon) || $coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT)
+			@if(empty($coupon) || ($coupon && $coupon->kind !== \App\Models\Coupon::KIND_PARTICIPANT))
 				<h2 class="o-checkoutSection__header">@lang('payment.personal-data-heading')</h2>
 
 				{!! form_row($form->recipient) !!}

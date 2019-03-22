@@ -30,6 +30,7 @@ class PersonalDataController extends Controller
 
 		return view('payment.personal-data', [
 			'form'    => $form,
+			'coupon'  => $coupon,
 		]);
 	}
 

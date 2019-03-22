@@ -3,12 +3,12 @@
 </template>
 
 <script>
-import { getImageUrl } from 'js/utils/env';
+import { getSvgUrl } from 'js/utils/env';
 export default {
 	props: ['name'],
 	computed: {
 		href() {
-			return getImageUrl(`icons/sprite.svg#${this.name}`);
+			return getSvgUrl(`icons/sprite.svg#${this.name}`);
 		}
 	}
 };

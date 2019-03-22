@@ -36,3 +36,7 @@ export function getApiUrl(path) {
 export function getImageUrl(filename) {
 	return getUrl(`images/${filename}`);
 }
+
+export function getSvgUrl(filename) {
+	return getUrl(`svg/${filename}`);
+}

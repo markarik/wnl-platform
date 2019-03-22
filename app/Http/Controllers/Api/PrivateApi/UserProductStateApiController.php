@@ -1,9 +1,9 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
+use App\Http\Requests\User\UpdateUserProductState;
 use Auth;
 use App\Models\User;
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Requests\User\UpdateUserSettings;
 use Illuminate\Http\Request;
 
 class UserProductStateApiController extends ApiController
@@ -31,15 +31,26 @@ class UserProductStateApiController extends ApiController
 		return $this->transformAndRespond($userProductState);
 	}
 
-	public function put(UpdateUserSettings $request)
+	public function updateForLatestProduct(UpdateUserProductState $request)
 	{
-		// TODO
-//		$user = User::fetch($request->route('id'));
-//		$user->settings()->updateOrCreate(
-//			['user_id' => $user->id],
-//			['settings' => $request->all()]
-//		);
-//
-//		return $this->respondOk();
+		$user = User::fetch($request->route('id'));
+
+		if (!$user) {
+			return $this->respondNotFound();
+		}
+
+		$productId = $user->getLatestPaidCourseProductId();
+
+		$user->userProductStates()->updateOrCreate(
+			[
+				'user_id' => $user->id,
+				'product_id' => $productId
+			],
+			[
+				'wizard_step' => $request->get('wizard_step'),
+			]
+		);
+
+		return $this->respondOk();
 	}
 }

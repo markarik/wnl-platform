@@ -26,7 +26,9 @@
 </style>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import axios from 'axios';
+import {mapGetters, mapActions} from 'vuex';
+
 import SidenavSlot from 'js/components/global/SidenavSlot';
 import MainNav from 'js/components/MainNav';
 import WnlOnboardingScreenWelcome from 'js/components/onboarding/OnboardingScreenWelcome';
@@ -35,6 +37,8 @@ import WnlOnboardingScreenUserPlan from 'js/components/onboarding/OnboardingScre
 import WnlOnboardingScreenTutorial from 'js/components/onboarding/OnboardingScreenTutorial';
 import WnlOnboardingScreenSatisfactionGuarantee from 'js/components/onboarding/OnboardingScreenSatisfactionGuarantee';
 import WnlOnboardingScreenFinal from 'js/components/onboarding/OnboardingScreenFinal';
+
+import {getApiUrl} from 'js/utils/env';
 
 export default {
 	components: {
@@ -62,6 +66,7 @@ export default {
 	computed: {
 		...mapGetters([
 			'currentUser',
+			'currentUserId',
 			'isSidenavVisible',
 			'isSidenavMounted',
 		]),
@@ -71,6 +76,19 @@ export default {
 	},
 	methods: {
 		...mapActions(['setupCurrentUser']),
+		updateUserProductState() {
+			axios.put(getApiUrl(`users/${this.currentUserId}/user_product_state/latest`), {
+				wizard_step: this.step
+			});
+		}
 	},
+	watch: {
+		step() {
+			this.updateUserProductState();
+		}
+	},
+	mounted() {
+		this.updateUserProductState();
+	}
 };
 </script>

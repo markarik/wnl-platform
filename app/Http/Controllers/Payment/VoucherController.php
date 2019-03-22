@@ -21,5 +21,4 @@ class VoucherController extends Controller
 
 		return redirect()->route('payment-account');
 	}
-
 }

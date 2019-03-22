@@ -2,7 +2,7 @@
 
 @section('content')
 	<div class="t-checkout">
-		<div class="payment-content t-account o-column">
+		<div class="t-account o-column">
 			<div class="o-column__row -catalinaBlue">@lang('payment.account-name-heading')</div>
 			<div class="o-column__row">
 				@include('payment.avatar-large-with-defaults', ['user' => $user])

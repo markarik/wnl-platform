@@ -14,12 +14,12 @@
 					<div class="o-column__row -largeSpace">
 						<label for="code" class="a-label">@lang('payment.voucher-label')</label>
 						<input
-								type="text"
-								id="code"
-								name="code"
-								placeholder="XXXXXXXX"
-								value="{{ request('code') ?? session('_old_input.code') ?? '' }}"
-								class="a-input"
+							type="text"
+							id="code"
+							name="code"
+							placeholder="XXXXXXXX"
+							value="{{ request('code') ?? session('_old_input.code') ?? '' }}"
+							class="a-input"
 						>
 						@foreach ($errors->get('code') as $message)
 							<div class="a-error">{{ $message }}</div>

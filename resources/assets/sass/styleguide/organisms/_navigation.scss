@@ -33,5 +33,16 @@
 
   &__avatar {
     padding: $space-xxs;
+
+    @media #{$breakpoint-m} {
+      padding: $space-xxxxs;
+
+      .a-avatar, .a-icon {
+        font-size: $icon-m;
+        height: $icon-m;
+        width: $icon-m;
+      }
+    }
+
   }
 }

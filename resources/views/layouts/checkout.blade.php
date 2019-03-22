@@ -58,7 +58,7 @@
 											{{$user->initials}}
 										</span>
 									@else
-										<i class="o-navigation__item fa-user a-icon -small"></i>
+										<i class="o-navigation__item fa-user a-icon"></i>
 									@endif
 							</div>
 							<div class="o-dropdown__menu -shadowLarge">

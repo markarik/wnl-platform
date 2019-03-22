@@ -19,8 +19,7 @@
 		<link rel="icon" href="{{ url('favicon.png') }}">
 
 		<!-- Styles -->
-		<!-- // FIXME uncomment before merging to master -->
-		<!-- <link href="{{ mix('css/app.css') }}" rel="stylesheet"> -->
+		<link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
 		<!-- Scripts -->
 		<script>
@@ -76,7 +75,7 @@
 					<span>@lang('payment.footer-safe-transaction')</span>
 					<i class="fa-shield a-icon -medium -mischka"></i>
 				</p>
-				<p class="o-footer__block">
+				<p class="o-footer__block -last">
 					<span>@lang('payment.footer-help')</span>
 				</p>
 			</footer>
@@ -85,5 +84,6 @@
 		<script src="{{ mix('js/payment.js') }}"></script>
 		@yield('payment-scripts')
 		@yield('scripts')
+		@include('payment.facebook-messenger')
 	</body>
 </html>

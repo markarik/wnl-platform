@@ -75,7 +75,7 @@
 					<span>@lang('payment.footer-safe-transaction')</span>
 					<i class="fa-shield a-icon -medium -mischka"></i>
 				</p>
-				<p class="o-footer__block">
+				<p class="o-footer__block -last">
 					<span>@lang('payment.footer-help')</span>
 				</p>
 			</footer>

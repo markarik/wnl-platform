@@ -31,8 +31,9 @@ class MyOrdersModule
 	{
 		$order = $browser->order;
 
-		$browser->waitForText('Twoje zamówienia', 60);
-		$browser->waitForText('Zamówienie numer ' . $order->id);
+		$browser
+			->waitForText('Twoje zamówienia', 60)
+			->waitForText('Zamówienie numer ' . $order->id);
 
 		if (empty($browser->coupon)) {
 			$browser->waitForText('Study Buddy');
@@ -44,7 +45,7 @@ class MyOrdersModule
 
 	public function assertPaid(BethinkBrowser $browser, string $expectedAmount)
 	{
-		$browser->waitForText('Wpłacono ' . $expectedAmount);
+		$browser->waitForText('Wpłacono ' . $expectedAmount, 60);
 	}
 
 	public function assertNotPaid(BethinkBrowser $browser)
@@ -56,7 +57,9 @@ class MyOrdersModule
 	public function assertInstalment(BethinkBrowser $browser, int $instalmentNumber, string $expectedText)
 	{
 		$order = $browser->order;
-		$browser->assertSeeIn('.order[data-order-id="' . $order->id . '"] .instalment-amount[data-instalment="' . $instalmentNumber . '"]', $expectedText);
+		$browser
+			->waitForText('Zamówienie numer ' . $order->id)
+			->assertSeeIn('.order[data-order-id="' . $order->id . '"] .instalment-amount[data-instalment="' . $instalmentNumber . '"]', $expectedText);
 	}
 
 	public function assertStudyBuddyAwaitingRefund(BethinkBrowser $browser)
@@ -65,7 +68,7 @@ class MyOrdersModule
 
 		$browser
 			->refresh()
-			->waitForText('Twoje zamówienia')
+			->waitForText('Zamówienie numer ' . $order->id)
 			->assertSeeIn('.order[data-order-id="' . $order->id . '"]', 'Twój Study Buddy dołączył już do kursu!');
 	}
 }

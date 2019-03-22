@@ -3,30 +3,56 @@
 namespace App\Http\Controllers\Payment;
 
 
+use App\Http\Controllers\Controller;
 use App\Http\Forms\SignUpForm;
 use App\Mail\SignUpConfirmation;
+use App\Models\Coupon;
+use App\Models\Product;
 use App\Models\User;
+use App\Traits\CheckoutTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
 
-class AccountController
+class AccountController extends Controller
 {
+	use CheckoutTrait;
 	use FormBuilderTrait;
 
 	public function index(Request $request)
 	{
 		$user = Auth::user();
+		$product = $this->getProduct($request);
+		$coupon = $this->readCoupon($product, $user);
+
 		if ($user) {
+			$hasCurrentProduct = $user->getLatestPaidCourseProductId() === $product->id;
+			$hasParticipantCoupon = !empty($coupon) && $coupon->kind === Coupon::KIND_PARTICIPANT;
+			$hasBoughtAlbum = $user->getProducts()->filter(function($product) {
+				return $product->slug === Product::SLUG_WNL_ALBUM;
+			})->count() > 0;
+
+			if (!$hasBoughtAlbum && $hasParticipantCoupon && $hasCurrentProduct) {
+				return view('payment.account-buy-album', [
+					'user' => $user
+				]);
+			}
+
+			if ($hasBoughtAlbum || (!$hasParticipantCoupon && $hasCurrentProduct)) {
+				return view('payment.account-no-available-product', [
+					'user' => $user,
+				]);
+			}
+
 			if ($user->signUpComplete) {
 				return view('payment.account-name', [
 					'user' => $user,
 				]);
-			} else {
-				return view('payment.account-continue');
 			}
+
+			return view('payment.account-continue');
 		}
 
 		// Set intended url after successful login

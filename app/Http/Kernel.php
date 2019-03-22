@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
 		'guest'        => \App\Http\Middleware\RedirectIfAuthenticated::class,
 		'throttle'     => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 		'payment'      => \App\Http\Middleware\RedirectIfPaid::class,
+		'signups-open' => \App\Http\Middleware\SignupsOpen::class,
 		'api-auth'     => \App\Http\Middleware\ApiAuth::class,
 		'subscription' => \App\Http\Middleware\Subscription::class,
 		'terms'        => \App\Http\Middleware\TermsOfUse::class,

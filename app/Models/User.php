@@ -194,36 +194,14 @@ class User extends Authenticatable
 		return $this->userAddress->city ?? '';
 	}
 
-	/**
-	 * TODO: https://bethink.atlassian.net/browse/PLAT-556
-	 * Returns users all identity numbers
-	 * @return array An associate array with types of
-	 */
-	public function getIdentityNumbersAttribute() {
-		$numbers = [
-			[
-				'type' => 'personal_identity_number',
-				'value' => $this->personalData->personal_identity_number ?? null,
-			],
-			[
-				'type' => 'identity_card_number',
-				'value' => $this->personalData->identity_card_number ?? null,
-			],
-			[
-				'type' => 'passport_number',
-				'value' => $this->personalData->passport_number ?? null,
-			],
-		];
-
-		return array_values(array_filter($numbers, function ($number) {
-			return !empty($number['value']);
-		}));
+	public function getPersonalIdentityNumberAttribute()
+	{
+		return $this->personalData->personal_identity_number ?? null;
 	}
 
-	// TODO: https://bethink.atlassian.net/browse/PLAT-556
-	public function getIdentityNumberAttribute()
+	public function getPassportNumberAttribute()
 	{
-		return $this->identity_numbers[0]['value'] ?? null;
+		return $this->personalData->passport_number ?? null;
 	}
 
 	public function getIsSubscriberAttribute()
@@ -332,6 +310,13 @@ class User extends Authenticatable
 			->each(function (Lesson $lesson) {
 				$lesson->is_default_start_date = true;
 			});
+	}
+
+	public function getProducts() {
+		return $this->orders()->join('products', 'orders.product_id', '=', 'products.id')
+			->where('paid', 1)
+			->where('canceled', 0)
+			->get();
 	}
 
 	/**

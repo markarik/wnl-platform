@@ -1,0 +1,42 @@
+.o-checkoutSection {
+  margin-bottom: $space-xxl;
+
+  &__header {
+    @include textPlus3;
+    margin-bottom: $space-m;
+  }
+
+  &__subheader {
+    @include textBase;
+    color: $color-storm-gray;
+    text-transform: uppercase;
+    margin-bottom: $space-s;
+  }
+
+  &__info {
+    align-items: center;
+    display: flex;
+    margin-bottom: $space-s;
+
+    .a-icon {
+      margin-left: 10px;
+    }
+  }
+
+  &__secondaryInfo {
+    color: $color-ebony-clay;
+    margin-bottom: $space-s;
+  }
+
+  &__dataReadOnly {
+    margin-bottom: $space-s;
+  }
+
+  &__editLink {
+    color: $color-blue-chill;
+    display: inline-block;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: $space-l;
+  }
+}

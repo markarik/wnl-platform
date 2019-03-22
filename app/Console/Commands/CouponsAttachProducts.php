@@ -40,7 +40,7 @@ class CouponsAttachProducts extends Command
 	{
 		$coupons = Coupon::all();
 
-		$online = Product::slug('wnl-online');
+		$online = Product::slug(Product::SLUG_WNL_ONLINE);
 
 		foreach ($coupons as $coupon) {
 			$coupon->products()->attach($online);

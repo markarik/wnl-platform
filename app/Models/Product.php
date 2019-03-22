@@ -8,6 +8,10 @@ class Product extends Model
 {
 	const VAT_RATES = [0, 5, 8 , 23];
 
+	const SLUG_WNL_ALBUM = 'wnl-album';
+	const SLUG_WNL_ONLINE = 'wnl-online';
+	const SLUG_WNL_ONLINE_ONSITE = 'wnl-online-onsite';
+
 	protected $fillable = [
 		'name',
 		'invoice_name',
@@ -88,9 +92,8 @@ class Product extends Model
 		return round($value, 2);
 	}
 
-	public function getAvailableAttribute()
+	public function getAvailableAttribute(): bool
 	{
-		return
-			$this->quantity > 0;
+		return $this->quantity > 0;
 	}
 }

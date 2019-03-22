@@ -48,7 +48,7 @@
 
 			{{-- Forgot password --}}
 			<p class="control wnl-login-remind">
-				<a href="{{ url('/password/reset') }}">
+				<a class="a-link" href="{{ url('/password/reset') }}">
 					@lang('auth.remind-link')
 				</a>
 			</p>

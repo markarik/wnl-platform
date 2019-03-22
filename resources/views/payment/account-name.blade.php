@@ -1,31 +1,31 @@
-@extends('payment.layout')
+@extends('layouts.checkout', ['disableCart' => true])
 
 @section('content')
-	@include('payment.payment-hero', [
-		'step' => 1,
-		'title' => 'Lorem ipsum',
-		'subtitle' => 'Bacon ipsum',
-	])
-
-	<div class="container payment-content">
-		<div class="block has-text-centered">
-			<div><strong>@lang('payment.account-name-heading')</strong></div>
-
-			<div>
-				@if ($user->profile->avatar_url)
-					<img title="{{$user->fullName}}" src="{{$user->profile->avatar_url}}" />
-				@else
-					<div title="{{$user->fullName}}">{{$user->initials}}</div>
-				@endif
-			</div>
-			<div><strong>{{$user->fullName}}</strong></div>
-			<div><small>@lang('payment.account-wrong-account-text') <a class="logout-link">@lang('payment.account-wrong-account-register-text')</a></small></div>
-
-
-			<a class="button is-primary" href="{{route('payment-personal-data')}}" data-button="account-continue">
-				@lang('payment.account-name-submit')
-			</a>
+	<div class="t-account">
+		<div class="t-account__row -catalinaBlue">@lang('payment.account-name-heading')</div>
+		<div class="t-account__row">
+			@if (!empty($user->profile->avatar_url))
+				<img src="{{$user->profile->avatar_url}}" class="a-avatar -large"/>
+			@elseif (!empty($user->initials))
+				<span class="a-avatar -automatic -large">
+					{{$user->initials}}
+				</span>
+			@else
+				<i class="o-navigation__item a-icon a-avatar -large fa-user"></i>
+			@endif
 		</div>
-	</div>
+		<div class="t-account__row -textPlus2">{{$user->fullName}}</div>
+		<div class="t-account__row -textMinus1 -largeSpace">@lang('payment.account-wrong-account-text')
+			<a class="logout-link a-link">@lang('payment.account-wrong-account-register-text')</a>
+		</div>
 
+
+		<a class="a-button -big t-account__row" href="{{route('payment-personal-data')}}" data-button="account-continue">
+			@lang('payment.account-name-submit')
+		</a>
+	</div>
+@endsection
+
+@section('payment-scripts')
+	<script>typeof fbq === 'function' && fbq('track', 'Lead', {platform: '{{config('app.instance_name')}}'})</script>
 @endsection

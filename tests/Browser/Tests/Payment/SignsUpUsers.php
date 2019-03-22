@@ -68,7 +68,7 @@ trait SignsUpUsers
 			'postcode'         => $faker->postcode,
 			'city'             => $faker->city,
 			'invoice_company'  => $faker->company,
-			'identity_number'  => $faker->pesel,
+			'personal_identity_number'  => $faker->pesel,
 			'invoice_nip'      => $faker->randomNumber(9),
 			'invoice_address'  => $faker->streetAddress,
 			'invoice_postcode' => $faker->postcode,
@@ -112,7 +112,7 @@ trait SignsUpUsers
 			->type('zip', $user['postcode'])
 			->type('city', $user['city']);
 
-		$browser->typeIfNotDisabled('identity_number', $user['identity_number']);
+		$browser->typeIfNotDisabled('personal_identity_number', $user['personal_identity_number']);
 
 		if ($invoice) {
 			$browser

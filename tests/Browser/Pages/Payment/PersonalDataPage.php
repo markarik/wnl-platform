@@ -39,7 +39,8 @@ class PersonalDataPage extends BasePage
 	{
 		return [
 			'@login' => '.has-account a',
-			'@cart' => '.cart',
+			'@cart' => '.o-cart',
+			'@submit-personal-data' => '[data-button="submit-personal-data"]'
 		];
 	}
 }

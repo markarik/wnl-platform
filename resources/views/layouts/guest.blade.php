@@ -84,7 +84,7 @@
 						</a>
 						&nbsp;|&nbsp;
 						<a target="_blank" href="@lang('payment.privacy-policy-link-href')">
-							@lang('payment.account-privacy-link-content')
+							@lang('payment.account-privacy-policy-link-content')
 						</a>
 					</small>
 				</p>
@@ -101,22 +101,6 @@
 				</p>
 				<small>@lang('common.footer-copy')</small>
 			</footer>
-		</div>
-		<div class="modals">
-			@if(request()->route())
-			<div id="login-modal" class="modal">
-				<div class="modal-background"></div>
-				<div class="modal-card">
-					<header class="modal-card-head">
-						<p class="modal-card-title"></p>
-						<button class="delete"></button>
-					</header>
-					<section class="modal-card-body content">
-						@include('auth.login-modal')
-					</section>
-				</div>
-			</div>
-			@endif
 		</div>
 		<!-- Scripts -->
 		<script src="{{ mix('js/guest.js') }}"></script>

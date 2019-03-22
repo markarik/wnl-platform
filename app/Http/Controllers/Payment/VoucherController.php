@@ -4,14 +4,11 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\UseCoupon;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use App\Models\Coupon;
-use Validator;
 
 class VoucherController extends Controller
 {
-	public function index(Request $request)
+	public function index()
 	{
 		return view('payment.voucher');
 	}

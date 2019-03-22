@@ -1,7 +1,17 @@
-@extends('payment.layout')
+@php
+/**
+ * @var App\Models\Coupon $coupon
+ * @var App\Models\Order $order
+ * @var App\Models\OrderInstalment[] $instalments
+ * @var App\Models\PaymentMethod $paymentMethodInstalments
+ * @var App\Models\User $user
+ */
+@endphp
+
+@extends('layouts.checkout')
 
 @section('content')
-
+	<div class="t-checkout">
 	@include('payment.cart', [
 		'productName' => $order->product->name,
 		'productPrice' => $order->product->price,
@@ -10,114 +20,92 @@
 		'coupon' => $coupon,
 	])
 
-	@include('payment.payment-hero', [
-		'step' => 3,
-		'title' => trans('payment.confirm-order-title'),
-		'subtitle' => trans('payment.confirm-order-subtitle'),
-	])
+	<div class="t-checkout__content">
+		@include('payment.stepper', ['currentStep' => 2])
+		<section class="o-checkoutSection">
+			<h2 class="o-checkoutSection__header">@lang('payment.confirm-order-heading')</h2>
+			<form action="{{route('payment-confirm-order-post')}}" method="post" id="customPaymentForm">
+				{!! csrf_field() !!}
+				<input id="customPaymentMethodInput" type="hidden" name="method" value=""/>
+			</form>
 
-	<div class="container">
-		<section class="subsection">
-			<div class="box">
-				<p class="title">@lang('payment.confirm-order-heading')</p>
-				<p class="subtitle">{{ $order->product->name }}</p>
-				@if($order->coupon && ($order->coupon->slug !== 'wnl-online-only' || $order->product->slug === 'wnl-online'))
-					<p class="strikethrough">
-						@lang('payment.confirm-order-price', [ 'price' => $order->product->price])
-					</p>
-					<p class="big strong">
-						@lang('payment.confirm-order-price', [ 'price' => $productPriceWithCoupon ])
-					</p>
-					<div class="notification margins top">
-						@lang('payment.confirm-order-coupon', [
-							'name' => $order->coupon->name,
-							'value' => $order->coupon->value_with_unit,
-						])
+			<div class="o-paymentOptions">
+				@if($order->coupon && (int) $order->total_with_coupon === 0)
+					<div class="m-paymentOption -active">
+						<div class="m-formGroup -checkbox -marginLess">
+							<div>
+								<label class="m-paymentOption__label">@lang('payment.confirm-order-payment-method-free-label')</label>
+								<span class="m-paymentOption__info">@lang('payment.confirm-order-payment-method-free-info')</span>
+							</div>
+						</div>
+						<i class="a-icon -medium fa-gift"></i>
 					</div>
 				@else
-					<p class="big strong">@lang('payment.confirm-order-price', [ 'price' => $order->product->price ])</p>
+					<div class="m-paymentOption -active">
+						<div class="m-formGroup -checkbox -marginLess">
+							<input type="radio" name="payment_method" value="now" id="paymentMethodNow" class="a-radio" checked/>
+							<div>
+								<label for="paymentMethodNow" class="m-paymentOption__label">@lang('payment.confirm-order-payment-method-now-label')</label>
+								<span class="m-paymentOption__info">@lang('payment.confirm-order-payment-method-now-info')</span>
+							</div>
+						</div>
+						<i class="a-icon -medium fa-thumbs-up"></i>
+					</div>
+
+					<div class="m-paymentOption">
+						<div class="m-formGroup -checkbox -marginLess">
+							<input type="radio" name="payment_method" value="later" id="paymentMethod7days" class="a-radio"/>
+							<div>
+								<label for="paymentMethod7days" class="m-paymentOption__label">@lang('payment.confirm-order-payment-method-later-label')</label>
+								<span class="m-paymentOption__info">@lang('payment.confirm-order-payment-method-later-info')</span>
+							</div>
+						</div>
+						<i class="a-icon -medium fa-calendar"></i>
+					</div>
+
+					<form action="{{ config('przelewy24.transaction_url') }}" method="post" id="fullPaymentP24Form">
+						<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
+						<input type="hidden" name="p24_merchant_id" value="{{ config('przelewy24.merchant_id') }}"/>
+						<input type="hidden" name="p24_pos_id" value="{{ config('przelewy24.merchant_id') }}"/>
+						<input type="hidden" name="p24_amount" value="{{ $amount }}"/>
+						<input type="hidden" name="p24_currency" value="PLN"/>
+						<input type="hidden" name="p24_description" value="{{ $order->product->name }}"/>
+						<input type="hidden" name="p24_client" value="{{ $user->full_name }}"/>
+						<input type="hidden" name="p24_address" value="{{ $user->userAddress->street}}"/>
+						<input type="hidden" name="p24_zip" value="{{ $user->userAddress->zip }}"/>
+						<input type="hidden" name="p24_city" value="{{ $user->userAddress->city }}"/>
+						<input type="hidden" name="p24_country" value="PL"/>
+						<input type="hidden" name="p24_email" value="{{ $user->email }}"/>
+						<input type="hidden" name="p24_language" value="pl"/>
+						<input type="hidden" name="p24_url_return" value="{{ $returnUrl }}"/>
+						<input type="hidden" name="p24_url_status" value="{{ config('przelewy24.status_url') }}"/>
+						<input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
+						<input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
+						<input type="hidden" name="p24_encoding" value="UTF-8"/>
+					</form>
 				@endif
-			</div>
-		</section>
 
-		@if ($order->has_shipment)
-			<section class="subsection">
-				<div class="box">
-					<p class="title">@lang('payment.confirm-personal-data-heading')</p>
-					<p class="big">{{ $user->full_name }}</p>
-					<p><strong>{{ $user->email }}</strong></p>
+				<div class="o-paymentOptions__instalments">
+				@if ($instalments)
+					<div class="m-formGroup -checkbox -withIcon">
+						<input type="checkbox" name="instalments" id="instalments" class="a-checkbox"/>
+						<label class="a-label" for="instalments">@lang('payment.confirm-order-payment-method-instalments-label')</label>
+						<i class="a-icon -cadetBlue fa-info-circle -touchable" id="instalments-modal-opener"></i>
 
-					<p class="margin top big">@lang('payment.confirm-personal-data-private')</p>
+						<div id="instalments-modal" class="modal">
+							<div class="modal-background"></div>
+							<div class="modal-card">
+								<section class="modal-card-body o-checkoutInstalmentsModal">
+									@include('payment.instalments-modal', ['instalments' => $instalments, 'order' => $order])
+								</section>
+							</div>
+						</div>
 
-					@if(is_array($user->identityNumbers))
-						<p>
-							<strong>
-								{{ trans('payment.identity_number_' . $user->identityNumbers[0]['type']) }}:
-								{{ $user->identityNumbers[0]['value'] }}
-							</strong>
-						</p>
-					@endif
-
-					<p class="margin top big">@lang('payment.confirm-personal-data-address')</p>
-					<ul>
-						<li>{{ $user->userAddress->recipient }}</li>
-						<li>{{ $user->userAddress->street }}</li>
-						<li>{{ $user->userAddress->zip }}, {{ $user->userAddress->city }}</li>
-					</ul>
-				</div>
-			</section>
-		@else
-			<section>
-				<p>
-					@lang('payment.confirm-no-album-info')
-				</p>
-			</section>
-		@endif
-
-		@if($user->invoice)
-			<section class="subsection">
-				<div class="box">
-					<p class="title">@lang('payment.personal-data-invoice-heading')</p>
-					<ul>
-						<li><strong>{{ $user->invoice_name }}</strong></li>
-						<li>{{ $user->invoice_address }}</li>
-						<li>{{ $user->invoice_zip }}, {{ $user->invoice_city }}</li>
-						<li>{{ $user->invoice_country }}</li>
-					</ul>
-				</div>
-			</section>
-		@endif
-
-		<section class="subsection">
-			<p class="has-text-centered edit-personal-data">
-				<a href="{{ route('payment-personal-data') }}">@lang('payment.confirm-change-order')</a>
-			</p>
-		</section>
-		@if($order->coupon && (int) $order->total_with_coupon === 0)
-			<section class="subsection has-text-centered margin top">
-				<p class="subtitle">
-					@lang('payment.confirm-order-free')
-				</p>
-				<form action="{{route('payment-confirm-order-post')}}" method="post">
-					{!! csrf_field() !!}
-					<input type="hidden" name="method" value="free"/>
-
-					<button class="button is-primary" data-button="pay-free">
-						@lang('payment.confirm-method-free-button')
-					</button>
-				</form>
-			</section>
-		@else
-			<section class="subsection has-text-centered margin top">
-				{{-- <h2 class="title">@lang('payment.confirm-method-heading')</h2> --}}
-				<p class="subtitle">@lang('payment.confirm-method-heading')</p>
-				<div class="columns margin top">
-					<div class="column">
-						<form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form" id="full_payment_p24_form">
+						<form action="{{ config('przelewy24.transaction_url') }}" method="post" id="instalmentsP24Form">
 							<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
 							<input type="hidden" name="p24_merchant_id" value="{{ config('przelewy24.merchant_id') }}"/>
 							<input type="hidden" name="p24_pos_id" value="{{ config('przelewy24.merchant_id') }}"/>
-							<input type="hidden" name="p24_amount" value="{{ $amount }}"/>
+							<input type="hidden" name="p24_amount" value="{{ (int)$instalments[0]['amount'] * 100 }}"/>
 							<input type="hidden" name="p24_currency" value="PLN"/>
 							<input type="hidden" name="p24_description" value="{{ $order->product->name }}"/>
 							<input type="hidden" name="p24_client" value="{{ $user->full_name }}"/>
@@ -127,123 +115,58 @@
 							<input type="hidden" name="p24_country" value="PL"/>
 							<input type="hidden" name="p24_email" value="{{ $user->email }}"/>
 							<input type="hidden" name="p24_language" value="pl"/>
-							<input type="hidden" name="p24_url_return" value="{{ $returnUrl }}"/>
-							<input type="hidden" name="p24_url_status" value="{{ config('przelewy24.status_url') }}"/>
-							<input type="hidden" name="p24_api_version" value="{{config('przelewy24.api_version')}}"/>
-							<input type="hidden" name="p24_sign" value="{{ $checksum }}"/>
+							<input type="hidden" name="p24_url_return" value="{{ url('app/myself/orders?payment') }}"/>
+							<input type="hidden" name="p24_url_status" value="{{ config('przelewy24.status_url')  }}"/>
+							<input type="hidden" name="p24_api_version" value="{{ config('przelewy24.api_version') }}"/>
+							<input type="hidden" name="p24_sign" value="{{ $instalmentsChecksum }}"/>
 							<input type="hidden" name="p24_encoding" value="UTF-8"/>
 						</form>
-						<button class="button is-primary p24-submit" data-id="full_payment_p24_form"
-						data-button="pay-online-now"
-						data-payment="online">@lang('payment.confirm-method-online-payment-button')</button>
 					</div>
-					 <div class="column">
-						<form action="{{route('payment-confirm-order-post')}}" method="post">
-							{!! csrf_field() !!}
-							<input type="hidden" name="method" value="online"/>
-
-							<button type="submit" class="button" data-button="pay-online-later">@lang('payment.confirm-deferred-payment-button')</button>
-						</form>
-					</div>
+				@elseif (empty($paymentMethodInstalments))
+					@lang('payment.confirm-order-instalments-not-available-for-product-text')
+				@else
+					@lang('payment.confirm-order-instalments-not-available-text')
+				@endif
 				</div>
-			</section>
-			<?php /** @var \App\Models\OrderInstalment[] $instalments */ ?>
-			@if($instalments)
-				 <section class="has-text-centered">
-					<div class="expandable">
-						<div class="margin vertical">
-							<a class="link expand" id="expand-instalments">Płatność na raty</a>
-						</div>
-						<div class="expandable-content box">
-							<h4>Płatność w 3 ratach</h4>
-							<p>Potrzebujesz rozłożyć płatność w czasie? Nie ma problemu!</p>
-							<p class="margin bottom">
-								Możesz zapłacić w trzech ratach - pierwszej <strong>7 dni po złożeniu zamówienia</strong>
-								i kolejnych do <strong data-instalment-due-date data-timestamp="{{$instalments[1]->due_date->timestamp}}">{{$instalments[1]->due_date->format('d.m.Y')}}</strong>
-								i <strong data-instalment-due-date data-timestamp="{{$instalments[2]->due_date->timestamp}}">{{$instalments[2]->due_date->format('d.m.Y')}}</strong>.</p>
+			</div>
 
-							<table class="table is-bordered margin vertical">
-								<tr>
-									<th>Twój wariant kursu</th>
-									@foreach ($instalments as $instalment)
-										<th>
-											@if($loop->first)
-												1. rata (do 7 dni po złożeniu zamówienia)
-											@else
-												{{$loop->index + 1}}. rata (do&nbsp;{{$instalment->due_date->format('d.m.Y')}})
-											@endif
-										</th>
-									@endforeach
-									<th>Razem</th>
-								</tr>
-								<tr id="instalments-amounts">
-									<td>{{ $order->product->name }}</td>
-									@for ($i = 0; $i < count($instalments); $i++)
-										<td>
-											{{ $instalments[$i]['amount'] }}zł
-										</td>
-									@endfor
-									<td>{{ $order->total_with_coupon }}zł</td>
-								</tr>
-							</table>
-
-							<p class="margin vertical has-text-centered">
-								Więcej informacji na temat rat znajdziesz w <a href="https://wiecejnizlek.pl/cennik">Cenniku</a> oraz w <a class="tou-open-modal-link">Regulaminie</a>.
-							</p>
-
-							<div class="columns margin top">
-
-								<div class="column">
-									<form action="{{ config('przelewy24.transaction_url') }}" method="post" class="p24_form" id="instalments_p24_form">
-										<input type="hidden" name="p24_session_id" value="{{ $order->session_id }}"/>
-										<input type="hidden" name="p24_merchant_id" value="{{ config('przelewy24.merchant_id') }}"/>
-										<input type="hidden" name="p24_pos_id" value="{{ config('przelewy24.merchant_id') }}"/>
-										<input type="hidden" name="p24_amount" value="{{ (int)$instalments[0]['amount'] * 100 }}"/>
-										<input type="hidden" name="p24_currency" value="PLN"/>
-										<input type="hidden" name="p24_description" value="{{ $order->product->name }}"/>
-										<input type="hidden" name="p24_client" value="{{ $user->full_name }}"/>
-										<input type="hidden" name="p24_address" value="{{ $user->userAddress->street}}"/>
-										<input type="hidden" name="p24_zip" value="{{ $user->userAddress->zip }}"/>
-										<input type="hidden" name="p24_city" value="{{ $user->userAddress->city }}"/>
-										<input type="hidden" name="p24_country" value="PL"/>
-										<input type="hidden" name="p24_email" value="{{ $user->email }}"/>
-										<input type="hidden" name="p24_language" value="pl"/>
-										<input type="hidden" name="p24_url_return" value="{{ url('app/myself/orders?payment') }}"/>
-										<input type="hidden" name="p24_url_status" value="{{ config('przelewy24.status_url')  }}"/>
-										<input type="hidden" name="p24_api_version" value="{{ config('przelewy24.api_version') }}"/>
-										<input type="hidden" name="p24_sign" value="{{ $instalmentsChecksum }}"/>
-										<input type="hidden" name="p24_encoding" value="UTF-8"/>
-									</form>
-									<button class="button is-primary p24-submit" data-id="instalments_p24_form" data-button="pay-instalments-now"
-									 data-payment="instalments">@lang('payment.confirm-method-instalments-online-button')</button>
-								</div>
-
-								<div class="column">
-									<form action="{{route('payment-confirm-order-post')}}" method="post">
-										{!! csrf_field() !!}
-										<input type="hidden" name="method" value="instalments"/>
-										<button type="submit" class="button margin top" data-button="pay-instalments-later">
-											@lang('payment.confirm-method-instalments-button')
-										</button>
-									</form>
-								</div>
-
-							</div>
-
-						</div>
-					</div>
-				</section>
-			@else
-				<section class="has-text-centered">
-					<div class="strong margin top">
-						Ze względu na zbliżający się start kursu, płatność na raty nie jest już dostępna.
-					</div>
-				</section>
+			@if ($order->has_shipment)
+				<div>
+					<h2 class="o-checkoutSection__subheader">@lang('payment.confirm-personal-data-address-header')</h2>
+					<ul class="o-checkoutSection__dataReadOnly">
+						<li>{{ $user->userAddress->recipient }}</li>
+						<li>{{ $user->userAddress->street }}</li>
+						<li>{{ $user->userAddress->zip }} {{ $user->userAddress->city }}</li>
+					</ul>
+					<a class="o-checkoutSection__editLink" href="{{ route('payment-personal-data') }}" data-link="edit-personal-data">@lang('payment.confirm-change-order')</a>
+				</div>
 			@endif
-		@endif
+
+			<div>
+				<h2 class="o-checkoutSection__subheader">@lang('payment.personal-data-invoice-heading')</h2>
+				@if ($user->invoice)
+					<ul class="o-checkoutSection__dataReadOnly">
+						<li>{{ $user->invoice_name }}</li>
+						<li>{{ $user->invoice_address }}</li>
+						<li>{{ $user->invoice_zip }} {{ $user->invoice_city }}</li>
+						<li>{{ $user->invoice_country }}</li>
+						<li>@lang('payment.confirm-order-nip') {{ $user->invoice_nip }}</li>
+					</ul>
+				@else
+					<ul class="o-checkoutSection__dataReadOnly">
+						<li>{{ $user->first_name }} {{ $user->last_name }}</li>
+						<li>{{ $user->userAddress->street }}</li>
+						<li>{{ $user->userAddress->zip }} {{ $user->userAddress->city }}</li>
+					</ul>
+				@endif
+				<a class="o-checkoutSection__editLink" href="{{ route('payment-personal-data') }}">@lang('payment.confirm-change-order')</a>
+			</div>
+			<button class="a-button -big" id="confirmOrderSubmit">@lang('payment.confirm-order-submit')</button>
+		</section>
+	</div>
 	</div>
 @endsection
 
 @section('payment-scripts')
-	<script>typeof fbq === 'function' && fbq('track', 'InitiateCheckout')</script>
+	<script>typeof fbq === 'function' && fbq('track', 'InitiateCheckout', {platform: '{{config('app.instance_name')}}'})</script>
 @endsection

@@ -14,18 +14,10 @@ class SignUpForm extends Form
 			->add('email', 'email', [
 				'label' => trans('payment.email'),
 				'rules' => 'required|email|unique:users,email',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.email'),
-				],
 			])
 			->add('password', 'password', [
 				'label' => trans('payment.password'),
 				'rules' => 'required|min:6',
-				'attr'  => [
-					'class' => 'input',
-					'placeholder' => trans('payment.password'),
-				],
 			]);
 	}
 }

@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Forms\AddressForm;
-use App\Http\Forms\SignUpForm;
 use App\Http\Forms\PersonalDataForm;
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\User;
+use App\Traits\CheckoutTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,43 +18,26 @@ use Kris\LaravelFormBuilder\FormBuilderTrait;
 
 class PersonalDataController extends Controller
 {
+	use CheckoutTrait;
 	use FormBuilderTrait;
 
 	public function index(Request $request)
 	{
-		if (Session::has('productId')) {
-			$product = Product::find(Session::get('productId'));
-		} else {
-			$product = Product::slug($request->route('productSlug') ?? 'wnl-online');
-			Session::put('productId', $product->id);
-		}
-
-		if (!$product instanceof Product ||
-			!$product->available ||
-			$product->signups_close->isPast() ||
-			$product->signups_start->isFuture()
-		) {
-			return view('payment.signups-closed', ['product' => $product]);
-		}
-
 		$user = Auth::user();
-		$coupon = $this->readCoupon($user);
+		$product = $this->getProduct($request);
+		$coupon = $this->readCoupon($product, $user);
 		$form = $this->setupForm($coupon, $user);
-
-		$productPriceWithCoupon = null;
 
 		return view('payment.personal-data', [
 			'form'    => $form,
-			'product' => $product,
-			'productPriceWithCoupon' => $product->getPriceWithCoupon($coupon),
-			'coupon' => $coupon
 		]);
 	}
 
 	public function handle(Request $request)
 	{
+		$product = $this->getProduct($request);
 		$user = Auth::user();
-		$coupon = $this->readCoupon($user);
+		$coupon = $this->readCoupon($product, $user);
 		$form = $this->setupForm($coupon, $user);
 
 		if (!$form->isValid()) {
@@ -65,9 +49,9 @@ class PersonalDataController extends Controller
 		$this->updateAccount($user, $request, $form);
 
 		if (!!Session::get('orderId')) {
-			$this->updateOrder($user, $request);
+			$this->updateOrder($product, $user, $request);
 		} else {
-			$this->createOrder($user, $request);
+			$this->createOrder($product, $user, $request);
 		}
 
 		return redirect(route('payment-confirm-order'));
@@ -87,7 +71,7 @@ class PersonalDataController extends Controller
 		return $form;
 	}
 
-	protected function createOrder($user, $request)
+	protected function createOrder(Product $product, User $user, Request $request)
 	{
 		\Log::notice('Creating order');
 		$order = $user->orders()->create([
@@ -98,11 +82,11 @@ class PersonalDataController extends Controller
 
 		Session::put('orderId', $order->id);
 
-		$coupon = $this->readCoupon(Auth::user());
+		$coupon = $this->readCoupon($product, $user);
 
 		if (!empty($coupon)) {
 			$this->addCoupon($order, $coupon);
-		} else if ($order->product->slug !== 'wnl-album') {
+		} else if ($order->product->slug !== Product::SLUG_WNL_ALBUM) {
 			$this->generateStudyBuddy($order);
 		}
 	}
@@ -125,17 +109,8 @@ class PersonalDataController extends Controller
 
 		$coupon->save();
 		$coupon->products()->attach(
-			Product::whereIn('slug', ['wnl-online'])->get()
+			Product::whereIn('slug', [Product::SLUG_WNL_ONLINE])->get()
 		);
-	}
-
-	protected function readCoupon($user) {
-		$userCoupon = $user ? $user->coupons->first() : null;
-		if (session()->has('coupon')) {
-			return session()->get('coupon')->fresh();
-		} else {
-			return $userCoupon;
-		}
 	}
 
 	protected function updateAccount($user, $request, $form)
@@ -190,21 +165,24 @@ class PersonalDataController extends Controller
 			'recipient' => $request->get('recipient'),
 		]);
 
-		if (!$form->identity_number->getOption('attr.disabled')) {
+		if (!$form->personal_identity_number->getOption('attr.disabled')) {
 			$user->personalData()->updateOrCreate(
 				['user_id' => $user->id],
-				$this->getIdentityNumbersArray($request)
+				[
+					'passport_number' => $request->get('passport_number'),
+					'personal_identity_number' => $request->get('personal_identity_number'),
+				]
 			);
 		}
 	}
 
-	protected function updateOrder($user, $request)
+	protected function updateOrder(Product $product, User $user, Request $request)
 	{
 		Log::notice('Updating order');
 		$user->orders()
 			->recent()
 			->update([
-				'product_id' => Session::get('productId'),
+				'product_id' => $product->id,
 				'session_id' => str_random(32),
 				'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 			]);
@@ -225,18 +203,5 @@ class PersonalDataController extends Controller
 		}
 
 		$order->attachCoupon($coupon);
-	}
-
-	protected function getIdentityNumbersArray(Request $request) {
-		$identityNumbers = [
-			'passport_number' => null,
-			'personal_identity_number' => null,
-		];
-
-		if (array_key_exists($request->get('identity_number_type'), $identityNumbers)) {
-			$identityNumbers[$request->get('identity_number_type')] = $request->get('identity_number');
-		}
-
-		return $identityNumbers;
 	}
 }

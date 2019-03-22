@@ -20,6 +20,7 @@ class Coupon extends Model
 	const KIND_STUDY_BUDDY = 'study_buddy';
 	const KIND_VOUCHER = 'voucher';
 	const KIND_PARTICIPANT = 'participant';
+	const SLUG_WNL_ONLINE_ONLY = 'wnl-online-only';
 
 	protected $dispatchesEvents = [
 		'created' => CouponCreated::class,
@@ -67,5 +68,10 @@ class Coupon extends Model
 		return trans($this->is_percentage ? 'common.percent' : 'common.currency', [
 			'value' => $this->value,
 		]);
+	}
+
+	public function isApplicableForProduct(Product $product): bool
+	{
+		return $this->products->count() === 0 || $this->products->contains($product);
 	}
 }

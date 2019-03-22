@@ -85,5 +85,6 @@
 		<script src="{{ mix('js/payment.js') }}"></script>
 		@yield('payment-scripts')
 		@yield('scripts')
+		@include('payment.facebook-messenger')
 	</body>
 </html>

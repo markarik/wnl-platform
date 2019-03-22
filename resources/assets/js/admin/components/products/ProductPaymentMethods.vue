@@ -26,7 +26,7 @@
 						/>
 					</td>
 					<td>
-						<label :for="method.id">{{ method.slug }}</label>
+						<label :for="method.id">{{ methodNames[method.slug] }}</label>
 					</td>
 					<td>
 						<wnl-datepicker
@@ -62,16 +62,16 @@
 				<thead>
 					<th>Numer raty</th>
 					<th>Rodzaj</th>
-					<th>Wartość</th>
+					<th>Wysokość raty</th>
 					<th>Termin (dni od zamówienia)</th>
 					<th>Termin (data)</th>
 				</thead>
 				<tbody>
 					<tr v-for="(instalment, index) in instalments" :key="index">
 						<td>{{ instalment.order_number }}</td>
-						<td>{{ instalment.value_type }}</td>
-						<td>{{ instalment.value }}</td>
-						<td>{{ instalment.due_days }}</td>
+						<td>{{ instalmentTypes[instalment.value_type] }}</td>
+						<td>{{ instalment.value }}{{ instalmentValueUnit(instalment.value_type) }}</td>
+						<td>{{ instalment.due_days || '-'}}</td>
 						<td>
 							<wnl-datepicker
 									v-if="!instalment.due_days"
@@ -80,6 +80,7 @@
 									:value="instalment.due_date"
 									@closed="dueDateUpdated($event, instalment.order_number)"
 							/>
+							<span v-else>-</span>
 						</td>
 					</tr>
 				</tbody>
@@ -89,11 +90,6 @@
 		<a class="button is-primary is-wide" v-if="!loadingMethods" @click="save">Zapisz</a>
 	</div>
 </template>
-
-<style lang="sass" scoped>
-	.wnl-table__cell--datepicker
-		width: 240px
-</style>
 
 <script>
 import {mapActions} from 'vuex';
@@ -151,15 +147,29 @@ export default {
 					due_date: null,
 				},
 			],
+			methodNames: {
+				instalments: 'Raty',
+				online: 'Płatność online (przelewy24)',
+				transfer: 'Przelew bankowy',
+
+			},
+			instalmentTypes: {
+				percentage: 'procent kwoty pozostałej do zapłaty',
+				amount: 'kwota',
+			}
 		};
 	},
 	computed: {
 		showInstalmentsSchedule() {
-			return !!this.selectedMethods.filter(item => item.slug === 'instalments').length;
+			return this.selectedMethods.some(item => item.slug === 'instalments');
 		},
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
+
+		instalmentValueUnit(type){
+			return type === 'percentage' ? '%' : 'zł';
+		},
 
 		getDate(id, date) {
 			const method = this.selectedMethods.find(item => item.id === id);
@@ -167,7 +177,7 @@ export default {
 		},
 
 		methodEnabled(id) {
-			return !!this.selectedMethods.filter(item => item.id === id).length;
+			return this.selectedMethods.some(item => item.id === id);
 		},
 
 		toggleMethod(event, id) {
@@ -226,10 +236,10 @@ export default {
 
 		async getProduct() {
 			const url = getApiUrl(`products/${this.id}?include=payment_methods,instalments`);
-			const {data: {included, ...product}} = await axios.get(url);
+			const {data: {included}} = await axios.get(url);
 			const productMethods = included ? Object.values(included.payment_methods) : [];
 			const instalments = included ? Object.values(included.instalments) : [];
-			return {product, productMethods, instalments};
+			return {productMethods, instalments};
 		}
 
 	},

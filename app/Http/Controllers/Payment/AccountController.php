@@ -40,7 +40,10 @@ class AccountController extends Controller
 				]);
 			}
 
-			if ($hasBoughtAlbum || (!$hasParticipantCoupon && $hasCurrentProduct)) {
+			if (
+				($hasBoughtAlbum && $hasCurrentProduct && $hasParticipantCoupon)
+				|| (!$hasParticipantCoupon && $hasCurrentProduct)
+			) {
 				return view('payment.account-no-available-product', [
 					'user' => $user,
 				]);

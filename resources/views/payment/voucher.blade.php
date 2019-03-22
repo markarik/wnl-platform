@@ -1,41 +1,40 @@
 @extends('layouts.checkout')
 
 @section('content')
-	@include('payment.cart')
-	<section class="section t-checkout__content">
-		<div>
-			@if (Auth::user() && Auth::user()->coupons->count() > 0)
-				<div class="notification has-text-centered">
-					@lang('payment.voucher-already-has', [ 'name' => Auth::user()->coupons[0]['name'] ])
-					<p>
-						<a href="{{ route('payment-account') }}">
-							@lang('payment.voucher-skip')
-						</a>
-					</p>
-				</div>
-			@endif
-			<div class="voucher-code">
-				<form action="{{ route('payment-voucher-post') }}" method="post">
+	<div class="t-checkout">
+		@include('payment.cart')
+		<div class="t-checkout__content">
+			<div class="o-voucher o-column">
+				<header class="o-column__row">
+					<h2 class="o-voucher__headline">Mask kod? Super 🎉</h2>
+					<h2 class="o-voucher__headline">Wpisz go poniżej, aby wykorzystać zniżkę.</h2>
+				</header>
+				<form action="{{ route('payment-voucher-post') }}" method="post" class="m-formGroup o-column">
 					{!! csrf_field() !!}
-
-					<p><label for="code">@lang('payment.voucher-label')</label></p>
-					<input type="text" class="code-input" id="code" name="code" placeholder="XXXXXXXX" value="{{ request('code') ?? session('_old_input.code') ?? '' }}">
-					@foreach ($errors->get('code') as $message)
-						<div class="is-error">{{ $message }}</div>
-					@endforeach
-					<p class="margin vertical has-text-centered">
-						<button type="submit" class="button is-primary">
+					<div class="o-column__row -largeSpace">
+						<label for="code" class="a-label">@lang('payment.voucher-label')</label>
+						<input
+								type="text"
+								id="code"
+								name="code"
+								placeholder="XXXXXXXX"
+								value="{{ request('code') ?? session('_old_input.code') ?? '' }}"
+								class="a-input"
+						>
+						@foreach ($errors->get('code') as $message)
+							<div class="a-error">{{ $message }}</div>
+						@endforeach
+					</div>
+					<div class="o-column__row -textCenter">
+						<button type="submit" class="a-button -big">
 							@lang('payment.voucher-submit')
 						</button>
-					</p>
-					<p class="voucher-skip has-text-centered">
-						<a href="{{ route('payment-account') }}">
-							@lang('payment.voucher-skip')
-						</a>
-					</p>
+					</div>
+					<a href="{{ route('payment-account') }}" class="a-linkInText -stormGray -textMinus1 -textCenter">
+						@lang('payment.voucher-skip')
+					</a>
 				</form>
 			</div>
 		</div>
-	</section>
-
+	</div>
 @endsection

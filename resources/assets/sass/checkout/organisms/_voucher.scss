@@ -1,0 +1,9 @@
+.o-voucher {
+  max-width: 620px;
+  margin: 0 auto;
+
+  .o-voucher__headline {
+    text-align: center;
+    @include textPlus3;
+  }
+}

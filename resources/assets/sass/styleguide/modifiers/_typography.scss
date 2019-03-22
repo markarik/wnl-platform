@@ -22,6 +22,10 @@
   text-transform: uppercase;
 }
 
+.-textCenter {
+  text-align: center;
+}
+
 .-textMinus2 {
   @include textMinus2;
 }

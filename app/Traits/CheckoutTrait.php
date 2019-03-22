@@ -37,14 +37,12 @@ trait CheckoutTrait
 
 	private function readCoupon(Product $product, ?User $user): ?Coupon {
 		/** @var Coupon $coupon */
-		$coupon = $user ? $user->coupons->first() : null;
+		$coupon = $user ? $user->coupons->last() : null;
 
 		if (session()->has('coupon')) {
 			$sessionCoupon = session()->get('coupon');
 
-			if (!$sessionCoupon instanceof Coupon) {
-				$coupon = null;
-			} else {
+			if ($sessionCoupon instanceof Coupon) {
 				$coupon = session()->get('coupon')->fresh();
 			}
 		}

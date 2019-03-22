@@ -1,0 +1,12 @@
+.o-column {
+  display: flex;
+  flex-direction: column;
+
+  .o-column__row {
+    margin-bottom: $space-s;
+
+    &.-largeSpace {
+      margin-bottom: $space-l;
+    }
+  }
+}

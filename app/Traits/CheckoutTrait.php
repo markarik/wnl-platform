@@ -43,7 +43,7 @@ trait CheckoutTrait
 			$sessionCoupon = session()->get('coupon');
 
 			if ($sessionCoupon instanceof Coupon) {
-				$coupon = session()->get('coupon')->fresh();
+				$coupon = $sessionCoupon->fresh();
 			}
 		}
 

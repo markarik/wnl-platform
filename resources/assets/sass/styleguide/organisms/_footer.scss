@@ -1,16 +1,18 @@
 .o-footer {
   @include textMinus1;
   background-color: $color-catalina-blue;
-  padding: 0 $space-m;
+  padding: 0 $space-xl;
   display: flex;
   flex-direction: column;
 
   @media #{$breakpoint-s} {
     flex-direction: row;
-    padding: $space-m 0;
+    padding: $space-xl 0;
   }
 
   &__block {
+    $breakpoint-s-max-width: 348px;
+
     padding: $space-m 0;
     display: flex;
     align-items: center;
@@ -19,7 +21,7 @@
     @media #{$breakpoint-s} {
       flex: 0 1 auto;
       padding: 0 0 0 $space-m;
-      max-width: 346px;
+      max-width: $breakpoint-s-max-width;
     }
 
     .a-icon {
@@ -35,6 +37,15 @@
       @media #{$breakpoint-s} {
         border-bottom: none;
         border-right: 1px solid $color-cadet-blue;
+      }
+    }
+
+    &.-last {
+      // Make place for Messenger plugin
+      max-width: 280px;
+
+      @media #{$breakpoint-s} {
+        max-width: $breakpoint-s-max-width;
       }
     }
   }

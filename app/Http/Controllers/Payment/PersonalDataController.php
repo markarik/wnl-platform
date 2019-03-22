@@ -49,7 +49,7 @@ class PersonalDataController extends Controller
 		$this->updateAccount($user, $request, $form);
 
 		if (!!Session::get('orderId')) {
-			$this->updateOrder($product, $user, $request);
+			$this->updateOrder($product, $user, $request, $coupon);
 		} else {
 			$this->createOrder($product, $user, $request);
 		}
@@ -176,16 +176,19 @@ class PersonalDataController extends Controller
 		}
 	}
 
-	protected function updateOrder(Product $product, User $user, Request $request)
+	protected function updateOrder(Product $product, User $user, Request $request, ?Coupon $coupon)
 	{
 		Log::notice('Updating order');
-		$user->orders()
-			->recent()
-			->update([
+		$order = $user->orders()->recent();
+		$order->update([
 				'product_id' => $product->id,
 				'session_id' => str_random(32),
 				'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 			]);
+
+		if (!empty($coupon)) {
+			$order->attachCoupon($coupon);
+		}
 	}
 
 	protected function addCoupon($order, $coupon)

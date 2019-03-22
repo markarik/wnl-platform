@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<img src="{{imageUrl}}">
+		<img :src="imageUrl">
 		<h2>Cześć {{currentUserName}} 👋</h2>
 		<p>Zanim rozpoczniesz naukę, poznasz najważniejsze funkcje platformy i kursu ⭐</p>
 		<div>
@@ -22,6 +22,8 @@
 </style>
 
 <script>
+import {mapGetters} from 'vuex';
+
 import {getImageUrl} from 'js/utils/env';
 
 export default {

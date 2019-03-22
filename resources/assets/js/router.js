@@ -37,6 +37,7 @@ import MessagesDashboard from 'js/components/messages/MessagesDashboard';
 import ModeratorsDashboard from 'js/components/moderators/ModeratorsDashboard';
 import MainUsers from 'js/components/users/MainUsers';
 import UserProfile from 'js/components/users/UserProfile';
+import Onboarding from 'js/components/onboarding/Onboarding';
 
 Vue.use(Router);
 
@@ -283,6 +284,12 @@ let routes = [
 		name: 'dashboard',
 		path: '/app',
 		redirect: {name: 'courses', params: {courseId: 1}},
+	},
+	{
+		name: 'onboarding',
+		path: '/app/onboarding/:step?',
+		component: Onboarding,
+		props: true,
 	},
 	{
 		name: 'logout',

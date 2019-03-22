@@ -10,7 +10,7 @@ use App\Models\Product;
 class ProductTransformer extends ApiTransformer
 {
 
-	protected $availableIncludes = [];
+	protected $availableIncludes = ['payment_methods', 'instalments'];
 	protected $parent;
 
 	public function __construct($parent = null)
@@ -47,5 +47,19 @@ class ProductTransformer extends ApiTransformer
 		}
 
 		return $data;
+	}
+
+	public function includePaymentMethods(Product $product)
+	{
+		$paymentMethods = $product->paymentMethods;
+		$transformer = new PaymentMethodTransformer(['products' => $product->id]);
+
+		return $this->collection($paymentMethods, $transformer, 'payment_methods');
+	}
+
+	public function includeInstalments(Product $product){
+		$instalments = $product->instalments;
+		$transformer = new ProductInstalmentTransformer(['products' => $product->id]);
+		return $this->collection($instalments, $transformer, 'instalments');
 	}
 }

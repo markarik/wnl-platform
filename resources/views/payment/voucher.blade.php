@@ -7,8 +7,8 @@
 			<div class="o-voucher o-column">
 				<img src="{{ asset('images/voucher_page_hero.svg') }}" class="o-column__row -largeSpace"/>
 				<header class="o-column__row">
-					<h2 class="o-voucher__headline">Mask kod? Super 🎉</h2>
-					<h2 class="o-voucher__headline">Wpisz go poniżej, aby wykorzystać zniżkę.</h2>
+					<div class="o-voucher__headline">Mask kod? Super 🎉</div>
+					<div class="o-voucher__headline">Wpisz go poniżej, aby wykorzystać zniżkę.</div>
 				</header>
 				<form action="{{ route('payment-voucher-post') }}" method="post" class="m-formGroup o-column">
 					{!! csrf_field() !!}

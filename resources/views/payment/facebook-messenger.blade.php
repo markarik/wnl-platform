@@ -21,6 +21,6 @@
 		 attribution=setup_tool
 		 page_id="1107802549311729"
 		 theme_color="#0D9EA0"
-		 logged_in_greeting="Cześ! Chętnie odpowiemy na Twoje pytania."
-		 logged_out_greeting="Cześ! Chętnie odpowiemy na Twoje pytania.">
+		 logged_in_greeting="Cześć! Chętnie odpowiemy na Twoje pytania."
+		 logged_out_greeting="Cześć! Chętnie odpowiemy na Twoje pytania.">
 </div>

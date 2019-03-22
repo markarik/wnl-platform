@@ -30,6 +30,11 @@ import { mapGetters, mapActions } from 'vuex';
 import SidenavSlot from 'js/components/global/SidenavSlot';
 import MainNav from 'js/components/MainNav';
 import WnlOnboardingScreenWelcome from 'js/components/onboarding/OnboardingScreenWelcome';
+import WnlOnboardingScreenLearningStyle from 'js/components/onboarding/OnboardingScreenLearningStyle';
+import WnlOnboardingScreenUserPlan from 'js/components/onboarding/OnboardingScreenUserPlan';
+import WnlOnboardingScreenTutorial from 'js/components/onboarding/OnboardingScreenTutorial';
+import WnlOnboardingScreenSatisfactionGuarantee from 'js/components/onboarding/OnboardingScreenSatisfactionGuarantee';
+import WnlOnboardingScreenFinal from 'js/components/onboarding/OnboardingScreenFinal';
 
 export default {
 	components: {
@@ -45,7 +50,12 @@ export default {
 	data() {
 		return {
 			stepComponents: {
-				'welcome': WnlOnboardingScreenWelcome
+				'welcome': WnlOnboardingScreenWelcome,
+				'learning-style': WnlOnboardingScreenLearningStyle,
+				'user-plan': WnlOnboardingScreenUserPlan,
+				'tutorial': WnlOnboardingScreenTutorial,
+				'satisfaction-guarantee': WnlOnboardingScreenSatisfactionGuarantee,
+				'final': WnlOnboardingScreenFinal,
 			}
 		};
 	},

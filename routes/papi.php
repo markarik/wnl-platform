@@ -295,6 +295,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::get("{$r['users']}/{id}/{$r['user-settings']}", 'UserSettingsApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-settings']}", 'UserSettingsApiController@put');
 
+	Route::get("{$r['users']}/{id}/{$r['user-product-state']}/latest", 'UserProductStateApiController@getForLatestProduct');
+	Route::put("{$r['users']}/{id}/{$r['user-product-state']}/latest", 'UserProductStateApiController@setForLatestProduct');
+
 	Route::patch("{$r['users']}/{userId}/forget", 'UsersApiController@forget');
 
 	Route::get("{$r['users']}/{userId}/{$r['user-personal-data']}", 'UserPersonalDataApiController@get');

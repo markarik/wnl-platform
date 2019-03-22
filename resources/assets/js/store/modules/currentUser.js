@@ -119,7 +119,9 @@ const actions = {
 		try {
 			[userResponse, subscriptionResponse] = await Promise.all([
 				axios.get(getApiUrl('users/current/profile?include=roles')),
-				axios.get(getApiUrl('user_subscription/current'))
+				axios.get(getApiUrl('user_subscription/current')),
+				axios.get(getApiUrl('users/current/user_product_state/latest'))
+				// TODO aggregare with serrings to one request
 			]);
 		} catch (error) {
 			$wnl.logger.error(error);

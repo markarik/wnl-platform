@@ -160,6 +160,10 @@ class User extends Authenticatable
 			->withPivot(['start_date']);
 	}
 
+	public function userProductStates() {
+		return $this->hasMany(UserProductState::class);
+	}
+
 	/**
 	 * Dynamic attributes
 	 */

@@ -13,6 +13,7 @@ return [
 		'user-address'            => 'address',
 		'user-billing-data'       => 'billing',
 		'user-settings'           => 'settings',
+		'user-product-state'      => 'user_product_state',
 		'user-avatar'             => 'avatar',
 		'user-password'           => 'password',
 		'user-notifications'      => 'notifications',

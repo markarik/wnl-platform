@@ -13,9 +13,9 @@
 		</a>
 	</p>
 
-	<p>Jeśli coś Ci tu nie gra, prosimy napisz do nas na info@wiecejnizlek.pl!</p>
+	<p>Jeśli masz wątpliwości, prosimy napisz do nas na <a href="mailto:info@wiecejnizlek.pl">info@wiecejnizlek.pl</a>.</p>
 
-	<p>Twoje konto <strong>zostanie automatycznie odblokowane po zaksięgowaniu wpłaty.</strong> 🙂</p>
+	<p>Twoje konto <strong>zostanie automatycznie odblokowane, gdy płatność zakończy się sukcesem.</strong> 🙂</p>
 
 	<p>Do zobaczenia!</p>
 @endsection

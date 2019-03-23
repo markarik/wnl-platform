@@ -41,7 +41,37 @@ class ProductsApiController extends ApiController
 		return $this->respondOk(['vat_rates' => Product::VAT_RATES]);
 	}
 
-	private function transformRequestParams($request) {
+	public function syncPaymentMethods(Product $product, Request $request)
+	{
+		$data = collect($request->payment_methods)->map(function ($item) {
+			return [
+				'payment_method_id' => $item['id'],
+				'start_date'        => $this->getDate($item['start_date']),
+				'end_date'          => $this->getDate($item['end_date']),
+			];
+		})->keyBy('payment_method_id');
+		$product->paymentMethods()->sync($data);
+	}
+
+	public function syncInstalments(Product $product, Request $request)
+	{
+		foreach ($request->instalments as $instalment) {
+			$product->instalments()->updateOrCreate(
+				['order_number' => $instalment['order_number']],
+				[
+					'due_date'     => $this->getDate($instalment['due_date']),
+					'order_number' => $instalment['order_number'],
+					'product_id'   => $instalment['product_id'],
+					'value_type'   => $instalment['value_type'],
+					'value'        => $instalment['value'],
+					'due_days'     => $instalment['due_days'],
+				]
+			);
+		}
+	}
+
+	private function transformRequestParams($request)
+	{
 		return [
 			'name'          => $request->name,
 			'invoice_name'  => $request->invoice_name,
@@ -62,11 +92,12 @@ class ProductsApiController extends ApiController
 		];
 	}
 
-	private function getDate($timestamp) {
+	private function getDate($timestamp)
+	{
 		if (!$timestamp) {
 			return null;
 		}
 
-		return Carbon::createFromTimestamp((int) $timestamp);
+		return Carbon::createFromTimestamp((int)$timestamp);
 	}
 }

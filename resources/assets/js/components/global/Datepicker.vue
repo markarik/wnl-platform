@@ -42,7 +42,7 @@ export default {
 			default: () => ({}),
 			type: Object,
 		},
-		value: [String, Date],
+		value: [String, Date, Number],
 		withBorder: Boolean
 	},
 	data() {

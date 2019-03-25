@@ -6,7 +6,7 @@
 
   @media #{$breakpoint-m} {
     animation: none;
-    padding: $space-xxl $space-m $space-l $space-m;
+    padding: $space-xxl $space-xxxl $space-l $space-m;
 
     &.-dNone {
       display: initial;
@@ -32,7 +32,7 @@
       padding: 0;
       flex-direction: column;
       max-width: 500px;
-      margin: 0 auto;
+      margin: 0 0 0 auto;
     }
   }
 
@@ -47,7 +47,7 @@
   &__card {
     background-color: $color-white;
     display: flex;
-    padding: $space-xxs $space-xs $space-s $space-xs;
+    padding: $space-xxs;
     border-radius: 5px;
     margin-bottom: $space-m;
 

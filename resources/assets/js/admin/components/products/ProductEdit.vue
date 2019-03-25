@@ -22,6 +22,7 @@
 
 import WnlProductDetailsEditor from './ProductDetailsEditor';
 import WnlProductLessonsEditor from './ProductLessonsEditor';
+import WnlProductPaymentMethods from './ProductPaymentMethods';
 
 export default {
 	components: { WnlProductDetailsEditor },
@@ -41,6 +42,10 @@ export default {
 				lessons: {
 					component: WnlProductLessonsEditor,
 					text: 'Powiązane lekcje'
+				},
+				payment: {
+					component: WnlProductPaymentMethods,
+					text: 'Metody płatności'
 				},
 			}
 		};

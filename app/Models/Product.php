@@ -68,7 +68,7 @@ class Product extends Model
 	{
 		return $this
 			->belongsToMany('App\Models\PaymentMethod')
-			->withPivot('start_date', 'end_date')
+			->withPivot(['start_date', 'end_date'])
 			->using('App\Models\PaymentMethodProduct');
 	}
 

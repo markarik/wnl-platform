@@ -100,17 +100,22 @@ trait SignsUpUsers
 	 * @param $user
 	 * @param $browser
 	 * @param bool $invoice
-	 * @param bool $password
+	 * @param bool $address
 	 */
-	protected function fillInPersonalDataForm($user, $browser, $invoice = false)
+	protected function fillInPersonalDataForm($user, $browser, $invoice = false, $address = true)
 	{
-		$browser->type('phone', $user['phoneNumber'])
+		$browser
 			->typeIfNotDisabled('first_name', $user['firstName'])
-			->typeIfNotDisabled('last_name', $user['lastName'])
-			->type('recipient', $user['recipient'])
-			->type('address', $user['address'])
-			->type('zip', $user['postcode'])
-			->type('city', $user['city']);
+			->typeIfNotDisabled('last_name', $user['lastName']);
+
+		if($address){
+			$browser
+				->type('phone', $user['phoneNumber'])
+				->type('recipient', $user['recipient'])
+				->type('address', $user['address'])
+				->type('zip', $user['postcode'])
+				->type('city', $user['city']);
+		}
 
 		$browser->typeIfNotDisabled('personal_identity_number', $user['personal_identity_number']);
 

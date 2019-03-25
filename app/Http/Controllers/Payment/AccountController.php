@@ -95,6 +95,6 @@ class AccountController extends Controller
 		Log::debug('User automatically logged in after registration.');
 
 
-		return redirect(route('payment-personal-data'));
+		return redirect(route('payment-personal-data', ['slug' => Product::SLUG_WNL_ONLINE]));
 	}
 }

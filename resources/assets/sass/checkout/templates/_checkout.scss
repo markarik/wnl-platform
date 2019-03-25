@@ -26,6 +26,10 @@
       padding: 0 $space-xxxl $space-xxxl;
     }
 
+    &.-centered {
+      margin: 0 auto;
+    }
+
     .t-checkout__content__row {
       margin-bottom: $space-l;
     }

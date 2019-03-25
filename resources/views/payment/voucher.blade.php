@@ -13,7 +13,7 @@
 				<form action="{{ route('payment-voucher-post') }}" method="post" class="m-formGroup o-column">
 					{!! csrf_field() !!}
 					<div class="o-column__row -largeSpace">
-						<label for="code" class="a-label">@lang('payment.voucher-label')</label>
+						<label for="code" class="a-label -required">@lang('payment.voucher-label')</label>
 						<input
 							type="text"
 							id="code"

@@ -38,11 +38,10 @@ import ModeratorsDashboard from 'js/components/moderators/ModeratorsDashboard';
 import MainUsers from 'js/components/users/MainUsers';
 import UserProfile from 'js/components/users/UserProfile';
 import Onboarding from 'js/components/onboarding/Onboarding';
-import {ONBOARDING_STEPS, ROLES} from 'js/consts/user';
 
 Vue.use(Router);
 
-let routes = [
+const routes = [
 	{
 		name: 'course',
 		path: '/app/courses/:courseId',
@@ -374,11 +373,10 @@ const router =  new Router({
 
 router.beforeEach(async (to, from, next) => {
 	await store.dispatch('setupCurrentUser');
-	const currentUser = store.getters.currentUser;
 
 	if (
 		to.matched.some(record => record.meta.requiresOnboardingPassed) &&
-		currentUser.productState.wizard_step !== ONBOARDING_STEPS.FINISHED && !currentUser.roles.includes(ROLES.ADMIN)
+		!store.getters.isOnboardingPassed
 	) {
 		return next('/app/onboarding');
 	}

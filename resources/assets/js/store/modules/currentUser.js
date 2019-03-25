@@ -2,6 +2,7 @@ import * as types from 'js/store/mutations-types';
 import { getApiUrl } from 'js/utils/env';
 import { set } from 'vue';
 import {USER_SETTING_NAMES} from 'js/consts/settings';
+import {ONBOARDING_STEPS, ROLES} from 'js/consts/user';
 
 let getCurrentUserPromise;
 
@@ -52,12 +53,13 @@ const getters = {
 	thickScrollbar: state => state.settings[USER_SETTING_NAMES.THICK_SCROLLBAR],
 	getAllSettings: state => state.settings,
 	hasRole: state => role => state.profile.roles.indexOf(role) > -1,
-	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
-	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
+	isAdmin: state => state.profile.roles.indexOf(ROLES.ADMIN) > -1,
+	isModerator: state => state.profile.roles.indexOf(ROLES.MODERATOR) > -1,
 	isCurrentUserLoading: state => state.loading,
 	currentUserStats: state => state.stats,
 	currentUserSubscriptionDates: state => state.profile.subscription.dates,
 	currentUserSubscriptionActive: state => state.profile.subscription.status === 'active',
+	isOnboardingPassed: (state, getters) => getters.currentUser.wizard_step === ONBOARDING_STEPS.FINISHED,
 };
 
 // Mutations

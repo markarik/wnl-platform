@@ -16,13 +16,13 @@
 			<component
 				:is="currentStepComponent"
 			/>
-			<div v-if="currentStep.getCustomButtons">
-				<router-link
-					v-for="(customButton, index) in currentStep.getCustomButtons()"
+			<div v-if="currentStep.customButtons">
+				<button
+					v-for="(customButton, index) in currentStep.customButtons"
 					:class="customButton.class || 'button is-primary'"
 					:key="index"
-					:to="customButton.linkTo || getNextStepLink()"
-				>{{customButton.label}}</router-link>
+					@click="customButton.onClick"
+				>{{customButton.label}}</button>
 			</div>
 			<router-link
 				v-else
@@ -74,9 +74,30 @@ export default {
 			required: false,
 		}
 	},
-	data() {
-		return {
-			steps: [
+	computed: {
+		...mapGetters([
+			'currentUser',
+			'currentUserId',
+			'isSidenavVisible',
+			'isSidenavMounted',
+		]),
+		currentStep() {
+			return this.steps.find(({name}) => name === this.step);
+		},
+		currentStepComponent() {
+			return this.currentStep.component;
+		},
+		currentStepIndex() {
+			return this.steps.findIndex(({name}) => name === this.step);
+		},
+		currentStepIndexForStepper() {
+			return this.stepsForStepper.findIndex(({name}) => name === this.step);
+		},
+		stepsForStepper() {
+			return this.steps.filter(step => !step.hideOnStepper);
+		},
+		steps() {
+			return [
 				{
 					name: ONBOARDING_STEPS.WELCOME,
 					component: WnlOnboardingScreenWelcome,
@@ -106,9 +127,13 @@ export default {
 					component: WnlOnboardingScreenSatisfactionGuarantee,
 					text: 'Gwarancja ',
 					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.SATISFACTION_GUARANTEE}},
-					getCustomButtons: () => [
+					customButtons: [
 						{
 							label: 'Rozumiem, dalej',
+							onClick: () => {
+								// eslint-disable-next-line vue/no-side-effects-in-computed-properties
+								this.$router.push(this.getNextStepLink());
+							},
 						},
 					],
 				},
@@ -117,44 +142,37 @@ export default {
 					component: WnlOnboardingScreenFinal,
 					text: 'Powitanie',
 					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.FINAL}},
-					getCustomButtons: () => [
+					customButtons: [
 						{
 							class: 'button is-secondary',
 							label: 'Pomijam Wstępny LEK',
-							linkTo: {name: resource('courses'), params: {courseId: 1}}
+							onClick: () => {
+								// eslint-disable-next-line vue/no-async-in-computed-properties
+								this.updateUserProductState({
+									onboarding_step: ONBOARDING_STEPS.FINISHED
+								}).then(() => {
+									// eslint-disable-next-line vue/no-side-effects-in-computed-properties
+									this.$router.push({name: resource('courses'), params: {courseId: 1}});
+								});
+							},
 						},
 						{
 							label: 'Otwórz Wstępny LEK',
-							// FIXME ids should be dynamic and come from backend
-							linkTo: {name: resource('lessons'), params: {courseId: 1, lessonId: 85}}
+							onClick: () => {
+								// eslint-disable-next-line vue/no-async-in-computed-properties
+								this.updateUserProductState({
+									onboarding_step: ONBOARDING_STEPS.FINISHED
+								}).then(() => {
+									// FIXME ids should be dynamic and come from backend
+									// eslint-disable-next-line vue/no-side-effects-in-computed-properties
+									this.$router.push({name: resource('lessons'), params: {courseId: 1, lessonId: 85}});
+								});
+							}
 						}
 					]
 				},
-			]
-		};
-	},
-	computed: {
-		...mapGetters([
-			'currentUser',
-			'currentUserId',
-			'isSidenavVisible',
-			'isSidenavMounted',
-		]),
-		currentStep() {
-			return this.steps.find(({name}) => name === this.step);
-		},
-		currentStepComponent() {
-			return this.currentStep.component;
-		},
-		currentStepIndex() {
-			return this.steps.findIndex(({name}) => name === this.step);
-		},
-		currentStepIndexForStepper() {
-			return this.stepsForStepper.findIndex(({name}) => name === this.step);
-		},
-		stepsForStepper() {
-			return this.steps.filter(step => !step.hideOnStepper);
-		},
+			];
+		}
 	},
 	methods: {
 		...mapActions([
@@ -167,7 +185,6 @@ export default {
 			return nextStep ? nextStep.linkTo : null;
 		},
 		validateAndSyncCurrentStep() {
-			// TODO Why do we need .productState? We don't need it for isOnboardingPassed. Unify if possible.
 			const lastStep = this.currentUser.productState.onboarding_step;
 
 			if (this.currentStepIndex === -1) {

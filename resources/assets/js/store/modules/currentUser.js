@@ -59,7 +59,7 @@ const getters = {
 	currentUserStats: state => state.stats,
 	currentUserSubscriptionDates: state => state.profile.subscription.dates,
 	currentUserSubscriptionActive: state => state.profile.subscription.status === 'active',
-	isOnboardingPassed: (state, getters) => getters.currentUser.onboarding_step === ONBOARDING_STEPS.FINISHED || getters.isAdmin,
+	isOnboardingPassed: (state, getters) => getters.currentUser.productState.onboarding_step === ONBOARDING_STEPS.FINISHED || getters.isAdmin,
 };
 
 // Mutations
@@ -231,7 +231,7 @@ const actions = {
 	},
 
 	updateUserProductState({commit, state}, payload) {
-		axios.put(getApiUrl(`users/${getters.currentUserId(state)}/user_product_state/latest`), payload)
+		return axios.put(getApiUrl(`users/${getters.currentUserId(state)}/user_product_state/latest`), payload)
 			.then(() => {
 				commit(types.USERS_UPDATE_CURRENT, {
 					productState: payload

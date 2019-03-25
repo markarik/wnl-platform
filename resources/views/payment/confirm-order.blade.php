@@ -45,8 +45,12 @@
 						<div class="m-formGroup -checkbox -marginLess">
 							<input type="radio" name="payment_method" value="now" id="paymentMethodNow" class="a-radio" checked/>
 							<div>
-								<label for="paymentMethodNow" class="m-paymentOption__label">@lang('payment.confirm-order-payment-method-now-label')</label>
-								<span class="m-paymentOption__info">@lang('payment.confirm-order-payment-method-now-info')</span>
+								@if ($order->product->slug === App\Models\Product::SLUG_WNL_ONLINE)
+									<label for="paymentMethodNow" class="m-paymentOption__label">@lang('payment.confirm-order-payment-method-now-label')</label>
+									<span class="m-paymentOption__info">@lang('payment.confirm-order-payment-method-now-info')</span>
+								@else
+									<label for="paymentMethodNow" class="m-paymentOption__label">@lang('payment.confirm-order-payment-method-now-label-album')</label>
+								@endif
 							</div>
 						</div>
 						<i class="a-icon -medium fa-thumbs-up"></i>
@@ -57,7 +61,9 @@
 							<input type="radio" name="payment_method" value="later" id="paymentMethod7days" class="a-radio"/>
 							<div>
 								<label for="paymentMethod7days" class="m-paymentOption__label">@lang('payment.confirm-order-payment-method-later-label')</label>
-								<span class="m-paymentOption__info">@lang('payment.confirm-order-payment-method-later-info')</span>
+								@if ($order->product->slug === App\Models\Product::SLUG_WNL_ONLINE)
+									<span class="m-paymentOption__info">@lang('payment.confirm-order-payment-method-later-info')</span>
+								@endif
 							</div>
 						</div>
 						<i class="a-icon -medium fa-calendar"></i>

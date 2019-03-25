@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use JavaScript;
 
 class AppController extends Controller
 {
 	public function index()
 	{
+		$user = Auth::user();
+		if (!$user->signUpComplete) {
+			return redirect()->route('payment-account');
+		}
+
+
 		JavaScript::put([
 			'env'    => [
 				'appDebug'           => env('APP_DEBUG'),
@@ -21,6 +28,7 @@ class AppController extends Controller
 				'SENTRY_DSN_VUE_PUB' => env('SENTRY_DSN_VUE_PUB'),
 				'MODERATORS_CHANNEL' => env('MODERATORS_CHANNEL', 3),
 				'appVersion'         => config('app.version'),
+				'appInstanceName'    => config('app.instance_name'),
 				'sadHost'            => env('SAD_HOST'),
 				'sadPort'            => env('SAD_PORT')
 			],

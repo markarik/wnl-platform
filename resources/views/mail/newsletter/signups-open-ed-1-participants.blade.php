@@ -51,7 +51,7 @@
 
 
 	<div style="text-align: center; margin: 10px auto 20px;">
-		<a class="button" href="https://platforma.wiecejnizlek.pl/payment/select-product">
+		<a class="button" href="https://platforma.wiecejnizlek.pl/payment/account">
 			Zapisz się na kurs
 		</a>
 	</div>

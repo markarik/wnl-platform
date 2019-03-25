@@ -5,15 +5,16 @@ namespace Tests\Browser\Tests\Payment\Modules;
 
 
 use App\Models\Coupon;
+use App\Models\StudyBuddy;
 use Tests\BethinkBrowser;
-use Tests\Browser\Pages\Payment\SelectProductPage;
+use Tests\Browser\Pages\Payment\AccountPage;
 use Tests\Browser\Pages\Payment\VoucherPage;
 
 class VoucherModule
 {
-	public function default(BethinkBrowser $browser)
+	public function code10Percent(BethinkBrowser $browser)
 	{
-		$this->useCode($browser);
+		$this->useCode($browser, 10);
 	}
 
 	public function code100Percent($browser)
@@ -23,28 +24,18 @@ class VoucherModule
 
 	public function skip(BethinkBrowser $browser)
 	{
-		if (!empty($browser->studyBuddy)) {
-			$this->useCode($browser);
-			return;
-		}
-
 		$browser
 			->visit(new VoucherPage())
 			->click('@skip')
 			->assertPathIs(
-				(new SelectProductPage)->url()
+				(new AccountPage)->url()
 			);
 	}
 
-	protected function useCode(BethinkBrowser $browser, $value = 10)
+	protected function useCode(BethinkBrowser $browser, int $value)
 	{
-		if (!empty($browser->studyBuddy)) {
-			$this->studyBuddy($browser);
-			return;
-		}
-
 		$coupon = factory(Coupon::class)->create([
-			'value' => $value,
+			'value' => $value
 		]);
 
 		$browser->coupon = $coupon;
@@ -54,22 +45,20 @@ class VoucherModule
 			->type('code', $coupon->code)
 			->click('@use')
 			->assertPathIs(
-				(new SelectProductPage)->url()
+				(new AccountPage)->url()
 			);
 	}
 
-	protected function studyBuddy(BethinkBrowser $browser)
+	public function codeStudyBuddy(BethinkBrowser $browser, StudyBuddy $studyBuddy)
 	{
-		$studyBuddy = $browser->studyBuddy;
-
 		$browser->coupon = $studyBuddy->coupon;
 
 		$browser
 			->visit(new VoucherPage)
-			->type('code', $browser->studyBuddy->code)
+			->type('code', $studyBuddy->code)
 			->click('@use')
 			->assertPathIs(
-				(new SelectProductPage)->url()
+				(new AccountPage)->url()
 			);
 	}
 }

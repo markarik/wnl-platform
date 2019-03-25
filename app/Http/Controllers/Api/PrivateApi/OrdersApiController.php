@@ -42,6 +42,7 @@ class OrdersApiController extends ApiController
 	{
 		$user = Auth::user();
 		$orderId = $request->route('id');
+		/** @var Order $order */
 		$order = $user->orders()->find($orderId);
 
 		$code = mb_convert_case($request->code, MB_CASE_UPPER, "UTF-8");
@@ -79,14 +80,16 @@ class OrdersApiController extends ApiController
 	/**
 	 * Additional coupon validation, that couldn't be done
 	 * in custom request class.
+	 *
+	 * @param Order $order
+	 * @param Coupon $coupon
+	 * @return array
 	 */
-	public function validateCoupon($order, $coupon)
+	public function validateCoupon(Order $order, Coupon $coupon)
 	{
 		$errors = [];
 
-		if ($coupon->products->count() > 0 &&
-			!$coupon->products->contains($order->product)
-		) {
+		if (!$coupon->isApplicableForProduct($order->product)) {
 			array_push($errors, trans('payment.voucher-product-incompatible'));
 		}
 

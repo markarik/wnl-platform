@@ -1,0 +1,39 @@
+.o-stepper {
+  display: flex;
+  width: 100%;
+  margin-bottom: $space-m;
+
+  .o-stepper__step {
+    border-top: 4px solid $color-mischka;
+    color: $color-cadet-blue;
+    flex: 1 0 auto;
+    font-size: $font-size-minus-1;
+    padding-right: $space-s;
+    padding-top: $space-xxxs;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    a {
+      color: inherit;
+      cursor: inherit;
+    }
+
+    &.-done a {
+      color: $color-storm-gray;
+      cursor: pointer;
+
+      &:hover {
+        color: $color-blue-chill;
+      }
+    }
+
+    &.-done, &.-active {
+      border-color: $color-blue-chill;
+    }
+
+    &.-active {
+      color: $color-blue-chill;
+    }
+  }
+}

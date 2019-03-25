@@ -12,7 +12,7 @@
 		</div>
 		<div v-else>
 			<p class="title is-5">
-				Zanim zakończysz tę lekcję, sprawdź swoją wiedzę z wczorajszej! <wnl-emoji name="thinking_face"></wnl-emoji>
+				Sprawdź swoją wiedzę z wczorajszej lekcji! <wnl-emoji name="thinking_face"></wnl-emoji>
 			</p>
 			<p class="big">
 				Po każdym podejściu, na ekranie pozostaną tylko błędnie rozwiązane pytania. Aby zakończyć test, odpowiadasz do skutku! Żeby nie było zbyt łatwo, kolejność odpowiedzi będzie każdorazowo zmieniana. Powodzenia!

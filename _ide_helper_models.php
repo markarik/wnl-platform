@@ -459,11 +459,9 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property int $course_id
- * @property int $order_number
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Course $course
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lesson[] $lessons
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Group newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Group newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Group query()
@@ -471,7 +469,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Group whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Group whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Group whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Group whereOrderNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Group whereUpdatedAt($value)
  */
 	class Group extends \Eloquent {}
@@ -577,6 +574,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Coupon|null $coupon
  * @property-read mixed $coupon_amount
+ * @property-read mixed $has_shipment
  * @property-read mixed $instalments
  * @property-read mixed $is_overdue
  * @property-read mixed $total_with_coupon
@@ -779,8 +777,8 @@ namespace App\Models{
  * App\Models\User
  *
  * @property int $id
- * @property string $first_name
- * @property string $last_name
+ * @property string|null $first_name
+ * @property string|null $last_name
  * @property string $email
  * @property string $password
  * @property string|null $address
@@ -812,12 +810,12 @@ namespace App\Models{
  * @property-read mixed $full_name
  * @property-read mixed $identity_number
  * @property-read array $identity_numbers
+ * @property-read mixed $initials
  * @property-read mixed $is_subscriber
  * @property-read mixed $recipient
+ * @property-read mixed $sign_up_complete
  * @property-read mixed $subscription_dates
  * @property-read mixed $subscription_status
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lesson[] $lessonsAvailability
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lesson[] $lessonsAvailabilityUnordered
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
  * @property-read \App\Models\UserPersonalData $personalData
@@ -830,6 +828,7 @@ namespace App\Models{
  * @property-read \App\Models\UserSubscription $subscription
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Task[] $tasks
  * @property-read \App\Models\UserAddress $userAddress
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lesson[] $userLessons
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserTime[] $userTime
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newQuery()
@@ -955,25 +954,20 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $name
- * @property int|null $group_id
- * @property int $order_number
  * @property int $is_required
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\FlashcardsSet $flashcardsSets
  * @property-read mixed $questions
- * @property-read \App\Models\Group|null $group
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Screen[] $screens
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lesson newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lesson newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lesson query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lesson whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lesson whereGroupId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lesson whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lesson whereIsRequired($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lesson whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lesson whereOrderNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Lesson whereUpdatedAt($value)
  */
 	class Lesson extends \Eloquent {}
@@ -1358,15 +1352,22 @@ namespace App\Models{
 /**
  * App\Models\LessonProduct
  *
+ * @property int $id
  * @property int $lesson_id
  * @property int $product_id
  * @property \Illuminate\Support\Carbon|null $start_date
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Lesson $lesson
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LessonProduct newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LessonProduct newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LessonProduct query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LessonProduct whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LessonProduct whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LessonProduct whereLessonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LessonProduct whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LessonProduct whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\LessonProduct whereUpdatedAt($value)
  */
 	class LessonProduct extends \Eloquent {}
 }
@@ -1421,6 +1422,8 @@ namespace App\Models{
  *
  * @property int $id
  * @property string|null $name
+ * @property int $lesson_id
+ * @property string|null $description
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuizQuestion[] $questions
@@ -1428,7 +1431,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QuizSet newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QuizSet query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QuizSet whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QuizSet whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QuizSet whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QuizSet whereLessonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QuizSet whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QuizSet whereUpdatedAt($value)
  */
@@ -1964,6 +1969,7 @@ namespace App\Models{
  * @property int|null $times_usable
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $kind
  * @property-read mixed $is_percentage
  * @property-read mixed $value_with_unit
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
@@ -1977,6 +1983,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Coupon whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Coupon whereExpiresAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Coupon whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Coupon whereKind($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Coupon whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Coupon whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Coupon whereTimesUsable($value)

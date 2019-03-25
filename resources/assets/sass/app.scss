@@ -12,12 +12,15 @@
 @import "mixins";
 @import "transitions";
 @import "./views/login";
+@import "styleguide/styleguide";
 
 // Fonts
 $fa-font-path: "../../../node_modules/font-awesome/fonts";
 @import "node_modules/font-awesome/scss/font-awesome";
 @import "fonts";
 
+// Pages
+@import "checkout/checkout.scss";
 
 // Layout
 $navbar-height: 3.5rem;
@@ -261,14 +264,6 @@ html {
 
 // Payment
 
-.payment-content {
-
-	.text-danger {
-		font-size: $font-size-minus-1;
-		font-weight: $font-weight-bold;
-	}
-}
-
 section.voucher {
 	display: flex;
 	flex-direction: column;
@@ -310,90 +305,6 @@ section.voucher {
 
 	.voucher-skip {
 		margin-top: $margin-huge;
-	}
-}
-
-#payment-steps {
-	margin-bottom: 3em;
-}
-
-.payment-step {
-	align-items: center;
-	border-color: $color-white-transparent;
-	color: $color-white-transparent;
-	display: flex;
-	flex-direction: column;
-	text-align: center;
-
-	&.is-active {
-		border-color: $color-white;
-		color: $color-white;
-	}
-
-	&.is-current {
-
-		.payment-step-count {
-			@include glow;
-		}
-
-		.payment-step-text {
-			font-weight: $font-weight-black;
-		}
-	}
-}
-
-.payment-step-count {
-	border: 2px solid;
-	border-radius: $border-radius-full;
-	display: block;
-	font-size: $font-size-plus-5;
-	font-weight: $font-weight-black;
-	line-height: 1.5em;
-	margin-bottom: 10px;
-	height: 1.7em;
-	width: 1.7em;
-}
-
-.payment-step-text {
-	font-size: $font-size-minus-1;
-}
-
-.onsite-plus {
-	display: block;
-	font-size: $font-size-plus-7;
-	text-align: center;
-	width: 100%;
-}
-
-.sublist-group {
-	list-style-type: disc;
-	margin: 5px 30px 15px 30px;
-}
-
-.box.wnl-album {
-	margin-bottom: 40px;
-	.columns {
-		.column:last-child {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-		}
-	}
-}
-
-.section.select-product {
-	.button {
-		white-space: normal;
-	}
-}
-
-.identity-number-select {
-	align-items: center;
-	display: flex;
-	margin: $margin-base 0;
-
-	label {
-		margin: 0 $margin-big 0 $margin-small;
 	}
 }
 

@@ -399,4 +399,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// CSRF token
 	Route::get("token", 'TokenApiController@getToken');
+
+	// Products
+	Route::get("{$r['products']}/bySlug/{slug}", 'ProductsApiController@getBySlug');
 });

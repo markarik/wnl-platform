@@ -198,36 +198,14 @@ class User extends Authenticatable
 		return $this->userAddress->city ?? '';
 	}
 
-	/**
-	 * TODO: https://bethink.atlassian.net/browse/PLAT-556
-	 * Returns users all identity numbers
-	 * @return array An associate array with types of
-	 */
-	public function getIdentityNumbersAttribute() {
-		$numbers = [
-			[
-				'type' => 'personal_identity_number',
-				'value' => $this->personalData->personal_identity_number ?? null,
-			],
-			[
-				'type' => 'identity_card_number',
-				'value' => $this->personalData->identity_card_number ?? null,
-			],
-			[
-				'type' => 'passport_number',
-				'value' => $this->personalData->passport_number ?? null,
-			],
-		];
-
-		return array_values(array_filter($numbers, function ($number) {
-			return !empty($number['value']);
-		}));
+	public function getPersonalIdentityNumberAttribute()
+	{
+		return $this->personalData->personal_identity_number ?? null;
 	}
 
-	// TODO: https://bethink.atlassian.net/browse/PLAT-556
-	public function getIdentityNumberAttribute()
+	public function getPassportNumberAttribute()
 	{
-		return $this->identity_numbers[0]['value'] ?? null;
+		return $this->personalData->passport_number ?? null;
 	}
 
 	public function getIsSubscriberAttribute()
@@ -263,9 +241,28 @@ class User extends Authenticatable
 		return "{$addr->street}, {$addr->zip} {$addr->city}";
 	}
 
+	public function getInitialsAttribute() {
+		$initials = '';
+
+		if ($this->first_name) {
+			$initials .= mb_strtoupper($this->first_name[0]);
+		}
+		if ($this->last_name) {
+			$initials .= mb_strtoupper($this->last_name[0]);
+		}
+
+		return $initials;
+	}
+
+	public function getSignUpCompleteAttribute() {
+		return !($this->first_name === null || $this->last_name === null);
+	}
+
 	protected function getSubscriptionStatus($dates)
 	{
-		if ($this->hasRole(['admin', 'moderator', 'test'])) return self::SUBSCRIPTION_STATUS_ACTIVE;
+		if ($this->hasRole([Role::ROLE_ADMIN, Role::ROLE_MODERATOR, Role::ROLE_TEST])) {
+			return self::SUBSCRIPTION_STATUS_ACTIVE;
+		}
 
 		list ($min, $max) = $dates;
 
@@ -319,6 +316,13 @@ class User extends Authenticatable
 			});
 	}
 
+	public function getProducts() {
+		return $this->orders()->join('products', 'orders.product_id', '=', 'products.id')
+			->where('paid', 1)
+			->where('canceled', 0)
+			->get();
+	}
+
 	/**
 	 * @return Collection|Lesson[]
 	 */
@@ -354,6 +358,27 @@ class User extends Authenticatable
 	public function sendPasswordResetNotification($token)
 	{
 		$this->notify(new ResetPasswordNotification($token));
+	}
+
+	public static function createWithProfileAndBilling($userData) {
+		/** @var User $user */
+		$user = static::create($userData);
+
+		$user->profile()->create([
+			'first_name' => $user->first_name,
+			'last_name'  => $user->last_name,
+		]);
+
+		$user->billing()->create([
+			'company_name' => $user->invoice_name,
+			'vat_id'       => $user->invoice_nip,
+			'address'      => $user->invoice_address,
+			'zip'          => $user->invoice_zip,
+			'city'         => $user->invoice_city,
+			'country'      => $user->invoice_country,
+		]);
+
+		return $user;
 	}
 
 	/**

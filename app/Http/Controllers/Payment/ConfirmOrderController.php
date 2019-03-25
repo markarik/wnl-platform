@@ -3,30 +3,36 @@
 namespace App\Http\Controllers\Payment;
 
 use App\Models\Order;
+use App\Models\OrderInstalment;
 use App\Models\Payment as PaymentModel;
+use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Lib\Przelewy24\Client as Payment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class ConfirmOrderController extends Controller
 {
 	public function index(Payment $payment)
 	{
 		$user = Auth::user();
-
-		if (!$user) {
-			Log::notice('Auth failed, redirecting...');
-
-			return redirect(route('payment-select-product'));
-		}
-
 		Log::debug('Order confirmation');
 
+		/** @var Order $order */
 		$order = $user->orders()->recent();
-		$amount = (int)$order->total_with_coupon * 100;
+
+		$coupon = $order->coupon;
+		$productPriceWithCoupon = $order->total_with_coupon;
+
+		$amount = (int)$productPriceWithCoupon * 100;
 		$checksum = $payment::generateChecksum($order->session_id, $amount);
+
+		/** @var PaymentMethod $paymentMethodInstalments */
+		$paymentMethodInstalments = $order->product->paymentMethods
+			->where('slug', 'instalments')
+			->first();
 
 		$viewData = [
 			'order' => $order,
@@ -34,19 +40,21 @@ class ConfirmOrderController extends Controller
 			'checksum' => $checksum,
 			'amount'      => $amount,
 			'returnUrl'  => $this->getReturnUrl($amount),
-			'instalments' => null
+			'instalments' => null,
+			'coupon' => $coupon,
+			'productPriceWithCoupon' => $productPriceWithCoupon,
+			'paymentMethodInstalments' => $paymentMethodInstalments,
 		];
 
-		$productInstalments = $order->product->paymentMethods
-			->where('slug', 'instalments')
-			->first();
+		if (!empty($paymentMethodInstalments) && $paymentMethodInstalments->isAvailable()) {
+			$paymentSchedule = $order->generatePaymentSchedule();
 
-		if (!empty($productInstalments)) {
-			$instalments = $productInstalments->isAvailable() ? $order->instalments['instalments'] : false;
-			$firstInstalmentAmount = (int) ((int) $order->total_with_coupon === 0 ? 0 : $instalments[0]['amount'] * 100);
+			/** @var OrderInstalment $firstInstalment */
+			$firstInstalment = $paymentSchedule->first();
+			$firstInstalmentAmount = (int) ((int) $order->total_with_coupon === 0 ? 0 : $firstInstalment->amount * 100);
 			$instalmentsChecksum = $payment::generateChecksum($order->session_id, $firstInstalmentAmount);
 
-			$viewData['instalments'] = $instalments;
+			$viewData['instalments'] = $paymentSchedule;
 			$viewData['instalmentsChecksum'] = $instalmentsChecksum;
 		}
 
@@ -61,7 +69,7 @@ class ConfirmOrderController extends Controller
 		$order->method = $request->input('method');
 		$order->save();
 
-		session()->forget(['coupon', 'product']);
+		Session::forget(['coupon', 'productId', 'orderId']);
 
 		$amount = (int)$order->total_with_coupon * 100;
 		return redirect($this->getReturnUrl($amount));

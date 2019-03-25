@@ -184,7 +184,7 @@ export default {
 			return this.isSidenavOpen ? 'fa-close' : 'fa-bars';
 		},
 		signUpLink() {
-			return getUrl('payment/select-product');
+			return getUrl('payment/account');
 		},
 	},
 	methods: {

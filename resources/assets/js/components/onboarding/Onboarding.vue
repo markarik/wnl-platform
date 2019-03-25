@@ -7,29 +7,26 @@
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
-		<div v-if="currentStep" class="scrollable-main-container">
-			<wnl-stepper
-				:steps="stepsForStepper"
-				:current-step="currentStepIndexForStepper"
-				v-if="!currentStep.hideOnStepper"
-			/>
-			<component
-				:is="currentStepComponent"
-			/>
-			<div v-if="currentStep.customButtons">
+
+			<div v-if="currentStep" class="scrollable-main-container">
+				<wnl-stepper
+					:steps="stepsForStepper"
+					:current-step="currentStepIndexForStepper"
+					v-if="!currentStep.hideOnStepper"
+				/>
+				<component
+					:is="currentStep.component"
+				/>
 				<button
-					v-for="(customButton, index) in currentStep.customButtons"
-					:class="customButton.class || 'button is-primary'"
-					:key="index"
-					@click="customButton.onClick"
-				>{{customButton.label}}</button>
+					v-if="isLastStep"
+					class="button is-secondary"
+					@click="onCancelClick"
+				>Pomijam Wstępny LEK</button>
+				<button
+					class="button is-primary"
+					@click="onNextClick"
+				>{{currentStep.buttonText || 'Dalej'}}</button>
 			</div>
-			<router-link
-				v-else
-				class="button is-primary"
-				:to="getNextStepLink()"
-			>Dalej</router-link>
-		</div>
 	</div>
 </template>
 
@@ -74,30 +71,9 @@ export default {
 			required: false,
 		}
 	},
-	computed: {
-		...mapGetters([
-			'currentUser',
-			'currentUserId',
-			'isSidenavVisible',
-			'isSidenavMounted',
-		]),
-		currentStep() {
-			return this.steps.find(({name}) => name === this.step);
-		},
-		currentStepComponent() {
-			return this.currentStep.component;
-		},
-		currentStepIndex() {
-			return this.steps.findIndex(({name}) => name === this.step);
-		},
-		currentStepIndexForStepper() {
-			return this.stepsForStepper.findIndex(({name}) => name === this.step);
-		},
-		stepsForStepper() {
-			return this.steps.filter(step => !step.hideOnStepper);
-		},
-		steps() {
-			return [
+	data() {
+		return {
+			steps: [
 				{
 					name: ONBOARDING_STEPS.WELCOME,
 					component: WnlOnboardingScreenWelcome,
@@ -127,64 +103,53 @@ export default {
 					component: WnlOnboardingScreenSatisfactionGuarantee,
 					text: 'Gwarancja ',
 					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.SATISFACTION_GUARANTEE}},
-					customButtons: [
-						{
-							label: 'Rozumiem, dalej',
-							onClick: () => {
-								// eslint-disable-next-line vue/no-side-effects-in-computed-properties
-								this.$router.push(this.getNextStepLink());
-							},
-						},
-					],
+					buttonText: 'Rozumiem, dalej',
 				},
 				{
 					name: ONBOARDING_STEPS.FINAL,
 					component: WnlOnboardingScreenFinal,
 					text: 'Powitanie',
 					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.FINAL}},
-					customButtons: [
-						{
-							class: 'button is-secondary',
-							label: 'Pomijam Wstępny LEK',
-							onClick: () => {
-								// eslint-disable-next-line vue/no-async-in-computed-properties
-								this.updateUserProductState({
-									onboarding_step: ONBOARDING_STEPS.FINISHED
-								}).then(() => {
-									// eslint-disable-next-line vue/no-side-effects-in-computed-properties
-									this.$router.push({name: resource('courses'), params: {courseId: 1}});
-								});
-							},
-						},
-						{
-							label: 'Otwórz Wstępny LEK',
-							onClick: () => {
-								// eslint-disable-next-line vue/no-async-in-computed-properties
-								this.updateUserProductState({
-									onboarding_step: ONBOARDING_STEPS.FINISHED
-								}).then(() => {
-									// FIXME ids should be dynamic and come from backend
-									// eslint-disable-next-line vue/no-side-effects-in-computed-properties
-									this.$router.push({name: resource('lessons'), params: {courseId: 1, lessonId: 85}});
-								});
-							}
-						}
-					]
+					buttonText: 'Otwórz Wstępny LEK',
 				},
-			];
-		}
+			]
+		};
+	},
+	computed: {
+		...mapGetters([
+			'currentUser',
+			'currentUserId',
+			'isSidenavVisible',
+			'isSidenavMounted',
+		]),
+		currentStep() {
+			return this.steps.find(({name}) => name === this.step);
+		},
+		nextStep() {
+			return this.steps[this.currentStepIndex + 1] || null;
+		},
+		isLastStep() {
+			return this.nextStep === null;
+		},
+		currentStepIndex() {
+			return this.steps.findIndex(({name}) => name === this.step);
+		},
+		currentStepIndexForStepper() {
+			return this.stepsForStepper.findIndex(({name}) => name === this.step);
+		},
+		stepsForStepper() {
+			return this.steps.filter(step => !step.hideOnStepper);
+		},
+		nextStepLink() {
+			return this.nextStep ? this.nextStep.linkTo : {name: resource('lessons'), params: {courseId: 1, lessonId: 85}};
+		},
 	},
 	methods: {
 		...mapActions([
 			'setupCurrentUser',
 			'updateUserProductState',
 		]),
-		getNextStepLink() {
-			const nextStep = this.steps[this.currentStepIndex + 1];
-
-			return nextStep ? nextStep.linkTo : null;
-		},
-		validateAndSyncCurrentStep() {
+		validateCurrentStep() {
 			const lastStep = this.currentUser.productState.onboarding_step;
 
 			if (this.currentStepIndex === -1) {
@@ -205,26 +170,33 @@ export default {
 			if (!lastStep) {
 				maxStepIndex = 0;
 			} else {
-				const lastStepIndex = this.steps.findIndex(({name}) => name === lastStep);
-				maxStepIndex = lastStepIndex + 1;
+				maxStepIndex = this.steps.findIndex(({name}) => name === lastStep);
 			}
 
 			if (this.currentStepIndex > maxStepIndex) {
 				this.$router.replace(this.steps[maxStepIndex].linkTo);
-			} else {
-				this.updateUserProductState({
-					onboarding_step: this.step
-				});
 			}
-		}
+		},
+		async onNextClick() {
+			await this.updateUserProductState({
+				onboarding_step: this.nextStep ? this.nextStep.name : ONBOARDING_STEPS.FINISHED,
+			});
+			this.$router.replace(this.nextStepLink);
+		},
+		async onCancelClick() {
+			await this.updateUserProductState({
+				onboarding_step: ONBOARDING_STEPS.FINISHED,
+			});
+			this.$router.replace({name: resource('courses'), params: {courseId: 1}});
+		},
 	},
 	watch: {
 		step() {
-			this.validateAndSyncCurrentStep();
+			this.validateCurrentStep();
 		}
 	},
 	mounted() {
-		this.validateAndSyncCurrentStep();
+		this.validateCurrentStep();
 	}
 };
 </script>

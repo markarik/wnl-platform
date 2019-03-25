@@ -22,6 +22,7 @@ class RenameUserProductStateWizardStepColumn extends Migration
 						'satisfaction-guarantee',
 						'welcome',
 						'finished',
+						'final',
 					])->nullable();
 				});
     }

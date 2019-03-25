@@ -3,6 +3,7 @@
 		<wnl-sidenav-slot
 			:is-visible="isSidenavVisible"
 			:is-detached="!isSidenavMounted"
+			:is-narrow="true"
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>

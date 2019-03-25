@@ -8,7 +8,8 @@
 			 	'-done': index < currentStep,
 			 }"
 		>
-			<router-link :to="step.link_to">{{index + 1}}. {{step.text}}</router-link>
+			<router-link :to="step.link_to" v-if="index < currentStep">{{index + 1}}. {{step.text}}</router-link>
+			<a v-else>{{index + 1}}. {{step.text}}</a>
 		</div>
 	</div>
 </template>

@@ -8,7 +8,11 @@
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<wnl-stepper :steps="steps" :current-step="currentStepIndex"/>
+			<wnl-stepper
+				:steps="stepsForStepper"
+				:current-step="currentStepIndex"
+				v-if="!currentStep.hideOnStepper"
+			/>
 			<component :is="currentStepComponent"/>
 		</div>
 	</div>
@@ -62,7 +66,7 @@ export default {
 				{
 					name: ONBOARDING_STEPS.WELCOME,
 					component: WnlOnboardingScreenWelcome,
-					text: 'asd',
+					hideOnStepper: true,
 					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.WELCOME}},
 				},
 				{
@@ -112,8 +116,11 @@ export default {
 			return this.currentStep.component;
 		},
 		currentStepIndex() {
-			return this.steps.findIndex(({name}) => name === this.step);
-		}
+			return this.stepsForStepper.findIndex(({name}) => name === this.step);
+		},
+		stepsForStepper() {
+			return this.steps.filter(step => !step.hideOnStepper);
+		},
 	},
 	methods: {
 		...mapActions(['setupCurrentUser']),

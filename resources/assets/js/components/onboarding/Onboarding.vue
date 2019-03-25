@@ -7,30 +7,29 @@
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
-
-			<div v-if="currentStep" class="scrollable-main-container">
-				<wnl-stepper
-					:steps="stepsForStepper"
-					:current-step="currentStepIndexForStepper"
-					v-if="!currentStep.hideOnStepper"
-				/>
-				<component
-					:is="currentStep.component"
-				/>
-				<button
-					v-if="isLastStep"
-					class="button is-secondary"
-					@click="onCancelClick"
-				>Pomijam Wstępny LEK</button>
-				<button
-					class="button is-primary"
-					@click="onNextClick"
-				>{{currentStep.buttonText || 'Dalej'}}</button>
-			</div>
+		<div v-if="currentStep" class="scrollable-main-container">
+			<wnl-stepper
+				:steps="stepsForStepper"
+				:current-step="currentStepIndexForStepper"
+				v-if="!currentStep.hideOnStepper"
+			/>
+			<component
+				:is="currentStep.component"
+			/>
+			<button
+				v-if="isLastStep"
+				class="button is-secondary"
+				@click="onCancelClick"
+			>Pomijam Wstępny LEK</button>
+			<button
+				class="button is-primary"
+				@click="onNextClick"
+			>{{currentStep.buttonText || 'Dalej'}}</button>
+		</div>
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.wnl-course-layout
@@ -41,6 +40,10 @@
 		flex: $course-content-flex 0 0
 		position: relative
 		overflow-y: hidden
+
+	.scrollable-main-container
+		margin: 0 auto
+		max-width: 700px
 </style>
 
 <script>
@@ -140,9 +143,6 @@ export default {
 		stepsForStepper() {
 			return this.steps.filter(step => !step.hideOnStepper);
 		},
-		nextStepLink() {
-			return this.nextStep ? this.nextStep.linkTo : {name: resource('lessons'), params: {courseId: 1, lessonId: 85}};
-		},
 	},
 	methods: {
 		...mapActions([
@@ -151,6 +151,10 @@ export default {
 		]),
 		validateCurrentStep() {
 			const lastStep = this.currentUser.productState.onboarding_step;
+
+			if (lastStep === ONBOARDING_STEPS.FINISHED) {
+				return this.$router.replace({name: resource('courses'), params: {courseId: 1}});
+			}
 
 			if (this.currentStepIndex === -1) {
 				let stepToRedirectTo;
@@ -181,7 +185,7 @@ export default {
 			await this.updateUserProductState({
 				onboarding_step: this.nextStep ? this.nextStep.name : ONBOARDING_STEPS.FINISHED,
 			});
-			this.$router.replace(this.nextStepLink);
+			this.$router.replace(this.nextStep ? this.nextStep.linkTo : {name: resource('lessons'), params: {courseId: 1, lessonId: 85}});
 		},
 		async onCancelClick() {
 			await this.updateUserProductState({

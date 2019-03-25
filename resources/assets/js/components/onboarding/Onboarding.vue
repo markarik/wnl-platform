@@ -8,7 +8,8 @@
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<component :is="stepComponent"/>
+			<wnl-stepper :steps="steps" :current-step="currentStepIndex"/>
+			<component :is="currentStepComponent"/>
 		</div>
 	</div>
 </template>
@@ -30,21 +31,24 @@
 import axios from 'axios';
 import {mapGetters, mapActions} from 'vuex';
 
-import SidenavSlot from 'js/components/global/SidenavSlot';
-import MainNav from 'js/components/MainNav';
+import WnlSidenavSlot from 'js/components/global/SidenavSlot';
+import WnlMainNav from 'js/components/MainNav';
 import WnlOnboardingScreenWelcome from 'js/components/onboarding/OnboardingScreenWelcome';
 import WnlOnboardingScreenLearningStyle from 'js/components/onboarding/OnboardingScreenLearningStyle';
 import WnlOnboardingScreenUserPlan from 'js/components/onboarding/OnboardingScreenUserPlan';
 import WnlOnboardingScreenTutorial from 'js/components/onboarding/OnboardingScreenTutorial';
 import WnlOnboardingScreenSatisfactionGuarantee from 'js/components/onboarding/OnboardingScreenSatisfactionGuarantee';
 import WnlOnboardingScreenFinal from 'js/components/onboarding/OnboardingScreenFinal';
+import WnlStepper from 'js/components/onboarding/Stepper';
 
 import {getApiUrl} from 'js/utils/env';
+import {ONBOARDING_STEPS} from 'js/consts/user';
 
 export default {
 	components: {
-		'wnl-sidenav-slot': SidenavSlot,
-		'wnl-main-nav': MainNav,
+		WnlSidenavSlot,
+		WnlMainNav,
+		WnlStepper,
 	},
 	props: {
 		step: {
@@ -54,14 +58,44 @@ export default {
 	},
 	data() {
 		return {
-			stepComponents: {
-				'welcome': WnlOnboardingScreenWelcome,
-				'learning-style': WnlOnboardingScreenLearningStyle,
-				'user-plan': WnlOnboardingScreenUserPlan,
-				'tutorial': WnlOnboardingScreenTutorial,
-				'satisfaction-guarantee': WnlOnboardingScreenSatisfactionGuarantee,
-				'final': WnlOnboardingScreenFinal,
-			}
+			steps: [
+				{
+					name: ONBOARDING_STEPS.WELCOME,
+					component: WnlOnboardingScreenWelcome,
+					text: 'asd',
+					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.WELCOME}},
+				},
+				{
+					name: ONBOARDING_STEPS.LEARNING_STYLE,
+					component: WnlOnboardingScreenLearningStyle,
+					text: '5 sposobów',
+					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.LEARNING_STYLE}},
+				},
+				{
+					name: ONBOARDING_STEPS.USER_PLAN,
+					component: WnlOnboardingScreenUserPlan,
+					text: 'Plan pracy',
+					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.USER_PLAN}},
+				},
+				{
+					name: ONBOARDING_STEPS.TUTORIAL,
+					component: WnlOnboardingScreenTutorial,
+					text: 'Wideo',
+					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.TUTORIAL}},
+				},
+				{
+					name: ONBOARDING_STEPS.SATISFACTION_GUARANTEE,
+					component: WnlOnboardingScreenSatisfactionGuarantee,
+					text: 'Gwarancja ',
+					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.SATISFACTION_GUARANTEE}},
+				},
+				{
+					name: ONBOARDING_STEPS.FINAL,
+					component: WnlOnboardingScreenFinal,
+					text: 'Powitanie',
+					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.FINAL}},
+				},
+			]
 		};
 	},
 	computed: {
@@ -71,8 +105,14 @@ export default {
 			'isSidenavVisible',
 			'isSidenavMounted',
 		]),
-		stepComponent() {
-			return this.stepComponents[this.step];
+		currentStep() {
+			return this.steps.find(({name}) => name === this.step);
+		},
+		currentStepComponent() {
+			return this.currentStep.component;
+		},
+		currentStepIndex() {
+			return this.steps.findIndex(({name}) => name === this.step);
 		}
 	},
 	methods: {

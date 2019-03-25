@@ -4,7 +4,7 @@
 		<p>Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami. Przed datą otwarcia lekcje pozostaną zamknięte.</p>
 		<h3>Domyślny plan</h3>
 		<div>
-			<p>Proponowany przez nas plan pracy trwa od {TUTAJ DATY}, zaklada pracę 5 dni w tygodniu przez 14 tygodni.</p>
+			<p>Proponowany przez nas plan pracy trwa od {{defaultPlanStartDate}}, zakłada pracę 5 dni w tygodniu przez 14 tygodni.</p>
 			<p>Możesz zmienić zakres dni, w których chcesz pracować, a my dostosujemy do nich Twój plan pracy – Edytuj plan</p>
 		</div>
 		<div>
@@ -22,11 +22,26 @@
 </style>
 
 <script>
+import axios from 'axios';
+import moment from 'moment';
+
 import WnlAutomaticPlan from 'js/components/user/plan/AutomaticPlan';
+
+import {getApiUrl} from 'js/utils/env';
 
 export default {
 	components: {
 		WnlAutomaticPlan,
+	},
+	data() {
+		return {
+			defaultPlanStartDate: null,
+		};
+	},
+	async mounted() {
+		const {data: {course_start}} = await axios.get(getApiUrl('products/current/paidCourse'));
+
+		this.defaultPlanStartDate = moment(course_start * 1000).format('LL');
 	}
 };
 </script>

@@ -228,7 +228,16 @@ const actions = {
 		return axios.patch(getApiUrl(`users/${getters.currentUserId}/forget`), {
 			password: payload
 		});
-	}
+	},
+
+	updateUserProductState({commit, state}, payload) {
+		axios.put(getApiUrl(`users/${getters.currentUserId(state)}/user_product_state/latest`), payload)
+			.then(() => {
+				commit(types.USERS_UPDATE_CURRENT, {
+					productState: payload
+				});
+			});
+	},
 };
 
 const _fetchUserStats = (userId) => {

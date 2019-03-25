@@ -47,7 +47,6 @@
 </style>
 
 <script>
-import axios from 'axios';
 import {mapGetters, mapActions} from 'vuex';
 
 import WnlSidenavSlot from 'js/components/global/SidenavSlot';
@@ -60,7 +59,6 @@ import WnlOnboardingScreenSatisfactionGuarantee from 'js/components/onboarding/O
 import WnlOnboardingScreenFinal from 'js/components/onboarding/OnboardingScreenFinal';
 import WnlStepper from 'js/components/onboarding/Stepper';
 
-import {getApiUrl} from 'js/utils/env';
 import {resource} from 'js/utils/config';
 import {ONBOARDING_STEPS} from 'js/consts/user';
 
@@ -73,7 +71,7 @@ export default {
 	props: {
 		step: {
 			type: String,
-			default: 'welcome'
+			default: ONBOARDING_STEPS.WELCOME,
 		}
 	},
 	data() {
@@ -156,26 +154,51 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions(['setupCurrentUser']),
+		...mapActions([
+			'setupCurrentUser',
+			'updateUserProductState',
+		]),
 		getNextStepLink() {
 			const currentStepIndex = this.steps.findIndex(({name}) => name === this.step);
 			const nextStep = this.steps[currentStepIndex + 1];
 
 			return nextStep ? nextStep.linkTo : null;
 		},
-		updateUserProductState() {
-			axios.put(getApiUrl(`users/${this.currentUserId}/user_product_state/latest`), {
-				onboarding_step: this.step
-			});
+		validateAndSyncCurrentStep() {
+			const currentStepIndex = this.steps.findIndex((step) => step.name === this.step);
+
+			if (currentStepIndex === -1) {
+				this.$router.replace(this.steps[0].linkTo);
+				return;
+			}
+
+			// TODO Why do we need .productState? We don't need it for isOnboardingPassed. Unify if possible.
+			const lastStep = this.currentUser.productState.onboarding_step;
+			let maxStepIndex = null;
+
+			if (!lastStep) {
+				maxStepIndex = 0;
+			} else {
+				const lastStepIndex = this.steps.findIndex((step) => step.name === lastStep);
+				maxStepIndex = lastStepIndex + 1;
+			}
+
+			if (currentStepIndex > maxStepIndex) {
+				this.$router.replace(this.steps[maxStepIndex].linkTo);
+			} else {
+				this.updateUserProductState({
+					onboarding_step: this.step
+				});
+			}
 		}
 	},
 	watch: {
 		step() {
-			this.updateUserProductState();
+			this.validateAndSyncCurrentStep();
 		}
 	},
 	mounted() {
-		this.updateUserProductState();
+		this.validateAndSyncCurrentStep();
 	}
 };
 </script>

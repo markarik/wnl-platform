@@ -83,7 +83,7 @@ class PersonalDataController extends Controller
 
 		Session::put('orderId', $order->id);
 
-		if (!empty($coupon)) {
+		if (!empty($coupon) && $coupon->isApplicableForProduct($order->product)) {
 			$this->addCoupon($order, $coupon);
 		} else if ($order->product->slug !== Product::SLUG_WNL_ALBUM) {
 			$this->generateStudyBuddy($order);
@@ -185,7 +185,7 @@ class PersonalDataController extends Controller
 				'invoice'    => $request->invoice ?? $user->invoice ?? 0,
 			]);
 
-		if (!empty($coupon)) {
+		if (!empty($coupon) && $coupon->isApplicableForProduct($order->product)) {
 			$order->attachCoupon($coupon);
 		}
 	}

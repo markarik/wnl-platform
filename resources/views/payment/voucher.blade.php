@@ -3,7 +3,7 @@
 @section('content')
 	<div class="t-checkout">
 		@include('payment.cart')
-		<div class="t-checkout__content">
+		<div class="t-checkout__content -centered">
 			<div class="o-voucher o-column">
 				<img src="{{ asset('images/voucher_page_hero.svg') }}" class="o-column__row -largeSpace"/>
 				<header class="o-column__row">

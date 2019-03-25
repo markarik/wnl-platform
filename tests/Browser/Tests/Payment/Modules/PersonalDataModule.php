@@ -32,6 +32,14 @@ class PersonalDataModule
 		$this->submit($browser, false);
 	}
 
+	public function submitNoAddress(BethinkBrowser $browser)
+	{
+		$this->navigate($browser);
+
+		$browser->on(new PersonalDataPage());
+		$this->submit($browser, false, false);
+	}
+
 	public function submitCustomInvoice(BethinkBrowser $browser)
 	{
 		$this->navigate($browser);
@@ -53,10 +61,10 @@ class PersonalDataModule
 		$this->assertCart($browser);
 	}
 
-	protected function submit(BethinkBrowser $browser, $invoiceFlag)
+	protected function submit(BethinkBrowser $browser, $invoice = false, $address = true)
 	{
 		$userData = $this->generatePersonalFormData();
-		$this->fillInPersonalDataForm($userData, $browser, $invoiceFlag);
+		$this->fillInPersonalDataForm($userData, $browser, $invoice, $address);
 
 		$browser->click('@submit-personal-data');
 

@@ -114,10 +114,10 @@ const actions = {
 	},
 
 	async fetchCurrentUserProfile({ commit }) {
-		let userResponse, subscriptionResponse;
+		let userResponse, subscriptionResponse, productStateResponse;
 
 		try {
-			[userResponse, subscriptionResponse] = await Promise.all([
+			[userResponse, subscriptionResponse, productStateResponse] = await Promise.all([
 				axios.get(getApiUrl('users/current/profile?include=roles')),
 				axios.get(getApiUrl('user_subscription/current')),
 				axios.get(getApiUrl('users/current/user_product_state/latest'))
@@ -139,7 +139,8 @@ const actions = {
 
 		const currentUser = {
 			...profile,
-			subscription: subscriptionResponse.data
+			subscription: subscriptionResponse.data,
+			productState: productStateResponse.data,
 		};
 
 		if (!currentUser.user_id) {

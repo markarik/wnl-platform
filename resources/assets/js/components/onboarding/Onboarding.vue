@@ -7,13 +7,28 @@
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
-		<div class="wnl-course-content wnl-column">
+		<div class="scrollable-main-container">
 			<wnl-stepper
 				:steps="stepsForStepper"
-				:current-step="currentStepIndex"
+				:current-step="currentStepIndexForStepper"
 				v-if="!currentStep.hideOnStepper"
 			/>
-			<component :is="currentStepComponent"/>
+			<component
+				:is="currentStepComponent"
+			/>
+			<div v-if="currentStep.getCustomButtons">
+				<router-link
+					v-for="(customButton, index) in currentStep.getCustomButtons()"
+					:class="customButton.class || 'button is-primary'"
+					:key="index"
+					:to="customButton.linkTo || getNextStepLink()"
+				>{{customButton.label}}</router-link>
+			</div>
+			<router-link
+				v-else
+				class="button is-primary"
+				:to="getNextStepLink()"
+			>Dalej</router-link>
 		</div>
 	</div>
 </template>
@@ -46,6 +61,7 @@ import WnlOnboardingScreenFinal from 'js/components/onboarding/OnboardingScreenF
 import WnlStepper from 'js/components/onboarding/Stepper';
 
 import {getApiUrl} from 'js/utils/env';
+import {resource} from 'js/utils/config';
 import {ONBOARDING_STEPS} from 'js/consts/user';
 
 export default {
@@ -67,37 +83,54 @@ export default {
 					name: ONBOARDING_STEPS.WELCOME,
 					component: WnlOnboardingScreenWelcome,
 					hideOnStepper: true,
-					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.WELCOME}},
+					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.WELCOME}},
 				},
 				{
 					name: ONBOARDING_STEPS.LEARNING_STYLE,
 					component: WnlOnboardingScreenLearningStyle,
 					text: '5 sposobów',
-					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.LEARNING_STYLE}},
+					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.LEARNING_STYLE}},
 				},
 				{
 					name: ONBOARDING_STEPS.USER_PLAN,
 					component: WnlOnboardingScreenUserPlan,
 					text: 'Plan pracy',
-					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.USER_PLAN}},
+					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.USER_PLAN}},
 				},
 				{
 					name: ONBOARDING_STEPS.TUTORIAL,
 					component: WnlOnboardingScreenTutorial,
 					text: 'Wideo',
-					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.TUTORIAL}},
+					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.TUTORIAL}},
 				},
 				{
 					name: ONBOARDING_STEPS.SATISFACTION_GUARANTEE,
 					component: WnlOnboardingScreenSatisfactionGuarantee,
 					text: 'Gwarancja ',
-					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.SATISFACTION_GUARANTEE}},
+					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.SATISFACTION_GUARANTEE}},
+					getCustomButtons: () => [
+						{
+							label: 'Rozumiem, dalej',
+						},
+					],
 				},
 				{
 					name: ONBOARDING_STEPS.FINAL,
 					component: WnlOnboardingScreenFinal,
 					text: 'Powitanie',
-					link_to: {name: 'onboarding', params: {step: ONBOARDING_STEPS.FINAL}},
+					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.FINAL}},
+					getCustomButtons: () => [
+						{
+							class: 'button is-secondary',
+							label: 'Pomijam Wstępny LEK',
+							linkTo: {name: resource('courses'), params: {courseId: 1}}
+						},
+						{
+							label: 'Otwórz Wstępny LEK',
+							// FIXME ids should be dynamic and come from backend
+							linkTo: {name: resource('lessons'), params: {courseId: 1, lessonId: 85}}
+						}
+					]
 				},
 			]
 		};
@@ -115,7 +148,7 @@ export default {
 		currentStepComponent() {
 			return this.currentStep.component;
 		},
-		currentStepIndex() {
+		currentStepIndexForStepper() {
 			return this.stepsForStepper.findIndex(({name}) => name === this.step);
 		},
 		stepsForStepper() {
@@ -124,6 +157,12 @@ export default {
 	},
 	methods: {
 		...mapActions(['setupCurrentUser']),
+		getNextStepLink() {
+			const currentStepIndex = this.steps.findIndex(({name}) => name === this.step);
+			const nextStep = this.steps[currentStepIndex + 1];
+
+			return nextStep ? nextStep.linkTo : null;
+		},
 		updateUserProductState() {
 			axios.put(getApiUrl(`users/${this.currentUserId}/user_product_state/latest`), {
 				onboarding_step: this.step

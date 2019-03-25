@@ -51,7 +51,6 @@ return [
 		'user-personal-data'      => 'personal_data',
 		'flashcards'              => 'flashcards',
 		'flashcards-sets'         => 'flashcards_sets',
-		'quiz-sets'               => 'quiz_sets',
 		'site-wide-messages'      => 'site_wide_messages',
 		'user-flashcards-results' => 'user_flashcards_results',
 		'discussions'             => 'discussions',
@@ -60,5 +59,7 @@ return [
 		'course-structure-nodes'  => 'course_structure_nodes',
 		'products'                => 'products',
 		'lesson-product'          => 'lesson_product',
+		'payment-methods'         => 'payment_methods',
+		'product-instalments'     => 'product_instalments',
 	],
 ];

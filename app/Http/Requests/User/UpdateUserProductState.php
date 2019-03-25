@@ -29,16 +29,16 @@ class UpdateUserProductState extends FormRequest
 	public function rules()
 	{
 		return [
-			'wizard_step' => [
+			'onboarding_step' => [
 				'required',
 				Rule::in([
-					UserProductState::WIZARD_STEP_FINAL,
-					UserProductState::WIZARD_STEP_FINISHED,
-					UserProductState::WIZARD_STEP_LEARNING_STYLE,
-					UserProductState::WIZARD_STEP_SATISFACTION_GUARANTEE,
-					UserProductState::WIZARD_STEP_TUTORIAL,
-					UserProductState::WIZARD_STEP_USER_PLAN,
-					UserProductState::WIZARD_STEP_WELCOME,
+					UserProductState::ONBOARDING_STEP_FINAL,
+					UserProductState::ONBOARDING_STEP_FINISHED,
+					UserProductState::ONBOARDING_STEP_LEARNING_STYLE,
+					UserProductState::ONBOARDING_STEP_SATISFACTION_GUARANTEE,
+					UserProductState::ONBOARDING_STEP_TUTORIAL,
+					UserProductState::ONBOARDING_STEP_USER_PLAN,
+					UserProductState::ONBOARDING_STEP_WELCOME,
 				]),
 			],
 		];

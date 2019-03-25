@@ -47,7 +47,7 @@ class UserProductStateApiController extends ApiController
 				'product_id' => $productId
 			],
 			[
-				'wizard_step' => $request->get('wizard_step'),
+				'onboarding_step' => $request->get('onboarding_step'),
 			]
 		);
 

@@ -19,12 +19,12 @@ class CreateUserProductState extends Migration
 				$table->unsignedInteger('user_id');
 				$table->unsignedInteger('product_id');
 				$table->enum('wizard_step', [
-					UserProductState::WIZARD_STEP_LEARNING_STYLE,
-					UserProductState::WIZARD_STEP_USER_PLAN,
-					UserProductState::WIZARD_STEP_TUTORIAL,
-					UserProductState::WIZARD_STEP_SATISFACTION_GUARANTEE,
-					UserProductState::WIZARD_STEP_WELCOME,
-					UserProductState::WIZARD_STEP_FINISHED,
+					'learning_style',
+					'user_plan',
+					'tutorial',
+					'satisfaction_guarantee',
+					'welcome',
+					'finished',
 				])->nullable();
 				$table->timestamps();
 

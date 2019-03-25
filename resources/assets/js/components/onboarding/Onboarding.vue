@@ -126,7 +126,7 @@ export default {
 		...mapActions(['setupCurrentUser']),
 		updateUserProductState() {
 			axios.put(getApiUrl(`users/${this.currentUserId}/user_product_state/latest`), {
-				wizard_step: this.step
+				onboarding_step: this.step
 			});
 		}
 	},

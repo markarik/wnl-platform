@@ -59,7 +59,7 @@ const getters = {
 	currentUserStats: state => state.stats,
 	currentUserSubscriptionDates: state => state.profile.subscription.dates,
 	currentUserSubscriptionActive: state => state.profile.subscription.status === 'active',
-	isOnboardingPassed: (state, getters) => getters.currentUser.wizard_step === ONBOARDING_STEPS.FINISHED || getters.isAdmin,
+	isOnboardingPassed: (state, getters) => getters.currentUser.onboarding_step === ONBOARDING_STEPS.FINISHED || getters.isAdmin,
 };
 
 // Mutations

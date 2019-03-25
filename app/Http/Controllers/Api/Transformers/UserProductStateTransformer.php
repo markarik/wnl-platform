@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Api\Transformers;
 
 use App\Http\Controllers\Api\ApiTransformer;
 use App\Models\UserProductState;
-use App\Models\UserSettings;
 
 class UserProductStateTransformer extends ApiTransformer
 {
@@ -21,7 +20,7 @@ class UserProductStateTransformer extends ApiTransformer
 	{
 		$data = [
 			'product_id' => $userProductState->product_id,
-			'wizard_step' => $userProductState->wizard_step,
+			'onboarding_step' => $userProductState->onboarding_step,
 		];
 
 		if ($this->parent) {

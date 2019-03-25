@@ -133,18 +133,20 @@
 					</div>
 				</div>
 			</div>
-			<div class="level wnl-screen-title">
-				<div class="level-left">
-					<div class="level-item big strong">
-						{{ $t('lessonsAvailability.sections.acceptPlan') }}
+			<div v-if="showAnnotation">
+				<div class="level wnl-screen-title">
+					<div class="level-left">
+						<div class="level-item big strong">
+							{{ $t('lessonsAvailability.sections.acceptPlan') }}
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="annotation">
-				<div class="level">
-					<div class="level-item" v-if="this.completedLessonsLength > 0">
-						{{ $t('lessonsAvailability.annotation.header') }}
-						{{ this.completedLessonsLength}}{{ $t('lessonsAvailability.annotation.info') }}
+				<div class="annotation">
+					<div class="level">
+						<div class="level-item" v-if="this.completedLessonsLength > 0">
+							{{ $t('lessonsAvailability.annotation.header') }}
+							{{ this.completedLessonsLength}}{{ $t('lessonsAvailability.annotation.info') }}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -204,7 +206,7 @@
 import TextOverlay from 'js/components/global/TextOverlay.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { getApiUrl } from 'js/utils/env';
-import { isEmpty, first, last } from 'lodash';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 import Datepicker from 'js/components/global/Datepicker';
@@ -218,6 +220,12 @@ export default {
 		'wnl-datepicker': Datepicker,
 	},
 	mixins: [emits_events],
+	props: {
+		showAnnotation: {
+			type: Boolean,
+			default: true,
+		},
+	},
 	data() {
 		return {
 			isLoading: false,

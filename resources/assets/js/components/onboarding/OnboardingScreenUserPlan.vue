@@ -11,6 +11,8 @@
 			<p>Wskazówka:</p>
 			<p>Plan zakłada optymalną kolejność przerabiania przedmiotów. Jeśli chcesz stworzyć indywidualny plan lub go edytować, możesz to zrobić w zakładce KONTO > PLAN PRACY.</p>
 		</div>
+
+		<wnl-automatic-plan :show-annotation="false" />
 	</div>
 </template>
 
@@ -20,7 +22,11 @@
 </style>
 
 <script>
-export default {
+import WnlAutomaticPlan from 'js/components/user/plan/AutomaticPlan';
 
+export default {
+	components: {
+		WnlAutomaticPlan,
+	}
 };
 </script>

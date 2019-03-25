@@ -7,7 +7,7 @@
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
-		<div class="scrollable-main-container">
+		<div v-if="currentStep" class="scrollable-main-container">
 			<wnl-stepper
 				:steps="stepsForStepper"
 				:current-step="currentStepIndexForStepper"
@@ -71,7 +71,7 @@ export default {
 	props: {
 		step: {
 			type: String,
-			default: ONBOARDING_STEPS.WELCOME,
+			required: false,
 		}
 	},
 	data() {
@@ -146,6 +146,9 @@ export default {
 		currentStepComponent() {
 			return this.currentStep.component;
 		},
+		currentStepIndex() {
+			return this.steps.findIndex(({name}) => name === this.step);
+		},
 		currentStepIndexForStepper() {
 			return this.stepsForStepper.findIndex(({name}) => name === this.step);
 		},
@@ -159,31 +162,37 @@ export default {
 			'updateUserProductState',
 		]),
 		getNextStepLink() {
-			const currentStepIndex = this.steps.findIndex(({name}) => name === this.step);
-			const nextStep = this.steps[currentStepIndex + 1];
+			const nextStep = this.steps[this.currentStepIndex + 1];
 
 			return nextStep ? nextStep.linkTo : null;
 		},
 		validateAndSyncCurrentStep() {
-			const currentStepIndex = this.steps.findIndex((step) => step.name === this.step);
+			// TODO Why do we need .productState? We don't need it for isOnboardingPassed. Unify if possible.
+			const lastStep = this.currentUser.productState.onboarding_step;
 
-			if (currentStepIndex === -1) {
-				this.$router.replace(this.steps[0].linkTo);
+			if (this.currentStepIndex === -1) {
+				let stepToRedirectTo;
+
+				if (lastStep) {
+					stepToRedirectTo = this.steps.find(({name}) => name === lastStep);
+				} else {
+					stepToRedirectTo = this.steps[0];
+				}
+
+				this.$router.replace(stepToRedirectTo.linkTo);
 				return;
 			}
 
-			// TODO Why do we need .productState? We don't need it for isOnboardingPassed. Unify if possible.
-			const lastStep = this.currentUser.productState.onboarding_step;
 			let maxStepIndex = null;
 
 			if (!lastStep) {
 				maxStepIndex = 0;
 			} else {
-				const lastStepIndex = this.steps.findIndex((step) => step.name === lastStep);
+				const lastStepIndex = this.steps.findIndex(({name}) => name === lastStep);
 				maxStepIndex = lastStepIndex + 1;
 			}
 
-			if (currentStepIndex > maxStepIndex) {
+			if (this.currentStepIndex > maxStepIndex) {
 				this.$router.replace(this.steps[maxStepIndex].linkTo);
 			} else {
 				this.updateUserProductState({

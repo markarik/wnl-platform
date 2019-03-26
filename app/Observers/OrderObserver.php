@@ -4,6 +4,7 @@
 namespace App\Observers;
 
 
+use App\Jobs\CreateSubscription;
 use App\Jobs\OrderConfirmed;
 use App\Jobs\OrderPaid;
 use App\Jobs\OrderStudyBuddy;
@@ -32,6 +33,7 @@ class OrderObserver
 				$order->paid = true;
 				$order->paid_at = Carbon::now();
 				$order->save();
+				$this->dispatchNow(new CreateSubscription($order));
 			}
 
 			\Log::notice("OrderObserver: Dispatching OrderPaid for order #$order->id");
@@ -85,6 +87,7 @@ class OrderObserver
 			$order->paid = true;
 			$order->save();
 			$this->dispatch(new OrderPaid($order));
+			$this->dispatchNow(new CreateSubscription($order));
 		}
 
 		if ($order->method === 'instalments') {

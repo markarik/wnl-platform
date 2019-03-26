@@ -5,7 +5,7 @@
 		</figure>
 		<h2 class="title has-text-centered">Gwarancja satysfakcji ⭐️</h2>
 
-		<div class="row margin bottom">
+		<div class="row">
 			<div class="row-item">
 				<span class="row-item-icon">🇵🇱</span>
 				<span>Dla osób, które ukończyły studia w języku polskim.</span>

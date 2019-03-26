@@ -62,12 +62,14 @@
 		padding: $margin-base
 
 		/deep/ .row
-			display: flex
+			@media #{$media-query-tablet}
+				display: flex
 
 		/deep/ .row-item
 			display: flex
 			flex: 1 1 50%
 			padding-right: $margin-base
+			margin-bottom: $margin-base
 
 		/deep/ .row-item-icon
 			font-size: $font-size-plus-3

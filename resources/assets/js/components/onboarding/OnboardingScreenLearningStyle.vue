@@ -3,7 +3,7 @@
 		<h2 class="has-text-centered title">5 sposobów nauki 🤔</h2>
 		<p class="has-text-centered title is-5">Każdy z nich jest dobry! Idealny dla Ciebie to ten, wedle którego będziesz w stanie zrealizować kurs w całości 🙂</p>
 
-		<div class="row margin bottom">
+		<div class="row">
 			<div class="row-item">
 				<span class="row-item-icon">🏆</span>
 				<span>Zapoznaj się z nimi teraz aby w przyszłości lepiej zaplanować naukę.</span>
@@ -13,7 +13,7 @@
 				<span>Próba zrealizowania pełnego planu przy 2-3h czasu dziennie, to jedna z najczęstszych przyczyn zaległości i olbrzymiej frustracji.</span>
 			</div>
 		</div>
-		<div class="row margin bottom">
+		<div class="row">
 			<div class="row-item">
 				<span class="row-item-icon">⏱</span>
 				<span>Podane średnie czasy są wyznaczone statystycznie na podstawie danych zebranych podczas poprzednich edycji.</span>

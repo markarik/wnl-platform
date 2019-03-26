@@ -3,38 +3,42 @@
 		<h2 class="title">Plan pracy 🗓</h2>
 		<p class="title is-5">Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami. Przed datą otwarcia lekcje pozostaną zamknięte.</p>
 
-		<p></p>
-		<h3 class="title">Domyślny plan</h3>
+		<wnl-text-loader v-if="isLoading" />
 
-		<template v-if="isReturningUser">
-			<div>
+		<template v-else>
+			<h3 class="title">Domyślny plan</h3>
+
+			<template v-if="isReturningUser">
 				<div>
-					<span>ℹ️</span>
-					<p>Na najbliższą edycję szykujemy nową Chirurgię (na 10 czerwca) i Medycynę ratunkową (na 19 sierpnia). Możesz jednak spokojnie zaplanować naukę!</p>
-					<p>Zakres materiału oraz struktura lekcji pozostaną takie same, jak obecnie. Nawet jeżeli zrealizujesz te lekcje przed ich aktualizacją, możesz bez przeszkód kontynuować kurs i mieć pewność pokrycia całości materiału.</p>
+					<div>
+						<span>ℹ️</span>
+						<p>Na najbliższą edycję szykujemy nową Chirurgię (na 10 czerwca) i Medycynę ratunkową (na 19 sierpnia). Możesz jednak spokojnie zaplanować naukę!</p>
+						<p>Zakres materiału oraz struktura lekcji pozostaną takie same, jak obecnie. Nawet jeżeli zrealizujesz te lekcje przed ich aktualizacją, możesz bez przeszkód kontynuować kurs i mieć pewność pokrycia całości materiału.</p>
+					</div>
+					<div>
+						<p>Wskazówka:</p>
+						<p>Plan możesz zawsze zmienić w zakłade KONTO > Plan pracy.</p>
+					</div>
+				</div>
+			</template>
+
+			<template v-else>
+				<div>
+					<p>Proponowany przez nas plan pracy trwa od <strong>{{defaultPlanStartDate}}</strong>, zakłada pracę <strong>5 dni w tygodniu przez 14 tygodni</strong>.</p>
+					<p>
+						Możesz zmienić zakres dni, w których chcesz pracować, a my dostosujemy do nich Twój plan pracy –
+						<a @click="openEditor">Edytuj plan</a>
+					</p>
 				</div>
 				<div>
 					<p>Wskazówka:</p>
-					<p>Plan możesz zawsze zmienić w zakłade KONTO > Plan pracy.</p>
+					<p>Plan zakłada optymalną kolejność przerabiania przedmiotów. Jeśli chcesz stworzyć indywidualny plan lub go edytować, możesz to zrobić w zakładce KONTO > PLAN PRACY.</p>
 				</div>
-			</div>
-		</template>
-		<template v-else>
-			<div>
-				<p>Proponowany przez nas plan pracy trwa od <strong>{{defaultPlanStartDate}}</strong>, zakłada pracę <strong>5 dni w tygodniu przez 14 tygodni</strong>.</p>
-				<p>
-					Możesz zmienić zakres dni, w których chcesz pracować, a my dostosujemy do nich Twój plan pracy –
-					<a @click="openEditor">Edytuj plan</a>
-				</p>
-			</div>
-			<div>
-				<p>Wskazówka:</p>
-				<p>Plan zakłada optymalną kolejność przerabiania przedmiotów. Jeśli chcesz stworzyć indywidualny plan lub go edytować, możesz to zrobić w zakładce KONTO > PLAN PRACY.</p>
-			</div>
-			<wnl-automatic-plan
-				v-if="isEditorVisible"
-				:show-annotation="false"
-			/>
+				<wnl-automatic-plan
+					v-if="isEditorVisible"
+					:show-annotation="false"
+				/>
+			</template>
 		</template>
 	</div>
 </template>
@@ -60,6 +64,7 @@ export default {
 		return {
 			defaultPlanStartDate: null,
 			isEditorVisible: false,
+			isLoading: true,
 			isReturningUser: false,
 		};
 	},
@@ -69,9 +74,13 @@ export default {
 		}
 	},
 	async mounted() {
-		const {data: {course_start}} = await axios.get(getApiUrl('products/current/paidCourse'));
+		const {data: {course_start: courseStart}} = await axios.get(getApiUrl('products/current/paidCourse'));
+		this.defaultPlanStartDate = moment(courseStart * 1000).format('LL');
 
-		this.defaultPlanStartDate = moment(course_start * 1000).format('LL');
+		const {data: {id: profileId, included}} = await axios.get(getApiUrl('users/current/profile?include=has_prolonged_course'));
+		this.isReturningUser = included.has_prolonged_courses[profileId].has_prolonged_course;
+
+		this.isLoading = false;
 	},
 };
 </script>

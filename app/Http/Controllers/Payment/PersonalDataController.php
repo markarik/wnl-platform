@@ -29,7 +29,7 @@ class PersonalDataController extends Controller
 		$addresEnabled = $this->addresEnabled($coupon);
 		$form = $this->setupForm($user, $addresEnabled);
 
-		if (($product->slug === Product::SLUG_WNL_ALBUM && !$this->canBuyAlbum($request)) || $this->hasCurrentProduct($request)) {
+		if (($product->slug === Product::SLUG_WNL_ALBUM && !$this->canBuyAlbum()) || $this->hasCurrentProduct($request)) {
 			return redirect(route('payment-account'));
 		}
 

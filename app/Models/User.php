@@ -241,7 +241,8 @@ class User extends Authenticatable
 		return "{$addr->street}, {$addr->zip} {$addr->city}";
 	}
 
-	public function getInitialsAttribute() {
+	public function getInitialsAttribute()
+	{
 		$initials = '';
 
 		if ($this->first_name) {
@@ -254,8 +255,18 @@ class User extends Authenticatable
 		return $initials;
 	}
 
-	public function getSignUpCompleteAttribute() {
+	public function getSignUpCompleteAttribute()
+	{
 		return !($this->first_name === null || $this->last_name === null);
+	}
+
+	public function getHasProlongedCourseAttribute()
+	{
+		return $this->orders
+				->filter(function ($order) {
+					return $order->paid && !$order->canceled && $order->coupon && $order->coupon->kind === Coupon::KIND_PARTICIPANT;
+				})
+				->count() > 0;
 	}
 
 	protected function getSubscriptionStatus($dates)
@@ -284,7 +295,8 @@ class User extends Authenticatable
 		return [$min, $max];
 	}
 
-	public function getLatestPaidCourseProductId() {
+	public function getLatestPaidCourseProductId()
+	{
 		if (!$this->productIdForDefaultLessonsStartDatesLoaded) {
 			$product = Product::select(['products.id'])
 				->join('orders', 'orders.product_id', '=', 'products.id')
@@ -316,7 +328,8 @@ class User extends Authenticatable
 			});
 	}
 
-	public function getProducts() {
+	public function getProducts()
+	{
 		return $this->orders()->join('products', 'orders.product_id', '=', 'products.id')
 			->where('paid', 1)
 			->where('canceled', 0)
@@ -360,7 +373,8 @@ class User extends Authenticatable
 		$this->notify(new ResetPasswordNotification($token));
 	}
 
-	public static function createWithProfileAndBilling($userData) {
+	public static function createWithProfileAndBilling($userData)
+	{
 		/** @var User $user */
 		$user = static::create($userData);
 

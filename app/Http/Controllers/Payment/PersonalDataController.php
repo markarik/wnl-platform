@@ -187,6 +187,9 @@ class PersonalDataController extends Controller
 
 		if (!empty($coupon) && $coupon->isApplicableForProduct($order->product)) {
 			$order->attachCoupon($coupon);
+		} else {
+			$order->coupon_id = null;
+			$order->save();
 		}
 	}
 

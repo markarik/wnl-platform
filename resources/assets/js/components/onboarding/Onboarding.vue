@@ -7,7 +7,7 @@
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
-		<div class="onboarding-wrapper">
+		<div v-if="$currentEditionParticipant.isAllowed('access')" class="onboarding-wrapper">
 			<wnl-stepper
 				class="onboarding-stepper"
 				:steps="stepsForStepper"
@@ -31,6 +31,7 @@
 				>{{currentStep.buttonText || 'Dalej'}}</button>
 			</div>
 		</div>
+		<wnl-splash-screen v-else/>
 	</div>
 </template>
 
@@ -126,14 +127,18 @@ import WnlOnboardingScreenTutorial from 'js/components/onboarding/OnboardingScre
 import WnlOnboardingScreenSatisfactionGuarantee from 'js/components/onboarding/OnboardingScreenSatisfactionGuarantee';
 import WnlOnboardingScreenFinal from 'js/components/onboarding/OnboardingScreenFinal';
 import WnlStepper from 'js/components/onboarding/Stepper';
+import WnlSplashScreen from 'js/components/global/SplashScreen.vue';
 
 import {resource} from 'js/utils/config';
 import {ONBOARDING_STEPS} from 'js/consts/user';
+import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 
 export default {
+	perimeters: [currentEditionParticipant],
 	components: {
-		WnlSidenavSlot,
 		WnlMainNav,
+		WnlSidenavSlot,
+		WnlSplashScreen,
 		WnlStepper,
 	},
 	props: {

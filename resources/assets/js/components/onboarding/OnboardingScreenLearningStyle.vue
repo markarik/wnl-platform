@@ -1,20 +1,26 @@
 <template>
-	<div>
-		<h2>5 sposobów nauki 🤔</h2>
-		<p>Każdy z nich jest dobry! Idealny dla Ciebie to ten, wedle którego będziesz w stanie zrealizować kurs w całości 🙂</p>
+	<div class="has-text-centered ">
+		<h2 class="title">5 sposobów nauki 🤔</h2>
+		<p class="title is-5">Każdy z nich jest dobry! Idealny dla Ciebie to ten, wedle którego będziesz w stanie zrealizować kurs w całości 🙂</p>
 
-		<div>
-			<div>
+		<div class="row margin bottom">
+			<div class="row-item">
 				<span>🏆</span>
-				<p>Zapoznaj się z nimi teraz aby w przyszłości lepiej zaplanować naukę.</p>
+				<span>Zapoznaj się z nimi teraz aby w przyszłości lepiej zaplanować naukę.</span>
 			</div>
-			<div>
+			<div class="row-item">
 				<span>😤</span>
-				<p>Próba zrealizowania pełnego planu przy 2-3h czasu dziennie, to jedna z najczęstszych przyczyn zaległości i olbrzymiej frustracji.</p>
+				<span>Próba zrealizowania pełnego planu przy 2-3h czasu dziennie, to jedna z najczęstszych przyczyn zaległości i olbrzymiej frustracji.</span>
 			</div>
-			<div>
+		</div>
+		<div class="row">
+			<div class="row-item">
 				<span>⏱</span>
-				<p>Podane średnie czasy są wyznaczone statystycznie na podstawie danych zebranych podczas poprzednich edycji.</p>
+				<span>Podane średnie czasy są wyznaczone statystycznie na podstawie danych zebranych podczas poprzednich edycji.</span>
+			</div>
+			<div class="row-item">
+				<span>💡</span>
+				<span>Wskazówka: Szczegółowy opis tego sposobu pracy znajdziesz w lekcji: WSTĘP DO KURSU > Efektyna nauka</span>
 			</div>
 		</div>
 

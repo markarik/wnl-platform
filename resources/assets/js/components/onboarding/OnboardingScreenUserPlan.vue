@@ -1,8 +1,10 @@
 <template>
 	<div>
-		<h2>Plan pracy 🗓</h2>
-		<p>Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami. Przed datą otwarcia lekcje pozostaną zamknięte.</p>
-		<h3>Domyślny plan</h3>
+		<h2 class="title">Plan pracy 🗓</h2>
+		<p class="title is-5">Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami. Przed datą otwarcia lekcje pozostaną zamknięte.</p>
+
+		<p></p>
+		<h3 class="title">Domyślny plan</h3>
 
 		<template v-if="isReturningUser">
 			<div>

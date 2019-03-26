@@ -7,24 +7,29 @@
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
-		<div v-if="currentStep" class="scrollable-main-container">
+		<div class="onboarding-wrapper">
 			<wnl-stepper
+				class="onboarding-stepper"
 				:steps="stepsForStepper"
 				:current-step="currentStepIndexForStepper"
 				v-if="!currentStep.hideOnStepper"
 			/>
 			<component
+				class="scrollable-container"
+				v-if="currentStep"
 				:is="currentStep.component"
 			/>
-			<button
-				v-if="isLastStep"
-				class="button is-secondary"
-				@click="onCancelClick"
-			>Pomijam Wstępny LEK</button>
-			<button
-				class="button is-primary"
-				@click="onNextClick"
-			>{{currentStep.buttonText || 'Dalej'}}</button>
+			<div class="has-text-centered buttons">
+				<button
+					v-if="isLastStep"
+					class="button is-secondary"
+					@click="onCancelClick"
+				>Pomijam Wstępny LEK</button>
+				<button
+					class="button is-primary"
+					@click="onNextClick"
+				>{{currentStep.buttonText || 'Dalej'}}</button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -41,9 +46,31 @@
 		position: relative
 		overflow-y: hidden
 
-	.scrollable-main-container
-		margin: 0 auto
-		max-width: 700px
+	.onboarding-wrapper
+		display: flex
+		flex-direction: column
+		width: 100%
+
+	.scrollable-container, .onboarding-stepper
+		max-width: 730px
+		margin-left: auto
+		margin-right: auto
+
+	.scrollable-container
+		flex-grow: 1
+		padding: $margin-base
+
+		/deep/ .row
+			display: flex
+
+		/deep/ .row-item
+			flex: 1 1 50%
+			padding-right: $margin-base
+
+	.buttons
+		border-top: $border-light-gray
+		padding: $margin-base
+
 </style>
 
 <script>

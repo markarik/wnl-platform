@@ -1,24 +1,23 @@
 <template>
-	<div>
+	<div class="has-text-centered">
 		<img :src="imageUrl">
-		<h2>Cześć {{currentUserName}} 👋</h2>
-		<p>Zanim rozpoczniesz naukę, poznasz najważniejsze funkcje platformy i kursu ⭐</p>
-		<div>
-			<div>
-				<span>⏰</span>
-				<p>Wprowadzenie zajmie Tobie około 10min.</p>
+		<h2 class="title">Cześć {{currentUserName}} 👋</h2>
+		<p class="title is-5">Zanim rozpoczniesz naukę, poznasz najważniejsze funkcje platformy i kursu ⭐</p>
+		<div class="row">
+			<div class="row-item">
+				<span class="margin right">⏰</span>
+				<span>Wprowadzenie zajmie Tobie około 10min.</span>
 			</div>
-			<div>
-				<span>🔁</span>
-				<p>Wprowadzenie możesz zamknąc w dowolnym momencie. Bedzie na Ciebie czekać.</p>
+			<div class="row-item">
+				<span class="margin right">🔁</span>
+				<span>Wprowadzenie możesz zamknąc w dowolnym momencie. Bedzie na Ciebie czekać.</span>
 			</div>
 		</div>
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
-
 </style>
 
 <script>

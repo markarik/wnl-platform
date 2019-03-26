@@ -89,7 +89,9 @@
 				border-color: $color-ocean-blue
 				color: $color-ocean-blue
 
-		// TODO color
+			.-green
+				border-color: $color-green
+				color: $color-green
 
 		/deep/ .ordered-item-number
 			align-items: center

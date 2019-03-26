@@ -89,7 +89,7 @@
 		</div>
 
 		<div class="ordered-item">
-			<div class="ordered-item-number">5</div>
+			<div class="ordered-item-number -green">5</div>
 			<div>
 				<h3 class="title is-4">Codzienna praktyka</h3>
 				<p class="margin bottom text-dimmed">

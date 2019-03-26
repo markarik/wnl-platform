@@ -84,6 +84,7 @@ export default {
 				order.product.slug === 'wnl-online' &&
 				order.coupon && order.coupon.value === 50 &&
 				order.coupon.type === 'percentage' &&
+				order.paid &&
 				!order.canceled
 			);
 

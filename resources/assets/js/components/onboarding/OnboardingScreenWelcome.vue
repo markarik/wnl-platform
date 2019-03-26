@@ -12,7 +12,7 @@
 			</div>
 			<div class="row-item">
 				<span class="row-item-icon">🔁</span>
-				<span>Wprowadzenie możesz zamknąc w dowolnym momencie. Bedzie na Ciebie czekać.</span>
+				<span>Wprowadzenie możesz zamknąć w dowolnym momencie. Będzie na Ciebie czekać.</span>
 			</div>
 		</div>
 	</div>

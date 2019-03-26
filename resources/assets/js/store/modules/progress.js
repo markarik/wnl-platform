@@ -30,9 +30,6 @@ const getters = {
 	getSection: (state) => (courseId, lessonId, screenId, sectionId) => {
 		return _.get(state.courses[courseId], `lessons[${lessonId}].screens[${screenId}].sections[${sectionId}]`);
 	},
-	wasCourseStarted: (state, getters) => (courseId) => {
-		return !_.isEmpty(getters.getCourse(courseId).lessons);
-	},
 	getSavedLesson: (state, getters) => (courseId, lessonId, profileId) => {
 		const storeValue = _.get(state.courses[courseId], `lessons[${lessonId}]`);
 

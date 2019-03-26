@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<h2>Witaj na kursie do LEK!️</h2>
+		<img :src="imageUrl" alt="" class="onboarding-image margin bottom">
+		<h2 class="title">Witaj na kursie do LEK!️</h2>
 
 		<h3>1 - Rozwiąż Wstępny LEK</h3>
 		<ul>
@@ -23,10 +24,18 @@
 <style lang="sass" rel="stylesheet/sass">
 	@import 'resources/assets/sass/variables'
 
+	.onboarding-image
+		max-width: 500px
 </style>
 
 <script>
-export default {
+import {getImageUrl} from 'js/utils/env';
 
+export default {
+	data() {
+		return {
+			imageUrl: getImageUrl('happy-hands.svg'),
+		};
+	}
 };
 </script>

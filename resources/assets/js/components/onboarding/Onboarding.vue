@@ -52,9 +52,10 @@
 		width: 100%
 
 	.scrollable-container, .onboarding-stepper
-		max-width: 730px
 		margin-left: auto
 		margin-right: auto
+		max-width: 730px
+		width: 100%
 
 	.scrollable-container
 		flex-grow: 1

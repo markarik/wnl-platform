@@ -1,10 +1,19 @@
 <template>
-	<div>
-		<h2>Gwarancja satysfakcji ⭐️</h2>
-		<p>Dla osób, które ukończyły studia w języku polskim. 🇵🇱</p>
-		<p>Jeśli ukończysz kurs w terminie i nie zdasz egzaminu, otrzymasz darmowe przedłużenie uczestnictwa lub zwrot wpłaty!</p>
+	<div class="has-text-centered">
+		<img :src="imageUrl" alt="" class="onboarding-image margin bottom">
+		<h2 class="title">Gwarancja satysfakcji ⭐️</h2>
+		<div class="row">
+			<div class="row-item">
+				<span>🇵🇱</span>
+				<span>Dla osób, które ukończyły studia w języku polskim.</span>
+			</div>
+			<div class="row-item">
+				<span>😤</span>
+				<span>Jeśli ukończysz kurs w terminie i nie zdasz egzaminu, otrzymasz darmowe przedłużenie uczestnictwa lub zwrot wpłaty!</span>
+			</div>
+		</div>
 
-		<h3>3 warunki przyznania Gwarancji satysfakcji</h3>
+		<h3 class="title is-3">3 warunki przyznania Gwarancji satysfakcji</h3>
 		<p>Czyli dlaczego warto rozwiązać Wstępny LEK?</p>
 
 		<h3>1. Rozwiązanie próbnego, Wstępnego LEK-u przed rozpoczęciem pierwszej lekcji</h3>
@@ -24,13 +33,21 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.onboarding-image
+		max-width: 200px
 </style>
 
 <script>
-export default {
+import {getImageUrl} from 'js/utils/env';
 
+export default {
+	data() {
+		return {
+			imageUrl: getImageUrl('onboarding-screen-satisfaction-guarantee.png'),
+		};
+	}
 };
 </script>

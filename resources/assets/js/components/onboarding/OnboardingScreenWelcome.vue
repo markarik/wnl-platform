@@ -1,6 +1,6 @@
 <template>
 	<div class="has-text-centered">
-		<img :src="imageUrl">
+		<img :src="imageUrl" alt="" class="onboarding-image margin bottom">
 		<h2 class="title">Cześć {{currentUserName}} 👋</h2>
 		<p class="title is-5">Zanim rozpoczniesz naukę, poznasz najważniejsze funkcje platformy i kursu ⭐</p>
 		<div class="row">
@@ -18,6 +18,9 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.onboarding-image
+		max-width: 274px
 </style>
 
 <script>

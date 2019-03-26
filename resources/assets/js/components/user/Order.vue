@@ -187,7 +187,7 @@
 						</template>
 						<ul class="payments__list">
 							<li v-for="payment in order.payments" :key="payment.id" class="payments__link">
-								<span>{{payment.created_at}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
+								<span>{{formatTime(payment.created_at)}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
 							</li>
 						</ul>
 						<small v-if="isPending">Księgowanie wpłat może potrwać do 3 dni roboczych.</small>
@@ -637,6 +637,9 @@ export default {
 			nextTick(() => {
 				this.$refs.p24Form.$el.submit();
 			});
+		},
+		formatTime(time) {
+			return moment(time * 1000).format('L LT');
 		}
 	},
 	mounted() {

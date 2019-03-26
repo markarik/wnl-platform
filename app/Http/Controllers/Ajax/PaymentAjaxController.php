@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 
 class PaymentAjaxController extends Controller
 {
@@ -37,6 +38,8 @@ class PaymentAjaxController extends Controller
 			'order_id' => $order->id,
 			'status' => 'in-progress',
 		]);
+
+		Session::forget(['coupon', 'productId', 'orderId']);
 
 		return response()->json(['status' => 'success']);
 	}

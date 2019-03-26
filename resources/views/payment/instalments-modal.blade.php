@@ -38,6 +38,8 @@
 	'pricing-link-href' => trans('payment.pricing-link-href'),
 	'tou-link-href' => trans('payment.tou-link-href'),
 ])</p>
-<button id="instalments-modal-closer" class="a-button -big">
-	@lang('payment.instalments-modal-button')
-</button>
+<div class="-textCenter">
+	<button id="instalments-modal-closer" class="a-button -big">
+		@lang('payment.instalments-modal-button')
+	</button>
+</div>

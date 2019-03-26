@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderInstalment;
 use App\Models\Payment as PaymentModel;
 use App\Models\PaymentMethod;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -21,7 +22,11 @@ class ConfirmOrderController extends Controller
 		Log::debug('Order confirmation');
 
 		/** @var Order $order */
-		$order = $user->orders()->recent();
+		$order = $user->orders()->find(Session::get('orderId'));
+
+		if (!$order instanceof Order) {
+			return redirect(route('payment-personal-data', ['slug' => Product::SLUG_WNL_ONLINE]));
+		}
 
 		$coupon = $order->coupon;
 		$productPriceWithCoupon = $order->total_with_coupon;

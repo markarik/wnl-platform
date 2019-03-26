@@ -48,6 +48,7 @@
   }
 
   &:disabled {
+    background-color: $color-white;
     border-color: $color-athens-grey;
     pointer-events: none;
   }

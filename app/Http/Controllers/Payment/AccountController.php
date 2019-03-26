@@ -24,26 +24,18 @@ class AccountController extends Controller
 	public function index(Request $request)
 	{
 		$user = Auth::user();
-		$product = $this->getProduct($request);
-		$coupon = $this->readCoupon($product, $user);
 
 		if ($user) {
-			$hasCurrentProduct = $user->getLatestPaidCourseProductId() === $product->id;
-			$hasParticipantCoupon = !empty($coupon) && $coupon->kind === Coupon::KIND_PARTICIPANT;
-			$hasBoughtAlbum = $user->getProducts()->filter(function($product) {
-				return $product->slug === Product::SLUG_WNL_ALBUM;
-			})->count() > 0;
+			$hasCurrentProduct = $this->hasCurrentProduct($request);
+			$canBuyAlbum = $this->canBuyAlbum($request);
 
-			if (!$hasBoughtAlbum && $hasParticipantCoupon && $hasCurrentProduct) {
+			if ($hasCurrentProduct && $canBuyAlbum) {
 				return view('payment.account-buy-album', [
 					'user' => $user
 				]);
 			}
 
-			if (
-				($hasBoughtAlbum && $hasCurrentProduct && $hasParticipantCoupon)
-				|| (!$hasParticipantCoupon && $hasCurrentProduct)
-			) {
+			if ($hasCurrentProduct && !$canBuyAlbum) {
 				return view('payment.account-no-available-product', [
 					'user' => $user,
 				]);
@@ -95,6 +87,6 @@ class AccountController extends Controller
 		Log::debug('User automatically logged in after registration.');
 
 
-		return redirect(route('payment-personal-data'));
+		return redirect(route('payment-personal-data', ['slug' => Product::SLUG_WNL_ONLINE]));
 	}
 }

@@ -6,6 +6,7 @@ use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 trait CheckoutTrait
@@ -52,5 +53,25 @@ trait CheckoutTrait
 		}
 
 		return $coupon;
+	}
+
+	private function canBuyAlbum(Request $request) {
+		$user = Auth::user();
+
+		$hasProlongedCourse = $user->orders->filter(function($order) {
+				return $order->paid && !$order->canceled && $order->coupon && $order->coupon->kind === Coupon::KIND_PARTICIPANT;
+			})->count() > 0;
+		$hasBoughtAlbum = $user->getProducts()->filter(function($product) {
+				return $product->slug === Product::SLUG_WNL_ALBUM;
+			})->count() > 0;
+
+		return !$hasBoughtAlbum && $hasProlongedCourse;
+	}
+
+	private function hasCurrentProduct(Request $request) {
+		$user = Auth::user();
+
+		$product = $this->getProduct($request);
+		return $user->getLatestPaidCourseProductId() === $product->id;
 	}
 }

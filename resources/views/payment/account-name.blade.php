@@ -20,7 +20,11 @@
 		</div>
 
 
-		<a class="a-button -big o-column__row" href="{{route('payment-personal-data')}}" data-button="account-continue">
+		<a
+				class="a-button -big o-column__row"
+				href="{{route('payment-personal-data', ['slug' => \App\Models\Product::SLUG_WNL_ONLINE])}}"
+				data-button="account-continue"
+		>
 			@lang('payment.account-name-submit')
 		</a>
 	</div>

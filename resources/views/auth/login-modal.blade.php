@@ -40,8 +40,8 @@
 			</p>
 
 			{{-- Submit --}}
-			<p class="control">
-				<button type="submit" class="button is-primary is-wide">
+			<p class="has-text-centered">
+				<button type="submit" class="a-button -big">
 					@lang('auth.submit')
 				</button>
 			</p>

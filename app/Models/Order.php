@@ -199,7 +199,9 @@ class Order extends Model
 	}
 
 	public function getHasShipmentAttribute() {
-		return empty($this->coupon) || $this->coupon->kind !== Coupon::KIND_PARTICIPANT;
+		return $this->product->slug !== Product::SLUG_WNL_ALBUM
+			|| empty($this->coupon)
+			|| $this->coupon->kind !== Coupon::KIND_PARTICIPANT;
 	}
 
 	public function cancel()

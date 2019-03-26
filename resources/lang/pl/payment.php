@@ -200,6 +200,7 @@ return [
 	'personal-data-invoice-heading' => 'Dane do faktury',
 	'confirm-order-submit' => 'Składam zamówienie',
 	'confirm-order-payment-method-now-label' => 'Dostęp do platformy od razu',
+	'confirm-order-payment-method-now-label-album' => 'Zapłać teraz',
 	'confirm-order-payment-method-now-info' => 'Skupisz się już tylko na nauce',
 	'confirm-order-payment-method-later-label' => 'Kupuję i płacę w ciągu 7 dni',
 	'confirm-order-payment-method-later-info' => 'Zarezerwuj sobie miejsce w kursie',

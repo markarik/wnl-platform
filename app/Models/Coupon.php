@@ -72,6 +72,9 @@ class Coupon extends Model
 
 	public function isApplicableForProduct(Product $product): bool
 	{
+		// disable coupons for albums
+		if ($product->slug === Product::SLUG_WNL_ALBUM) return false;
+
 		return $this->products->count() === 0 || $this->products->contains($product);
 	}
 }

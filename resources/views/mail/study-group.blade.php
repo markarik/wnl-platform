@@ -5,7 +5,7 @@
 	<h3>Cześć!</h3>
 
 	<p>
-		Cieszymy się, że Ty i Twoja grupa dołączacie do nas! :)
+		Cieszymy się, że Ty i Twoja grupa dołączycie do nas! :)
 	</p>
 
 	<p class="has-text-centered" style="text-transform: uppercase;">Twój kod Study Group o wartości {{ $coupon->value_with_unit ?? '{value_with_unit}' }}, to:</p>
@@ -22,9 +22,11 @@
 		Kupon będzie ważny do <strong>{!! isset($coupon) && isset($coupon->expires_at) ? $coupon->expires_at->format('d.m.Y') : '{expires}' !!}</strong>.
 	</p>
 
-	<h4>
-		Przypominamy, że nie ma już możliwości dopisywania osób do Waszej listy. Dziękujemy za wyrozumiałość!
-	</h4>
+	<p>
+		<strong>
+			Przypominamy, że nie ma już możliwości dopisywania osób do Waszej listy.
+		</strong>
+	</p>
 
 	<p>
 		Jako grupa pamiętajcie, aby zamówienia z użyciem swoich kodów opłaciło co najmniej 10 osób - w przeciwnym wypadku będziemy musieli anulować zniżkę. :(
@@ -38,5 +40,5 @@
 		<img src="https://media.giphy.com/media/wSNDFkJywdW24/giphy.gif" alt="Dobrze, że jesteście!" style="display: block; margin: 0 auto;">
 	</p>
 
-	<p>Z pozdrowieniami,</p>
+	<p>Z pozdrowieniami</p>
 @endsection

@@ -404,7 +404,7 @@ export default {
 			.then(([tasks, filtersList]) => {
 				this.moderators = filtersList.data['task-assignee'];
 
-				this.labelFilters = this.parseSubjectFilters(filtersList.data['task-labels']);
+				this.labelFilters = this.parseSubjectFilters(filtersList.data['task-course_structure']);
 				this.selectedByLabelFilters = this.buildByLessonFiltering();
 
 				this.subjectTypeFilters = this.parseSubjectTypeFilters(filtersList.data['task-subject_type']);

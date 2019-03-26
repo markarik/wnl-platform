@@ -106,6 +106,9 @@ trait ProvidesApiFiltering
 
 	protected function getFilter($filterName)
 	{
+		echo '<pre>';
+    	var_dump($filterName);
+    	echo '</pre>';
 		$filterClass = $this->getFilterClass($filterName);
 
 		return new $filterClass();

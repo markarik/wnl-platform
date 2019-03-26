@@ -9,7 +9,7 @@ use App\Models\Category;
 class TasksApiController extends ApiController
 {
 	static $AVAILABLE_FILTERS = [
-		'task-labels',
+		'task-course_structure',
 		'task-assignee',
 		'task-subject_type'
 	];

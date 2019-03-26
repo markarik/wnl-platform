@@ -1,9 +1,9 @@
-<?php namespace App\Http\Controllers\Api\Filters\Task;
+<?php namespace App\Http\Controllers\Api\Filters\CourseStructure;
 
 use App\Http\Controllers\Api\Filters\ApiFilter;
 use App\Models\Category;
 
-class LabelsFilter extends ApiFilter
+class CourseStructureFilter extends ApiFilter
 {
     protected $expected = ['list'];
 

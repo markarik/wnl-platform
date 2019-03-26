@@ -89,7 +89,7 @@ export default {
 
 			const albumOrders = this.orders.filter(order => order.product.slug === 'wnl-album');
 
-			return albumOrders.length === 0 && prolongationOrders.length > 0;
+			return albumOrders.length < prolongationOrders.length;
 		},
 		orderAlbumUrl() {
 			return getUrl('payment/personal-data/wnl-album');

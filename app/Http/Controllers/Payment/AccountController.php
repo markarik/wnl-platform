@@ -26,16 +26,16 @@ class AccountController extends Controller
 		$user = Auth::user();
 
 		if ($user) {
-			$product = $this->getProduct($request);
-			$hasCurrentProduct = $user->getLatestPaidCourseProductId() === $product->id;
+			$hasCurrentProduct = $this->hasCurrentProduct($request);
+			$canBuyAlbum = $this->canBuyAlbum($request);
 
-			if ($hasCurrentProduct && $this->canBuyAlbum($request)) {
+			if ($hasCurrentProduct && $canBuyAlbum) {
 				return view('payment.account-buy-album', [
 					'user' => $user
 				]);
 			}
 
-			if ($hasCurrentProduct && !$this->canBuyAlbum($request)) {
+			if ($hasCurrentProduct && !$canBuyAlbum) {
 				return view('payment.account-no-available-product', [
 					'user' => $user,
 				]);

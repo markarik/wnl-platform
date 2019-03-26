@@ -67,4 +67,11 @@ trait CheckoutTrait
 
 		return !$hasBoughtAlbum && $hasProlongedCourse;
 	}
+
+	private function hasCurrentProduct(Request $request) {
+		$user = Auth::user();
+
+		$product = $this->getProduct($request);
+		return $user->getLatestPaidCourseProductId() === $product->id;
+	}
 }

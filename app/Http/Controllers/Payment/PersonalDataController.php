@@ -26,7 +26,8 @@ class PersonalDataController extends Controller
 		$user = Auth::user();
 		$product = $this->getProduct($request);
 		$coupon = $this->readCoupon($product, $user);
-		$form = $this->setupForm($coupon, $user);
+		$addresEnabled = $this->addresEnabled($coupon);
+		$form = $this->setupForm($user, $addresEnabled);
 
 		return view('payment.personal-data', [
 			'form'    => $form,
@@ -39,7 +40,8 @@ class PersonalDataController extends Controller
 		$product = $this->getProduct($request);
 		$user = Auth::user();
 		$coupon = $this->readCoupon($product, $user);
-		$form = $this->setupForm($coupon, $user);
+		$addresEnabled = $this->addresEnabled($coupon);
+		$form = $this->setupForm($user, $addresEnabled);
 
 		if (!$form->isValid()) {
 			Log::notice('Sing up form invalid, redirecting...');
@@ -47,7 +49,7 @@ class PersonalDataController extends Controller
 			return redirect()->back()->withErrors($form->getErrors())->withInput();
 		}
 
-		$this->updateAccount($user, $request, $form);
+		$this->updateAccount($user, $request, $form, $addresEnabled);
 
 		if (!!Session::get('orderId')) {
 			$this->updateOrder($product, $user, $request, $coupon);
@@ -58,14 +60,14 @@ class PersonalDataController extends Controller
 		return redirect(route('payment-confirm-order'));
 	}
 
-	protected function setupForm($coupon, $user) {
+	protected function setupForm($user, $address = true) {
 		$form = $this->form(PersonalDataForm::class, [
 			'method' => 'POST',
 			'url'    => route('payment-personal-data-post'),
 			'model'  => $user,
 		]);
 
-		if (empty($coupon) || $coupon->kind !== Coupon::KIND_PARTICIPANT) {
+		if ($address) {
 			$form->compose(AddressForm::class);
 		}
 
@@ -112,7 +114,7 @@ class PersonalDataController extends Controller
 		);
 	}
 
-	protected function updateAccount($user, $request, $form)
+	protected function updateAccount($user, $request, $form, $addresEnabled = true)
 	{
 		$userData = [
 			'invoice' => (bool) $request->invoice,
@@ -154,15 +156,17 @@ class PersonalDataController extends Controller
 			]
 		);
 
-		$user->userAddress()->updateOrCreate(
-		['user_id' => $user->id],
-		[
-			'street'    => $request->get('address'),
-			'zip'       => $request->get('zip'),
-			'city'      => $request->get('city'),
-			'phone'     => $request->get('phone'),
-			'recipient' => $request->get('recipient'),
-		]);
+		if($addresEnabled) {
+			$user->userAddress()->updateOrCreate(
+				['user_id' => $user->id],
+				[
+					'street'    => $request->get('address'),
+					'zip'       => $request->get('zip'),
+					'city'      => $request->get('city'),
+					'phone'     => $request->get('phone'),
+					'recipient' => $request->get('recipient'),
+				]);
+		}
 
 		if (!$form->personal_identity_number->getOption('attr.disabled')) {
 			$user->personalData()->updateOrCreate(
@@ -208,5 +212,9 @@ class PersonalDataController extends Controller
 		}
 
 		$order->attachCoupon($coupon);
+	}
+
+	private function addresEnabled($coupon) {
+		return empty($coupon) || $coupon->kind !== Coupon::KIND_PARTICIPANT;
 	}
 }

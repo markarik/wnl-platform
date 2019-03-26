@@ -7,22 +7,22 @@
 
 		<div class="row margin bottom">
 			<div class="row-item">
-				<span>🇵🇱</span>
+				<span class="row-item-icon">🇵🇱</span>
 				<span>Dla osób, które ukończyły studia w języku polskim.</span>
 			</div>
 			<div class="row-item">
-				<span>😤</span>
+				<span class="row-item-icon">😤</span>
 				<span>Jeśli ukończysz kurs w terminie i nie zdasz egzaminu, otrzymasz darmowe przedłużenie uczestnictwa lub zwrot wpłaty!</span>
 			</div>
 		</div>
 
-		<h3 class="title is-3 has-text-centered">3 warunki przyznania Gwarancji satysfakcji</h3>
+		<h3 class="title is-4 has-text-centered">3 warunki przyznania Gwarancji satysfakcji</h3>
 		<p class="has-text-centered margin bottom">Czyli dlaczego warto rozwiązać Wstępny LEK?</p>
 
 		<div class="ordered-item">
 			<div class="ordered-item-number">1</div>
 			<div>
-				<h3 class="title">Rozwiązanie próbnego, Wstępnego LEK-u przed rozpoczęciem pierwszej lekcji</h3>
+				<h3 class="title is-4">Rozwiązanie próbnego, Wstępnego LEK-u przed rozpoczęciem pierwszej lekcji</h3>
 				<p>Zanim siądziesz do nauki - sprawdź swoją wiedzę! To kluczowe dla dalszej pracy. Link do egzaminu znajdziesz na końcu tego samouczka, a później w lekcji Wstępny LEK.</p>
 			</div>
 		</div>
@@ -30,7 +30,7 @@
 		<div class="ordered-item">
 			<div class="ordered-item-number -purple-secondary">2</div>
 			<div>
-				<h3 class="title">Ukończenie kursu najpóźniej dzień przed egzaminem</h3>
+				<h3 class="title is-4">Ukończenie kursu najpóźniej dzień przed egzaminem</h3>
 				<p>Ukończenie kursu wymaga minimum:</p>
 				<div class="content">
 				<ul>
@@ -46,7 +46,7 @@
 		<div class="ordered-item">
 			<div class="ordered-item-number -sky-blue">3</div>
 			<div>
-				<h3 class="title">Rozwiązanie próbnego, Końcowego LEK-u najpóźniej dzień przed egzaminem</h3>
+				<h3 class="title is-4">Rozwiązanie próbnego, Końcowego LEK-u najpóźniej dzień przed egzaminem</h3>
 				<p>Egzamin znajdziesz w lekcji Końcowy LEK.</p>
 			</div>
 		</div>

@@ -65,12 +65,17 @@
 			display: flex
 
 		/deep/ .row-item
+			display: flex
 			flex: 1 1 50%
 			padding-right: $margin-base
 
+		/deep/ .row-item-icon
+			font-size: $font-size-plus-3
+			margin-right: $margin-base
+
 		/deep/ .ordered-item
 			display: flex
-			margin-bottom: $margin-huge
+			margin: $margin-huge 0
 
 			.-purple-secondary
 				border-color: $color-purple-second

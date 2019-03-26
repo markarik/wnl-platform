@@ -5,21 +5,21 @@
 
 		<div class="row margin bottom">
 			<div class="row-item">
-				<span>🏆</span>
+				<span class="row-item-icon">🏆</span>
 				<span>Zapoznaj się z nimi teraz aby w przyszłości lepiej zaplanować naukę.</span>
 			</div>
 			<div class="row-item">
-				<span>😤</span>
+				<span class="row-item-icon">😤</span>
 				<span>Próba zrealizowania pełnego planu przy 2-3h czasu dziennie, to jedna z najczęstszych przyczyn zaległości i olbrzymiej frustracji.</span>
 			</div>
 		</div>
 		<div class="row margin bottom">
 			<div class="row-item">
-				<span>⏱</span>
+				<span class="row-item-icon">⏱</span>
 				<span>Podane średnie czasy są wyznaczone statystycznie na podstawie danych zebranych podczas poprzednich edycji.</span>
 			</div>
 			<div class="row-item">
-				<span>💡</span>
+				<span class="row-item-icon">💡</span>
 				<span>Wskazówka: Szczegółowy opis tego sposobu pracy znajdziesz w lekcji: WSTĘP DO KURSU > Efektyna nauka</span>
 			</div>
 		</div>
@@ -27,7 +27,7 @@
 		<div class="ordered-item">
 			<div class="ordered-item-number">1</div>
 			<div>
-				<h3 class="title">Minimalny</h3>
+				<h3 class="title is-4">Minimalny</h3>
 				<p class="text-dimmed">
 					<span>⏱</span>
 					Średnio 4 godziny dziennie
@@ -43,7 +43,7 @@
 		<div class="ordered-item">
 			<div class="ordered-item-number -purple-secondary">2</div>
 			<div>
-				<h3 class="title">Podstawowy</h3>
+				<h3 class="title is-4">Podstawowy</h3>
 				<p class="text-dimmed">
 					<span>⏱</span>
 					Średnio 4 godziny dziennie
@@ -59,7 +59,7 @@
 		<div class="ordered-item">
 			<div class="ordered-item-number -sky-blue">3</div>
 			<div>
-				<h3 class="title">Pełny potencjał!</h3>
+				<h3 class="title is-4">Pełny potencjał!</h3>
 				<p class="text-dimmed">
 					<span>⏱</span>
 					Średnio 4 godziny dziennie
@@ -75,7 +75,7 @@
 		<div class="ordered-item">
 			<div class="ordered-item-number -ocean-blue">4</div>
 			<div>
-				<h3 class="title">Nauka długofalowa</h3>
+				<h3 class="title is-4">Nauka długofalowa</h3>
 				<p class="text-dimmed">
 					<span>⏱</span>
 					Średnio 3 godziny dziennie przez 2 edycje kursu
@@ -91,7 +91,7 @@
 		<div class="ordered-item">
 			<div class="ordered-item-number">5</div>
 			<div>
-				<h3 class="title">Codzienna praktyka</h3>
+				<h3 class="title is-4">Codzienna praktyka</h3>
 				<p class="margin bottom text-dimmed">
 					<span>⏱</span>
 					W miarę potrzeb

@@ -1,15 +1,17 @@
 <template>
-	<div class="has-text-centered">
-		<img :src="imageUrl" alt="" class="onboarding-image margin bottom">
-		<h2 class="title">Cześć {{currentUserName}} 👋</h2>
-		<p class="title is-5">Zanim rozpoczniesz naukę, poznasz najważniejsze funkcje platformy i kursu ⭐</p>
+	<div>
+		<figure class="has-text-centered margin bottom">
+			<img :src="imageUrl" alt="" class="onboarding-image">
+		</figure>
+		<h2 class="title has-text-centered">Cześć {{currentUserName}} 👋</h2>
+		<p class="title is-5 has-text-centered">Zanim rozpoczniesz naukę, poznasz najważniejsze funkcje platformy i kursu ⭐</p>
 		<div class="row">
 			<div class="row-item">
-				<span class="margin right">⏰</span>
+				<span class="row-item-icon">⏰</span>
 				<span>Wprowadzenie zajmie Tobie około 10min.</span>
 			</div>
 			<div class="row-item">
-				<span class="margin right">🔁</span>
+				<span class="row-item-icon">🔁</span>
 				<span>Wprowadzenie możesz zamknąc w dowolnym momencie. Bedzie na Ciebie czekać.</span>
 			</div>
 		</div>

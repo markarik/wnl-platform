@@ -1,0 +1,37 @@
+.t-checkout {
+  flex-grow: 1;
+
+  @media #{$breakpoint-m} {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .t-checkout__cart {
+    width: 100%;
+
+    @media #{$breakpoint-m} {
+      order: 2;
+      min-width: 360px;
+      max-width: 628px;
+    }
+  }
+
+  .t-checkout__content {
+    width: 100%;
+    padding: 0 $space-m $space-l $space-m;
+
+    @media #{$breakpoint-m} {
+      max-width: 740px;
+      min-width: 620px;
+      padding: 0 $space-xxxl $space-xxxl;
+    }
+
+    &.-centered {
+      margin: 0 auto;
+    }
+
+    .t-checkout__content__row {
+      margin-bottom: $space-l;
+    }
+  }
+}

@@ -9,27 +9,26 @@ use Tests\Browser\Pages\Payment\P24ChooseBank;
 
 class OnlinePaymentModule
 {
-	public function successfulPayment(BethinkBrowser $browser)
+	public function successfulPayment(BethinkBrowser $browser, string $expectedAmount)
 	{
-		$this->payment($browser);
+		$this->payment($browser, $expectedAmount);
 		$browser->press('@confirm-payment');
 	}
 
-	public function rejectedPayment(BethinkBrowser $browser)
-	{
-		$this->payment($browser);
-		$browser->press('@decline-payment');
-		$browser->click('@return');
-	}
-
-	protected function payment(BethinkBrowser $browser)
+	protected function payment(BethinkBrowser $browser, string $expectedAmount)
 	{
 		$browser
+			->waitUntil('window.origin === "https://sandbox.przelewy24.pl"', 60)
+			->assertSee('Kwota: ' . $expectedAmount . ' PLN')
 			->on(new P24ChooseBank)
-			->click('@ing-logo');
+			->click('@ing-logo')
+			->waitForReload();
 
-		$browser
-			->waitFor('@login-button', 40)
-			->press('@login-button');
+		// On second payment user is already logged in
+		if ($browser->getCurrentPath() === '/pl/login') {
+			$browser
+				->waitFor('@login-button')
+				->press('@login-button');
+		}
 	}
 }

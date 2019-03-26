@@ -162,7 +162,7 @@ export default {
 			return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL');
 		},
 		signUpLink() {
-			return getUrl('payment/select-product');
+			return getUrl('payment/account');
 		},
 	},
 	methods: {

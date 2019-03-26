@@ -36,6 +36,17 @@ class ProductsApiController extends ApiController
 		return $this->transformAndRespond($product);
 	}
 
+	public function getBySlug($slug)
+	{
+		$product = Product::slug($slug);
+
+		if(is_null($product)){
+			return $this->respondNotFound();
+		}
+
+		return $this->transformAndRespond($product);
+	}
+
 	public function getVatRates()
 	{
 		return $this->respondOk(['vat_rates' => Product::VAT_RATES]);

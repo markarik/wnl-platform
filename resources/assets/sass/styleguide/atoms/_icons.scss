@@ -1,0 +1,43 @@
+.a-icon {
+  display: inline-block;
+  font: normal normal normal $icon-s/1 FontAwesome;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+
+  &:before {
+    display: block;
+    margin: 0 auto;
+  }
+
+  &.-touchable {
+    cursor: pointer;
+  }
+
+  &.-touchable:not(.-x-large):not(.-large) {
+    padding: #{($min-touchable-size - $icon-s) / 2}
+  }
+
+  &.-x-large {
+    font-size: $icon-xl;
+  }
+
+  &.-large {
+    font-size: $icon-l;
+  }
+
+  &.-medium {
+    font-size: $icon-m;
+
+    &.-touchable {
+      padding: #{($min-touchable-size - $icon-m) / 2}
+    }
+  }
+
+  &.-x-small {
+    font-size: $icon-xs;
+
+    &.-touchable {
+      padding: #{($min-touchable-size - $icon-xs) / 2}
+    }
+  }
+}

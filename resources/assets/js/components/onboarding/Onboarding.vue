@@ -22,7 +22,7 @@
 			<div class="has-text-centered buttons">
 				<button
 					v-if="isLastStep"
-					class="button is-secondary"
+					class="button is-secondary margin right"
 					@click="onCancelClick"
 				>Pomijam Wstępny LEK</button>
 				<button
@@ -67,6 +67,37 @@
 		/deep/ .row-item
 			flex: 1 1 50%
 			padding-right: $margin-base
+
+		/deep/ .ordered-item
+			display: flex
+			margin-bottom: $margin-huge
+
+			.-purple-secondary
+				border-color: $color-purple-second
+				color: $color-purple-second
+
+			.-sky-blue
+				border-color: $color-sky-blue
+				color: $color-sky-blue
+
+			.-ocean-blue
+				border-color: $color-ocean-blue
+				color: $color-ocean-blue
+
+		// TODO color
+
+		/deep/ .ordered-item-number
+			align-items: center
+			border: 1px solid $color-purple
+			border-radius: 100%
+			color: $color-purple
+			display: flex
+			flex-shrink: 0
+			font-size: $font-size-plus-4
+			height: 64px
+			justify-content: center
+			margin-right: $margin-big
+			width: 64px
 
 	.buttons
 		border-top: $border-light-gray

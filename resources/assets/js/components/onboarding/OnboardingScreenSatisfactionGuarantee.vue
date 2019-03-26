@@ -1,8 +1,11 @@
 <template>
-	<div class="has-text-centered">
-		<img :src="imageUrl" alt="" class="onboarding-image margin bottom">
-		<h2 class="title">Gwarancja satysfakcji ⭐️</h2>
-		<div class="row">
+	<div>
+		<figure class="has-text-centered margin bottom">
+			<img :src="imageUrl" alt="" class="onboarding-image">
+		</figure>
+		<h2 class="title has-text-centered">Gwarancja satysfakcji ⭐️</h2>
+
+		<div class="row margin bottom">
 			<div class="row-item">
 				<span>🇵🇱</span>
 				<span>Dla osób, które ukończyły studia w języku polskim.</span>
@@ -13,23 +16,40 @@
 			</div>
 		</div>
 
-		<h3 class="title is-3">3 warunki przyznania Gwarancji satysfakcji</h3>
-		<p>Czyli dlaczego warto rozwiązać Wstępny LEK?</p>
+		<h3 class="title is-3 has-text-centered">3 warunki przyznania Gwarancji satysfakcji</h3>
+		<p class="has-text-centered margin bottom">Czyli dlaczego warto rozwiązać Wstępny LEK?</p>
 
-		<h3>1. Rozwiązanie próbnego, Wstępnego LEK-u przed rozpoczęciem pierwszej lekcji</h3>
-		<p>Zanim siądziesz do nauki - sprawdź swoją wiedzę! To kluczowe dla dalszej pracy. Link do egzaminu znajdziesz na końcu tego samouczka, a później w lekcji Wstępny LEK.</p>
+		<div class="ordered-item">
+			<div class="ordered-item-number">1</div>
+			<div>
+				<h3 class="title">Rozwiązanie próbnego, Wstępnego LEK-u przed rozpoczęciem pierwszej lekcji</h3>
+				<p>Zanim siądziesz do nauki - sprawdź swoją wiedzę! To kluczowe dla dalszej pracy. Link do egzaminu znajdziesz na końcu tego samouczka, a później w lekcji Wstępny LEK.</p>
+			</div>
+		</div>
 
-		<h3>2. Ukończenie kursu najpóźniej dzień przed egzaminem</h3>
-		<p>Ukończenie kursu wymaga minimum:</p>
-		<ul>
-			<li>300h aktywności na platformie</li>
-			<li>80% ukończonych lekcji</li>
-			<li>2500 rozwiązanych pytań zamkniętych</li>
-		</ul>
-		<p>Wszystkie statystyki możesz śledzić w zakładce KONTO > Statystyki.</p>
+		<div class="ordered-item">
+			<div class="ordered-item-number -purple-secondary">2</div>
+			<div>
+				<h3 class="title">Ukończenie kursu najpóźniej dzień przed egzaminem</h3>
+				<p>Ukończenie kursu wymaga minimum:</p>
+				<div class="content">
+				<ul>
+					<li>300h aktywności na platformie</li>
+					<li>80% ukończonych lekcji</li>
+					<li>2500 rozwiązanych pytań zamkniętych</li>
+				</ul>
+				</div>
+				<p>Wszystkie statystyki możesz śledzić w zakładce KONTO > Statystyki.</p>
+			</div>
+		</div>
 
-		<h3>3. Rozwiązanie próbnego, Końcowego LEK-u najpóźniej dzień przed egzaminem</h3>
-		<p>Egzamin znajdziesz w lekcji Końcowy LEK.</p>
+		<div class="ordered-item">
+			<div class="ordered-item-number -sky-blue">3</div>
+			<div>
+				<h3 class="title">Rozwiązanie próbnego, Końcowego LEK-u najpóźniej dzień przed egzaminem</h3>
+				<p>Egzamin znajdziesz w lekcji Końcowy LEK.</p>
+			</div>
+		</div>
 	</div>
 </template>
 

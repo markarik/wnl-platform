@@ -96,7 +96,7 @@ export default {
 		},
 		resetProgress() {
 			this.satisfactionGuaranteeModalVisible = true;
-			this.satisfactionGuaranteeModalTitle = this.$t('user.progressReset.progressHeader');
+			this.satisfactionGuaranteeModalTitle = this.$t('user.progressReset.progressModalHeader');
 			this.satisfactionGuaranteeModalSubmitAction = async () => {
 				try {
 					await this.resetAndReloadProgress();
@@ -115,7 +115,7 @@ export default {
 		},
 		resetQuestions() {
 			this.satisfactionGuaranteeModalVisible = true;
-			this.satisfactionGuaranteeModalTitle = this.$t('user.progressReset.questionsHeader');
+			this.satisfactionGuaranteeModalTitle = this.$t('user.progressReset.questionsModalHeader');
 			this.satisfactionGuaranteeModalSubmitAction = () => {
 				try {
 					this.deleteQuestions();

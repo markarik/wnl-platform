@@ -118,7 +118,7 @@
 						<button
 							@click="satisfactionGuaranteeModalVisible = true"
 							class="button is-danger to-right"
-						>Wyczyść wszystkie wyniki</button>
+						>{{$t('questions.dashboard.stats.resetButton')}}</button>
 					</div>
 				</div>
 				<router-view v-else :id="id" @userEvent="onUserEvent"/>
@@ -153,7 +153,7 @@
 		</div>
 		<wnl-satisfaction-guarantee-modal
 			:visible="satisfactionGuaranteeModalVisible"
-			:title="$t('user.progressReset.questionsHeader')"
+			:title="$t('user.progressReset.questionsModalHeader')"
 			@closeModal="satisfactionGuaranteeModalVisible = false"
 			@submit="resetQuestionsProgress"
 		></wnl-satisfaction-guarantee-modal>

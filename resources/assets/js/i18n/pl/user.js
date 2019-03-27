@@ -46,8 +46,10 @@ export const user = {
 	},
 	progressReset: {
 		header: 'Usuwanie postępu',
-		progressHeader: 'Czy na pewno chcesz usunąć postęp w nauce?',
-		questionsHeader: 'Czy na pewno chcesz usunąć wszystkie wyniki pytań kontrolnych?',
+		progressHeader: 'Postęp w nauce',
+		questionsHeader: 'Wyniki pytań kontrolnych',
+		progressModalHeader: 'Czy na pewno chcesz usunąć postęp w nauce?',
+		questionsModalHeader: 'Czy na pewno chcesz usunąć wszystkie wyniki pytań kontrolnych?',
 		collectionsHeader: 'Kolekcje',
 		progressButton: 'Wyczyść postęp w nauce',
 		questionsButton: 'Wyczyść wszystkie wyniki',

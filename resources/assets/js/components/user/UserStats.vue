@@ -29,7 +29,7 @@
 		<div>Liczba wątków: {{totalSocial}}</div>
 		<wnl-satisfaction-guarantee-modal
 			:visible="satisfactionGuaranteeModalVisible"
-			:title="$t('user.progressReset.progressHeader')"
+			:title="$t('user.progressReset.progressModalHeader')"
 			@closeModal="satisfactionGuaranteeModalVisible = false"
 			@submit="resetProgress"
 		></wnl-satisfaction-guarantee-modal>
@@ -65,7 +65,7 @@ export default {
 	mixins: [emits_events],
 	data() {
 		return {
-			satisfactionGuaranteeModalVisible: true
+			satisfactionGuaranteeModalVisible: false
 		};
 	},
 	computed: {

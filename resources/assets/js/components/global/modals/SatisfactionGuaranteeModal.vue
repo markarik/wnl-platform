@@ -6,7 +6,7 @@
 			<p class="margin bottom">{{$t('ui.satisfactionGuarantee.body')}}</p>
 			<p class="margin bottom text-dimmed satisfaction-guarantee-modal__extra-info">
 				<i class="fa fa-info-circle"/>
-				<span v-html="$t('ui.satisfactionGuarantee.note')"></span>
+				<span v-html="$t('ui.satisfactionGuarantee.note', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
 			</p>
 			<div class="satisfaction-guarantee-modal__actions">
 				<button class="button" @click="$emit('closeModal')">{{$t('ui.satisfactionGuarantee.close')}}</button>

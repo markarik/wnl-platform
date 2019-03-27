@@ -18,7 +18,8 @@ class UsersApiController extends ApiController
 
 	public function get($id)
 	{
-		$userId = $id === 'current' ? Auth::user()->id : $id;
+		$currentUser = Auth::user();
+		$userId = $id === 'current' ? $currentUser->id : $id;
 
 		/** @var Builder $builder */
 		$builder = $this->eagerLoadIncludes(User::class);
@@ -28,6 +29,10 @@ class UsersApiController extends ApiController
 
 		if (empty($user)) {
 			return $this->respondNotFound();
+		}
+
+		if (!$currentUser->can('view', $user)) {
+			return $this->respondForbidden();
 		}
 
 		return $this->transformAndRespond($user);

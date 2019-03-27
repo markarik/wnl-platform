@@ -1,3 +1,4 @@
+<?php /** @var Closure $n */ ?>
 @extends('payment.invoices.final-layout')
 
 @section('title')
@@ -149,20 +150,21 @@
 				<th>Vat</th>
 				<th>Brutto</th>
 			</tr>
+			<?php /** @var \App\Models\OrderInstalment $instalment */ ?>
 			@foreach($invoiceOrder->instalments['instalments'] as $index => $instalment)
-				@if($instalment['left'] > 0)
+				@if($instalment->left_amount > 0)
 					<tr>
-						<td>{{ $instalment['date']->format('d-m-Y') }}</td>
-						<td>{{ $n($instalment['amount'] / 1.23) }}zł</td>
-						<td>{{ $n($instalment['amount'] - $instalment['amount'] / 1.23) }}zł</td>
-						<td>{{ $n($instalment['amount']) }}zł</td>
+						<td>{{ $instalment->due_date->format('d-m-Y') }}</td>
+						<td>{{ $n($instalment->amount / 1.23) }}zł</td>
+						<td>{{ $n($instalment->amount - $instalment->amount / 1.23) }}zł</td>
+						<td>{{ $n($instalment->amount) }}zł</td>
 					</tr>
 				@endif
 			@endforeach
 			<tr>
 				<td><strong>Razem</strong></td>
-				<td>{{ $n($invoiceOrder->instalments['total']/ 1.23) }}zł</td>
-				<td>{{ $n($invoiceOrder->instalments['total']- $invoiceOrder->instalments['total'] / 1.23) }}zł</td>
+				<td>{{ $n($invoiceOrder->instalments['total'] / 1.23) }}zł</td>
+				<td>{{ $n($invoiceOrder->instalments['total'] - $invoiceOrder->instalments['total'] / 1.23) }}zł</td>
 				<td>{{ $n($invoiceOrder->instalments['total']) }}zł</td>
 			</tr>
 		</table>

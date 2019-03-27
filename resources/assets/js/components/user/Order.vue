@@ -1,5 +1,5 @@
 <template>
-	<div class="card">
+	<div class="card order" :data-order-id="order.id">
 		<div class="card-content">
 			<div class="media">
 				<div class="media-left">
@@ -103,6 +103,7 @@
 
 							<p class="aligncenter margin top">
 								<button
+									data-button="pay-next-instalment"
 									:class="{
 									'button': true,
 									'is-primary': true,
@@ -113,8 +114,8 @@
 								</button>
 							</p>
 							<p class="metadata aligncenter margin vertical">
-								Kolejna rata: <strong>{{ order.instalments.nextPayment.amount }}zł do
-								{{ instalmentDate(order.instalments.nextPayment.date) }}</strong>
+								Kolejna rata: <strong>{{ order.instalments.nextPayment.left_amount }}zł do
+								{{ instalmentDate(order.instalments.nextPayment.due_date) }}</strong>
 							</p>
 
 							<table class="table is-striped">
@@ -123,13 +124,13 @@
 									<th>Termin płatności</th>
 									<th>Zapłacone / Do&nbsp;zapłaty</th>
 								</tr>
-								<tr v-for="(instalment, index) in order.instalments.instalments" :key="index">
+								<tr v-for="(instalment, index) in order.instalments.instalments" :key="instalment.id">
 									<td>{{index + 1}}</td>
 									<td>
-										{{ instalmentDate(instalment.date) }}
+										{{ instalmentDate(instalment.due_date) }}
 									</td>
-									<td>
-										{{instalment.amount - instalment.left}}zł / {{instalment.amount}}zł
+									<td class="instalment-amount" :data-instalment="index + 1">
+										{{instalment.amount - instalment.left_amount}}zł / {{instalment.amount}}zł
 									</td>
 								</tr>
 								<tr>
@@ -186,7 +187,7 @@
 						</template>
 						<ul class="payments__list">
 							<li v-for="payment in order.payments" :key="payment.id" class="payments__link">
-								<span>{{payment.created_at}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
+								<span>{{formatTime(payment.created_at)}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
 							</li>
 						</ul>
 						<small v-if="isPending">Księgowanie wpłat może potrwać do 3 dni roboczych.</small>
@@ -502,7 +503,7 @@ export default {
 		},
 		amountToBePaidNext() {
 			if (this.order.method === 'instalments') {
-				return this.order.instalments.nextPayment.amount;
+				return this.order.instalments.nextPayment.left_amount;
 			}
 
 			return this.order.total;
@@ -593,7 +594,7 @@ export default {
 			return code ? getUrl(`payment/voucher?code=${code}`) : getUrl('payment/voucher');
 		},
 		instalmentDate(date) {
-			return moment(date.date).format('LL');
+			return moment(date).format('LL');
 		},
 		getCouponValue(coupon) {
 			return coupon.type === 'amount' ? `${coupon.value}zł` : `${coupon.value}%`;
@@ -636,6 +637,9 @@ export default {
 			nextTick(() => {
 				this.$refs.p24Form.$el.submit();
 			});
+		},
+		formatTime(time) {
+			return moment(time * 1000).format('L LT');
 		}
 	},
 	mounted() {

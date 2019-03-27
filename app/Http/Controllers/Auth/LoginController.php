@@ -56,6 +56,10 @@ class LoginController extends Controller
 
 		$request->session()->flash('logout', true);
 
+		$redirectToRoute = $request->get('redirectToRoute');
+		if ($redirectToRoute) {
+			return redirect()->route($redirectToRoute);
+		}
 		return redirect('/login');
 	}
 

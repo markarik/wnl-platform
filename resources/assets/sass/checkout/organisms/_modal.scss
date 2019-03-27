@@ -1,0 +1,12 @@
+.o-checkoutModal {
+  &__header {
+    @include centeredSpread;
+    @include textPlus2;
+
+    margin-bottom: $space-l;
+
+    .a-icon {
+      color: $color-cadet-blue;
+    }
+  }
+}

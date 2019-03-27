@@ -58,7 +58,7 @@ class UsersApiController extends ApiController
 	}
 
 	public function post(PostUser $request) {
-		$user = User::create([
+		$user = User::createWithProfileAndBilling([
 			'first_name' => $request->get('first_name'),
 			'last_name' => $request->get('last_name'),
 			'email' => $request->get('email'),

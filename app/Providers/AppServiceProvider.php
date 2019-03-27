@@ -90,7 +90,6 @@ class AppServiceProvider extends ServiceProvider
 	protected function registerModelObservers()
 	{
 		Models\Order::observe(Observers\OrderObserver::class);
-		Models\User::observe(Observers\UserObserver::class);
 		Models\Lesson::observe(Observers\LessonObserver::class);
 		Models\Notification::observe(Observers\NotificationObserver::class);
 		Models\QnaQuestion::observe(Observers\QnaQuestionObserver::class);

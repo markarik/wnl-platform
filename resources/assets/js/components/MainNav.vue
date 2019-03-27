@@ -136,7 +136,7 @@ export default {
 	computed: {
 		...mapGetters(['currentUser']),
 		signUpLink() {
-			return getUrl('payment/select-product');
+			return getUrl('payment/account');
 		},
 	},
 };

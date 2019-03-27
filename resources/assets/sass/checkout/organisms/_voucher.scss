@@ -1,0 +1,15 @@
+.o-voucher {
+  max-width: 620px;
+  margin: 0 auto;
+  padding-top: $space-l;
+
+  &__headline {
+    text-align: center;
+    @include textPlus3;
+  }
+
+  &__image {
+    margin: 0 auto;
+    max-width: 205px;
+  }
+}

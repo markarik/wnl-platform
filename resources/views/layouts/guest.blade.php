@@ -46,10 +46,10 @@
 					</span>
 
 					<div class="nav-right nav-menu">
-						<form method="post" action="/logout" id="logout-form">
+						<form method="post" action="{{route('logout', ['redirectToRoute' => $logoutRedirectToRoute ?? null])}}" id="logout-form">
 							{{ csrf_field() }}
 						</form>
-						<a href="{{ url('payment/select-product') }}" class="nav-item">
+						<a href="{{ url('payment/account') }}" class="nav-item">
 							Zapisz się na kurs
 						</a>
 						<a href="@lang('common.course-website-link')" class="nav-item">
@@ -80,11 +80,11 @@
 					<small>
 						{{-- <a class="tou-open-modal-link"> --}}
 						<a target="_blank" href="@lang('payment.tou-link-href')">
-							@lang('payment.personal-data-tou-link-content')
+							@lang('payment.account-tou-link-content')
 						</a>
 						&nbsp;|&nbsp;
 						<a target="_blank" href="@lang('payment.privacy-policy-link-href')">
-							@lang('payment.personal-data-privacy-link-content')
+							@lang('payment.account-privacy-policy-link-content')
 						</a>
 					</small>
 				</p>
@@ -101,22 +101,6 @@
 				</p>
 				<small>@lang('common.footer-copy')</small>
 			</footer>
-		</div>
-		<div class="modals">
-			@if(request()->route())
-			<div id="login-modal" class="modal">
-				<div class="modal-background"></div>
-				<div class="modal-card">
-					<header class="modal-card-head">
-						<p class="modal-card-title"></p>
-						<button class="delete"></button>
-					</header>
-					<section class="modal-card-body content">
-						@include('auth.login-modal')
-					</section>
-				</div>
-			</div>
-			@endif
 		</div>
 		<!-- Scripts -->
 		<script src="{{ mix('js/guest.js') }}"></script>

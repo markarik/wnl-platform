@@ -46,8 +46,8 @@ export const user = {
 	},
 	progressReset: {
 		header: 'Usuwanie postępu',
-		progressHeader: 'Postęp w nauce',
-		questionsHeader: 'Wyniki pytań kontrolnych',
+		progressHeader: 'Czy na pewno chcesz usunąć postęp w nauce?',
+		questionsHeader: 'Czy na pewno chcesz usunąć wszystkie wyniki pytań kontrolnych?',
 		collectionsHeader: 'Kolekcje',
 		progressButton: 'Wyczyść postęp w nauce',
 		questionsButton: 'Wyczyść wszystkie wyniki',
@@ -66,7 +66,6 @@ export const user = {
 		collectionsWarning: `Naciśnięcie poniższego przycisku spowoduje
 		usunięcie wszystkiego z Twojej kolekcji, czyli
 		między innymi zapisanych slajdów, pytań kontrolnych, pytań i odpowiedzi.`,
-		progressConfirmation: 'Czy na pewno chcesz usunąć cały postęp w nauce?',
 		questionsConfirmation: 'Czy na pewno chcesz usunąć wyniki pytań kontrolnych?',
 		collectionsConfirmation: 'Czy na pewno chcesz wyczyścić swoją kolekcję?',
 		alertError: 'Ups... Coś poszło nie tak. Spróbujesz jesze raz?',

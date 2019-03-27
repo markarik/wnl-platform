@@ -5,7 +5,7 @@
 		</figure>
 		<h2 class="title has-text-centered">Cześć {{currentUserName}} 👋</h2>
 		<p class="title is-5 has-text-centered">Zanim rozpoczniesz naukę, poznasz najważniejsze funkcje platformy i kursu ⭐</p>
-		<div class="row">
+		<div class="row margin-top-huge">
 			<div class="row-item">
 				<span class="row-item-icon">⏰</span>
 				<span>Wprowadzenie zajmie Tobie około 10min.</span>

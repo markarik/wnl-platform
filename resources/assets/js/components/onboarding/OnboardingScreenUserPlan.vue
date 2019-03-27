@@ -19,7 +19,7 @@
 				<p class="text-dimmed margin bottom">💡 Plan zakłada optymalną kolejność przerabiania przedmiotów. Jeśli chcesz stworzyć indywidualny plan lub go edytować, będziesz mieć taką możliwość w zakładce KONTO > PLAN PRACY.</p>
 				<div class="margin-top-huge">
 					<img :src="imageUrl" alt="" class="onboarding-plan-image">
-					<h3 class="title is-4">Domyślny plan</h3>
+					<h3 class="title is-4 onboarding-plan-header">Domyślny plan</h3>
 					<div>
 						<p class="margin bottom">Proponowany przez nas plan pracy trwa od <strong>{{defaultPlanStartDate}}</strong>, zakłada pracę <strong>5 dni w tygodniu przez 14 tygodni</strong>.</p>
 						<p>
@@ -41,13 +41,20 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
+	.onboarding-plan-header
+		text-align: center
+
+		@media #{$media-query-tablet}
+			text-align: left
+
 	.onboarding-plan-image
-		float: left
-		margin-right: $margin-huge
+		display: block
+		margin: 0 auto
 		max-width: 168px
 
-	.margin-top-huge
-		margin-top: $margin-huge
+		@media #{$media-query-tablet}
+			float: left
+			margin: 0 $margin-huge 0 0
 
 </style>
 

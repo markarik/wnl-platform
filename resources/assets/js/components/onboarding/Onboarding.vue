@@ -12,14 +12,14 @@
 				class="onboarding-stepper"
 				:steps="stepsForStepper"
 				:current-step="currentStepIndexForStepper"
-				v-if="!currentStep.hideOnStepper"
+				v-if="currentStep && !currentStep.hideOnStepper"
 			/>
 			<component
 				class="scrollable-container"
 				v-if="currentStep"
 				:is="currentStep.component"
 			/>
-			<div class="has-text-centered buttons">
+			<div class="has-text-centered buttons" v-if="currentStep">
 				<button
 					v-if="isLastStep"
 					class="button is-secondary margin"
@@ -62,7 +62,7 @@
 	.scrollable-container, .onboarding-stepper
 		margin-left: auto
 		margin-right: auto
-		max-width: 730px
+		max-width: 760px
 		width: 100%
 
 	.onboarding-stepper
@@ -74,59 +74,73 @@
 
 	.scrollable-container
 		flex-grow: 1
-		padding: $margin-base
+		padding: $margin-big
 
-		/deep/ .row
-			@media #{$media-query-tablet}
+		/deep/
+			.row
+				@media #{$media-query-tablet}
+					display: flex
+
+			.row-item
 				display: flex
+				flex: 1 1 50%
+				padding-right: $margin-base
+				margin-bottom: $margin-base
 
-		/deep/ .row-item
-			display: flex
-			flex: 1 1 50%
-			padding-right: $margin-base
-			margin-bottom: $margin-base
+			.row-item-icon
+				font-size: $font-size-plus-3
+				margin-right: $margin-base
 
-		/deep/ .row-item-icon
-			font-size: $font-size-plus-3
-			margin-right: $margin-base
+			.ordered-item
+				margin: $margin-huge 0
 
-		/deep/ .ordered-item
-			margin: $margin-huge 0
+				@media #{$media-query-tablet}
+					display: flex
 
-			@media #{$media-query-tablet}
+				.-purple-secondary
+					border-color: $color-purple-second
+					color: $color-purple-second
+
+				.-sky-blue
+					border-color: $color-sky-blue
+					color: $color-sky-blue
+
+				.-ocean-blue
+					border-color: $color-ocean-blue
+					color: $color-ocean-blue
+
+				.-green
+					border-color: $color-green
+					color: $color-green
+
+				.title
+					text-align: center
+
+					@media #{$media-query-tablet}
+						text-align: left
+
+			.ordered-item-number
+				align-items: center
+				border: 1px solid $color-purple
+				border-radius: 100%
+				color: $color-purple
 				display: flex
+				flex-shrink: 0
+				font-size: $font-size-plus-4
+				height: 64px
+				justify-content: center
+				margin: 0 auto $margin-base
+				width: 64px
 
-			.-purple-secondary
-				border-color: $color-purple-second
-				color: $color-purple-second
+				@media #{$media-query-tablet}
+					margin: 0 $margin-big 0 0
 
-			.-sky-blue
-				border-color: $color-sky-blue
-				color: $color-sky-blue
+			.margin-bottom-medium
+				margin-bottom: $margin-medium
 
-			.-ocean-blue
-				border-color: $color-ocean-blue
-				color: $color-ocean-blue
+			.margin-top-huge
+				margin-top: $margin-huge
 
-			.-green
-				border-color: $color-green
-				color: $color-green
-
-		/deep/ .ordered-item-number
-			align-items: center
-			border: 1px solid $color-purple
-			border-radius: 100%
-			color: $color-purple
-			display: flex
-			flex-shrink: 0
-			font-size: $font-size-plus-4
-			height: 64px
-			justify-content: center
-			margin: 0 auto $margin-base
-			width: 64px
-
-			@media #{$media-query-tablet}
-				margin: 0 $margin-big 0 0 
 
 	.buttons
 		border-top: $border-light-gray
@@ -163,7 +177,7 @@ export default {
 	props: {
 		step: {
 			type: String,
-			required: false,
+			default: null,
 		}
 	},
 	data() {

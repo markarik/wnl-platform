@@ -2,7 +2,7 @@
 	<div class="has-text-centered">
 		<h2 class="title">Obsługa platformy 👨🏻‍🏫</h2>
 		<p class="title is-5">Zanim wylądujesz na Dashboardzie, zapoznaj się z nim w 3 minuty!</p>
-		<div class="onboarding-video-wrapper">
+		<div class="onboarding-video-wrapper margin-top-huge">
 			<iframe
 				class="onboarding-video"
 				src="https://www.youtube.com/embed/koD1wynUvcY"

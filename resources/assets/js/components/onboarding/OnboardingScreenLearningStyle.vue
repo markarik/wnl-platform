@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<h2 class="has-text-centered title">5 sposobów nauki 🤔</h2>
-		<p class="has-text-centered title is-5">Każdy z nich jest dobry! Idealny dla Ciebie to ten, wedle którego będziesz w stanie zrealizować kurs w całości 🙂</p>
+		<p class="has-text-centered title is-5">Każdy z nich jest dobry! Idealny dla Ciebie to ten, wedle którego będziesz w stanie zrealizować kurs w całości.</p>
 
-		<div class="row">
+		<div class="row margin-top-huge">
 			<div class="row-item">
 				<span class="row-item-icon">🏆</span>
 				<span>Zapoznaj się z nimi teraz aby w przyszłości lepiej zaplanować naukę.</span>
@@ -28,7 +28,7 @@
 			<div class="ordered-item-number">1</div>
 			<div>
 				<h3 class="title is-4">Minimalny</h3>
-				<p class="text-dimmed">
+				<p class="text-dimmed margin-bottom-medium">
 					<span>⏱</span>
 					Średnio 4 godziny dziennie
 				</p>
@@ -44,7 +44,7 @@
 			<div class="ordered-item-number -purple-secondary">2</div>
 			<div>
 				<h3 class="title is-4">Podstawowy</h3>
-				<p class="text-dimmed">
+				<p class="text-dimmed margin-bottom-medium">
 					<span>⏱</span>
 					Średnio 4 godziny dziennie
 				</p>
@@ -60,7 +60,7 @@
 			<div class="ordered-item-number -sky-blue">3</div>
 			<div>
 				<h3 class="title is-4">Pełny potencjał!</h3>
-				<p class="text-dimmed">
+				<p class="text-dimmed margin-bottom-medium">
 					<span>⏱</span>
 					Średnio 4 godziny dziennie
 				</p>
@@ -76,7 +76,7 @@
 			<div class="ordered-item-number -ocean-blue">4</div>
 			<div>
 				<h3 class="title is-4">Nauka długofalowa</h3>
-				<p class="text-dimmed">
+				<p class="text-dimmed margin-bottom-medium">
 					<span>⏱</span>
 					Średnio 3 godziny dziennie przez 2 edycje kursu
 				</p>
@@ -101,10 +101,6 @@
 		</div>
 	</div>
 </template>
-
-<style lang="sass" rel="stylesheet/sass" scoped>
-	@import 'resources/assets/sass/variables'
-</style>
 
 <script>
 export default {

@@ -5,7 +5,7 @@
 		</figure>
 		<h2 class="title has-text-centered">Gwarancja satysfakcji ⭐️</h2>
 
-		<div class="row">
+		<div class="row margin-top-huge">
 			<div class="row-item">
 				<span class="row-item-icon">🇵🇱</span>
 				<span>Dla osób, które ukończyły studia w języku polskim.</span>
@@ -16,7 +16,7 @@
 			</div>
 		</div>
 
-		<h3 class="title is-4 has-text-centered">3 warunki przyznania Gwarancji satysfakcji</h3>
+		<h3 class="title is-4 has-text-centered margin-top-huge">3 warunki przyznania Gwarancji satysfakcji</h3>
 		<p class="has-text-centered margin bottom">Czyli dlaczego warto rozwiązać Wstępny LEK?</p>
 
 		<div class="ordered-item">

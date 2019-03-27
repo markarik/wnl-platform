@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Transformers;
 
 use App\Http\Controllers\Api\ApiTransformer;
-use App\Models\UserProfile;
+use App\Models\User;
 
 class UserHasProlongedCourseTransformer extends ApiTransformer
 {
@@ -14,11 +14,11 @@ class UserHasProlongedCourseTransformer extends ApiTransformer
 		$this->parent = $parent;
 	}
 
-	public function transform(UserProfile $userProfile)
+	public function transform(User $user)
 	{
 		$data = [
-			'id' => $userProfile->id,
-			'has_prolonged_course' => $userProfile->user->has_prolonged_course
+			'id' => $user->id,
+			'has_prolonged_course' => $user->has_prolonged_course
 		];
 
 		if ($this->parent) {

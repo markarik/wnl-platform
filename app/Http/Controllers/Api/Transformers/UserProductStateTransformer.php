@@ -19,6 +19,7 @@ class UserProductStateTransformer extends ApiTransformer
 	public function transform(UserProductState $userProductState)
 	{
 		$data = [
+			'id' => $userProductState->id,
 			'product_id' => $userProductState->product_id,
 			'onboarding_step' => $userProductState->onboarding_step,
 		];

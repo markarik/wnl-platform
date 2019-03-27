@@ -14,6 +14,7 @@ return [
 		'user-billing-data'       => 'billing',
 		'user-settings'           => 'settings',
 		'user-product-state'      => 'user_product_state',
+		'user-subscription'       => 'user_subscription',
 		'user-avatar'             => 'avatar',
 		'user-password'           => 'password',
 		'user-notifications'      => 'notifications',

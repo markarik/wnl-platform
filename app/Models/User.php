@@ -17,12 +17,6 @@ class User extends Authenticatable
 {
 	use Notifiable, CourseProgressStats, Searchable;
 
-	const SUBSCRIPTION_DATES_CACHE_KEY = '%s-%s-subscription-dates';
-	const CACHE_VER = '2';
-	const SUBSCRIPTION_STATUS_INACTIVE = 'inactive';
-	const SUBSCRIPTION_STATUS_AWAITING = 'awaiting';
-	const SUBSCRIPTION_STATUS_ACTIVE = 'active';
-
 	protected $casts = [
 		'invoice'            => 'boolean',
 		'consent_newsletter' => 'boolean',
@@ -53,8 +47,6 @@ class User extends Authenticatable
 	];
 
 	protected $guarded = ['suspended', 'deleted_at'];
-
-	protected $appends = ['subscription_status'];
 
 	private $lessonsAvailability = null;
 	private $lessonsAvailabilityLoaded = false;
@@ -213,27 +205,6 @@ class User extends Authenticatable
 		return !is_null(Subscriber::where('email', $this->email)->first());
 	}
 
-	public function getSubscriptionStatusAttribute()
-	{
-		$key = self::getSubscriptionKey($this->id);
-
-		return \Cache::remember($key, 60 * 24, function () {
-			$dates = $this->getSubscriptionDates();
-
-			return $this->getSubscriptionStatus($dates);
-		});
-	}
-
-	public function getSubscriptionDatesAttribute()
-	{
-		list ($min, $max) = $this->getSubscriptionDates();
-
-		return [
-			'min' => $min->timestamp ?? null,
-			'max' => $max->timestamp ?? null,
-		];
-	}
-
 	public function getFullAddressAttribute()
 	{
 		$addr = $this->userAddress;
@@ -267,32 +238,6 @@ class User extends Authenticatable
 					return $order->paid && !$order->canceled && $order->coupon && $order->coupon->kind === Coupon::KIND_PARTICIPANT;
 				})
 				->count() > 0;
-	}
-
-	protected function getSubscriptionStatus($dates)
-	{
-		if ($this->hasRole([Role::ROLE_ADMIN, Role::ROLE_MODERATOR, Role::ROLE_TEST])) {
-			return self::SUBSCRIPTION_STATUS_ACTIVE;
-		}
-
-		list ($min, $max) = $dates;
-
-		if (!$min || !$max) {
-			return self::SUBSCRIPTION_STATUS_INACTIVE;
-		}
-
-		if ($min->isPast() && $max->isFuture()) return self::SUBSCRIPTION_STATUS_ACTIVE;
-		if ($min->isFuture() && $max->isFuture()) return self::SUBSCRIPTION_STATUS_AWAITING;
-
-		return self::SUBSCRIPTION_STATUS_INACTIVE;
-	}
-
-	protected function getSubscriptionDates()
-	{
-		$min = $this->subscription ? Carbon::parse($this->subscription->access_start) : null;
-		$max = $this->subscription ? Carbon::parse($this->subscription->access_end) : null;
-
-		return [$min, $max];
 	}
 
 	public function getLatestPaidCourseProductId()
@@ -507,11 +452,6 @@ class User extends Authenticatable
 		if ($this->profile) {
 			$this->profile->unsearchable();
 		}
-	}
-
-	public static function getSubscriptionKey($id)
-	{
-		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
 	}
 
 	public function toSearchableArray() {

@@ -11,8 +11,6 @@ class UserProfileTransformer extends ApiTransformer
 {
 	protected $parent;
 
-	protected $availableIncludes = ['roles', 'has_prolonged_course'];
-
 	public function __construct($parent = null)
 	{
 		$this->parent = $parent;
@@ -50,25 +48,5 @@ class UserProfileTransformer extends ApiTransformer
 		}
 
 		return $data;
-	}
-
-	public function includeRoles(UserProfile $profile)
-	{
-		$roles = $profile->roles;
-
-		return $this->collection(
-			$roles,
-			new RoleTransformer(['user_profiles' => $profile->id]),
-			'roles'
-		);
-	}
-
-	public function includeHasProlongedCourse(UserProfile $profile)
-	{
-		return $this->item(
-			$profile,
-			new UserHasProlongedCourseTransformer(['user_profiles' => $profile->id]),
-			'has_prolonged_course'
-		);
 	}
 }

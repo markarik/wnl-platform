@@ -3,7 +3,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{ name: 'courses', params: { courseId: 1, keepsNavOpen: true }}"
-			v-if="isOnboardingPassed"
+			v-if="isOnboardingFinished"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-home"></i>
@@ -13,7 +13,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{ name: 'onboarding' }"
-			v-if="!isOnboardingPassed"
+			v-if="!isOnboardingFinished"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-play"></i>
@@ -23,7 +23,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{ name: 'collections', params: { keepsNavOpen: true } }"
-			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingPassed"
+			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
@@ -33,7 +33,7 @@
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'questions-dashboard', params: { keepsNavOpen: true } }"
-			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingPassed"
+			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-check-square-o"></i>
@@ -58,20 +58,10 @@
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
-		<!--<a-->
-			<!--v-if="!$upcomingEditionParticipant.isAllowed('access') && !currentUser.accountSuspended"-->
-			<!--class="wnl-main-nav-item"-->
-			<!--:href="signUpLink"-->
-		<!--&gt;-->
-			<!--<span class="icon is-medium">-->
-				<!--<i class="fa fa-thumbs-o-up"></i>-->
-			<!--</span>-->
-			<!--<span class="text">Zapisz się!</span>-->
-		<!--</a>-->
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'moderatorFeed'}"
-			v-if="$moderatorFeatures.isAllowed('access') && isOnboardingPassed"
+			v-if="$moderatorFeatures.isAllowed('access') && isOnboardingFinished"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-list"></i>
@@ -148,7 +138,7 @@ export default {
 	props: ['isHorizontal'],
 	perimeters: [moderatorFeatures, currentEditionParticipant, upcomingEditionParticipant],
 	computed: {
-		...mapGetters(['currentUser', 'isOnboardingPassed']),
+		...mapGetters(['isOnboardingFinished']),
 		signUpLink() {
 			return getUrl('payment/account');
 		},

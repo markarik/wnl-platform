@@ -227,7 +227,7 @@ export default {
 	},
 	computed: {
 		...mapGetters([
-			'currentUser',
+			'currentUserLastestProductState',
 			'isSidenavVisible',
 			'isSidenavMounted',
 		]),
@@ -253,11 +253,11 @@ export default {
 	methods: {
 		...mapActions([
 			'setupCurrentUser',
-			'updateUserProductState',
+			'updateLatestProductState',
 			'addAutoDismissableAlert',
 		]),
 		validateCurrentStep() {
-			const lastStep = this.currentUser.productState.onboarding_step;
+			const lastStep = this.currentUserLastestProductState && this.currentUserLastestProductState.onboarding_step;
 
 			if (lastStep === ONBOARDING_STEPS.FINISHED) {
 				return this.$router.replace({name: resource('courses'), params: {courseId: 1}});
@@ -300,7 +300,7 @@ export default {
 		async updateOnboardingStep(step) {
 			this.isLoading = true;
 			try {
-				await this.updateUserProductState({
+				await this.updateLatestProductState({
 					onboarding_step: step,
 				});
 

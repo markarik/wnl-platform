@@ -53,7 +53,7 @@ export default {
 	},
 	props: ['view'],
 	computed: {
-		...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isOnboardingPassed']),
+		...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isOnboardingFinished']),
 
 		isProduction() {
 			return isProduction();
@@ -124,7 +124,7 @@ export default {
 					iconClass: 'fa-sliders',
 					iconTitle: 'Profil publiczny',
 				},
-				...this.isOnboardingPassed ? [{
+				...this.isOnboardingFinished ? [{
 					text: 'Statystyki',
 					itemClass: 'has-icon',
 					to: {
@@ -135,7 +135,7 @@ export default {
 					iconClass: 'fa-line-chart',
 					iconTitle: 'Statystyki',
 				}] : [],
-				...this.isOnboardingPassed ? [{
+				...this.isOnboardingFinished ? [{
 					text: 'Plan pracy',
 					itemClass: 'has-icon',
 					to: {
@@ -146,7 +146,7 @@ export default {
 					iconClass: 'fa fa-tasks',
 					iconTitle: 'Plan pracy',
 				}] : [],
-				...this.isOnboardingPassed ? [{
+				...this.isOnboardingFinished ? [{
 					text: 'Certyfikaty',
 					itemClass: 'has-icon',
 					to: {
@@ -158,7 +158,7 @@ export default {
 					iconClass: 'fa-trophy',
 					iconTitle: 'Certyfikaty',
 				}] : [],
-				...this.isOnboardingPassed ? [{
+				...this.isOnboardingFinished ? [{
 					text: 'Usuwanie postępu',
 					itemClass: 'has-icon',
 					to: {

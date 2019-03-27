@@ -45,7 +45,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		//Users admin
 		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
-		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
 		Route::post("{$r['users']}", 'UsersApiController@post');
 
@@ -278,6 +277,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['user-lesson']}/{userId}", 'UserLessonApiController@putPlan');
 	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
 	Route::get("{$r['user-lesson']}/{userId}/exportPlan", 'UserLessonApiController@exportPlan');
+
+	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 
 	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');

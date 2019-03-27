@@ -815,8 +815,6 @@ namespace App\Models{
  * @property-read mixed $personal_identity_number
  * @property-read mixed $recipient
  * @property-read mixed $sign_up_complete
- * @property-read mixed $subscription_dates
- * @property-read mixed $subscription_status
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
  * @property-read \App\Models\UserPersonalData $personalData
@@ -1475,6 +1473,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $access_end
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $subscription_dates
+ * @property-read mixed $subscription_status
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSubscription newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSubscription newQuery()

@@ -89,8 +89,8 @@ export default {
 		const {data: {course_start: courseStart}} = await axios.get(getApiUrl('products/current/paidCourse'));
 		this.defaultPlanStartDate = moment(courseStart * 1000).format('LL');
 
-		const {data: {id: profileId, included}} = await axios.get(getApiUrl('users/current/profile?include=has_prolonged_course'));
-		this.isReturningUser = included.has_prolonged_courses[profileId].has_prolonged_course;
+		const {data: {id, included}} = await axios.get(getApiUrl('users/current?include=has_prolonged_course'));
+		this.isReturningUser = included.has_prolonged_courses[id].has_prolonged_course;
 
 		this.isLoading = false;
 	},

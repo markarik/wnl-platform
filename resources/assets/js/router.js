@@ -376,7 +376,7 @@ router.beforeEach(async (to, from, next) => {
 
 	if (
 		to.matched.some(record => record.meta.requiresOnboardingPassed) &&
-		!store.getters.isOnboardingPassed
+		!store.getters.isOnboardingFinished
 	) {
 		return next('/app/onboarding');
 	}

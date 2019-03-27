@@ -41,7 +41,8 @@ class UserNotificationsGate implements ShouldQueue
 			->get();
 
 		$users = $users->filter(function($user) {
-			return $user->subscription_status === 'active';
+			/** @var User $user */
+			return $user->subscription && ($user->subscription->subscription_status === 'active');
 		});
 
 		if ($progress) {

@@ -37,5 +37,12 @@ export const ui = {
 		somethingWentWrongUnofficial: 'Psayayay coś poszło nie tak. Lepiej odśwież stronę... :(',
 		unauthorized: 'Nie masz uprawnień do tego działania.',
 	},
-	accountDeleted: 'Konto usunięte'
+	accountDeleted: 'Konto usunięte',
+	satisfactionGuarantee: {
+		headline: '⚠️ Ta akcja może wypłynąć na Twoją Gwarancję Satysfakcji.',
+		body: 'eśli planujesz rozpoczęcie nauki od nowa pamiętaj, że należy spełnić konkretne kryteria, aby Gwarancja Satysfakcji była przyznana.',
+		note: 'Wszystkie informacje na temat Gwarancji Satysfakcji znajdziesz w <a href="/app/help/guarantee" target="_blank">POMOC > Gwarancja Satysfakcji.</a>',
+		accept: 'Rozumiem',
+		close: 'Zamknij'
+	}
 };

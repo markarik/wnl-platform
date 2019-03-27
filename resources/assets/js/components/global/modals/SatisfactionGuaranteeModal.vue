@@ -2,21 +2,15 @@
 	<wnl-modal @closeModal="$emit('closeModal')" v-if="visible">
 		<div class="satisfaction-guarantee-modal normal">
 			<h4 class="margin bottom">{{title}}</h4>
-			<p class="strong margin bottom">
-				⚠️ Ta akcja może wypłynąć na Twoją Gwarancję Satysfakcji.
-			</p>
-			<p class="margin bottom">Jeśli planujesz rozpoczęcie nauki od nowa pamiętaj, że należy spełnić konkretne kryteria, aby Gwarancja Satysfakcji była przyznana
-			</p>
+			<p class="strong margin bottom">{{$t('ui.satisfactionGuarantee.headline')}}</p>
+			<p class="margin bottom">{{$t('ui.satisfactionGuarantee.body')}}</p>
 			<p class="margin bottom text-dimmed satisfaction-guarantee-modal__extra-info">
 				<i class="fa fa-info-circle"/>
-				<span>
-					Wszystkie informacje na temat Gwarancji Satysfakcji znajdziesz w
-					<a href="/app/help/guarantee" target="_blank">POMOC > Gwarancja Satysfakcji.</a>
-				</span>
+				<span>{{$t('ui.satisfactionGuarantee.note')}}</span>
 			</p>
 			<p class="satisfaction-guarantee-modal__actions">
-				<button class="button is-outlined" @click="$emit('closeModal')">Zamknij</button>
-				<button class="button is-primary" @click="$emit('submit')">Rozumiem</button>
+				<button class="button is-outlined" @click="$emit('closeModal')">{{$t('ui.satisfactionGuarantee.close')}}</button>
+				<button class="button is-primary" @click="$emit('submit')">{{$t('ui.satisfactionGuarantee.accept')}}</button>
 			</p>
 		</div>
 	</wnl-modal>
@@ -67,5 +61,4 @@ export default {
 				margin-right: $margin-big
 				&:last-child
 					margin-right: 0
-
 </style>

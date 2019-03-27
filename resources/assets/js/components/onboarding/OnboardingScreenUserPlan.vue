@@ -61,11 +61,13 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import {mapActions} from 'vuex';
 
 import WnlAutomaticPlan from 'js/components/user/plan/AutomaticPlan';
 
 import {getApiUrl} from 'js/utils/env';
 import {getImageUrl} from 'js/utils/env';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
 	components: {
@@ -81,18 +83,30 @@ export default {
 		};
 	},
 	methods: {
+		...mapActions([
+			'addAutoDismissableAlert',
+		]),
 		openEditor() {
 			this.isEditorVisible = true;
 		}
 	},
 	async mounted() {
-		const {data: {course_start: courseStart}} = await axios.get(getApiUrl('products/current/paidCourse'));
-		this.defaultPlanStartDate = moment(courseStart * 1000).format('LL');
-
-		const {data: {id, included}} = await axios.get(getApiUrl('users/current?include=has_prolonged_course'));
-		this.isReturningUser = included.has_prolonged_courses[id].has_prolonged_course;
-
-		this.isLoading = false;
+		try {
+			const [{data: {course_start: courseStart}}, {data: {id, included}}] = await Promise.all([
+				axios.get(getApiUrl('products/current/paidCourse')),
+				axios.get(getApiUrl('users/current?include=has_prolonged_course')),
+			]);
+			this.isReturningUser = included.has_prolonged_courses[id].has_prolonged_course;
+			this.defaultPlanStartDate = moment(courseStart * 1000).format('LL');
+		} catch (error) {
+			$wnl.logger.error(error);
+			this.addAutoDismissableAlert({
+				text: 'Coś poszło nie tak :(',
+				type: ALERT_TYPES.ERROR,
+			});
+		} finally {
+			this.isLoading = false;
+		}
 	},
 };
 </script>

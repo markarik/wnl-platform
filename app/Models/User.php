@@ -215,6 +215,8 @@ class User extends Authenticatable
 			]);
 
 			$userSubscription->id = -1;
+			$userSubscription->access_start = Carbon::now()->subYear(1);
+			$userSubscription->access_end = Carbon::now()->addYear(1);
 
 			return $userSubscription;
 		} else {

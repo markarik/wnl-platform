@@ -61,10 +61,6 @@ class UserSubscription extends Model
 	 */
 	protected function getSubscriptionStatus($dates)
 	{
-		if ($this->user->hasRole([Role::ROLE_ADMIN, Role::ROLE_MODERATOR, Role::ROLE_TEST])) {
-			return self::SUBSCRIPTION_STATUS_ACTIVE;
-		}
-
 		list ($min, $max) = $dates;
 
 		if (empty($min) || empty($max)) {

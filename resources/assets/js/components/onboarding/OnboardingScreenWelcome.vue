@@ -31,16 +31,15 @@ import {mapGetters} from 'vuex';
 import {getImageUrl} from 'js/utils/env';
 
 export default {
-	components: {
-
+	data() {
+		return {
+			imageUrl: getImageUrl('happy-poland.png'),
+		};
 	},
 	computed: {
 		...mapGetters([
 			'currentUserName'
 		]),
-		imageUrl() {
-			return getImageUrl('happy-poland.png');
-		}
 	},
 };
 </script>

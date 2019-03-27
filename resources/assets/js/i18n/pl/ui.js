@@ -39,7 +39,7 @@ export const ui = {
 	},
 	accountDeleted: 'Konto usunięte',
 	satisfactionGuarantee: {
-		headline: '⚠️ Ta akcja może wypłynąć na Twoją Gwarancję Satysfakcji.',
+		headline: '⚠️ Ta akcja może wpłynąć na Twoją Gwarancję Satysfakcji.',
 		body: 'Jeśli planujesz rozpoczęcie nauki od nowa pamiętaj, że należy spełnić konkretne kryteria, aby Gwarancja Satysfakcji była przyznana.',
 		note: 'Wszystkie informacje na temat Gwarancji Satysfakcji znajdziesz w <a href="/app/help/guarantee" target="_blank">POMOC > Gwarancja Satysfakcji.</a>',
 		accept: 'Rozumiem',

@@ -16,7 +16,7 @@
 	@import 'resources/assets/sass/variables'
 	.onboarding-video-wrapper
 		max-width: 700px
-		padding-bottom: 50%
+		padding-bottom: 56.25%
 		position: relative
 
 	.onboarding-video

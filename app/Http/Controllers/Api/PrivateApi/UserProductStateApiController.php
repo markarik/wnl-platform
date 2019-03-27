@@ -17,10 +17,6 @@ class UserProductStateApiController extends ApiController
 	{
 		$user = User::fetch($request->route('id'));
 
-		if (!$user) {
-			return $this->respondNotFound();
-		}
-
 		$productId = $user->getLatestPaidCourseProductId();
 
 		$userProductState = $user->userProductStates()->updateOrCreate(

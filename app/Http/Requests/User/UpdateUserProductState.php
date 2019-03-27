@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\User;
 
-use App\Models\User;
 use App\Models\UserProductState;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -16,9 +15,13 @@ class UpdateUserProductState extends FormRequest
 	 */
 	public function authorize()
 	{
-		$user = User::fetch($this->route('id'));
+		$routeParamId = $this->route('id');
 
-		return $this->user()->id === $user->id;
+		if ($routeParamId === 'current') {
+			return true;
+		}
+
+		return ((string) $this->user()->id) === $routeParamId;
 	}
 
 	/**

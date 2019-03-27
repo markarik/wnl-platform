@@ -67,7 +67,7 @@
 					</a>
 				</div>
 			</div>
-			<div class="card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
+			<div class="card-footer quiz-question-card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
 				<div v-if="question.explanation" class="card-item relative">
 					<header>
 						<span class="icon is-small comment-icon"><i class="fa fa-info"></i></span>
@@ -158,7 +158,7 @@
 	.card-content ul
 		counter-reset: list
 
-	.card-footer
+	.quiz-question-card-footer
 		flex-direction: column
 
 	.quiz-question-icon

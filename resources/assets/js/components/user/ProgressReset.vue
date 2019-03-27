@@ -90,15 +90,16 @@ export default {
 		...mapActions('questions', {deleteQuestions: 'deleteProgress'}),
 		...mapActions('collections', ['deleteCollection']),
 		...mapActions(['addAutoDismissableAlert']),
-		resetAndReloadProgress() {
-			return Promise.all([this.deleteProgress(), this.setupCourse()]);
+		async resetAndReloadProgress() {
+			await this.deleteProgress();
+			await this.setupCourse();
 		},
 		resetProgress() {
 			this.satisfactionGuaranteeModalVisible = true;
 			this.satisfactionGuaranteeModalTitle = this.$t('user.progressReset.progressHeader');
-			this.satisfactionGuaranteeModalSubmitAction = () => {
+			this.satisfactionGuaranteeModalSubmitAction = async () => {
 				try {
-					this.resetAndReloadProgress();
+					await this.resetAndReloadProgress();
 					this.emitUserEvent({
 						subcontext: context.account.subcontext.progress_eraser.value,
 						features: features.progress.value,

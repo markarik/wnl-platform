@@ -8,31 +8,13 @@
 				<i class="fa fa-info-circle"/>
 				<span v-html="$t('ui.satisfactionGuarantee.note')"></span>
 			</p>
-			<p class="satisfaction-guarantee-modal__actions">
-				<button class="button is-outlined" @click="$emit('closeModal')">{{$t('ui.satisfactionGuarantee.close')}}</button>
+			<div class="satisfaction-guarantee-modal__actions">
+				<button class="button" @click="$emit('closeModal')">{{$t('ui.satisfactionGuarantee.close')}}</button>
 				<button class="button is-primary" @click="$emit('submit')">{{$t('ui.satisfactionGuarantee.accept')}}</button>
-			</p>
+			</div>
 		</div>
 	</wnl-modal>
 </template>
-
-<script>
-import WnlModal from 'js/components/global/Modal';
-
-export default {
-	components: {WnlModal},
-	props: {
-		visible: {
-			type: Boolean,
-			default: false
-		},
-		title: {
-			type: String,
-			required: true
-		}
-	}
-};
-</script>
 
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
@@ -56,9 +38,28 @@ export default {
 				white-space: nowrap
 				color: inherit
 				text-decoration: underline
+
 		&__actions
 			.button
 				margin-right: $margin-big
 				&:last-child
 					margin-right: 0
 </style>
+
+<script>
+import WnlModal from 'js/components/global/Modal';
+
+export default {
+	components: {WnlModal},
+	props: {
+		visible: {
+			type: Boolean,
+			default: false
+		},
+		title: {
+			type: String,
+			required: true
+		}
+	}
+};
+</script>

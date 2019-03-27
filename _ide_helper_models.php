@@ -815,6 +815,7 @@ namespace App\Models{
  * @property-read mixed $personal_identity_number
  * @property-read mixed $recipient
  * @property-read mixed $sign_up_complete
+ * @property-read mixed $subscription_proxy
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
  * @property-read \App\Models\UserPersonalData $personalData

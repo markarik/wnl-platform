@@ -21,7 +21,7 @@ class Subscription
 	public function handle($request, Closure $next)
 	{
 		$user = Auth::user();
-		$status = $user->subscription->subscription_status ?? 'inactive';
+		$status = $user->subscription_proxy->subscription_status ?? 'inactive';
 
 		if ($status === 'active') {
 			return $next($request);

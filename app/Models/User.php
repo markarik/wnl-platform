@@ -205,7 +205,7 @@ class User extends Authenticatable
 		return !is_null(Subscriber::where('email', $this->email)->first());
 	}
 
-	public function getSubscriptionAttribute()
+	public function getSubscriptionProxyAttribute()
 	{
 		// We don't create subscriptions for these roles
 		// Let's emulate one, so subscription_status works

@@ -16,6 +16,6 @@ class UserSubscriptionApiController extends ApiController
 	{
 		$user = Auth::User();
 
-		return $this->transformAndRespond($user->subscription);
+		return $this->transformAndRespond($user->subscription_proxy);
 	}
 }

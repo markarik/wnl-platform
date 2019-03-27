@@ -61,7 +61,7 @@ class UserTransformer extends ApiTransformer
 
 	public function includeSubscription(User $user)
 	{
-		$subscription = $user->subscription;
+		$subscription = $user->subscription_proxy;
 
 		if (empty($subscription)) {
 			return null;

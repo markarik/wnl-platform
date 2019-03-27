@@ -91,8 +91,10 @@
 			margin-right: $margin-base
 
 		/deep/ .ordered-item
-			display: flex
 			margin: $margin-huge 0
+
+			@media #{$media-query-tablet}
+				display: flex
 
 			.-purple-secondary
 				border-color: $color-purple-second
@@ -120,8 +122,11 @@
 			font-size: $font-size-plus-4
 			height: 64px
 			justify-content: center
-			margin-right: $margin-big
+			margin: 0 auto $margin-base
 			width: 64px
+
+			@media #{$media-query-tablet}
+				margin: 0 $margin-big 0 0 
 
 	.buttons
 		border-top: $border-light-gray
@@ -209,7 +214,6 @@ export default {
 	computed: {
 		...mapGetters([
 			'currentUser',
-			'currentUserId',
 			'isSidenavVisible',
 			'isSidenavMounted',
 		]),

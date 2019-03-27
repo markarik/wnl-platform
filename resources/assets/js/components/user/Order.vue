@@ -426,7 +426,7 @@ export default {
 			return this.order.coupon;
 		},
 		logoUrl() {
-			// TODO: Mar 28, 2017 - Make it dynamic when more courses are added
+			// TODO PLAT-1153: Mar 28, 2017 - Make it dynamic when more courses are added
 			return getImageUrl('wnl-logo-square@2x.png');
 		},
 		isFullyPaid() {

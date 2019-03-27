@@ -3,7 +3,7 @@
 		<figure class="has-text-centered margin bottom">
 		<img :src="imageUrl" alt="" class="onboarding-image">
 		</figure>
-		<h2 class="title has-text-centered">Witaj na kursie do LEK!️</h2>
+		<h2 class="title has-text-centered">Witaj na kursie do LEK 🎉</h2>
 
 		<div class="ordered-item">
 			<div class="ordered-item-number">1</div>
@@ -32,7 +32,7 @@
 			<div class="ordered-item-number -skyBlue">3</div>
 			<div>
 				<h3 class="title is-4">Zacznij pierwszą lekcję!</h3>
-				<p>Lekcje będą otwierały się zgodnie z wybranym przez Ciebie planem - zawsze może go zmienić w zakładce KONTO - Plan pracy.</p>
+				<p>Lekcje będą otwierały się zgodnie z wybranym przez Ciebie planem - zawsze możesz go zmienić w zakładce KONTO > Plan pracy.</p>
 			</div>
 		</div>
 

@@ -212,7 +212,6 @@ export default {
 					component: WnlOnboardingScreenSatisfactionGuarantee,
 					text: 'Gwarancja ',
 					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.SATISFACTION_GUARANTEE}},
-					buttonText: 'Rozumiem, dalej',
 				},
 				{
 					name: ONBOARDING_STEPS.FINAL,

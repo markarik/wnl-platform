@@ -1,7 +1,10 @@
 <template>
 	<div>
 		<h2 class="title has-text-centered">Plan pracy 🗓</h2>
-		<p class="title is-5 has-text-centered">Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami. Przed datą otwarcia lekcje pozostaną zamknięte.</p>
+		<p class="title is-5 has-text-centered">
+			Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami.<br>
+			Do tego czasu lekcje pozostaną zamknięte.
+		</p>
 
 		<wnl-text-loader v-if="isLoading" />
 
@@ -10,21 +13,21 @@
 				<img :src="imageUrl" alt="" class="onboarding-plan-image">
 				<div>
 					<p class="margin bottom">Na najbliższą edycję szykujemy nową Chirurgię (na 10 czerwca) i Medycynę ratunkową (na 19 sierpnia). Możesz jednak spokojnie zaplanować naukę!</p>
-					<p class="margin bottom">Zakres materiału oraz struktura lekcji pozostaną takie same, jak obecnie. Nawet jeżeli zrealizujesz te lekcje przed ich aktualizacją, możesz bez przeszkód kontynuować kurs i mieć pewność pokrycia całości materiału.</p>
-					<p class="text-dimmed">💡 Plan możesz zawsze zmienić w zakłade KONTO > Plan pracy.</p>
+					<p class="margin bottom">Zakres materiału oraz struktura lekcji pozostaną takie same, jak obecnie. Nawet jeżeli zrealizujesz te lekcje przed ich aktualizacją, możesz bez przeszkód kontynuować kurs i mieć pewność pokrycia całości materiału 🙂</p>
+					<p class="text-dimmed">💡 Plan możesz zawsze zmienić w zakładce KONTO > Plan pracy.</p>
 				</div>
 			</div>
 
 			<div class="margin-top-huge" v-else>
-				<p class="text-dimmed margin bottom">💡 Plan zakłada optymalną kolejność przerabiania przedmiotów. Jeśli chcesz stworzyć indywidualny plan lub go edytować, będziesz mieć taką możliwość w zakładce KONTO > PLAN PRACY.</p>
+				<p class="text-dimmed margin bottom">💡 Plan zakłada optymalną kolejność przerabiania przedmiotów. Jeśli chcesz stworzyć indywidualny plan lub go edytować, będziesz mieć taką możliwość w zakładce KONTO > Plan pracy.</p>
 				<div class="margin-top-huge">
 					<img :src="imageUrl" alt="" class="onboarding-plan-image">
 					<h3 class="title is-4 onboarding-plan-header">Domyślny plan</h3>
 					<div>
-						<p class="margin bottom">Proponowany przez nas plan pracy trwa od <strong>{{defaultPlanStartDate}}</strong>, zakłada pracę <strong>5 dni w tygodniu przez 14 tygodni</strong>.</p>
+						<p class="margin bottom">Proponowany przez nas plan pracy trwa od <strong>{{defaultPlanStartDate}}</strong>, zakłada pracę <strong>5&nbsp;dni w tygodniu przez 14 tygodni</strong> 🗓</p>
 						<p>
-							Możesz zmienić zakres dni, w których chcesz pracować, a my dostosujemy do nich Twój plan pracy –
-							<a @click="openEditor">Edytuj plan</a>
+							Możesz zmienić zakres dni, w których chcesz pracować, a my dostosujemy do nich Twój plan pracy 👉
+							<a class="clickable" @click="openEditor">Edytuj plan</a>
 						</p>
 					</div>
 				</div>

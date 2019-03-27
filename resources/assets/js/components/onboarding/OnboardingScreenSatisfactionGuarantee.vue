@@ -23,7 +23,7 @@
 			<div class="ordered-item-number">1</div>
 			<div>
 				<h3 class="title is-4">Rozwiązanie próbnego, Wstępnego LEK-u przed rozpoczęciem pierwszej lekcji</h3>
-				<p>Zanim siądziesz do nauki - sprawdź swoją wiedzę! To kluczowe dla dalszej pracy. Link do egzaminu znajdziesz na końcu tego samouczka, a później w lekcji Wstępny LEK.</p>
+				<p>Zanim rozpoczniesz naukę - sprawdź swoją wiedzę! To kluczowe dla dalszej pracy. Link do egzaminu znajdziesz na końcu tego samouczka, a później w lekcji Wstępny LEK.</p>
 			</div>
 		</div>
 

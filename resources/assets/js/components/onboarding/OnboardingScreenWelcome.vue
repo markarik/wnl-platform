@@ -8,7 +8,7 @@
 		<div class="row margin-top-huge">
 			<div class="row-item">
 				<span class="row-item-icon">⏰</span>
-				<span>Wprowadzenie zajmie Tobie około 10min.</span>
+				<span>Wprowadzenie zajmie Ci około 10min.</span>
 			</div>
 			<div class="row-item">
 				<span class="row-item-icon">🔁</span>

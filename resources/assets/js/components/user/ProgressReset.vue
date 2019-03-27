@@ -90,37 +90,6 @@ export default {
 		...mapActions('questions', {deleteQuestions: 'deleteProgress'}),
 		...mapActions('collections', ['deleteCollection']),
 		...mapActions(['addAutoDismissableAlert']),
-		confirmAndExecute(title, html, action) {
-			return this.$swal(swalConfig({
-				title,
-				html,
-				showCancelButton: true,
-				confirmButtonText: this.$t('ui.confirm.confirm'),
-				cancelButtonText: this.$t('ui.confirm.cancel'),
-				type: 'error',
-				confirmButtonClass: 'button is-danger',
-				reverseButtons: true
-			}))
-				.then(action)
-				.then(() => {
-					this.addAutoDismissableAlert({
-						text: this.$t('user.progressReset.alertSuccess'),
-						type: 'success',
-						timeout: 10000,
-					});
-				})
-				.catch(error => {
-					if (error === 'cancel'  || error === 'overlay') {
-						return;
-					}
-					$wnl.logger.capture(error);
-					this.addAutoDismissableAlert({
-						text: this.$t('user.progressReset.alertError'),
-						type: 'error',
-						timeout: 4000,
-					});
-				});
-		},
 		resetAndReloadProgress() {
 			return Promise.all([this.deleteProgress(), this.setupCourse()]);
 		},
@@ -135,17 +104,9 @@ export default {
 						features: features.progress.value,
 						action: features.progress.actions.erase_progress.value
 					});
-					this.addAutoDismissableAlert({
-						text: this.$t('user.progressReset.alertSuccess'),
-						type: 'success',
-						timeout: 10000,
-					});
+					this.handleSuccess();
 				} catch (e) {
-					this.addAutoDismissableAlert({
-						text: this.$t('user.progressReset.alertError'),
-						type: 'error',
-						timeout: 4000,
-					});
+					this.handleError(e);
 				} finally {
 					this.satisfactionGuaranteeModalVisible = false;
 				}
@@ -162,35 +123,55 @@ export default {
 						features: features.progress.value,
 						action: features.progress.actions.erase_quiz.value
 					});
-					this.addAutoDismissableAlert({
-						text: this.$t('user.progressReset.alertSuccess'),
-						type: 'success',
-						timeout: 10000,
-					});
+					this.handleSuccess();
 				} catch (e) {
-					this.addAutoDismissableAlert({
-						text: this.$t('user.progressReset.alertError'),
-						type: 'error',
-						timeout: 4000,
-					});
+					this.handleError(e);
 				} finally {
 					this.satisfactionGuaranteeModalVisible = false;
 				}
 			};
 		},
 		resetCollections() {
-			this.confirmAndExecute(
-				this.$t('user.progressReset.collectionsHeader'),
-				this.$t('user.progressReset.collectionsConfirmation'),
-				() => {
+			this.$swal(swalConfig({
+				title: this.$t('user.progressReset.collectionsHeader'),
+				text: this.$t('user.progressReset.collectionsConfirmation'),
+				showCancelButton: true,
+				confirmButtonText: this.$t('ui.confirm.confirm'),
+				cancelButtonText: this.$t('ui.confirm.cancel'),
+				type: 'error',
+				confirmButtonClass: 'button is-danger',
+				reverseButtons: true
+			}))
+				.then(() => {
 					this.deleteCollection();
 					this.emitUserEvent({
 						subcontext: context.account.subcontext.progress_eraser.value,
 						features: features.progress.value,
 						action: features.progress.actions.erase_collections.value
 					});
-				}
-			);
+				})
+				.then(this.handleSuccess)
+				.catch(error => {
+					if (error === 'cancel'  || error === 'overlay') {
+						return;
+					}
+					this.handleError(error);
+				});
+		},
+		handleSuccess() {
+			this.addAutoDismissableAlert({
+				text: this.$t('user.progressReset.alertSuccess'),
+				type: 'success',
+				timeout: 10000,
+			});
+		},
+		handleError(error) {
+			$wnl.logger.capture(error);
+			this.addAutoDismissableAlert({
+				text: this.$t('user.progressReset.alertError'),
+				type: 'error',
+				timeout: 4000,
+			});
 		}
 	}
 };

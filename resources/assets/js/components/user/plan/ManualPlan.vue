@@ -78,7 +78,7 @@
 		</div>
 		<wnl-satisfaction-guarantee-modal
 			:visible="satisfactionGuaranteeModalVisible"
-			title="Czy na pewno chcesz zmienić plan pracy?"
+			:title="$t('user.plan.changePlanConfirmation')"
 			@closeModal="satisfactionGuaranteeModalVisible = false"
 			@submit="acceptPlan"
 		></wnl-satisfaction-guarantee-modal>

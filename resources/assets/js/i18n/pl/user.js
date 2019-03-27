@@ -116,5 +116,8 @@ export const user = {
 			incorrectSerialNumber: 'Numer podanego identyfikatora jest niepoprawny.',
 			incorrectNumber: 'Numer jest nieprawidłowy'
 		}
+	},
+	plan: {
+		changePlanConfirmation: 'Czy na pewno chcesz zmienić plan pracy?'
 	}
 };

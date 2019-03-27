@@ -205,6 +205,23 @@ class User extends Authenticatable
 		return !is_null(Subscriber::where('email', $this->email)->first());
 	}
 
+	public function getSubscriptionAttribute()
+	{
+		// We don't create subscriptions for these roles
+		// Let's emulate one, so subscription_status works
+		if ($this->hasRole([Role::ROLE_ADMIN, Role::ROLE_MODERATOR, Role::ROLE_TEST])) {
+			$userSubscription = UserSubscription::make([
+				'user_id' => $this->id
+			]);
+
+			$userSubscription->id = -1;
+
+			return $userSubscription;
+		} else {
+			return $this->subscription()->first();
+		}
+	}
+
 	public function getFullAddressAttribute()
 	{
 		$addr = $this->userAddress;

@@ -23,10 +23,16 @@
 				<button
 					v-if="isLastStep"
 					class="button is-secondary margin right"
+					:class="{
+						'is-loading': isLoading
+					}"
 					@click="onCancelClick"
 				>Pomijam Wstępny LEK</button>
 				<button
 					class="button is-primary"
+					:class="{
+						'is-loading': isLoading
+					}"
 					@click="onNextClick"
 				>{{currentStep.buttonText || 'Dalej'}}</button>
 			</div>
@@ -132,6 +138,7 @@ import WnlSplashScreen from 'js/components/global/SplashScreen.vue';
 import {resource} from 'js/utils/config';
 import {ONBOARDING_STEPS} from 'js/consts/user';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
 	perimeters: [currentEditionParticipant],
@@ -149,6 +156,7 @@ export default {
 	},
 	data() {
 		return {
+			isLoading: false,
 			steps: [
 				{
 					name: ONBOARDING_STEPS.WELCOME,
@@ -221,6 +229,7 @@ export default {
 		...mapActions([
 			'setupCurrentUser',
 			'updateUserProductState',
+			'addAutoDismissableAlert',
 		]),
 		validateCurrentStep() {
 			const lastStep = this.currentUser.productState.onboarding_step;
@@ -255,17 +264,31 @@ export default {
 			}
 		},
 		async onNextClick() {
-			await this.updateUserProductState({
-				onboarding_step: this.nextStep ? this.nextStep.name : ONBOARDING_STEPS.FINISHED,
-			});
+			await this.updateOnboardingStep(this.nextStep ? this.nextStep.name : ONBOARDING_STEPS.FINISHED);
+			// TODO get lessonId for ldek and stop using hardcoded values
 			this.$router.replace(this.nextStep ? this.nextStep.linkTo : {name: resource('lessons'), params: {courseId: 1, lessonId: 85}});
 		},
 		async onCancelClick() {
-			await this.updateUserProductState({
-				onboarding_step: ONBOARDING_STEPS.FINISHED,
-			});
+			await this.updateOnboardingStep(ONBOARDING_STEPS.FINISHED);
 			this.$router.replace({name: resource('courses'), params: {courseId: 1}});
 		},
+		async updateOnboardingStep(step) {
+			this.isLoading = true;
+			try {
+				await this.updateUserProductState({
+					onboarding_step: step,
+				});
+
+			} catch (error) {
+				$wnl.logger.error(error);
+				this.addAutoDismissableAlert({
+					text: 'Coś poszło nie tak :(',
+					type: ALERT_TYPES.ERROR,
+				});
+			} finally {
+				this.isLoading = false;
+			}
+		}
 	},
 	watch: {
 		step() {

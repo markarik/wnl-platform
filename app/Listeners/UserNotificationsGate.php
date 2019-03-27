@@ -4,6 +4,7 @@ use App\Events\Event;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserCourseProgress;
+use App\Models\UserSubscription;
 use App\Notifications\EventNotification;
 use App\Notifications\EventTaskNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -42,7 +43,7 @@ class UserNotificationsGate implements ShouldQueue
 
 		$users = $users->filter(function($user) {
 			/** @var User $user */
-			return $user->subscription_proxy && ($user->subscription_proxy->subscription_status === 'active');
+			return $user->subscription_proxy && ($user->subscription_proxy->subscription_status === UserSubscription::SUBSCRIPTION_STATUS_ACTIVE);
 		});
 
 		if ($progress) {

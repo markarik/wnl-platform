@@ -41,7 +41,7 @@ class UserProductStateApiController extends ApiController
 
 		$productId = $user->getLatestPaidCourseProductId();
 
-		$user->userProductStates()->updateOrCreate(
+		$userProductState = $user->userProductStates()->updateOrCreate(
 			[
 				'user_id' => $user->id,
 				'product_id' => $productId
@@ -51,6 +51,6 @@ class UserProductStateApiController extends ApiController
 			]
 		);
 
-		return $this->respondOk();
+		return $this->transformAndRespond($userProductState);
 	}
 }

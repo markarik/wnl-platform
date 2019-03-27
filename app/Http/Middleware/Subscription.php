@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\UserSubscription;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\Concerns\GeneratesApiResponses;
@@ -21,9 +22,9 @@ class Subscription
 	public function handle($request, Closure $next)
 	{
 		$user = Auth::user();
-		$status = $user->subscription_proxy->subscription_status ?? 'inactive';
+		$status = $user->subscription_proxy->subscription_status ?? UserSubscription::SUBSCRIPTION_STATUS_INACTIVE;
 
-		if ($status === 'active') {
+		if ($status === UserSubscription::SUBSCRIPTION_STATUS_ACTIVE) {
 			return $next($request);
 		}
 

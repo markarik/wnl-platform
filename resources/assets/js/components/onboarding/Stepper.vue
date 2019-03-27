@@ -23,7 +23,7 @@ export default {
 		},
 		currentStep: {
 			type: Number,
-			required: false,
+			required: true,
 		},
 	},
 };

@@ -22,14 +22,14 @@
 			<div class="has-text-centered buttons">
 				<button
 					v-if="isLastStep"
-					class="button is-secondary margin right"
+					class="button is-secondary margin"
 					:class="{
 						'is-loading': isLoading
 					}"
 					@click="onCancelClick"
 				>Pomijam Wstępny LEK</button>
 				<button
-					class="button is-primary"
+					class="button is-primary margin"
 					:class="{
 						'is-loading': isLoading
 					}"
@@ -46,6 +46,7 @@
 
 	.wnl-course-layout
 		justify-content: space-between
+		overflow-x: hidden
 
 	.wnl-course-content
 		max-width: $course-content-max-width
@@ -63,6 +64,10 @@
 		margin-right: auto
 		max-width: 730px
 		width: 100%
+
+	.onboarding-stepper
+		flex-shrink: 0
+		overflow-x: auto
 
 	.scrollable-container
 		flex-grow: 1
@@ -117,7 +122,6 @@
 
 	.buttons
 		border-top: $border-light-gray
-		padding: $margin-base
 
 </style>
 

@@ -21,7 +21,7 @@
 		</div>
 
 		<div class="ordered-item">
-			<div class="ordered-item-number -purple-secondary">2</div>
+			<div class="ordered-item-number -purpleSecondary">2</div>
 			<div>
 				<h3 class="title is-4">Zapoznaj się z modułami Wstęp do kursu i Efektywna nauka</h3>
 				<p>Ukończ moduły "Wstęp do kursu" i "Efektywna nauka" a zrozumiesz metodykę pracy na kursie i oszczędzisz wiele czasu na nauce!</p>
@@ -29,7 +29,7 @@
 		</div>
 
 		<div class="ordered-item">
-			<div class="ordered-item-number -sky-blue">3</div>
+			<div class="ordered-item-number -skyBlue">3</div>
 			<div>
 				<h3 class="title is-4">Zacznij pierwszą lekcję!</h3>
 				<p>Lekcje będą otwierały się zgodnie z wybranym przez Ciebie planem - zawsze może go zmienić w zakładce KONTO - Plan pracy.</p>

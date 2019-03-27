@@ -41,7 +41,7 @@
 		</div>
 
 		<div class="ordered-item">
-			<div class="ordered-item-number -purple-secondary">2</div>
+			<div class="ordered-item-number -purpleSecondary">2</div>
 			<div>
 				<h3 class="title is-4">Podstawowy</h3>
 				<p class="text-dimmed margin-bottom-medium">
@@ -57,7 +57,7 @@
 		</div>
 
 		<div class="ordered-item">
-			<div class="ordered-item-number -sky-blue">3</div>
+			<div class="ordered-item-number -skyBlue">3</div>
 			<div>
 				<h3 class="title is-4">Pełny potencjał!</h3>
 				<p class="text-dimmed margin-bottom-medium">
@@ -73,7 +73,7 @@
 		</div>
 
 		<div class="ordered-item">
-			<div class="ordered-item-number -ocean-blue">4</div>
+			<div class="ordered-item-number -oceanBlue">4</div>
 			<div>
 				<h3 class="title is-4">Nauka długofalowa</h3>
 				<p class="text-dimmed margin-bottom-medium">

@@ -96,15 +96,15 @@
 				@media #{$media-query-tablet}
 					display: flex
 
-				.-purple-secondary
+				.-purpleSecondary
 					border-color: $color-purple-second
 					color: $color-purple-second
 
-				.-sky-blue
+				.-skyBlue
 					border-color: $color-sky-blue
 					color: $color-sky-blue
 
-				.-ocean-blue
+				.-oceanBlue
 					border-color: $color-ocean-blue
 					color: $color-ocean-blue
 

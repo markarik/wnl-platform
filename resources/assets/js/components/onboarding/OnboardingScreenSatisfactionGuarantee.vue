@@ -28,7 +28,7 @@
 		</div>
 
 		<div class="ordered-item">
-			<div class="ordered-item-number -purple-secondary">2</div>
+			<div class="ordered-item-number -purpleSecondary">2</div>
 			<div>
 				<h3 class="title is-4">Ukończenie kursu najpóźniej dzień przed egzaminem</h3>
 				<p>Ukończenie kursu wymaga minimum:</p>
@@ -44,7 +44,7 @@
 		</div>
 
 		<div class="ordered-item">
-			<div class="ordered-item-number -sky-blue">3</div>
+			<div class="ordered-item-number -skyBlue">3</div>
 			<div>
 				<h3 class="title is-4">Rozwiązanie próbnego, Końcowego LEK-u najpóźniej dzień przed egzaminem</h3>
 				<p>Egzamin znajdziesz w lekcji Końcowy LEK.</p>

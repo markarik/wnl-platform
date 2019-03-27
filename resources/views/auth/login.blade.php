@@ -4,7 +4,7 @@
 
 	<div class="wnl-login-view">
 		<div class="wnl-login-container">
-			@if($signUpsOpen)
+			@if($signupsOpen)
 			<div class="notification is-success has-text-centered">
 				<p class="strong">Odkryj naukę na nowo!</p>
 				<p>Zapisy na unikalny kurs do LEK-u już trwają!</p>

@@ -256,11 +256,8 @@ class User extends Authenticatable
 
 	public function getHasLatestCourseProductAttribute()
 	{
-		return $this->orders()
-			->whereHas('product', function($query){
-				$query->where('slug', Product::SLUG_WNL_ONLINE);
-			})
-			->where('paid', 1)
+		return $this->getProducts()
+			->where('slug', Product::SLUG_WNL_ONLINE)
 			->count() > 0;
 	}
 

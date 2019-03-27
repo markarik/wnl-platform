@@ -7,19 +7,18 @@
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 		</wnl-sidenav-slot>
-		<div v-if="$currentEditionParticipant.isAllowed('access')" class="onboarding-wrapper">
+		<div v-if="$currentEditionParticipant.isAllowed('access') && currentStep" class="onboarding-wrapper">
 			<wnl-stepper
 				class="onboarding-stepper"
 				:steps="stepsForStepper"
 				:current-step="currentStepIndexForStepper"
-				v-if="currentStep && !currentStep.hideOnStepper"
+				v-if="!currentStep.hideOnStepper"
 			/>
 			<component
 				class="scrollable-container"
-				v-if="currentStep"
 				:is="currentStep.component"
 			/>
-			<div class="has-text-centered buttons" v-if="currentStep">
+			<div class="has-text-centered buttons">
 				<button
 					v-if="isLastStep"
 					class="button margin"

@@ -11,7 +11,7 @@
 				<div>
 					<p class="margin bottom">Na najbliższą edycję szykujemy nową Chirurgię (na 10 czerwca) i Medycynę ratunkową (na 19 sierpnia). Możesz jednak spokojnie zaplanować naukę!</p>
 					<p class="margin bottom">Zakres materiału oraz struktura lekcji pozostaną takie same, jak obecnie. Nawet jeżeli zrealizujesz te lekcje przed ich aktualizacją, możesz bez przeszkód kontynuować kurs i mieć pewność pokrycia całości materiału.</p>
-					<p class="text-dimmed">💡   Plan możesz zawsze zmienić w zakłade KONTO > Plan pracy.</p>
+					<p class="text-dimmed">💡 Plan możesz zawsze zmienić w zakłade KONTO > Plan pracy.</p>
 				</div>
 			</div>
 

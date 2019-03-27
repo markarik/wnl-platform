@@ -42,7 +42,7 @@ class LoginController extends Controller
 	/**
 	 * Show the application's login form.
 	 *
-	 * @return \Illuminate\Http\Response
+	 * @return \Illuminate\View\View
 	 */
 	public function showLoginForm()
 	{

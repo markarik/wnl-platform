@@ -5,7 +5,7 @@
 		@include('payment.cart')
 		<div class="t-checkout__content -centered">
 			<div class="o-voucher o-column">
-				<img src="{{ asset('images/voucher_page_hero.svg') }}" class="o-column__row -largeSpace"/>
+				<img src="{{ asset('images/happy-poland.png') }}" class="o-column__row o-voucher__image -largeSpace"/>
 				<header class="o-column__row">
 					<div class="o-voucher__headline">Mask kod? Super 🎉</div>
 					<div class="o-voucher__headline">Wpisz go poniżej, aby wykorzystać zniżkę.</div>

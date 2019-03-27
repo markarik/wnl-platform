@@ -69,6 +69,9 @@
 		flex-shrink: 0
 		overflow-x: auto
 
+		&::-webkit-scrollbar
+			display: none
+
 	.scrollable-container
 		flex-grow: 1
 		padding: $margin-base

@@ -22,7 +22,7 @@
 			<div class="has-text-centered buttons" v-if="currentStep">
 				<button
 					v-if="isLastStep"
-					class="button is-secondary margin"
+					class="button margin"
 					:class="{
 						'is-loading': isLoading
 					}"

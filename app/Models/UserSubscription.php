@@ -56,7 +56,7 @@ class UserSubscription extends Model
 	}
 
 	/**
-	 * @param Carbon[] $dates
+	 * @param Carbon[]|array $dates
 	 * @return string
 	 */
 	protected function getSubscriptionStatus($dates)
@@ -67,7 +67,7 @@ class UserSubscription extends Model
 
 		list ($min, $max) = $dates;
 
-		if (!$min || !$max) {
+		if (empty($min) || empty($max)) {
 			return self::SUBSCRIPTION_STATUS_INACTIVE;
 		}
 

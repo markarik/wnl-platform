@@ -254,6 +254,16 @@ class User extends Authenticatable
 		return !($this->first_name === null || $this->last_name === null);
 	}
 
+	public function getHasLatestCourseProductAttribute()
+	{
+		return $this->orders()
+			->whereHas('product', function($query){
+				$query->where('slug', Product::SLUG_WNL_ONLINE);
+			})
+			->where('paid', 1)
+			->count() > 0;
+	}
+
 	protected function getSubscriptionStatus($dates)
 	{
 		if ($this->hasRole([Role::ROLE_ADMIN, Role::ROLE_MODERATOR, Role::ROLE_TEST])) {

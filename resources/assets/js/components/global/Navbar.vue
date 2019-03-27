@@ -13,14 +13,14 @@
 				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
 			</router-link>
 		</div>
-		<!-- <div class="wnl-navbar-signup" v-if="!isMobile">
+		<div class="wnl-navbar-signup" v-if="!isMobile && !currentUserHasLatestProduct">
 			<a target="_blank" :href="signUpLink" class="button is-success is-small is-outlined">
 				<span>Zapisz się</span>&nbsp;
 				<span class="icon is-small">
 					<i class="fa fa-thumbs-o-up"></i>
 				</span>
 			</a>
-		</div> -->
+		</div>
 		<div
 			v-if="$currentEditionParticipant.isAllowed('access')"
 			class="wnl-navbar-item wnl-navbar-search"
@@ -161,6 +161,7 @@ export default {
 	},
 	computed: {
 		...mapGetters([
+			'currentUserHasLatestProduct',
 			'canShowChatToggleInNavbar',
 			'canShowControlsInNavbar',
 			'canShowSidenavTrigger',

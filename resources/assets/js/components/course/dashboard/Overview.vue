@@ -20,13 +20,13 @@
 		<div class="overview-progress box">
 			<wnl-next-lesson @userEvent="trackUserEvent"/>
 			<wnl-your-progress/>
-			<!-- <div class="has-text-centered margin vertical">
+			<div class="has-text-centered margin vertical" v-if="!currentUserHasLatestProduct">
 				<a
 					:href="signUpLink"
 					target="_blank"
 					class="button is-small is-success">Zapisz się
 				</a>
-			</div> -->
+			</div>
 		</div>
 
 		<div class="active-users">
@@ -140,7 +140,11 @@ export default {
 			'currentUserName',
 			'overviewView',
 		]),
-		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
+		...mapGetters([
+			'currentUserSubscriptionDates',
+			'currentUserSubscriptionActive',
+			'currentUserHasLatestProduct',
+		]),
 		isBeginning() {
 			return !this.wasCourseStarted(this.courseId);
 		},

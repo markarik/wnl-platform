@@ -10,7 +10,8 @@ class UserSubscriptionApiController extends ApiController {
 
 		return $this->respondOk([
 			'status' => $user->subscriptionStatus,
-			'dates' => $user->subscriptionDates
+			'dates' => $user->subscriptionDates,
+			'latest_product' => $user->hasLatestCourseProduct,
 		]);
 	}
 }

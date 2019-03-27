@@ -66,7 +66,7 @@
 </style>
 
 <script>
-import noop from 'lodash';
+import { noop } from 'lodash';
 import { swalConfig } from 'js/utils/swal';
 import { mapActions } from 'vuex';
 import emits_events from 'js/mixins/emits-events';

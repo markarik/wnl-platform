@@ -32,7 +32,7 @@
 				</table>
 				<div class="accept-plan">
 					<a
-						@click="acceptPlan"
+						@click="satisfactionGuaranteeModalVisible = true"
 						class="button button is-primary is-outlined is-big"
 					>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
 					</a>
@@ -71,11 +71,17 @@
 		</div>
 		<div class="accept-plan">
 			<a
-				@click="acceptPlan"
+				@click="satisfactionGuaranteeModalVisible = true"
 				class="button button is-primary is-outlined is-big"
 			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
 			</a>
 		</div>
+		<wnl-satisfaction-guarantee-modal
+			:visible="satisfactionGuaranteeModalVisible"
+			title="Czy na pewno chcesz zmienić plan pracy?"
+			@closeModal="satisfactionGuaranteeModalVisible = false"
+			@submit="acceptPlan"
+		></wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 
@@ -123,17 +129,20 @@ import { isEmpty } from 'lodash';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 import WnlManualPlanNodesList from 'js/components/user/plan/ManualPlanNodesList';
+import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
 export default {
 	name: 'ManualPlan',
 	components: {
 		WnlTextOverlay,
 		WnlManualPlanNodesList,
+		WnlSatisfactionGuaranteeModal
 	},
 	mixins: [emits_events],
 	data() {
 		return {
 			manualStartDates: [],
+			satisfactionGuaranteeModalVisible: false,
 			isLoading: false,
 			alertSuccess: {
 				text: this.$i18n.t('lessonsAvailability.alertSuccess'),
@@ -188,6 +197,7 @@ export default {
 			}
 		},
 		async acceptPlan() {
+			this.satisfactionGuaranteeModalVisible = false;
 			if (!this.validate()) {
 				return false;
 			}

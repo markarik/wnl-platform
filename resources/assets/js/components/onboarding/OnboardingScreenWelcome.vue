@@ -39,7 +39,7 @@ export default {
 			'currentUserName'
 		]),
 		imageUrl() {
-			return getImageUrl('onboarding-screen-welcome.png');
+			return getImageUrl('happy-poland.png');
 		}
 	},
 };

@@ -50,7 +50,7 @@ class LoginController extends Controller
 		$signupsOpen = App\Models\Product::select()
 			->where('slug', App\Models\Product::SLUG_WNL_ONLINE)
 			->whereDate('signups_start', '<', $now)
-			->whereDate('signups_end', '>', $now)
+			->whereDate('signups_end', '>=', $now)
 			->count() > 0;
 
 		return view('auth.login', ['signupsOpen' => $signupsOpen]);

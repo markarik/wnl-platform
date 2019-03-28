@@ -72,7 +72,7 @@ const getters = {
 
 	currentUserSubscriptionDates: state => state.subscription && state.subscription.subscription_dates,
 	currentUserSubscriptionActive: state => state.subscription && state.subscription.subscription_status === 'active',
-	currentUserHasLatestProduct: state => state.profile.subscription.has_latest_product,
+	currentUserHasLatestProduct: state => state.subscription.has_latest_product,
 };
 
 // Mutations

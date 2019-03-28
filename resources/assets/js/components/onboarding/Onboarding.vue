@@ -83,7 +83,7 @@
 			.row-item
 				display: flex
 				flex: 1 1 50%
-				padding-right: $margin-base
+				padding: 0 $margin-small
 				margin-bottom: $margin-base
 
 			.row-item-icon

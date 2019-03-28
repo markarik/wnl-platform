@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\Order;
-use App\Models\User;
 use App\Models\UserSubscription;
 use Illuminate\Bus\Queueable;
 use Lib\Invoice\Invoice;
@@ -41,7 +40,7 @@ class OrderPaid implements ShouldQueue
 		$this->handleInstalments();
 		$this->sendConfirmation();
 
-		\Cache::forget(User::getSubscriptionKey($this->order->user->id));
+		\Cache::forget(UserSubscription::getCacheKey($this->order->user->id));
 	}
 
 	protected function handleCoupon()
@@ -86,8 +85,8 @@ class OrderPaid implements ShouldQueue
 			return;
 		}
 
-		$subscriptionAccessStart = $user->subscription->access_start ?? null;
-		$subscriptionAccessEnd = $user->subscription->access_end ?? null;
+		$subscriptionAccessStart = $user->subscription_proxy->access_start ?? null;
+		$subscriptionAccessEnd = $user->subscription_proxy->access_end ?? null;
 
 		$accessStart = $subscriptionAccessStart
 			? min([$subscriptionAccessStart, $product->access_start])

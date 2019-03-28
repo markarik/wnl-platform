@@ -36,7 +36,7 @@
 		<div class="t-app">
 			<nav class="o-navigation">
 				<a class="o-navigation__item" href="https://wiecejnizlek.pl">
-					<img src="{{ asset('/images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK" class="o-navigation__logo">
+					<img src="{{ asset('images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK" class="o-navigation__logo">
 				</a>
 
 				<div class="o-navigation__right -stormGray">

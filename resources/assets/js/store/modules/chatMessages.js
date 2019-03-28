@@ -51,7 +51,7 @@ const getters = {
 		return Object.values(state.profiles).find(profile => profile.user_id === id) || {};
 	},
 	getInterlocutor: (state, getters, rootState, rootGetters) => profiles => {
-		const profileId = profiles.find(profileId => profileId !== rootGetters.currentUser.id);
+		const profileId = profiles.find(profileId => profileId !== rootGetters.currentUserProfileId);
 		if (profileId) return getters.getProfileById(profileId);
 		return {};
 	},
@@ -61,7 +61,7 @@ const getters = {
 			return {};
 		}
 
-		if (profile.id === rootGetters.currentUser.id) {
+		if (profile.id === rootGetters.currentUserProfileId) {
 			return Object.values(state.rooms).find(room => {
 				const roomProfiles = room.profiles || [];
 
@@ -73,7 +73,7 @@ const getters = {
 			const roomProfiles = room.profiles || [];
 
 			return roomProfiles.length === 2 &&
-				roomProfiles.includes(rootGetters.currentUser.id) &&
+				roomProfiles.includes(rootGetters.currentUserProfileId) &&
 				roomProfiles.includes(profile.id);
 		}) || {};
 	},

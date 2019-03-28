@@ -50,7 +50,7 @@
 <script>
 import axios from 'axios';
 import _ from 'lodash';
-import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env';
+import {getUrl, getApiUrl} from 'js/utils/env';
 import {mapGetters} from 'vuex';
 import Order from './Order';
 import moment from 'moment';

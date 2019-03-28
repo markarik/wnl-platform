@@ -134,16 +134,12 @@ export default {
 	computed: {
 		...mapGetters('progress', [
 			'isLessonComplete',
-			'wasCourseStarted',
 		]),
 		...mapGetters([
 			'currentUserName',
 			'overviewView',
 		]),
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
-		isBeginning() {
-			return !this.wasCourseStarted(this.courseId);
-		},
 		panels() {
 			return [
 				{

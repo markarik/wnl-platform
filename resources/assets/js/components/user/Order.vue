@@ -409,7 +409,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters(['isAdmin', 'currentUser']),
+		...mapGetters(['isAdmin']),
 		couponsDisabled() {
 			if (this.order.product.signups_end) {
 				return new Date(this.order.product.signups_end * 1000) < new Date();

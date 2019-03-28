@@ -119,7 +119,7 @@ export default {
 			this.isReturningUser = included.has_prolonged_courses[id].has_prolonged_course;
 			this.defaultPlanStartDate = moment(courseStart * 1000).format('LL');
 			this.automaticPlanStartDate = new Date(courseStart * 1000);
-			this.isPlannerEnabled = this.automaticPlanStartDate >= new Date();
+			this.isPlannerEnabled = this.automaticPlanStartDate >= (new Date()).setHours(0, 0);
 		} catch (error) {
 			$wnl.logger.error(error);
 			this.addAutoDismissableAlert({

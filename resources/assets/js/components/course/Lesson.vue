@@ -1,5 +1,5 @@
 <template>
-	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
+	<div v-if="!isRenderBlocked" class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
 		<div class="wnl-lesson" v-if="isLessonAvailable(lessonId)">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
@@ -59,16 +59,18 @@
 import _ from 'lodash';
 import {mapGetters, mapActions} from 'vuex';
 
-import PreviousNext from 'js/components/course/PreviousNext';
+import WnlPreviousNext from 'js/components/course/PreviousNext';
+
 import {resource} from 'js/utils/config';
 import {breadcrumb} from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
+import {swalConfig} from 'js/utils/swal';
 
 export default {
 	name: 'Lesson',
 	components: {
-		'wnl-previous-next': PreviousNext,
+		WnlPreviousNext,
 	},
 	mixins: [breadcrumb],
 	props: ['courseId', 'lessonId', 'presenceChannel', 'screenId', 'slide'],
@@ -82,6 +84,7 @@ export default {
 				 * all browsers are able to beautifully scroll the content.
 				 */
 			elementHeight: _.get(this.$parent, '$el.offsetHeight') || '100%',
+			isRenderBlocked: true,
 		};
 	},
 	computed: {
@@ -183,7 +186,6 @@ export default {
 		},
 	},
 	methods: {
-
 		...mapActions('progress', [
 			'startLesson',
 			'completeLesson',
@@ -253,6 +255,9 @@ export default {
 				activeScreen: parseInt(this.screenId)
 			});
 		},
+		goToDashboard() {
+			this.$router.push('/');
+		},
 		shouldCompleteScreen() {
 			if (!this.currentScreen.sections) {
 				return true;
@@ -312,16 +317,35 @@ export default {
 		},
 	},
 	async mounted () {
-		this.toggleOverlay({source: 'lesson', display: true});
 		try {
-			await this.setupLesson(this.lessonId);
-			this.launchLesson();
+			// FIXME show only if user didn't finish the exam and din't skip the modal
+			// TODO consider using custom modal but make it a blocking one
+			await this.$swal(swalConfig({
+				title: '⚠️ Rozpoczęcie nauki przed rozwiązaniem wstępnego LEK-u wiąże się z utratą Gwarancji Satysfkacji!',
+				// TODO add missing text
+				text: 'Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu, pod warunkiem przywrócenia domyślnego planu pracy i rozwiązaniu Wstępnego LEK-u przed rozpoczęciem nauki.',
+				showCancelButton: true,
+				confirmButtonText: 'Rezygnuję z gwarancji',
+				cancelButtonText: 'Wróć na dashboard',
+				type: 'error', // ???
+				confirmButtonClass: 'button is-primary',
+				reverseButtons: true
+			}));
+
+			this.isRenderBlocked = false;
+			this.toggleOverlay({source: 'lesson', display: true});
+			try {
+				await this.setupLesson(this.lessonId);
+				this.launchLesson();
+			} catch (e) {
+				$wnl.logger.error(e);
+			} finally {
+				this.toggleOverlay({source: 'lesson', display: false});
+			}
+			window.addEventListener('resize', this.updateElementHeight);
 		} catch (e) {
-			$wnl.logger.error(e);
-		} finally {
-			this.toggleOverlay({source: 'lesson', display: false});
+			this.goToDashboard();
 		}
-		window.addEventListener('resize', this.updateElementHeight);
 	},
 	beforeDestroy () {
 		window.Echo.leave(this.presenceChannel);

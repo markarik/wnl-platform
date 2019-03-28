@@ -148,7 +148,7 @@ import UserDropdown from 'js/components/user/UserDropdown.vue';
 import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed';
 import ChatFeed from 'js/components/notifications/feeds/chat/ChatFeed';
 import { mapGetters, mapActions } from 'vuex';
-import { getSvgUrl, getUrl } from 'js/utils/env';
+import { getImageUrl, getUrl } from 'js/utils/env';
 
 export default {
 	name: 'Navbar',
@@ -175,10 +175,10 @@ export default {
 			return this.isChatVisible ? 'fa-close' : 'fa-comments-o';
 		},
 		logoSrc() {
-			return getSvgUrl('wnl-logo-image.svg');
+			return getImageUrl('wnl-logo-image.svg');
 		},
 		logoTextSrc() {
-			return getSvgUrl('wnl-logo-text.svg');
+			return getImageUrl('wnl-logo-text.svg');
 		},
 		sidenavIconClass() {
 			return this.isSidenavOpen ? 'fa-close' : 'fa-bars';

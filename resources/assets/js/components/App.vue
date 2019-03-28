@@ -45,7 +45,6 @@ import Navbar from 'js/components/global/Navbar.vue';
 import Alerts from 'js/components/global/GlobalAlerts';
 import sessionStore from 'js/services/sessionStore';
 import {startActivityTracking} from 'js/services/activityMonitor';
-import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection';
 import {getApiUrl} from 'js/utils/env';
 
 export default {

@@ -113,7 +113,7 @@ export default {
 							return {
 								...order,
 								invoices: (order.invoices || []).map(invoiceId => invoices[invoiceId]),
-								studyBuddy: order.study_buddy ? included.study_buddies[order.study_buddy[0]] : {},
+								...(order.study_buddy && {studyBuddy: included.study_buddies[order.study_buddy[0]]}),
 								payments: (order.payments || []).map(paymentId => payments[paymentId])
 							};
 						});

@@ -81,7 +81,7 @@ export default {
 		...mapActions('siteWideMessages', ['fetchUserSiteWideMessages', 'updateSiteWideMessage']),
 		...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 		...mapActions('notifications', ['initNotifications']),
-		...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus', 'updateFromEventLog']),
+		...mapActions('chatMessages', ['setupChat']),
 		...mapActions('tasks', ['initModeratorsFeedListener']),
 		...mapActions('course', { courseSetup: 'setup' }),
 		handleSiteWideMessages() {
@@ -102,7 +102,6 @@ export default {
 
 		return this.setupCurrentUser()
 			.then(() => {
-				this.setConnectionStatus(false);
 				// Setup Notifications
 				this.initNotifications();
 				this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener();
@@ -111,14 +110,7 @@ export default {
 				});
 
 				// Setup Chat
-				const userChannel = 'authenticated-user';
-				this.fetchUserRoomsWithMessages({page: 1})
-					.then((pointer) => this.$socketJoinRoom(userChannel, pointer))
-					.then((data) => {
-						this.updateFromEventLog(data.events);
-						this.setConnectionStatus(true);
-						this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage);
-					});
+				this.setupChat();
 
 				// Setup time tracking
 				const activitiesConfig = {

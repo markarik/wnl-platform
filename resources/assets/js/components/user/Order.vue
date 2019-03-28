@@ -515,7 +515,7 @@ export default {
 			'fetchUserSubscription',
 		]),
 		...mapActions('course', ['setStructure']),
-
+		...mapActions('chatMessages', ['setupChat']),
 		async downloadInvoice(invoice) {
 			try {
 				const response = await axios.request({
@@ -570,8 +570,9 @@ export default {
 					this.order.paid        = true;
 					this.order.paid_amount = order.paid_amount;
 					this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
-					await this.fetchUserSubscription();
-					await this.setStructure();
+					this.fetchUserSubscription();
+					this.setStructure();
+					this.setupChat();
 				} else {
 					setTimeout(this.checkStatus, 10000);
 				}

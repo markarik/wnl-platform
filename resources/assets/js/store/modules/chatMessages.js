@@ -4,7 +4,11 @@ import {uniq} from 'lodash';
 
 import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
-import {SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MARK_ROOM_AS_READ} from 'js/plugins/chat-connection';
+import {
+	SOCKET_EVENT_SEND_MESSAGE,
+	SOCKET_EVENT_MARK_ROOM_AS_READ,
+	SOCKET_EVENT_USER_SENT_MESSAGE
+} from 'js/plugins/chat-connection';
 
 const namespaced = true;
 
@@ -287,6 +291,16 @@ const actions = {
 				break;
 			}
 		});
+	},
+
+	async setupChat({dispatch}) {
+		dispatch('setConnectionStatus', false);
+		const userChannel = 'authenticated-user';
+		const pointer = await dispatch('fetchUserRoomsWithMessages', {page: 1});
+		const data = await this._vm.$socketJoinRoom(userChannel, pointer);
+		dispatch('updateFromEventLog', data.events);
+		dispatch('setConnectionStatus', true);
+		this._vm.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage);
 	},
 };
 

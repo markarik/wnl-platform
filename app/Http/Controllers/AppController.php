@@ -36,6 +36,9 @@ class AppController extends Controller
 				'papi'    => config('papi'),
 				'lessons' => config('lessons'),
 			],
+			'course' => [
+				'productLogo' => config('course.product_logo'),
+			],
 			'defaultSettings' => config('user-default-settings'),
 		]);
 

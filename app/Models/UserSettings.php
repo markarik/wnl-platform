@@ -21,4 +21,9 @@ class UserSettings extends Model
 		return array_merge(config('user-default-settings'), $settings);
 	}
 
+	public function patch($settings) {
+		$this->settings = array_merge(json_decode($this->attributes['settings'], true), $settings);
+		$this->save();
+	}
+
 }

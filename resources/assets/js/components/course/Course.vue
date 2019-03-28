@@ -89,7 +89,6 @@ export default {
 	computed: {
 		...mapGetters('course', ['isLessonAvailable', 'ready']),
 		...mapGetters([
-			'currentUser',
 			'isSidenavVisible',
 			'isSidenavMounted',
 			'isChatMounted',

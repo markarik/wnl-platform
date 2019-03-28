@@ -45,7 +45,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 		//Users admin
 		Route::post("{$r['users']}/.filter", 'UsersApiController@filter');
-		Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 		Route::put("{$r['users']}/{id}", 'UsersApiController@put');
 		Route::post("{$r['users']}", 'UsersApiController@post');
 
@@ -279,6 +278,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::put("{$r['user-lesson']}/{userId}/{lessonId}", 'UserLessonApiController@put');
 	Route::get("{$r['user-lesson']}/{userId}/exportPlan", 'UserLessonApiController@exportPlan');
 
+	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
+
 	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
 
@@ -294,6 +295,8 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::get("{$r['users']}/{id}/{$r['user-settings']}", 'UserSettingsApiController@get');
 	Route::put("{$r['users']}/{id}/{$r['user-settings']}", 'UserSettingsApiController@put');
+
+	Route::put("{$r['users']}/{id}/{$r['user-product-state']}/latest", 'UserProductStateApiController@updateForLatestProduct');
 
 	Route::patch("{$r['users']}/{userId}/forget", 'UsersApiController@forget');
 
@@ -398,5 +401,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::get("token", 'TokenApiController@getToken');
 
 	// Products
+	Route::get("{$r['products']}/current/paidCourse", 'ProductsApiController@getPaidCourseForUser');
 	Route::get("{$r['products']}/bySlug/{slug}", 'ProductsApiController@getBySlug');
 });

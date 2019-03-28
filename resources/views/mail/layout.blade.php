@@ -74,7 +74,7 @@
 	<div style="padding: 0 20px; max-width: 650px; margin: 0 auto;">
 		<div style="padding: 20px 0 5px;">
 			<div style="text-align: center;">
-				<img src="{{ asset('images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK" style="height: 50px; max-width: 150px;">
+				<img src="{{ asset('svg/wnl-logo.svg') }}" alt="Logo Więcej niż LEK" style="height: 50px; max-width: 150px;">
 			</div>
 		</div>
 		<div>

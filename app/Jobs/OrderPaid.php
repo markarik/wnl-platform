@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\Order;
-use App\Models\User;
 use App\Models\UserSubscription;
 use Illuminate\Bus\Queueable;
 use Lib\Invoice\Invoice;
@@ -39,6 +38,8 @@ class OrderPaid implements ShouldQueue
 		$this->handleCoupon();
 		$this->handleInstalments();
 		$this->sendConfirmation();
+
+		\Cache::forget(UserSubscription::getCacheKey($this->order->user->id));
 	}
 
 	protected function handleCoupon()

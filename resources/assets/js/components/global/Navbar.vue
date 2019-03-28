@@ -22,19 +22,19 @@
 			</a>
 		</div> -->
 		<div
-			v-if="$currentEditionParticipant.isAllowed('access')"
+			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 			class="wnl-navbar-item wnl-navbar-search"
 		>
 			<wnl-search/>
 		</div>
 		<div
-			v-if="$currentEditionParticipant.isAllowed('access')"
+			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 			class="wnl-navbar-item wnl-navbar-feed">
 			<wnl-personal-feed/>
 		</div>
 		<div
 			class="wnl-navbar-item wnl-navbar-messages"
-			v-if="$currentEditionParticipant.isAllowed('access')"
+			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 		>
 			<wnl-chat-feed/>
 		</div>
@@ -148,7 +148,7 @@ import UserDropdown from 'js/components/user/UserDropdown.vue';
 import PersonalFeed from 'js/components/notifications/feeds/personal/PersonalFeed';
 import ChatFeed from 'js/components/notifications/feeds/chat/ChatFeed';
 import { mapGetters, mapActions } from 'vuex';
-import { getImageUrl, getUrl } from 'js/utils/env';
+import { getSvgUrl, getUrl } from 'js/utils/env';
 
 export default {
 	name: 'Navbar',
@@ -169,15 +169,16 @@ export default {
 			'isMobile',
 			'isTouchScreen',
 			'isSidenavOpen',
+			'isOnboardingFinished',
 		]),
 		chatIconClass() {
 			return this.isChatVisible ? 'fa-close' : 'fa-comments-o';
 		},
 		logoSrc() {
-			return getImageUrl('wnl-logo-image.svg');
+			return getSvgUrl('wnl-logo-image.svg');
 		},
 		logoTextSrc() {
-			return getImageUrl('wnl-logo-text.svg');
+			return getSvgUrl('wnl-logo-text.svg');
 		},
 		sidenavIconClass() {
 			return this.isSidenavOpen ? 'fa-close' : 'fa-bars';

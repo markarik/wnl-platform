@@ -23,7 +23,7 @@
 		<div class="container">
 			<div class="nav-left">
 				<a class="nav-item" href="https://wiecejnizlek.pl">
-					<img src="{{ asset('/images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
+					<img src="{{ asset('svg/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
 				</a>
 			</div>
 

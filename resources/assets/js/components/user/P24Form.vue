@@ -6,7 +6,7 @@
 		<input type="hidden" name="p24_amount" :value="amount"/>
 		<input type="hidden" name="p24_currency" value="PLN"/>
 		<input type="hidden" name="p24_description" :value="productName"/>
-		<input type="hidden" name="p24_client" :value="this.currentUser.full_name"/>
+		<input type="hidden" name="p24_client" :value="this.currentUserProfile.full_name"/>
 		<input type="hidden" name="p24_address" :value="userData.street"/>
 		<input type="hidden" name="p24_zip" :value="userData.zip"/>
 		<input type="hidden" name="p24_city" :value="userData.city"/>
@@ -47,7 +47,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters(['currentUser']),
+		...mapGetters(['currentUserProfile']),
 		returnUrl() {
 			return window.location.href;
 		},

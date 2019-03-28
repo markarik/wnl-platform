@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\Order;
-use App\Models\User;
 use App\Models\UserSubscription;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -40,8 +39,8 @@ class CreateSubscription
 			return;
 		}
 
-		$subscriptionAccessStart = $user->subscription->access_start ?? null;
-		$subscriptionAccessEnd = $user->subscription->access_end ?? null;
+		$subscriptionAccessStart = $user->subscription_proxy->access_start ?? null;
+		$subscriptionAccessEnd = $user->subscription_proxy->access_end ?? null;
 
 		$accessStart = $subscriptionAccessStart
 			? min([$subscriptionAccessStart, $product->access_start])
@@ -53,6 +52,6 @@ class CreateSubscription
 			['access_start' => $accessStart, 'access_end' => $accessEnd]
 		);
 
-		\Cache::forget(User::getSubscriptionKey($this->order->user->id));
+		\Cache::forget(UserSubscription::getCacheKey($this->order->user->id));
 	}
 }

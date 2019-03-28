@@ -31,11 +31,13 @@
 						</p>
 					</div>
 				</div>
- 				<wnl-automatic-plan
-					class="margin-top-huge"
-					v-if="isEditorVisible"
-					:show-annotation="false"
-				/>
+				<div class="onboarding-planner-wrapper" v-if="isEditorVisible">
+					<span class="icon onboarding-planner-close clickable" @click="isEditorVisible=false"><i class="fa fa-close"></i></span>
+					<wnl-automatic-plan
+						:show-annotation="false"
+						:start="automaticPlanStartDate"
+					/>
+				</div>
 			</div>
 		</template>
 	</div>
@@ -59,6 +61,14 @@
 			float: left
 			margin: 0 $margin-huge 0 0
 
+	.onboarding-planner-wrapper
+		margin-top: $margin-huge
+		position: relative
+
+	.onboarding-planner-close
+		position: absolute
+		right: 0
+
 </style>
 
 <script>
@@ -79,6 +89,7 @@ export default {
 	data() {
 		return {
 			defaultPlanStartDate: null,
+			automaticPlanStartDate: null,
 			isEditorVisible: false,
 			isLoading: true,
 			isReturningUser: false,
@@ -101,6 +112,7 @@ export default {
 			]);
 			this.isReturningUser = included.has_prolonged_courses[id].has_prolonged_course;
 			this.defaultPlanStartDate = moment(courseStart * 1000).format('LL');
+			this.automaticPlanStartDate = new Date(Math.max(courseStart * 1000, (new Date()).getTime()));
 		} catch (error) {
 			$wnl.logger.error(error);
 			this.addAutoDismissableAlert({

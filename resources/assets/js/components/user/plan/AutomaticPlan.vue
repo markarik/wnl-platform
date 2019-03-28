@@ -192,6 +192,8 @@
 		margin-bottom: $margin-base
 
 	.dates
+		margin-top: $margin-base
+
 		.date
 			margin-bottom: $margin-big
 
@@ -237,14 +239,19 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		start: {
+			type: Date,
+			default: () => new Date(),
+		}
 	},
 	data() {
+		console.log(this.start)
 		return {
 			satisfactionGuaranteeModalVisible: false,
 			isLoading: false,
 			isSubmitDisabled: false,
 			activePreset: 'dateToDate',
-			startDate: new Date(),
+			startDate: this.start,
 			endDate: null,
 			workDays: [1, 2, 3, 4, 5],
 			workLoad: null,

@@ -29,6 +29,7 @@ const state = {
 			passportNumber: ''
 		},
 	},
+	hasFinishedEntryExam: false,
 	accountSuspended: false,
 	roles: [],
 	subscription: {
@@ -46,6 +47,7 @@ const getters = {
 
 	currentUser: state => state,
 	currentUserId: state => state.id,
+	currentUserHasFinishedEntryExam: state => state.hasFinishedEntryExam,
 
 	currentUserProfile: state => state.profile,
 	currentUserProfileId: state => state.profile.id,
@@ -135,7 +137,15 @@ const actions = {
 			throw error;
 		}
 
-		const {id, profile, subscription, has_prolonged_course, latest_product_state, included} = response.data;
+		const {
+			id,
+			profile,
+			subscription,
+			has_prolonged_course,
+			has_finished_entry_exam: hasFinishedEntryExam,
+			latest_product_state,
+			included
+		} = response.data;
 
 		const currentUser = {
 			id,
@@ -144,6 +154,7 @@ const actions = {
 			hasProlongedCourse: has_prolonged_course && included.has_prolonged_courses[has_prolonged_course[0]],
 			subscription: subscription && included.subscriptions[subscription[0]],
 			latestProductState: latest_product_state && included.latest_product_states[latest_product_state[0]],
+			hasFinishedEntryExam
 		};
 
 		if (!id) {

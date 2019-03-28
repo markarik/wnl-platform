@@ -801,6 +801,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property bool $suspended
  * @property string|null $deleted_at
+ * @property bool $has_finished_entry_exam
  * @property-read \App\Models\UserBillingData $billing
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ChatMessage[] $chatMessages
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ChatRoom[] $chatRooms
@@ -845,6 +846,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereHasFinishedEntryExam($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereInvoice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereInvoiceAddress($value)

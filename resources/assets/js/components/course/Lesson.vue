@@ -66,6 +66,7 @@ import {breadcrumb} from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 import {swalConfig} from 'js/utils/swal';
+import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 export default {
 	name: 'Lesson',
@@ -104,9 +105,11 @@ export default {
 			screenProgress: 'getScreen',
 			lessonProgress: 'getLesson'
 		}),
-		...mapGetters({
-			currentUserProfileId: 'currentUserProfileId',
-		}),
+		...mapGetters([
+			'currentUserProfileId',
+			'currentUserHasFinishedEntryExam',
+			'getSetting'
+		]),
 		breadcrumb() {
 			return {
 				level: 1,
@@ -318,22 +321,26 @@ export default {
 	},
 	async mounted () {
 		try {
-			// FIXME show only if user didn't finish the exam and din't skip the modal
-			// TODO consider using custom modal but make it a blocking one
-			await this.$swal(swalConfig({
-				title: '⚠️ Rozpoczęcie nauki przed rozwiązaniem wstępnego LEK-u wiąże się z utratą Gwarancji Satysfkacji!',
-				// TODO add missing text
-				text: 'Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu, pod warunkiem przywrócenia domyślnego planu pracy i rozwiązaniu Wstępnego LEK-u przed rozpoczęciem nauki.',
-				showCancelButton: true,
-				confirmButtonText: 'Rezygnuję z gwarancji',
-				cancelButtonText: 'Wróć na dashboard',
-				type: 'error', // ???
-				confirmButtonClass: 'button is-primary',
-				reverseButtons: true
-			}));
+			if (!this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) && !this.currentUserHasFinishedEntryExam) {
+				// TODO consider using custom modal but make it a blocking one
+				await this.$swal(swalConfig({
+					title: '⚠️ Rozpoczęcie nauki przed rozwiązaniem wstępnego LEK-u wiąże się z utratą Gwarancji Satysfkacji!',
+					// TODO add missing text
+					text: 'Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu, pod warunkiem przywrócenia domyślnego planu pracy i rozwiązaniu Wstępnego LEK-u przed rozpoczęciem nauki.',
+					showCancelButton: true,
+					confirmButtonText: 'Rezygnuję z gwarancji',
+					cancelButtonText: 'Wróć na dashboard',
+					type: 'error', // ???
+					confirmButtonClass: 'button is-primary',
+					reverseButtons: true
+				}));
+
+				// TODO set USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL to true
+			}
 
 			this.isRenderBlocked = false;
 			this.toggleOverlay({source: 'lesson', display: true});
+
 			try {
 				await this.setupLesson(this.lessonId);
 				this.launchLesson();

@@ -3,5 +3,6 @@ export const USER_SETTING_NAMES = {
 	SKIP_FUNCTIONAL_SLIDES: 'skip_functional_slides',
 	NOTIFY_LIVE: 'notify_live',
 	THICK_SCROLLBAR: 'thick_scrollbar',
-	DEFAULT_TAXONOMY_ID: 'default_taxonomy_id'
+	DEFAULT_TAXONOMY_ID: 'default_taxonomy_id',
+	SKIP_SATISFACTION_GUARANTEE_MODAL: 'skip_satisfaction_guarantee_modal',
 };

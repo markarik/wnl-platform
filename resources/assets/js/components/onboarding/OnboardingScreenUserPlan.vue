@@ -2,8 +2,14 @@
 	<div>
 		<h2 class="title has-text-centered">Plan pracy 🗓</h2>
 		<p class="title is-5 has-text-centered">
-			Twój obecny plan pracy nie ulegnie zmianie.<br>
-			Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami.
+			<template v-if="isReturningUser">
+				Twój obecny plan pracy nie ulegnie zmianie.<br>
+				Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami.
+			</template>
+			<template v-else>
+				Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami.<br>
+				Do tego czasu lekcje pozostaną zamknięte.
+			</template>
 		</p>
 
 		<wnl-text-loader v-if="isLoading" />

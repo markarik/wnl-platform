@@ -19,6 +19,7 @@ export const questions = {
 			heading: 'Twoje statystyki',
 			mockExam: 'Poniżej znajduje się lista Twoich wyników z próbnych egzaminów.',
 			scores: 'Ilość rozwiązanych pytań i procent prawidłowych odpowiedzi',
+			resetButton: 'Wyczyść wszystkie wyniki',
 		},
 		ui: {
 			deleteModal: {

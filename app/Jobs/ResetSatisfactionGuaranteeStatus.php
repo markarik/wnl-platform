@@ -3,10 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\User;
-use App\Models\UserCourseProgress;
+use App\Models\UserSettings;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Carbon\Carbon;
-use Illuminate\Support\Collection;
 
 
 class ResetSatisfactionGuaranteeStatus
@@ -33,11 +31,15 @@ class ResetSatisfactionGuaranteeStatus
 	public function handle()
 	{
 		$this->user->has_finished_entry_exam = false;
-		$this->user->save;
-
-		\Log::debug('IM HERE>>>>>>>>>>>');
-		$this->user->settings->patch([
-			'skip_satisfaction_guarantee_modal' => true
+		$this->user->save();
+		$currentSettings = $this->user->settings->attributes['settings'] ?? [];
+		$updatedSettings = array_merge($currentSettings, [
+			'skip_satisfaction_guarantee_modal' => false
 		]);
+
+		$this->user->settings()->updateOrCreate(
+			['user_id' => $this->user->id],
+			['settings' => $updatedSettings]
+		);
 	}
 }

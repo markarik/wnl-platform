@@ -197,8 +197,12 @@ export default {
 			'completeSubsection',
 			'saveLessonProgress',
 		]),
-		...mapActions(['updateLessonNav', 'setupCurrentUser', 'toggleOverlay']),
-		...mapActions(['setupCurrentUser']),
+		...mapActions([
+			'changeUserSettingAndSync',
+			'setupCurrentUser',
+			'toggleOverlay',
+			'updateLessonNav',
+		]),
 		...mapActions('users', ['setActiveUsers', 'userJoined', 'userLeft']),
 		...mapActions('course', ['setupLesson']),
 		onUserEvent(payload) {
@@ -321,7 +325,7 @@ export default {
 	},
 	async mounted () {
 		try {
-			if (!this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) && !this.currentUserHasFinishedEntryExam) {
+			if (this.lesson.is_required && !this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) && !this.currentUserHasFinishedEntryExam) {
 				// TODO consider using custom modal but make it a blocking one
 				await this.$swal(swalConfig({
 					title: '⚠️ Rozpoczęcie nauki przed rozwiązaniem wstępnego LEK-u wiąże się z utratą Gwarancji Satysfkacji!',
@@ -332,10 +336,13 @@ export default {
 					cancelButtonText: 'Wróć na dashboard',
 					type: 'error', // ???
 					confirmButtonClass: 'button is-primary',
-					reverseButtons: true
+					reverseButtons: true,
 				}));
 
-				// TODO set USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL to true
+				this.changeUserSettingAndSync({
+					setting: USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL,
+					value: true,
+				});
 			}
 
 			this.isRenderBlocked = false;

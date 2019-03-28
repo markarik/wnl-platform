@@ -7,8 +7,7 @@
 				Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami.
 			</template>
 			<template v-else>
-				Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami.<br>
-				Do tego czasu lekcje pozostaną zamknięte.
+				Lekcje będą się otwierały zgodnie z ustalonymi w planie datami.
 			</template>
 		</p>
 
@@ -31,7 +30,7 @@
 					<h3 class="title is-4 onboarding-plan-header">Domyślny plan</h3>
 					<div>
 						<p class="margin bottom">Proponowany przez nas plan pracy trwa od <strong>{{defaultPlanStartDate}}</strong>, zakłada pracę <strong>5&nbsp;dni w tygodniu przez 14 tygodni</strong> 🗓</p>
-						<p>
+						<p v-if="isPlannerEnabled">
 							Możesz zmienić zakres dni, w których chcesz pracować, a my dostosujemy do nich Twój plan pracy 👉
 							<a class="clickable" @click="openEditor">Edytuj plan</a>
 						</p>
@@ -96,6 +95,7 @@ export default {
 		return {
 			defaultPlanStartDate: null,
 			automaticPlanStartDate: null,
+			isPlannerEnabled: true,
 			isEditorVisible: false,
 			isLoading: true,
 			isReturningUser: false,
@@ -118,7 +118,8 @@ export default {
 			]);
 			this.isReturningUser = included.has_prolonged_courses[id].has_prolonged_course;
 			this.defaultPlanStartDate = moment(courseStart * 1000).format('LL');
-			this.automaticPlanStartDate = new Date(Math.max(courseStart * 1000, (new Date()).getTime()));
+			this.automaticPlanStartDate = new Date(courseStart * 1000);
+			this.isPlannerEnabled = this.automaticPlanStartDate >= new Date();
 		} catch (error) {
 			$wnl.logger.error(error);
 			this.addAutoDismissableAlert({

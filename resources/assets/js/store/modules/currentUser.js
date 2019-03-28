@@ -155,6 +155,15 @@ const actions = {
 		commit(types.USERS_UPDATE_CURRENT, currentUser);
 	},
 
+	async fetchUserSubscription({commit}) {
+		try {
+			const response = await axios.get(getApiUrl('user_subscription/current'));
+			commit(types.USERS_SET_SUBSCRIPTION, response.data);
+		} catch (e) {
+			$wnl.logger.capture(e);
+		}
+	},
+
 	fetchCurrentUserStats({commit, getters}) {
 		return new Promise((resolve, reject) => {
 			_fetchUserStats(getters.currentUserId)

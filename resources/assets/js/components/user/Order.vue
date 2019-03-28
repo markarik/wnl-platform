@@ -510,10 +510,11 @@ export default {
 		}
 	},
 	methods: {
-		...mapMutations({
-			'setSubscription': types.USERS_SET_SUBSCRIPTION
-		}),
-		...mapActions(['addAutoDismissableAlert']),
+		...mapActions([
+			'addAutoDismissableAlert',
+			'fetchUserSubscription',
+		]),
+		...mapActions('course', ['setStructure']),
 
 		async downloadInvoice(invoice) {
 			try {
@@ -559,25 +560,24 @@ export default {
 				$wnl.logger.capture(err);
 			}
 		},
-		checkStatus() {
-			axios.get(getApiUrl(`orders/${this.order.id}?include=payments`))
-				.then((response) => {
-					const {included = {}, ...order} = response.data;
-					const {payments = {}} = included;
-					if (order.paid) {
-						this.order.paid        = true;
-						this.order.paid_amount = order.paid_amount;
-						this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
+		async checkStatus() {
+			try{
+				const response = await axios.get(getApiUrl(`orders/${this.order.id}?include=payments`));
 
-						axios.get(getApiUrl('user_subscription/current'))
-							.then(response => {
-								this.setSubscription(response.data);
-							});
-					} else {
-						setTimeout(this.checkStatus, 10000);
-					}
-				})
-				.catch(exception => $wnl.logger.capture(exception));
+				const {included = {}, ...order} = response.data;
+				const {payments = {}} = included;
+				if (order.paid) {
+					this.order.paid        = true;
+					this.order.paid_amount = order.paid_amount;
+					this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
+					await this.fetchUserSubscription();
+					await this.setStructure();
+				} else {
+					setTimeout(this.checkStatus, 10000);
+				}
+			} catch (e) {
+				$wnl.logger.capture(e);
+			}
 		},
 		couponSubmitSuccess() {
 			axios.get(getApiUrl(`orders/${this.order.id}`))
@@ -640,7 +640,7 @@ export default {
 		},
 		formatTime(time) {
 			return moment(time * 1000).format('L LT');
-		}
+		},
 	},
 	mounted() {
 		if (this.isPending) this.checkStatus();

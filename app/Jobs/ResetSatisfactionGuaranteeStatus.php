@@ -32,11 +32,11 @@ class ResetSatisfactionGuaranteeStatus
 	{
 		$this->user->has_finished_entry_exam = false;
 		$this->user->save();
+
 		$currentSettings = $this->user->settings->attributes['settings'] ?? [];
 		$updatedSettings = array_merge($currentSettings, [
 			'skip_satisfaction_guarantee_modal' => false
 		]);
-
 		$this->user->settings()->updateOrCreate(
 			['user_id' => $this->user->id],
 			['settings' => $updatedSettings]

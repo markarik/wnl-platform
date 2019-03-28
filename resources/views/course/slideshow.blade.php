@@ -26,8 +26,8 @@
 	<body>
 		<span id="orderNumberContainer" class="order-number-container"></span>
 		<a class="bookmark rounded-button">
-			<img class="bookmark-image bookmark-image-add" src="{{ asset('images/star-o.svg') }}" alt="Dodaj do zakładek">
-			<img class="bookmark-image bookmark-image-remove" src="{{ asset('images/star.svg') }}" alt="Usuń z zakładek">
+			<img class="bookmark-image bookmark-image-add" src="{{ asset('svg/star-o.svg') }}" alt="Dodaj do zakładek">
+			<img class="bookmark-image bookmark-image-remove" src="{{ asset('svg/star.svg') }}" alt="Usuń z zakładek">
 			<span>zapisz</span>
 		</a>
 		<div class="theme-font-montserrat theme-color-white-blue" style="width: 100%; height: 100%;">
@@ -36,12 +36,12 @@
 					{!! $slides !!}
 				</div>
 			</div>
-			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-right enabled" aria-label="next slide"></div>
-			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-left enabled" aria-label="previous slide">
+			<div style="background-image: url('{{ asset('svg/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-right enabled" aria-label="next slide"></div>
+			<div style="background-image: url('{{ asset('svg/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-left enabled" aria-label="previous slide">
 			</div>
 		</div>
 		<a class="toggle-annotations rounded-button without-image" style="display: none">
-			<img src="{{ asset('images/comments.svg') }}" alt="Komentarze do slajdu">
+			<img src="{{ asset('svg/comments.svg') }}" alt="Komentarze do slajdu">
 			<span class="badge annotations-count">0</span>
 		</a>
 		<div class="slideshow-annotations" style="display: none;">
@@ -50,14 +50,14 @@
 			{{-- <a class="annotations-new-comment">Skomentuj</a> --}}
 		</div>
 		<a class="toggle-fullscreen rounded-button without-image">
-			<img class="fs-close" src="{{ asset('images/close-fullscreen.svg') }}" alt="Zamknij pełen ekran">
-			<img class="fs-open" src="{{ asset('images/fullscreen-arrows.svg') }}" alt="Pełen ekran">
+			<img class="fs-close" src="{{ asset('svg/close-fullscreen.svg') }}" alt="Zamknij pełen ekran">
+			<img class="fs-open" src="{{ asset('svg/fullscreen-arrows.svg') }}" alt="Pełen ekran">
 		</a>
 		<div id="modifiedSlidesList" class="modified-slides-list">
 			<button id="refreshButton" class="refresh-button">Odśwież prezentację</button>
 		</div>
 		<a id="refreshIcon" class="refresh-icon rounded-button without-image hidden">
-			<img src="{{ asset('images/refresh.svg') }}" alt="Odśwież prezentację">
+			<img src="{{ asset('svg/refresh.svg') }}" alt="Odśwież prezentację">
 			<span id="modifiedSlidesCounter" class="badge">0</span>
 		</a>
 		<script src="{{ mix('/js/slideshow.js') }}"></script>

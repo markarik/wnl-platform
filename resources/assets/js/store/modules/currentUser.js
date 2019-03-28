@@ -1,15 +1,20 @@
+import axios from 'axios';
+import {set} from 'vue';
+
 import * as types from 'js/store/mutations-types';
-import { getApiUrl } from 'js/utils/env';
-import { set } from 'vue';
+import {getApiUrl} from 'js/utils/env';
 import {USER_SETTING_NAMES} from 'js/consts/settings';
+import {ONBOARDING_STEPS, ROLES} from 'js/consts/user';
 
 let getCurrentUserPromise;
 
 // Initial state
 const state = {
 	loading: true,
+	id: 0,
 	profile: {
 		id: 0,
+		user_id: 0,
 		first_name: '',
 		last_name: '',
 		full_name: '',
@@ -18,46 +23,55 @@ const state = {
 		display_name: '',
 		username: '',
 		avatar: '',
-		roles: [],
-		user_id: 0,
-		subscription: {
-			dates: {
-				min: 0, max: 0
-			}
-		},
 		identity: {
 			personalIdentityNumber: '',
 			identityCardNumber: '',
 			passportNumber: ''
 		},
-		accountSuspended: false
 	},
+	accountSuspended: false,
+	roles: [],
+	subscription: {
+		dates: {
+			min: 0, max: 0
+		}
+	},
+	latestProductState: null,
 	settings: $wnl.defaultSettings,
 };
 
 // Getters
 const getters = {
-	currentUser: state => state.profile,
-	currentUserId: state => state.profile.user_id,
+	isCurrentUserLoading: state => state.loading,
+
+	currentUser: state => state,
+	currentUserId: state => state.id,
+
+	currentUserProfile: state => state.profile,
 	currentUserProfileId: state => state.profile.id,
 	currentUserAvatar: state => state.profile.avatar,
 	currentUserEmail: state => state.profile.public_email,
 	currentUserName: state => state.profile.first_name,
 	currentUserFullName: state => state.profile.full_name,
 	currentUserDisplayName: state => state.profile.display_name,
-	currentUserRoles: state => state.profile.roles,
-	currentUserSlug: state => state.profile.full_name.toLowerCase().replace(/\W/g, ''),
 	currentUserIdentity: state => state.profile.identity,
+
+	currentUserRoles: state => state.roles,
+	isAdmin: state => state.roles.indexOf(ROLES.ADMIN) > -1,
+	isModerator: state => state.roles.indexOf(ROLES.MODERATOR) > -1,
+
+	currentUserLastestProductState: state => state.latestProductState,
+	isOnboardingFinished: (state, getters) => state.latestProductState && state.latestProductState.onboarding_step === ONBOARDING_STEPS.FINISHED || getters.isAdmin,
+
+	currentUserAccountSuspended: state => state.accountSuspended,
+	currentUserStats: state => state.stats,
+
 	getSetting: state => setting => state.settings[setting],
 	thickScrollbar: state => state.settings[USER_SETTING_NAMES.THICK_SCROLLBAR],
 	getAllSettings: state => state.settings,
-	hasRole: state => role => state.profile.roles.indexOf(role) > -1,
-	isAdmin: state => state.profile.roles.indexOf('admin') > -1,
-	isModerator: state => state.profile.roles.indexOf('moderator') > -1,
-	isCurrentUserLoading: state => state.loading,
-	currentUserStats: state => state.stats,
-	currentUserSubscriptionDates: state => state.profile.subscription.dates,
-	currentUserSubscriptionActive: state => state.profile.subscription.status === 'active',
+
+	currentUserSubscriptionDates: state => state.subscription && state.subscription.subscription_dates,
+	currentUserSubscriptionActive: state => state.subscription && state.subscription.subscription_status === 'active',
 	currentUserHasLatestProduct: state => state.profile.subscription.has_latest_product,
 };
 
@@ -66,12 +80,9 @@ const mutations = {
 	[types.IS_LOADING] (state, isLoading) {
 		set(state, 'loading', isLoading);
 	},
-	[types.USERS_SETUP_CURRENT] (state, userData) {
-		set(state, 'profile', userData);
-	},
 	[types.USERS_UPDATE_CURRENT] (state, userData) {
 		Object.keys(userData).forEach((key) => {
-			set(state.profile, key, userData[key]);
+			set(state, key, userData[key]);
 		});
 	},
 	[types.USERS_SETUP_SETTINGS] (state, settings) {
@@ -86,11 +97,11 @@ const mutations = {
 	[types.USERS_SET_SUBSCRIPTION] (state, payload) {
 		set(state, 'subscription', payload);
 	},
-	[types.USERS_SET_IDENTIY] (state, payload) {
+	[types.USERS_SET_IDENTITY] (state, payload) {
 		set(state.profile, 'identity', payload);
 	},
 	[types.USERS_SET_ACCOUNT_SUSPENDED] (state, payload) {
-		set(state.profile, 'accountSuspended', payload);
+		set(state, 'accountSuspended', payload);
 	},
 };
 
@@ -101,8 +112,7 @@ const actions = {
 		if (!getCurrentUserPromise) {
 			getCurrentUserPromise = Promise
 				.all([
-					dispatch('fetchCurrentUserProfile'),
-					dispatch('fetchUserSettings'),
+					dispatch('fetchCurrentUser'),
 				])
 				.then(() => commit(types.IS_LOADING, false))
 				.catch((error) => {
@@ -114,40 +124,36 @@ const actions = {
 		return getCurrentUserPromise;
 	},
 
-	async fetchCurrentUserProfile({ commit }) {
-		let userResponse, subscriptionResponse;
+	async fetchCurrentUser({commit}) {
+		let response;
 
 		try {
-			[userResponse, subscriptionResponse] = await Promise.all([
-				axios.get(getApiUrl('users/current/profile?include=roles')),
-				axios.get(getApiUrl('user_subscription/current'))
-			]);
+			response = await axios.get(
+				getApiUrl('users/current?include=roles,profile,has_prolonged_course,subscription,latest_product_state')
+			);
 		} catch (error) {
 			$wnl.logger.error(error);
 			throw error;
 		}
 
-		const {included, ...profile} = userResponse.data;
-		if (!included) {
-			profile.roles = [];
-		} else {
-			const roles = included.roles || {};
-			profile.roles = Object.values(roles)
-				.map(role => role.name);
-		}
+		const {id, profile, subscription, has_prolonged_course, latest_product_state, included} = response.data;
 
 		const currentUser = {
-			...profile,
-			subscription: subscriptionResponse.data
+			id,
+			roles: Object.values(included.roles || []).map(role => role.name),
+			profile: profile && included.profiles[profile[0]],
+			hasProlongedCourse: has_prolonged_course && included.has_prolonged_courses[has_prolonged_course[0]],
+			subscription: subscription && included.subscriptions[subscription[0]],
+			latestProductState: latest_product_state && included.latest_product_states[latest_product_state[0]],
 		};
 
-		if (!currentUser.user_id) {
+		if (!id) {
 			$wnl.logger.error('current user returned user with ID 0', {
-				profile: currentUser
+				profile,
 			});
 			throw new Error('current user returned user with ID 0');
 		}
-		commit(types.USERS_SETUP_CURRENT, currentUser);
+		commit(types.USERS_UPDATE_CURRENT, currentUser);
 	},
 
 	fetchCurrentUserStats({commit, getters}) {
@@ -177,18 +183,14 @@ const actions = {
 	async fetchUserPersonalData({ commit }) {
 		try {
 			const response = await axios.get(getApiUrl('users/current/personal_data'));
-			commit(types.USERS_SET_IDENTIY, response.data);
-		}
-		catch (error) {
+			commit(types.USERS_SET_IDENTITY, response.data);
+		} catch (error) {
 			const emptyResponse = {
 				personalIdentityNumber: null,
 				identityCardNumber: null,
 				passportNumber: null
 			};
-			if (error.response.status === 404) {
-				commit(types.USERS_SET_IDENTIY, emptyResponse);
-			}
-			commit(types.USERS_SET_IDENTIY, emptyResponse);
+			commit(types.USERS_SET_IDENTITY, emptyResponse);
 			$wnl.logger.error(error);
 		}
 	},
@@ -202,7 +204,7 @@ const actions = {
 	},
 
 	setUserIdentity({ commit }, payload) {
-		commit(types.USERS_SET_IDENTIY, payload);
+		commit(types.USERS_SET_IDENTITY, payload);
 	},
 
 	changeUserSettingAndSync({ commit, dispatch }, payload) {
@@ -224,7 +226,16 @@ const actions = {
 		return axios.patch(getApiUrl(`users/${getters.currentUserId}/forget`), {
 			password: payload
 		});
-	}
+	},
+
+	updateLatestProductState({commit, getters}, payload) {
+		return axios.put(getApiUrl(`users/${getters.currentUserId}/user_product_state/latest`), payload)
+			.then(() => {
+				commit(types.USERS_UPDATE_CURRENT, {
+					latestProductState: payload
+				});
+			});
+	},
 };
 
 const _fetchUserStats = (userId) => {

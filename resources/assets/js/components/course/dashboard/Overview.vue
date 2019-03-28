@@ -134,7 +134,6 @@ export default {
 	computed: {
 		...mapGetters('progress', [
 			'isLessonComplete',
-			'wasCourseStarted',
 		]),
 		...mapGetters([
 			'currentUserName',
@@ -145,9 +144,6 @@ export default {
 			'currentUserSubscriptionActive',
 			'currentUserHasLatestProduct',
 		]),
-		isBeginning() {
-			return !this.wasCourseStarted(this.courseId);
-		},
 		panels() {
 			return [
 				{

@@ -8,7 +8,7 @@
 				Twoje zamówienia znajdziesz w zakładce - <router-link :to="{name: 'my-orders'}">KONTO > Twoje zamówienia</router-link>.
 			</p>
 		</div>
-		<div class="has-text-centered" v-else-if="currentUser.accountSuspended">
+		<div class="has-text-centered" v-else-if="currentUserAccountSuspended">
 			<p class="title is-4">Twoje konto zostało zablokowane</p>
 			<p>
 				Niestety, Twoje konto zostało zablokowane. 🙁 <br/>
@@ -74,7 +74,7 @@ export default {
 	name: 'SplashScreen',
 	perimeters: [upcomingEditionParticipant],
 	computed: {
-		...mapGetters(['currentUserSubscriptionDates', 'currentUser']),
+		...mapGetters(['currentUserSubscriptionDates', 'currentUserAccountSuspended']),
 		countdownImageUrl() {
 			return getImageUrl('countdown.png');
 		},

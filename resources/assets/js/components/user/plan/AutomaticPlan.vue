@@ -133,24 +133,27 @@
 					</div>
 				</div>
 			</div>
-			<div class="level wnl-screen-title">
-				<div class="level-left">
-					<div class="level-item big strong">
-						{{ $t('lessonsAvailability.sections.acceptPlan') }}
+			<div v-if="showAnnotation">
+				<div class="level wnl-screen-title">
+					<div class="level-left">
+						<div class="level-item big strong">
+							{{ $t('lessonsAvailability.sections.acceptPlan') }}
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="annotation">
-				<div class="level">
-					<div class="level-item" v-if="this.completedLessonsLength > 0">
-						{{ $t('lessonsAvailability.annotation.header') }}
-						{{ this.completedLessonsLength}}{{ $t('lessonsAvailability.annotation.info') }}
+				<div class="annotation">
+					<div class="level">
+						<div class="level-item" v-if="this.completedLessonsLength > 0">
+							{{ $t('lessonsAvailability.annotation.header') }}
+							{{ this.completedLessonsLength}}{{ $t('lessonsAvailability.annotation.info') }}
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="accept-plan">
 			<a
+				:disabled="isSubmitDisabled"
 				@click="acceptPlan"
 				class="button button is-primary is-outlined is-big"
 			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
@@ -185,6 +188,7 @@
 	.dates
 		.date
 			margin-bottom: $margin-big
+
 			label, .tip
 				display: inline-block
 				text-align: center
@@ -201,15 +205,17 @@
 </style>
 
 <script>
-import TextOverlay from 'js/components/global/TextOverlay.vue';
-import { mapGetters, mapActions } from 'vuex';
-import { getApiUrl } from 'js/utils/env';
-import { isEmpty, first, last } from 'lodash';
+import {isEmpty} from 'lodash';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
+import {mapGetters, mapActions} from 'vuex';
+
+import TextOverlay from 'js/components/global/TextOverlay.vue';
 import Datepicker from 'js/components/global/Datepicker';
-import emits_events from 'js/mixins/emits-events';
+
 import features from 'js/consts/events_map/features.json';
+import emits_events from 'js/mixins/emits-events';
+import {getApiUrl} from 'js/utils/env';
 
 export default {
 	name: 'AutomaticPlan',
@@ -218,9 +224,16 @@ export default {
 		'wnl-datepicker': Datepicker,
 	},
 	mixins: [emits_events],
+	props: {
+		showAnnotation: {
+			type: Boolean,
+			default: true,
+		},
+	},
 	data() {
 		return {
 			isLoading: false,
+			isSubmitDisabled: false,
 			activePreset: 'dateToDate',
 			startDate: new Date(),
 			endDate: null,
@@ -344,21 +357,27 @@ export default {
 			return this.workLoad === workLoad;
 		},
 		onPresetStartDateChange(payload) {
+			this.isSubmitDisabled = false;
 			return this.startDate = payload[0];
 		},
 		chooseWorkload(workLoad) {
+			this.isSubmitDisabled = false;
 			this.workLoad = workLoad;
 		},
 		onEndDateChange(payload) {
+			this.isSubmitDisabled = false;
 			if (isEmpty(payload)) this.endDate = null;
 		},
 		togglePreset(preset) {
+			this.isSubmitDisabled = false;
 			return this.activePreset = preset;
 		},
 		isDayActive(dayNumber) {
 			return this.workDays.includes(dayNumber);
 		},
 		toggleDay(dayNumber) {
+			this.isSubmitDisabled = false;
+
 			let index = this.workDays.indexOf(dayNumber);
 			if (index === -1) {
 				return this.workDays.push(dayNumber);
@@ -395,13 +414,13 @@ export default {
 				} else {
 					this.addAutoDismissableAlert(this.alertSuccess);
 				}
+				this.isSubmitDisabled = true;
 				this.isLoading = false;
 				this.emitUserEvent({
 					action: features.automatic_settings.actions.save_plan.value,
 					feature: features.automatic_settings.value
 				});
-			}
-			catch(error) {
+			} catch (error) {
 				this.isLoading = false;
 				$wnl.logger.capture(error);
 				this.addAutoDismissableAlert(this.alertError);
@@ -441,6 +460,6 @@ export default {
 			}
 			return true;
 		},
-	}
+	},
 };
 </script>

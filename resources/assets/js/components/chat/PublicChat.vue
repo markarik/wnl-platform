@@ -29,7 +29,7 @@
 			:room-id="currentRoom.id"
 			:room="currentRoom"
 			:loaded="loaded"
-			:message-payload="{users: [currentUser]}"
+			:message-payload="{users: [currentUserProfile]}"
 			@messageSent="onMessageSent"
 			@foundMentions="processMentions"
 		></wnl-message-form>
@@ -107,7 +107,7 @@ export default {
 		...mapGetters([
 			'canShowCloseIconInChat',
 			'currentUserId',
-			'currentUser'
+			'currentUserProfile'
 		]),
 		...mapGetters('course', ['getLesson']),
 		chatTitle() {
@@ -254,7 +254,7 @@ export default {
 					name: this.$route.name,
 					params: this.$route.params
 				},
-				actors: this.currentUser
+				actors: this.currentUserProfile
 			};
 		}
 	},

@@ -9,7 +9,7 @@
 		</div>
 		<div class="reset-progress">
 			<p v-t="'progress.reset.info'"/>
-			<button @click="resetProgress" class="button is-danger to-right">Wyczyść postęp w nauce</button>
+			<button @click="satisfactionGuaranteeModalVisible = true" class="button is-danger to-right">Wyczyść postęp w nauce</button>
 		</div>
 
 		<div class="level wnl-screen-title">
@@ -27,6 +27,12 @@
 		<div>Rozwiązanych pytań: {{questionsSolvedPerc}}% ({{questionsSolved}}/{{questionsTotal}})</div>
 		<div class="strong margin top">Społeczność</div>
 		<div>Liczba wątków: {{totalSocial}}</div>
+		<wnl-satisfaction-guarantee-modal
+			:visible="satisfactionGuaranteeModalVisible"
+			:title="$t('user.progressReset.progressModalHeader')"
+			@closeModal="satisfactionGuaranteeModalVisible = false"
+			@submit="resetProgress"
+		></wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 <style lang="sass" scoped>
@@ -48,14 +54,20 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment';
-import { swalConfig } from 'js/utils/swal';
 import emits_events from 'js/mixins/emits-events';
 import context from 'js/consts/events_map/context.json';
 import features from 'js/consts/events_map/features.json';
+import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
 export default {
 	name: 'UserStats',
+	components: {WnlSatisfactionGuaranteeModal},
 	mixins: [emits_events],
+	data() {
+		return {
+			satisfactionGuaranteeModalVisible: false
+		};
+	},
 	computed: {
 		...mapGetters(['isMobileProfile', 'currentUserStats']),
 		timeSpent() {
@@ -95,31 +107,22 @@ export default {
 	methods: {
 		...mapActions(['fetchCurrentUserStats', 'toggleOverlay']),
 		...mapActions('progress', ['deleteProgress', 'setupCourse']),
-		resetProgress() {
-			this.$swal(swalConfig({
-				title: this.$t('progress.reset.title'),
-				text: this.$t('progress.reset.text'),
-				showCancelButton: true,
-				confirmButtonText: this.$t('ui.confirm.confirm'),
-				cancelButtonText: this.$t('ui.confirm.cancel'),
-				type: 'error',
-				confirmButtonClass: 'button is-danger',
-				reverseButtons: true
-			}))
-				.then(() => {
-					this.emitUserEvent({
-						subcontext: context.account.subcontext.stats.value,
-						features: features.progress.value,
-						action: features.progress.actions.erase_progress.value
-					});
-					this.toggleOverlay({source: 'userStats', display: true});
-					return this.deleteProgress();
-				})
-				.then(() => Promise.all([this.fetchCurrentUserStats(), this.setupCourse()]))
-				.then(() => {
-					this.toggleOverlay({source: 'userStats', display: false});
-				})
-				.catch($wnl.logger.error);
+		async resetProgress() {
+			this.satisfactionGuaranteeModalVisible = false;
+			try {
+				this.emitUserEvent({
+					subcontext: context.account.subcontext.stats.value,
+					features: features.progress.value,
+					action: features.progress.actions.erase_progress.value
+				});
+				this.toggleOverlay({source: 'userStats', display: true});
+				await this.deleteProgress();
+				await Promise.all([this.fetchCurrentUserStats(), this.setupCourse()]);
+			} catch (error) {
+				$wnl.logger.error(error);
+			} finally {
+				this.toggleOverlay({source: 'userStats', display: false});
+			}
 		}
 	},
 	mounted() {

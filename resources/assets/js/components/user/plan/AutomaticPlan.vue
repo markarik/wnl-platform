@@ -151,11 +151,17 @@
 		</div>
 		<div class="accept-plan">
 			<a
-				@click="acceptPlan"
+				@click="satisfactionGuaranteeModalVisible = true"
 				class="button button is-primary is-outlined is-big"
 			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
 			</a>
 		</div>
+		<wnl-satisfaction-guarantee-modal
+			:visible="satisfactionGuaranteeModalVisible"
+			:title="$t('user.plan.changePlanConfirmation')"
+			@closeModal="satisfactionGuaranteeModalVisible = false"
+			@submit="acceptPlan"
+		></wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 
@@ -204,22 +210,25 @@
 import TextOverlay from 'js/components/global/TextOverlay.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { getApiUrl } from 'js/utils/env';
-import { isEmpty, first, last } from 'lodash';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 import Datepicker from 'js/components/global/Datepicker';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
+import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
 export default {
 	name: 'AutomaticPlan',
 	components: {
 		'wnl-text-overlay': TextOverlay,
 		'wnl-datepicker': Datepicker,
+		WnlSatisfactionGuaranteeModal
 	},
 	mixins: [emits_events],
 	data() {
 		return {
+			satisfactionGuaranteeModalVisible: false,
 			isLoading: false,
 			activePreset: 'dateToDate',
 			startDate: new Date(),
@@ -367,6 +376,7 @@ export default {
 			}
 		},
 		async acceptPlan() {
+			this.satisfactionGuaranteeModalVisible = false;
 			if (this.activePreset === 'dateToDate') {
 				this.workLoad = null;
 			}

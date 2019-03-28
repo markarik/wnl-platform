@@ -13,7 +13,7 @@
 				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
 			</router-link>
 		</div>
-		<div class="wnl-navbar-signup" v-if="!isMobile && !currentUserHasLatestProduct">
+		<div class="wnl-navbar-signup" v-if="!currentUserHasLatestProduct">
 			<a target="_blank" :href="signUpLink" class="button is-success is-small is-outlined">
 				<span>Zapisz się</span>&nbsp;
 				<span class="icon is-small">

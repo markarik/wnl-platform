@@ -245,7 +245,6 @@ export default {
 		}
 	},
 	data() {
-		console.log(this.start)
 		return {
 			satisfactionGuaranteeModalVisible: false,
 			isLoading: false,

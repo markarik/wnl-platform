@@ -3,7 +3,7 @@
 		<div class="card-content">
 			<div class="media">
 				<div class="media-left">
-					<figure class="product-logo image is-48x48">
+					<figure class="product-logo image is-64x64">
 						<img :src="logoUrl" alt="Logo produktu">
 					</figure>
 				</div>
@@ -426,8 +426,7 @@ export default {
 			return this.order.coupon;
 		},
 		logoUrl() {
-			// TODO PLAT-1153: Mar 28, 2017 - Make it dynamic when more courses are added
-			return getImageUrl('wnl-logo-square@2x.png');
+			return getUrl($wnl.course.productLogo);
 		},
 		isFullyPaid() {
 			return this.order.paid_amount >= this.order.total;

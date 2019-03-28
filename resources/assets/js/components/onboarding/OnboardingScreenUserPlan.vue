@@ -37,7 +37,7 @@
 					</div>
 				</div>
 				<div class="onboarding-planner-wrapper" v-if="isEditorVisible">
-					<span class="icon onboarding-planner-close clickable" @click="isEditorVisible=false"><i class="fa fa-close"></i></span>
+					<button class="delete onboarding-planner-close clickable" @click="isEditorVisible=false"></button>
 					<wnl-automatic-plan
 						:show-annotation="false"
 						:start="automaticPlanStartDate"

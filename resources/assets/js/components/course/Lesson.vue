@@ -37,10 +37,10 @@
 		@closeModal="this.satisfactionGuaranteeModalReject"
 		@submit="this.satisfactionGuaranteeModalResolve"
 	>
-		<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
-		<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu, pod warunkiem przywrócenia domyślnego planu pracy i rozwiązaniu Wstępnego LEK-u przed rozpoczęciem nauki.</template>
+		<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem Wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
+		<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu, pod warunkiem przywrócenia domyślnego planu pracy i po rozwiązaniu Wstępnego LEK-u przed rozpoczęciem nauki.</template>
 		<template slot="close">Wróć na dashboard</template>
-		<template slot="submit">Rezygnuję z gwarancji</template>
+		<template slot="submit">Rozumiem, akceptuję</template>
 	</wnl-satisfaction-guarantee-modal>
 </template>
 

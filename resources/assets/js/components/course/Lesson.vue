@@ -30,6 +30,18 @@
 			</p>
 		</div>
 	</div>
+	<wnl-satisfaction-guarantee-modal
+		v-else
+		:visible="true"
+		:display-headline="false"
+		@closeModal="this.satisfactionGuaranteeModalReject"
+		@submit="this.satisfactionGuaranteeModalResolve"
+	>
+		<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
+		<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu, pod warunkiem przywrócenia domyślnego planu pracy i rozwiązaniu Wstępnego LEK-u przed rozpoczęciem nauki.</template>
+		<template slot="close">Wróć na dashboard</template>
+		<template slot="submit">Rezygnuję z gwarancji</template>
+	</wnl-satisfaction-guarantee-modal>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -56,22 +68,23 @@
 </style>
 
 <script>
-import _ from 'lodash';
+import {get, isEmpty, head, noop} from 'lodash';
 import {mapGetters, mapActions} from 'vuex';
 
 import WnlPreviousNext from 'js/components/course/PreviousNext';
+import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
 import {resource} from 'js/utils/config';
 import {breadcrumb} from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
-import {swalConfig} from 'js/utils/swal';
 import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 export default {
 	name: 'Lesson',
 	components: {
 		WnlPreviousNext,
+		WnlSatisfactionGuaranteeModal,
 	},
 	mixins: [breadcrumb],
 	props: ['courseId', 'lessonId', 'presenceChannel', 'screenId', 'slide'],
@@ -84,8 +97,10 @@ export default {
 				 * (which btw is defined as 100% of its parent element),
 				 * all browsers are able to beautifully scroll the content.
 				 */
-			elementHeight: _.get(this.$parent, '$el.offsetHeight') || '100%',
+			elementHeight: get(this.$parent, '$el.offsetHeight') || '100%',
 			isRenderBlocked: true,
+			satisfactionGuaranteeModalResolve: noop,
+			satisfactionGuaranteeModalReject: noop,
 		};
 	},
 	computed: {
@@ -169,11 +184,11 @@ export default {
 			return this.subsectionsReversed.length > 0;
 		},
 		firstScreenId() {
-			if (_.isEmpty(this.screens)) {
+			if (isEmpty(this.screens)) {
 				return null;
 			}
 
-			return _.head(this.screens).id;
+			return head(this.screens).id;
 		},
 		lessonProgressContext() {
 			return {
@@ -235,7 +250,7 @@ export default {
 									lessonId: this.lessonId,
 									screenId: this.firstScreenId,
 								};
-								if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !_.get(route, 'params.slide')) {
+								if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !get(route, 'params.slide')) {
 									params.slide = 1;
 								}
 								this.$router.replace({name: resource('screens'), params, query});
@@ -263,8 +278,23 @@ export default {
 				activeScreen: parseInt(this.screenId)
 			});
 		},
-		goToDashboard() {
-			this.$router.push('/');
+		async displaySatisfactionGuaranteeModalIfNeeded() {
+			if (
+				this.lesson.is_required &&
+				this.lesson.id !== this.entryExamLessonId &&
+				!this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) &&
+				!this.currentUserHasFinishedEntryExam
+			) {
+				await new Promise((resolve, reject) => {
+					this.satisfactionGuaranteeModalResolve = resolve;
+					this.satisfactionGuaranteeModalReject = reject;
+				});
+
+				this.changeUserSettingAndSync({
+					setting: USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL,
+					value: true,
+				});
+			}
 		},
 		shouldCompleteScreen() {
 			if (!this.currentScreen.sections) {
@@ -272,12 +302,12 @@ export default {
 			}
 
 			const allSections = this.currentScreen.sections;
-			const completedSections = _.get(this.screenProgress(this.courseId, this.lessonId, this.currentScreen.id), 'sections', {});
+			const completedSections = get(this.screenProgress(this.courseId, this.lessonId, this.currentScreen.id), 'sections', {});
 
 			return !allSections.find(id => !completedSections[id]);
 		},
 		shouldCompleteLesson() {
-			const startedScreens = _.get(this.lessonProgress(this.courseId, this.lessonId), 'screens', {});
+			const startedScreens = get(this.lessonProgress(this.courseId, this.lessonId), 'screens', {});
 
 			if (this.screens && !startedScreens) {
 				return false;
@@ -326,31 +356,7 @@ export default {
 	},
 	async mounted () {
 		try {
-			if (
-				this.lesson.is_required &&
-				this.lesson.id !== this.entryExamLessonId &&
-				!this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) &&
-				!this.currentUserHasFinishedEntryExam
-			) {
-				// TODO consider using custom modal but make it a blocking one
-				await this.$swal(swalConfig({
-					title: '⚠️ Rozpoczęcie nauki przed rozwiązaniem wstępnego LEK-u wiąże się z utratą Gwarancji Satysfkacji!',
-					// TODO add missing text
-					text: 'Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu, pod warunkiem przywrócenia domyślnego planu pracy i rozwiązaniu Wstępnego LEK-u przed rozpoczęciem nauki.',
-					showCancelButton: true,
-					confirmButtonText: 'Rezygnuję z gwarancji',
-					cancelButtonText: 'Wróć na dashboard',
-					type: 'error', // ???
-					confirmButtonClass: 'button is-primary',
-					reverseButtons: true,
-				}));
-
-				this.changeUserSettingAndSync({
-					setting: USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL,
-					value: true,
-				});
-			}
-
+			await this.displaySatisfactionGuaranteeModalIfNeeded();
 			this.isRenderBlocked = false;
 			this.toggleOverlay({source: 'lesson', display: true});
 
@@ -364,7 +370,8 @@ export default {
 			}
 			window.addEventListener('resize', this.updateElementHeight);
 		} catch (e) {
-			this.goToDashboard();
+			// User skipped satisfaction guarantee
+			this.$router.push('/');
 		}
 	},
 	beforeDestroy () {

@@ -3,7 +3,7 @@
 		<div class="card-content">
 			<div class="media">
 				<div class="media-left">
-					<figure class="product-logo image is-48x48">
+					<figure class="product-logo image is-64x64">
 						<img :src="logoUrl" alt="Logo produktu">
 					</figure>
 				</div>
@@ -409,7 +409,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters(['isAdmin', 'currentUser']),
+		...mapGetters(['isAdmin']),
 		couponsDisabled() {
 			if (this.order.product.signups_end) {
 				return new Date(this.order.product.signups_end * 1000) < new Date();
@@ -426,8 +426,7 @@ export default {
 			return this.order.coupon;
 		},
 		logoUrl() {
-			// TODO: Mar 28, 2017 - Make it dynamic when more courses are added
-			return getImageUrl('wnl-logo-square@2x.png');
+			return getUrl($wnl.course.productLogo);
 		},
 		isFullyPaid() {
 			return this.order.paid_amount >= this.order.total;

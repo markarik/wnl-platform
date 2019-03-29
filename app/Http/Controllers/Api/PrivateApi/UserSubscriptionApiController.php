@@ -16,6 +16,10 @@ class UserSubscriptionApiController extends ApiController
 	{
 		$user = Auth::User();
 
-		return $this->transformAndRespond($user->subscription_proxy);
+		if (is_null($user) || is_null($data = $user->subscription_proxy)){
+			return $this->respondNotFound();
+		}
+
+		return $this->transformAndRespond($data);
 	}
 }

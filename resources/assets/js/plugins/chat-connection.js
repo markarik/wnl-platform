@@ -66,26 +66,11 @@ const WnlSocket = {
 			socket.off('connect_error');
 		};
 
-		socket.on('connect_error', onSocketConnectionError);
-
-		socket.on('reconnect', () => {
-			store.dispatch(SOCKET_CONNECTION_RECONNECTED);
-			socket.on('connect_error', onSocketConnectionError);
-		});
-
-		Vue.prototype.$socketEmit = (event, payload) => {
-			eventsQueue.push(() => socket.emit(event, payload));
-		};
-
-		Vue.prototype.$socketRegisterListener = (event, listener) => {
+		const registerListener = (event, listener) => {
 			socket.on(event, listener);
 		};
 
-		Vue.prototype.$socketRemoveListener = (event, listener) => {
-			socket.off(event, listener);
-		};
-
-		Vue.prototype.$socketJoinRoom = (room, pointer = null) => {
+		const joinRoom = (room, pointer = null) => {
 			return new Promise((resolve, reject) => {
 				eventsQueue.push(() => {
 					socket.emit(SOCKET_EVENT_JOIN_ROOM, {room, pointer});
@@ -104,6 +89,25 @@ const WnlSocket = {
 				});
 			});
 		};
+
+		socket.on('connect_error', onSocketConnectionError);
+
+		socket.on('reconnect', () => {
+			store.dispatch(SOCKET_CONNECTION_RECONNECTED);
+			socket.on('connect_error', onSocketConnectionError);
+		});
+
+		Vue.prototype.$socketEmit = (event, payload) => {
+			eventsQueue.push(() => socket.emit(event, payload));
+		};
+
+		Vue.prototype.$socketRegisterListener = registerListener;
+
+		Vue.prototype.$socketRemoveListener = (event, listener) => {
+			socket.off(event, listener);
+		};
+
+		Vue.prototype.$socketJoinRoom = joinRoom;
 
 		Vue.prototype.$socketSendMessage = (payload) => {
 			return new Promise((resolve, reject) => {
@@ -143,6 +147,19 @@ const WnlSocket = {
 					});
 				});
 			});
+		};
+
+		Vue.prototype.$socketChatSetup = async () => {
+			store.dispatch('chatMessages/setConnectionStatus', false);
+			const userChannel = 'authenticated-user';
+			const pointer = await store.dispatch('chatMessages/fetchUserRoomsWithMessages', {page: 1});
+			const data = await joinRoom(userChannel, pointer);
+			store.dispatch('chatMessages/updateFromEventLog', data.events);
+			store.dispatch('chatMessages/setConnectionStatus', true);
+			registerListener(
+				SOCKET_EVENT_USER_SENT_MESSAGE,
+				(msg) => store.dispatch('chatMessages/onNewMessage', msg)
+			);
 		};
 	}
 };

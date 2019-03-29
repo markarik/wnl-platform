@@ -14,5 +14,5 @@
 		<img src="https://media.giphy.com/media/yUrUb9fYz6x7a/giphy.gif" alt="Tyle papierologii..." style="display: block; margin: 0 auto;">
 	</p>
 
-	<p>Z pozdrowieniami,</p>
+	<p>Z pozdrowieniami</p>
 @endsection

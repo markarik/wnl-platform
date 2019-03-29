@@ -50,7 +50,7 @@
 <script>
 import axios from 'axios';
 import _ from 'lodash';
-import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env';
+import {getUrl, getApiUrl} from 'js/utils/env';
 import {mapGetters} from 'vuex';
 import Order from './Order';
 import moment from 'moment';
@@ -113,7 +113,7 @@ export default {
 							return {
 								...order,
 								invoices: (order.invoices || []).map(invoiceId => invoices[invoiceId]),
-								studyBuddy: order.study_buddy ? included.study_buddies[order.study_buddy[0]] : {},
+								...(order.study_buddy && {studyBuddy: included.study_buddies[order.study_buddy[0]]}),
 								payments: (order.payments || []).map(paymentId => payments[paymentId])
 							};
 						});

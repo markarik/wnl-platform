@@ -3,7 +3,7 @@
 		<div class="card-content">
 			<div class="media">
 				<div class="media-left">
-					<figure class="product-logo image is-48x48">
+					<figure class="product-logo image is-64x64">
 						<img :src="logoUrl" alt="Logo produktu">
 					</figure>
 				</div>
@@ -426,8 +426,7 @@ export default {
 			return this.order.coupon;
 		},
 		logoUrl() {
-			// TODO: Mar 28, 2017 - Make it dynamic when more courses are added
-			return getImageUrl('wnl-logo-square@2x.png');
+			return getUrl($wnl.course.productLogo);
 		},
 		isFullyPaid() {
 			return this.order.paid_amount >= this.order.total;
@@ -510,11 +509,11 @@ export default {
 		}
 	},
 	methods: {
-		...mapMutations({
-			'setSubscription': types.USERS_SET_SUBSCRIPTION
-		}),
-		...mapActions(['addAutoDismissableAlert']),
-
+		...mapActions([
+			'addAutoDismissableAlert',
+			'fetchUserSubscription',
+		]),
+		...mapActions('course', ['setStructure']),
 		async downloadInvoice(invoice) {
 			try {
 				const response = await axios.request({
@@ -559,25 +558,25 @@ export default {
 				$wnl.logger.capture(err);
 			}
 		},
-		checkStatus() {
-			axios.get(getApiUrl(`orders/${this.order.id}?include=payments`))
-				.then((response) => {
-					const {included = {}, ...order} = response.data;
-					const {payments = {}} = included;
-					if (order.paid) {
-						this.order.paid        = true;
-						this.order.paid_amount = order.paid_amount;
-						this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
+		async checkStatus() {
+			try{
+				const response = await axios.get(getApiUrl(`orders/${this.order.id}?include=payments`));
 
-						axios.get(getApiUrl('user_subscription/current'))
-							.then(response => {
-								this.setSubscription(response.data);
-							});
-					} else {
-						setTimeout(this.checkStatus, 10000);
-					}
-				})
-				.catch(exception => $wnl.logger.capture(exception));
+				const {included = {}, ...order} = response.data;
+				const {payments = {}} = included;
+				if (order.paid) {
+					this.order.paid        = true;
+					this.order.paid_amount = order.paid_amount;
+					this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
+					this.fetchUserSubscription();
+					this.setStructure();
+					this.$socketChatSetup();
+				} else {
+					setTimeout(this.checkStatus, 10000);
+				}
+			} catch (e) {
+				$wnl.logger.capture(e);
+			}
 		},
 		couponSubmitSuccess() {
 			axios.get(getApiUrl(`orders/${this.order.id}`))
@@ -640,7 +639,7 @@ export default {
 		},
 		formatTime(time) {
 			return moment(time * 1000).format('L LT');
-		}
+		},
 	},
 	mounted() {
 		if (this.isPending) this.checkStatus();

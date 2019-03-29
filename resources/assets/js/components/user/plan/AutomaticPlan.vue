@@ -154,11 +154,17 @@
 		<div class="accept-plan">
 			<a
 				:disabled="isSubmitDisabled"
-				@click="acceptPlan"
-				class="button button is-primary is-outlined is-big"
+				@click="!isSubmitDisabled && (satisfactionGuaranteeModalVisible = true)"
+				class="button is-primary is-outlined is-big"
 			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
 			</a>
 		</div>
+		<wnl-satisfaction-guarantee-modal
+			:visible="satisfactionGuaranteeModalVisible"
+			:title="$t('user.plan.changePlanConfirmation')"
+			@closeModal="satisfactionGuaranteeModalVisible = false"
+			@submit="acceptPlan"
+		></wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 
@@ -186,6 +192,8 @@
 		margin-bottom: $margin-base
 
 	.dates
+		margin-top: $margin-base
+
 		.date
 			margin-bottom: $margin-big
 
@@ -212,6 +220,7 @@ import {mapGetters, mapActions} from 'vuex';
 
 import TextOverlay from 'js/components/global/TextOverlay.vue';
 import Datepicker from 'js/components/global/Datepicker';
+import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
 import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
@@ -222,6 +231,7 @@ export default {
 	components: {
 		'wnl-text-overlay': TextOverlay,
 		'wnl-datepicker': Datepicker,
+		WnlSatisfactionGuaranteeModal
 	},
 	mixins: [emits_events],
 	props: {
@@ -229,13 +239,18 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		start: {
+			type: Date,
+			default: () => new Date(),
+		}
 	},
 	data() {
 		return {
+			satisfactionGuaranteeModalVisible: false,
 			isLoading: false,
 			isSubmitDisabled: false,
 			activePreset: 'dateToDate',
-			startDate: new Date(),
+			startDate: this.start,
 			endDate: null,
 			workDays: [1, 2, 3, 4, 5],
 			workLoad: null,
@@ -386,6 +401,7 @@ export default {
 			}
 		},
 		async acceptPlan() {
+			this.satisfactionGuaranteeModalVisible = false;
 			if (this.activePreset === 'dateToDate') {
 				this.workLoad = null;
 			}

@@ -161,10 +161,11 @@
 		</div>
 		<wnl-satisfaction-guarantee-modal
 			:visible="satisfactionGuaranteeModalVisible"
-			:title="$t('user.plan.changePlanConfirmation')"
 			@closeModal="satisfactionGuaranteeModalVisible = false"
 			@submit="acceptPlan"
-		></wnl-satisfaction-guarantee-modal>
+		>
+			<template slot="title">{{$t('user.plan.changePlanConfirmation')}}</template>
+		</wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 

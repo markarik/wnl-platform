@@ -35,7 +35,6 @@ class OrderPaid implements ShouldQueue
 	 */
 	public function handle()
 	{
-		$this->handleUserSubscription();
 		$this->handleCoupon();
 		$this->handleInstalments();
 		$this->sendConfirmation();
@@ -73,30 +72,6 @@ class OrderPaid implements ShouldQueue
 		}
 
 		return (new Invoice)->advance($order);
-	}
-
-	protected function handleUserSubscription()
-	{
-		\Log::notice("OrderPaid: handleUserSubscription called for order #{$this->order->id}");
-		$product = $this->order->product;
-		$user = $this->order->user;
-
-		if (empty($product->access_start) && empty($product->access_end)) {
-			return;
-		}
-
-		$subscriptionAccessStart = $user->subscription_proxy->access_start ?? null;
-		$subscriptionAccessEnd = $user->subscription_proxy->access_end ?? null;
-
-		$accessStart = $subscriptionAccessStart
-			? min([$subscriptionAccessStart, $product->access_start])
-			: $product->access_start;
-		$accessEnd = max([$subscriptionAccessEnd, $product->access_end]);
-
-		UserSubscription::updateOrCreate(
-			['user_id' => $user->id],
-			['access_start' => $accessStart, 'access_end' => $accessEnd]
-		);
 	}
 
 	protected function handleInstalments()

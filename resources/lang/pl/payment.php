@@ -157,7 +157,7 @@ return [
 	'account-register-heading' => 'Cześć! 👋<br />Najpierw stwórzmy dla Ciebie nowe konto.',
 	'account-register-login-text' => 'Posiadasz już konto na portalu Więcej niż LEK?',
 	'account-register-login-button' => 'Zaloguj się',
-	'account-wrong-account-text' => 'Nie ty?',
+	'account-wrong-account-text' => 'To nie Ty?',
 	'account-wrong-account-register-text' => 'Załóż nowe konto',
 	'account-buy-album' => 'Zamów nowy album',
 	'account-product-bought-info' => 'Posiadasz już zamówienie na najbliższą edycję.',

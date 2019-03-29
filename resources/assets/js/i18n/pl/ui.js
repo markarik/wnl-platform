@@ -42,7 +42,7 @@ export const ui = {
 		headline: '⚠️ Ta akcja może wpłynąć na Twoją Gwarancję Satysfakcji.',
 		body: 'Jeśli planujesz rozpoczęcie nauki od nowa, pamiętaj, że należy spełnić konkretne kryteria, aby Gwarancja Satysfakcji była przyznana.',
 		note: 'Wszystkie informacje na temat Gwarancji Satysfakcji znajdziesz w <a href="{url}" target="_blank">POMOC > Gwarancja Satysfakcji.</a>',
-		accept: 'Rozumiem',
+		accept: 'Rozumiem i akceptuję',
 		close: 'Zamknij'
 	}
 };

@@ -12,9 +12,18 @@
 			<wnl-submit class="submit"/>
 		</div>
 		<wnl-form-text
-				name="name"
-				class="margin top bottom"
+			name="name"
+			class="margin top bottom"
 		>Nazwa</wnl-form-text>
+		<wnl-form-text
+			name="entry_exam_tag_id"
+			class="margin top bottom"
+		>ID tagu "Wstępny Lek"</wnl-form-text>
+		<wnl-form-text
+			name="entry_exam_lesson_id"
+			class="margin top bottom"
+		>ID lekcji "Wstępny lekcji"</wnl-form-text>
+
 	</wnl-form>
 </template>
 

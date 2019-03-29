@@ -84,9 +84,6 @@ const mutations = {
 			set(state, key, userData[key]);
 		});
 	},
-	[types.USERS_SETUP_SETTINGS] (state, settings) {
-		set(state, 'settings', settings);
-	},
 	[types.USERS_CHANGE_SETTING] (state, payload) {
 		set(state.settings, payload.setting, payload.value);
 	},
@@ -128,23 +125,40 @@ const actions = {
 
 		try {
 			response = await axios.get(
-				getApiUrl('users/current?include=roles,profile,has_prolonged_course,subscription,latest_product_state')
+				getApiUrl('users/current?include=roles,profile,has_prolonged_course,subscription,settings,latest_product_state')
 			);
 		} catch (error) {
 			$wnl.logger.error(error);
 			throw error;
 		}
 
-		const {id, profile, subscription, has_prolonged_course, latest_product_state, included} = response.data;
+		const {id, profile, subscription, settings, has_prolonged_course, latest_product_state, included} = response.data;
 
-		const currentUser = {
-			id,
-			roles: Object.values(included.roles || []).map(role => role.name),
-			profile: profile && included.profiles[profile[0]],
-			hasProlongedCourse: has_prolonged_course && included.has_prolonged_courses[has_prolonged_course[0]],
-			subscription: subscription && included.subscriptions[subscription[0]],
-			latestProductState: latest_product_state && included.latest_product_states[latest_product_state[0]],
-		};
+		const currentUser = {id};
+
+		if (included.roles) {
+			currentUser.roles = Object.values(included.roles).map(role => role.name);
+		}
+
+		if (profile) {
+			currentUser.profile = included.profiles[profile[0]];
+		}
+
+		if (has_prolonged_course) {
+			currentUser.hasProlongedCourse = included.has_prolonged_courses[has_prolonged_course[0]];
+		}
+
+		if (subscription) {
+			currentUser.subscription = included.subscriptions[subscription[0]];
+		}
+
+		if (latest_product_state) {
+			currentUser.latestProductState = included.latest_product_states[latest_product_state[0]];
+		}
+
+		if (settings) {
+			currentUser.settings = included.settings[settings[0]];
+		}
 
 		if (!id) {
 			$wnl.logger.error('current user returned user with ID 0', {
@@ -176,16 +190,6 @@ const actions = {
 					reject();
 				});
 		});
-	},
-
-	async fetchUserSettings({ commit }) {
-		try {
-			const { data } = await axios.get(getApiUrl('users/current/settings'));
-			commit(types.USERS_SETUP_SETTINGS, data);
-		} catch (error) {
-			$wnl.logger.error(error);
-			throw error;
-		}
 	},
 
 	async fetchUserPersonalData({ commit }) {

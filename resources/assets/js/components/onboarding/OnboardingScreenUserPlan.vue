@@ -2,8 +2,13 @@
 	<div>
 		<h2 class="title has-text-centered">Plan pracy 🗓</h2>
 		<p class="title is-5 has-text-centered">
-			Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami.<br>
-			Do tego czasu lekcje pozostaną zamknięte.
+			<template v-if="isReturningUser">
+				Twój obecny plan pracy nie ulegnie zmianie.<br>
+				Lekcje będą się otwierały zgodnie z ustalonymi przez Ciebie datami.
+			</template>
+			<template v-else>
+				Lekcje będą się otwierały zgodnie z ustalonymi w planie datami.
+			</template>
 		</p>
 
 		<wnl-text-loader v-if="isLoading" />
@@ -25,17 +30,19 @@
 					<h3 class="title is-4 onboarding-plan-header">Domyślny plan</h3>
 					<div>
 						<p class="margin bottom">Proponowany przez nas plan pracy trwa od <strong>{{defaultPlanStartDate}}</strong>, zakłada pracę <strong>5&nbsp;dni w tygodniu przez 14 tygodni</strong> 🗓</p>
-						<p>
+						<p v-if="isPlannerEnabled">
 							Możesz zmienić zakres dni, w których chcesz pracować, a my dostosujemy do nich Twój plan pracy 👉
 							<a class="clickable" @click="openEditor">Edytuj plan</a>
 						</p>
 					</div>
 				</div>
- 				<wnl-automatic-plan
-					class="margin-top-huge"
-					v-if="isEditorVisible"
-					:show-annotation="false"
-				/>
+				<div class="onboarding-planner-wrapper" v-if="isEditorVisible">
+					<button class="delete onboarding-planner-close clickable" @click="isEditorVisible=false"></button>
+					<wnl-automatic-plan
+						:show-annotation="false"
+						:start="automaticPlanStartDate"
+					/>
+				</div>
 			</div>
 		</template>
 	</div>
@@ -59,6 +66,14 @@
 			float: left
 			margin: 0 $margin-huge 0 0
 
+	.onboarding-planner-wrapper
+		margin-top: $margin-huge
+		position: relative
+
+	.onboarding-planner-close
+		position: absolute
+		right: 0
+
 </style>
 
 <script>
@@ -79,6 +94,8 @@ export default {
 	data() {
 		return {
 			defaultPlanStartDate: null,
+			automaticPlanStartDate: null,
+			isPlannerEnabled: true,
 			isEditorVisible: false,
 			isLoading: true,
 			isReturningUser: false,
@@ -101,6 +118,8 @@ export default {
 			]);
 			this.isReturningUser = included.has_prolonged_courses[id].has_prolonged_course;
 			this.defaultPlanStartDate = moment(courseStart * 1000).format('LL');
+			this.automaticPlanStartDate = new Date(courseStart * 1000);
+			this.isPlannerEnabled = this.automaticPlanStartDate >= (new Date()).setHours(0, 0);
 		} catch (error) {
 			$wnl.logger.error(error);
 			this.addAutoDismissableAlert({

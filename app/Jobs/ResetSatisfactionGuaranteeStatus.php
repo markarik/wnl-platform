@@ -35,7 +35,7 @@ class ResetSatisfactionGuaranteeStatus
 
 		$currentSettings = $this->user->settings->attributes['settings'] ?? [];
 		$updatedSettings = array_merge($currentSettings, [
-			'skip_satisfaction_guarantee_modal' => false
+			UserSettings::SETTING_SKIP_SATISFACTION_GUARANTEE_MODAL => false
 		]);
 		$this->user->settings()->updateOrCreate(
 			['user_id' => $this->user->id],

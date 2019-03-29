@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserSettings extends Model
 {
+	const SETTING_SKIP_SATISFACTION_GUARANTEE_MODAL = 'skip_satisfaction_guarantee_modal';
+
 	protected $fillable = [
 		'settings',
 	];

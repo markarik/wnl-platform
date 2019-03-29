@@ -1,11 +1,11 @@
 @extends('mail.layout')
 
 @section('content')
-	<h3>Witaj ponownie {{ $order->user->first_name ?? '{first_name}' }}!</h3>
+	<h3>Cześć!</h3>
 
-	<p>Piszemy do Ciebie, żeby potwierdzić zamówienie numer {{ $order->id ?? '{order_no}' }} złożone na kurs <strong>{{$order->product->name ?? '{product_name}'}}</strong>.</p>
+	<p>Potwierdzamy zamówienie numer {{ $order->id ?? '{order_no}' }} złożone na <strong>{{$order->product->name ?? '{product_name}'}}</strong>.</p>
 
-	<p><strong>Status swojego zamówienia możesz śledzić na stronie <a href="{{url('app/myself/orders')}}">KONTO > Twoje zamówienia</a>.</strong> Tam znajdziesz też wszystkie szczegóły dotyczące płatności.</p>
+	<p><strong>Status swojego zamówienia możesz śledzić na stronie <a href="{{url('app/myself/orders')}}">KONTO > Twoje zamówienia</a>.</strong> Tam znajdziesz wszystkie szczegóły dotyczące płatności.</p>
 
 	@if (isset($order) && $order->method == 'transfer')
 		<p>Płatności przelewem bankowym możesz dokonać przy użyciu poniższych danych:</p>
@@ -39,7 +39,7 @@
 		<p>Aby uzyskać szczegółowe informacje o terminach i kwotach rat, odwiedź <a href="{{url('app/myself/orders')}}">KONTO > Twoje zamówienia</a>. :)</p>
 	@endif
 
-	<p>W załączniku znajdziesz dokument pro forma, który zawiera szczegóły zamówienia. Stanowi on jednocześnie podstawę do płatności.</p>
+	<p>W załączniku przesyłamy dokument pro forma, który zawiera szczegóły zamówienia. Stanowi on jednocześnie podstawę do płatności.</p>
 
 	<p>W razie pytań pisz śmiało na info@wiecejnizlek.pl!</p>
 

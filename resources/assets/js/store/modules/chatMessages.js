@@ -292,16 +292,6 @@ const actions = {
 			}
 		});
 	},
-
-	async setupChat({dispatch}) {
-		dispatch('setConnectionStatus', false);
-		const userChannel = 'authenticated-user';
-		const pointer = await dispatch('fetchUserRoomsWithMessages', {page: 1});
-		const data = await this._vm.$socketJoinRoom(userChannel, pointer);
-		dispatch('updateFromEventLog', data.events);
-		dispatch('setConnectionStatus', true);
-		this._vm.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, (msg) => dispatch('onNewMessage', msg));
-	},
 };
 
 const fetchUserRooms = async ({limit, page}) => {

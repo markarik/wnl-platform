@@ -80,7 +80,6 @@ export default {
 		...mapActions('siteWideMessages', ['fetchUserSiteWideMessages', 'updateSiteWideMessage']),
 		...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 		...mapActions('notifications', ['initNotifications']),
-		...mapActions('chatMessages', ['setupChat']),
 		...mapActions('tasks', ['initModeratorsFeedListener']),
 		...mapActions('course', { courseSetup: 'setup' }),
 		handleSiteWideMessages() {
@@ -109,7 +108,7 @@ export default {
 				});
 
 				// Setup Chat
-				this.setupChat();
+				this.$socketChatSetup();
 
 				// Setup time tracking
 				const activitiesConfig = {

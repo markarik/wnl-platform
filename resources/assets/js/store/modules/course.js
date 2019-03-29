@@ -25,6 +25,7 @@ const state = {
 	ready: false,
 	id: 0,
 	name: '',
+	isPlanBuilderEnabled: false,
 	groups: [],
 	sections: {},
 	subsections: {},
@@ -202,9 +203,10 @@ const mutations = {
 			...subsections
 		});
 	},
-	[types.SET_COURSE](state, {name, id}) {
+	[types.SET_COURSE](state, {name, id, is_plan_builder_enabled}) {
 		set(state, 'name', name);
 		set(state, 'id', id);
+		set(state, 'isPlanBuilderEnabled', is_plan_builder_enabled);
 	},
 };
 

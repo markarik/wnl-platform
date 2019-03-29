@@ -105,6 +105,7 @@ export default {
 			};
 		},
 		isLesson() {
+			// Allow users to look at unavailable lessons when PlanBuilder is enabled
 			return typeof this.lessonId !== 'undefined' && (this.isLessonAvailable(this.lessonId) || this.isPlanBuilderEnabled);
 		},
 		chatRooms() {

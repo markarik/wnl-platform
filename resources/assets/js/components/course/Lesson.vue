@@ -22,7 +22,7 @@
 		</div>
 		<div v-else>
 			<!--TODO hide button when !is_plan_builder_enabled-->
-			<button class="delete clickable" @click="showLesson=true"></button>
+			<button class="delete clickable" @click="onUnavaialableDismiss"></button>
 			<p class="has-text-centered margin vertical">
 				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
 			</p>
@@ -72,6 +72,7 @@ import PreviousNext from 'js/components/course/PreviousNext';
 import {resource} from 'js/utils/config';
 import {breadcrumb} from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
+import features from 'js/consts/events_map/features.json';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 
 export default {
@@ -216,6 +217,15 @@ export default {
 			this.$trackUserEvent({
 				...payload,
 				context: context.lesson.value
+			});
+		},
+		onUnavaialableDismiss() {
+			this.showLesson = true;
+			this.$trackUserEvent({
+				context: context.lesson.value,
+				feature: features.unavaialable.value,
+				action: features.unavaialable.actions.dismiss.value,
+				target: this.lessonId,
 			});
 		},
 		launchLesson() {

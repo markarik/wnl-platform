@@ -13,7 +13,7 @@ class UsersTest extends ApiTestCase
 		$user = factory(User::class)->create();
 
 		$response = $this->actingAs($user)
-			->json('GET', 'papi/v2/users/all');
+			->json('GET', 'papi/v2/users/1');
 
 		$response
 			->assertStatus(403);

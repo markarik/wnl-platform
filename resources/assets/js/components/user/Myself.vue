@@ -53,12 +53,13 @@ export default {
 	},
 	props: ['view'],
 	computed: {
-		...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile']),
+		...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isOnboardingFinished']),
+
 		isProduction() {
 			return isProduction();
 		},
 		items() {
-			let items = [
+			return [
 				{
 					text: 'Konto',
 					itemClass: 'heading small',
@@ -123,7 +124,7 @@ export default {
 					iconClass: 'fa-sliders',
 					iconTitle: 'Profil publiczny',
 				},
-				{
+				...this.isOnboardingFinished ? [{
 					text: 'Statystyki',
 					itemClass: 'has-icon',
 					to: {
@@ -133,8 +134,8 @@ export default {
 					method: 'push',
 					iconClass: 'fa-line-chart',
 					iconTitle: 'Statystyki',
-				},
-				{
+				}] : [],
+				...this.isOnboardingFinished ? [{
 					text: 'Plan pracy',
 					itemClass: 'has-icon',
 					to: {
@@ -144,8 +145,8 @@ export default {
 					method: 'push',
 					iconClass: 'fa fa-tasks',
 					iconTitle: 'Plan pracy',
-				},
-				{
+				}] : [],
+				...this.isOnboardingFinished ? [{
 					text: 'Certyfikaty',
 					itemClass: 'has-icon',
 					to: {
@@ -156,8 +157,8 @@ export default {
 					method: 'push',
 					iconClass: 'fa-trophy',
 					iconTitle: 'Certyfikaty',
-				},
-				{
+				}] : [],
+				...this.isOnboardingFinished ? [{
 					text: 'Usuwanie postępu',
 					itemClass: 'has-icon',
 					to: {
@@ -167,7 +168,7 @@ export default {
 					method: 'push',
 					iconClass: 'fa fa-exclamation-triangle',
 					iconTitle: 'Usuwanie postępu',
-				},
+				}] : [],
 				{
 					text: 'Zmiana hasła',
 					itemClass: 'has-icon',
@@ -192,8 +193,6 @@ export default {
 					iconTitle: 'Usuń konto',
 				},
 			];
-
-			return items;
 		},
 		isMainRoute() {
 			return this.$route.name === 'myself';

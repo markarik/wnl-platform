@@ -15,6 +15,9 @@ mix.js('resources/assets/js/app.js', 'public/js/app.js')
 	.js('resources/assets/js/notSupportedBrowserModal.js', 'public/js/notSupportedBrowserModal.js')
 	.js('resources/vendor/imageviewer/imageviewer.js', 'public/js/imageviewer.js');
 
+mix.copyDirectory('resources/assets/images', 'public/images');
+mix.copyDirectory('resources/assets/svg', 'public/svg');
+
 mix.options({
 	hmrStyleLoaderOptions: {
 		insertAt: {

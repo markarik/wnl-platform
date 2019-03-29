@@ -8,10 +8,15 @@
 .env.*
 env*/
 **/*.swp
+
 public/css/*
 public/js/*
 public/fonts/*
+public/images/*
+public/svg/*
 public/mix-manifest.json
+public/report.html
+
 storage/debugbar
 .DS_Store
 yarn-error.log
@@ -20,6 +25,5 @@ public/hot
 phpunit.dusk.xml
 phpunit.log.xml
 scenario.dusk
-public/report.html
 *.sql
 laravel-echo-server.json

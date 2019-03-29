@@ -1,12 +1,9 @@
 <?php
 
-
 namespace App\Http\Controllers\Api\Transformers;
-
 
 use App\Models\User;
 use App\Http\Controllers\Api\ApiTransformer;
-
 
 class UserTransformer extends ApiTransformer
 {
@@ -19,6 +16,8 @@ class UserTransformer extends ApiTransformer
 		'settings',
 		'coupons',
 		'user_address',
+		'has_prolonged_course',
+		'latest_product_state',
 	];
 
 	protected $parent;
@@ -62,7 +61,7 @@ class UserTransformer extends ApiTransformer
 
 	public function includeSubscription(User $user)
 	{
-		$subscription = $user->subscription;
+		$subscription = $user->subscription_proxy;
 
 		if (empty($subscription)) {
 			return null;
@@ -116,5 +115,27 @@ class UserTransformer extends ApiTransformer
 		}
 
 		return $this->item($address, new UserAddressTransformer(['users' => $user->id]), 'addresses');
+	}
+
+	public function includeLatestProductState(User $user)
+	{
+		$userProductState = $user->userProductStates->firstWhere('product_id', '=', $user->getLatestPaidCourseProductId());
+
+		if ($userProductState) {
+			return $this->item(
+				$userProductState,
+				new UserProductStateTransformer(['users' => $user->id]),
+				'latest_product_state'
+			);
+		}
+	}
+
+	public function includeHasProlongedCourse(User $user)
+	{
+		return $this->item(
+			$user,
+			new UserHasProlongedCourseTransformer(['users' => $user->id]),
+			'has_prolonged_course'
+		);
 	}
 }

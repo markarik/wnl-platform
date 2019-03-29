@@ -99,7 +99,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters(['currentUser', 'isOverlayVisible']),
+		...mapGetters(['currentUserProfile', 'currentUserProfileId', 'isOverlayVisible']),
 		comments() {
 			return this.getterFunction('comments', {
 				resource: this.commentableResource,
@@ -164,8 +164,8 @@ export default {
 			this.action('addComment', {
 				commentableResource: this.commentableResource,
 				commentableId: this.commentableId,
-				comment: _.merge(data, { 'profiles': [ this.currentUser.id ] }),
-				profile: this.currentUser,
+				comment: _.merge(data, { 'profiles': [ this.currentUserProfileId ] }),
+				profile: this.currentUserProfile,
 			});
 
 			nextTick(() => {

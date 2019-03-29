@@ -90,6 +90,7 @@ export default {
 	},
 	computed: {
 		...mapGetters('course', [
+			'entryExamLessonId',
 			'getScreensForLesson',
 			'getLesson',
 			'getSectionsForScreen',
@@ -97,8 +98,8 @@ export default {
 			'getScreen',
 			'getScreenSectionsCheckpoints',
 			'getSectionSubsectionsCheckpoints',
+			'getLessons',
 			'isLessonAvailable',
-			'getLessons'
 		]),
 		...mapGetters('progress', {
 			getSavedLesson: 'getSavedLesson',
@@ -325,7 +326,12 @@ export default {
 	},
 	async mounted () {
 		try {
-			if (this.lesson.is_required && !this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) && !this.currentUserHasFinishedEntryExam) {
+			if (
+				this.lesson.is_required &&
+				this.lesson.id !== this.entryExamLessonId &&
+				!this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) &&
+				!this.currentUserHasFinishedEntryExam
+			) {
 				// TODO consider using custom modal but make it a blocking one
 				await this.$swal(swalConfig({
 					title: '⚠️ Rozpoczęcie nauki przed rozwiązaniem wstępnego LEK-u wiąże się z utratą Gwarancji Satysfkacji!',

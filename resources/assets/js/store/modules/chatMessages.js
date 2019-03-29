@@ -4,7 +4,11 @@ import {uniq} from 'lodash';
 
 import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
-import {SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MARK_ROOM_AS_READ} from 'js/plugins/chat-connection';
+import {
+	SOCKET_EVENT_SEND_MESSAGE,
+	SOCKET_EVENT_MARK_ROOM_AS_READ,
+	SOCKET_EVENT_USER_SENT_MESSAGE
+} from 'js/plugins/chat-connection';
 
 const namespaced = true;
 

@@ -17,5 +17,5 @@
 
 	<p>W razie pytań pozostajemy do dyspozycji!</p>
 
-	<p>Z pozdrowieniami,</p>
+	<p>Z pozdrowieniami</p>
 @endsection

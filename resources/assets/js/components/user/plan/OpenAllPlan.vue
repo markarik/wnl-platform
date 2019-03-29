@@ -14,11 +14,17 @@
 		</div>
 		<div class="accept-plan">
 			<a
-				@click="acceptPlan"
+				@click="satisfactionGuaranteeModalVisible = true"
 				class="button button is-primary is-outlined is-big"
 			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
 			</a>
 		</div>
+		<wnl-satisfaction-guarantee-modal
+			:visible="satisfactionGuaranteeModalVisible"
+			:title="$t('user.plan.changePlanConfirmation')"
+			@closeModal="satisfactionGuaranteeModalVisible = false"
+			@submit="acceptPlan"
+		></wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 
@@ -45,15 +51,18 @@ import { getApiUrl } from 'js/utils/env';
 import momentTimezone from 'moment-timezone';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
+import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
 export default {
 	name: 'OpenAllPlan',
 	components: {
 		'wnl-text-overlay': TextOverlay,
+		WnlSatisfactionGuaranteeModal
 	},
 	mixins: [emits_events],
 	data() {
 		return {
+			satisfactionGuaranteeModalVisible: false,
 			isLoading: false,
 			alertSuccess: {
 				text: this.$i18n.t('lessonsAvailability.alertSuccess'),
@@ -96,6 +105,7 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('course', ['setStructure']),
 		async acceptPlan() {
+			this.satisfactionGuaranteeModalVisible = false;
 			this.isLoading = true;
 			try {
 				const response = await axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {

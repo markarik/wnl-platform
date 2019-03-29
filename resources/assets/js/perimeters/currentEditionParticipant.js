@@ -12,7 +12,7 @@ export default createPerimeter({
 	isCurrentEditionParticipant() {
 		return this.child &&
 			this.child.subscription &&
-			this.child.subscription.status === 'active';
+			this.child.subscription.subscription_status === 'active';
 	},
 
 	isAccountActive() {

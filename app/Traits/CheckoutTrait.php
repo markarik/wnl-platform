@@ -55,12 +55,10 @@ trait CheckoutTrait
 		return $coupon;
 	}
 
-	private function canBuyAlbum(Request $request) {
+	private function canBuyAlbum() {
 		$user = Auth::user();
 
-		$hasProlongedCourse = $user->orders->filter(function($order) {
-				return $order->paid && !$order->canceled && $order->coupon && $order->coupon->kind === Coupon::KIND_PARTICIPANT;
-			})->count() > 0;
+		$hasProlongedCourse = $user->has_prolonged_course;
 		$hasBoughtAlbum = $user->getProducts()->filter(function($product) {
 				return $product->slug === Product::SLUG_WNL_ALBUM;
 			})->count() > 0;

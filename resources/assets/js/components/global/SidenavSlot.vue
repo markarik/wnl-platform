@@ -2,7 +2,7 @@
 	<div
 		class="wnl-sidenav-slot"
 		v-if="isVisible"
-		:class="{ 'wnl-sidenav-detached': isDetached, 'has-chat': hasChat, 'is-max-width': isMaxWidth }"
+		:class="{ 'wnl-sidenav-detached': isDetached, 'has-chat': hasChat, 'is-max-width': isMaxWidth, 'is-narrow': isNarrow }"
 		ref="slot"
 		@click="onClick"
 	>
@@ -34,6 +34,10 @@
 			display: flex
 			height: $main-height
 			width: 100%
+
+		&.is-narrow
+			width: initial
+			border-right: none
 
 	.wnl-sidenav-detached
 		background: rgba(0, 0, 0, 0.8)
@@ -76,7 +80,28 @@ import Breadcrumbs from 'js/components/global/Breadcrumbs';
 import SidenavItem from 'js/components/global/SidenavItem';
 
 export default {
-	props: ['isVisible', 'isDetached', 'hasChat', 'direction', 'isMaxWidth'],
+	props: {
+		isVisible: {
+			type: Boolean,
+			default: false,
+		},
+		isDetached: {
+			type: Boolean,
+			default: false,
+		},
+		hasChat: {
+			type: Boolean,
+			default: false,
+		},
+		isMaxWidth: {
+			type: Boolean,
+			default: false,
+		},
+		isNarrow: {
+			type: Boolean,
+			default: false,
+		},
+	},
 	methods: {
 		...mapActions(['closeSidenavs']),
 		onClick(event) {

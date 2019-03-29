@@ -36,8 +36,8 @@
 					{!! $slides !!}
 				</div>
 			</div>
-			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-right enabled" aria-label="next slide"></div>
-			<div style="background-image: url('{{ asset('/images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-left enabled" aria-label="previous slide">
+			<div style="background-image: url('{{ asset('images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-right enabled" aria-label="next slide"></div>
+			<div style="background-image: url('{{ asset('images/slide-control-arrow.svg') }}')" class="wnl-slideshow-control navigate-left enabled" aria-label="previous slide">
 			</div>
 		</div>
 		<a class="toggle-annotations rounded-button without-image" style="display: none">

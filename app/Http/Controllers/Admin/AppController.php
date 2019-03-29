@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use JavaScript;
 
@@ -25,6 +24,9 @@ class AppController extends Controller
 			],
 			'config' => [
 				'papi' => config('papi'),
+			],
+			'course' => [
+				'productLogo' => config('course.product_logo'),
 			],
 		]);
 

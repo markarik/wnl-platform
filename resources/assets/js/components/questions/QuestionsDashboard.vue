@@ -115,7 +115,10 @@
 							</div>
 						</div>
 						<div class="questions-dashboard-heading margin vertical"/>
-						<button @click="resetQuestionsProgress" class="button is-danger to-right">Wyczyść wszystkie wyniki</button>
+						<button
+							@click="satisfactionGuaranteeModalVisible = true"
+							class="button is-danger to-right"
+						>{{$t('questions.dashboard.stats.resetButton')}}</button>
 					</div>
 				</div>
 				<router-view v-else :id="id" @userEvent="onUserEvent"/>
@@ -148,6 +151,12 @@
 				<span>{{$t('questions.dashboard.notifications.toggleBar')}}</span>
 			</span>
 		</div>
+		<wnl-satisfaction-guarantee-modal
+			:visible="satisfactionGuaranteeModalVisible"
+			:title="$t('user.progressReset.questionsModalHeader')"
+			@closeModal="satisfactionGuaranteeModalVisible = false"
+			@submit="resetQuestionsProgress"
+		></wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 
@@ -334,6 +343,7 @@ import { swalConfig } from 'js/utils/swal';
 import withChat from 'js/mixins/with-chat';
 import features from 'js/consts/events_map/features.json';
 import context from 'js/consts/events_map/context.json';
+import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
 export default {
 	name: 'QuestionsDashboard',
@@ -342,6 +352,7 @@ export default {
 		'wnl-questions-navigation': QuestionsNavigation,
 		'wnl-questions-plan-progress': QuestionsPlanProgress,
 		'wnl-sidenav-slot': SidenavSlot,
+		WnlSatisfactionGuaranteeModal
 	},
 	mixins: [withChat],
 	props: {
@@ -357,7 +368,8 @@ export default {
 			stats: {},
 			expandedExams: [],
 			context: context.questions_bank,
-			feature: features.dashboard
+			feature: features.dashboard,
+			satisfactionGuaranteeModalVisible: false
 		};
 	},
 	computed: {
@@ -460,6 +472,7 @@ export default {
 			return score >= 56 ? 'is-success' : 'is-danger';
 		},
 		resetQuestionsProgress() {
+			this.satisfactionGuaranteeModalVisible = false;
 			this.$swal(swalConfig({
 				title: this.$t('questions.dashboard.ui.deleteModal.title'),
 				text: this.$t('questions.dashboard.ui.deleteModal.text'),

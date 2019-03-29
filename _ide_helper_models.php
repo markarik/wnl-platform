@@ -1452,12 +1452,16 @@ namespace App\Models{
  * @property string $slug
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int|null $entry_exam_tag_id
+ * @property int|null $entry_exam_lesson_id
  * @property-read \Kalnoy\Nestedset\Collection|\App\Models\CourseStructureNode[] $courseStructureNodes
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Group[] $groups
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereEntryExamLessonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereEntryExamTagId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereSlug($value)
@@ -1566,6 +1570,7 @@ namespace App\Models{
  * @property array|null $settings
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $settings_with_defaults
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSettings query()

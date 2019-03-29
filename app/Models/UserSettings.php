@@ -18,8 +18,11 @@ class UserSettings extends Model
 
 	public function getSettingsAttribute()
 	{
-		$settings = json_decode($this->attributes['settings'], true);
+		return json_decode($this->attributes['settings'], true);
+	}
 
-		return array_merge(config('user-default-settings'), $settings);
+	public function getSettingsWithDefaultsAttribute()
+	{
+		return array_merge(config('user-default-settings'), $this->settings);
 	}
 }

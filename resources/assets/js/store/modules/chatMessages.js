@@ -300,7 +300,7 @@ const actions = {
 		const data = await this._vm.$socketJoinRoom(userChannel, pointer);
 		dispatch('updateFromEventLog', data.events);
 		dispatch('setConnectionStatus', true);
-		this._vm.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage);
+		this._vm.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, (msg) => dispatch('onNewMessage', msg));
 	},
 };
 

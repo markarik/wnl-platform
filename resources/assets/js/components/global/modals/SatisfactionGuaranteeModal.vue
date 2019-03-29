@@ -48,10 +48,24 @@
 				text-decoration: underline
 
 		&__actions
+			display: flex
+			flex-wrap: wrap
+			justify-content: center
+
 			.button
-				margin-right: $margin-big
+				flex: 100%
+				margin-bottom: $margin-big
 				&:last-child
-					margin-right: 0
+					margin-bottom: 0
+
+			@media #{$media-query-tablet}
+				flex-wrap: nowrap
+				.button
+					flex: 50%
+					margin: 0 $margin-base 0 0
+
+					&:last-child
+						margin: 0
 </style>
 
 <script>

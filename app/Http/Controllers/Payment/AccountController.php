@@ -27,7 +27,7 @@ class AccountController extends Controller
 
 		if ($user) {
 			$hasCurrentProduct = $this->hasCurrentProduct($request);
-			$canBuyAlbum = $this->canBuyAlbum($request);
+			$canBuyAlbum = $this->canBuyAlbum();
 
 			if ($hasCurrentProduct && $canBuyAlbum) {
 				return view('payment.account-buy-album', [

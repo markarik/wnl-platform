@@ -808,14 +808,14 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Coupon[] $coupons
  * @property-read mixed $full_address
  * @property-read mixed $full_name
- * @property-read mixed $identity_number
- * @property-read array $identity_numbers
+ * @property-read mixed $has_prolonged_course
  * @property-read mixed $initials
  * @property-read mixed $is_subscriber
+ * @property-read mixed $passport_number
+ * @property-read mixed $personal_identity_number
  * @property-read mixed $recipient
  * @property-read mixed $sign_up_complete
- * @property-read mixed $subscription_dates
- * @property-read mixed $subscription_status
+ * @property-read mixed $subscription_proxy
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
  * @property-read \App\Models\UserPersonalData $personalData
@@ -829,6 +829,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Task[] $tasks
  * @property-read \App\Models\UserAddress $userAddress
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Lesson[] $userLessons
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserProductState[] $userProductStates
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\UserTime[] $userTime
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newQuery()
@@ -1473,6 +1474,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $access_end
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $subscription_dates
+ * @property-read mixed $subscription_status
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSubscription newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserSubscription newQuery()
@@ -1506,6 +1509,29 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Slideshow whereUpdatedAt($value)
  */
 	class Slideshow extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\UserProductState
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $product_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $onboarding_step
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProductState newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProductState newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProductState query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProductState whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProductState whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProductState whereOnboardingStep($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProductState whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProductState whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProductState whereUserId($value)
+ */
+	class UserProductState extends \Eloquent {}
 }
 
 namespace App\Models{

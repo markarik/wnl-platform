@@ -5,9 +5,9 @@ export const lessonsAvailability = {
 	viewsDropdownInfo: 'Rozwiń, aby podejrzeć daty otwarcia lekcji',
 	lessonsToBeChangedList: 'Lista zmienionych dat:',
 	sections: {
-		workDays: '1. Dni tygodnia, w których chcesz pracować.',
-		availablePresets: '2. Dostępne plany nauki.',
-		acceptPlan: '3. Zatwierdź plan!',
+		workDays: '1. Dni tygodnia, w których chcesz pracować',
+		availablePresets: '2. Dostępne plany nauki',
+		acceptPlan: '3. Zatwierdź plan',
 	},
 	secondSection: {
 		daysPerLesson: 'Ile dni chcesz poświęcić na jedną lekcję?',

@@ -37,15 +37,19 @@ import MessagesDashboard from 'js/components/messages/MessagesDashboard';
 import ModeratorsDashboard from 'js/components/moderators/ModeratorsDashboard';
 import MainUsers from 'js/components/users/MainUsers';
 import UserProfile from 'js/components/users/UserProfile';
+import Onboarding from 'js/components/onboarding/Onboarding';
 
 Vue.use(Router);
 
-let routes = [
+const routes = [
 	{
 		name: 'course',
 		path: '/app/courses/:courseId',
 		component: Course,
 		props: true,
+		meta: {
+			requiresOnboardingPassed: true,
+		},
 		children: [
 			{
 				name: resource('courses'),
@@ -79,7 +83,7 @@ let routes = [
 					});
 				},
 			}
-		]
+		],
 	},
 	{
 		name: 'myself',
@@ -125,17 +129,26 @@ let routes = [
 			{
 				name: 'certificates',
 				path: 'certificates',
-				component: UserCertificates
+				component: UserCertificates,
+				meta: {
+					requiresOnboardingPassed: true,
+				},
 			},
 			{
 				name: 'lessons-availabilites',
 				path: 'availabilities',
-				component: PlanView
+				component: PlanView,
+				meta: {
+					requiresOnboardingPassed: true,
+				},
 			},
 			{
 				name: 'progress-reset',
 				path: 'progress-reset',
-				component: ProgressReset
+				component: ProgressReset,
+				meta: {
+					requiresOnboardingPassed: true,
+				},
 			},
 			{
 				name: 'delete-account',
@@ -149,6 +162,9 @@ let routes = [
 		path: '/app/collections',
 		component: Collections,
 		props: true,
+		meta: {
+			requiresOnboardingPassed: true,
+		},
 		children: [
 			{
 				props: true,
@@ -211,6 +227,9 @@ let routes = [
 	{
 		path: '/app/questions',
 		component: Questions,
+		meta: {
+			requiresOnboardingPassed: true,
+		},
 		children: [
 			{
 				name: 'questions-dashboard',
@@ -285,6 +304,12 @@ let routes = [
 		redirect: {name: 'courses', params: {courseId: 1}},
 	},
 	{
+		name: 'onboarding',
+		path: '/app/onboarding/:step?',
+		component: Onboarding,
+		props: true,
+	},
+	{
 		name: 'logout',
 		path: '/logout',
 		beforeEnter: () => {
@@ -328,7 +353,7 @@ let routes = [
 	}
 ];
 
-export default new Router({
+const router =  new Router({
 	mode: 'history',
 	linkActiveClass: 'is-active',
 	scrollBehavior: (to, from, savedPosition) => {
@@ -345,3 +370,17 @@ export default new Router({
 	},
 	routes
 });
+
+router.beforeEach(async (to, from, next) => {
+	await store.dispatch('setupCurrentUser');
+
+	if (
+		to.matched.some(record => record.meta.requiresOnboardingPassed) &&
+		!store.getters.isOnboardingFinished
+	) {
+		return next('/app/onboarding');
+	}
+	return next();
+});
+
+export default router;

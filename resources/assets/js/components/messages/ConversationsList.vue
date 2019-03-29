@@ -130,7 +130,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters(['currentUser']),
+		...mapGetters(['currentUserProfile']),
 		...mapGetters('chatMessages', [
 			'sortedRooms',
 			'getRoomById',
@@ -160,7 +160,7 @@ export default {
 		getOtherUser(room) {
 			const profile = this.getInterlocutor(room.profiles);
 			if (profile.id) return profile;
-			return this.currentUser;
+			return this.currentUserProfile;
 		},
 		pullConversations: _.debounce(function(event) {
 			if (!this.userSearchVisible && this.hasMoreRooms) {

@@ -125,14 +125,14 @@ const actions = {
 
 		try {
 			response = await axios.get(
-				getApiUrl('users/current?include=roles,profile,has_prolonged_course,subscription,settings,latest_product_state')
+				getApiUrl('users/current?include=roles,profile,subscription,settings,latest_product_state')
 			);
 		} catch (error) {
 			$wnl.logger.error(error);
 			throw error;
 		}
 
-		const {id, profile, subscription, settings, has_prolonged_course, latest_product_state, included} = response.data;
+		const {id, profile, subscription, settings, latest_product_state, included} = response.data;
 
 		const currentUser = {id};
 
@@ -142,10 +142,6 @@ const actions = {
 
 		if (profile) {
 			currentUser.profile = included.profiles[profile[0]];
-		}
-
-		if (has_prolonged_course) {
-			currentUser.hasProlongedCourse = included.has_prolonged_courses[has_prolonged_course[0]];
 		}
 
 		if (subscription) {

@@ -23,7 +23,6 @@
 	@import 'resources/assets/sass/variables'
 
 	.item.disabled
-		pointer-events: none
 		color: $color-light-gray
 
 		&:hover
@@ -59,7 +58,7 @@
 		&.is-disabled
 			color: $color-light-gray
 
-		&:hover
+		&:hover:not(.is-disabled)
 			color: $color-ocean-blue
 
 		&.router-link-exact-active

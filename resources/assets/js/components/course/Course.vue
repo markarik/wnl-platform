@@ -104,7 +104,9 @@ export default {
 			};
 		},
 		isLesson() {
-			return typeof this.lessonId !== 'undefined' && this.isLessonAvailable(this.lessonId);
+			return typeof this.lessonId !== 'undefined';
+			// TODO
+			// return typeof this.lessonId !== 'undefined' && (this.isLessonAvailable(this.lessonId) || is_plan_builder_enabled);
 		},
 		chatRooms() {
 			let courseChatRoom = `courses-${this.courseId}`,

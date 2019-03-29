@@ -25,7 +25,7 @@ class UpdateCourse extends FormRequest
 	{
 		return [
 			'name'   => 'required|string',
-			'groups' => 'array',
+			'is_plan_builder_enabled' => 'boolean'
 		];
 	}
 }

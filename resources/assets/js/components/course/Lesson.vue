@@ -1,7 +1,7 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
-		<div class="wnl-lesson" v-if="isLessonAvailable(lessonId)">
-			<div class="wnl-lesson-view">
+		<div class="wnl-lesson" v-if="shouldShowLesson">
+			<div class="wnl-lesson__view">
 				<div class="level wnl-screen-title">
 					<div class="level-left">
 						<div class="level-item metadata">
@@ -21,12 +21,15 @@
 			</div>
 		</div>
 		<div v-else>
-			<h3 class="has-text-centered">O nie! Ta lekcja nie jest jeszcze dostępna!</h3>
+			<!--TODO hide button when !is_plan_builder_enabled-->
+			<button class="delete clickable" @click="showLesson=true"></button>
 			<p class="has-text-centered margin vertical">
 				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
 			</p>
-			<p class="has-text-centered">
-				<router-link to="/" class="button is-outlined is-primary">Wróć do auli</router-link>
+			<h3 class="title is-3 has-text-centered"><strong>Otwierasz lekcję poza planem pracy pracy!</strong>🛡️</h3>
+			<h5 class="title is-5 has-text-centered">Lekcja będzie aktywna w planie od <strong>{{lessonStartDate}}</strong></h5>
+			<p class="has-text-centered wnl-lesson-note">
+				Terminy otwarcia lekcji możesz zmienić w zakładce <router-link :to="{name: 'lessons-availabilites'}">Konto > Plan Pracy</router-link>
 			</p>
 		</div>
 	</div>
@@ -53,10 +56,16 @@
 
 	.wnl-screen-title
 		padding-bottom: $margin-base
+
+	.wnl-lesson-note
+		border-top: $border-light-gray
+		margin-top: $margin-huge
+		padding-top: $margin-big
 </style>
 
 <script>
 import _ from 'lodash';
+import moment from 'moment';
 import {mapGetters, mapActions} from 'vuex';
 
 import PreviousNext from 'js/components/course/PreviousNext';
@@ -82,6 +91,7 @@ export default {
 				 * all browsers are able to beautifully scroll the content.
 				 */
 			elementHeight: _.get(this.$parent, '$el.offsetHeight') || '100%',
+			showLesson: false,
 		};
 	},
 	computed: {
@@ -125,6 +135,9 @@ export default {
 		},
 		lessonNumber() {
 			return this.getLessons.findIndex(({id}) => id === this.lesson.id) + 1;
+		},
+		lessonStartDate() {
+			return moment.unix(this.lesson.startDate).format('LL');
 		},
 		screens() {
 			return this.getScreensForLesson(this.lessonId);
@@ -181,6 +194,9 @@ export default {
 				},
 			};
 		},
+		shouldShowLesson() {
+			return this.isLessonAvailable(this.lessonId) || this.showLesson;
+		}
 	},
 	methods: {
 

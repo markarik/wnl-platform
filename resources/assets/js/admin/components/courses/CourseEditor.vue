@@ -13,8 +13,12 @@
 		</div>
 		<wnl-form-text
 				name="name"
-				class="margin top bottom"
+				class="margin vertical"
 		>Nazwa</wnl-form-text>
+		<wnl-form-check
+			name="is_plan_builder_enabled"
+			class="margin vertical"
+		>Włącz edytor planu pracy</wnl-form-check>
 	</wnl-form>
 </template>
 
@@ -42,7 +46,7 @@
 </style>
 
 <script>
-import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit} from 'js/components/global/form';
+import {Form as WnlForm, Text as WnlFormText, Check as WnlFormCheck, Submit as WnlSubmit} from 'js/components/global/form';
 
 export default {
 	name: 'CourseEditor',
@@ -60,6 +64,7 @@ export default {
 	},
 	components: {
 		WnlFormText,
+		WnlFormCheck,
 		WnlForm,
 		WnlSubmit,
 	},

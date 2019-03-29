@@ -20,8 +20,9 @@ class CourseTransformer extends ApiTransformer
 	public function transform(Course $course)
 	{
 		$data = [
-			'id'   => $course->id,
-			'name' => $course->name,
+			'id'                      => $course->id,
+			'name'                    => $course->name,
+			'is_plan_builder_enabled' => $course->is_plan_builder_enabled
 		];
 
 		if ($this->parent) {

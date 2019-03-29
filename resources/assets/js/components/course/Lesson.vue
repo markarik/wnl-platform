@@ -21,8 +21,11 @@
 			</div>
 		</div>
 		<div v-else>
-			<!--TODO hide button when !is_plan_builder_enabled-->
-			<button class="delete clickable" @click="onUnavaialableDismiss"></button>
+			<button
+				v-if="isPlanBuilderEnabled"
+				class="delete clickable"
+				@click="onUnavaialableDismiss"
+			></button>
 			<p class="has-text-centered margin vertical">
 				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
 			</p>
@@ -66,7 +69,7 @@
 <script>
 import _ from 'lodash';
 import moment from 'moment';
-import {mapGetters, mapActions} from 'vuex';
+import {mapGetters, mapActions, mapState} from 'vuex';
 
 import PreviousNext from 'js/components/course/PreviousNext';
 import {resource} from 'js/utils/config';
@@ -96,6 +99,7 @@ export default {
 		};
 	},
 	computed: {
+		...mapState('course', ['isPlanBuilderEnabled']),
 		...mapGetters('course', [
 			'getScreensForLesson',
 			'getLesson',
@@ -221,6 +225,7 @@ export default {
 		},
 		onUnavaialableDismiss() {
 			this.showLesson = true;
+			this.launchLesson();
 			this.$trackUserEvent({
 				context: context.lesson.value,
 				feature: features.unavaialable.value,
@@ -341,7 +346,9 @@ export default {
 		this.toggleOverlay({source: 'lesson', display: true});
 		try {
 			await this.setupLesson(this.lessonId);
-			this.launchLesson();
+			if (this.isLessonAvailable(this.lessonId)) {
+				this.launchLesson();
+			}
 		} catch (e) {
 			$wnl.logger.error(e);
 		} finally {

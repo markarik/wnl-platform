@@ -140,7 +140,7 @@ const getters = {
 		return undefined;
 	},
 	nextLesson: (state, getters, rootState, rootGetters) => {
-		if (typeof getters.getLessons === 'undefined' || !rootGetters['progress/getCourse'](state.id)) {
+		if (typeof getters.getRequiredLessons === 'undefined' || !rootGetters['progress/getCourse'](state.id)) {
 			return {};
 		}
 
@@ -151,27 +151,37 @@ const getters = {
 
 			return inProgressLesson;
 		} else {
-			const sortedLessons = getters.getLessons;
+			const firstInProgressLesson = getters.getRequiredLessons.find(lesson => {
+				return lesson.isAvailable
+					&& rootGetters['progress/wasLessonStarted'](state.id, lesson.id)
+					&& !rootGetters['progress/isLessonComplete'](state.id, lesson.id);
+			});
 
-			for (let i = 0; i < sortedLessons.length; i++) {
-				const lesson = sortedLessons[i];
-				const isAvailable = lesson.isAvailable;
-				const isAccessible = lesson.isAccessible;
-				if (isAvailable &&
-					!rootGetters['progress/wasLessonStarted'](state.id, lesson.id)
-				) {
-					lesson.status = STATUS_AVAILABLE;
-					return lesson;
-				} else if (!isAvailable && isAccessible) {
-					lesson.status = STATUS_NONE;
-					return lesson;
-				}
+			if (firstInProgressLesson) {
+				return {
+					...firstInProgressLesson,
+					status: STATUS_AVAILABLE
+				};
 			}
-		}
 
-		return {
-			status: STATUS_NONE
-		};
+			const firstAvailableLesson = getters.getRequiredLessons.find(lesson => {
+				return lesson.isAvailable && !rootGetters['progress/isLessonComplete'](state.id, lesson.id);
+			});
+
+			if (firstAvailableLesson) return {
+				...firstAvailableLesson,
+				status: STATUS_AVAILABLE
+			};
+
+			const firstNextLesson = getters.getRequiredLessons.find(lesson => {
+				return !rootGetters['progress/isLessonComplete'](state.id, lesson.id);
+			});
+
+			return {
+				...firstNextLesson,
+				status: STATUS_NONE
+			};
+		}
 	}
 };
 

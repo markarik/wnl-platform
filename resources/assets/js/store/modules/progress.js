@@ -48,7 +48,7 @@ const getters = {
 			state.courses[courseId].lessons[lessonId].status === STATUS_IN_PROGRESS;
 	},
 	getFirstLessonInProgress: (state, getters, rootState, rootGetters) => (courseId) => {
-		let lessons = rootGetters['course/getLessons'];
+		let lessons = rootGetters['course/getRequiredLessons'];
 
 		return lessons.find(({id: lessonId, isAvailable}) => {
 			const lessonProgress = state.courses[courseId].lessons[lessonId];

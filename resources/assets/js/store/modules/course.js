@@ -144,13 +144,12 @@ const getters = {
 			return {};
 		}
 
-		const inProgressId = rootGetters['progress/getFirstLessonIdInProgress'](state.id);
+		const inProgressLesson = rootGetters['progress/getFirstLessonInProgress'](state.id);
 
-		if (inProgressId > 0) {
-			const lesson = getters.getLesson(inProgressId);
-			lesson.status = STATUS_IN_PROGRESS;
+		if (inProgressLesson) {
+			inProgressLesson.status = STATUS_IN_PROGRESS;
 
-			return lesson;
+			return inProgressLesson;
 		} else {
 			const sortedLessons = getters.getLessons;
 

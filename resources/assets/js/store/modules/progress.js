@@ -47,13 +47,13 @@ const getters = {
 		return getters.wasLessonStarted(courseId, lessonId) &&
 			state.courses[courseId].lessons[lessonId].status === STATUS_IN_PROGRESS;
 	},
-	getFirstLessonIdInProgress: (state, getters, rootState, rootGetters) => (courseId) => {
-		let lessons = state.courses[courseId].lessons;
+	getFirstLessonInProgress: (state, getters, rootState, rootGetters) => (courseId) => {
+		let lessons = rootGetters['course/getLessons'];
 
-		return Object.keys(lessons).find((lessonId) => {
-			const lesson = rootGetters['course/getLesson'](lessonId);
-			return lessons[lessonId].status === STATUS_IN_PROGRESS && lesson.isAvailable === true;
-		}) || 0;
+		return lessons.find(({id: lessonId, isAvailable}) => {
+			const lessonProgress = state.courses[courseId].lessons[lessonId];
+			return lessonProgress && lessonProgress.status === STATUS_IN_PROGRESS && isAvailable === true;
+		});
 	},
 	isLessonComplete: (state, getters) => (courseId, lessonId) => {
 		return getters.wasLessonStarted(courseId, lessonId) &&

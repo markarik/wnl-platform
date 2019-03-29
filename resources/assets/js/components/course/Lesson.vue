@@ -20,19 +20,32 @@
 				<wnl-previous-next></wnl-previous-next>
 			</div>
 		</div>
-		<div v-else>
-			<button
-				v-if="isPlanBuilderEnabled"
-				class="delete clickable"
-				@click="onUnavaialableDismiss"
-			></button>
+		<div v-else-if="isPlanBuilderEnabled">
 			<p class="has-text-centered margin vertical">
 				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
 			</p>
-			<h3 class="title is-3 has-text-centered"><strong>Otwierasz lekcję poza planem pracy pracy!</strong>🛡️</h3>
+			<h3 class="title is-3 has-text-centered"><strong>Lekcja nieaktywna</strong>🛡️</h3>
 			<h5 class="title is-5 has-text-centered">Lekcja będzie aktywna w planie od <strong>{{lessonStartDate}}</strong></h5>
-			<p class="has-text-centered wnl-lesson-note">
-				Terminy otwarcia lekcji możesz zmienić w zakładce <router-link :to="{name: 'lessons-availabilites'}">Konto > Plan Pracy</router-link>
+			<p class="has-text-centered">
+				Zachęcamy Cię do powrotu, do ostatniej niezakończonej lekcji. Jeśli jednak masz potrzebę spojrzenia na lekcję możesz to zrobić.
+			</p>
+			<div class="has-text-centered margin top">
+				<button
+					class="button is-primary is-outlined"
+					@click="onUnavaialableDismiss"
+				>
+					Podejrzyj lekcję
+				</button>
+			</div>
+		</div>
+		<div v-else>
+			<p class="has-text-centered margin vertical">
+				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
+			</p>
+			<h3 class="title is-3 has-text-centered"><strong>Lekcja zablokowana</strong>🛡️</h3>
+			<h5 class="title is-5 has-text-centered">Lekcja będzie dostępna od <strong>{{lessonStartDate}}</strong></h5>
+			<p class="has-text-centered">
+				Zachęcamy Cię do powrotu, do ostatniej niezakończonej lekcji.
 			</p>
 		</div>
 	</div>
@@ -59,11 +72,6 @@
 
 	.wnl-screen-title
 		padding-bottom: $margin-base
-
-	.wnl-lesson-note
-		border-top: $border-light-gray
-		margin-top: $margin-huge
-		padding-top: $margin-big
 </style>
 
 <script>
@@ -226,6 +234,7 @@ export default {
 		onUnavaialableDismiss() {
 			this.showLesson = true;
 			this.launchLesson();
+
 			this.$trackUserEvent({
 				context: context.lesson.value,
 				feature: features.unavaialable.value,

@@ -37,7 +37,7 @@
 	</p>
 
 	<p class="text-align: center;">
-		<img src="https://media.giphy.com/media/wSNDFkJywdW24/giphy.gif" alt="Dobrze, że jesteście!" style="display: block; margin: 0 auto;">
+		<img src="https://media.giphy.com/media/1QgElnasrLeCCYabpB/giphy.gif" alt="Dobrze, że jesteście!" style="display: block; margin: 0 auto;">
 	</p>
 
 	<p>Z pozdrowieniami</p>

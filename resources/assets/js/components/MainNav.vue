@@ -59,7 +59,7 @@
 			<span class="text">Pomoc</span>
 		</router-link>
 		<a
-			v-if="!currentUserHasLatestProduct"
+			v-if="!currentUserHasLatestProduct && !isMobile"
 			class="wnl-main-nav-item"
 			:href="signUpLink"
 		>
@@ -148,7 +148,7 @@ export default {
 	props: ['isHorizontal'],
 	perimeters: [moderatorFeatures, currentEditionParticipant, upcomingEditionParticipant],
 	computed: {
-		...mapGetters(['isOnboardingFinished', 'currentUserHasLatestProduct']),
+		...mapGetters(['isOnboardingFinished', 'currentUserHasLatestProduct', 'isMobile']),
 		signUpLink() {
 			return getUrl('payment/account');
 		},

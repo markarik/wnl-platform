@@ -16,3 +16,5 @@ parameters:
         - '#Call to protected method (decrement|increment)\(\) of class Illuminate\\Database\\Eloquent\\Model#'
         # Possibly can be handled by writing an extension for the Searchable trait but there is only 1 error instance
         - '#Call to an undefined static method .+::searchRaw\(\)#'
+        # No support for magic methods in Illuminate\View\View
+        - '#Access to an undefined property Illuminate\\View\\View::.*#'

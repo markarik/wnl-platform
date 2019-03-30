@@ -10,11 +10,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Coupon extends Model
 {
-	protected $fillable = ['name', 'slug', 'code', 'type', 'value', 'expires_at', 'user_id', 'times_usable'];
+	protected $fillable = ['name', 'slug', 'code', 'type', 'value', 'expires_at', 'user_id', 'times_usable', 'kind'];
 
 	protected $dates = [
 		'expires_at',
 	];
+
+	const KIND_GROUP = 'group';
+	const KIND_STUDY_BUDDY = 'study_buddy';
+	const KIND_VOUCHER = 'voucher';
+	const KIND_PARTICIPANT = 'participant';
+	const SLUG_WNL_ONLINE_ONLY = 'wnl-online-only';
 
 	protected $dispatchesEvents = [
 		'created' => CouponCreated::class,
@@ -62,5 +68,13 @@ class Coupon extends Model
 		return trans($this->is_percentage ? 'common.percent' : 'common.currency', [
 			'value' => $this->value,
 		]);
+	}
+
+	public function isApplicableForProduct(Product $product): bool
+	{
+		// disable coupons for albums
+		if ($product->slug === Product::SLUG_WNL_ALBUM) return false;
+
+		return $this->products->count() === 0 || $this->products->contains($product);
 	}
 }

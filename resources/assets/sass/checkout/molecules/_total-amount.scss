@@ -1,0 +1,14 @@
+.m-checkoutTotalAmount {
+  @include centeredSpread;
+
+  &__preCoupon {
+    @include textMinus1;
+    font-weight: 300;
+    margin-right: $space-xxxs;
+    text-decoration: line-through;
+  }
+
+  &__final {
+    @include textPlus1;
+  }
+}

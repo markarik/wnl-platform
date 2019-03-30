@@ -6,10 +6,7 @@ namespace Tests\Browser\Tests\Payment\Modules;
 
 use App\Models\Order;
 use App\Models\User;
-use Faker\Generator;
-use Faker\Provider\pl_PL\Person;
 use Tests\BethinkBrowser;
-use Tests\Browser\Pages\LoginModal;
 use Tests\Browser\Pages\Payment\PersonalDataPage;
 use Tests\Browser\Tests\Payment\SignsUpUsers;
 use PHPUnit\Framework\Assert;
@@ -18,66 +15,78 @@ class PersonalDataModule
 {
 	use SignsUpUsers;
 
-	public function signUpNoInvoice(BethinkBrowser $browser)
+	public function submitNoInvoice(BethinkBrowser $browser)
 	{
 		$this->navigate($browser);
 
 		$browser->on(new PersonalDataPage());
-		$this->signUp($browser, false);
+		$this->submit($browser, false);
 	}
 
-	public function signUpCustomInvoice(BethinkBrowser $browser)
+	public function submitNoInvoiceExistingOrder(BethinkBrowser $browser)
 	{
 		$this->navigate($browser);
 
 		$browser->on(new PersonalDataPage());
-		$this->signUp($browser, true);
+		$this->assertPersonalDataDisabled($browser);
+		$this->submit($browser, false);
 	}
 
-	public function logInUsingModal(BethinkBrowser $browser)
+	public function submitNoAddress(BethinkBrowser $browser)
 	{
-		if (!empty($browser->user)) return __CLASS__;
-
-		$faker = new Generator();
-		$faker->addProvider(new Person($faker));
-		$user = factory(\App\Models\User::class)->create();
-		$browser->user = $user;
-
 		$this->navigate($browser);
+
 		$browser->on(new PersonalDataPage());
-		$browser
-			->click('@login')
-			->on(new LoginModal)
-			->loginAsUser($user->email, 'secret');
+		$this->submit($browser, false, false);
+	}
+
+	public function submitCustomInvoice(BethinkBrowser $browser)
+	{
+		$this->navigate($browser);
+
+		$browser->on(new PersonalDataPage());
+		$this->submit($browser, true);
 	}
 
 	protected function navigate(BethinkBrowser $browser)
 	{
 		// Check if personal-data is current page, if not,
-		// navigate to it using random product.
+		// navigate to it using a product.
 		if (!str_is('*personal-data*', $browser->getCurrentPath())) {
-			$browser->visit('payment/personal-data/' . array_random(['wnl-online', 'wnl-online-onsite']));
+			$browser->visit('payment/personal-data');
 		}
+
+		$browser->on(new PersonalDataPage());
+
+		$this->assertCart($browser);
 	}
 
-	protected function signUp(BethinkBrowser $browser, $invoiceFlag)
+	protected function submit(BethinkBrowser $browser, $invoice = false, $address = true)
 	{
-		$userData = $this->generateFormData();
-		$this->fillInForm($userData, $browser, $invoiceFlag, !$this->isEdit($browser));
-		$browser->userData = $userData;
+		$userData = $this->generatePersonalFormData();
+		$this->fillInPersonalDataForm($userData, $browser, $invoice, $address);
 
-		$browser->xpathClick('.//button[@class="button is-primary"]');
+		$browser->click('@submit-personal-data');
 
-		if (!$this->isEdit($browser)) {
-			$browser->user = User::where('email', $userData['email'])->first();
-			$browser->order = $browser->user->orders()->recent();
-			Assert::assertTrue($browser->user instanceof User);
-			Assert::assertTrue($browser->order instanceof Order);
-		}
+		$browser->user = User::where('email', $browser->accountData['email'])->first();
+		$browser->order = $browser->user->orders()->recent();
+		Assert::assertTrue($browser->user instanceof User);
+		Assert::assertTrue($browser->order instanceof Order);
 	}
 
-	protected function isEdit(BethinkBrowser $browser)
+	protected function assertCart(BethinkBrowser $browser)
 	{
-		return str_is('*?edit=true*', $browser->driver->getCurrentUrl());
+		$browser->assertVisible('@cart');
+		$browser->assertSeeIn('@cart', 'Wysyłka');
+		$browser->assertSeeIn('@cart', 'Na terenie Polski za darmo');
+		$browser->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do');
+		$browser->assertSeeIn('@cart', 'Kwota całkowita');
+	}
+
+	protected function assertPersonalDataDisabled(BethinkBrowser $browser)
+	{
+		$browser->assertDisabled('first_name');
+		$browser->assertDisabled('last_name');
+		$browser->assertDisabled('personal_identity_number');
 	}
 }

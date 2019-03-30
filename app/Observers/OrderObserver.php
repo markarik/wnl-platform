@@ -4,10 +4,10 @@
 namespace App\Observers;
 
 
+use App\Jobs\CreateSubscription;
 use App\Jobs\OrderConfirmed;
 use App\Jobs\OrderPaid;
 use App\Jobs\OrderStudyBuddy;
-use App\Jobs\PopulateUserCoursePlan;
 use App\Models\Order;
 use App\Notifications\OrderCreated;
 use Carbon\Carbon;
@@ -36,9 +36,10 @@ class OrderObserver
 
 			\Log::notice("OrderObserver: Dispatching OrderPaid for order #$order->id");
 			$this->dispatch(new OrderPaid($order));
+			$this->dispatchNow(new CreateSubscription($order));
 
 			\Log::notice("OrderPaid: handleStudyBuddy called for order #{$order->id}");
-			dispatch_now(new OrderStudyBuddy($order));
+			$this->dispatchNow(new OrderStudyBuddy($order));
 		} else {
 			\Log::notice(
 				"OrderObserver: Order #$order->id NOT updated. Order was not dirty or settlement was smaller than 0"
@@ -68,7 +69,7 @@ class OrderObserver
 		}
 	}
 
-	protected function handlePaymentMethodSet($order)
+	protected function handlePaymentMethodSet(Order $order)
 	{
 		\Log::debug('Order payment method set, decrementing product quantity.');
 		$this->dispatch(new OrderConfirmed($order));
@@ -85,16 +86,17 @@ class OrderObserver
 			$order->paid = true;
 			$order->save();
 			$this->dispatch(new OrderPaid($order));
+			$this->dispatchNow(new CreateSubscription($order));
 		}
 
 		if ($order->method === 'instalments') {
-			$order->generatePaymentSchedule();
+			$order->generateAndSavePaymentSchedule();
 		}
 
 		$this->notify(new OrderCreated($order));
 	}
 
-	protected function handleCouponChange($order)
+	protected function handleCouponChange(Order $order)
 	{
 		\Log::debug('Order coupon changed.');
 		if ($order->studyBuddy) {
@@ -102,7 +104,7 @@ class OrderObserver
 		}
 
 		if ($order->method === 'instalments') {
-			$order->generatePaymentSchedule();
+			$order->generateAndSavePaymentSchedule();
 		}
 	}
 }

@@ -58,7 +58,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters(['currentUser']),
+		...mapGetters(['currentUserId', 'currentUserProfile', 'currentUserProfileId']),
 		...mapGetters('chatMessages', ['getRoomForPrivateChat']),
 		roomsToShow() {
 			return this.items.map(profile => {
@@ -67,7 +67,7 @@ export default {
 				return {
 					messages: [],
 					...room,
-					profiles: this.currentUser.id === profile.id ? [profile] : [this.currentUser, profile]
+					profiles: this.currentUserProfileId === profile.id ? [profile] : [this.currentUserProfile, profile]
 				};
 			});
 		}
@@ -99,9 +99,9 @@ export default {
 			this.items = items;
 		},
 		getInterlocutor(room) {
-			const profile = room.profiles.find(profile => profile.user_id !== this.currentUser.user_id) || {};
+			const profile = room.profiles.find(profile => profile.user_id !== this.currentUserId) || {};
 			if (profile.id) return profile;
-			return this.currentUser;
+			return this.currentUserProfile;
 		},
 		// override method from mixin - don't emit close event until room is created
 		onEnter(evt) {

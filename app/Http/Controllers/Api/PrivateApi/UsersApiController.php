@@ -5,6 +5,7 @@ use App\Http\Requests\User\PostUser;
 use App\Http\Requests\User\UpdateUser;
 use App\Models\User;
 use Auth;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
 class UsersApiController extends ApiController
@@ -13,6 +14,28 @@ class UsersApiController extends ApiController
 	{
 		parent::__construct($request);
 		$this->resourceName = config('papi.resources.users');
+	}
+
+	public function get($id)
+	{
+		$currentUser = Auth::user();
+		$userId = $id === 'current' ? $currentUser->id : $id;
+
+		/** @var Builder $builder */
+		$builder = $this->eagerLoadIncludes(User::class);
+
+		/** @var User $user */
+		$user = $builder->find($userId);
+
+		if (empty($user)) {
+			return $this->respondNotFound();
+		}
+
+		if (!$currentUser->can('view', $user)) {
+			return $this->respondForbidden();
+		}
+
+		return $this->transformAndRespond($user);
 	}
 
 	public function put(UpdateUser $request, $userId)
@@ -58,7 +81,7 @@ class UsersApiController extends ApiController
 	}
 
 	public function post(PostUser $request) {
-		$user = User::create([
+		$user = User::createWithProfileAndBilling([
 			'first_name' => $request->get('first_name'),
 			'last_name' => $request->get('last_name'),
 			'email' => $request->get('email'),

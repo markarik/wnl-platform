@@ -8,7 +8,7 @@
 				Twoje zamówienia znajdziesz w zakładce - <router-link :to="{name: 'my-orders'}">KONTO > Twoje zamówienia</router-link>.
 			</p>
 		</div>
-		<div class="has-text-centered" v-else-if="currentUser.accountSuspended">
+		<div class="has-text-centered" v-else-if="currentUserAccountSuspended">
 			<p class="title is-4">Twoje konto zostało zablokowane</p>
 			<p>
 				Niestety, Twoje konto zostało zablokowane. 🙁 <br/>
@@ -23,7 +23,7 @@
 				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.
 			</p>
 			<p class="margin vertical">
-				<a href="http://wiecejnizlek.pl/zapisy" class="button is-primary is-outlined">
+				<a :href="paymentUrl" class="button is-primary is-outlined">
 					Zapisz się na najbliższą edycję
 				</a>
 			</p>
@@ -63,7 +63,7 @@
 
 <script>
 import moment from 'moment';
-import { getImageUrl } from 'js/utils/env';
+import { getImageUrl, getUrl } from 'js/utils/env';
 import { set } from 'vue';
 import { mapGetters } from 'vuex';
 import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
@@ -74,12 +74,15 @@ export default {
 	name: 'SplashScreen',
 	perimeters: [upcomingEditionParticipant],
 	computed: {
-		...mapGetters(['currentUserSubscriptionDates', 'currentUser']),
+		...mapGetters(['currentUserSubscriptionDates', 'currentUserAccountSuspended']),
 		countdownImageUrl() {
 			return getImageUrl('countdown.png');
 		},
 		startDate() {
 			return moment(new Date(this.currentUserSubscriptionDates.min * 1000)).format('LL');
+		},
+		paymentUrl() {
+			return getUrl('payment/account');
 		},
 	},
 };

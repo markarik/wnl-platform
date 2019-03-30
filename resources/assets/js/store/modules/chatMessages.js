@@ -4,7 +4,11 @@ import {uniq} from 'lodash';
 
 import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
-import {SOCKET_EVENT_SEND_MESSAGE, SOCKET_EVENT_MARK_ROOM_AS_READ} from 'js/plugins/chat-connection';
+import {
+	SOCKET_EVENT_SEND_MESSAGE,
+	SOCKET_EVENT_MARK_ROOM_AS_READ,
+	SOCKET_EVENT_USER_SENT_MESSAGE
+} from 'js/plugins/chat-connection';
 
 const namespaced = true;
 
@@ -51,7 +55,7 @@ const getters = {
 		return Object.values(state.profiles).find(profile => profile.user_id === id) || {};
 	},
 	getInterlocutor: (state, getters, rootState, rootGetters) => profiles => {
-		const profileId = profiles.find(profileId => profileId !== rootGetters.currentUser.id);
+		const profileId = profiles.find(profileId => profileId !== rootGetters.currentUserProfileId);
 		if (profileId) return getters.getProfileById(profileId);
 		return {};
 	},
@@ -61,7 +65,7 @@ const getters = {
 			return {};
 		}
 
-		if (profile.id === rootGetters.currentUser.id) {
+		if (profile.id === rootGetters.currentUserProfileId) {
 			return Object.values(state.rooms).find(room => {
 				const roomProfiles = room.profiles || [];
 
@@ -73,7 +77,7 @@ const getters = {
 			const roomProfiles = room.profiles || [];
 
 			return roomProfiles.length === 2 &&
-				roomProfiles.includes(rootGetters.currentUser.id) &&
+				roomProfiles.includes(rootGetters.currentUserProfileId) &&
 				roomProfiles.includes(profile.id);
 		}) || {};
 	},

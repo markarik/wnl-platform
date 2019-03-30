@@ -2,7 +2,6 @@
 
 use Auth;
 use App\Models\User;
-use App\Models\UserPresonalData;
 use League\Fractal\Resource\Item;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\User\PostUserPersonalData;

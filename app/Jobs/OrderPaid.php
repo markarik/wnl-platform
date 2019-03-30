@@ -2,10 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Http\Controllers\Api\PrivateApi\CoursesApiController;
 use App\Models\Order;
-use App\Models\User;
-use App\Models\UserLesson;
 use App\Models\UserSubscription;
 use Illuminate\Bus\Queueable;
 use Lib\Invoice\Invoice;
@@ -38,12 +35,11 @@ class OrderPaid implements ShouldQueue
 	 */
 	public function handle()
 	{
-		$this->handleUserSubscription();
 		$this->handleCoupon();
 		$this->handleInstalments();
 		$this->sendConfirmation();
 
-		\Cache::forget(User::getSubscriptionKey($this->order->user->id));
+		\Cache::forget(UserSubscription::getCacheKey($this->order->user->id));
 	}
 
 	protected function handleCoupon()
@@ -78,36 +74,12 @@ class OrderPaid implements ShouldQueue
 		return (new Invoice)->advance($order);
 	}
 
-	protected function handleUserSubscription()
-	{
-		\Log::notice("OrderPaid: handleUserSubscription called for order #{$this->order->id}");
-		$product = $this->order->product;
-		$user = $this->order->user;
-
-		if (empty($product->access_start) && empty($product->access_end)) {
-			return;
-		}
-
-		$subscriptionAccessStart = $user->subscription->access_start ?? null;
-		$subscriptionAccessEnd = $user->subscription->access_end ?? null;
-
-		$accessStart = $subscriptionAccessStart
-			? min([$subscriptionAccessStart, $product->access_start])
-			: $product->access_start;
-		$accessEnd = max([$subscriptionAccessEnd, $product->access_end]);
-
-		$subscription = UserSubscription::updateOrCreate(
-			['user_id' => $user->id],
-			['access_start' => $accessStart, 'access_end' => $accessEnd]
-		);
-	}
-
 	protected function handleInstalments()
 	{
 		\Log::notice("OrderPaid: handleInstalments called for order #{$this->order->id}");
 		if ($this->order->method !== 'instalments') return;
 
-		$this->order->generatePaymentSchedule();
+		$this->order->generateAndSavePaymentSchedule();
 
 		if ($this->order->user->suspended && !$this->order->is_overdue) {
 			$this->order->user->suspended = false;

@@ -25,7 +25,7 @@ class PaymentTransformer extends ApiTransformer
 			'status' => $payment->status,
 			'external_id' => $payment->external_id,
 			'orders' => $orderId,
-			'created_at' => $payment->created_at->format('d-m-Y H:i:s'),
+			'created_at' => $payment->created_at->timestamp,
 			'amount' => $payment->amount,
 		];
 

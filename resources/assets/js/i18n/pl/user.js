@@ -48,6 +48,8 @@ export const user = {
 		header: 'Usuwanie postępu',
 		progressHeader: 'Postęp w nauce',
 		questionsHeader: 'Wyniki pytań kontrolnych',
+		progressModalHeader: 'Czy na pewno chcesz usunąć postęp w nauce?',
+		questionsModalHeader: 'Czy na pewno chcesz usunąć wszystkie wyniki pytań kontrolnych?',
 		collectionsHeader: 'Kolekcje',
 		progressButton: 'Wyczyść postęp w nauce',
 		questionsButton: 'Wyczyść wszystkie wyniki',
@@ -66,7 +68,6 @@ export const user = {
 		collectionsWarning: `Naciśnięcie poniższego przycisku spowoduje
 		usunięcie wszystkiego z Twojej kolekcji, czyli
 		między innymi zapisanych slajdów, pytań kontrolnych, pytań i odpowiedzi.`,
-		progressConfirmation: 'Czy na pewno chcesz usunąć cały postęp w nauce?',
 		questionsConfirmation: 'Czy na pewno chcesz usunąć wyniki pytań kontrolnych?',
 		collectionsConfirmation: 'Czy na pewno chcesz wyczyścić swoją kolekcję?',
 		alertError: 'Ups... Coś poszło nie tak. Spróbujesz jesze raz?',
@@ -100,7 +101,7 @@ export const user = {
 		},
 		identityNumber: {
 			header: 'Numer PESEL',
-			explanation: '<p>Nasz kurs staje się lepszy dlatego, że oceniamy wyniki naszych działań. Jako pierwsi otwarcie mówimy o wynikach naszych kursanów. Podjęliśmy też oficjalną współpracę z Centrum Egzaminów Medycznych, któremu również zależy na ewaluacji polskiej edukacji medycznej. Żeby jednak zmiany mogły nastąpić, potrzebujemy rzetelnych danych.</p><p>Dlatego prosimy Cię o uzupełnienie numeru PESEL na Twoim profilu. Posłuży on tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!</p>',
+			explanation: '<p>Nasz kurs staje się lepszy, dlatego że oceniamy wyniki naszych działań. Jako pierwsi otwarcie mówimy o wynikach naszych kursanów. Podjęliśmy też oficjalną współpracę z Centrum Egzaminów Medycznych, któremu również zależy na ewaluacji polskiej edukacji medycznej. Żeby jednak zmiany mogły nastąpić, potrzebujemy rzetelnych danych.</p><p>Dlatego prosimy Cię o uzupełnienie numeru PESEL na Twoim profilu. Posłuży on tylko i wyłącznie do opracowania przez CEM zbiorczych statystyk. Nie poznamy Twojego indywidualnego wyniku, a numer jest szyfrowany w bazie i nie będzie nigdy widoczny publicznie. Dziękujemy za zrozumienie i pomoc w zmianie obrazu polskiej edukacji medycznej!</p>',
 			yourNumber: 'Podany przez Ciebie numer to: {number}.',
 			yourNumberChange: 'Jeśli chcesz dokonać zmiany, napisz na info@bethink.pl.',
 			changeNumberType: 'Chcę podać inny numer identyfikacyjny',
@@ -117,5 +118,8 @@ export const user = {
 			incorrectSerialNumber: 'Numer podanego identyfikatora jest niepoprawny.',
 			incorrectNumber: 'Numer jest nieprawidłowy'
 		}
+	},
+	plan: {
+		changePlanConfirmation: 'Czy na pewno chcesz zmienić plan pracy?'
 	}
 };

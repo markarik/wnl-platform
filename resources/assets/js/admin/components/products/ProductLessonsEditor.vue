@@ -43,7 +43,7 @@
 		</template>
 		<wnl-text-loader v-else-if="loading">Ładuję plan...</wnl-text-loader>
 		<p v-else>
-			Ten produkt nie ma żadynch lekcji
+			Ten produkt nie ma żadnych lekcji
 		</p>
 		<wnl-product-lessons-editor-add-lesson :product-lessons="productLessons" @addLesson="onAddLesson" />
 	</div>

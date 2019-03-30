@@ -20,6 +20,7 @@ use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\UserBillingData;
 use App\Models\UserCourseProgress;
+use App\Models\UserProductState;
 use App\Models\UserProfile;
 use App\Models\UserQuestionsBankState;
 use App\Models\UserSettings;
@@ -39,6 +40,7 @@ use App\Policies\TaxonomyPolicy;
 use App\Policies\TaxonomyTermPolicy;
 use App\Policies\User\UserAddressPolicy;
 use App\Policies\User\UserCourseProgressPolicy;
+use App\Policies\User\UserProductStatePolicy;
 use App\Policies\User\UserProfilePolicy;
 use App\Policies\User\UserBillingPolicy;
 use App\Policies\User\UserSettingsPolicy;
@@ -59,6 +61,7 @@ class AuthServiceProvider extends ServiceProvider
 		UserAddress::class            => UserAddressPolicy::class,
 		UserBillingData::class        => UserBillingPolicy::class,
 		UserSettings::class           => UserSettingsPolicy::class,
+		UserProductState::class       => UserProductStatePolicy::class,
 		QnaAnswer::class              => QnaAnswerPolicy::class,
 		QnaQuestion::class            => QnaQuestionPolicy::class,
 		Comment::class                => CommentPolicy::class,

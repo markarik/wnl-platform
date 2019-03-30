@@ -51,7 +51,7 @@ class LoginController extends Controller
 	 */
 	public function login(Request $request)
 	{
-		$user = User::create([
+		$user = User::createWithProfileAndBilling([
 			'first_name'         => $request->get('first_name'),
 			'last_name'          => ' ',
 			'email'              => str_random() . '@wiecejnizlek.pl',

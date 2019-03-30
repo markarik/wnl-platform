@@ -1,9 +1,9 @@
 <template>
-	<div class="card">
+	<div class="card order" :data-order-id="order.id">
 		<div class="card-content">
 			<div class="media">
 				<div class="media-left">
-					<figure class="product-logo image is-48x48">
+					<figure class="product-logo image is-64x64">
 						<img :src="logoUrl" alt="Logo produktu">
 					</figure>
 				</div>
@@ -103,6 +103,7 @@
 
 							<p class="aligncenter margin top">
 								<button
+									data-button="pay-next-instalment"
 									:class="{
 									'button': true,
 									'is-primary': true,
@@ -113,8 +114,8 @@
 								</button>
 							</p>
 							<p class="metadata aligncenter margin vertical">
-								Kolejna rata: <strong>{{ order.instalments.nextPayment.amount }}zł do
-								{{ instalmentDate(order.instalments.nextPayment.date) }}</strong>
+								Kolejna rata: <strong>{{ order.instalments.nextPayment.left_amount }}zł do
+								{{ instalmentDate(order.instalments.nextPayment.due_date) }}</strong>
 							</p>
 
 							<table class="table is-striped">
@@ -123,13 +124,13 @@
 									<th>Termin płatności</th>
 									<th>Zapłacone / Do&nbsp;zapłaty</th>
 								</tr>
-								<tr v-for="(instalment, index) in order.instalments.instalments" :key="index">
+								<tr v-for="(instalment, index) in order.instalments.instalments" :key="instalment.id">
 									<td>{{index + 1}}</td>
 									<td>
-										{{ instalmentDate(instalment.date) }}
+										{{ instalmentDate(instalment.due_date) }}
 									</td>
-									<td>
-										{{instalment.amount - instalment.left}}zł / {{instalment.amount}}zł
+									<td class="instalment-amount" :data-instalment="index + 1">
+										{{instalment.amount - instalment.left_amount}}zł / {{instalment.amount}}zł
 									</td>
 								</tr>
 								<tr>
@@ -186,7 +187,7 @@
 						</template>
 						<ul class="payments__list">
 							<li v-for="payment in order.payments" :key="payment.id" class="payments__link">
-								<span>{{payment.created_at}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
+								<span>{{formatTime(payment.created_at)}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
 							</li>
 						</ul>
 						<small v-if="isPending">Księgowanie wpłat może potrwać do 3 dni roboczych.</small>
@@ -408,7 +409,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters(['isAdmin', 'currentUser']),
+		...mapGetters(['isAdmin']),
 		couponsDisabled() {
 			if (this.order.product.signups_end) {
 				return new Date(this.order.product.signups_end * 1000) < new Date();
@@ -425,8 +426,7 @@ export default {
 			return this.order.coupon;
 		},
 		logoUrl() {
-			// TODO: Mar 28, 2017 - Make it dynamic when more courses are added
-			return getImageUrl('wnl-logo-square@2x.png');
+			return getUrl($wnl.course.productLogo);
 		},
 		isFullyPaid() {
 			return this.order.paid_amount >= this.order.total;
@@ -502,18 +502,18 @@ export default {
 		},
 		amountToBePaidNext() {
 			if (this.order.method === 'instalments') {
-				return this.order.instalments.nextPayment.amount;
+				return this.order.instalments.nextPayment.left_amount;
 			}
 
 			return this.order.total;
 		}
 	},
 	methods: {
-		...mapMutations({
-			'setSubscription': types.USERS_SET_SUBSCRIPTION
-		}),
-		...mapActions(['addAutoDismissableAlert']),
-
+		...mapActions([
+			'addAutoDismissableAlert',
+			'fetchUserSubscription',
+		]),
+		...mapActions('course', ['setStructure']),
 		async downloadInvoice(invoice) {
 			try {
 				const response = await axios.request({
@@ -558,25 +558,25 @@ export default {
 				$wnl.logger.capture(err);
 			}
 		},
-		checkStatus() {
-			axios.get(getApiUrl(`orders/${this.order.id}?include=payments`))
-				.then((response) => {
-					const {included = {}, ...order} = response.data;
-					const {payments = {}} = included;
-					if (order.paid) {
-						this.order.paid        = true;
-						this.order.paid_amount = order.paid_amount;
-						this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
+		async checkStatus() {
+			try{
+				const response = await axios.get(getApiUrl(`orders/${this.order.id}?include=payments`));
 
-						axios.get(getApiUrl('user_subscription/current'))
-							.then(response => {
-								this.setSubscription(response.data);
-							});
-					} else {
-						setTimeout(this.checkStatus, 10000);
-					}
-				})
-				.catch(exception => $wnl.logger.capture(exception));
+				const {included = {}, ...order} = response.data;
+				const {payments = {}} = included;
+				if (order.paid) {
+					this.order.paid        = true;
+					this.order.paid_amount = order.paid_amount;
+					this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
+					this.fetchUserSubscription();
+					this.setStructure();
+					this.$socketChatSetup();
+				} else {
+					setTimeout(this.checkStatus, 10000);
+				}
+			} catch (e) {
+				$wnl.logger.capture(e);
+			}
 		},
 		couponSubmitSuccess() {
 			axios.get(getApiUrl(`orders/${this.order.id}`))
@@ -593,7 +593,7 @@ export default {
 			return code ? getUrl(`payment/voucher?code=${code}`) : getUrl('payment/voucher');
 		},
 		instalmentDate(date) {
-			return moment(date.date).format('LL');
+			return moment(date).format('LL');
 		},
 		getCouponValue(coupon) {
 			return coupon.type === 'amount' ? `${coupon.value}zł` : `${coupon.value}%`;
@@ -636,7 +636,10 @@ export default {
 			nextTick(() => {
 				this.$refs.p24Form.$el.submit();
 			});
-		}
+		},
+		formatTime(time) {
+			return moment(time * 1000).format('L LT');
+		},
 	},
 	mounted() {
 		if (this.isPending) this.checkStatus();

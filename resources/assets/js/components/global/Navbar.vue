@@ -22,19 +22,19 @@
 			</a>
 		</div> -->
 		<div
-			v-if="$currentEditionParticipant.isAllowed('access')"
+			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 			class="wnl-navbar-item wnl-navbar-search"
 		>
 			<wnl-search/>
 		</div>
 		<div
-			v-if="$currentEditionParticipant.isAllowed('access')"
+			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 			class="wnl-navbar-item wnl-navbar-feed">
 			<wnl-personal-feed/>
 		</div>
 		<div
 			class="wnl-navbar-item wnl-navbar-messages"
-			v-if="$currentEditionParticipant.isAllowed('access')"
+			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 		>
 			<wnl-chat-feed/>
 		</div>
@@ -169,6 +169,7 @@ export default {
 			'isMobile',
 			'isTouchScreen',
 			'isSidenavOpen',
+			'isOnboardingFinished',
 		]),
 		chatIconClass() {
 			return this.isChatVisible ? 'fa-close' : 'fa-comments-o';
@@ -183,7 +184,7 @@ export default {
 			return this.isSidenavOpen ? 'fa-close' : 'fa-bars';
 		},
 		signUpLink() {
-			return getUrl('payment/select-product');
+			return getUrl('payment/account');
 		},
 	},
 	methods: {

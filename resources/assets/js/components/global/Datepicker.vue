@@ -32,6 +32,7 @@
 </style>
 
 <script>
+import moment from 'moment';
 import Flatpickr from 'flatpickr';
 import {pl} from 'flatpickr/dist/l10n/pl.js';
 
@@ -59,7 +60,8 @@ export default {
 			set(newValue) {
 				if (this.selectedDates !== newValue) {
 					this.selectedDates = newValue;
-					this.$emit('input', new Date(newValue));
+					const momentDate = this.datepicker.config.dateFormat === 'U' ? moment.unix(newValue) : moment(newValue);
+					this.$emit('input', moment(momentDate).toDate());
 				}
 			}
 		},

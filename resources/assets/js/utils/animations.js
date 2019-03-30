@@ -27,7 +27,7 @@ export function scrollToY(scrollTop, duration = 500, scrollable = false) {
 		container.scrollTop = 1;
 	}
 
-	scroll = new SweetScroll({
+	const scroll = new SweetScroll({
 		duration,
 	}, container);
 

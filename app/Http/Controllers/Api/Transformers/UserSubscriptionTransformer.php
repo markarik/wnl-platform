@@ -24,6 +24,8 @@ class UserSubscriptionTransformer extends ApiTransformer
 			'access_start' => $subscription->access_start->timestamp ?? null,
 			'access_end' => $subscription->access_end->timestamp ?? null,
 			'created_at' => $subscription->created_at->timestamp ?? null,
+			'subscription_status' => $subscription->subscription_status,
+			'subscription_dates' => $subscription->subscription_dates,
 		];
 
 		if ($this->parent) {

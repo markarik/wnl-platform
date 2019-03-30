@@ -8,6 +8,10 @@ class Product extends Model
 {
 	const VAT_RATES = [0, 5, 8 , 23];
 
+	const SLUG_WNL_ALBUM = 'wnl-album';
+	const SLUG_WNL_ONLINE = 'wnl-online';
+	const SLUG_WNL_ONLINE_ONSITE = 'wnl-online-onsite';
+
 	protected $fillable = [
 		'name',
 		'invoice_name',
@@ -75,10 +79,21 @@ class Product extends Model
 			->first();
 	}
 
-	public function getAvailableAttribute()
+	public function getPriceWithCoupon(Coupon $coupon = null) {
+		if (empty($coupon)) {
+			return $this->price;
+		}
+
+		if ($coupon->is_percentage) {
+			$value = $this->price - $coupon->value * $this->price / 100;
+		} else {
+			$value = $this->price - $coupon->value;
+		}
+		return round($value, 2);
+	}
+
+	public function getAvailableAttribute(): bool
 	{
-		return
-			$this->quantity > 0 &&
-			$this->signups_start->isPast();
+		return $this->quantity > 0;
 	}
 }

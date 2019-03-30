@@ -6,6 +6,13 @@
 					Twoje zamówienia
 				</div>
 			</div>
+			<div v-if="displayAlbumLink">
+				<a :href="orderAlbumUrl" title="Zamów album map myśli">
+					<span class="icon is-small status-icon">
+						<i class="fa fa-shopping-cart"></i>
+					</span> Zamów album map myśli ({{albumInfo.price}}zł)
+				</a>
+			</div>
 		</div>
 		<div class="level" v-if="currentUserSubscriptionActive">
 			<div class="level-left">
@@ -43,23 +50,25 @@
 <script>
 import axios from 'axios';
 import _ from 'lodash';
-import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env';
+import {getUrl, getApiUrl} from 'js/utils/env';
 import {mapGetters} from 'vuex';
 import Order from './Order';
 import moment from 'moment';
+import {envValue} from 'js/utils/env';
 
 export default {
 	name: 'MyOrders',
 	data () {
 		return {
 			loaded: false,
-			orders: []
+			orders: [],
+			albumInfo: {},
 		};
 	},
 	computed: {
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
 		paymentUrl() {
-			return getUrl('payment/select-product');
+			return getUrl('payment/account');
 		},
 		hasOrders() {
 			return !_.isEmpty(this.orders);
@@ -69,7 +78,23 @@ export default {
 		},
 		userFriendlySubscriptionDate() {
 			return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL');
-		}
+		},
+		displayAlbumLink() {
+			const prolongationOrders = this.orders.filter(order =>
+				order.product.slug === 'wnl-online' &&
+				order.coupon && order.coupon.value === 50 &&
+				order.coupon.type === 'percentage' &&
+				order.paid &&
+				!order.canceled
+			);
+
+			const albumOrders = this.orders.filter(order => order.product.slug === 'wnl-album');
+
+			return albumOrders.length < prolongationOrders.length;
+		},
+		orderAlbumUrl() {
+			return getUrl('payment/personal-data/wnl-album');
+		},
 	},
 	methods: {
 		getOrders() {
@@ -88,7 +113,7 @@ export default {
 							return {
 								...order,
 								invoices: (order.invoices || []).map(invoiceId => invoices[invoiceId]),
-								studyBuddy: order.study_buddy ? included.study_buddies[order.study_buddy[0]] : {},
+								...(order.study_buddy && {studyBuddy: included.study_buddies[order.study_buddy[0]]}),
 								payments: (order.payments || []).map(paymentId => payments[paymentId])
 							};
 						});
@@ -97,17 +122,22 @@ export default {
 				})
 				.catch(exception => $wnl.logger.capture(exception));
 		},
+		async getAlbumInfo() {
+			const {data} = await axios.get(getApiUrl('products/bySlug/wnl-album'));
+			this.albumInfo = data;
+		},
 		isConfirmed(order) {
 			return !_.isEmpty(order.method);
 		},
 	},
 	mounted() {
 		this.getOrders();
+		this.getAlbumInfo();
 	},
 	created() {
 		if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {
 			const {payment, amount, ...query} = this.$route.query;
-			typeof fbq === 'function' && fbq('track', 'Purchase', {value: amount / 100, currency: 'PLN'});
+			typeof fbq === 'function' && fbq('track', 'Purchase', {value: amount / 100, currency: 'PLN', platform: envValue('appInstanceName')});
 			this.$router.push({
 				...this.$route,
 				query

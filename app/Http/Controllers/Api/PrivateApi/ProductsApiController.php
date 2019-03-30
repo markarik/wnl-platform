@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Product\CreateProduct;
 use App\Http\Requests\Product\UpdateProduct;
 use App\Models\Product;
+use Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -34,6 +35,34 @@ class ProductsApiController extends ApiController
 		$product = Product::create($this->transformRequestParams($request));
 
 		return $this->transformAndRespond($product);
+	}
+
+	public function getBySlug($slug)
+	{
+		$product = Product::slug($slug);
+
+		if(is_null($product)){
+			return $this->respondNotFound();
+		}
+
+		return $this->transformAndRespond($product);
+	}
+
+	public function getPaidCourseForUser()
+	{
+		$user = Auth::user();
+
+		if (is_null($user)) {
+			return $this->respondNotFound();
+		}
+
+		$productId = $user->getLatestPaidCourseProductId();
+
+		if (is_null($productId)) {
+			return $this->respondNotFound();
+		}
+
+		return $this->transformAndRespond(Product::findOrFail($productId));
 	}
 
 	public function getVatRates()

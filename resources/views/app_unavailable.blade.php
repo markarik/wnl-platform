@@ -23,7 +23,7 @@
 		<div class="container">
 			<div class="nav-left">
 				<a class="nav-item" href="https://wiecejnizlek.pl">
-					<img src="{{ asset('/images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
+					<img src="{{ asset('images/wnl-logo.svg') }}" alt="Logo Więcej niż LEK">
 				</a>
 			</div>
 
@@ -34,7 +34,7 @@
 			</span>
 
 			<div class="nav-right nav-menu">
-				<a href="https://platforma.wiecejnizlek.pl/payment/select-product" class="nav-item">
+				<a href="https://lek.wiecejnizlek.pl/payment/account" class="nav-item">
 					Zapisz się na kurs
 				</a>
 				<a href="@lang('common.course-website-link')" class="nav-item">

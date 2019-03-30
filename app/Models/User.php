@@ -17,12 +17,6 @@ class User extends Authenticatable
 {
 	use Notifiable, CourseProgressStats, Searchable;
 
-	const SUBSCRIPTION_DATES_CACHE_KEY = '%s-%s-subscription-dates';
-	const CACHE_VER = '2';
-	const SUBSCRIPTION_STATUS_INACTIVE = 'inactive';
-	const SUBSCRIPTION_STATUS_AWAITING = 'awaiting';
-	const SUBSCRIPTION_STATUS_ACTIVE = 'active';
-
 	protected $casts = [
 		'invoice'            => 'boolean',
 		'consent_newsletter' => 'boolean',
@@ -53,8 +47,6 @@ class User extends Authenticatable
 	];
 
 	protected $guarded = ['suspended', 'deleted_at'];
-
-	protected $appends = ['subscription_status'];
 
 	private $lessonsAvailability = null;
 	private $lessonsAvailabilityLoaded = false;
@@ -160,6 +152,10 @@ class User extends Authenticatable
 			->withPivot(['start_date']);
 	}
 
+	public function userProductStates() {
+		return $this->hasMany(UserProductState::class);
+	}
+
 	/**
 	 * Dynamic attributes
 	 */
@@ -194,36 +190,14 @@ class User extends Authenticatable
 		return $this->userAddress->city ?? '';
 	}
 
-	/**
-	 * TODO: https://bethink.atlassian.net/browse/PLAT-556
-	 * Returns users all identity numbers
-	 * @return array An associate array with types of
-	 */
-	public function getIdentityNumbersAttribute() {
-		$numbers = [
-			[
-				'type' => 'personal_identity_number',
-				'value' => $this->personalData->personal_identity_number ?? null,
-			],
-			[
-				'type' => 'identity_card_number',
-				'value' => $this->personalData->identity_card_number ?? null,
-			],
-			[
-				'type' => 'passport_number',
-				'value' => $this->personalData->passport_number ?? null,
-			],
-		];
-
-		return array_values(array_filter($numbers, function ($number) {
-			return !empty($number['value']);
-		}));
+	public function getPersonalIdentityNumberAttribute()
+	{
+		return $this->personalData->personal_identity_number ?? null;
 	}
 
-	// TODO: https://bethink.atlassian.net/browse/PLAT-556
-	public function getIdentityNumberAttribute()
+	public function getPassportNumberAttribute()
 	{
-		return $this->identity_numbers[0]['value'] ?? null;
+		return $this->personalData->passport_number ?? null;
 	}
 
 	public function getIsSubscriberAttribute()
@@ -231,25 +205,23 @@ class User extends Authenticatable
 		return !is_null(Subscriber::where('email', $this->email)->first());
 	}
 
-	public function getSubscriptionStatusAttribute()
+	public function getSubscriptionProxyAttribute()
 	{
-		$key = self::getSubscriptionKey($this->id);
+		// We don't create subscriptions for these roles
+		// Let's emulate one, so subscription_status works
+		if ($this->hasRole([Role::ROLE_ADMIN, Role::ROLE_MODERATOR, Role::ROLE_TEST])) {
+			$userSubscription = UserSubscription::make([
+				'user_id' => $this->id
+			]);
 
-		return \Cache::remember($key, 60 * 24, function () {
-			$dates = $this->getSubscriptionDates();
+			$userSubscription->id = -1;
+			$userSubscription->access_start = Carbon::now()->subYear(1);
+			$userSubscription->access_end = Carbon::now()->addYear(1);
 
-			return $this->getSubscriptionStatus($dates);
-		});
-	}
-
-	public function getSubscriptionDatesAttribute()
-	{
-		list ($min, $max) = $this->getSubscriptionDates();
-
-		return [
-			'min' => $min->timestamp ?? null,
-			'max' => $max->timestamp ?? null,
-		];
+			return $userSubscription;
+		} else {
+			return $this->subscription()->first();
+		}
 	}
 
 	public function getFullAddressAttribute()
@@ -259,31 +231,36 @@ class User extends Authenticatable
 		return "{$addr->street}, {$addr->zip} {$addr->city}";
 	}
 
-	protected function getSubscriptionStatus($dates)
+	public function getInitialsAttribute()
 	{
-		if ($this->hasRole(['admin', 'moderator', 'test'])) return self::SUBSCRIPTION_STATUS_ACTIVE;
+		$initials = '';
 
-		list ($min, $max) = $dates;
-
-		if (!$min || !$max) {
-			return self::SUBSCRIPTION_STATUS_INACTIVE;
+		if ($this->first_name) {
+			$initials .= mb_strtoupper($this->first_name[0]);
+		}
+		if ($this->last_name) {
+			$initials .= mb_strtoupper($this->last_name[0]);
 		}
 
-		if ($min->isPast() && $max->isFuture()) return self::SUBSCRIPTION_STATUS_ACTIVE;
-		if ($min->isFuture() && $max->isFuture()) return self::SUBSCRIPTION_STATUS_AWAITING;
-
-		return self::SUBSCRIPTION_STATUS_INACTIVE;
+		return $initials;
 	}
 
-	protected function getSubscriptionDates()
+	public function getSignUpCompleteAttribute()
 	{
-		$min = $this->subscription ? Carbon::parse($this->subscription->access_start) : null;
-		$max = $this->subscription ? Carbon::parse($this->subscription->access_end) : null;
-
-		return [$min, $max];
+		return !($this->first_name === null || $this->last_name === null);
 	}
 
-	public function getLatestPaidCourseProductId() {
+	public function getHasProlongedCourseAttribute()
+	{
+		return $this->orders
+				->filter(function ($order) {
+					return $order->paid && !$order->canceled && $order->coupon && $order->coupon->kind === Coupon::KIND_PARTICIPANT;
+				})
+				->count() > 0;
+	}
+
+	public function getLatestPaidCourseProductId()
+	{
 		if (!$this->productIdForDefaultLessonsStartDatesLoaded) {
 			$product = Product::select(['products.id'])
 				->join('orders', 'orders.product_id', '=', 'products.id')
@@ -313,6 +290,14 @@ class User extends Authenticatable
 			->each(function (Lesson $lesson) {
 				$lesson->is_default_start_date = true;
 			});
+	}
+
+	public function getProducts()
+	{
+		return $this->orders()->join('products', 'orders.product_id', '=', 'products.id')
+			->where('paid', 1)
+			->where('canceled', 0)
+			->get();
 	}
 
 	/**
@@ -350,6 +335,28 @@ class User extends Authenticatable
 	public function sendPasswordResetNotification($token)
 	{
 		$this->notify(new ResetPasswordNotification($token));
+	}
+
+	public static function createWithProfileAndBilling($userData)
+	{
+		/** @var User $user */
+		$user = static::create($userData);
+
+		$user->profile()->create([
+			'first_name' => $user->first_name,
+			'last_name'  => $user->last_name,
+		]);
+
+		$user->billing()->create([
+			'company_name' => $user->invoice_name,
+			'vat_id'       => $user->invoice_nip,
+			'address'      => $user->invoice_address,
+			'zip'          => $user->invoice_zip,
+			'city'         => $user->invoice_city,
+			'country'      => $user->invoice_country,
+		]);
+
+		return $user;
 	}
 
 	/**
@@ -464,11 +471,6 @@ class User extends Authenticatable
 		if ($this->profile) {
 			$this->profile->unsearchable();
 		}
-	}
-
-	public static function getSubscriptionKey($id)
-	{
-		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
 	}
 
 	public function toSearchableArray() {

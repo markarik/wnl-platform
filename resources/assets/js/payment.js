@@ -39,10 +39,15 @@ function invoiceForm() {
 
 function signupsClosed() {
 	const countdown = $('.signups-countdown');
-	const theDate = countdown.data('start');
-	const getTimeLeft = (date) => moment.duration(
-		moment(date * 1000).diff(moment(), 'seconds'), 'seconds'
-	).format('d[d] h[h] m[m] s[s]');
+	const theDate = countdown.data('start') * 1000;
+	const getTimeLeft = (date) => {
+		const now = moment();
+		if (now > date) location.reload();
+
+		return moment.duration(
+			moment(date).diff(now, 'seconds'), 'seconds'
+		).format('d[d] h[h] m[m] s[s]');
+	};
 
 	window.setInterval(function () {
 		countdown.html(getTimeLeft(theDate));

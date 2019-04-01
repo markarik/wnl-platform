@@ -11,7 +11,11 @@ class UserBillingPolicy
 	use HandlesAuthorization;
 
 	public function before($user, $ability) {
-		return $user->isAdmin();
+		if ($user->isAdmin()) {
+			return true;
+		}
+
+		return null;
 	}
 
 	/**

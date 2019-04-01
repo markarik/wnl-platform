@@ -82,6 +82,7 @@ export default {
 		...mapActions('notifications', ['initNotifications']),
 		...mapActions('tasks', ['initModeratorsFeedListener']),
 		...mapActions('course', { courseSetup: 'setup' }),
+		...mapActions('products', ['fetchCurrentProducts']),
 		handleSiteWideMessages() {
 			this.siteWideAlerts.forEach(alert => {
 				this.addAlert({
@@ -97,6 +98,9 @@ export default {
 	mounted() {
 		this.toggleOverlay({source: 'course', display: true});
 		sessionStore.clearAll();
+
+		// Setup current products
+		this.fetchCurrentProducts();
 
 		return this.setupCurrentUser()
 			.then(() => {

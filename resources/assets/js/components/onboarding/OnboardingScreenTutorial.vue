@@ -5,7 +5,7 @@
 		<div class="onboarding-video-wrapper margin-top-huge">
 			<iframe
 				class="onboarding-video"
-				src="https://www.youtube.com/embed/koD1wynUvcY"
+				src="https://www.youtube.com/embed/Gttl8H08C3E"
 				frameborder="0" allow="encrypted-media" allowfullscreen
 			></iframe>
 		</div>

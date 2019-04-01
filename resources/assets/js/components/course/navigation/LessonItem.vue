@@ -23,9 +23,9 @@
 	@import 'resources/assets/sass/variables'
 
 	.item.disabled
-		color: $color-light-gray
+		color: $color-lighter-gray
 
-		&:hover
+		&:hover:not(.disabled)
 			color: $color-ocean-blue
 
 	.item-wrapper
@@ -56,7 +56,7 @@
 		transition: background-color $transition-length-base
 
 		&.is-disabled
-			color: $color-light-gray
+			color: $color-lighter-gray
 
 		&:hover:not(.is-disabled)
 			color: $color-ocean-blue

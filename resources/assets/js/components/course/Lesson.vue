@@ -360,22 +360,24 @@ export default {
 	async mounted () {
 		try {
 			await this.displaySatisfactionGuaranteeModalIfNeeded();
-			this.isRenderBlocked = false;
-			this.toggleOverlay({source: 'lesson', display: true});
-
-			try {
-				await this.setupLesson(this.lessonId);
-				this.launchLesson();
-			} catch (e) {
-				$wnl.logger.error(e);
-			} finally {
-				this.toggleOverlay({source: 'lesson', display: false});
-			}
-			window.addEventListener('resize', this.updateElementHeight);
 		} catch (e) {
 			// User wants to keep the satisfaction guarantee
 			this.$router.push('/');
+			return;
 		}
+
+		this.isRenderBlocked = false;
+		this.toggleOverlay({source: 'lesson', display: true});
+
+		try {
+			await this.setupLesson(this.lessonId);
+			this.launchLesson();
+		} catch (e) {
+			$wnl.logger.error(e);
+		}
+
+		this.toggleOverlay({source: 'lesson', display: false});
+		window.addEventListener('resize', this.updateElementHeight);
 	},
 	beforeDestroy () {
 		window.Echo.leave(this.presenceChannel);

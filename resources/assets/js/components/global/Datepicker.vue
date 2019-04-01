@@ -60,7 +60,8 @@ export default {
 			set(newValue) {
 				if (this.selectedDates !== newValue) {
 					this.selectedDates = newValue;
-					this.$emit('input', moment(newValue).toDate());
+					const momentDate = this.datepicker.config.dateFormat === 'U' ? moment.unix(newValue) : moment(newValue);
+					this.$emit('input', moment(momentDate).toDate());
 				}
 			}
 		},

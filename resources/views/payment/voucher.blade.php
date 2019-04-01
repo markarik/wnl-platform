@@ -26,11 +26,11 @@
 						@endforeach
 					</div>
 					<div class="o-column__row -textCenter">
-						<button type="submit" class="a-button -big">
+						<button type="submit" class="a-button -big" data-button="voucher-submit">
 							@lang('payment.voucher-submit')
 						</button>
 					</div>
-					<a href="{{ route('payment-account') }}" class="a-linkInText -stormGray -textMinus1 -textCenter">
+					<a href="{{ route('payment-account') }}" class="a-linkInText -stormGray -textMinus1 -textCenter" data-link="voucher-skip">
 						@lang('payment.voucher-skip')
 					</a>
 				</form>

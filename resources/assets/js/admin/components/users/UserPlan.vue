@@ -28,7 +28,7 @@
 		</template>
 		<wnl-text-loader v-else-if="loading">Ładuję plan lekcji....</wnl-text-loader>
 		<p v-else>
-			Ten użytkownik nie ma żadynch lekcji
+			Ten użytkownik nie ma żadnych lekcji
 		</p>
 		<div>
 			<div class="level wnl-screen-title">

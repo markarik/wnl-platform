@@ -17,5 +17,5 @@
 		<img src="https://media.giphy.com/media/QbkL9WuorOlgI/giphy.gif" alt="Jak dobrze, że jesteś!" style="display: block; margin: 0 auto;">
 	</p>
 
-	<p>Z pozdrowieniami,</p>
+	<p>Z pozdrowieniami</p>
 @endsection

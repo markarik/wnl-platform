@@ -260,6 +260,13 @@ class User extends Authenticatable
 				->count() > 0;
 	}
 
+	public function getHasLatestCourseProductAttribute()
+	{
+		return $this->getProducts()
+				->where('slug', Product::SLUG_WNL_ONLINE)
+				->count() > 0;
+	}
+
 	public function getLatestPaidCourseProductId()
 	{
 		if (!$this->productIdForDefaultLessonsStartDatesLoaded) {

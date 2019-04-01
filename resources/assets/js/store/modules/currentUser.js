@@ -74,6 +74,7 @@ const getters = {
 
 	currentUserSubscriptionDates: state => state.subscription && state.subscription.subscription_dates,
 	currentUserSubscriptionActive: state => state.subscription && state.subscription.subscription_status === 'active',
+	currentUserHasLatestProduct: state => state.hasLatestCourseProduct.has_latest_course_product,
 };
 
 // Mutations
@@ -127,14 +128,23 @@ const actions = {
 
 		try {
 			response = await axios.get(
-				getApiUrl('users/current?include=roles,profile,subscription,settings,latest_product_state')
+				getApiUrl('users/current?include=roles,profile,subscription,settings,latest_product_state,has_latest_course_product')
 			);
 		} catch (error) {
 			$wnl.logger.error(error);
 			throw error;
 		}
 
-		const {id, has_finished_entry_exam, profile, subscription, settings, latest_product_state, included} = response.data;
+		const {
+			id,
+			has_finished_entry_exam,
+			has_latest_course_product,
+			profile,
+			subscription,
+			settings,
+			latest_product_state,
+			included
+		} = response.data;
 
 		const currentUser = {
 			id,
@@ -159,6 +169,10 @@ const actions = {
 
 		if (settings) {
 			currentUser.settings = included.settings[settings[0]];
+		}
+
+		if (has_latest_course_product) {
+			currentUser.hasLatestCourseProduct = included.has_latest_course_products[has_latest_course_product[0]];
 		}
 
 		if (!id) {

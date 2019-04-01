@@ -34,8 +34,8 @@
 		v-else
 		:visible="true"
 		:display-headline="false"
-		@closeModal="this.satisfactionGuaranteeModalReject"
-		@submit="this.satisfactionGuaranteeModalResolve"
+		@closeModal="satisfactionGuaranteeModalReject"
+		@submit="satisfactionGuaranteeModalResolve"
 	>
 		<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem Wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
 		<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu, pod warunkiem przywrócenia domyślnego planu pracy i po rozwiązaniu Wstępnego LEK-u przed rozpoczęciem nauki.</template>
@@ -373,7 +373,7 @@ export default {
 			}
 			window.addEventListener('resize', this.updateElementHeight);
 		} catch (e) {
-			// User skipped satisfaction guarantee
+			// User wants to keep the satisfaction guarantee
 			this.$router.push('/');
 		}
 	},

@@ -15,11 +15,7 @@ const state = {
 const getters = {
 	getCurrentCourseProductSignupsOpen: state => {
 		const currentProduct = state.products.find(item => item.slug === products.slugOnline);
-		if (!currentProduct) {
-			return false;
-		} else {
-			return currentProduct.signups_open;
-		}
+		return currentProduct && currentProduct.signups_open;
 	},
 	getAlbum: state => state.products.find(item => item.slug === products.slugAlbum),
 };

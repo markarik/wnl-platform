@@ -80,13 +80,13 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['isOverlayVisible', 'currentUserId', 'currentUserDisplayName']),
+		...mapGetters(['isOverlayVisible', 'currentUserId']),
 		...mapGetters('chatMessages', ['getProfileByUserId', 'profiles', 'getInterlocutor']),
 		interlocutorProfile() {
 			return this.getInterlocutor(this.room.profiles);
 		},
 		chatTitle() {
-			return this.interlocutorProfile.display_name || this.currentUserDisplayName;
+			return this.interlocutorProfile.full_name;
 		},
 		hasMore() {
 			return !!this.room.pagination && this.room.pagination.has_more;

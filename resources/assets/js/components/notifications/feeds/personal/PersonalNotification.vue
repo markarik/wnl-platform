@@ -9,7 +9,7 @@
 		<div class="personal-notification" @click="markAsReadAndGo" :class="{'deleted': deleted || resolved}">
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ displayName }}</span>
+					<span class="actor">{{ actorName }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object" v-if="object">{{ object }}</span>
 					<span class="context" v-if="contextInfo">{{ contextInfo }}</span>
@@ -151,8 +151,8 @@ export default {
 				user_id: this.message.actors.id
 			};
 		},
-		displayName() {
-			return sanitizeName(this.message.actors.display_name);
+		actorName() {
+			return sanitizeName(this.message.actors.full_name);
 		},
 		action() {
 			return this.$t(`notifications.events.${_.camelCase(this.message.event)}`);

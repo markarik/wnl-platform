@@ -14,7 +14,7 @@
 			</div>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ displayName }}</span>
+					<span class="actor">{{ actorName }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object">{{ object }}</span>
 					<span class="context">{{ contextInfo }}</span>
@@ -220,8 +220,8 @@ export default {
 				user_id: this.message.actors.id
 			};
 		},
-		displayName() {
-			return sanitizeName(this.message.actors.display_name);
+		actorName() {
+			return sanitizeName(this.message.actors.full_name);
 		},
 		action() {
 			return this.$t(`notifications.events.${camelCase(this.message.event)}`);

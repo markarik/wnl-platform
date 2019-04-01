@@ -15,7 +15,6 @@ class UserProfile extends Model
 		'last_name',
 		'public_email',
 		'public_phone',
-		'display_name',
 		'username',
 		'city',
 		'university',
@@ -54,15 +53,5 @@ class UserProfile extends Model
 	public function setUsernameAttribute($value)
 	{
 		$this->attributes['username'] = $value === '' ? null : $value;
-	}
-
-	public function getDisplayNameAttribute()
-	{
-		if ($this->attributes['display_name']) {
-			return $this->attributes['display_name'];
-		} else {
-			return $this->full_name;
-		}
-
 	}
 }

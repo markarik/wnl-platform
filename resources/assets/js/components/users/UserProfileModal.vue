@@ -10,16 +10,8 @@
 			<div class="right">
 				<div class="content">
 					<div class="user-info-name-content">
-						<div class="user-info-full-name" v-if="checkForNameDisplay">
+						<div class="user-info-full-name">
 							<span>{{ author.full_name }}</span>
-						</div>
-						<div class="user-info-both-names" v-if="!checkForNameDisplay">
-							<div class="user-info-full-name">
-								<span>{{ author.full_name }}</span>
-							</div>
-							<div class="user-info-display-name">
-								<span>{{ author.display_name }}</span>
-							</div>
 						</div>
 					</div>
 					<div v-if="author.city" class="user-info-city">
@@ -76,13 +68,6 @@
 		margin-bottom: $margin-small
 		line-height: $line-height-none
 
-	.user-info-display-name
-		margin-top: $margin-tiny
-		color: $color-ocean-blue-opacity
-		font-size: $font-size-plus-2
-		font-weight: $font-weight-bold
-		margin-bottom: $margin-small
-
 	.user-info-city
 		color: $color-gray
 		font-size: $font-size-base
@@ -103,8 +88,6 @@
 </style>
 
 <script>
-import { mapActions } from 'vuex';
-
 import MessageLink from 'js/components/global/MessageLink';
 
 export default {
@@ -118,10 +101,5 @@ export default {
 			userId: this.author.user_id
 		};
 	},
-	computed: {
-		checkForNameDisplay() {
-			return this.author.full_name === this.author.display_name;
-		}
-	}
 };
 </script>

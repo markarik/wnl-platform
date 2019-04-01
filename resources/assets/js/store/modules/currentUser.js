@@ -20,7 +20,6 @@ const state = {
 		full_name: '',
 		public_email: '',
 		public_phone: '',
-		display_name: '',
 		username: '',
 		avatar: '',
 		identity: {
@@ -53,7 +52,6 @@ const getters = {
 	currentUserEmail: state => state.profile.public_email,
 	currentUserName: state => state.profile.first_name,
 	currentUserFullName: state => state.profile.full_name,
-	currentUserDisplayName: state => state.profile.display_name,
 	currentUserIdentity: state => state.profile.identity,
 
 	currentUserRoles: state => state.roles,

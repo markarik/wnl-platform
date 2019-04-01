@@ -17,7 +17,6 @@
 							:id="getMessageClientId(message)"
 							:author="getMessageAuthor(message)"
 							:full-name="getMessageAuthor(message).full_name"
-							:display-name="getMessageAuthor(message).display_name"
 							:avatar="getMessageAuthor(message).avatar"
 							:time="message.time"
 							:content="message.content"

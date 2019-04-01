@@ -456,7 +456,6 @@ class User extends Authenticatable
 			'interests' => null,
 			'about' => null,
 			'learning_location' => null,
-			'display_name' => null,
 			'deleted_at' => $now
 		]);
 

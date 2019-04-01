@@ -82,7 +82,7 @@ export default {
 		...mapActions('notifications', ['initNotifications']),
 		...mapActions('tasks', ['initModeratorsFeedListener']),
 		...mapActions('course', { courseSetup: 'setup' }),
-		...mapActions('products', 'fetchCurrent'),
+		...mapActions('products', ['fetchCurrentProducts']),
 		handleSiteWideMessages() {
 			this.siteWideAlerts.forEach(alert => {
 				this.addAlert({
@@ -95,9 +95,12 @@ export default {
 			});
 		}
 	},
-	mounted() {
+	async mounted() {
 		this.toggleOverlay({source: 'course', display: true});
 		sessionStore.clearAll();
+
+		// Setup current products
+		await this.fetchCurrentProducts();
 
 		return this.setupCurrentUser()
 			.then(() => {

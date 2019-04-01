@@ -59,7 +59,7 @@
 			<span class="text">Pomoc</span>
 		</router-link>
 		<a
-			v-if="!currentUserHasLatestProduct && !isMobile"
+			v-if="!currentUserHasLatestProduct && !isMobile && getCurrentCourseProduct.signups_open"
 			class="wnl-main-nav-item"
 			:href="signUpLink"
 		>
@@ -149,6 +149,7 @@ export default {
 	perimeters: [moderatorFeatures, currentEditionParticipant, upcomingEditionParticipant],
 	computed: {
 		...mapGetters(['isOnboardingFinished', 'currentUserHasLatestProduct', 'isMobile']),
+		...mapGetters('products', ['getCurrentCourseProduct']),
 		signUpLink() {
 			return getUrl('payment/account');
 		},

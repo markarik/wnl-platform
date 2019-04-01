@@ -42,6 +42,12 @@ class ProductTransformer extends ApiTransformer
 			'vat_note'      => $product->vat_note,
 		];
 
+		if ($product->signups_start && $product->signups_end) {
+			$data = array_merge($data, [
+				'signups_open' => $product->signups_start->isPast() && $product->signups_end->isFuture(),
+			]);
+		}
+
 		if ($this->parent) {
 			$data = array_merge($data, $this->parent);
 		}

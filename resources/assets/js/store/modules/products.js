@@ -1,5 +1,9 @@
 import { set } from 'vue';
 import * as types from 'js/store/mutations-types';
+import {getApiUrl} from 'js/utils/env';
+
+
+const namespaced = true;
 
 // Initial state
 const state = {
@@ -8,8 +12,8 @@ const state = {
 
 // Getters
 const getters = {
-	getCurrentCourseProduct: state => state.products,
-	getAlbum: state => state.products,
+	getCurrentCourseProduct: state => state.products.find(item => item.slug === 'wnl-online'),
+	getAlbum: state => state.products.find(item => item.slug === 'wnl-album'),
 };
 
 // Mutations
@@ -21,13 +25,14 @@ const mutations = {
 
 // Actions
 const actions = {
-	async fetchCurrent({ commit }) {
-		const {data} = await axios.get(getApiUrl('products/current'));
-		commit(types.SET_NAVIGATION, data);
+	async fetchCurrentProducts({ commit }) {
+		const {data} = await axios.get(getApiUrl('products/current/all'));
+		commit(types.SET_PRODUCTS, data);
 	}
 };
 
 export default {
+	namespaced,
 	state,
 	getters,
 	mutations,

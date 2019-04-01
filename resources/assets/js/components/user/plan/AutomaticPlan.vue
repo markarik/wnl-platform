@@ -154,17 +154,11 @@
 		<div class="accept-plan">
 			<a
 				:disabled="isSubmitDisabled"
-				@click="!isSubmitDisabled && (satisfactionGuaranteeModalVisible = true)"
+				@click="!isSubmitDisabled && acceptPlan()"
 				class="button is-primary is-outlined is-big"
 			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
 			</a>
 		</div>
-		<wnl-satisfaction-guarantee-modal
-			:visible="satisfactionGuaranteeModalVisible"
-			:title="$t('user.plan.changePlanConfirmation')"
-			@closeModal="satisfactionGuaranteeModalVisible = false"
-			@submit="acceptPlan"
-		></wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 
@@ -220,18 +214,17 @@ import {mapGetters, mapActions} from 'vuex';
 
 import TextOverlay from 'js/components/global/TextOverlay.vue';
 import Datepicker from 'js/components/global/Datepicker';
-import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
 import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
 import {getApiUrl} from 'js/utils/env';
+import { swalConfig } from 'js/utils/swal';
 
 export default {
 	name: 'AutomaticPlan',
 	components: {
 		'wnl-text-overlay': TextOverlay,
 		'wnl-datepicker': Datepicker,
-		WnlSatisfactionGuaranteeModal
 	},
 	mixins: [emits_events],
 	props: {
@@ -246,7 +239,6 @@ export default {
 	},
 	data() {
 		return {
-			satisfactionGuaranteeModalVisible: false,
 			isLoading: false,
 			isSubmitDisabled: false,
 			activePreset: 'dateToDate',
@@ -401,7 +393,6 @@ export default {
 			}
 		},
 		async acceptPlan() {
-			this.satisfactionGuaranteeModalVisible = false;
 			if (this.activePreset === 'dateToDate') {
 				this.workLoad = null;
 			}
@@ -410,37 +401,49 @@ export default {
 				return false;
 			}
 
-			this.isLoading = true;
-			try {
-				const response = await axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
-					work_days: this.workDays,
-					work_load: this.workLoad,
-					start_date: this.startDate,
-					end_date: this.endDate,
-					timezone: momentTimezone.tz.guess(),
-					preset_active: this.activePreset,
-				});
-				await this.setStructure();
-				if (moment(response.data.end_date).isSameOrAfter(moment(this.currentUserSubscriptionDates.max))) {
-					this.addAutoDismissableAlert({
-						text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
-						type: 'warning',
-						timeout: 10000,
+			this.$swal(swalConfig({
+				title: 'Zmień plan pracy',
+				confirmButtonText: 'Akceptuję plan',
+				cancelButtonText: 'Zamknij',
+				text: 'Czy na pewno chcesz zmienić swój plan pracy?',
+				showCancelButton: true,
+				type: 'info',
+				reverseButtons: true,
+			})).then(async () => {
+				this.isLoading = true;
+				try {
+					const response = await axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
+						work_days: this.workDays,
+						work_load: this.workLoad,
+						start_date: this.startDate,
+						end_date: this.endDate,
+						timezone: momentTimezone.tz.guess(),
+						preset_active: this.activePreset,
 					});
-				} else {
-					this.addAutoDismissableAlert(this.alertSuccess);
+					await this.setStructure();
+					if (moment(response.data.end_date).isSameOrAfter(moment(this.currentUserSubscriptionDates.max))) {
+						this.addAutoDismissableAlert({
+							text: `Data otwarcia ostatniej lekcji: ${moment(response.data.end_date * 1000).locale('pl').format('LL')}, wypada poza datą Twojej subskrypcji: ${moment(this.currentUserSubscriptionDates).locale('pl').format('LL')}. Plan został ustalony według Twoich ustawień.`,
+							type: 'warning',
+							timeout: 10000,
+						});
+					} else {
+						this.addAutoDismissableAlert(this.alertSuccess);
+					}
+					this.isSubmitDisabled = true;
+					this.isLoading = false;
+					this.emitUserEvent({
+						action: features.automatic_settings.actions.save_plan.value,
+						feature: features.automatic_settings.value
+					});
+				} catch (error) {
+					this.isLoading = false;
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert(this.alertError);
 				}
-				this.isSubmitDisabled = true;
-				this.isLoading = false;
-				this.emitUserEvent({
-					action: features.automatic_settings.actions.save_plan.value,
-					feature: features.automatic_settings.value
-				});
-			} catch (error) {
-				this.isLoading = false;
-				$wnl.logger.capture(error);
-				this.addAutoDismissableAlert(this.alertError);
-			}
+			}).catch(() => {
+				// ignore swal cancellation
+			});
 		},
 		validate() {
 			if (isEmpty(this.workDays)) {

@@ -14,17 +14,11 @@
 		</div>
 		<div class="accept-plan">
 			<a
-				@click="satisfactionGuaranteeModalVisible = true"
+				@click="acceptPlan"
 				class="button button is-primary is-outlined is-big"
 			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
 			</a>
 		</div>
-		<wnl-satisfaction-guarantee-modal
-			:visible="satisfactionGuaranteeModalVisible"
-			:title="$t('user.plan.changePlanConfirmation')"
-			@closeModal="satisfactionGuaranteeModalVisible = false"
-			@submit="acceptPlan"
-		></wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 
@@ -51,13 +45,11 @@ import { getApiUrl } from 'js/utils/env';
 import momentTimezone from 'moment-timezone';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
-import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
 export default {
 	name: 'OpenAllPlan',
 	components: {
 		'wnl-text-overlay': TextOverlay,
-		WnlSatisfactionGuaranteeModal
 	},
 	mixins: [emits_events],
 	data() {
@@ -105,27 +97,37 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('course', ['setStructure']),
 		async acceptPlan() {
-			this.satisfactionGuaranteeModalVisible = false;
-			this.isLoading = true;
-			try {
-				const response = await axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
-					work_load: 0,
-					timezone: momentTimezone.tz.guess(),
-					preset_active: 'openAll',
-				});
-				await this.setStructure();
-				this.addAutoDismissableAlert(this.alertSuccess);
-				this.isLoading = false;
-				this.emitUserEvent({
-					feature: features.open_all.value,
-					action: features.open_all.actions.save_plan.value
-				});
-			}
-			catch(error) {
-				this.isLoading = false;
-				$wnl.logger.capture(error);
-				this.addAutoDismissableAlert(this.alertError);
-			}
+			this.$swal(swalConfig({
+				title: 'Zmień plan pracy',
+				confirmButtonText: 'Akceptuję plan',
+				cancelButtonText: 'Zamknij',
+				text: 'Czy na pewno chcesz zmienić swój plan pracy?',
+				showCancelButton: true,
+				type: 'info',
+				reverseButtons: true,
+			})).then(async () => {
+				this.isLoading = true;
+				try {
+					await axios.put(getApiUrl(`user_lesson/${this.currentUserId}`), {
+						work_load: 0,
+						timezone: momentTimezone.tz.guess(),
+						preset_active: 'openAll',
+					});
+					await this.setStructure();
+					this.addAutoDismissableAlert(this.alertSuccess);
+					this.isLoading = false;
+					this.emitUserEvent({
+						feature: features.open_all.value,
+						action: features.open_all.actions.save_plan.value
+					});
+				} catch (error) {
+					this.isLoading = false;
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert(this.alertError);
+				}
+			}).catch(() => {
+				// ignore swal cancellation
+			});
 		}
 	}
 };

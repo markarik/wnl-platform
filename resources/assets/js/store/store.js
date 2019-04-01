@@ -31,6 +31,7 @@ import taxonomies from 'js/store/modules/taxonomies';
 import taxonomyTerms from 'js/store/modules/taxonomyTerms';
 import contentClassifier from 'js/store/modules/contentClassifier';
 import activateWithShortcutKey from 'js/store/modules/activateWithShortcutKey';
+import products from 'js/store/modules/products';
 
 Vue.use(Vuex);
 
@@ -66,6 +67,7 @@ export default new Vuex.Store({
 		taxonomyTerms,
 		contentClassifier,
 		activateWithShortcutKey,
+		products,
 	},
 	strict: debug
 });

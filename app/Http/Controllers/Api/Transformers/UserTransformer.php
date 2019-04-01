@@ -18,6 +18,7 @@ class UserTransformer extends ApiTransformer
 		'user_address',
 		'has_prolonged_course',
 		'latest_product_state',
+		'has_latest_course_product',
 	];
 
 	protected $parent;
@@ -136,6 +137,15 @@ class UserTransformer extends ApiTransformer
 			$user,
 			new UserHasProlongedCourseTransformer(['users' => $user->id]),
 			'has_prolonged_course'
+		);
+	}
+
+	public function includeHasLatestCourseProduct(User $user)
+	{
+		return $this->item(
+			$user,
+			new UserHasLatestCourseProductTransformer(['users' => $user->id]),
+			'has_latest_course_product'
 		);
 	}
 }

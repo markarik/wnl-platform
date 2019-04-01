@@ -1,6 +1,7 @@
 import { set } from 'vue';
 import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
+import {products} from 'js/utils/constants';
 
 
 const namespaced = true;
@@ -12,8 +13,15 @@ const state = {
 
 // Getters
 const getters = {
-	getCurrentCourseProduct: state => state.products.find(item => item.slug === 'wnl-online'),
-	getAlbum: state => state.products.find(item => item.slug === 'wnl-album'),
+	getCurrentCourseProductSignupsOpen: state => {
+		const currentProduct = state.products.find(item => item.slug === products.slugOnline);
+		if (!currentProduct) {
+			return false;
+		} else {
+			return currentProduct.signups_open;
+		}
+	},
+	getAlbum: state => state.products.find(item => item.slug === products.slugAlbum),
 };
 
 // Mutations
@@ -26,8 +34,12 @@ const mutations = {
 // Actions
 const actions = {
 	async fetchCurrentProducts({ commit }) {
-		const {data} = await axios.get(getApiUrl('products/current/all'));
-		commit(types.SET_PRODUCTS, data);
+		try{
+			const {data} = await axios.get(getApiUrl('products/current/all'));
+			commit(types.SET_PRODUCTS, data);
+		} catch (e) {
+			$wnl.logger.capture(e);
+		}
 	}
 };
 

@@ -95,12 +95,12 @@ export default {
 			});
 		}
 	},
-	async mounted() {
+	mounted() {
 		this.toggleOverlay({source: 'course', display: true});
 		sessionStore.clearAll();
 
 		// Setup current products
-		await this.fetchCurrentProducts();
+		this.fetchCurrentProducts();
 
 		return this.setupCurrentUser()
 			.then(() => {

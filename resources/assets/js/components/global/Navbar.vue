@@ -13,7 +13,7 @@
 				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
 			</router-link>
 		</div>
-		<div class="wnl-navbar-signup" v-if="!currentUserHasLatestProduct && getCurrentCourseProduct.signups_open">
+		<div class="wnl-navbar-signup" v-if="!currentUserHasLatestProduct && getCurrentCourseProductSignupsOpen">
 			<a target="_blank" :href="signUpLink" class="button is-success is-small is-outlined">
 				<span>Zapisz się</span>&nbsp;
 				<span class="icon is-small">
@@ -172,7 +172,7 @@ export default {
 			'isSidenavOpen',
 			'isOnboardingFinished',
 		]),
-		...mapGetters('products', ['getCurrentCourseProduct']),
+		...mapGetters('products', ['getCurrentCourseProductSignupsOpen']),
 		chatIconClass() {
 			return this.isChatVisible ? 'fa-close' : 'fa-comments-o';
 		},

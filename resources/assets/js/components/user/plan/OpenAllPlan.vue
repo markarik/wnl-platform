@@ -45,6 +45,7 @@ import { getApiUrl } from 'js/utils/env';
 import momentTimezone from 'moment-timezone';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
+import { swalConfig } from 'js/utils/swal';
 
 export default {
 	name: 'OpenAllPlan',

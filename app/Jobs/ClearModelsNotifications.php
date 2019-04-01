@@ -8,7 +8,6 @@ use App\Models\Notification;
 use Illuminate\Bus\Queueable;
 use App\Notifications\EventNotification;
 use App\Notifications\Media\LiveChannel;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,14 +18,14 @@ class ClearModelsNotifications implements ShouldQueue
 	use Dispatchable, InteractsWithQueue, Queueable;
 
 	/**
-	 * @var Model $model
+	 * @var Notification $model
 	 */
 	private $model;
 
 	/**
 	 * Create a new job instance.
 	 *
-	 * @param Model $model
+	 * @param Notification $model
 	 */
 	public function __construct($model)
 	{
@@ -49,7 +48,7 @@ class ClearModelsNotifications implements ShouldQueue
 		$this->deleteNotifications($notifications);
 
 		// subject is resolved by moderator, not deleted by an author
-		if (!empty($model->deleted_at) && !$model->forceDeleting) {
+		if (!empty($model->deleted_at)) {
 			$params = ['resolved' => true];
 		} else {
 			$params = ['deleted' => true];

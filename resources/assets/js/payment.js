@@ -40,7 +40,6 @@ function invoiceForm() {
 function signupsClosed() {
 	const countdown = $('.signups-countdown');
 	if (countdown.length === 0) return;
-	console.log('bla bla bla');
 	const theDate = new Date(countdown.data('start') * 1000);
 
 	const getTimeLeft = (date) => {

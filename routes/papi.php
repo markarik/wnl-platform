@@ -402,5 +402,6 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Products
 	Route::get("{$r['products']}/current/paidCourse", 'ProductsApiController@getPaidCourseForUser');
+	Route::get("{$r['products']}/current", 'ProductsApiController@getCurrent');
 	Route::get("{$r['products']}/bySlug/{slug}", 'ProductsApiController@getBySlug');
 });

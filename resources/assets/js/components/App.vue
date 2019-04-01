@@ -82,6 +82,7 @@ export default {
 		...mapActions('notifications', ['initNotifications']),
 		...mapActions('tasks', ['initModeratorsFeedListener']),
 		...mapActions('course', { courseSetup: 'setup' }),
+		...mapActions('products', 'fetchCurrent'),
 		handleSiteWideMessages() {
 			this.siteWideAlerts.forEach(alert => {
 				this.addAlert({

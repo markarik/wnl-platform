@@ -30,21 +30,21 @@ class OrdersStatsExport extends CommandWithMonitoring
 	 */
 	public function handleCommand()
 	{
-		$setOne = $this->stats(Carbon::parse('2018-09-24 23:59'), Carbon::now(),
+		$currentEdition = $this->stats(Carbon::parse('2019-03-31 23:59'), Carbon::now(),
 			['date', 'orders_count', 'value', 'paid', 'albums', '50%', '']);
 
-		$setTwo = $this->stats(Carbon::parse('2018-04-02 23:59'), Carbon::parse('2018-09-24 23:59'),
+		$previousEdition = $this->stats(Carbon::parse('2018-09-24 23:59'), Carbon::parse('2019-03-31 23:59'),
 			['date', 'orders_count', 'value', 'paid', '']);
 
-		$setThree = $this->stats(Carbon::parse('2017-09-24 23:59'), Carbon::parse('2018-04-02 23:59'),
+		$yearAgoEdition = $this->stats(Carbon::parse('2018-04-02 23:59'), Carbon::parse('2018-09-24 23:59'),
 			['date', 'orders_count', 'value', 'paid', '']);
 
 		$rows = collect();
 		for ($i=1; $i<190; $i++) {
 			$rows->push(array_merge(
-				$setOne->shift() ?? ['', '', '', '', '', '', ''],
-				$setTwo->shift() ?? [],
-				$setThree->shift() ?? []
+				$currentEdition->shift() ?? ['', '', '', '', '', '', ''],
+				$previousEdition->shift() ?? [],
+				$yearAgoEdition->shift() ?? []
 			));
 		}
 

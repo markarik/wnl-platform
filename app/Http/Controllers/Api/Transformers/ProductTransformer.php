@@ -43,8 +43,8 @@ class ProductTransformer extends ApiTransformer
 		];
 
 		$signupsOpen = false;
-		if ($product->signups_start && $product->signups_end) {
-			$signupsOpen = $product->signups_start->isPast() && $product->signups_end->isFuture();
+		if ($product->signups_start && $product->signups_close) {
+			$signupsOpen = $product->signups_start->isPast() && $product->signups_close->isFuture();
 		}
 
 		$data = array_merge($data, ['signups_open' => $signupsOpen]);

@@ -1,8 +1,7 @@
 import { set } from 'vue';
 import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
-import {products} from 'js/utils/constants';
-
+import {PRODUCTS_SLUGS} from 'js/consts/products';
 
 const namespaced = true;
 
@@ -14,10 +13,10 @@ const state = {
 // Getters
 const getters = {
 	getCurrentCourseProductSignupsOpen: state => {
-		const currentProduct = state.products.find(item => item.slug === products.slugOnline);
+		const currentProduct = state.products.find(item => item.slug === PRODUCTS_SLUGS.SLUG_ONLINE);
 		return currentProduct && currentProduct.signups_open;
 	},
-	getAlbum: state => state.products.find(item => item.slug === products.slugAlbum),
+	getAlbum: state => state.products.find(item => item.slug === PRODUCTS_SLUGS.SLUG_ALBUM),
 };
 
 // Mutations

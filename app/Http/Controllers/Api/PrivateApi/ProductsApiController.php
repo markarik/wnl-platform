@@ -99,6 +99,11 @@ class ProductsApiController extends ApiController
 		}
 	}
 
+	public function getCurrent()
+	{
+		return $this->transformAndRespond(Product::whereNotNull('slug')->get());
+	}
+
 	private function transformRequestParams($request)
 	{
 		return [

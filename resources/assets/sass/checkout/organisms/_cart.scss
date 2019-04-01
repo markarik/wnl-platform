@@ -2,7 +2,6 @@
   animation: cartSlideDown .8s;
   padding: $space-xs 0 $space-l 0;
   background-color: $color-alabaster;
-  font-family: $font-family-rubik;
 
   @media #{$breakpoint-m} {
     animation: none;

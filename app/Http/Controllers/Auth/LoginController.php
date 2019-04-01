@@ -40,6 +40,23 @@ class LoginController extends Controller
 	}
 
 	/**
+	 * Show the application's login form.
+	 *
+	 * @return \Illuminate\View\View
+	 */
+	public function showLoginForm()
+	{
+		$now = now();
+		$signupsOpen = App\Models\Product::select()
+			->where('slug', App\Models\Product::SLUG_WNL_ONLINE)
+			->whereDate('signups_start', '<=', $now)
+			->whereDate('signups_end', '>=', $now)
+			->count() > 0;
+
+		return view('auth.login', ['signupsOpen' => $signupsOpen]);
+	}
+
+	/**
 	 * Log the user out of the application.
 	 *
 	 * @param  \Illuminate\Http\Request $request

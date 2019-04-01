@@ -10,7 +10,7 @@
 				<a :href="orderAlbumUrl" title="Zamów album map myśli">
 					<span class="icon is-small status-icon">
 						<i class="fa fa-shopping-cart"></i>
-					</span> Zamów album map myśli ({{albumInfo.price}}zł)
+					</span> Zamów album map myśli ({{getAlbum.price}}zł)
 				</a>
 			</div>
 		</div>
@@ -62,11 +62,11 @@ export default {
 		return {
 			loaded: false,
 			orders: [],
-			albumInfo: {},
 		};
 	},
 	computed: {
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
+		...mapGetters('products', ['getAlbum']),
 		paymentUrl() {
 			return getUrl('payment/account');
 		},
@@ -122,17 +122,12 @@ export default {
 				})
 				.catch(exception => $wnl.logger.capture(exception));
 		},
-		async getAlbumInfo() {
-			const {data} = await axios.get(getApiUrl('products/bySlug/wnl-album'));
-			this.albumInfo = data;
-		},
 		isConfirmed(order) {
 			return !_.isEmpty(order.method);
 		},
 	},
 	mounted() {
 		this.getOrders();
-		this.getAlbumInfo();
 	},
 	created() {
 		if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {

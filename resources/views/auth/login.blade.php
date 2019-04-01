@@ -7,7 +7,7 @@
 			@if($signupsOpen)
 				<div class="notification is-success has-text-centered">
 					<p class="strong">Odkryj naukę na nowo!</p>
-					<p>Zapisy na unikalny kurs do LEK-u już trwają!</p>
+					<p>Zapisy już trwają!</p>
 					<p>
 						<a href="{{ url('/payment/account') }}" class="button is-small is-success is-inverted">
 							<span>Zapisz się na kurs</span>

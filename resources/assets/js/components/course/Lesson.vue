@@ -38,7 +38,7 @@
 		@submit="satisfactionGuaranteeModalResolve"
 	>
 		<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem Wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
-		<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu, pod warunkiem przywrócenia domyślnego planu pracy i po rozwiązaniu Wstępnego LEK-u przed rozpoczęciem nauki.</template>
+		<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu. Warunkiem jest usunięcie postępu, ułożenie nowego planu pracy i rozwiązanie Wstępnego LEK-u przed rozpoczęciem pierwszej obowiązkowej lekcji.</template>
 		<template slot="footer">
 			<span v-html="$t('ui.satisfactionGuarantee.noteInLesson', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
 		</template>

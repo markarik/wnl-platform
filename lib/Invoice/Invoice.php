@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Storage;
 
 class Invoice
 {
-	const VAT_THRESHOLD = 159452.00;
 	const VAT_ZERO = 0.0;
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;

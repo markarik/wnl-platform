@@ -112,7 +112,7 @@ class Invoice
 
 	public function proforma(Order $order, $invoice = null)
 	{
-		$vatValue = $this->getVatValue();
+		$vatValue = $order->product->vat_rate / 100;
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
@@ -184,7 +184,7 @@ class Invoice
 		if ($invoice) $builder->where('id', '<', $invoice->id);
 		$previousAdvances = $builder->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
-		$vatValue = $this->getVatValue($recentSettlement);
+		$vatValue = $order->product->vat_rate / 100;
 		$vatString = $this->getVatString($vatValue);
 		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
@@ -271,9 +271,8 @@ class Invoice
 			config('invoice.corrective_series'),
 		])->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
-		$vatValue = $this->getVatValue($recentSettlement);
+		$vatValue = $order->product->vat_rate / 100;
 		$vatString = $this->getVatString($vatValue);
-		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(config('invoice.final_series')),
@@ -380,11 +379,9 @@ class Invoice
 	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference, bool $refund = true)
 	{
 		$previousAdvances = $order->invoices()->where('series', config('invoice.advance_series'))->get();
-		$previousCorrectives = $order->invoices()->where('series', config('invoice.corrective_series'))->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
 		$vatValue = $corrected->vat === '23' ? 0.23 : 0;
 		$vatString = $this->getVatString($vatValue);
-		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
 		$invoice = $order->invoices()->create([
 			'number' => $this->nextNumberInSeries(config('invoice.corrective_series')),
 			'series' => config('invoice.corrective_series'),
@@ -549,17 +546,6 @@ class Invoice
 		}
 
 		return $dbResult + 1;
-	}
-
-	private function getVatValue($currentSettlement = 0)
-	{
-		$sumAfterOrder = $this->advanceInvoiceSum() + $currentSettlement;
-
-		if ($sumAfterOrder < self::VAT_THRESHOLD) {
-			return self::VAT_ZERO;
-		}
-
-		return self::VAT_NORMAL;
 	}
 
 	private function getVatString($value)

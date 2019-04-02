@@ -50,7 +50,7 @@ class UserProfile extends Model
 		$fullName = $this->first_name . ' ' . $this->last_name;
 
 		if ($fullName === 'account deleted') {
-			$fullName = 'Konto usunięte';
+			$fullName = trans('profile.account-deleted');
 		}
 
 		return $fullName;

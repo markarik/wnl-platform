@@ -14,7 +14,7 @@ class CourseAddIsPlanBuilderEnabled extends Migration
 	public function up()
 	{
 			Schema::table('courses', function (Blueprint $table) {
-				$table->boolean('is_plan_builder_enabled')->default(1)->after('slug');
+				$table->tinyInteger('is_plan_builder_enabled')->default(1)->after('slug');
 			});
 	}
 

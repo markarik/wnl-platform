@@ -32,7 +32,7 @@
 			<div class="has-text-centered margin top">
 				<button
 					class="button is-primary is-outlined"
-					@click="onUnavaialableDismiss"
+					@click="onUnavailableDismiss"
 				>
 					Podejrzyj lekcję
 				</button>
@@ -231,7 +231,7 @@ export default {
 				context: context.lesson.value
 			});
 		},
-		onUnavaialableDismiss() {
+		onUnavailableDismiss() {
 			this.showLesson = true;
 			this.launchLesson();
 

@@ -417,7 +417,7 @@ const actions = {
 			return response;
 		});
 	},
-	saveQuestionsResults({commit, getters, rootGetters, state}, {questions, meta={}}) {
+	saveQuestionsResults({commit, dispatch, getters, rootGetters, state}, {questions, meta={}}) {
 		const results = questions.map((questionId) => {
 			const question = getters.getQuestion(questionId);
 

@@ -18,7 +18,6 @@ import {
 	reactionsMutations
 } from 'js/store/modules/reactions';
 
-
 const namespaced = true;
 
 const LIMIT = 25;
@@ -434,6 +433,10 @@ const actions = {
 		const filters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId);
 
 		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results, meta: {...meta, filters}});
+
+		if (meta.examTagId === rootGetters['course/entryExamTagId']) {
+			dispatch('updateCurrentUser', {hasFinishedEntryExam: true}, {root: true});
+		}
 	},
 	savePosition({getters, rootGetters, state}, payload) {
 		const parsedFilters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId);

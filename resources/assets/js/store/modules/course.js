@@ -40,6 +40,7 @@ const getters = {
 	courseId: state => state.id,
 	name: state => state.name,
 	entryExamLessonId: state => state.entryExamLessonId,
+	entryExamTagId: state => state.entryExamTagId,
 	getNode: state => nodeId => state.structure.find(node => node.id === nodeId),
 	getChildrenNodes: state => parentId => state.structure.filter(node => node.parent_id === parentId),
 	getAncestorNodesById: (state, getters) => nodeId => {
@@ -214,10 +215,11 @@ const mutations = {
 			...subsections
 		});
 	},
-	[types.SET_COURSE](state, {name, id, entry_exam_lesson_id}) {
+	[types.SET_COURSE](state, {name, id, entry_exam_lesson_id, entry_exam_tag_id}) {
 		set(state, 'name', name);
 		set(state, 'id', id);
 		set(state, 'entryExamLessonId', entry_exam_lesson_id);
+		set(state, 'entryExamTagId', entry_exam_tag_id);
 	},
 };
 

@@ -169,8 +169,9 @@ class Invoice
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
-		if ($vatValue === self::VAT_ZERO) {
-			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+
+		if ($order->product->vat_note) {
+			$data['notes'][] = $order->product->vat_note;
 		}
 
 		$this->renderAndSave('payment.invoices.pro-forma', $data, $invoice);
@@ -255,8 +256,9 @@ class Invoice
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
-		if ($vatValue === self::VAT_ZERO) {
-			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+
+		if ($order->product->vat_note) {
+			$data['notes'][] = $order->product->vat_note;
 		}
 
 		$this->renderAndSave('payment.invoices.advance', $data, $invoice);
@@ -343,8 +345,9 @@ class Invoice
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
-		if ($vatValue === self::VAT_ZERO) {
-			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+
+		if ($order->product->vat_note) {
+			$data['notes'][] = $order->product->vat_note;
 		}
 
 		$data['vatSummary'] = [];
@@ -479,8 +482,9 @@ class Invoice
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
-		if ($vatValue === self::VAT_ZERO) {
-			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+
+		if ($order->product->vat_note) {
+			$data['notes'][] = $order->product->vat_note;
 		}
 
 		$this->renderAndSave('payment.invoices.corrective', $data, $invoice);

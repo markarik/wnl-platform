@@ -22,31 +22,34 @@
 		</div>
 		<div v-else-if="isPlanBuilderEnabled">
 			<p class="has-text-centered margin vertical">
-				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
+				<img src="https://media.giphy.com/media/BCfw7hyQeq9TNsC7st/giphy.gif"/>
 			</p>
-			<h3 class="title is-3 has-text-centered"><strong>Lekcja nieaktywna</strong>🛡️</h3>
-			<h5 class="title is-5 has-text-centered">Lekcja będzie aktywna od <strong>{{lessonStartDate}}</strong></h5>
+			<h5 class="title is-5 has-text-centered">Zgodnie z Twoim planem, ta lekcja otworzy się <strong>{{lessonStartDate}}</strong></h5>
 			<p class="has-text-centered">
-				Zachęcamy Cię do powrotu do ostatniej niezakończonej lekcji. Jednak jeżeli chcesz otworzyć lekcję - możesz to zrobić. 🙂
+				Możesz podejrzeć zawartość lekcji. Nie wpłynie to na Twój pasek postępu.
 			</p>
-			<div class="has-text-centered margin top">
+			<div class="has-text-centered margin vertical">
 				<button
 					class="button is-primary is-outlined"
 					@click="onUnavailableDismiss"
 				>
-					Otwórz lekcję
+					Podgląd lekcji
 				</button>
+				<p class="has-text-centered margin vertical">Jeżeli chcesz zrealizować tę lekcję dziś, <router-link :to="{name: 'lessons-availabilites'}">zmień swój plan pracy</router-link>.</p>
 			</div>
 		</div>
 		<div v-else>
 			<p class="has-text-centered margin vertical">
 				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
 			</p>
-			<h3 class="title is-3 has-text-centered"><strong>Lekcja zablokowana</strong>🛡️</h3>
+			<h3 class="title is-3 has-text-centered"><strong>Lekcja nieaktywna</strong>🛡️</h3>
 			<h5 class="title is-5 has-text-centered">Lekcja będzie dostępna od <strong>{{lessonStartDate}}</strong></h5>
 			<p class="has-text-centered">
-				Zachęcamy Cię do powrotu do ostatniej niezakończonej lekcji.
+				Zachęcamy Cię do powrotu do ostatniej niezakończonej lekcji. 🙂
 			</p>
+			<div class="has-text-centered margin vertical">
+				<router-link :to="{name: 'courses', params: {courseId}}" class="button is-primary is-outlined">Wróć na dashboard</router-link>
+			</div>
 		</div>
 	</div>
 </template>

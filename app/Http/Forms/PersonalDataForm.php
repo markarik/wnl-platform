@@ -121,11 +121,7 @@ class PersonalDataForm extends Form
 				],
 			])
 			->add('invoice_nip', 'text', [
-				'error_messages' => [
-					'required_with' => trans('payment.invoice-required')
-				],
 				'label' => trans('payment.invoice-nip'),
-				'rules' => 'required_with:invoice',
 				'attr' => [
 					'placeholder' => trans('payment.invoice-nip'),
 				],

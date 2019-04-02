@@ -1,9 +1,12 @@
 <template>
-	<li :class="{
-	'is-group': isGroup,
-	'is-lesson': !isGroup,
-	'is-even': isEven,
-	}">
+	<li
+		v-if="!isGroup || childrenNodes.length > 0"
+		:class="{
+			'is-group': isGroup,
+			'is-lesson': !isGroup,
+			'is-even': isEven,
+		}"
+	>
 		<template v-if="isGroup">
 			<span class="item-toggle" @click="isOpen = !isOpen">
 				<span class="icon is-small">
@@ -152,7 +155,9 @@ export default {
 			'getChildrenNodes'
 		]),
 		childrenNodes() {
-			return this.getChildrenNodes(this.node.id);
+			return this.getChildrenNodes(this.node.id).filter(
+				node => node.structurable_type === getModelByResource(resources.groups) || node.model.is_required
+			);
 		},
 		isDefaultStartDate() {
 			return this.node.model.isDefaultStartDate &&

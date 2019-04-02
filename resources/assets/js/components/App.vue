@@ -45,7 +45,6 @@ import Navbar from 'js/components/global/Navbar.vue';
 import Alerts from 'js/components/global/GlobalAlerts';
 import sessionStore from 'js/services/sessionStore';
 import {startActivityTracking} from 'js/services/activityMonitor';
-import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection';
 import {getApiUrl} from 'js/utils/env';
 
 export default {
@@ -81,9 +80,9 @@ export default {
 		...mapActions('siteWideMessages', ['fetchUserSiteWideMessages', 'updateSiteWideMessage']),
 		...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
 		...mapActions('notifications', ['initNotifications']),
-		...mapActions('chatMessages', ['fetchUserRoomsWithMessages', 'onNewMessage', 'setConnectionStatus', 'updateFromEventLog']),
 		...mapActions('tasks', ['initModeratorsFeedListener']),
 		...mapActions('course', { courseSetup: 'setup' }),
+		...mapActions('products', ['fetchCurrentProducts']),
 		handleSiteWideMessages() {
 			this.siteWideAlerts.forEach(alert => {
 				this.addAlert({
@@ -100,9 +99,11 @@ export default {
 		this.toggleOverlay({source: 'course', display: true});
 		sessionStore.clearAll();
 
+		// Setup current products
+		this.fetchCurrentProducts();
+
 		return this.setupCurrentUser()
 			.then(() => {
-				this.setConnectionStatus(false);
 				// Setup Notifications
 				this.initNotifications();
 				this.currentUserRoles.indexOf('moderator') > -1 && this.initModeratorsFeedListener();
@@ -111,14 +112,7 @@ export default {
 				});
 
 				// Setup Chat
-				const userChannel = 'authenticated-user';
-				this.fetchUserRoomsWithMessages({page: 1})
-					.then((pointer) => this.$socketJoinRoom(userChannel, pointer))
-					.then((data) => {
-						this.updateFromEventLog(data.events);
-						this.setConnectionStatus(true);
-						this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.onNewMessage);
-					});
+				this.$socketChatSetup();
 
 				// Setup time tracking
 				const activitiesConfig = {

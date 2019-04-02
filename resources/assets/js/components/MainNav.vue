@@ -58,16 +58,16 @@
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
-		<!--<a-->
-			<!--v-if="!$upcomingEditionParticipant.isAllowed('access') && !currentUser.accountSuspended"-->
-			<!--class="wnl-main-nav-item"-->
-			<!--:href="signUpLink"-->
-		<!--&gt;-->
-			<!--<span class="icon is-medium">-->
-				<!--<i class="fa fa-thumbs-o-up"></i>-->
-			<!--</span>-->
-			<!--<span class="text">Zapisz się!</span>-->
-		<!--</a>-->
+		<a
+			v-if="!currentUserHasLatestProduct && !isMobile && getCurrentCourseProductSignupsOpen"
+			class="wnl-main-nav-item"
+			:href="signUpLink"
+		>
+			<span class="icon is-medium">
+				<i class="fa fa-thumbs-o-up"></i>
+			</span>
+			<span class="text">Zapisz się!</span>
+		</a>
 		<router-link
 			class="wnl-main-nav-item"
 			:to="{name: 'moderatorFeed'}"
@@ -148,7 +148,8 @@ export default {
 	props: ['isHorizontal'],
 	perimeters: [moderatorFeatures, currentEditionParticipant, upcomingEditionParticipant],
 	computed: {
-		...mapGetters(['isOnboardingFinished']),
+		...mapGetters(['isOnboardingFinished', 'currentUserHasLatestProduct', 'isMobile']),
+		...mapGetters('products', ['getCurrentCourseProductSignupsOpen']),
 		signUpLink() {
 			return getUrl('payment/account');
 		},

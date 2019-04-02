@@ -39,13 +39,25 @@ function invoiceForm() {
 
 function signupsClosed() {
 	const countdown = $('.signups-countdown');
-	const theDate = countdown.data('start');
-	const getTimeLeft = (date) => moment.duration(
-		moment(date * 1000).diff(moment(), 'seconds'), 'seconds'
-	).format('d[d] h[h] m[m] s[s]');
+	if (countdown.length === 0) return;
+	const theDate = new Date(countdown.data('start') * 1000);
+
+	const getTimeLeft = (date) => {
+		const now = new Date();
+		if (now > date) return 0;
+
+		return moment.duration(
+			moment(date).diff(now, 'seconds'), 'seconds'
+		);
+	};
 
 	window.setInterval(function () {
-		countdown.html(getTimeLeft(theDate));
+		const timeLeft = getTimeLeft(theDate);
+		if(timeLeft === 0) {
+			location.reload();
+		} else {
+			countdown.html(timeLeft.format('d[d] h[h] m[m] s[s]'));
+		}
 	}, 1000);
 }
 

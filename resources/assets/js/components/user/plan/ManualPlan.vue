@@ -32,7 +32,7 @@
 				</table>
 				<div class="accept-plan">
 					<a
-						@click="satisfactionGuaranteeModalVisible = true"
+						@click="acceptPlan"
 						class="button button is-primary is-outlined is-big"
 					>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
 					</a>
@@ -71,17 +71,11 @@
 		</div>
 		<div class="accept-plan">
 			<a
-				@click="satisfactionGuaranteeModalVisible = true"
+				@click="acceptPlan"
 				class="button button is-primary is-outlined is-big"
 			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
 			</a>
 		</div>
-		<wnl-satisfaction-guarantee-modal
-			:visible="satisfactionGuaranteeModalVisible"
-			:title="$t('user.plan.changePlanConfirmation')"
-			@closeModal="satisfactionGuaranteeModalVisible = false"
-			@submit="acceptPlan"
-		></wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 
@@ -129,20 +123,18 @@ import { isEmpty } from 'lodash';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 import WnlManualPlanNodesList from 'js/components/user/plan/ManualPlanNodesList';
-import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
+import { swalConfig } from 'js/utils/swal';
 
 export default {
 	name: 'ManualPlan',
 	components: {
 		WnlTextOverlay,
 		WnlManualPlanNodesList,
-		WnlSatisfactionGuaranteeModal
 	},
 	mixins: [emits_events],
 	data() {
 		return {
 			manualStartDates: [],
-			satisfactionGuaranteeModalVisible: false,
 			isLoading: false,
 			alertSuccess: {
 				text: this.$i18n.t('lessonsAvailability.alertSuccess'),
@@ -197,32 +189,43 @@ export default {
 			}
 		},
 		async acceptPlan() {
-			this.satisfactionGuaranteeModalVisible = false;
 			if (!this.validate()) {
 				return false;
 			}
 
-			this.isLoading = true;
-			try {
-				await axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
-					manual_start_dates: this.manualStartDates,
-					timezone: momentTimezone.tz.guess(),
-				});
-				await this.setStructure();
-				this.isLoading = false;
-				this.manualStartDates = [];
-				this.addAutoDismissableAlert(this.alertSuccess);
-				this.emitUserEvent({
-					action: features.manual_settings.actions.save_plan.value,
-					feature: features.manual_settings.value,
-				});
-			}
-			catch(error) {
-				this.isLoading = false;
-				this.manualStartDates = [];
-				$wnl.logger.capture(error);
-				this.addAutoDismissableAlert(this.alertError);
-			}
+			this.$swal(swalConfig({
+				title: 'Zmień plan pracy',
+				confirmButtonText: 'Akceptuję plan',
+				cancelButtonText: 'Zamknij',
+				text: 'Czy na pewno chcesz zmienić swój plan pracy?',
+				showCancelButton: true,
+				type: 'info',
+				reverseButtons: true,
+			})).then(async () => {
+				this.isLoading = true;
+				try {
+					await axios.put(getApiUrl(`user_lesson/${this.currentUserId}/batch`), {
+						manual_start_dates: this.manualStartDates,
+						timezone: momentTimezone.tz.guess(),
+					});
+					await this.setStructure();
+					this.isLoading = false;
+					this.manualStartDates = [];
+					this.addAutoDismissableAlert(this.alertSuccess);
+					this.emitUserEvent({
+						action: features.manual_settings.actions.save_plan.value,
+						feature: features.manual_settings.value,
+					});
+				}
+				catch(error) {
+					this.isLoading = false;
+					this.manualStartDates = [];
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert(this.alertError);
+				}
+			}).catch(e => {
+				// ignore cancellation of swal
+			});
 		},
 		validate() {
 			if (isEmpty(this.manualStartDates)) {

@@ -13,5 +13,5 @@
 		<img src="https://media.giphy.com/media/prjtNfj7bcRz2/giphy.gif" alt="You'll get the money soon..." style="display: block; margin: 0 auto;">
 	</p>
 
-	<p>Z pozdrowieniami,</p>
+	<p>Z pozdrowieniami</p>
 @endsection

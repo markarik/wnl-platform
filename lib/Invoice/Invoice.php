@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Storage;
 
 class Invoice
 {
-	const VAT_THRESHOLD = 159452.00;
 	const VAT_ZERO = 0.0;
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;
@@ -28,7 +27,7 @@ class Invoice
 		if ($invoice) $builder->where('id', '<', $invoice->id);
 		$previousAdvances = $builder->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
-		$vatValue = $order->product->vat_rate / 100;
+		$vatValue = $this->getVatValue($order);
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
@@ -112,7 +111,7 @@ class Invoice
 
 	public function proforma(Order $order, $invoice = null)
 	{
-		$vatValue = $this->getVatValue();
+		$vatValue = $this->getVatValue($order);
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
@@ -169,8 +168,9 @@ class Invoice
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
-		if ($vatValue === self::VAT_ZERO) {
-			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+
+		if ($order->product->vat_note) {
+			$data['notes'][] = $order->product->vat_note;
 		}
 
 		$this->renderAndSave('payment.invoices.pro-forma', $data, $invoice);
@@ -184,7 +184,7 @@ class Invoice
 		if ($invoice) $builder->where('id', '<', $invoice->id);
 		$previousAdvances = $builder->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
-		$vatValue = $this->getVatValue($recentSettlement);
+		$vatValue = $this->getVatValue($order);
 		$vatString = $this->getVatString($vatValue);
 		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
@@ -255,8 +255,9 @@ class Invoice
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
-		if ($vatValue === self::VAT_ZERO) {
-			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+
+		if ($order->product->vat_note) {
+			$data['notes'][] = $order->product->vat_note;
 		}
 
 		$this->renderAndSave('payment.invoices.advance', $data, $invoice);
@@ -271,9 +272,8 @@ class Invoice
 			config('invoice.corrective_series'),
 		])->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
-		$vatValue = $this->getVatValue($recentSettlement);
+		$vatValue = $this->getVatValue($order);
 		$vatString = $this->getVatString($vatValue);
-		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(config('invoice.final_series')),
@@ -344,8 +344,9 @@ class Invoice
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
-		if ($vatValue === self::VAT_ZERO) {
-			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+
+		if ($order->product->vat_note) {
+			$data['notes'][] = $order->product->vat_note;
 		}
 
 		$data['vatSummary'] = [];
@@ -380,11 +381,9 @@ class Invoice
 	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference, bool $refund = true)
 	{
 		$previousAdvances = $order->invoices()->where('series', config('invoice.advance_series'))->get();
-		$previousCorrectives = $order->invoices()->where('series', config('invoice.corrective_series'))->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
 		$vatValue = $corrected->vat === '23' ? 0.23 : 0;
 		$vatString = $this->getVatString($vatValue);
-		$totalPaid = $recentSettlement + $previousAdvances->sum('amount');
 		$invoice = $order->invoices()->create([
 			'number' => $this->nextNumberInSeries(config('invoice.corrective_series')),
 			'series' => config('invoice.corrective_series'),
@@ -482,8 +481,9 @@ class Invoice
 		];
 
 		$data['notes'][] = sprintf('Zamówienie nr %d', $order->id);
-		if ($vatValue === self::VAT_ZERO) {
-			$data['notes'][] = 'Zwolnienie z VAT na podstawie art. 113 ust. 1 Ustawy z dnia 11 marca 2004r. o podatku od towarów i usług';
+
+		if ($order->product->vat_note) {
+			$data['notes'][] = $order->product->vat_note;
 		}
 
 		$this->renderAndSave('payment.invoices.corrective', $data, $invoice);
@@ -551,17 +551,6 @@ class Invoice
 		return $dbResult + 1;
 	}
 
-	private function getVatValue($currentSettlement = 0)
-	{
-		$sumAfterOrder = $this->advanceInvoiceSum() + $currentSettlement;
-
-		if ($sumAfterOrder < self::VAT_THRESHOLD) {
-			return self::VAT_ZERO;
-		}
-
-		return self::VAT_NORMAL;
-	}
-
 	private function getVatString($value)
 	{
 		if ($value === self::VAT_ZERO) {
@@ -569,6 +558,15 @@ class Invoice
 		}
 
 		return sprintf('%d%%', $value * 100);
+	}
+
+	/**
+	 * @param Order $order
+	 * @return float|int
+	 */
+	protected function getVatValue(Order $order)
+	{
+		return $order->product->vat_rate / 100;
 	}
 
 	private function advanceInvoiceSum()

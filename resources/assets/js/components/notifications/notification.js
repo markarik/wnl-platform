@@ -53,7 +53,7 @@ export const notification = {
 				return this.$t('notifications.context.quizQuestion', {
 					id: this.routeContext.params.id,
 				});
-			} else if (route.name.indexOf('help') > -1) {
+			} else if (this.$te(`routes.help.${route.name}`)) {
 				return this.$t('notifications.context.page', {
 					page: this.$t(`routes.help.${route.name}`),
 				});

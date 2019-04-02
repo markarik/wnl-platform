@@ -25,7 +25,7 @@ class PostQuestion extends FormRequest
 	{
 		return [
 			'text'    => 'string|required',
-			'tags'    => 'required',
+			'tags'    => 'array',
 			'context' => 'required',
 			'discussion_id' => 'required|numeric|exists:discussions,id'
 		];

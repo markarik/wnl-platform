@@ -25,16 +25,16 @@
 				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
 			</p>
 			<h3 class="title is-3 has-text-centered"><strong>Lekcja nieaktywna</strong>🛡️</h3>
-			<h5 class="title is-5 has-text-centered">Lekcja będzie aktywna w planie od <strong>{{lessonStartDate}}</strong></h5>
+			<h5 class="title is-5 has-text-centered">Lekcja będzie aktywna od <strong>{{lessonStartDate}}</strong></h5>
 			<p class="has-text-centered">
-				Zachęcamy Cię do powrotu, do ostatniej niezakończonej lekcji. Jeśli jednak masz potrzebę spojrzenia na lekcję możesz to zrobić.
+				Zachęcamy Cię do powrotu do ostatniej niezakończonej lekcji. Jednak jeżeli chcesz otworzyć lekcję - możesz to zrobić. 🙂
 			</p>
 			<div class="has-text-centered margin top">
 				<button
 					class="button is-primary is-outlined"
 					@click="onUnavailableDismiss"
 				>
-					Podejrzyj lekcję
+					Otwórz lekcję
 				</button>
 			</div>
 		</div>
@@ -45,7 +45,7 @@
 			<h3 class="title is-3 has-text-centered"><strong>Lekcja zablokowana</strong>🛡️</h3>
 			<h5 class="title is-5 has-text-centered">Lekcja będzie dostępna od <strong>{{lessonStartDate}}</strong></h5>
 			<p class="has-text-centered">
-				Zachęcamy Cię do powrotu, do ostatniej niezakończonej lekcji.
+				Zachęcamy Cię do powrotu do ostatniej niezakończonej lekcji.
 			</p>
 		</div>
 	</div>

@@ -34,7 +34,7 @@
 		v-else
 		:visible="true"
 		:display-headline="false"
-		@closeModal="satisfactionGuaranteeModalReject"
+		@closeModal="() => satisfactionGuaranteeModalReject(satisfactionGuaranteeModalCanceled)"
 		@submit="satisfactionGuaranteeModalResolve"
 	>
 		<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem Wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
@@ -102,6 +102,7 @@ export default {
 				 */
 			elementHeight: get(this.$parent, '$el.offsetHeight') || '100%',
 			isRenderBlocked: true,
+			satisfactionGuaranteeModalCanceled: 'satisfactionGuaranteeModalCanceled',
 			satisfactionGuaranteeModalResolve: noop,
 			satisfactionGuaranteeModalReject: noop,
 		};
@@ -217,6 +218,7 @@ export default {
 			'saveLessonProgress',
 		]),
 		...mapActions([
+			'addAutoDismissableAlert',
 			'changeUserSettingAndSync',
 			'setupCurrentUser',
 			'toggleOverlay',
@@ -361,6 +363,14 @@ export default {
 		try {
 			await this.displaySatisfactionGuaranteeModalIfNeeded();
 		} catch (e) {
+			if (e !== this.satisfactionGuaranteeModalCanceled) {
+				$wnl.logger.error(e);
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+					type: 'error',
+				});
+			}
+
 			// User wants to keep the satisfaction guarantee
 			this.$router.push('/');
 			return;

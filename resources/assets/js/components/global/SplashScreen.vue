@@ -17,14 +17,14 @@
 			</p>
 		</div>
 		<div class="has-text-centered" v-else>
-			<p class="title is-4">W tym momencie nie posiadasz dostępu do kursu</p>
-			<p>Widzisz ten ekran ponieważ Twoje zamówienie oczekuje na zaksięgowanie wpłaty, lub jesteś uczestnikiem poprzedniej edycji, która dobiegła już końca. 🙂<br>
-			W razie, gdyby okazało się to nieporozumieniem, napisz do nas na info@wiecejnizlek.pl albo na
-				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.
-			</p>
+			<p class="title is-4">Twoje zamówienie oczekuje na płatność</p>
 			<p class="margin vertical">
-				<a :href="paymentUrl" class="button is-primary is-outlined">
-					Zapisz się na najbliższą edycję
+				Pełny dostęp do kursu otrzymasz po dokonaniu i zaksięgowaniu płatności. Masz na to <strong>7 dni</strong> od momentu złożenia zamówienia.
+			</p>
+			<p class="margin vertical" v-if="currentProductAccessEndDate">Dostęp będzie trwał <strong>do {{currentProductAccessEndDate}}</strong>.</p>
+			<p class="margin vertical">
+				<a :href="paymentUrl" class="button is-primary">
+					Opłać zamówienie
 				</a>
 			</p>
 		</div>
@@ -75,6 +75,7 @@ export default {
 	perimeters: [upcomingEditionParticipant],
 	computed: {
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserAccountSuspended']),
+		...mapGetters('products', ['getCurrentCourse']),
 		countdownImageUrl() {
 			return getImageUrl('countdown.png');
 		},
@@ -84,6 +85,9 @@ export default {
 		paymentUrl() {
 			return getUrl('payment/account');
 		},
+		currentProductAccessEndDate() {
+			return this.getCurrentCourse && moment(this.getCurrentCourse.access_end * 1000).format('LL');
+		}
 	},
 };
 </script>

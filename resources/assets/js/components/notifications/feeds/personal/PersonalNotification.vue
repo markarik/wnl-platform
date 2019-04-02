@@ -9,7 +9,7 @@
 		<div class="personal-notification" @click="markAsReadAndGo" :class="{'deleted': deleted || resolved}">
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ actorName }}</span>
+					<span class="actor">{{ message.actors.full_name }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object" v-if="object">{{ object }}</span>
 					<span class="context" v-if="contextInfo">{{ contextInfo }}</span>
@@ -115,14 +115,12 @@
 </style>
 
 <script>
-import { truncate } from 'lodash';
 import { mapGetters } from 'vuex';
 
 import Avatar from 'js/components/global/Avatar';
 import UserProfileModal from 'js/components/users/UserProfileModal';
 import Modal from 'js/components/global/Modal';
 import { notification } from 'js/components/notifications/notification';
-import { sanitizeName } from 'js/store/modules/users';
 
 export default {
 	name: 'PersonalNotification',
@@ -150,9 +148,6 @@ export default {
 				...this.message.actors,
 				user_id: this.message.actors.id
 			};
-		},
-		actorName() {
-			return sanitizeName(this.message.actors.full_name);
 		},
 		action() {
 			return this.$t(`notifications.events.${_.camelCase(this.message.event)}`);

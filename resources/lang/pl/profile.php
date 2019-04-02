@@ -10,6 +10,5 @@ return [
 	'change-payment-method'        => 'Zmień metodę płatności',
 	'account'                      => 'Konto',
 	'deleted'                      => 'Usunięte',
-	'account-deleted'              => 'Konto usunięte',
 
 ];

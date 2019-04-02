@@ -45,15 +45,31 @@ class UserProfile extends Model
 		return (new Bethink)->getAssetPublicUrl($this->avatar) ?? null;
 	}
 
-	public function getFullNameAttribute()
+	public function getFirstNameAttribute()
 	{
-		$fullName = $this->first_name . ' ' . $this->last_name;
-
-		if ($fullName === 'account deleted') {
-			$fullName = trans('profile.account-deleted');
+		if (!is_null($this->deleted_at)) {
+			return trans('profile.account-deleted-first-name');
 		}
 
-		return $fullName;
+		return $this->original['first_name'];
+	}
+
+	public function getLastNameAttribute()
+	{
+		if (!is_null($this->deleted_at)) {
+			return trans('profile.account-deleted-last-name');
+		}
+
+		return $this->original['last_name'];
+	}
+
+	public function getFullNameAttribute()
+	{
+		if (!is_null($this->deleted_at)) {
+			return trans('profile.account-deleted-full-name');
+		}
+
+		return $this->first_name . ' ' . $this->last_name;
 	}
 
 	public function setUsernameAttribute($value)

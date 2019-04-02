@@ -162,13 +162,7 @@ class User extends Authenticatable
 
 	public function getFullNameAttribute()
 	{
-		$fullName = $this->first_name . ' ' . $this->last_name;
-
-		if ($fullName === 'account deleted') {
-			$fullName = trans('profile.account-deleted');
-		}
-
-		return $fullName;
+		return $this->first_name . ' ' . $this->last_name;
 	}
 
 	public function getAddressAttribute($value)

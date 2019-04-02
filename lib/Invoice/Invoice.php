@@ -27,7 +27,7 @@ class Invoice
 		if ($invoice) $builder->where('id', '<', $invoice->id);
 		$previousAdvances = $builder->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
-		$vatValue = $order->product->vat_rate / 100;
+		$vatValue = $this->getVatValue($order);
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
@@ -111,7 +111,7 @@ class Invoice
 
 	public function proforma(Order $order, $invoice = null)
 	{
-		$vatValue = $order->product->vat_rate / 100;
+		$vatValue = $this->getVatValue($order);
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
@@ -184,7 +184,7 @@ class Invoice
 		if ($invoice) $builder->where('id', '<', $invoice->id);
 		$previousAdvances = $builder->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
-		$vatValue = $order->product->vat_rate / 100;
+		$vatValue = $this->getVatValue($order);
 		$vatString = $this->getVatString($vatValue);
 		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
@@ -272,7 +272,7 @@ class Invoice
 			config('invoice.corrective_series'),
 		])->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('corrected_amount');
-		$vatValue = $order->product->vat_rate / 100;
+		$vatValue = $this->getVatValue($order);
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
 			$invoice = $order->invoices()->create([
@@ -558,6 +558,15 @@ class Invoice
 		}
 
 		return sprintf('%d%%', $value * 100);
+	}
+
+	/**
+	 * @param Order $order
+	 * @return float|int
+	 */
+	protected function getVatValue(Order $order)
+	{
+		return $order->product->vat_rate / 100;
 	}
 
 	private function advanceInvoiceSum()

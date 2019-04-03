@@ -240,8 +240,8 @@ export default {
 
 			this.$trackUserEvent({
 				context: context.lesson.value,
-				feature: features.unavaialable.value,
-				action: features.unavaialable.actions.dismiss.value,
+				feature: features.unavailable.value,
+				action: features.unavailable.actions.dismiss.value,
 				target: this.lessonId,
 			});
 		},

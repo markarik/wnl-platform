@@ -49,8 +49,8 @@
       }
     }
   },
-	"unavaialable": {
-		"value": "unavaialable",
+	"unavailable": {
+		"value": "unavailable",
 		"actions": {
 			"dismiss": {
 				"value": "dismiss"

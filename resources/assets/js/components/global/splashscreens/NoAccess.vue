@@ -31,12 +31,9 @@
     .splash-screen
         align-items: center
         display: flex
-        flex: 1 0 auto
         flex-direction: column
         height: 100%
         justify-content: center
-        min-height: 100%
-        width: 100%
 
     .splash-screen-image
         max-width: 400px

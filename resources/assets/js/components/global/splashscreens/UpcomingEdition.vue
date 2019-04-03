@@ -33,12 +33,9 @@
 	.splash-screen
 		align-items: center
 		display: flex
-		flex: 1 0 auto
 		flex-direction: column
-		height: 100%
 		justify-content: center
-		min-height: 100%
-		width: 100%
+		height: 100%
 		text-align: center
 		padding: 0 $margin-small
 

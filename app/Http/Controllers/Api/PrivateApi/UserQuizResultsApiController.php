@@ -87,7 +87,7 @@ class UserQuizResultsApiController extends ApiController
 			\Log::notice('>>>Dispatching CalculateExamResults Job');
 			$course = Course::find(CourseProvider::getCourseId());
 
-			if ($course->entry_exam_tag_id === $meta['examTagId']) {
+			if ($meta['allQuestionsSolved'] && $course->entry_exam_tag_id === $meta['examTagId']) {
 				$user->has_finished_entry_exam = true;
 				$user->save();
 			}

@@ -18,7 +18,8 @@ class CouponTransformer extends ApiTransformer
 			'value' => $coupon->value,
 			'expires_at' => $coupon->expires_at,
 			'user_id' => $coupon->user_id,
-			'times_usable' => $coupon->times_usable
+			'times_usable' => $coupon->times_usable,
+			'kind' => $coupon->kind,
 		];
 
 		return $data;

@@ -221,6 +221,7 @@ return [
 	'cart-price-label' => 'Kwota całkowita',
 	'cart-price-value' => ':valuezł',
 	'cart-empty' => 'Twój koszyk jest pusty.',
+	'cart-no-album-info' => 'TODO copy',
 
 	/**
 	 * Personal identity number modal

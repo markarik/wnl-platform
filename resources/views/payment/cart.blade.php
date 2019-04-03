@@ -21,8 +21,12 @@
 			</section>
 			<section class="o-cart__details">
 				<p class="m-checkoutListItem">
-					<span>@lang('payment.cart-shipment-label')</span>
-					<span class="m-checkoutListItem__value">@lang('payment.cart-shipment-value')</span>
+					@if(empty($coupon) || $coupon->kind !== App\Models\Coupon::KIND_PARTICIPANT)
+						<span>@lang('payment.cart-shipment-label')</span>
+						<span class="m-checkoutListItem__value">@lang('payment.cart-shipment-value')</span>
+					@else
+						<span>@lang('payment.cart-no-album-info')</span>
+					@endif
 				</p>
 				@if(!empty($coupon))
 					<p class="m-checkoutListItem">

@@ -1,14 +1,26 @@
 <template>
 	<div class="splash-screen">
 		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
-		<div class="splash-screen-countdown">
+		<div v-if="diff > 0">
 			<p class="title is-4">Twoja przygoda z kursem zacznie się już za:</p>
-			<template v-if="diff > 0">
-				{{daysLeft}}dni
-				{{hoursLeft}}godz
-				{{minutesLeft}}min
-			</template>
-			<p class="info">
+			<div class="splash-screen-counter">
+				<div class="splash-screen-counter__item">
+					<span>{{daysLeft}}</span>
+					<span class="text-dimmed">dni</span>
+				</div>
+				<div class="splash-screen-counter__item">
+					<span>{{hoursLeft}}</span>
+					<span class="text-dimmed">godz</span>
+				</div>
+				<div class="splash-screen-counter__item">
+					<span>{{minutesLeft}}</span>
+					<span class="text-dimmed">min</span>
+				</div>
+				<div class="splash-screen-counter__item -small">
+					🚀
+				</div>
+			</div>
+			<p class="splash-screen__info text-dimmed">
 				Twoje subskrypcja będzie aktywna do {{endDate}}
 			</p>
 		</div>
@@ -27,21 +39,36 @@
 		justify-content: center
 		min-height: 100%
 		width: 100%
-
-	.splash-screen-image
-		max-width: 240px
-
-	.splash-screen-countdown
-		font-size: $font-size-plus-7
-		font-weight: $font-weight-black
-		line-height: $line-height-plus
 		text-align: center
+		padding: 0 $margin-small
 
-		.info
-			font-size: $font-size-base
-			font-weight: $font-weight-regular
-			line-height: $line-height-base
-			margin: $margin-base
+		.splash-screen-image
+			max-width: 240px
+
+		.splash-screen-counter
+			display: flex
+			justify-content: center
+			margin-bottom: $margin-huge
+
+			&__item
+				margin-right: $margin-small
+				font-size: $font-size-plus-2
+				font-weight: bold
+
+				@media #{$media-query-tablet}
+					font-size: $font-size-plus-4
+
+				&.-small
+					font-size: $font-size-plus-1
+
+					@media #{$media-query-tablet}
+						font-size: $font-size-plus-2
+
+				&:last-child
+					margin-right: 0
+		&__info
+			font-size: $font-size-plus-1
+
 
 </style>
 

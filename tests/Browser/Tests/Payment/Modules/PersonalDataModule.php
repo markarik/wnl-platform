@@ -4,6 +4,7 @@
 namespace Tests\Browser\Tests\Payment\Modules;
 
 
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\User;
 use Tests\BethinkBrowser;
@@ -77,8 +78,12 @@ class PersonalDataModule
 	protected function assertCart(BethinkBrowser $browser)
 	{
 		$browser->assertVisible('@cart');
-		$browser->assertSeeIn('@cart', 'Wysyłka');
-		$browser->assertSeeIn('@cart', 'Na terenie Polski za darmo');
+		if (!empty($browser->coupon) && $browser->coupon->kind === Coupon::KIND_PARTICIPANT) {
+			$browser->assertSeeIn('@cart', 'TODO copy');
+		} else {
+			$browser->assertSeeIn('@cart', 'Wysyłka');
+			$browser->assertSeeIn('@cart', 'Na terenie Polski za darmo');
+		}
 		$browser->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do');
 		$browser->assertSeeIn('@cart', 'Kwota całkowita');
 	}

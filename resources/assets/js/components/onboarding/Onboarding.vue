@@ -158,7 +158,7 @@ import WnlOnboardingScreenTutorial from 'js/components/onboarding/OnboardingScre
 import WnlOnboardingScreenSatisfactionGuarantee from 'js/components/onboarding/OnboardingScreenSatisfactionGuarantee';
 import WnlOnboardingScreenFinal from 'js/components/onboarding/OnboardingScreenFinal';
 import WnlStepper from 'js/components/onboarding/Stepper';
-import WnlSplashScreen from 'js/components/global/SplashScreen.vue';
+import WnlSplashScreen from 'js/components/global/splashscreens/SplashScreen';
 
 import {resource} from 'js/utils/config';
 import {ONBOARDING_STEPS} from 'js/consts/user';

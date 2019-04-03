@@ -69,7 +69,7 @@ import PublicChat from 'js/components/chat/PublicChat.vue';
 import Navigation from 'js/components/course/Navigation';
 import SidenavSlot from 'js/components/global/SidenavSlot';
 import MainNav from 'js/components/MainNav';
-import SplashScreen from 'js/components/global/SplashScreen.vue';
+import SplashScreen from 'js/components/global/splashscreens/SplashScreen';
 import { breadcrumb } from 'js/mixins/breadcrumb';
 import withChat from 'js/mixins/with-chat';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';

@@ -5,6 +5,7 @@ import {set} from 'vue';
 import * as types from 'js/store/mutations-types';
 import progressStore, {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 import { getApiUrl } from 'js/utils/env';
+import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 // Namespace
 const namespaced = true;
@@ -209,6 +210,10 @@ const actions = {
 		const userId = rootGetters.currentUserId;
 		await axios.delete(getApiUrl(`users/${userId}/state/course/1`));
 		dispatch('updateCurrentUser', {hasFinishedEntryExam: false}, {root: true});
+		dispatch('changeUserSettingAndSync', {
+			setting: USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL,
+			value: false,
+		});
 	}
 };
 

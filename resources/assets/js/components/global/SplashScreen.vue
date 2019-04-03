@@ -19,14 +19,15 @@
 		<div class="has-text-centered" v-else>
 			<p class="title is-4">Twoje zamówienie oczekuje na płatność</p>
 			<p class="margin vertical">
-				Pełny dostęp do kursu otrzymasz po dokonaniu i zaksięgowaniu płatności. Masz na to <strong>7 dni</strong> od momentu złożenia zamówienia.
+				Masz na to <strong>7 dni</strong> od momentu złożenia zamówienia.
 			</p>
-			<p class="margin vertical" v-if="currentProductAccessEndDate">Dostęp będzie trwał <strong>do {{currentProductAccessEndDate}}</strong>.</p>
 			<p class="margin vertical">
 				<a :href="paymentUrl" class="button is-primary">
 					Opłać zamówienie
 				</a>
 			</p>
+			<p class="margin vertical text-dimmed" v-if="currentProductAccessStartDateIsPast">Dostęp do kursu otrzymasz od razu po dokonaniu płatności.</p>
+			<p class="margin vertical text-dimmed" v-else>Dostęp do kursu otrzymasz od {{currentProductAccessStartDate}}.</p>
 		</div>
 	</div>
 </template>
@@ -85,9 +86,12 @@ export default {
 		paymentUrl() {
 			return getUrl('payment/account');
 		},
-		currentProductAccessEndDate() {
-			return this.getCurrentCourse && moment(this.getCurrentCourse.access_end * 1000).format('LL');
-		}
+		currentProductAccessStartDateIsPast() {
+			return this.getCurrentCourse && moment(this.getCurrentCourse.access_start * 1000).isBefore();
+		},
+		currentProductAccessStartDate() {
+			return this.getCurrentCourse && moment(this.getCurrentCourse.access_start * 1000).format('LL');
+		},
 	},
 };
 </script>

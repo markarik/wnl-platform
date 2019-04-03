@@ -209,10 +209,16 @@ const actions = {
 	async deleteProgress({dispatch, rootGetters}) {
 		const userId = rootGetters.currentUserId;
 		await axios.delete(getApiUrl(`users/${userId}/state/course/1`));
-		dispatch('updateCurrentUser', {hasFinishedEntryExam: false}, {root: true});
+		dispatch('updateCurrentUser', {
+			hasFinishedEntryExam: false
+		}, {
+			root: true
+		});
 		dispatch('changeUserSettingAndSync', {
 			setting: USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL,
 			value: false,
+		}, {
+			root: true
 		});
 	}
 };

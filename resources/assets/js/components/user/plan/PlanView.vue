@@ -77,32 +77,31 @@ export default {
 	components: { 'wnl-dropdown': Dropdown },
 	mixins: [emits_events],
 	data() {
-		const tabs = [];
-		if (this.isPlanBuilderEnabled) {
-			tabs.push(
-				{
-					title: 'Twój plan pracy',
-					component: LessonsPlanner,
-				},
-				{
-					title: 'Jak zmienić plan?',
-					component: PlannerGuide,
-				}
-			);
-		}
-		tabs.push({
-			title: 'Pobierz plan pracy',
-			component: DownloadPlan,
-		});
-
 		return {
-			tabs,
 			activeTabIndex: 0,
 		};
 	},
 	computed: {
 		...mapState('course', ['isPlanBuilderEnabled']),
 		...mapGetters(['isMobile']),
+		tabs() {
+			const tabs = [{
+				title: 'Pobierz plan pracy',
+				component: DownloadPlan,
+			}];
+			if (this.isPlanBuilderEnabled) {
+				tabs.unshift({
+					title: 'Twój plan pracy',
+					component: LessonsPlanner,
+				},
+				{
+					title: 'Jak zmienić plan?',
+					component: PlannerGuide,
+				});
+			}
+
+			return tabs;
+		},
 		activeTab() {
 			return this.tabs[this.activeTabIndex] || {};
 		},
@@ -117,6 +116,6 @@ export default {
 				...payload
 			});
 		}
-	}
+	},
 };
 </script>

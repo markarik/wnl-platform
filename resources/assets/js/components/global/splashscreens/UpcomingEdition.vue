@@ -3,9 +3,11 @@
 		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
 		<div class="splash-screen-countdown">
 			<p class="title is-4">Twoja przygoda z kursem zacznie się już za:</p>
-			{{daysLeft}}dni
-			{{hoursLeft}}godz
-			{{minutesLeft}}min
+			<template v-if="diff > 0">
+				{{daysLeft}}dni
+				{{hoursLeft}}godz
+				{{minutesLeft}}min
+			</template>
 			<p class="info">
 				Twoje subskrypcja będzie aktywna do {{endDate}}
 			</p>
@@ -48,6 +50,12 @@ import moment from 'moment';
 import { mapGetters } from 'vuex';
 
 export default {
+	data() {
+		return {
+			diff: 0,
+			intervalId: null
+		};
+	},
 	computed: {
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserAccountSuspended']),
 		countdownImageUrl() {
@@ -62,14 +70,20 @@ export default {
 		minutesLeft() {
 			return this.diff - this.daysLeft * 1440 - this.hoursLeft * 60;
 		},
-		diff() {
-			const accessStart = new Date(this.currentUserSubscriptionDates.min * 1000);
-			const now = new Date();
-			return moment(accessStart).diff(now, 'minutes');
-		},
 		endDate() {
 			return moment(new Date(this.currentUserSubscriptionDates.max * 1000)).format('LL');
 		}
+	},
+	created() {
+		const accessStart = new Date(this.currentUserSubscriptionDates.min * 1000);
+		const now = new Date();
+		this.diff = moment(accessStart).diff(now, 'minutes');
+		this.intervalId = setInterval(() => {
+			this.diff = this.diff - 1;
+		}, 60000);
+	},
+	beforeDestroy() {
+		clearInterval(this.intervalId);
 	}
 };
 </script>

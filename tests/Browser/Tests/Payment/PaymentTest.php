@@ -96,6 +96,34 @@ class PaymentTest extends DuskTestCase
 		});
 	}
 
+	public function testOrderWithCouponNoStuddyBuddy() {
+		$this->browse(function (BethinkBrowser $browser) {
+			(new VoucherModule())->code10Percent($browser);
+			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->submitNoInvoice($browser);
+			(new ConfirmOrderModule())->payOnlineLater($browser);
+			(new MyOrdersModule())->assertOrderPlaced($browser);
+			(new MyOrdersModule())->payNow($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '1350.00');
+			(new MyOrdersModule())->assertPaid($browser, '1350zł / 1350zł');
+			(new MyOrdersModule())->assertStuddyBuddyNotActive($browser);
+		});
+	}
+
+	public function testOrderWithCouponLaterNoStuddyBuddy() {
+		$this->browse(function (BethinkBrowser $browser) {
+			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->submitNoInvoice($browser);
+			(new ConfirmOrderModule())->payOnlineLater($browser);
+			(new MyOrdersModule())->assertOrderPlaced($browser);
+			(new MyOrdersModule())->useCoupon($browser, 10);
+			(new MyOrdersModule())->payNow($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '1350.00');
+			(new MyOrdersModule())->assertPaid($browser, '1350zł / 1350zł');
+			(new MyOrdersModule())->assertStuddyBuddyNotActive($browser);
+		});
+	}
+
 	public function testRegisterAndPayByInstalmentsNow()
 	{
 		$this->browse(function (BethinkBrowser $browser) {

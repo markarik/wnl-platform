@@ -82,7 +82,9 @@ class ConfirmOrderModule
 			->assertSeeIn('@cart', $order->total_with_coupon);
 
 		if (!empty($browser->coupon) && $browser->coupon->kind === Coupon::KIND_PARTICIPANT) {
-			$browser->assertSeeIn('@cart', 'TODO copy');
+			$browser
+				->assertSeeIn('@cart', 'Album')
+				->assertSeeIn('@cart', 'Zakup kursu ze zniżką 50% nie obejmuje nowego albumu map myśli. Nowy album możesz zamówić osobno po opłaceniu zamówienia za kurs.');
 		} else {
 			$browser
 				->assertSeeIn('@cart', 'Wysyłka')

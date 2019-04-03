@@ -20,14 +20,12 @@
 				</p>
 			</section>
 			<section class="o-cart__details">
-				<p class="m-checkoutListItem">
-					@if(empty($coupon) || $coupon->kind !== App\Models\Coupon::KIND_PARTICIPANT)
+				@if(!$hasParticipantCoupon)
+					<p class="m-checkoutListItem">
 						<span>@lang('payment.cart-shipment-label')</span>
 						<span class="m-checkoutListItem__value">@lang('payment.cart-shipment-value')</span>
-					@else
-						<span>@lang('payment.cart-no-album-info')</span>
-					@endif
-				</p>
+					</p>
+				@endif
 				@if(!empty($coupon))
 					<p class="m-checkoutListItem">
 						<span>@lang('payment.cart-coupon-label')</span>
@@ -36,6 +34,12 @@
 						? trans('payment.voucher-percentage', ['value' => $coupon->value])
 						: trans('payment.voucher-amount', ['value' => $coupon->value])}}
 					</span>
+					</p>
+				@endif
+				@if($hasParticipantCoupon)
+					<p class="m-checkoutListItem">
+						<span>@lang('payment.cart-album-label')</span>
+						<span class="m-checkoutListItem__value">@lang('payment.cart-no-album-info')</span>
 					</p>
 				@endif
 				<p class="m-checkoutTotalAmount">

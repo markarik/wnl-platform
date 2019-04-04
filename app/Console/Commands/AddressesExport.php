@@ -60,7 +60,7 @@ class AddressesExport extends Command
 		} elseif ($products) {
 			$products = explode(',', $products);
 			$orders = Order::whereDoesntHave('coupon', function ($query) {
-					$query->where('kind', 'participant');
+					$query->where('kind', Coupon::KIND_PARTICIPANT);
 				})
 				->where('paid', 1)
 				->where('shipping_status', 'new')

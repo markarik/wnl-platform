@@ -38,7 +38,7 @@ class OrderStudyBuddy implements ShouldQueue
 		$order = $this->order;
 		// Activate SB code & send email containing code link
 		$studyBuddy = $order->studyBuddy;
-		if ($studyBuddy && $studyBuddy->status === 'new') {
+		if (empty($order->coupon) && $studyBuddy && $studyBuddy->status === 'new') {
 			\Log::notice('Activating Study Buddy coupon.');
 			$studyBuddy->coupon->times_usable++;
 			$studyBuddy->coupon->save();

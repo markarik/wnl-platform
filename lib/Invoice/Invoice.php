@@ -500,7 +500,7 @@ class Invoice
 				'zip'     => $user->invoice_zip,
 				'city'    => $user->invoice_city,
 				'country' => $user->invoice_country,
-				'nip'     => 'NIP: ' . $user->invoice_nip,
+				'nip'     => !empty($user->invoice_nip) ? 'NIP: ' . $user->invoice_nip : '',
 			];
 		} else {
 			return [

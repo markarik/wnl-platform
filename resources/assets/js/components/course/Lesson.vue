@@ -119,7 +119,6 @@ export default {
 			satisfactionGuaranteeModalCanceled: 'satisfactionGuaranteeModalCanceled',
 			satisfactionGuaranteeModalResolve: noop,
 			satisfactionGuaranteeModalReject: noop,
-			showLesson: false,
 		};
 	},
 	computed: {
@@ -234,7 +233,7 @@ export default {
 				!this.currentUserHasFinishedEntryExam;
 		},
 		shouldShowLesson() {
-			return this.isLessonAvailable(this.lessonId) || this.showLesson;
+			return this.isLessonAvailable(this.lessonId);
 		},
 	},
 	methods: {

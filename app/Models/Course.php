@@ -9,7 +9,7 @@ class Course extends Model
 {
 	use Cached;
 
-    protected $fillable = ['name', 'slug'];
+    protected $fillable = ['name', 'slug', 'entry_exam_tag_id', 'entry_exam_lesson_id'];
 
 	public function groups() {
 		return $this->hasMany('\App\Models\Group');

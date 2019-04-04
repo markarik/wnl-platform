@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ApiController;
 use App\Jobs\ArchiveCourseProgress;
+use App\Jobs\ResetSatisfactionGuaranteeStatus;
 use App\Models\Comment;
 use App\Models\Lesson;
 use App\Models\QnaAnswer;
@@ -237,6 +238,7 @@ class UserStateApiController extends ApiController
 
 		$userCourseProgress = UserCourseProgress::where('user_id', $profileId)->get();
 
+		dispatch_now(new ResetSatisfactionGuaranteeStatus($user));
 		dispatch_now(new ArchiveCourseProgress($user, $userCourseProgress));
 
 		UserCourseProgress::where('user_id', $profileId)->delete();

@@ -37,6 +37,7 @@ class UserTransformer extends ApiTransformer
 			'full_name' => $user->full_name,
 			'email' => $user->email,
 			'created_at' => $user->created_at->timestamp ?? '',
+			'has_finished_entry_exam' => $user->has_finished_entry_exam,
 		];
 
 		if ($this->parent) {

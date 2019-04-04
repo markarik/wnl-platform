@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\UserQuizResultsTransformer;
 use App\Jobs\CalculateExamResults;
+use App\Models\Course;
 use App\Models\QuizAnswer;
 use App\Models\QuizQuestion;
 use App\Models\User;
@@ -15,6 +16,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use League\Fractal\Resource\Collection;
+use Facades\App\Contracts\CourseProvider;
 
 
 class UserQuizResultsApiController extends ApiController
@@ -83,6 +85,13 @@ class UserQuizResultsApiController extends ApiController
 		if (!empty($meta['examMode']) && !empty($meta['examTagId'])) {
 			$examTagId = $meta['examTagId'];
 			\Log::notice('>>>Dispatching CalculateExamResults Job');
+			$course = Course::find(CourseProvider::getCourseId());
+
+			if (($meta['allQuestionsSolved'] ?? false) && $course->entry_exam_tag_id === $meta['examTagId']) {
+				$user->has_finished_entry_exam = true;
+				$user->save();
+			}
+
 			$this->dispatch(new CalculateExamResults($examTagId, $userId, $recordsToInsert));
 		}
 

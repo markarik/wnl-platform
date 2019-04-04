@@ -2,8 +2,10 @@
 
 namespace App\Events\Coupons;
 
+use Log;
 use App\Models\Coupon;
 use Facades\App\Contracts\Requests;
+use GuzzleHttp\Exception\ClientException;
 
 abstract class CouponEvent
 {
@@ -33,7 +35,15 @@ abstract class CouponEvent
 			'coupon' => $coupon
 		];
 
-		Requests::request($method, $url, $headers, $body);
+		try {
+			Requests::request($method, $url, $headers, $body);
+		} catch (ClientException $e) {
+			if($e->getCode() < 500) {
+				Log::warning($e);
+			} else {
+				throw $e;
+			}
+		}
 	}
 
 	protected function isCouponSyncable(Coupon $coupon)

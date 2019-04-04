@@ -382,46 +382,27 @@ export default {
 		updateElementHeight() {
 			this.elementHeight = this.$parent.$el.offsetHeight;
 		},
-	},
-	async mounted () {
-		try {
-			await this.displaySatisfactionGuaranteeModalIfNeeded();
-			this.isSatisfactionGuaranteeModalVisible = false;
-		} catch (e) {
-			if (e !== this.satisfactionGuaranteeModalCanceled) {
-				$wnl.logger.error(e);
-				this.addAutoDismissableAlert({
-					text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
-					type: 'error',
-				});
+		async setup() {
+			try {
+				await this.displaySatisfactionGuaranteeModalIfNeeded();
+				this.isSatisfactionGuaranteeModalVisible = false;
+			} catch (e) {
+				if (e !== this.satisfactionGuaranteeModalCanceled) {
+					$wnl.logger.error(e);
+					this.addAutoDismissableAlert({
+						text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+						type: 'error',
+					});
+				}
+
+				// User wants to keep the satisfaction guarantee
+				this.$router.push('/');
+				return;
 			}
 
-			// User wants to keep the satisfaction guarantee
-			this.$router.push('/');
-			return;
-		}
+			this.isRenderBlocked = false;
+			this.toggleOverlay({source: 'lesson', display: true});
 
-		this.isRenderBlocked = false;
-		this.toggleOverlay({source: 'lesson', display: true});
-
-		try {
-			await this.setupLesson(this.lessonId);
-			if (this.isLessonAvailable(this.lessonId)) {
-				this.launchLesson();
-			}
-		} catch (e) {
-			$wnl.logger.error(e);
-		}
-
-		this.toggleOverlay({source: 'lesson', display: false});
-		window.addEventListener('resize', this.updateElementHeight);
-	},
-	beforeDestroy () {
-		window.Echo.leave(this.presenceChannel);
-		window.removeEventListener('resize', this.updateElementHeight);
-	},
-	watch: {
-		async lessonId() {
 			try {
 				await this.setupLesson(this.lessonId);
 				if (this.isLessonAvailable(this.lessonId)) {
@@ -430,6 +411,21 @@ export default {
 			} catch (e) {
 				$wnl.logger.error(e);
 			}
+
+			this.toggleOverlay({source: 'lesson', display: false});
+			window.addEventListener('resize', this.updateElementHeight);
+		}
+	},
+	mounted () {
+		this.setup();
+	},
+	beforeDestroy () {
+		window.Echo.leave(this.presenceChannel);
+		window.removeEventListener('resize', this.updateElementHeight);
+	},
+	watch: {
+		lessonId() {
+			this.setup();
 		},
 		'$route' () {
 			if (this.isLessonAvailable(this.lessonId)) {

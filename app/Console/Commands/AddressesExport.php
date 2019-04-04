@@ -59,7 +59,10 @@ class AddressesExport extends Command
 				->whereIn('id', $ids);
 		} elseif ($products) {
 			$products = explode(',', $products);
-			$orders = Order::where('paid', 1)
+			$orders = Order::whereDoesntHave('coupon', function ($query) {
+					$query->where('kind', 'participant');
+				})
+				->where('paid', 1)
 				->where('shipping_status', 'new')
 				->whereIn('product_id', $products);
 		} else {

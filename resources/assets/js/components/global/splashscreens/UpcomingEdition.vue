@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<img class="splash-screen-image" :src="logoImageUrl" alt="Logo kursu">
-		<div v-if="diff > 0">
+		<div v-if="diff >= 0">
 			<p class="title is-4">Twoja przygoda z kursem zacznie się już za:</p>
 			<div class="splash-screen-counter">
 				<div class="splash-screen-counter__item">
@@ -64,13 +64,14 @@
 
 <script>
 import moment from 'moment';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
 	data() {
 		return {
 			diff: 0,
-			intervalId: null
+			intervalId: null,
+			updateInProgress: false
 		};
 	},
 	computed: {
@@ -91,6 +92,13 @@ export default {
 			return moment(new Date(this.currentUserSubscriptionDates.max * 1000)).format('LL');
 		}
 	},
+	methods: {
+		...mapActions([
+			'fetchUserSubscription',
+			'addAutoDismissableAlert'
+		]),
+		...mapActions('course', ['setStructure']),
+	},
 	created() {
 		const accessStart = new Date(this.currentUserSubscriptionDates.min * 1000);
 		const now = new Date();
@@ -101,6 +109,28 @@ export default {
 	},
 	beforeDestroy() {
 		clearInterval(this.intervalId);
+	},
+	watch: {
+		async diff() {
+			if (this.diff < 0 && !this.updateInProgress) {
+				this.updateInProgress = true;
+				try {
+					await Promise.all([
+						this.fetchUserSubscription(),
+						this.setStructure(),
+						this.$socketChatSetup()
+					]);
+				} catch (e) {
+					$wnl.logger.error(e);
+					this.addAutoDismissableAlert({
+						text: 'Nie udało nam się pobrać danych na temat Twojego dostępu. Odśwież stronę :)',
+						type: 'error'
+					});
+				} finally {
+					this.updateInProgress = false;
+				}
+			}
+		}
 	}
 };
 </script>

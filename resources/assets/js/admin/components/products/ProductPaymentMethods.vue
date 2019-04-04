@@ -237,8 +237,9 @@ export default {
 		async getProduct() {
 			const url = getApiUrl(`products/${this.id}?include=payment_methods,instalments`);
 			const {data: {included}} = await axios.get(url);
-			const productMethods = included ? Object.values(included.payment_methods) : [];
-			const instalments = included ? Object.values(included.instalments) : [];
+
+			const productMethods = included && included.payment_methods ? Object.values(included.payment_methods) : [];
+			const instalments = included && included.instalments ? Object.values(included.instalments) : [];
 			return {productMethods, instalments};
 		}
 

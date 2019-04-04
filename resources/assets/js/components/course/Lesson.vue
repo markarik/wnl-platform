@@ -1,5 +1,5 @@
 <template>
-	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
+	<div v-if="!isRenderBlocked" class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
 		<div class="wnl-lesson" v-if="isLessonAvailable(lessonId)">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
@@ -30,6 +30,21 @@
 			</p>
 		</div>
 	</div>
+	<wnl-satisfaction-guarantee-modal
+		v-else
+		:visible="true"
+		:display-headline="false"
+		@closeModal="() => satisfactionGuaranteeModalReject(satisfactionGuaranteeModalCanceled)"
+		@submit="satisfactionGuaranteeModalResolve"
+	>
+		<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem Wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
+		<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu. Warunkiem jest usunięcie postępu, ułożenie nowego planu pracy i rozwiązanie Wstępnego LEK-u przed rozpoczęciem pierwszej obowiązkowej lekcji.</template>
+		<template slot="footer">
+			<span v-html="$t('ui.satisfactionGuarantee.noteInLesson', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
+		</template>
+		<template slot="close">Wróć na dashboard</template>
+		<template slot="submit">Rozumiem, akceptuję</template>
+	</wnl-satisfaction-guarantee-modal>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -56,19 +71,23 @@
 </style>
 
 <script>
-import _ from 'lodash';
+import {get, isEmpty, head, noop} from 'lodash';
 import {mapGetters, mapActions} from 'vuex';
 
-import PreviousNext from 'js/components/course/PreviousNext';
+import WnlPreviousNext from 'js/components/course/PreviousNext';
+import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
+
 import {resource} from 'js/utils/config';
 import {breadcrumb} from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
+import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 export default {
 	name: 'Lesson',
 	components: {
-		'wnl-previous-next': PreviousNext,
+		WnlPreviousNext,
+		WnlSatisfactionGuaranteeModal,
 	},
 	mixins: [breadcrumb],
 	props: ['courseId', 'lessonId', 'presenceChannel', 'screenId', 'slide'],
@@ -81,11 +100,16 @@ export default {
 				 * (which btw is defined as 100% of its parent element),
 				 * all browsers are able to beautifully scroll the content.
 				 */
-			elementHeight: _.get(this.$parent, '$el.offsetHeight') || '100%',
+			elementHeight: get(this.$parent, '$el.offsetHeight') || '100%',
+			isRenderBlocked: true,
+			satisfactionGuaranteeModalCanceled: 'satisfactionGuaranteeModalCanceled',
+			satisfactionGuaranteeModalResolve: noop,
+			satisfactionGuaranteeModalReject: noop,
 		};
 	},
 	computed: {
 		...mapGetters('course', [
+			'entryExamLessonId',
 			'getScreensForLesson',
 			'getLesson',
 			'getSectionsForScreen',
@@ -93,17 +117,19 @@ export default {
 			'getScreen',
 			'getScreenSectionsCheckpoints',
 			'getSectionSubsectionsCheckpoints',
+			'getLessons',
 			'isLessonAvailable',
-			'getLessons'
 		]),
 		...mapGetters('progress', {
 			getSavedLesson: 'getSavedLesson',
 			screenProgress: 'getScreen',
 			lessonProgress: 'getLesson'
 		}),
-		...mapGetters({
-			currentUserProfileId: 'currentUserProfileId',
-		}),
+		...mapGetters([
+			'currentUserProfileId',
+			'currentUserHasFinishedEntryExam',
+			'getSetting'
+		]),
 		breadcrumb() {
 			return {
 				level: 1,
@@ -162,11 +188,11 @@ export default {
 			return this.subsectionsReversed.length > 0;
 		},
 		firstScreenId() {
-			if (_.isEmpty(this.screens)) {
+			if (isEmpty(this.screens)) {
 				return null;
 			}
 
-			return _.head(this.screens).id;
+			return head(this.screens).id;
 		},
 		lessonProgressContext() {
 			return {
@@ -183,7 +209,6 @@ export default {
 		},
 	},
 	methods: {
-
 		...mapActions('progress', [
 			'startLesson',
 			'completeLesson',
@@ -192,8 +217,13 @@ export default {
 			'completeSubsection',
 			'saveLessonProgress',
 		]),
-		...mapActions(['updateLessonNav', 'setupCurrentUser', 'toggleOverlay']),
-		...mapActions(['setupCurrentUser']),
+		...mapActions([
+			'addAutoDismissableAlert',
+			'changeUserSettingAndSync',
+			'setupCurrentUser',
+			'toggleOverlay',
+			'updateLessonNav',
+		]),
 		...mapActions('users', ['setActiveUsers', 'userJoined', 'userLeft']),
 		...mapActions('course', ['setupLesson']),
 		onUserEvent(payload) {
@@ -225,7 +255,7 @@ export default {
 									lessonId: this.lessonId,
 									screenId: this.firstScreenId,
 								};
-								if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !_.get(route, 'params.slide')) {
+								if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !get(route, 'params.slide')) {
 									params.slide = 1;
 								}
 								this.$router.replace({name: resource('screens'), params, query});
@@ -253,18 +283,36 @@ export default {
 				activeScreen: parseInt(this.screenId)
 			});
 		},
+		async displaySatisfactionGuaranteeModalIfNeeded() {
+			if (
+				this.lesson.is_required &&
+				this.lesson.id !== this.entryExamLessonId &&
+				!this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) &&
+				!this.currentUserHasFinishedEntryExam
+			) {
+				await new Promise((resolve, reject) => {
+					this.satisfactionGuaranteeModalResolve = resolve;
+					this.satisfactionGuaranteeModalReject = reject;
+				});
+
+				this.changeUserSettingAndSync({
+					setting: USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL,
+					value: true,
+				});
+			}
+		},
 		shouldCompleteScreen() {
 			if (!this.currentScreen.sections) {
 				return true;
 			}
 
 			const allSections = this.currentScreen.sections;
-			const completedSections = _.get(this.screenProgress(this.courseId, this.lessonId, this.currentScreen.id), 'sections', {});
+			const completedSections = get(this.screenProgress(this.courseId, this.lessonId, this.currentScreen.id), 'sections', {});
 
 			return !allSections.find(id => !completedSections[id]);
 		},
 		shouldCompleteLesson() {
-			const startedScreens = _.get(this.lessonProgress(this.courseId, this.lessonId), 'screens', {});
+			const startedScreens = get(this.lessonProgress(this.courseId, this.lessonId), 'screens', {});
 
 			if (this.screens && !startedScreens) {
 				return false;
@@ -312,15 +360,33 @@ export default {
 		},
 	},
 	async mounted () {
+		try {
+			await this.displaySatisfactionGuaranteeModalIfNeeded();
+		} catch (e) {
+			if (e !== this.satisfactionGuaranteeModalCanceled) {
+				$wnl.logger.error(e);
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+					type: 'error',
+				});
+			}
+
+			// User wants to keep the satisfaction guarantee
+			this.$router.push('/');
+			return;
+		}
+
+		this.isRenderBlocked = false;
 		this.toggleOverlay({source: 'lesson', display: true});
+
 		try {
 			await this.setupLesson(this.lessonId);
 			this.launchLesson();
 		} catch (e) {
 			$wnl.logger.error(e);
-		} finally {
-			this.toggleOverlay({source: 'lesson', display: false});
 		}
+
+		this.toggleOverlay({source: 'lesson', display: false});
 		window.addEventListener('resize', this.updateElementHeight);
 	},
 	beforeDestroy () {

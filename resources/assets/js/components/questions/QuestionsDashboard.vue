@@ -153,10 +153,11 @@
 		</div>
 		<wnl-satisfaction-guarantee-modal
 			:visible="satisfactionGuaranteeModalVisible"
-			:title="$t('user.progressReset.questionsModalHeader')"
 			@closeModal="satisfactionGuaranteeModalVisible = false"
 			@submit="resetQuestionsProgress"
-		></wnl-satisfaction-guarantee-modal>
+		>
+			<template slot="title">{{$t('user.progressReset.questionsModalHeader')}}</template>
+		</wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 

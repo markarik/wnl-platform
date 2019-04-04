@@ -1,16 +1,26 @@
 <template>
 	<wnl-modal @closeModal="$emit('closeModal')" v-if="visible">
 		<div class="satisfaction-guarantee-modal normal">
-			<h4 class="margin bottom">{{title}}</h4>
-			<p class="strong margin bottom">{{$t('ui.satisfactionGuarantee.headline')}}</p>
-			<p class="margin bottom">{{$t('ui.satisfactionGuarantee.body')}}</p>
+			<h4 class="margin bottom">
+				<slot name="title"></slot>
+			</h4>
+			<p v-if="displayHeadline" class="strong margin bottom">{{$t('ui.satisfactionGuarantee.headline')}}</p>
+			<p class="margin bottom">
+				<slot name="body">{{$t('ui.satisfactionGuarantee.body')}}</slot>
+			</p>
 			<p class="margin bottom text-dimmed satisfaction-guarantee-modal__extra-info">
 				<i class="fa fa-info-circle"/>
-				<span v-html="$t('ui.satisfactionGuarantee.note', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
+				<slot name="footer">
+					<span v-html="$t('ui.satisfactionGuarantee.note', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
+				</slot>
 			</p>
 			<div class="satisfaction-guarantee-modal__actions">
-				<button class="button" @click="$emit('closeModal')">{{$t('ui.satisfactionGuarantee.close')}}</button>
-				<button class="button is-primary" @click="$emit('submit')">{{$t('ui.satisfactionGuarantee.accept')}}</button>
+				<button class="button" @click="$emit('closeModal')">
+					<slot name="close">{{$t('ui.satisfactionGuarantee.close')}}</slot>
+				</button>
+				<button class="button is-primary" @click="$emit('submit')">
+					<slot name="submit">{{$t('ui.satisfactionGuarantee.accept')}}</slot>
+				</button>
 			</div>
 		</div>
 	</wnl-modal>
@@ -70,9 +80,9 @@ export default {
 			type: Boolean,
 			default: false
 		},
-		title: {
-			type: String,
-			required: true
+		displayHeadline: {
+			type: Boolean,
+			default: true
 		}
 	}
 };

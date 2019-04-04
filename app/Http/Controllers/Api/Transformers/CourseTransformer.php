@@ -22,6 +22,8 @@ class CourseTransformer extends ApiTransformer
 		$data = [
 			'id'   => $course->id,
 			'name' => $course->name,
+			'entry_exam_tag_id' => $course->entry_exam_tag_id,
+			'entry_exam_lesson_id' => $course->entry_exam_lesson_id,
 		];
 
 		if ($this->parent) {

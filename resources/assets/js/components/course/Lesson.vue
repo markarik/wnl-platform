@@ -1,46 +1,48 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
-		<div class="wnl-lesson" v-if="shouldShowLesson">
-			<div class="wnl-lesson-view">
-				<div class="level wnl-screen-title">
-					<div class="level-left">
-						<div class="level-item metadata">
-							{{lessonName}}
+		<template v-if="!shouldDisplaySatisfactionGuaranteeModal">
+			<div class="wnl-lesson" v-if="shouldShowLesson">
+				<div class="wnl-lesson-view">
+					<div class="level wnl-screen-title">
+						<div class="level-left">
+							<div class="level-item metadata">
+								{{lessonName}}
+							</div>
+						</div>
+						<div class="level-right">
+							<div class="level-item small">
+								Lekcja {{lessonNumber}}
+							</div>
 						</div>
 					</div>
-					<div class="level-right">
-						<div class="level-item small">
-							Lekcja {{lessonNumber}}
-						</div>
-					</div>
+					<router-view @userEvent="onUserEvent"/>
 				</div>
-				<router-view @userEvent="onUserEvent"/>
+				<div class="wnl-lesson-previous-next-nav">
+					<wnl-previous-next></wnl-previous-next>
+				</div>
 			</div>
-			<div class="wnl-lesson-previous-next-nav">
-				<wnl-previous-next></wnl-previous-next>
+			<div v-else-if="isPlanBuilderEnabled">
+				<p class="has-text-centered margin vertical">
+					<img src="https://media.giphy.com/media/BCfw7hyQeq9TNsC7st/giphy.gif"/>
+				</p>
+				<h5 class="title is-5 has-text-centered">Zgodnie z Twoim planem, ta lekcja otworzy się <strong>{{lessonStartDate}}</strong></h5>
+				<p class="has-text-centered margin vertical">Jeżeli chcesz zrealizować tę lekcję dziś, <router-link :to="{name: 'lessons-availabilites'}">zmień swój plan pracy</router-link>.</p>
 			</div>
-		</div>
-		<div v-else-if="isPlanBuilderEnabled">
-			<p class="has-text-centered margin vertical">
-				<img src="https://media.giphy.com/media/BCfw7hyQeq9TNsC7st/giphy.gif"/>
-			</p>
-			<h5 class="title is-5 has-text-centered">Zgodnie z Twoim planem, ta lekcja otworzy się <strong>{{lessonStartDate}}</strong></h5>
-			<p class="has-text-centered margin vertical">Jeżeli chcesz zrealizować tę lekcję dziś, <router-link :to="{name: 'lessons-availabilites'}">zmień swój plan pracy</router-link>.</p>
-		</div>
-		<div v-else>
-			<h2 class="title is-2 has-text-centered margin vertical">{{lesson.name}}️</h2>
-			<p class="has-text-centered margin vertical">
-				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
-			</p>
-			<h3 class="title is-3 has-text-centered"><strong>Lekcja nieaktywna</strong>🛡️</h3>
-			<h5 class="title is-5 has-text-centered">Lekcja będzie dostępna od <strong>{{lessonStartDate}}</strong></h5>
-			<p class="has-text-centered">
-				Zachęcamy Cię do powrotu do ostatniej niezakończonej lekcji. 🙂
-			</p>
-			<div class="has-text-centered margin vertical">
-				<router-link :to="{name: 'courses', params: {courseId}}" class="button is-primary is-outlined">Wróć na dashboard</router-link>
+			<div v-else>
+				<h2 class="title is-2 has-text-centered margin vertical">{{lesson.name}}️</h2>
+				<p class="has-text-centered margin vertical">
+					<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
+				</p>
+				<h3 class="title is-3 has-text-centered"><strong>Lekcja nieaktywna</strong>🛡️</h3>
+				<h5 class="title is-5 has-text-centered">Lekcja będzie dostępna od <strong>{{lessonStartDate}}</strong></h5>
+				<p class="has-text-centered">
+					Zachęcamy Cię do powrotu do ostatniej niezakończonej lekcji. 🙂
+				</p>
+				<div class="has-text-centered margin vertical">
+					<router-link :to="{name: 'courses', params: {courseId}}" class="button is-primary is-outlined">Wróć na dashboard</router-link>
+				</div>
 			</div>
-		</div>
+		</template>
 
 		<wnl-satisfaction-guarantee-modal
 			v-if="isSatisfactionGuaranteeModalVisible"

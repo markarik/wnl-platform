@@ -41,12 +41,15 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex';
-import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
+import axios from 'axios';
+import {mapGetters} from 'vuex';
+
 import WnlNoAccess from 'js/components/global/splashscreens/NoAccess';
 import WnlUpcomingEdition from 'js/components/global/splashscreens/UpcomingEdition';
 import WnlOrderNotPaid from 'js/components/global/splashscreens/OrderNotPaid';
 import WnlDefaultSplashScreen from 'js/components/global/splashscreens/Default';
+
+import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
 import {getApiUrl} from 'js/utils/env';
 
 export default {

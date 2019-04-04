@@ -86,6 +86,7 @@
 									'is-primary': true,
 									'is-loading': this.paymentLoading
 								}"
+								data-button="pay-now"
 								@click="pay">
 								Opłać zamówienie
 							</button>
@@ -220,7 +221,9 @@
 						<a class=""
 							title="Dodaj lub zmień kod rabatowy"
 							@click="toggleCouponInput"
-							v-if="order.status !== 'closed'">
+							v-if="order.status !== 'closed'"
+						  data-button="add-coupon"
+						>
 							<span class="icon is-small margin right"><i class="fa fa-plus"></i></span>
 							<span>Dodaj lub zmień kod rabatowy</span>
 						</a>
@@ -233,7 +236,7 @@
 									hide-default-submit="true"
 									@submitSuccess="couponSubmitSuccess">
 							<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
-							<wnl-submit>Wykorzystaj kod</wnl-submit>
+							<wnl-submit data-button="coupon-submit">Wykorzystaj kod</wnl-submit>
 						</wnl-form>
 					</div>
 				</div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\View\Composers;
 
+use App\Models\Coupon;
 use App\Traits\CheckoutTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,10 +29,13 @@ class PaymentCartComposer
 	 */
 	public function compose(View $view)
 	{
+		$coupon = $view->coupon ?? $this->coupon;
+
 		$view->with('productName', $view->productName ?? $this->product->name);
 		$view->with('productPrice', $view->productPrice ?? $this->product->price);
 		$view->with('productAccessEnd', $view->productAccessEnd ?? $this->product->access_end);
 		$view->with('productPriceWithCoupon', $view->productPriceWithCoupon ?? $this->product->getPriceWithCoupon($this->coupon));
-		$view->with('coupon', $view->coupon ?? $this->coupon);
+		$view->with('coupon', $coupon);
+		$view->with('hasParticipantCoupon', $coupon ?  $coupon->kind === Coupon::KIND_PARTICIPANT : false);
 	}
 }

@@ -1,13 +1,13 @@
 <template>
 	<div>
-		<img class="splash-screen-image" :src="countdownImageUrl" alt="Logo kursu">
+		<img class="splash-screen-image" :src="logoImageUrl" alt="Logo kursu">
 		<div class="has-text-centered">
 			<p class="title is-4">Twoje zamówienie oczekuje na płatność</p>
 			<p class="margin vertical">
 				Na płatność masz <strong>7 dni</strong> od złożenia zamówienia.
 			</p>
 			<p class="margin vertical text-dimmed" v-if="currentProductAccessStartDateIsPast">Dostęp do kursu otrzymasz od razu po dokonaniu płatności.</p>
-			<p class="margin vertical text-dimmed" v-else>Dostęp do kursu otrzymasz od {{currentProductAccessStartDate}}.</p>
+			<p class="margin vertical text-dimmed" v-else-if="currentProductAccessStartDate">Dostęp do kursu otrzymasz od {{currentProductAccessStartDate}}.</p>
 			<p class="margin vertical">
 				<a :href="paymentUrl" class="button is-primary">
 					Opłać zamówienie
@@ -32,8 +32,8 @@ import { mapGetters } from 'vuex';
 export default {
 	computed: {
 		...mapGetters('products', ['getCurrentCourse']),
-		countdownImageUrl() {
-			return window.$wnl.course.productLogoBig;
+		logoImageUrl() {
+			return window.$wnl.course.productLogoWithStudents;
 		},
 		paymentUrl() {
 			return getUrl('payment/account');

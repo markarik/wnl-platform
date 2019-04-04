@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
+		<img class="splash-screen-image" :src="logoImageUrl" alt="Logo kursu">
 		<div v-if="diff > 0">
 			<p class="title is-4">Twoja przygoda z kursem zacznie się już za:</p>
 			<div class="splash-screen-counter">
@@ -75,8 +75,8 @@ export default {
 	},
 	computed: {
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserAccountSuspended']),
-		countdownImageUrl() {
-			return window.$wnl.course.productLogoBig;
+		logoImageUrl() {
+			return window.$wnl.course.productLogoWithStudents;
 		},
 		daysLeft() {
 			return Math.floor(this.diff / 1440);

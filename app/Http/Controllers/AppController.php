@@ -38,7 +38,7 @@ class AppController extends Controller
 			],
 			'course' => [
 				'productLogo' => config('course.product_logo'),
-				'productLogoBig' => config('course.product_logo_big')
+				'productLogoWithStudents' => config('course.product_logo_with_students')
 			],
 			'defaultSettings' => config('user-default-settings'),
 		]);

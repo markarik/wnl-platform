@@ -61,6 +61,7 @@ export default {
 			return screenProgress.status === STATUS_COMPLETE;
 		},
 		isDisabled() {
+			// PLAT-1182 | Unblock navigation when user opens the lesson
 			return !this.isLessonAvailable(this.lessonId);
 		},
 		meta() {

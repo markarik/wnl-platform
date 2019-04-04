@@ -25,18 +25,17 @@
 				<img src="https://media.giphy.com/media/BCfw7hyQeq9TNsC7st/giphy.gif"/>
 			</p>
 			<h5 class="title is-5 has-text-centered">Zgodnie z Twoim planem, ta lekcja otworzy się <strong>{{lessonStartDate}}</strong></h5>
-<!--			TODO PLAT-1182 decide how this should work - make sure to enable navigation when button is clicked-->
-<!--			<p class="has-text-centered">-->
-<!--				Możesz podejrzeć zawartość lekcji. Nie wpłynie to na Twój pasek postępu.-->
-<!--			</p>-->
-<!--			<div class="has-text-centered margin vertical">-->
-<!--				<button-->
-<!--					class="button is-primary is-outlined"-->
-<!--					@click="onUnavailableDismiss"-->
-<!--				>-->
-<!--					Podgląd lekcji-->
-<!--				</button>-->
-<!--			</div>-->
+			<p class="has-text-centered">
+				Możesz podejrzeć zawartość lekcji. Nie wpłynie to na Twój pasek postępu.
+			</p>
+			<div class="has-text-centered margin vertical">
+				<button
+					class="button is-primary is-outlined"
+					@click="onUnavailableDismiss"
+				>
+					Podgląd lekcji
+				</button>
+			</div>
 			<p class="has-text-centered margin vertical">Jeżeli chcesz zrealizować tę lekcję dziś, <router-link :to="{name: 'lessons-availabilites'}">zmień swój plan pracy</router-link>.</p>
 		</div>
 		<div v-else>

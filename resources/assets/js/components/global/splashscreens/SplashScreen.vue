@@ -2,8 +2,8 @@
 	<div class="splash-screen__container">
 		<div class="splash-screen__content scrollable-main-container">
 			<wnl-upcoming-edition v-if="$upcomingEditionParticipant.isAllowed('access')"/>
-			<wnl-no-access v-else-if="currentUserAccountSuspended"/>
 			<wnl-order-not-paid v-else-if="hasNotPaidOrder" />
+			<wnl-no-access v-else-if="currentUserAccountSuspended"/>
 			<wnl-default-splash-screen v-else />
 		</div>
 		<footer class="splash-screen__footer text-dimmed">

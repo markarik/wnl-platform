@@ -9,9 +9,9 @@
 			<p class="margin vertical text-dimmed" v-if="currentProductAccessStartDateIsPast">Dostęp do kursu otrzymasz od razu po dokonaniu płatności.</p>
 			<p class="margin vertical text-dimmed" v-else-if="currentProductAccessStartDate">Dostęp do kursu otrzymasz od {{currentProductAccessStartDate}}.</p>
 			<p class="margin vertical">
-				<a :href="paymentUrl" class="button is-primary">
+				<router-link :to="{name: 'my-orders'}" class="button is-primary">
 					Opłać zamówienie
-				</a>
+				</router-link>
 			</p>
 		</div>
 	</div>
@@ -34,9 +34,6 @@ export default {
 		...mapGetters('products', ['getCurrentCourse']),
 		logoImageUrl() {
 			return window.$wnl.course.productLogoWithStudents;
-		},
-		paymentUrl() {
-			return getUrl('payment/account');
 		},
 		currentProductAccessStartDateIsPast() {
 			return this.getCurrentCourse && moment(this.getCurrentCourse.access_start * 1000).isBefore();

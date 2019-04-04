@@ -185,7 +185,11 @@ export default {
 			'isLargeDesktop',
 			'isSidenavMounted',
 			'isSidenavVisible',
-			'currentUserId'
+			'currentUserId',
+			'currentUserHasFinishedEntryExam',
+		]),
+		...mapGetters('course', [
+			'entryExamTagId'
 		]),
 		...mapGetters('questions', [
 			'activeFilters',
@@ -306,7 +310,7 @@ export default {
 					.then(() => resolve());
 			});
 		},
-		confirmQuizEnd(text = '') {
+		confirmQuizEnd(description = '') {
 			const config = swalConfig({
 				confirmButtonText: this.$t('questions.solving.confirm.yes'),
 				cancelButtonText: this.$t('questions.solving.confirm.no'),
@@ -317,8 +321,8 @@ export default {
 				type: 'question',
 			});
 
-			if (!isEmpty(text)) {
-				config.text = text;
+			if (!isEmpty(description)) {
+				config.html = description;
 			}
 
 			return new Promise((resolve, reject) => {
@@ -505,9 +509,17 @@ export default {
 		},
 		verifyCheckQuestions({unansweredCount}) {
 			if (unansweredCount) {
-				this.confirmQuizEnd(this.$t('questions.solving.confirm.unanswered', {
+				let description = this.$t('questions.solving.confirm.unanswered', {
 					count: unansweredCount
-				})).then(() => false)
+				});
+
+				if (!this.currentUserHasFinishedEntryExam && this.examTagId === this.entryExamTagId) {
+					description = `<p class="margin bottom">${description}</p>
+												 <p class="margin bottom">${this.$t('questions.solving.confirm.satisfactionGuaranteeWarning')}</p>
+												 <p>${this.$t('questions.solving.confirm.continueLater')}</p>`;
+				}
+
+				this.confirmQuizEnd(description).then(() => false)
 					.catch(() => this.performCheckQuestions());
 			} else {
 				examStateStore.remove(this.examStateStoreKey);

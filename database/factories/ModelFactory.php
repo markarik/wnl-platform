@@ -350,3 +350,7 @@ $factory->define(App\Models\ProductInstalment::class, function () {
 	];
 });
 
+$factory->define(App\Models\UserSettings::class, function () {
+	return [];
+});
+

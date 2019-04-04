@@ -18,7 +18,6 @@ import {
 	reactionsMutations
 } from 'js/store/modules/reactions';
 
-
 const namespaced = true;
 
 const LIMIT = 25;
@@ -286,11 +285,11 @@ const actions = {
 	},
 	checkQuestions({commit, getters, dispatch}, meta) {
 		const results = {
-				unanswered: [],
-				incorrect: [],
-				correct: []
-			},
-			questionsToStore = [];
+			unanswered: [],
+			incorrect: [],
+			correct: []
+		};
+		const questionsToStore = [];
 
 		getters.testQuestions.forEach((question) => {
 			if (!isNumber(question.selectedAnswer)) {
@@ -304,7 +303,13 @@ const actions = {
 			dispatch('resolveQuestion', question.id);
 		});
 
-		dispatch('saveQuestionsResults', {questions: questionsToStore, meta});
+		dispatch('saveQuestionsResults', {
+			questions: questionsToStore,
+			meta: {
+				...meta,
+				allQuestionsSolved: results.unanswered.length === 0,
+			}
+		});
 
 		// I'm not updating store on propose - not sure if we want to keep results in VUEX store
 		// if we decide to keep them here we need to remember about clearing them when exiting the "TEST MODE"
@@ -418,7 +423,7 @@ const actions = {
 			return response;
 		});
 	},
-	saveQuestionsResults({commit, getters, rootGetters, state}, {questions, meta={}}) {
+	saveQuestionsResults({commit, dispatch, getters, rootGetters, state}, {questions, meta={}}) {
 		const results = questions.map((questionId) => {
 			const question = getters.getQuestion(questionId);
 
@@ -434,6 +439,10 @@ const actions = {
 		const filters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId);
 
 		axios.post(getApiUrl(`quiz_results/${rootGetters.currentUserId}`), {results, meta: {...meta, filters}});
+
+		if (meta.allQuestionsSolved && meta.examTagId === rootGetters['course/entryExamTagId']) {
+			dispatch('updateCurrentUser', {hasFinishedEntryExam: true}, {root: true});
+		}
 	},
 	savePosition({getters, rootGetters, state}, payload) {
 		const parsedFilters = parseFilters(getters.activeFilters, state.filters, rootGetters.currentUserId);

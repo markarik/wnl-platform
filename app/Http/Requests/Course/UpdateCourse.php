@@ -24,8 +24,10 @@ class UpdateCourse extends FormRequest
 	public function rules()
 	{
 		return [
-			'name'   => 'required|string',
-			'is_plan_builder_enabled' => 'boolean'
+			'name' => 'required|string',
+			'entry_exam_lesson_id' => 'exists:lessons,id',
+			'entry_exam_tag_id' => 'exists:tags,id',
+			'is_plan_builder_enabled' => 'boolean',
 		];
 	}
 }

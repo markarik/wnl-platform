@@ -21,7 +21,7 @@
 				</div>
 			</div>
 			<p class="splash-screen__info text-dimmed">
-				Twoje subskrypcja będzie aktywna do {{endDate}}
+				Twoja subskrypcja będzie aktywna do {{endDate}}.
 			</p>
 		</div>
 	</div>

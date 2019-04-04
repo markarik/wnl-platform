@@ -28,6 +28,7 @@
 			<p class="has-text-centered margin vertical">Jeżeli chcesz zrealizować tę lekcję dziś, <router-link :to="{name: 'lessons-availabilites'}">zmień swój plan pracy</router-link>.</p>
 		</div>
 		<div v-else>
+			<h2 class="title is-2 has-text-centered margin vertical">{{lesson.name}}️</h2>
 			<p class="has-text-centered margin vertical">
 				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
 			</p>

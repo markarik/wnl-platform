@@ -49,6 +49,14 @@
       }
     }
   },
+	"unavailable": {
+		"value": "unavailable",
+		"actions": {
+			"dismiss": {
+				"value": "dismiss"
+			}
+		}
+	},
   "screen": {
     "value": "screen",
     "feature_components": {

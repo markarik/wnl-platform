@@ -1,13 +1,14 @@
 .m-checkoutListItem {
   @include centeredSpread;
+  @include textMinus1;
 
   border-bottom: 1px solid $color-mischka;
   color: $color-storm-gray;
-  font-size: $font-size-minus-1;
-  line-height: 1em;
-  padding: $space-xxs 0;
+  padding: $space-xxxs 0;
 
   &__value {
     font-weight: 300;
+    margin-left: $space-xxl;
+    text-align: right;
   }
 }

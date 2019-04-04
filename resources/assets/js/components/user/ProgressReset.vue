@@ -42,10 +42,11 @@
 		</div>
 		<wnl-satisfaction-guarantee-modal
 			:visible="satisfactionGuaranteeModalVisible"
-			:title="satisfactionGuaranteeModalTitle"
 			@closeModal="satisfactionGuaranteeModalVisible = false"
 			@submit="satisfactionGuaranteeModalSubmitAction"
-		></wnl-satisfaction-guarantee-modal>
+		>
+			<template slot="title">{{satisfactionGuaranteeModalTitle}}</template>
+		</wnl-satisfaction-guarantee-modal>
 	</div>
 
 </template>

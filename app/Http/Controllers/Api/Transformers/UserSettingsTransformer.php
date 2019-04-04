@@ -18,7 +18,7 @@ class UserSettingsTransformer extends ApiTransformer
 
 	public function transform(UserSettings $userSettings)
 	{
-		$data = array_merge($userSettings->settings, ['id' => $userSettings->id]);
+		$data = array_merge($userSettings->settings_with_defaults, ['id' => $userSettings->id]);
 
 		if ($this->parent) {
 			$data = array_merge($data, $this->parent);

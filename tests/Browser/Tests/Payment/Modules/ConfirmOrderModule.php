@@ -4,6 +4,7 @@
 namespace Tests\Browser\Tests\Payment\Modules;
 
 
+use App\Models\Coupon;
 use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Payment\ConfirmOrderPage;
 
@@ -76,11 +77,19 @@ class ConfirmOrderModule
 		$browser
 			->assertVisible('@cart')
 			->assertSeeIn('@cart', $order->product->name)
-			->assertSeeIn('@cart', 'Wysyłka')
-			->assertSeeIn('@cart', 'Na terenie Polski za darmo')
 			->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do')
 			->assertSeeIn('@cart', 'Kwota całkowita')
 			->assertSeeIn('@cart', $order->total_with_coupon);
+
+		if (!empty($browser->coupon) && $browser->coupon->kind === Coupon::KIND_PARTICIPANT) {
+			$browser
+				->assertSeeIn('@cart', 'Album')
+				->assertSeeIn('@cart', 'Zakup kursu ze zniżką 50% nie obejmuje nowego albumu map myśli. Nowy album możesz zamówić osobno po opłaceniu zamówienia za kurs.');
+		} else {
+			$browser
+				->assertSeeIn('@cart', 'Wysyłka')
+				->assertSeeIn('@cart', 'Na terenie Polski za darmo');
+		}
 
 		if (!empty($browser->coupon)) {
 			$browser->assertSeeIn('@cart', 'Zniżka');

@@ -29,10 +29,11 @@
 		<div>Liczba wątków: {{totalSocial}}</div>
 		<wnl-satisfaction-guarantee-modal
 			:visible="satisfactionGuaranteeModalVisible"
-			:title="$t('user.progressReset.progressModalHeader')"
 			@closeModal="satisfactionGuaranteeModalVisible = false"
 			@submit="resetProgress"
-		></wnl-satisfaction-guarantee-modal>
+		>
+			<template slot="title">{{$t('user.progressReset.progressModalHeader')}}</template>
+		</wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 <style lang="sass" scoped>

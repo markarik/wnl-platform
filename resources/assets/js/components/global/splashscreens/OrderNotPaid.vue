@@ -22,7 +22,6 @@
 
 	.splash-screen-image
 		max-width: 240px
-		margin-bottom: $margin-big
 </style>
 
 <script>

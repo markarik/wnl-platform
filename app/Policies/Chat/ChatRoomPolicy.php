@@ -2,7 +2,9 @@
 
 namespace App\Policies\Chat;
 
+use App\Contracts\CourseProvider;
 use App\Models\ChatRoom;
+use App\Models\Course;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -78,6 +80,11 @@ class ChatRoomPolicy
 	 */
 	protected function checkLessonAccess($user, $chatRoom)
 	{
+		if (Course::find((new CourseProvider)->getCourseId())->is_plan_builder_enabled) {
+			// Allow users to access chat to all lessons when plan builder is enabled
+			return true;
+		}
+
 		foreach ($chatRoom->lessons as $lesson) {
 			if ($lesson->isAvailable($user)) {
 				return true;

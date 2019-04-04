@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<img class="splash-screen-image" :src="countdownImageUrl" alt="">
+		<img class="splash-screen-image" :src="logoImageUrl" alt="Logo kursu">
 		<div class="has-text-centered">
 			<p class="title is-4">Twoje konto zostało zablokowane</p>
 			<p>
@@ -21,12 +21,10 @@
 </style>
 
 <script>
-import { getImageUrl } from 'js/utils/env';
-
 export default {
 	computed: {
-		countdownImageUrl() {
-			return getImageUrl('countdown.png');
+		logoImageUrl() {
+			return window.$wnl.course.productLogoWithStudents;
 		},
 	},
 };

@@ -1,7 +1,7 @@
 <template>
 	<div v-if="!isRenderBlocked" class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
 		<div class="wnl-lesson" v-if="shouldShowLesson">
-			<div class="wnl-lesson__view">
+			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
 					<div class="level-left">
 						<div class="level-item metadata">
@@ -270,6 +270,7 @@ export default {
 				this.setupCurrentUser().then(() => {
 					this.getSavedLesson(this.courseId, this.lessonId, this.currentUserProfileId)
 						.then(({route, status}) => {
+							debugger;
 							if (this.firstScreenId && (!route || status === STATUS_COMPLETE || route && route.name !== resource('screens'))) {
 								const params = {
 									courseId: this.courseId,
@@ -418,8 +419,10 @@ export default {
 	},
 	watch: {
 		'$route' () {
-			this.goToDefaultScreenIfNone();
-			this.updateLessonProgress();
+			if (this.isLessonAvailable(this.lessonId)) {
+				this.goToDefaultScreenIfNone();
+				this.updateLessonProgress();
+			}
 		}
 	},
 };

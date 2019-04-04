@@ -31,7 +31,7 @@ class UpdateUserBilling extends FormRequest
 	{
 		return [
 			'company_name' => 'required|max:250',
-			'vat_id'       => 'required|max:250',
+			'vat_id'       => 'max:250',
 			'address'      => 'required|max:250',
 			'zip'          => 'required|max:250',
 			'city'         => 'required|max:250',

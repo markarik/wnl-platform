@@ -221,6 +221,8 @@ return [
 	'cart-price-label' => 'Kwota całkowita',
 	'cart-price-value' => ':valuezł',
 	'cart-empty' => 'Twój koszyk jest pusty.',
+	'cart-album-label' => 'Album',
+	'cart-no-album-info' => 'Zakup kursu ze zniżką 50% nie obejmuje nowego albumu map myśli. Nowy album możesz zamówić osobno po opłaceniu zamówienia za kurs.',
 
 	/**
 	 * Personal identity number modal

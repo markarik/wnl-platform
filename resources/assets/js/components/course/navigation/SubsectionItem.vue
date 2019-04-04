@@ -3,6 +3,7 @@
 		:to="to"
 		:is-completed="isCompleted"
 		:is-active="isActive"
+		:is-disabled="isDisabled"
 		:meta="meta"
 		class="margin left small"
 	>
@@ -26,6 +27,7 @@ export default {
 	},
 	computed: {
 		...mapGetters(['lessonState']),
+		...mapGetters('course', ['isLessonAvailable']),
 		...mapGetters('progress', {
 			getSectionProgress: 'getSection'
 		}),
@@ -65,6 +67,9 @@ export default {
 		},
 		isActive() {
 			return this.lessonState.activeSubsection === this.item.id;
+		},
+		isDisabled() {
+			return !this.isLessonAvailable(this.lessonId);
 		},
 		meta() {
 			return `(${this.item.slidesCount})`;

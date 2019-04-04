@@ -2,7 +2,7 @@
 	<div class="item todo">
 		<router-link
 				class="item-wrapper"
-				:class="{'is-active': isActive, 'is-completed': isCompleted}"
+				:class="{'is-active': isActive, 'is-completed': isCompleted, 'is-disabled': isDisabled}"
 				:to="to"
 		>
 			<span class="sidenav-item-content">
@@ -27,6 +27,10 @@
 		padding: 7px 15px
 		word-break: break-word
 		word-wrap: break-word
+
+		&.is-disabled
+			pointer-events: none
+			color: $color-lighter-gray
 
 	.sidenav-item-meta
 		color: $color-background-gray
@@ -67,6 +71,10 @@ export default {
 			default: false
 		},
 		isCompleted: {
+			type: Boolean,
+			default: false
+		},
+		isDisabled: {
 			type: Boolean,
 			default: false
 		},

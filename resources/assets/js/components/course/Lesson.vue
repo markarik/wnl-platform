@@ -270,7 +270,6 @@ export default {
 				this.setupCurrentUser().then(() => {
 					this.getSavedLesson(this.courseId, this.lessonId, this.currentUserProfileId)
 						.then(({route, status}) => {
-							debugger;
 							if (this.firstScreenId && (!route || status === STATUS_COMPLETE || route && route.name !== resource('screens'))) {
 								const params = {
 									courseId: this.courseId,
@@ -422,9 +421,18 @@ export default {
 		window.removeEventListener('resize', this.updateElementHeight);
 	},
 	watch: {
+		async lessonId() {
+			try {
+				await this.setupLesson(this.lessonId);
+				if (this.isLessonAvailable(this.lessonId)) {
+					this.launchLesson();
+				}
+			} catch (e) {
+				$wnl.logger.error(e);
+			}
+		},
 		'$route' () {
 			if (this.isLessonAvailable(this.lessonId)) {
-				this.goToDefaultScreenIfNone();
 				this.updateLessonProgress();
 			}
 		}

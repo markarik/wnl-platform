@@ -1,5 +1,5 @@
 <template>
-	<div class="splash-screen">
+	<div>
 		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
 		<div v-if="diff > 0">
 			<p class="title is-4">Twoja przygoda z kursem zacznie się już za:</p>
@@ -30,39 +30,32 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.splash-screen
-		align-items: center
+	.splash-screen-image
+		max-width: 240px
+
+	.splash-screen-counter
 		display: flex
-		flex-direction: column
 		justify-content: center
-		height: 100%
-		text-align: center
-		padding: 0 $margin-small
+		margin-bottom: $margin-huge
 
-		.splash-screen-image
-			max-width: 240px
+		&__item
+			margin-right: $margin-small
+			font-size: $font-size-plus-2
+			font-weight: bold
 
-		.splash-screen-counter
-			display: flex
-			justify-content: center
-			margin-bottom: $margin-huge
+			@media #{$media-query-tablet}
+				font-size: $font-size-plus-4
 
-			&__item
-				margin-right: $margin-small
-				font-size: $font-size-plus-2
-				font-weight: bold
+			&.-small
+				font-size: $font-size-plus-1
 
 				@media #{$media-query-tablet}
-					font-size: $font-size-plus-4
+					font-size: $font-size-plus-2
 
-				&.-small
-					font-size: $font-size-plus-1
+			&:last-child
+				margin-right: 0
 
-					@media #{$media-query-tablet}
-						font-size: $font-size-plus-2
-
-				&:last-child
-					margin-right: 0
+	.splash-screen
 		&__info
 			font-size: $font-size-plus-1
 

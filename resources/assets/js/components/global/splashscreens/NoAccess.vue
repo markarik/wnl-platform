@@ -1,5 +1,5 @@
 <template>
-	<div class="splash-screen scrollable-main-container">
+	<div>
 		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
 		<div class="has-text-centered">
 			<p class="title is-4">Twoje konto zostało zablokowane</p>
@@ -14,13 +14,6 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
-
-	.splash-screen
-		align-items: center
-		display: flex
-		flex-direction: column
-		height: 100%
-		justify-content: center
 
 	.splash-screen-image
 		max-width: 400px

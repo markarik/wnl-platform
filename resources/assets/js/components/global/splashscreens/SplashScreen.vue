@@ -1,6 +1,6 @@
 <template>
 	<div class="splash-screen__container">
-		<div class="splash-screen__content">
+		<div class="splash-screen__content scrollable-main-container">
 					<wnl-upcoming-edition v-if="$upcomingEditionParticipant.isAllowed('access')"/>
 					<wnl-no-access v-else-if="currentUserAccountSuspended"/>
 					<wnl-order-not-paid v-else />
@@ -19,12 +19,17 @@
 	.splash-screen__container
 		display: flex
 		flex-direction: column
-		flex: 1 0 auto
 		height: 100%
 		width: 100%
 
 	.splash-screen__content
-		flex: 1 0 auto
+		align-items: center
+		display: flex
+		flex-direction: column
+		justify-content: center
+		height: 100%
+		text-align: center
+		padding: $margin-small
 
 	.splash-screen__footer
 		border-top: $border-light-gray

@@ -1,10 +1,10 @@
 <template>
-	<div class="splash-screen scrollable-main-container">
+	<div>
 		<img class="splash-screen-image" :src="countdownImageUrl" alt="Logo kursu">
 		<div class="has-text-centered">
 			<p class="title is-4">Twoje zamówienie oczekuje na płatność</p>
 			<p class="margin vertical">
-							Na płatność masz <strong>7 dni</strong> od złożenia zamówienia.
+				Na płatność masz <strong>7 dni</strong> od złożenia zamówienia.
 			</p>
 			<p class="margin vertical text-dimmed" v-if="currentProductAccessStartDateIsPast">Dostęp do kursu otrzymasz od razu po dokonaniu płatności.</p>
 			<p class="margin vertical text-dimmed" v-else>Dostęp do kursu otrzymasz od {{currentProductAccessStartDate}}.</p>
@@ -20,16 +20,9 @@
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.splash-screen
-		align-items: center
-		display: flex
-		flex-direction: column
-		height: 100%
-		justify-content: center
-
 	.splash-screen-image
-		max-width: 400px
-		padding: 0 20px
+		max-width: 240px
+		margin-bottom: $margin-big
 </style>
 
 <script>

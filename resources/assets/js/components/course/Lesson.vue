@@ -1,5 +1,5 @@
 <template>
-	<div v-if="!isRenderBlocked" class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
+	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
 		<div class="wnl-lesson" v-if="shouldShowLesson">
 			<div class="wnl-lesson-view">
 				<div class="level wnl-screen-title">
@@ -41,22 +41,23 @@
 				<router-link :to="{name: 'courses', params: {courseId}}" class="button is-primary is-outlined">Wróć na dashboard</router-link>
 			</div>
 		</div>
+
+		<wnl-satisfaction-guarantee-modal
+			v-if="isSatisfactionGuaranteeModalVisible"
+			:visible="isSatisfactionGuaranteeModalVisible"
+			:display-headline="false"
+			@closeModal="() => satisfactionGuaranteeModalReject(satisfactionGuaranteeModalCanceled)"
+			@submit="satisfactionGuaranteeModalResolve"
+		>
+			<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem Wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
+			<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu. Warunkiem jest usunięcie postępu, ułożenie nowego planu pracy i rozwiązanie Wstępnego LEK-u przed rozpoczęciem pierwszej obowiązkowej lekcji.</template>
+			<template slot="footer">
+				<span v-html="$t('ui.satisfactionGuarantee.noteInLesson', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
+			</template>
+			<template slot="close">Wróć na dashboard</template>
+			<template slot="submit">Rozumiem, akceptuję</template>
+		</wnl-satisfaction-guarantee-modal>
 	</div>
-	<wnl-satisfaction-guarantee-modal
-		v-else-if="isSatisfactionGuaranteeModalVisible"
-		:visible="true"
-		:display-headline="false"
-		@closeModal="() => satisfactionGuaranteeModalReject(satisfactionGuaranteeModalCanceled)"
-		@submit="satisfactionGuaranteeModalResolve"
-	>
-		<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem Wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
-		<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu. Warunkiem jest usunięcie postępu, ułożenie nowego planu pracy i rozwiązanie Wstępnego LEK-u przed rozpoczęciem pierwszej obowiązkowej lekcji.</template>
-		<template slot="footer">
-			<span v-html="$t('ui.satisfactionGuarantee.noteInLesson', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
-		</template>
-		<template slot="close">Wróć na dashboard</template>
-		<template slot="submit">Rozumiem, akceptuję</template>
-	</wnl-satisfaction-guarantee-modal>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -114,7 +115,6 @@ export default {
 				 * all browsers are able to beautifully scroll the content.
 				 */
 			elementHeight: get(this.$parent, '$el.offsetHeight') || '100%',
-			isRenderBlocked: true,
 			isSatisfactionGuaranteeModalVisible: false,
 			satisfactionGuaranteeModalCanceled: 'satisfactionGuaranteeModalCanceled',
 			satisfactionGuaranteeModalResolve: noop,
@@ -226,9 +226,16 @@ export default {
 				},
 			};
 		},
+		shouldDisplaySatisfactionGuaranteeModal() {
+			return this.lesson.is_required &&
+				this.isLessonAvailable(this.lesson.id) &&
+				this.lesson.id !== this.entryExamLessonId &&
+				!this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) &&
+				!this.currentUserHasFinishedEntryExam;
+		},
 		shouldShowLesson() {
 			return this.isLessonAvailable(this.lessonId) || this.showLesson;
-		}
+		},
 	},
 	methods: {
 		...mapActions('progress', [
@@ -306,13 +313,7 @@ export default {
 			});
 		},
 		async displaySatisfactionGuaranteeModalIfNeeded() {
-			if (
-				this.lesson.is_required &&
-				this.isLessonAvailable(this.lessonId) &&
-				this.lessonId !== this.entryExamLessonId &&
-				!this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) &&
-				!this.currentUserHasFinishedEntryExam
-			) {
+			if (this.shouldDisplaySatisfactionGuaranteeModal) {
 				this.isSatisfactionGuaranteeModalVisible = true;
 
 				await new Promise((resolve, reject) => {
@@ -401,7 +402,6 @@ export default {
 				return;
 			}
 
-			this.isRenderBlocked = false;
 			this.toggleOverlay({source: 'lesson', display: true});
 
 			try {
@@ -428,11 +428,11 @@ export default {
 		lessonId() {
 			this.setup();
 		},
-		'$route' () {
-			if (this.isLessonAvailable(this.lessonId)) {
+		'$route'() {
+			if (!this.shouldDisplaySatisfactionGuaranteeModal) {
 				this.updateLessonProgress();
 			}
-		}
+		},
 	},
 };
 </script>

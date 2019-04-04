@@ -1,10 +1,13 @@
 <template>
 	<div class="splash-screen__container">
 		<div class="splash-screen__content scrollable-main-container">
-			<wnl-upcoming-edition v-if="$upcomingEditionParticipant.isAllowed('access')"/>
-			<wnl-order-not-paid v-else-if="hasNotPaidOrder" />
-			<wnl-no-access v-else-if="currentUserAccountSuspended"/>
-			<wnl-default-splash-screen v-else />
+			<wnl-text-loader v-if="isLoading"></wnl-text-loader>
+			<template v-else>
+				<wnl-no-access v-if="currentUserAccountSuspended"/>
+				<wnl-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
+				<wnl-order-not-paid v-else-if="hasNotPaidOrder" />
+				<wnl-default-splash-screen v-else />
+			</template>
 		</div>
 		<footer class="splash-screen__footer text-dimmed">
 			<p class="splash-screen__footer__text">
@@ -56,6 +59,7 @@ export default {
 	data() {
 		return {
 			hasNotPaidOrder: false,
+			isLoading: true,
 		};
 	},
 	components: { WnlNoAccess, WnlUpcomingEdition, WnlOrderNotPaid, WnlDefaultSplashScreen },
@@ -69,6 +73,8 @@ export default {
 			this.hasNotPaidOrder = orders.some(order => !order.canceled && !order.paid);
 		} catch (e) {
 			$wnl.logger.capture(e);
+		} finally {
+			this.isLoading = false;
 		}
 	}
 };

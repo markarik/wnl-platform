@@ -3,15 +3,16 @@
 		<wnl-sidenav-slot
 			:is-visible="canRenderSidenav"
 			:is-detached="!isSidenavMounted"
+			:is-narrow="!isCurrentEditionParcitipantAllowedAccess"
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<wnl-course-navigation
-				v-if="$currentEditionParticipant.isAllowed('access')"
+				v-if="isCurrentEditionParcitipantAllowedAccess"
 				:is-lesson="isLesson"
 			>
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
-		<div class="wnl-course-content wnl-column" v-if="$currentEditionParticipant.isAllowed('access')">
+		<div class="wnl-course-content wnl-column" v-if="isCurrentEditionParcitipantAllowedAccess">
 			<router-view :presence-channel="presenceChannel"/>
 		</div>
 		<wnl-splash-screen v-else/>
@@ -24,9 +25,9 @@
 			<div v-if="isLesson" class="lesson-active-users-container">
 				<wnl-active-users message="dashboard.activeUsersLessons" :channel="presenceChannel"/>
 			</div>
-			<wnl-public-chat :rooms="chatRooms" v-if="$currentEditionParticipant.isAllowed('access')"/>
+			<wnl-public-chat :rooms="chatRooms" v-if="isCurrentEditionParcitipantAllowedAccess"/>
 		</wnl-sidenav-slot>
-		<div v-if="$currentEditionParticipant.isAllowed('access') && isChatToggleVisible" class="wnl-chat-toggle">
+		<div v-if="isCurrentEditionParcitipantAllowedAccess && isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż czat</span>
@@ -103,6 +104,9 @@ export default {
 				screenId: this.screenId,
 				slide: this.slide,
 			};
+		},
+		isCurrentEditionParcitipantAllowedAccess() {
+			return this.$currentEditionParticipant.isAllowed('access');
 		},
 		isLesson() {
 			// Allow users to look at unavailable lessons when PlanBuilder is enabled

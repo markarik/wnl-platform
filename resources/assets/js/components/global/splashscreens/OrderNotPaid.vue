@@ -29,8 +29,6 @@ import moment from 'moment';
 import { getUrl } from 'js/utils/env';
 import { mapGetters } from 'vuex';
 
-require('moment-duration-format');
-
 export default {
 	computed: {
 		...mapGetters('products', ['getCurrentCourse']),

@@ -1,9 +1,10 @@
 <template>
 	<div class="splash-screen__container">
 		<div class="splash-screen__content scrollable-main-container">
-					<wnl-upcoming-edition v-if="$upcomingEditionParticipant.isAllowed('access')"/>
-					<wnl-no-access v-else-if="currentUserAccountSuspended"/>
-					<wnl-order-not-paid v-else />
+			<wnl-upcoming-edition v-if="$upcomingEditionParticipant.isAllowed('access')"/>
+			<wnl-no-access v-else-if="currentUserAccountSuspended"/>
+			<wnl-order-not-paid v-else-if="hasNotPaidOrder" />
+			<wnl-default-splash-screen v-else />
 		</div>
 		<footer class="splash-screen__footer text-dimmed">
 			<p class="splash-screen__footer__text">
@@ -45,12 +46,27 @@ import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant
 import WnlNoAccess from 'js/components/global/splashscreens/NoAccess';
 import WnlUpcomingEdition from 'js/components/global/splashscreens/UpcomingEdition';
 import WnlOrderNotPaid from 'js/components/global/splashscreens/OrderNotPaid';
+import WnlDefaultSplashScreen from 'js/components/global/splashscreens/Default';
+import {getApiUrl} from 'js/utils/env';
 
 export default {
-	components: { WnlNoAccess, WnlUpcomingEdition, WnlOrderNotPaid },
+	data() {
+		return {
+			hasNotPaidOrder: false,
+		};
+	},
+	components: { WnlNoAccess, WnlUpcomingEdition, WnlOrderNotPaid, WnlDefaultSplashScreen },
 	perimeters: [upcomingEditionParticipant],
 	computed: {
 		...mapGetters(['currentUserAccountSuspended']),
+	},
+	async mounted() {
+		try {
+			const {data: orders} = await axios.get(getApiUrl('orders/all'));
+			this.hasNotPaidOrder = orders.some(order => !order.canceled && !order.paid);
+		} catch (e) {
+			$wnl.logger.capture(e);
+		}
 	}
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<img class="splash-screen-image" :src="countdownImageUrl" alt="Odliczamy dni do kursu">
+		<img class="splash-screen-image" :src="countdownImageUrl" alt="">
 		<div class="has-text-centered">
 			<p class="title is-4">Twoje konto zostało zablokowane</p>
 			<p>
@@ -21,14 +21,10 @@
 </style>
 
 <script>
-import { getImageUrl, getUrl } from 'js/utils/env';
-import { mapGetters } from 'vuex';
-
-require('moment-duration-format');
+import { getImageUrl } from 'js/utils/env';
 
 export default {
 	computed: {
-		...mapGetters('products', ['getCurrentCourse']),
 		countdownImageUrl() {
 			return getImageUrl('countdown.png');
 		},

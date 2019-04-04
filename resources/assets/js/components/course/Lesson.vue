@@ -42,7 +42,7 @@
 		</div>
 	</div>
 	<wnl-satisfaction-guarantee-modal
-		v-else
+		v-else-if="isSatisfactionGuaranteeModalVisible"
 		:visible="true"
 		:display-headline="false"
 		@closeModal="() => satisfactionGuaranteeModalReject(satisfactionGuaranteeModalCanceled)"
@@ -92,7 +92,6 @@ import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/Satisfact
 import {resource} from 'js/utils/config';
 import {breadcrumb} from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
-import features from 'js/consts/events_map/features.json';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 import {USER_SETTING_NAMES} from 'js/consts/settings';
 
@@ -115,6 +114,7 @@ export default {
 				 */
 			elementHeight: get(this.$parent, '$el.offsetHeight') || '100%',
 			isRenderBlocked: true,
+			isSatisfactionGuaranteeModalVisible: false,
 			satisfactionGuaranteeModalCanceled: 'satisfactionGuaranteeModalCanceled',
 			satisfactionGuaranteeModalResolve: noop,
 			satisfactionGuaranteeModalReject: noop,
@@ -308,10 +308,13 @@ export default {
 		async displaySatisfactionGuaranteeModalIfNeeded() {
 			if (
 				this.lesson.is_required &&
-				this.lesson.id !== this.entryExamLessonId &&
+				this.isLessonAvailable(this.lessonId) &&
+				this.lessonId !== this.entryExamLessonId &&
 				!this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) &&
 				!this.currentUserHasFinishedEntryExam
 			) {
+				this.isSatisfactionGuaranteeModalVisible = true;
+
 				await new Promise((resolve, reject) => {
 					this.satisfactionGuaranteeModalResolve = resolve;
 					this.satisfactionGuaranteeModalReject = reject;
@@ -384,6 +387,7 @@ export default {
 	async mounted () {
 		try {
 			await this.displaySatisfactionGuaranteeModalIfNeeded();
+			this.isSatisfactionGuaranteeModalVisible = false;
 		} catch (e) {
 			if (e !== this.satisfactionGuaranteeModalCanceled) {
 				$wnl.logger.error(e);

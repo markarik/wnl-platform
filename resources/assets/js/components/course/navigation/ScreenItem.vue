@@ -2,6 +2,7 @@
 	<wnl-lesson-navigation-item
 		:to="to"
 		:is-completed="isCompleted"
+		:is-disabled="isDisabled"
 		:meta="meta"
 	>
 		<span slot="title">{{item.name}}</span>
@@ -28,7 +29,7 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters('course', ['getSectionsForScreen']),
+		...mapGetters('course', ['getSectionsForScreen', 'isLessonAvailable']),
 		...mapGetters('progress', {
 			getScreenProgress: 'getScreen',
 		}),
@@ -58,6 +59,9 @@ export default {
 			const screenProgress = this.getScreenProgress(this.courseId, this.lessonId, this.screenId) || {};
 
 			return screenProgress.status === STATUS_COMPLETE;
+		},
+		isDisabled() {
+			return !this.isLessonAvailable(this.lessonId);
 		},
 		meta() {
 			return this.item.slides_count && `(${this.item.slides_count})`;

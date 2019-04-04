@@ -63,7 +63,7 @@
 </style>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapState } from 'vuex';
 import ActiveUsers from 'js/components/course/dashboard/ActiveUsers';
 import PublicChat from 'js/components/chat/PublicChat.vue';
 import Navigation from 'js/components/course/Navigation';
@@ -87,6 +87,7 @@ export default {
 	},
 	props: ['courseId', 'lessonId', 'screenId', 'slide'],
 	computed: {
+		...mapState('course', ['isPlanBuilderEnabled']),
 		...mapGetters('course', ['isLessonAvailable', 'ready']),
 		...mapGetters([
 			'isSidenavVisible',
@@ -104,7 +105,8 @@ export default {
 			};
 		},
 		isLesson() {
-			return typeof this.lessonId !== 'undefined' && this.isLessonAvailable(this.lessonId);
+			// Allow users to look at unavailable lessons when PlanBuilder is enabled
+			return typeof this.lessonId !== 'undefined' && (this.isLessonAvailable(this.lessonId) || this.isPlanBuilderEnabled);
 		},
 		chatRooms() {
 			let courseChatRoom = `courses-${this.courseId}`,

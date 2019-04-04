@@ -25,6 +25,7 @@ const state = {
 	ready: false,
 	id: 0,
 	name: '',
+	isPlanBuilderEnabled: false,
 	groups: [],
 	sections: {},
 	subsections: {},
@@ -215,11 +216,18 @@ const mutations = {
 			...subsections
 		});
 	},
-	[types.SET_COURSE](state, {name, id, entry_exam_lesson_id, entry_exam_tag_id}) {
+	[types.SET_COURSE](state, {
+		name,
+		id,
+		entry_exam_lesson_id,
+		entry_exam_tag_id,
+		is_plan_builder_enabled,
+	}) {
 		set(state, 'name', name);
 		set(state, 'id', id);
 		set(state, 'entryExamLessonId', entry_exam_lesson_id);
 		set(state, 'entryExamTagId', entry_exam_tag_id);
+		set(state, 'isPlanBuilderEnabled', is_plan_builder_enabled);
 	},
 };
 

@@ -11,7 +11,7 @@ const composeItem = ({
 	active = false,
 	meta
 }) => {
-	const to = !isDisabled && routeName ? {
+	const to = routeName ? {
 		name: routeName,
 		params: routeParams
 	} : {};

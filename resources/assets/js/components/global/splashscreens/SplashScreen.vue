@@ -5,7 +5,7 @@
 			<template v-else>
 				<wnl-no-access v-if="currentUserAccountSuspended"/>
 				<wnl-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
-				<wnl-order-not-paid v-else-if="hasNotPaidOrder" />
+				<wnl-order-not-paid v-else-if="latestCourseWaitingForPayment" />
 				<wnl-default-splash-screen v-else />
 			</template>
 		</div>
@@ -54,11 +54,12 @@ import WnlDefaultSplashScreen from 'js/components/global/splashscreens/Default';
 
 import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
 import {getApiUrl} from 'js/utils/env';
+import {PRODUCTS_SLUGS} from 'js/consts/products';
 
 export default {
 	data() {
 		return {
-			hasNotPaidOrder: false,
+			latestCourseWaitingForPayment: false,
 			isLoading: true,
 		};
 	},
@@ -67,10 +68,24 @@ export default {
 	computed: {
 		...mapGetters(['currentUserAccountSuspended']),
 	},
+	methods: {
+		async getIsLatestCourseWaitingForPayment() {
+			const {data: orders} = await axios.get(getApiUrl('orders/all'));
+			const courseOrders = orders.filter(order => order.product.slug === PRODUCTS_SLUGS.SLUG_ONLINE);
+
+			if (courseOrders.length === 0) {
+				return false;
+			}
+
+			const maxCourseProductId = courseOrders.reduce((max, currentOrder) => currentOrder.product.id > max ? currentOrder.product.id : max, null);
+
+			return !courseOrders.filter(order => order.product.id === maxCourseProductId && !order.canceled)
+				.some(order => order.paid);
+		},
+	},
 	async mounted() {
 		try {
-			const {data: orders} = await axios.get(getApiUrl('orders/all'));
-			this.hasNotPaidOrder = orders.some(order => !order.canceled && !order.paid);
+			this.latestCourseWaitingForPayment = await this.getIsLatestCourseWaitingForPayment();
 		} catch (e) {
 			$wnl.logger.capture(e);
 		} finally {

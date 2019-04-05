@@ -2,15 +2,24 @@
 
 namespace App\Events\Coupons;
 
+use Log;
+use App\Models\Coupon;
 use Facades\App\Contracts\Requests;
+use GuzzleHttp\Exception\ClientException;
 
-abstract class CouponEvent {
+abstract class CouponEvent
+{
 	public $coupon;
 
-	abstract public function shouldSync();
 	abstract public function sync();
 
-	public function issueSyncRequest($method, $coupon) {
+	public function shouldSync(Coupon $coupon)
+	{
+		return $this->isCouponSyncable($coupon);
+	}
+
+	public function issueSyncRequest($method, $coupon)
+	{
 		if (empty(config('coupons.coupons_sync_url'))) {
 			\Log::info('Can not sync coupon. The sync URL is not provided');
 			return;
@@ -26,6 +35,19 @@ abstract class CouponEvent {
 			'coupon' => $coupon
 		];
 
-		Requests::request($method, $url, $headers, $body);
+		try {
+			Requests::request($method, $url, $headers, $body);
+		} catch (ClientException $e) {
+			if($e->getCode() < 500) {
+				Log::warning($e);
+			} else {
+				throw $e;
+			}
+		}
+	}
+
+	protected function isCouponSyncable(Coupon $coupon)
+	{
+		return in_array($coupon->kind, [Coupon::KIND_VOUCHER, Coupon::KIND_GROUP]);
 	}
 }

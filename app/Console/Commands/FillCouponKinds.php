@@ -24,7 +24,7 @@ class FillCouponKinds extends Command
 	/**
 	 * Execute the console command.
 	 *
-	 * @return mixed
+	 * @return void
 	 */
 	public function handle()
 	{
@@ -38,11 +38,9 @@ class FillCouponKinds extends Command
 				$coupon->kind = Coupon::KIND_PARTICIPANT;
 			} else if ($coupon->name === 'Zniżka grupowa') {
 				$coupon->kind = Coupon::KIND_GROUP;
+			} else {
+				$coupon->kind = Coupon::KIND_VOUCHER;
 			}
-			// I didn't set "voucher" kind on coupons on purpose because:
-			// 1. It won't cause any problems that this kind is not set,
-			// 2. When creating vouchers user can pass different arguments like name, value, type etc,
-			// hence, it's hard to estimate if it's really a voucher basing only on historical data
 
 			$coupon->save();
 			$bar->advance();

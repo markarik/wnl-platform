@@ -100,12 +100,13 @@ class PersonalDataController extends Controller
 	{
 		$expires = Carbon::now()->addYears(1);
 		$coupon = new Coupon([
-			'name'         => 'Study Buddy',
-			'type'         => 'amount',
-			'value'        => 100,
-			'expires_at'   => $expires,
-			'code'         => strtoupper(str_random(7)),
+			'name' => 'Study Buddy',
+			'type' => 'amount',
+			'value' => 100,
+			'expires_at' => $expires,
+			'code' => strtoupper(str_random(7)),
 			'times_usable' => 0,
+			'kind' => Coupon::KIND_STUDY_BUDDY,
 		]);
 
 		$order->studyBuddy()->create([

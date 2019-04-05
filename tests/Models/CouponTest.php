@@ -25,7 +25,7 @@ class CouponTest extends TestCase
 	{
 		Event::fake();
 
-		Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
+		Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_VOUCHER]);
 
 		Event::assertDispatchedTimes(CouponCreated::class, 1);
 		Event::assertNotDispatched(CouponUpdated::class);
@@ -37,7 +37,7 @@ class CouponTest extends TestCase
 	{
 		Event::fake();
 
-		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
+		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_VOUCHER]);
 		$coupon->value = 100;
 		$coupon->save();
 
@@ -55,7 +55,7 @@ class CouponTest extends TestCase
 		]);
 		Bus::fake();
 
-		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
+		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_VOUCHER]);
 		$coupon->value = 100;
 		$coupon->save();
 
@@ -70,7 +70,7 @@ class CouponTest extends TestCase
 	{
 		Event::fake();
 
-		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
+		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_VOUCHER]);
 		$coupon->delete();
 
 		Event::assertDispatchedTimes(CouponCreated::class, 1);
@@ -88,6 +88,7 @@ class CouponTest extends TestCase
 		$coupon->value = 10;
 		$coupon->type = 'amount';
 		$coupon->times_usable = 10;
+		$coupon->kind = Coupon::KIND_VOUCHER;
 
 		Config::set('coupons.coupons_sync_url', $expectedUrl);
 		Config::set('coupons.coupons_sync_token', $expectedToken);
@@ -112,7 +113,7 @@ class CouponTest extends TestCase
 
 		$mocked = Requests::shouldReceive('request');
 
-		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
+		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_VOUCHER]);
 		$couponToSync = $coupon->toArray();
 
 		$mocked->withArgs([
@@ -142,7 +143,7 @@ class CouponTest extends TestCase
 
 		$mocked = Requests::shouldReceive('request');
 
-		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
+		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_VOUCHER]);
 		$coupon->times_usable = 10;
 		$couponToSync = $coupon->toArray();
 		unset($couponToSync['id']);
@@ -172,9 +173,21 @@ class CouponTest extends TestCase
 		Config::set('coupons.coupons_sync_token', $expectedToken);
 		Config::set('coupons.coupons_sync_is_source', false);
 
-		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
-		$couponToSync = $coupon->toArray();
-		unset($couponToSync['id']);
+		Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_VOUCHER]);
+
+		$mocked->never()->verify();
+	}
+
+	/** @test */
+	public function creating_coupon_does_not_perform_sync_for_participant_coupon() {
+		$mocked = Requests::shouldReceive('request');
+		$expectedUrl = 'http://platform.test';
+		$expectedToken = '123';
+		Config::set('coupons.coupons_sync_url', $expectedUrl);
+		Config::set('coupons.coupons_sync_token', $expectedToken);
+		Config::set('coupons.coupons_sync_is_source', true);
+
+		Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_PARTICIPANT]);
 
 		$mocked->never()->verify();
 	}
@@ -187,7 +200,7 @@ class CouponTest extends TestCase
 		Config::set('coupons.coupons_sync_token', $expectedToken);
 		Config::set('coupons.coupons_sync_is_source', false);
 
-		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
+		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_VOUCHER]);
 		$coupon->times_usable = 10;
 
 		$mocked = Requests::shouldReceive('request');
@@ -197,10 +210,26 @@ class CouponTest extends TestCase
 	}
 
 	/** @test */
+	public function updating_coupon_does_not_perform_sync_for_no_participant_coupon() {
+		$mocked = Requests::shouldReceive('request');
+		$expectedUrl = 'http://platform.test';
+		$expectedToken = '123';
+		Config::set('coupons.coupons_sync_url', $expectedUrl);
+		Config::set('coupons.coupons_sync_token', $expectedToken);
+		Config::set('coupons.coupons_sync_is_source', true);
+
+		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_PARTICIPANT]);
+		$coupon->times_usable = 10;
+
+		$coupon->save();
+		$mocked->never()->verify();
+	}
+
+	/** @test */
 	public function updating_coupon_without_url_does_not_throw() {
 		Config::set('coupons.coupons_sync_url', null);
 
-		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
+		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_VOUCHER]);
 		$coupon->times_usable = 10;
 
 		$mocked = Requests::shouldReceive('request')->never();
@@ -218,7 +247,7 @@ class CouponTest extends TestCase
 		Config::set('coupons.coupons_sync_token', $expectedToken);
 		Config::set('coupons.coupons_sync_is_source', false);
 
-		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10]);
+		$coupon = Coupon::create(['code' => 'fizzbuzz', 'type' => 'amount', 'value' => 10, 'kind' => Coupon::KIND_VOUCHER]);
 		$coupon->delete();
 
 		$mocked->never()->verify();

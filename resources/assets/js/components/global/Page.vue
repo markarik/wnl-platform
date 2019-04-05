@@ -42,12 +42,13 @@ export default {
 			created_at: null,
 			updated_at: null,
 			tags: null,
-			discussion_id: 0
+			discussion_id: 0,
+			is_discussable: false
 		};
 	},
 	computed: {
 		hasQna() {
-			return this.is_discussable;
+			return this.is_discussable && this.discussion_id;
 		}
 	},
 	methods: {
@@ -93,7 +94,7 @@ export default {
 			this.content = injectArguments(newValue, this.arguments);
 		},
 		discussion_id() {
-			this.hasQna && this.discussion_id && this.fetchQuestionsForDiscussion(this.discussion_id);
+			this.hasQna && this.fetchQuestionsForDiscussion(this.discussion_id);
 		},
 		slug: function () {
 			this.fetch();

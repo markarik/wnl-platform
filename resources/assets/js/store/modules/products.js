@@ -12,10 +12,11 @@ const state = {
 
 // Getters
 const getters = {
-	getCurrentCourseProductSignupsOpen: state => {
-		const currentProduct = state.products.find(item => item.slug === PRODUCTS_SLUGS.SLUG_ONLINE);
+	getCurrentCourseProductSignupsOpen: (state, getters) => {
+		const currentProduct = getters.getCurrentCourse;
 		return currentProduct && currentProduct.signups_open;
 	},
+	getCurrentCourse: state => state.products.find(item => item.slug === PRODUCTS_SLUGS.SLUG_ONLINE),
 	getAlbum: state => state.products.find(item => item.slug === PRODUCTS_SLUGS.SLUG_ALBUM),
 };
 

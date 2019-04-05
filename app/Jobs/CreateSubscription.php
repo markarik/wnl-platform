@@ -51,7 +51,5 @@ class CreateSubscription
 			['user_id' => $user->id],
 			['access_start' => $accessStart, 'access_end' => $accessEnd]
 		);
-
-		\Cache::forget(UserSubscription::getCacheKey($this->order->user->id));
 	}
 }

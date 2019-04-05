@@ -12,9 +12,21 @@
 			<wnl-submit class="submit"/>
 		</div>
 		<wnl-form-text
-				name="name"
-				class="margin top bottom"
+			name="name"
+			class="margin vertical"
 		>Nazwa</wnl-form-text>
+		<wnl-form-text
+			name="entry_exam_tag_id"
+			class="margin top bottom"
+		>ID tagu, którym oznaczony jest wstępny egzamin</wnl-form-text>
+		<wnl-form-text
+			name="entry_exam_lesson_id"
+			class="margin top bottom"
+		>ID lekcji, która zawiera wstępny egzamin</wnl-form-text>
+		<wnl-form-check
+			name="is_plan_builder_enabled"
+			class="margin vertical"
+		>Włącz edytor planu pracy</wnl-form-check>
 	</wnl-form>
 </template>
 
@@ -42,7 +54,7 @@
 </style>
 
 <script>
-import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit} from 'js/components/global/form';
+import {Form as WnlForm, Text as WnlFormText, Check as WnlFormCheck, Submit as WnlSubmit} from 'js/components/global/form';
 
 export default {
 	name: 'CourseEditor',
@@ -60,6 +72,7 @@ export default {
 	},
 	components: {
 		WnlFormText,
+		WnlFormCheck,
 		WnlForm,
 		WnlSubmit,
 	},

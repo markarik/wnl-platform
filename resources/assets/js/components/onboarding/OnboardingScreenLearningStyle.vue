@@ -20,7 +20,7 @@
 			</div>
 			<div class="row-item">
 				<span class="row-item-icon">💡</span>
-				<span><strong>Wskazówka:</strong> Szczegółowy opis tego sposobu pracy znajdziesz w lekcji: WSTĘP DO KURSU > Efektyna nauka</span>
+				<span><strong>Wskazówka:</strong> Szczegółowy opis tych sposobów pracy znajdziesz w lekcji: WSTĘP DO KURSU > Efektyna nauka</span>
 			</div>
 		</div>
 

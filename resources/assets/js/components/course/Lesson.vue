@@ -1,34 +1,64 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
-		<div class="wnl-lesson" v-if="isLessonAvailable(lessonId)">
-			<div class="wnl-lesson-view">
-				<div class="level wnl-screen-title">
-					<div class="level-left">
-						<div class="level-item metadata">
-							{{lessonName}}
+		<template v-if="!shouldDisplaySatisfactionGuaranteeModal">
+			<div class="wnl-lesson" v-if="shouldShowLesson">
+				<div class="wnl-lesson-view">
+					<div class="level wnl-screen-title">
+						<div class="level-left">
+							<div class="level-item metadata">
+								{{lessonName}}
+							</div>
+						</div>
+						<div class="level-right">
+							<div class="level-item small">
+								Lekcja {{lessonNumber}}
+							</div>
 						</div>
 					</div>
-					<div class="level-right">
-						<div class="level-item small">
-							Lekcja {{lessonNumber}}
-						</div>
-					</div>
+					<router-view @userEvent="onUserEvent"/>
 				</div>
-				<router-view @userEvent="onUserEvent"/>
+				<div class="wnl-lesson-previous-next-nav">
+					<wnl-previous-next></wnl-previous-next>
+				</div>
 			</div>
-			<div class="wnl-lesson-previous-next-nav">
-				<wnl-previous-next></wnl-previous-next>
+			<div v-else-if="isPlanBuilderEnabled">
+				<p class="has-text-centered margin vertical">
+					<img src="https://media.giphy.com/media/BCfw7hyQeq9TNsC7st/giphy.gif"/>
+				</p>
+				<h5 class="title is-5 has-text-centered">Zgodnie z Twoim planem, ta lekcja otworzy się <strong>{{lessonStartDate}}</strong></h5>
+				<p class="has-text-centered margin vertical">Jeżeli chcesz zrealizować tę lekcję dziś, <router-link :to="{name: 'lessons-availabilites'}">zmień swój plan pracy</router-link>.</p>
 			</div>
-		</div>
-		<div v-else>
-			<h3 class="has-text-centered">O nie! Ta lekcja nie jest jeszcze dostępna!</h3>
-			<p class="has-text-centered margin vertical">
-				<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
-			</p>
-			<p class="has-text-centered">
-				<router-link to="/" class="button is-outlined is-primary">Wróć do auli</router-link>
-			</p>
-		</div>
+			<div v-else>
+				<h2 class="title is-2 has-text-centered margin vertical">{{lesson.name}}️</h2>
+				<p class="has-text-centered margin vertical">
+					<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
+				</p>
+				<h3 class="title is-3 has-text-centered"><strong>Lekcja nieaktywna</strong>🛡️</h3>
+				<h5 class="title is-5 has-text-centered">Lekcja będzie dostępna od <strong>{{lessonStartDate}}</strong></h5>
+				<p class="has-text-centered">
+					Zachęcamy Cię do powrotu do ostatniej niezakończonej lekcji. 🙂
+				</p>
+				<div class="has-text-centered margin vertical">
+					<router-link :to="{name: 'courses', params: {courseId}}" class="button is-primary is-outlined">Wróć na dashboard</router-link>
+				</div>
+			</div>
+		</template>
+
+		<wnl-satisfaction-guarantee-modal
+			v-if="isSatisfactionGuaranteeModalVisible"
+			:visible="isSatisfactionGuaranteeModalVisible"
+			:display-headline="false"
+			@closeModal="() => satisfactionGuaranteeModalReject(satisfactionGuaranteeModalCanceled)"
+			@submit="satisfactionGuaranteeModalResolve"
+		>
+			<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem Wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
+			<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu. Warunkiem jest usunięcie postępu, ułożenie nowego planu pracy i rozwiązanie Wstępnego LEK-u przed rozpoczęciem pierwszej obowiązkowej lekcji.</template>
+			<template slot="footer">
+				<span v-html="$t('ui.satisfactionGuarantee.noteInLesson', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
+			</template>
+			<template slot="close">Wróć na dashboard</template>
+			<template slot="submit">Rozumiem, akceptuję</template>
+		</wnl-satisfaction-guarantee-modal>
 	</div>
 </template>
 
@@ -56,19 +86,24 @@
 </style>
 
 <script>
-import _ from 'lodash';
-import {mapGetters, mapActions} from 'vuex';
+import {get, isEmpty, head, noop} from 'lodash';
+import moment from 'moment';
+import {mapGetters, mapActions, mapState} from 'vuex';
 
-import PreviousNext from 'js/components/course/PreviousNext';
+import WnlPreviousNext from 'js/components/course/PreviousNext';
+import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
+
 import {resource} from 'js/utils/config';
 import {breadcrumb} from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
+import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 export default {
 	name: 'Lesson',
 	components: {
-		'wnl-previous-next': PreviousNext,
+		WnlPreviousNext,
+		WnlSatisfactionGuaranteeModal,
 	},
 	mixins: [breadcrumb],
 	props: ['courseId', 'lessonId', 'presenceChannel', 'screenId', 'slide'],
@@ -81,11 +116,17 @@ export default {
 				 * (which btw is defined as 100% of its parent element),
 				 * all browsers are able to beautifully scroll the content.
 				 */
-			elementHeight: _.get(this.$parent, '$el.offsetHeight') || '100%',
+			elementHeight: get(this.$parent, '$el.offsetHeight') || '100%',
+			isSatisfactionGuaranteeModalVisible: false,
+			satisfactionGuaranteeModalCanceled: 'satisfactionGuaranteeModalCanceled',
+			satisfactionGuaranteeModalResolve: noop,
+			satisfactionGuaranteeModalReject: noop,
 		};
 	},
 	computed: {
+		...mapState('course', ['isPlanBuilderEnabled']),
 		...mapGetters('course', [
+			'entryExamLessonId',
 			'getScreensForLesson',
 			'getLesson',
 			'getSectionsForScreen',
@@ -93,17 +134,19 @@ export default {
 			'getScreen',
 			'getScreenSectionsCheckpoints',
 			'getSectionSubsectionsCheckpoints',
+			'getLessons',
 			'isLessonAvailable',
-			'getLessons'
 		]),
 		...mapGetters('progress', {
 			getSavedLesson: 'getSavedLesson',
 			screenProgress: 'getScreen',
 			lessonProgress: 'getLesson'
 		}),
-		...mapGetters({
-			currentUserProfileId: 'currentUserProfileId',
-		}),
+		...mapGetters([
+			'currentUserProfileId',
+			'currentUserHasFinishedEntryExam',
+			'getSetting'
+		]),
 		breadcrumb() {
 			return {
 				level: 1,
@@ -125,6 +168,9 @@ export default {
 		},
 		lessonNumber() {
 			return this.getLessons.findIndex(({id}) => id === this.lesson.id) + 1;
+		},
+		lessonStartDate() {
+			return moment.unix(this.lesson.startDate).format('LL');
 		},
 		screens() {
 			return this.getScreensForLesson(this.lessonId);
@@ -162,11 +208,11 @@ export default {
 			return this.subsectionsReversed.length > 0;
 		},
 		firstScreenId() {
-			if (_.isEmpty(this.screens)) {
+			if (isEmpty(this.screens)) {
 				return null;
 			}
 
-			return _.head(this.screens).id;
+			return head(this.screens).id;
 		},
 		lessonProgressContext() {
 			return {
@@ -181,9 +227,18 @@ export default {
 				},
 			};
 		},
+		shouldDisplaySatisfactionGuaranteeModal() {
+			return this.lesson.is_required &&
+				this.isLessonAvailable(this.lesson.id) &&
+				this.lesson.id !== this.entryExamLessonId &&
+				!this.getSetting(USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL) &&
+				!this.currentUserHasFinishedEntryExam;
+		},
+		shouldShowLesson() {
+			return this.isLessonAvailable(this.lessonId);
+		},
 	},
 	methods: {
-
 		...mapActions('progress', [
 			'startLesson',
 			'completeLesson',
@@ -192,8 +247,13 @@ export default {
 			'completeSubsection',
 			'saveLessonProgress',
 		]),
-		...mapActions(['updateLessonNav', 'setupCurrentUser', 'toggleOverlay']),
-		...mapActions(['setupCurrentUser']),
+		...mapActions([
+			'addAutoDismissableAlert',
+			'changeUserSettingAndSync',
+			'setupCurrentUser',
+			'toggleOverlay',
+			'updateLessonNav',
+		]),
 		...mapActions('users', ['setActiveUsers', 'userJoined', 'userLeft']),
 		...mapActions('course', ['setupLesson']),
 		onUserEvent(payload) {
@@ -225,7 +285,7 @@ export default {
 									lessonId: this.lessonId,
 									screenId: this.firstScreenId,
 								};
-								if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !_.get(route, 'params.slide')) {
+								if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !get(route, 'params.slide')) {
 									params.slide = 1;
 								}
 								this.$router.replace({name: resource('screens'), params, query});
@@ -253,18 +313,33 @@ export default {
 				activeScreen: parseInt(this.screenId)
 			});
 		},
+		async displaySatisfactionGuaranteeModalIfNeeded() {
+			if (this.shouldDisplaySatisfactionGuaranteeModal) {
+				this.isSatisfactionGuaranteeModalVisible = true;
+
+				await new Promise((resolve, reject) => {
+					this.satisfactionGuaranteeModalResolve = resolve;
+					this.satisfactionGuaranteeModalReject = reject;
+				});
+
+				this.changeUserSettingAndSync({
+					setting: USER_SETTING_NAMES.SKIP_SATISFACTION_GUARANTEE_MODAL,
+					value: true,
+				});
+			}
+		},
 		shouldCompleteScreen() {
 			if (!this.currentScreen.sections) {
 				return true;
 			}
 
 			const allSections = this.currentScreen.sections;
-			const completedSections = _.get(this.screenProgress(this.courseId, this.lessonId, this.currentScreen.id), 'sections', {});
+			const completedSections = get(this.screenProgress(this.courseId, this.lessonId, this.currentScreen.id), 'sections', {});
 
 			return !allSections.find(id => !completedSections[id]);
 		},
 		shouldCompleteLesson() {
-			const startedScreens = _.get(this.lessonProgress(this.courseId, this.lessonId), 'screens', {});
+			const startedScreens = get(this.lessonProgress(this.courseId, this.lessonId), 'screens', {});
 
 			if (this.screens && !startedScreens) {
 				return false;
@@ -310,28 +385,55 @@ export default {
 		updateElementHeight() {
 			this.elementHeight = this.$parent.$el.offsetHeight;
 		},
-	},
-	async mounted () {
-		this.toggleOverlay({source: 'lesson', display: true});
-		try {
-			await this.setupLesson(this.lessonId);
-			this.launchLesson();
-		} catch (e) {
-			$wnl.logger.error(e);
-		} finally {
+		async setup() {
+			try {
+				await this.displaySatisfactionGuaranteeModalIfNeeded();
+				this.isSatisfactionGuaranteeModalVisible = false;
+			} catch (e) {
+				if (e !== this.satisfactionGuaranteeModalCanceled) {
+					$wnl.logger.error(e);
+					this.addAutoDismissableAlert({
+						text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+						type: 'error',
+					});
+				}
+
+				// User wants to keep the satisfaction guarantee
+				this.$router.push('/');
+				return;
+			}
+
+			this.toggleOverlay({source: 'lesson', display: true});
+
+			try {
+				await this.setupLesson(this.lessonId);
+				if (this.isLessonAvailable(this.lessonId)) {
+					this.launchLesson();
+				}
+			} catch (e) {
+				$wnl.logger.error(e);
+			}
+
 			this.toggleOverlay({source: 'lesson', display: false});
+			window.addEventListener('resize', this.updateElementHeight);
 		}
-		window.addEventListener('resize', this.updateElementHeight);
+	},
+	mounted () {
+		this.setup();
 	},
 	beforeDestroy () {
 		window.Echo.leave(this.presenceChannel);
 		window.removeEventListener('resize', this.updateElementHeight);
 	},
 	watch: {
-		'$route' () {
-			this.goToDefaultScreenIfNone();
-			this.updateLessonProgress();
-		}
+		lessonId() {
+			this.setup();
+		},
+		'$route'() {
+			if (!this.shouldDisplaySatisfactionGuaranteeModal) {
+				this.updateLessonProgress();
+			}
+		},
 	},
 };
 </script>

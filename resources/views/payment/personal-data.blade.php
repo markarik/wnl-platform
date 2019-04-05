@@ -74,7 +74,7 @@
 				class="@if (Session::get('_old_input.invoice')) show @else hidden @endif"
 			>
 				{!! form_row($form->invoice_name, ['label_attr' => ['class' => 'a-label -required']]) !!}
-				{!! form_row($form->invoice_nip, ['label_attr' => ['class' => 'a-label -required']]) !!}
+				{!! form_row($form->invoice_nip, ['label_attr' => ['class' => 'a-label']]) !!}
 				{!! form_row($form->invoice_address, ['label_attr' => ['class' => 'a-label -required']]) !!}
 				<div class="o-formGroups">
 					{!! form_row($form->invoice_zip, ['label_attr' => ['class' => 'a-label -required']]) !!}

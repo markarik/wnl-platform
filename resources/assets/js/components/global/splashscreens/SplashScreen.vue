@@ -3,10 +3,11 @@
 		<div class="splash-screen__content scrollable-main-container">
 			<wnl-text-loader v-if="isLoading"></wnl-text-loader>
 			<template v-else>
-				<wnl-no-access v-if="currentUserAccountSuspended"/>
-				<wnl-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
-				<wnl-order-not-paid v-else-if="latestCourseWaitingForPayment" />
-				<wnl-default-splash-screen v-else />
+				<wnl-splash-screen-no-access v-if="currentUserAccountSuspended"/>
+				<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
+				<wnl-splash-screen-order-not-paid v-else-if="latestCourseWaitingForPayment"/>
+				<wnl-splash-screen-subscription-expired v-else-if="currentUserSubscriptionStatus === 'expired'"/>
+				<wnl-splash-screen-default v-else/>
 			</template>
 		</div>
 		<footer class="splash-screen__footer text-dimmed">
@@ -47,10 +48,11 @@
 import axios from 'axios';
 import {mapGetters} from 'vuex';
 
-import WnlNoAccess from 'js/components/global/splashscreens/NoAccess';
-import WnlUpcomingEdition from 'js/components/global/splashscreens/UpcomingEdition';
-import WnlOrderNotPaid from 'js/components/global/splashscreens/OrderNotPaid';
-import WnlDefaultSplashScreen from 'js/components/global/splashscreens/Default';
+import WnlSplashScreenNoAccess from 'js/components/global/splashscreens/NoAccess';
+import WnlSplashScreenUpcomingEdition from 'js/components/global/splashscreens/UpcomingEdition';
+import WnlSplashScreenOrderNotPaid from 'js/components/global/splashscreens/OrderNotPaid';
+import WnlSplashScreenSubscriptionExpired from 'js/components/global/splashscreens/SubscriptionExpired';
+import WnlSplashScreenDefault from 'js/components/global/splashscreens/Default';
 
 import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
 import {getApiUrl} from 'js/utils/env';
@@ -63,10 +65,19 @@ export default {
 			isLoading: true,
 		};
 	},
-	components: { WnlNoAccess, WnlUpcomingEdition, WnlOrderNotPaid, WnlDefaultSplashScreen },
+	components: {
+		WnlSplashScreenNoAccess,
+		WnlSplashScreenUpcomingEdition,
+		WnlSplashScreenOrderNotPaid,
+		WnlSplashScreenSubscriptionExpired,
+		WnlSplashScreenDefault
+	},
 	perimeters: [upcomingEditionParticipant],
 	computed: {
-		...mapGetters(['currentUserAccountSuspended']),
+		...mapGetters([
+			'currentUserAccountSuspended',
+			'currentUserSubscriptionStatus',
+		]),
 	},
 	methods: {
 		async getIsLatestCourseWaitingForPayment() {

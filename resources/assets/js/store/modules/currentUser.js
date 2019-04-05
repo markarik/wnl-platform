@@ -73,6 +73,7 @@ const getters = {
 	getAllSettings: state => state.settings,
 
 	currentUserSubscriptionDates: state => state.subscription && state.subscription.subscription_dates,
+	currentUserSubscriptionStatus: state => state.subscription && state.subscription.subscription_status,
 	currentUserSubscriptionActive: state => state.subscription && state.subscription.subscription_status === 'active',
 	currentUserHasLatestProduct: state => state.hasLatestCourseProduct.has_latest_course_product,
 };

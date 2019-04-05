@@ -187,6 +187,10 @@ const getters = {
 				status: STATUS_NONE
 			};
 		}
+	},
+	// TODO PLAT-1201 clean up and do it correctly - maybe a course name or slug? ;)
+	courseSlug: () => {
+		return $wnl.env.appInstanceName;
 	}
 };
 

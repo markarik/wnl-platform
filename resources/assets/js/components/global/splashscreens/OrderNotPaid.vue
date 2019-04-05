@@ -13,6 +13,10 @@
 					Opłać zamówienie
 				</router-link>
 			</p>
+			<!-- TODO PLAT-1201 clean up and do it correctly -->
+			<p class="splash-screen__info text-dimmed" v-if="courseSlug === 'ldek'">
+				Album map myśli wyślemy do Ciebie w 2. połowie maja.
+			</p>
 		</div>
 	</div>
 </template>
@@ -26,11 +30,11 @@
 
 <script>
 import moment from 'moment';
-import { getUrl } from 'js/utils/env';
 import { mapGetters } from 'vuex';
 
 export default {
 	computed: {
+		...mapGetters('course', ['courseSlug']),
 		...mapGetters('products', ['getCurrentCourse']),
 		logoImageUrl() {
 			return window.$wnl.course.productLogoWithStudents;

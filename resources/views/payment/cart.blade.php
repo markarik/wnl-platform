@@ -23,7 +23,14 @@
 				@if(!$hasParticipantCoupon)
 					<p class="m-checkoutListItem">
 						<span>@lang('payment.cart-shipment-label')</span>
-						<span class="m-checkoutListItem__value">@lang('payment.cart-shipment-value')</span>
+						<span class="m-checkoutListItem__value">
+							{{--TODO PLAT-1201 CLEAN UP--}}
+							@if(config('app.instance_name') === 'ldek')
+								@lang('payment.cart-shipment-value-LDEK')
+							@else
+								@lang('payment.cart-shipment-value')
+							@endif
+						</span>
 					</p>
 				@endif
 				@if(!empty($coupon))

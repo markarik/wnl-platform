@@ -14,7 +14,7 @@ class OrdersCanceledNotNullable extends Migration
 	 */
 	public function up()
 	{
-		Order::query()->update(array('canceled' => 0));
+		Order::query()->where(['canceled' => null])->update(['canceled' => 0]);
 		// We cannot modify table that conains enum
 		DB::statement('ALTER TABLE orders CHANGE canceled canceled tinyint(4) NOT NULL default 0;');
 	}

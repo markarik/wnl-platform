@@ -5,13 +5,9 @@
 			:context-tags="tags"
 			:reactions-disabled="true"
 			:discussion-id="discussion_id"
-			v-if="qna"/>
+			v-if="hasQna"/>
 	</div>
 </template>
-
-<style lang="sass">
-	@import 'resources/assets/sass/variables'
-</style>
 
 <script>
 import Qna from 'js/components/qna/Qna';
@@ -37,10 +33,6 @@ export default {
 			default: () => ({}),
 			type: Object,
 		},
-		qna: {
-			default: false,
-			type: Boolean,
-		},
 	},
 	data() {
 		return {
@@ -50,10 +42,17 @@ export default {
 			created_at: null,
 			updated_at: null,
 			tags: null,
-			discussion_id: 0
+			discussion_id: 0,
+			is_discussable: false
 		};
 	},
+	computed: {
+		hasQna() {
+			return this.is_discussable && this.discussion_id;
+		}
+	},
 	methods: {
+		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 		wrapEmbedded() {
 			let iframes = this.$el.getElementsByClassName('ql-video'),
 				wrapperClass = 'ratio-16-9-wrapper';
@@ -86,7 +85,6 @@ export default {
 				subcontext: this.slug
 			});
 		},
-		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 	},
 	mounted() {
 		this.fetch();
@@ -96,9 +94,11 @@ export default {
 			this.content = injectArguments(newValue, this.arguments);
 		},
 		discussion_id() {
-			this.discussion_id && this.fetchQuestionsForDiscussion(this.discussion_id);
+			this.hasQna && this.fetchQuestionsForDiscussion(this.discussion_id);
 		},
-		slug() {this.fetch();}
+		slug: function () {
+			this.fetch();
+		}
 	}
 };
 </script>

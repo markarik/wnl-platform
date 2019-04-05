@@ -15,21 +15,18 @@
 				<router-view
 						:arguments="templateArguments"
 						:slug="$route.name"
-						:qna="true"
 						@userEvent="onUserEvent"
 				></router-view>
 			</div>
 		</div>
 		<wnl-sidenav-slot
-				:is-visible="isChatVisible"
-				:is-detached="!isChatMounted"
-				:has-chat="true"
+			:is-visible="isChatVisible"
+			:is-detached="!isChatMounted"
+			:has-chat="hasChat"
 		>
-			<wnl-public-chat :rooms="chatRooms"
-							 title="W czym możemy Ci pomóc?"></wnl-public-chat>
+			<wnl-public-chat v-if="hasChat" :rooms="chatRooms" title="W czym możemy Ci pomóc?"></wnl-public-chat>
 		</wnl-sidenav-slot>
-		<div v-if="isChatToggleVisible" class="wnl-chat-toggle"
-			 @click="toggleChat">
+		<div v-if="hasChat && isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
 			<span class="icon is-big">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż czat</span>
@@ -74,9 +71,11 @@ import Sidenav from 'js/components/global/Sidenav';
 import SidenavSlot from 'js/components/global/SidenavSlot';
 import withChat from 'js/mixins/with-chat';
 import context from 'js/consts/events_map/context.json';
+import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 
 export default {
 	name: 'Help',
+	perimeters: [currentEditionParticipant],
 	components: {
 		'wnl-main-nav': MainNav,
 		'wnl-public-chat': PublicChat,
@@ -101,44 +100,9 @@ export default {
 				}
 			};
 		},
+		// TODO the list of items in nav should be generated automatically - PLAT-1198
 		sidenavItems() {
-			return [
-				{
-					text: 'Nad czym pracujemy?',
-					itemClass: 'has-icon',
-					to: {
-						name: 'help-new',
-						params: {},
-					},
-					isDisabled: false,
-					method: 'push',
-					iconClass: 'fa-gift',
-					iconTitle: 'Nad czym pracujemy?',
-				},
-				{
-					text: 'Pomoc w nauce',
-					itemClass: 'has-icon',
-					to: {
-						name: 'help-learning',
-						params: {},
-					},
-					isDisabled: false,
-					method: 'push',
-					iconClass: 'fa-mortar-board',
-					iconTitle: 'Pomoc w nauce',
-				},
-				{
-					text: 'Pomoc techniczna',
-					itemClass: 'has-icon',
-					to: {
-						name: 'help-tech',
-						params: {},
-					},
-					isDisabled: false,
-					method: 'push',
-					iconClass: 'fa-magic',
-					iconTitle: 'Pomoc techniczna',
-				},
+			const navItems = [
 				{
 					text: 'Obsługa platformy',
 					itemClass: 'has-icon',
@@ -176,12 +140,57 @@ export default {
 					iconTitle: 'Skróty klawiszowe',
 				}
 			];
+
+			if (this.$currentEditionParticipant.isAllowed('access')) {
+				navItems.unshift(
+					{
+						text: 'Pomoc techniczna',
+						itemClass: 'has-icon',
+						to: {
+							name: 'help-tech',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-magic',
+						iconTitle: 'Pomoc techniczna',
+					},
+					{
+						text: 'Nad czym pracujemy?',
+						itemClass: 'has-icon',
+						to: {
+							name: 'help-new',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-gift',
+						iconTitle: 'Nad czym pracujemy?',
+					},
+					{
+						text: 'Pomoc w nauce',
+						itemClass: 'has-icon',
+						to: {
+							name: 'help-learning',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-mortar-board',
+						iconTitle: 'Pomoc w nauce',
+					});
+			}
+
+			return navItems;
 		},
 		chatRooms() {
 			return [
 				{name: '#pomoc', channel: 'help-tech'},
 			];
 		},
+		hasChat() {
+			return this.$currentEditionParticipant.isAllowed('access');
+		}
 	},
 	methods: {
 		...mapActions(['toggleChat']),

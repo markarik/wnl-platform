@@ -6,7 +6,6 @@
 			<p class="margin vertical">
 				Na płatność masz <strong>7 dni</strong> od złożenia zamówienia.
 			</p>
-			<!-- TODO PLAT-1201 clean up and do it correctly -->
 			<p class="margin vertical text-dimmed" v-if="currentProductAccessStartDateIsPast">Dostęp do kursu otrzymasz od razu po dokonaniu płatności.</p>
 			<p class="margin vertical text-dimmed" v-else-if="currentProductAccessStartDate">Dostęp do kursu otrzymasz od {{currentProductAccessStartDate}}.</p>
 			<p class="margin vertical">
@@ -14,7 +13,7 @@
 					Opłać zamówienie
 				</router-link>
 			</p>
-
+			<!-- TODO PLAT-1201 clean up and do it correctly -->
 			<p class="splash-screen__info text-dimmed" v-if="appInstanceName === 'ldek'">
 				Album map myśli wyślemy do Ciebie w 2. połowie maja.
 			</p>

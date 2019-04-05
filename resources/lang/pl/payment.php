@@ -216,6 +216,7 @@ return [
 	'cart-header' => 'Twoje zamówienie',
 	'cart-access-info' => 'Dostęp od momentu wpłaty do :date',
 	'cart-shipment-label' => 'Wysyłka',
+	// TODO PLAT-1201 clean up and do it correctly
 	'cart-shipment-value-LDEK' => 'W 2. połowie maja. Darmowa na terenie Polski.',
 	'cart-shipment-value' => 'Na terenie Polski za darmo',
 	'cart-coupon-label' => 'Zniżka',

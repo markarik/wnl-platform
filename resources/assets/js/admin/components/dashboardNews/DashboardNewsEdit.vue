@@ -13,7 +13,7 @@
 			<wnl-textarea name="message">Treść</wnl-textarea>
 			<p class="message-links-info">
 				Jeżeli chcesz umieścić link do strony wewnątrz platformy, użyj relatywnego adresu.
-				Na przykład: <code>/app/courses/1</code> zamiast <code>https://platforma.wiecejnizlek.pl/app/courses/1</code>.
+				Na przykład: <code>/app/courses/1</code> zamiast <code>https://lek.wiecejnizlek.pl/app/courses/1</code>.
 				Pamiętaj o ukośniku <code>/</code> na początku adresu!
 				Dzięki temu strona otworzy się szybciej i bez przeładowania całego widoku.
 			</p>

@@ -53,7 +53,4 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'auth
 	Route::get('/email/{template}', function ($template) {
 		return Response::view('mail/' . $template);
 	});
-	Route::get('/newsletter/{template}', function ($template) {
-		return Response::view('mail/newsletter/' . $template);
-	});
 });

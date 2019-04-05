@@ -20,6 +20,10 @@
 					🚀
 				</div>
 			</div>
+			<!-- TODO PLAT-1201 clean up and do it correctly -->
+			<p class="splash-screen__info text-dimmed" v-if="appInstanceName === 'ldek'">
+				Album map myśli wyślemy do Ciebie w 2. połowie maja.
+			</p>
 			<p class="splash-screen__info text-dimmed">
 				Twoja subskrypcja będzie aktywna do {{endDate}}.
 			</p>
@@ -75,6 +79,7 @@ export default {
 		};
 	},
 	computed: {
+		...mapGetters('course', ['appInstanceName']),
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserAccountSuspended']),
 		logoImageUrl() {
 			return window.$wnl.course.productLogoWithStudents;

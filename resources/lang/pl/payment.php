@@ -216,6 +216,7 @@ return [
 	'cart-header' => 'Twoje zamówienie',
 	'cart-access-info' => 'Dostęp od momentu wpłaty do :date',
 	'cart-shipment-label' => 'Wysyłka',
+	'cart-shipment-value-LDEK' => 'W 2. połowie maja. Darmowa na terenie Polski.',
 	'cart-shipment-value' => 'Na terenie Polski za darmo',
 	'cart-coupon-label' => 'Zniżka',
 	'cart-price-label' => 'Kwota całkowita',

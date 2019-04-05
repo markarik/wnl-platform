@@ -187,6 +187,9 @@ const getters = {
 				status: STATUS_NONE
 			};
 		}
+	},
+	appInstanceName: () => {
+		return $wnl.env.appInstanceName;
 	}
 };
 

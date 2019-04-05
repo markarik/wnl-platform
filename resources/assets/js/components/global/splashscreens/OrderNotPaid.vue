@@ -6,12 +6,17 @@
 			<p class="margin vertical">
 				Na płatność masz <strong>7 dni</strong> od złożenia zamówienia.
 			</p>
+			<!-- TODO PLAT-1201 clean up and do it correctly -->
 			<p class="margin vertical text-dimmed" v-if="currentProductAccessStartDateIsPast">Dostęp do kursu otrzymasz od razu po dokonaniu płatności.</p>
 			<p class="margin vertical text-dimmed" v-else-if="currentProductAccessStartDate">Dostęp do kursu otrzymasz od {{currentProductAccessStartDate}}.</p>
 			<p class="margin vertical">
 				<router-link :to="{name: 'my-orders'}" class="button is-primary">
 					Opłać zamówienie
 				</router-link>
+			</p>
+
+			<p class="splash-screen__info text-dimmed" v-if="appInstanceName === 'ldek'">
+				Album map myśli wyślemy do Ciebie w 2. połowie maja.
 			</p>
 		</div>
 	</div>
@@ -31,6 +36,7 @@ import { mapGetters } from 'vuex';
 
 export default {
 	computed: {
+		...mapGetters('course', ['appInstanceName']),
 		...mapGetters('products', ['getCurrentCourse']),
 		logoImageUrl() {
 			return window.$wnl.course.productLogoWithStudents;

@@ -36,4 +36,10 @@ class PersonalIdentityNumberTest extends TestCase
 
 		$this->assertFalse($validator->passes('', '123'));
 	}
+
+	public function testIncorrectLengthCorrectChecksum() {
+		$validator = new ValidatePersonalIdentityNumber();
+
+		$this->assertFalse($validator->passes('', '8236'));
+	}
 }

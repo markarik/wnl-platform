@@ -9,11 +9,15 @@ class ValidatePersonalIdentityNumber implements Rule
 {
 	public function message()
 	{
-		return 'PESEL jest nieprawidłowy :(';
+		return trans('validation.identity_number');
 	}
 
 	public function passes($attribute, $value)
 	{
+		if (!preg_match('/^[0-9]{11}$/', $value)) {
+			return false;
+		}
+
 		if (!$this->validateChecksum($value)) return false;
 
 		$birthDate = $this->getBirthDate($value);
@@ -68,7 +72,7 @@ class ValidatePersonalIdentityNumber implements Rule
 			$month = $monthInCentury - 80;
 		}
 
-		$year = $century + substr($value,0,2);
+		$year = $century + (int) substr($value,0,2);
 
 		return [
 			'year' => $year,

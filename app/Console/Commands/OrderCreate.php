@@ -69,7 +69,7 @@ class OrderCreate extends Command
 
         $chosenMethod = $this->anticipate('Payment method', $paymentMethods->pluck('slug')->toArray());
 
-        $order->update([
+        $order->fresh()->update([
             'method' => $chosenMethod
         ]);
 

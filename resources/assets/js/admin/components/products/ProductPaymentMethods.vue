@@ -93,10 +93,9 @@
 
 <script>
 import {mapActions} from 'vuex';
-import {isEmpty} from 'lodash';
+import {unix} from 'moment';
 
 import {getApiUrl} from 'js/utils/env';
-import {swalConfig} from 'js/utils/swal';
 
 import WnlDatepicker from 'js/components/global/Datepicker';
 
@@ -252,8 +251,8 @@ export default {
 
 			this.instalments = this.instalments.map(item => {
 				const instalment = instalments.find(instalment => instalment.order_number === item.order_number);
-				if(instalment){
-					item.due_date = instalment.due_date * 1000;
+				if (instalment){
+					item.due_date = unix(instalment.due_date).format('X');
 				}
 				return item;
 			});

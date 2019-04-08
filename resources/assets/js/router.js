@@ -190,22 +190,61 @@ const routes = [
 		name: 'help',
 		path: '/app/help',
 		component: Help,
-		redirect: {name: 'help-new'},
+		redirect: {name: 'help-tech'},
 		children: [
 			{
 				name: 'help-learning',
 				path: 'learning',
 				component: Page,
+				// TODO remove once PLAT-1198 implemented
+				beforeEnter: (to, from, next) => {
+					store.dispatch('setupCurrentUser').then(() => {
+						const sandbox = createSandbox(store.getters.currentUser, {
+							perimeters: [currentEditionParticipant],
+						});
+
+						if (!sandbox.isAllowed('access')) {
+							return next({name: 'help-service'});
+						}
+						return next();
+					});
+				},
 			},
 			{
 				name: 'help-tech',
 				path: 'tech',
 				component: Page,
+				// TODO remove once PLAT-1198 implemented
+				beforeEnter: (to, from, next) => {
+					store.dispatch('setupCurrentUser').then(() => {
+						const sandbox = createSandbox(store.getters.currentUser, {
+							perimeters: [currentEditionParticipant],
+						});
+
+						if (!sandbox.isAllowed('access')) {
+							return next({name: 'help-service'});
+						}
+						return next();
+					});
+				},
 			},
 			{
 				name: 'help-new',
 				path: 'new',
 				component: Page,
+				// TODO remove once PLAT-1198 implemented
+				beforeEnter: (to, from, next) => {
+					store.dispatch('setupCurrentUser').then(() => {
+						const sandbox = createSandbox(store.getters.currentUser, {
+							perimeters: [currentEditionParticipant],
+						});
+
+						if (!sandbox.isAllowed('access')) {
+							return next({name: 'help-service'});
+						}
+						return next();
+					});
+				},
 			},
 			{
 				name: 'help-service',

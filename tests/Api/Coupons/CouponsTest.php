@@ -47,7 +47,8 @@ class CouponsTest extends ApiTestCase
 				'coupon' => [
 					'code' => 'foo',
 					'value' => 10,
-					'type' => 'amount'
+					'type' => 'amount',
+					'kind' => Coupon::KIND_VOUCHER,
 				]
 			]);
 
@@ -55,7 +56,8 @@ class CouponsTest extends ApiTestCase
 		$response->assertJson([
 			'code' => 'foo',
 			'value' => 10,
-			'type' => 'amount'
+			'type' => 'amount',
+			'kind' => Coupon::KIND_VOUCHER,
 		]);
 
 		Event::assertNotDispatched(CouponCreated::class);
@@ -72,7 +74,8 @@ class CouponsTest extends ApiTestCase
 			'code' => 'foo',
 			'value' => 10,
 			'type' => 'amount',
-			'times_usable' => 1
+			'times_usable' => 1,
+			'kind' => Coupon::KIND_VOUCHER,
 		]);
 
 		$response = $this
@@ -82,7 +85,8 @@ class CouponsTest extends ApiTestCase
 					'code' => 'foo',
 					'times_usable' => 0,
 					'type' => 'amount',
-					'value' => 10
+					'value' => 10,
+					'kind' => Coupon::KIND_VOUCHER,
 				]
 			]);
 
@@ -114,7 +118,8 @@ class CouponsTest extends ApiTestCase
 				'coupon' => [
 					'code' => 'foo',
 					'value' => 10,
-					'type' => 'amount'
+					'type' => 'amount',
+					'kind' => Coupon::KIND_VOUCHER,
 				]
 			])
 			->assertStatus(404);
@@ -132,7 +137,8 @@ class CouponsTest extends ApiTestCase
 			'code' => 'foo',
 			'value' => 10,
 			'type' => 'amount',
-			'times_usable' => 1
+			'times_usable' => 1,
+			'kind' => Coupon::KIND_VOUCHER,
 		]);
 
 		$response = $this
@@ -142,7 +148,8 @@ class CouponsTest extends ApiTestCase
 					'code' => 'foo',
 					'times_usable' => 0,
 					'type' => 'amount',
-					'value' => 10
+					'value' => 10,
+					'kind' => Coupon::KIND_VOUCHER,
 				]
 			]);
 
@@ -151,7 +158,8 @@ class CouponsTest extends ApiTestCase
 			'code' => 'foo',
 			'times_usable' => 0,
 			'type' => 'amount',
-			'value' => 10
+			'value' => 10,
+			'kind' => Coupon::KIND_VOUCHER,
 		]);
 
 		Event::assertNotDispatched(CouponUpdated::class);
@@ -168,7 +176,8 @@ class CouponsTest extends ApiTestCase
 			'code' => 'foo',
 			'value' => 10,
 			'type' => 'amount',
-			'times_usable' => 1
+			'times_usable' => 1,
+			'kind' => Coupon::KIND_VOUCHER,
 		]);
 
 		$response = $this
@@ -178,7 +187,8 @@ class CouponsTest extends ApiTestCase
 					'code' => 'foo',
 					'times_usable' => 0,
 					'type' => 'amount',
-					'value' => 10
+					'value' => 10,
+					'kind' => Coupon::KIND_VOUCHER,
 				]
 			]);
 
@@ -210,7 +220,8 @@ class CouponsTest extends ApiTestCase
 				'coupon' => [
 					'code' => 'foo',
 					'value' => 10,
-					'type' => 'amount'
+					'type' => 'amount',
+					'kind' => Coupon::KIND_VOUCHER,
 				]
 			])
 			->assertStatus(404);
@@ -228,7 +239,8 @@ class CouponsTest extends ApiTestCase
 			'code' => 'foo',
 			'value' => 10,
 			'type' => 'amount',
-			'times_usable' => 1
+			'times_usable' => 1,
+			'kind' => Coupon::KIND_VOUCHER,
 		]);
 
 		$response = $this
@@ -254,14 +266,16 @@ class CouponsTest extends ApiTestCase
 			'code' => 'foo',
 			'value' => 10,
 			'type' => 'amount',
-			'times_usable' => 1
+			'times_usable' => 1,
+			'kind' => Coupon::KIND_VOUCHER,
 		]);
 
 		$createdCoupon = Coupon::create([
 			'code' => 'foo',
 			'value' => 10,
 			'type' => 'amount',
-			'times_usable' => 1
+			'times_usable' => 1,
+			'kind' => Coupon::KIND_VOUCHER,
 		]);
 
 		$response = $this
@@ -284,7 +298,8 @@ class CouponsTest extends ApiTestCase
 			'code' => 'foo',
 			'value' => 10,
 			'type' => 'amount',
-			'times_usable' => 1
+			'times_usable' => 1,
+			'kind' => Coupon::KIND_VOUCHER,
 		]);
 
 		$response = $this
@@ -294,7 +309,8 @@ class CouponsTest extends ApiTestCase
 					'code' => 'foo',
 					'times_usable' => 0,
 					'type' => 'amount',
-					'value' => 10
+					'value' => 10,
+					'kind' => Coupon::KIND_VOUCHER,
 				]
 			]);
 

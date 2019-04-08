@@ -6,20 +6,19 @@ use App\Jobs\SyncCouponUpdate;
 use App\Models\Coupon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
-class CouponUpdated extends CouponEvent {
+class CouponUpdated extends CouponEvent
+{
 	use DispatchesJobs;
 
 	public $coupon;
 
-	public function __construct(Coupon $coupon) {
+	public function __construct(Coupon $coupon)
+	{
 		$this->coupon = $coupon;
 	}
 
-	public function shouldSync() {
-		return empty($this->coupon->studyBuddy);
-	}
-
-	public function sync() {
+	public function sync()
+	{
 		$couponToUpdate = $this->coupon->toArray();
 		unset($couponToUpdate['id']);
 

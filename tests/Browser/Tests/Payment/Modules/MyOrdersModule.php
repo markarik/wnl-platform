@@ -27,7 +27,11 @@ class MyOrdersModule
 
 	public function assertStuddyBuddyNotActive(BethinkBrowser $browser)
 	{
-		$studyBuddy = $browser->order->studyBuddy->fresh();
+		$studyBuddy = $browser->order->studyBuddy;
+		if ($studyBuddy) {
+			$studyBuddy = $studyBuddy->fresh();
+		}
+
 		Assert::assertNotEquals('active', $studyBuddy ? $studyBuddy->status : null);
 	}
 

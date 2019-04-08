@@ -372,8 +372,16 @@ import {nextTick} from 'vue';
 import * as types from 'js/store/mutations-types';
 
 export default {
-	name: 'Order',
-	props: ['orderInstance', 'loaderVisible'],
+	props: {
+		orderInstance: {
+			type: Object,
+			required: true,
+		},
+		shouldCheckPaymentStatus: {
+			type: Boolean,
+			default: true,
+		}
+	},
 	components: {
 		'wnl-form': Form,
 		'wnl-form-text': Text,
@@ -645,7 +653,7 @@ export default {
 		},
 	},
 	mounted() {
-		if (this.isPending) this.checkStatus();
+		if (this.isPending && this.shouldCheckPaymentStatus) this.checkStatus();
 		if (this.$route.query.hasOwnProperty('payment')) {
 			gaEvent('Payment', this.order.method);
 		}

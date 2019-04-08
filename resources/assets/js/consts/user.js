@@ -12,3 +12,10 @@ export const ROLES = {
 	ADMIN: 'admin',
 	MODERATOR: 'moderator',
 };
+
+export const SUBSCRIPTION_STATUS = {
+	ACTIVE: 'active',
+	AWAITING: 'awaiting',
+	EXPIRED: 'expired',
+	INACTIVE: 'inactive',
+};

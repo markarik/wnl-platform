@@ -4,7 +4,7 @@ import {set} from 'vue';
 import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import {USER_SETTING_NAMES} from 'js/consts/settings';
-import {ONBOARDING_STEPS, ROLES} from 'js/consts/user';
+import {ONBOARDING_STEPS, ROLES, SUBSCRIPTION_STATUS} from 'js/consts/user';
 
 let getCurrentUserPromise;
 
@@ -74,7 +74,7 @@ const getters = {
 
 	currentUserSubscriptionDates: state => state.subscription && state.subscription.subscription_dates,
 	currentUserSubscriptionStatus: state => state.subscription && state.subscription.subscription_status,
-	currentUserSubscriptionActive: state => state.subscription && state.subscription.subscription_status === 'active',
+	currentUserSubscriptionActive: state => state.subscription && state.subscription.subscription_status === SUBSCRIPTION_STATUS.ACTIVE,
 	currentUserHasLatestProduct: state => state.hasLatestCourseProduct.has_latest_course_product,
 };
 

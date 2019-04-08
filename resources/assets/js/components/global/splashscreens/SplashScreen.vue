@@ -6,7 +6,7 @@
 				<wnl-splash-screen-no-access v-if="currentUserAccountSuspended"/>
 				<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
 				<wnl-splash-screen-order-not-paid v-else-if="latestCourseWaitingForPayment"/>
-				<wnl-splash-screen-subscription-expired v-else-if="currentUserSubscriptionStatus === 'expired'"/>
+				<wnl-splash-screen-subscription-expired v-else-if="currentUserSubscriptionStatus === EXPIRED"/>
 				<wnl-splash-screen-default v-else/>
 			</template>
 		</div>
@@ -57,12 +57,14 @@ import WnlSplashScreenDefault from 'js/components/global/splashscreens/Default';
 import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
 import {getApiUrl} from 'js/utils/env';
 import {PRODUCTS_SLUGS} from 'js/consts/products';
+import {SUBSCRIPTION_STATUS} from 'js/consts/user';
 
 export default {
 	data() {
 		return {
 			latestCourseWaitingForPayment: false,
 			isLoading: true,
+			EXPIRED: SUBSCRIPTION_STATUS.EXPIRED,
 		};
 	},
 	components: {

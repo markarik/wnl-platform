@@ -12,14 +12,17 @@ use League\Fractal\Resource\Collection;
 
 class ProductsApiController extends ApiController
 {
+	/**
+	 * ProductsApiController constructor.
+	 * @param Request $request
+	 */
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
 		$this->resourceName = config('papi.resources.products');
 	}
+
 	/**
-	 * Get products availability
-	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function getCurrent()

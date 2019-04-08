@@ -385,6 +385,7 @@ export default {
 						userId: this.currentUserId
 					}
 				});
+				return;
 			}
 			const userId = this.$route.params.userId;
 			const dataForQnaQuestions = {

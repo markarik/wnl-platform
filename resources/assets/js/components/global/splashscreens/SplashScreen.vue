@@ -3,7 +3,8 @@
 		<div class="splash-screen__content scrollable-main-container">
 			<wnl-text-loader v-if="isLoading"></wnl-text-loader>
 			<template v-else>
-				<wnl-splash-screen-no-access v-if="currentUserAccountSuspended"/>
+				<wnl-splash-screen-generic-error v-if="currentUserLoadingError"/>
+				<wnl-splash-screen-no-access v-else-if="currentUserAccountSuspended"/>
 				<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
 				<wnl-splash-screen-order-not-paid v-else-if="latestCourseWaitingForPayment"/>
 				<wnl-splash-screen-subscription-expired v-else-if="currentUserSubscriptionStatus === EXPIRED"/>
@@ -53,6 +54,7 @@ import WnlSplashScreenUpcomingEdition from 'js/components/global/splashscreens/U
 import WnlSplashScreenOrderNotPaid from 'js/components/global/splashscreens/OrderNotPaid';
 import WnlSplashScreenSubscriptionExpired from 'js/components/global/splashscreens/SubscriptionExpired';
 import WnlSplashScreenDefault from 'js/components/global/splashscreens/Default';
+import WnlSplashScreenGenericError from 'js/components/global/splashscreens/GenericError';
 
 import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
 import {getApiUrl} from 'js/utils/env';
@@ -72,13 +74,15 @@ export default {
 		WnlSplashScreenUpcomingEdition,
 		WnlSplashScreenOrderNotPaid,
 		WnlSplashScreenSubscriptionExpired,
-		WnlSplashScreenDefault
+		WnlSplashScreenDefault,
+		WnlSplashScreenGenericError,
 	},
 	perimeters: [upcomingEditionParticipant],
 	computed: {
 		...mapGetters([
 			'currentUserAccountSuspended',
 			'currentUserSubscriptionStatus',
+			'currentUserLoadingError',
 		]),
 	},
 	methods: {

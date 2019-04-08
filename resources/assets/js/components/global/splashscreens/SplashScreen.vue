@@ -4,7 +4,7 @@
 			<wnl-text-loader v-if="isLoading"></wnl-text-loader>
 			<template v-else>
 				<wnl-account-suspended v-if="currentUserAccountSuspended" :instalments-not-paid="instalmentsNotPaid"/>
-				<wnl-order-canceled v-else-if="orderCanceled"/>
+				<wnl-order-canceled v-else-if="allOrdersCanceled"/>
 				<wnl-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
 				<wnl-order-not-paid v-else-if="latestCourseWaitingForPayment" />
 				<wnl-default-splash-screen v-else />
@@ -76,9 +76,8 @@ export default {
 		latestCourseWaitingForPayment() {
 			return !this.latestCourseOrders.some(order => order.paid && !order.canceled);
 		},
-		orderCanceled() {
-			return !this.latestCourseOrders.some(order => order.paid)
-					&& this.latestCourseOrders.some(order => order.canceled);
+		allOrdersCanceled() {
+			return this.latestCourseOrders.every(order => order.canceled);
 		},
 		instalmentsNotPaid() {
 			return this.orders.filter(order => {

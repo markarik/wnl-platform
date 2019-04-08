@@ -23,14 +23,25 @@
 </style>
 
 <script>
+import moment from 'moment';
+
 export default {
 	props: {
-		instalmentsNotPaid: {
-			type: Boolean,
-			default: false
+		orders: {
+			type: Array,
+			required: true,
 		}
 	},
 	computed: {
+		instalmentsNotPaid() {
+			return this.orders.filter(order => {
+				return order.method === 'instalments' && order.paid;
+			}).some((order) => {
+				return order.instalments.instalments.some(instalment => {
+					return instalment.amount > instalment.paid_amount && moment(instalment.due_date).isBefore(new Date(), 'day');
+				});
+			});
+		},
 		logoImageUrl() {
 			return window.$wnl.course.productLogoWithStudents;
 		},

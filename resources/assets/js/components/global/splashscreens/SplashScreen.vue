@@ -3,7 +3,7 @@
 		<div class="splash-screen__content scrollable-main-container">
 			<wnl-text-loader v-if="isLoading"></wnl-text-loader>
 			<template v-else>
-				<wnl-account-suspended v-if="currentUserAccountSuspended" :instalments-not-paid="instalmentsNotPaid"/>
+				<wnl-account-suspended v-if="currentUserAccountSuspended" :orders="orders"/>
 				<wnl-order-canceled v-else-if="allOrdersCanceled"/>
 				<wnl-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
 				<wnl-order-not-paid v-else-if="latestCourseWaitingForPayment" />
@@ -47,7 +47,6 @@
 <script>
 import axios from 'axios';
 import {mapGetters} from 'vuex';
-import moment from 'moment';
 
 import WnlAccountSuspended from 'js/components/global/splashscreens/AccountSuspended';
 import WnlOrderCanceled from 'js/components/global/splashscreens/OrderCanceled';
@@ -79,15 +78,6 @@ export default {
 		allOrdersCanceled() {
 			return this.latestCourseOrders.every(order => order.canceled);
 		},
-		instalmentsNotPaid() {
-			return this.orders.filter(order => {
-				return order.method === 'instalments' && order.paid;
-			}).some((order) => {
-				return order.instalments.instalments.some(instalment => {
-					return instalment.amount > instalment.paid_amount && moment(instalment.due_date).isBefore(new Date(), 'day');
-				});
-			});
-		}
 	},
 	methods: {
 		async fetchOrders() {

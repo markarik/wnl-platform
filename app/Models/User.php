@@ -24,6 +24,7 @@ class User extends Authenticatable
 		'consent_order'      => 'boolean',
 		'consent_terms'      => 'boolean',
 		'suspended'          => 'boolean',
+		'has_finished_entry_exam' => 'boolean',
 	];
 
 	/**
@@ -34,7 +35,7 @@ class User extends Authenticatable
 	protected $fillable = [
 		'first_name', 'last_name', 'email', 'password', 'address', 'zip', 'city', 'phone', 'invoice',
 		'invoice_name', 'invoice_nip', 'invoice_address', 'invoice_zip', 'invoice_city', 'invoice_country',
-		'consent_newsletter', 'consent_account', 'consent_order', 'consent_terms',
+		'consent_newsletter', 'consent_account', 'consent_order', 'consent_terms', 'has_finished_entry_exam'
 	];
 
 	/**

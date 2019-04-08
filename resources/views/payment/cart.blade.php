@@ -20,10 +20,19 @@
 				</p>
 			</section>
 			<section class="o-cart__details">
-				<p class="m-checkoutListItem">
-					<span>@lang('payment.cart-shipment-label')</span>
-					<span class="m-checkoutListItem__value">@lang('payment.cart-shipment-value')</span>
-				</p>
+				@if(!$hasParticipantCoupon)
+					<p class="m-checkoutListItem">
+						<span>@lang('payment.cart-shipment-label')</span>
+						<span class="m-checkoutListItem__value">
+							{{--TODO PLAT-1201 CLEAN UP--}}
+							@if(config('app.instance_name') === 'ldek')
+								@lang('payment.cart-shipment-value-LDEK')
+							@else
+								@lang('payment.cart-shipment-value')
+							@endif
+						</span>
+					</p>
+				@endif
 				@if(!empty($coupon))
 					<p class="m-checkoutListItem">
 						<span>@lang('payment.cart-coupon-label')</span>
@@ -32,6 +41,12 @@
 						? trans('payment.voucher-percentage', ['value' => $coupon->value])
 						: trans('payment.voucher-amount', ['value' => $coupon->value])}}
 					</span>
+					</p>
+				@endif
+				@if($hasParticipantCoupon)
+					<p class="m-checkoutListItem">
+						<span>@lang('payment.cart-album-label')</span>
+						<span class="m-checkoutListItem__value">@lang('payment.cart-no-album-info')</span>
 					</p>
 				@endif
 				<p class="m-checkoutTotalAmount">

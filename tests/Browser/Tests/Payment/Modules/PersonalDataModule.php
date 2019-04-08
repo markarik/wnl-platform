@@ -4,6 +4,7 @@
 namespace Tests\Browser\Tests\Payment\Modules;
 
 
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\User;
 use Tests\BethinkBrowser;
@@ -77,8 +78,13 @@ class PersonalDataModule
 	protected function assertCart(BethinkBrowser $browser)
 	{
 		$browser->assertVisible('@cart');
-		$browser->assertSeeIn('@cart', 'Wysyłka');
-		$browser->assertSeeIn('@cart', 'Na terenie Polski za darmo');
+		if (!empty($browser->coupon) && $browser->coupon->kind === Coupon::KIND_PARTICIPANT) {
+			$browser->assertSeeIn('@cart', 'Album');
+			$browser->assertSeeIn('@cart', 'Zakup kursu ze zniżką 50% nie obejmuje nowego albumu map myśli. Nowy album możesz zamówić osobno po opłaceniu zamówienia za kurs.');
+		} else {
+			$browser->assertSeeIn('@cart', 'Wysyłka');
+			$browser->assertSeeIn('@cart', 'Na terenie Polski za darmo');
+		}
 		$browser->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do');
 		$browser->assertSeeIn('@cart', 'Kwota całkowita');
 	}

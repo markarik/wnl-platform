@@ -3,15 +3,16 @@
 		<wnl-sidenav-slot
 			:is-visible="canRenderSidenav"
 			:is-detached="!isSidenavMounted"
+			:is-narrow="!isCurrentEditionParcitipantAllowedAccess"
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<wnl-course-navigation
-				v-if="$currentEditionParticipant.isAllowed('access')"
+				v-if="isCurrentEditionParcitipantAllowedAccess"
 				:is-lesson="isLesson"
 			>
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
-		<div class="wnl-course-content wnl-column" v-if="$currentEditionParticipant.isAllowed('access')">
+		<div class="wnl-course-content wnl-column" v-if="isCurrentEditionParcitipantAllowedAccess">
 			<router-view :presence-channel="presenceChannel"/>
 		</div>
 		<wnl-splash-screen v-else/>
@@ -24,9 +25,9 @@
 			<div v-if="isLesson" class="lesson-active-users-container">
 				<wnl-active-users message="dashboard.activeUsersLessons" :channel="presenceChannel"/>
 			</div>
-			<wnl-public-chat :rooms="chatRooms" v-if="$currentEditionParticipant.isAllowed('access')"/>
+			<wnl-public-chat :rooms="chatRooms" v-if="isCurrentEditionParcitipantAllowedAccess"/>
 		</wnl-sidenav-slot>
-		<div v-if="$currentEditionParticipant.isAllowed('access') && isChatToggleVisible" class="wnl-chat-toggle">
+		<div v-if="isCurrentEditionParcitipantAllowedAccess && isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż czat</span>
@@ -63,13 +64,13 @@
 </style>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapState } from 'vuex';
 import ActiveUsers from 'js/components/course/dashboard/ActiveUsers';
 import PublicChat from 'js/components/chat/PublicChat.vue';
 import Navigation from 'js/components/course/Navigation';
 import SidenavSlot from 'js/components/global/SidenavSlot';
 import MainNav from 'js/components/MainNav';
-import SplashScreen from 'js/components/global/SplashScreen.vue';
+import SplashScreen from 'js/components/global/splashscreens/SplashScreen';
 import { breadcrumb } from 'js/mixins/breadcrumb';
 import withChat from 'js/mixins/with-chat';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
@@ -87,6 +88,7 @@ export default {
 	},
 	props: ['courseId', 'lessonId', 'screenId', 'slide'],
 	computed: {
+		...mapState('course', ['isPlanBuilderEnabled']),
 		...mapGetters('course', ['isLessonAvailable', 'ready']),
 		...mapGetters([
 			'isSidenavVisible',
@@ -103,8 +105,12 @@ export default {
 				slide: this.slide,
 			};
 		},
+		isCurrentEditionParcitipantAllowedAccess() {
+			return this.$currentEditionParticipant.isAllowed('access');
+		},
 		isLesson() {
-			return typeof this.lessonId !== 'undefined' && this.isLessonAvailable(this.lessonId);
+			// Allow users to look at unavailable lessons when PlanBuilder is enabled
+			return typeof this.lessonId !== 'undefined' && (this.isLessonAvailable(this.lessonId) || this.isPlanBuilderEnabled);
 		},
 		chatRooms() {
 			let courseChatRoom = `courses-${this.courseId}`,

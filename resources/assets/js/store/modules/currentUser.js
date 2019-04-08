@@ -28,6 +28,7 @@ const state = {
 			passportNumber: ''
 		},
 	},
+	hasFinishedEntryExam: false,
 	accountSuspended: false,
 	roles: [],
 	subscription: {
@@ -45,6 +46,7 @@ const getters = {
 
 	currentUser: state => state,
 	currentUserId: state => state.id,
+	currentUserHasFinishedEntryExam: state => state.hasFinishedEntryExam,
 
 	currentUserProfile: state => state.profile,
 	currentUserProfileId: state => state.profile.id,
@@ -131,9 +133,21 @@ const actions = {
 			throw error;
 		}
 
-		const {id, profile, subscription, settings, latest_product_state, included, has_latest_course_product} = response.data;
+		const {
+			id,
+			has_finished_entry_exam,
+			has_latest_course_product,
+			profile,
+			subscription,
+			settings,
+			latest_product_state,
+			included
+		} = response.data;
 
-		const currentUser = {id};
+		const currentUser = {
+			id,
+			hasFinishedEntryExam: has_finished_entry_exam,
+		};
 
 		if (included.roles) {
 			currentUser.roles = Object.values(included.roles).map(role => role.name);

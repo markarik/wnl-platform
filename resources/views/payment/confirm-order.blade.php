@@ -156,7 +156,9 @@
 						<li>{{ $user->invoice_address }}</li>
 						<li>{{ $user->invoice_zip }} {{ $user->invoice_city }}</li>
 						<li>{{ $user->invoice_country }}</li>
-						<li>@lang('payment.confirm-order-nip') {{ $user->invoice_nip }}</li>
+						@if(!empty($user->invoice_nip))
+							<li>@lang('payment.confirm-order-nip') {{ $user->invoice_nip }}</li>
+						@endif
 					</ul>
 				@else
 					<ul class="o-checkoutSection__dataReadOnly">

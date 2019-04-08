@@ -38,8 +38,6 @@ class OrderPaid implements ShouldQueue
 		$this->handleCoupon();
 		$this->handleInstalments();
 		$this->sendConfirmation();
-
-		\Cache::forget(UserSubscription::getCacheKey($this->order->user->id));
 	}
 
 	protected function handleCoupon()

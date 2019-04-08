@@ -3,9 +3,9 @@
 		<div class="level wnl-screen-title tabs" v-if="!isMobile">
 			<ul>
 				<li
-					v-for="tab in tabs"
-					@click="onTabSelect(tab)"
-					:class="[tab.isActive ? 'is-active' : '', 'big', 'strong']"
+					v-for="(tab, index) in tabs"
+					@click="activeTabIndex = index"
+					:class="[index === activeTabIndex ? 'is-active' : '', 'big', 'strong']"
 					:key="tab.title"
 				>
 					<a>{{tab.title}}</a>
@@ -63,7 +63,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapGetters, mapState} from 'vuex';
 
 import LessonsPlanner from './LessonsPlanner';
 import PlannerGuide from './PlannerGuide';
@@ -78,53 +78,44 @@ export default {
 	mixins: [emits_events],
 	data() {
 		return {
-			tabs: [
-				{
+			activeTabIndex: 0,
+		};
+	},
+	computed: {
+		...mapState('course', ['isPlanBuilderEnabled']),
+		...mapGetters(['isMobile']),
+		tabs() {
+			const tabs = [{
+				title: 'Pobierz plan pracy',
+				component: DownloadPlan,
+			}];
+			if (this.isPlanBuilderEnabled) {
+				tabs.unshift({
 					title: 'Twój plan pracy',
 					component: LessonsPlanner,
-					isActive: true
 				},
 				{
 					title: 'Jak zmienić plan?',
 					component: PlannerGuide,
-				},
-				{
-					title: 'Pobierz plan pracy',
-					component: DownloadPlan,
-				},
-			]
-		};
-	},
-	computed: {
-		...mapGetters(['isMobile']),
+				});
+			}
+
+			return tabs;
+		},
 		activeTab() {
-			return this.tabs.find(tab => tab.isActive) || {};
+			return this.tabs[this.activeTabIndex] || {};
 		},
 		activeView() {
 			return this.activeTab.component;
 		}
 	},
 	methods: {
-		onTabSelect(selectedTab) {
-			this.tabs = this.tabs.map(tab => {
-				if (selectedTab.title === tab.title) {
-					return {
-						...tab,
-						isActive: true
-					};
-				}
-				return {
-					...tab,
-					isActive: false
-				};
-			});
-		},
 		onUserEvent(payload) {
 			this.emitUserEvent({
 				subcontext: context.account.subcontext.course_plan.value,
 				...payload
 			});
 		}
-	}
+	},
 };
 </script>

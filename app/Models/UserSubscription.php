@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserSubscription extends Model
 {
-	const CACHE_VER = '3';
-	const SUBSCRIPTION_DATES_CACHE_KEY = '%s-%s-subscription-dates';
 	const SUBSCRIPTION_STATUS_ACTIVE = 'active';
 	const SUBSCRIPTION_STATUS_AWAITING = 'awaiting';
 	const SUBSCRIPTION_STATUS_INACTIVE = 'inactive';
@@ -36,13 +34,9 @@ class UserSubscription extends Model
 
 	public function getSubscriptionStatusAttribute()
 	{
-		$key = self::getCacheKey($this->user->id);
+		$dates = $this->getSubscriptionDates();
 
-		return \Cache::remember($key, 60 * 24, function () {
-			$dates = $this->getSubscriptionDates();
-
-			return $this->getSubscriptionStatus($dates);
-		});
+		return $this->getSubscriptionStatus($dates);
 	}
 
 	public function getSubscriptionDatesAttribute()
@@ -79,10 +73,5 @@ class UserSubscription extends Model
 		$max = Carbon::parse($this->access_end);
 
 		return [$min, $max];
-	}
-
-	public static function getCacheKey($id)
-	{
-		return sprintf(self::SUBSCRIPTION_DATES_CACHE_KEY, self::CACHE_VER, $id);
 	}
 }

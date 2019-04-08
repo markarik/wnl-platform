@@ -216,11 +216,15 @@ return [
 	'cart-header' => 'Twoje zamówienie',
 	'cart-access-info' => 'Dostęp od momentu wpłaty do :date',
 	'cart-shipment-label' => 'Wysyłka',
+	// TODO PLAT-1201 clean up and do it correctly
+	'cart-shipment-value-LDEK' => 'W 2. połowie maja. Darmowa na terenie Polski.',
 	'cart-shipment-value' => 'Na terenie Polski za darmo',
 	'cart-coupon-label' => 'Zniżka',
 	'cart-price-label' => 'Kwota całkowita',
 	'cart-price-value' => ':valuezł',
 	'cart-empty' => 'Twój koszyk jest pusty.',
+	'cart-album-label' => 'Album',
+	'cart-no-album-info' => 'Zakup kursu ze zniżką 50% nie obejmuje nowego albumu map myśli. Nowy album możesz zamówić osobno po opłaceniu zamówienia za kurs.',
 
 	/**
 	 * Personal identity number modal

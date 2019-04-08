@@ -4,8 +4,12 @@
 namespace Tests\Browser\Tests\Payment\Modules;
 
 use App;
+use App\Models\Coupon;
 use PHPUnit\Framework\Assert;
 use Tests\BethinkBrowser;
+use Tests\Browser\Pages\Payment\AccountPage;
+use Tests\Browser\Pages\Payment\MyOrdersPage;
+use Tests\Browser\Pages\Payment\VoucherPage;
 
 class MyOrdersModule
 {
@@ -21,10 +25,42 @@ class MyOrdersModule
 		return $studyBuddy;
 	}
 
+	public function assertStuddyBuddyNotActive(BethinkBrowser $browser)
+	{
+		$studyBuddy = $browser->order->studyBuddy;
+		if ($studyBuddy) {
+			$studyBuddy = $studyBuddy->fresh();
+		}
+
+		Assert::assertNotEquals('active', $studyBuddy ? $studyBuddy->status : null);
+	}
+
+	public function payNow(BethinkBrowser $browser)
+	{
+		$order = $browser->order;
+		$browser->click('.order[data-order-id="' . $order->id . '"] [data-button="pay-now"]');
+	}
+
 	public function payNextInstalment(BethinkBrowser $browser)
 	{
 		$order = $browser->order;
 		$browser->click('.order[data-order-id="' . $order->id . '"] [data-button="pay-next-instalment"]');
+	}
+
+	public function useCoupon(BethinkBrowser $browser, $value) {
+		$coupon = factory(Coupon::class)->create([
+			'value' => $value
+		]);
+
+		$browser->coupon = $coupon;
+
+		$browser
+			->visit(new MyOrdersPage())
+			->click('@discounts-tab')
+			->click('@add-discount')
+			->type('code', $coupon->code)
+			->click('@use')
+			->waitForText('Naliczona zniżka');
 	}
 
 	public function assertOrderPlaced(BethinkBrowser $browser)

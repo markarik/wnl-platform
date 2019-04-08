@@ -9,6 +9,9 @@ export const routes = {
 		'help-learning': 'Pomoc w nauce',
 		'help-tech': 'Pomoc techniczna',
 		'help-new': 'Nad czym pracujemy?',
+		'help-service': 'Obsługa platformy',
+		'satisfaction-guarantee': 'Gwarancja satysfakcji',
+		'key-shortcuts': 'Skróty klawiszowe'
 	},
 	myself: {
 		main: 'Konto',

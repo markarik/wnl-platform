@@ -55,7 +55,6 @@
 import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection';
 import MessageForm from './MessageForm.vue';
 import MessagesList from './MessagesList.vue';
-import {getApiUrl} from 'js/utils/env';
 
 import { mapGetters, mapActions } from 'vuex';
 
@@ -80,13 +79,13 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['isOverlayVisible', 'currentUserId']),
+		...mapGetters(['isOverlayVisible', 'currentUserId', 'currentUserFullName']),
 		...mapGetters('chatMessages', ['getProfileByUserId', 'profiles', 'getInterlocutor']),
 		interlocutorProfile() {
 			return this.getInterlocutor(this.room.profiles);
 		},
 		chatTitle() {
-			return this.interlocutorProfile.full_name;
+			return this.interlocutorProfile.full_name || this.currentUserFullName;
 		},
 		hasMore() {
 			return !!this.room.pagination && this.room.pagination.has_more;

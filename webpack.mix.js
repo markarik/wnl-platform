@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const nodeExternals = require('webpack-node-externals');
 
 const sassOptions = {
 	implementation: require('node-sass')
@@ -40,5 +41,7 @@ mix.webpackConfig({
 			'sass': path.resolve(__dirname, 'resources/assets/sass'),
 			'vendor': path.resolve(__dirname, 'resources/vendor')
 		},
-	}
+	},
+	// Required for mocha
+	externals: [nodeExternals()],
 });

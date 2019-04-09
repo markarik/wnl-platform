@@ -8,7 +8,8 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "sync": "cross-env NODE_ENV=development SYNC=on node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "setup": "yarn install --pure-lockfile",
-    "test": "cross-env BABEL_ENV=test karma start resources/assets/js/tests/karma.conf.js --single-run"
+    "test": "cross-env BABEL_ENV=test karma start resources/assets/js/tests/karma.conf.js --single-run",
+    "test-vue": "mochapack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require tests/JavaScript/setup.js tests/JavaScript/**/*.spec.js"
   },
   "dependencies": {
     "append-query": "^2.0.1",
@@ -51,15 +52,19 @@
   },
   "devDependencies": {
     "@babel/polyfill": "^7.2.5",
+    "@vue/test-utils": "^1.0.0-beta.29",
     "avoriaz": "^6.0.0",
     "chai": "^3.5.0",
     "cross-env": "^3.2.4",
     "eslint": "^5.10.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "expect": "^24.7.1",
     "gulp": "^3.9.1",
     "gulp-phpunit": "^0.22.2",
     "gulp-svg-sprite": "^1.3.6",
+    "jsdom": "^14.0.0",
+    "jsdom-global": "^3.0.2",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-mocha": "^1.3.0",
@@ -67,11 +72,13 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.30",
     "karma-webpack": "^2.0.2",
-    "mocha": "^3.2.0",
+    "mocha": "^6.1.2",
+    "mochapack": "^1.1.1",
     "node-sass": "^4.11.0",
     "resolve-url-loader": "2.3.1",
     "sass-loader": "^7.1.0",
     "sinon": "^2.1.0",
-    "sinon-chai": "^3.0.0"
+    "sinon-chai": "^3.0.0",
+    "webpack-node-externals": "^1.7.2"
   }
 }

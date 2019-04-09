@@ -1,14 +1,16 @@
 <template>
-	<div class="splash-screen__container">
-		<div class="splash-screen__content scrollable-main-container">
-			<wnl-text-loader v-if="isLoading"></wnl-text-loader>
-			<template v-else>
-				<wnl-splash-screen-no-access v-if="currentUserAccountSuspended"/>
-				<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
-				<wnl-splash-screen-order-not-paid v-else-if="latestCourseWaitingForPayment"/>
-				<wnl-splash-screen-subscription-expired v-else-if="currentUserSubscriptionStatus === EXPIRED"/>
-				<wnl-splash-screen-default v-else/>
-			</template>
+	<div class="splash-screen">
+		<div class="splash-screen__container scrollable-main-container">
+			<div class="splash-screen__content">
+				<wnl-text-loader v-if="isLoading"></wnl-text-loader>
+				<template v-else>
+					<wnl-splash-screen-no-access v-if="currentUserAccountSuspended"/>
+					<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
+					<wnl-splash-screen-order-not-paid v-else-if="latestCourseWaitingForPayment"/>
+					<wnl-splash-screen-subscription-expired v-else-if="currentUserSubscriptionStatus === EXPIRED"/>
+					<wnl-splash-screen-default v-else/>
+				</template>
+			</div>
 		</div>
 		<footer class="splash-screen__footer text-dimmed">
 			<p class="splash-screen__footer__text">
@@ -21,27 +23,26 @@
 <style lang="sass" scoped>
 	@import 'resources/assets/sass/variables'
 
-	.splash-screen__container
+	.splash-screen
 		display: flex
 		flex-direction: column
 		height: 100%
 		width: 100%
 
-	.splash-screen__content
-		align-items: center
-		display: flex
-		flex-direction: column
-		justify-content: center
-		height: 100%
-		text-align: center
-		padding: $margin-small
+		&__container
+			display: flex
+			text-align: center
+			padding: $margin-small
 
-	.splash-screen__footer
-		border-top: $border-light-gray
-		padding: $margin-big
+		&__content
+			margin: auto
 
-		&__text
-			max-width: 320px
+		&__footer
+			border-top: $border-light-gray
+			padding: $margin-big
+
+			&__text
+				max-width: 320px
 </style>
 
 <script>

@@ -10,6 +10,7 @@ class UserSubscription extends Model
 	const SUBSCRIPTION_STATUS_ACTIVE = 'active';
 	const SUBSCRIPTION_STATUS_AWAITING = 'awaiting';
 	const SUBSCRIPTION_STATUS_INACTIVE = 'inactive';
+	const SUBSCRIPTION_STATUS_EXPIRED = 'expired';
 
 	protected $table = 'user_subscription';
 
@@ -63,6 +64,7 @@ class UserSubscription extends Model
 
 		if ($min->isPast() && $max->isFuture()) return self::SUBSCRIPTION_STATUS_ACTIVE;
 		if ($min->isFuture() && $max->isFuture()) return self::SUBSCRIPTION_STATUS_AWAITING;
+		if ($min->isPast() && $max->isPast()) return self::SUBSCRIPTION_STATUS_EXPIRED;
 
 		return self::SUBSCRIPTION_STATUS_INACTIVE;
 	}

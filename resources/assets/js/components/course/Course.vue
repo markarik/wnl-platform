@@ -17,6 +17,7 @@
 		</div>
 		<wnl-splash-screen v-else/>
 		<wnl-sidenav-slot
+			v-if="isCurrentEditionParcitipantAllowedAccess"
 			class="course-chat"
 			:is-visible="isChatVisible"
 			:is-detached="!isChatMounted"
@@ -25,7 +26,7 @@
 			<div v-if="isLesson" class="lesson-active-users-container">
 				<wnl-active-users message="dashboard.activeUsersLessons" :channel="presenceChannel"/>
 			</div>
-			<wnl-public-chat :rooms="chatRooms" v-if="isCurrentEditionParcitipantAllowedAccess"/>
+			<wnl-public-chat :rooms="chatRooms"/>
 		</wnl-sidenav-slot>
 		<div v-if="isCurrentEditionParcitipantAllowedAccess && isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">

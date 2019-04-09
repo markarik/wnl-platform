@@ -16,4 +16,3 @@
 		max-width: 600px
 		padding: $margin-big
 </style>
-ma

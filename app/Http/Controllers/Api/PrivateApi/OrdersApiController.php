@@ -5,6 +5,7 @@ use App\Jobs\OrderPaid;
 use App\Jobs\OrderStudyBuddy;
 use App\Models\Coupon;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use Illuminate\Support\Facades\Auth;
@@ -28,12 +29,7 @@ class OrdersApiController extends ApiController
 			$orders = $user->orders;
 			$resource = new Collection($orders, new OrderTransformer, $this->resourceName);
 		} else {
-			$order = Order::find($id);
-
-			if (!$user->can('view', $order)) {
-				return $this->respondForbidden();
-			}
-
+			$order = $user->orders()->find($id);
 			$resource = new Item($order, new OrderTransformer, $this->resourceName);
 		}
 

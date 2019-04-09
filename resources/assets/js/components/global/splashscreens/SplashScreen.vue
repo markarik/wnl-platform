@@ -4,7 +4,8 @@
 			<div class="splash-screen__content">
 				<wnl-text-loader v-if="isLoading"></wnl-text-loader>
 				<template v-else>
-					<wnl-splash-screen-no-access v-if="currentUserAccountSuspended"/>
+					<wnl-splash-screen-account-suspended v-if="currentUserAccountSuspended" :orders="orders"/>
+					<wnl-splash-screen-order-canceled v-else-if="allOrdersCanceled"/>
 					<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
 					<wnl-splash-screen-order-not-paid v-else-if="latestCourseWaitingForPayment"/>
 					<wnl-splash-screen-subscription-expired v-else-if="currentUserSubscriptionStatus === EXPIRED"/>
@@ -49,7 +50,8 @@
 import axios from 'axios';
 import {mapGetters} from 'vuex';
 
-import WnlSplashScreenNoAccess from 'js/components/global/splashscreens/NoAccess';
+import WnlSplashScreenAccountSuspended from 'js/components/global/splashscreens/AccountSuspended';
+import WnlSplashScreenOrderCanceled from 'js/components/global/splashscreens/OrderCanceled';
 import WnlSplashScreenUpcomingEdition from 'js/components/global/splashscreens/UpcomingEdition';
 import WnlSplashScreenOrderNotPaid from 'js/components/global/splashscreens/OrderNotPaid';
 import WnlSplashScreenSubscriptionExpired from 'js/components/global/splashscreens/SubscriptionExpired';
@@ -63,17 +65,18 @@ import {SUBSCRIPTION_STATUS} from 'js/consts/user';
 export default {
 	data() {
 		return {
-			latestCourseWaitingForPayment: false,
 			isLoading: true,
 			EXPIRED: SUBSCRIPTION_STATUS.EXPIRED,
+			orders: []
 		};
 	},
 	components: {
-		WnlSplashScreenNoAccess,
+		WnlSplashScreenAccountSuspended,
 		WnlSplashScreenUpcomingEdition,
 		WnlSplashScreenOrderNotPaid,
 		WnlSplashScreenSubscriptionExpired,
-		WnlSplashScreenDefault
+		WnlSplashScreenDefault,
+		WnlSplashScreenOrderCanceled
 	},
 	perimeters: [upcomingEditionParticipant],
 	computed: {
@@ -81,25 +84,25 @@ export default {
 			'currentUserAccountSuspended',
 			'currentUserSubscriptionStatus',
 		]),
+		latestCourseOrders() {
+			return this.orders.filter(order => order.product.slug === PRODUCTS_SLUGS.SLUG_ONLINE);
+		},
+		latestCourseWaitingForPayment() {
+			return !this.latestCourseOrders.some(order => order.paid && !order.canceled);
+		},
+		allOrdersCanceled() {
+			return this.latestCourseOrders.every(order => order.canceled);
+		},
 	},
 	methods: {
-		async getIsLatestCourseWaitingForPayment() {
+		async fetchOrders() {
 			const {data: orders} = await axios.get(getApiUrl('orders/all'));
-			const courseOrders = orders.filter(order => order.product.slug === PRODUCTS_SLUGS.SLUG_ONLINE);
-
-			if (courseOrders.length === 0) {
-				return false;
-			}
-
-			const maxCourseProductId = courseOrders.reduce((max, currentOrder) => currentOrder.product.id > max ? currentOrder.product.id : max, null);
-
-			return !courseOrders.filter(order => order.product.id === maxCourseProductId && !order.canceled)
-				.some(order => order.paid);
+			this.orders = orders;
 		},
 	},
 	async mounted() {
 		try {
-			this.latestCourseWaitingForPayment = await this.getIsLatestCourseWaitingForPayment();
+			await this.fetchOrders();
 		} catch (e) {
 			$wnl.logger.capture(e);
 		} finally {

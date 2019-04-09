@@ -123,7 +123,6 @@ class UserOrdersApiController extends ApiController
 			return $this->respondForbidden();
 		}
 
-		/** @var Order $order */
 		$order = $user->orders()->find($id);
 
 		if (!$order) {

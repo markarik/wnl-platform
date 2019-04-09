@@ -4,7 +4,8 @@
 			<div class="splash-screen__content">
 				<wnl-text-loader v-if="isLoading"></wnl-text-loader>
 				<template v-else>
-					<wnl-splash-screen-account-suspended v-if="currentUserAccountSuspended" :orders="orders"/>
+				  <wnl-splash-screen-generic-error v-if="currentUserLoadingError"/>
+					<wnl-splash-screen-account-suspended v-else-if="currentUserAccountSuspended" :orders="orders"/>
 					<wnl-splash-screen-order-canceled v-else-if="allOrdersCanceled"/>
 					<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
 					<wnl-splash-screen-order-not-paid v-else-if="latestCourseWaitingForPayment"/>
@@ -56,6 +57,7 @@ import WnlSplashScreenUpcomingEdition from 'js/components/global/splashscreens/U
 import WnlSplashScreenOrderNotPaid from 'js/components/global/splashscreens/OrderNotPaid';
 import WnlSplashScreenSubscriptionExpired from 'js/components/global/splashscreens/SubscriptionExpired';
 import WnlSplashScreenDefault from 'js/components/global/splashscreens/Default';
+import WnlSplashScreenGenericError from 'js/components/global/splashscreens/GenericError';
 
 import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
 import {getApiUrl} from 'js/utils/env';
@@ -76,6 +78,7 @@ export default {
 		WnlSplashScreenOrderNotPaid,
 		WnlSplashScreenSubscriptionExpired,
 		WnlSplashScreenDefault,
+		WnlSplashScreenGenericError,
 		WnlSplashScreenOrderCanceled
 	},
 	perimeters: [upcomingEditionParticipant],
@@ -83,6 +86,7 @@ export default {
 		...mapGetters([
 			'currentUserAccountSuspended',
 			'currentUserSubscriptionStatus',
+			'currentUserLoadingError',
 		]),
 		latestCourseOrders() {
 			return this.orders.filter(order => order.product.slug === PRODUCTS_SLUGS.SLUG_ONLINE);

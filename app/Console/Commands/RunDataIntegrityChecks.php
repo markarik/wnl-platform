@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Checks\DataIntegrity\InstalmentsDueDateCheck;
 use Checks\DataIntegrity\PaymentsCheck;
 use Checks\DataIntegrity\PresentablesOrderNumberCheck;
 
@@ -24,6 +25,7 @@ class RunDataIntegrityChecks extends CommandWithMonitoring
 	public function handleCommand() {
 		(new PaymentsCheck())->check();
 		(new PresentablesOrderNumberCheck())->check();
+		(new InstalmentsDueDateCheck())->check();
 
 		$this->output->text("Checked!");
 	}

@@ -12,6 +12,11 @@
 				</div>
 			</div>
 
+			<div v-else-if="isLoadingError" class="notification is-danger">
+				Nie udało się załadować profilu dla tego użytkownika.
+				Odśwież stronę, żeby spróbować ponownie lub <router-link :to="{name: 'dashboard'}">przejdź na dashboard</router-link>.
+			</div>
+
 			<div v-else>
 				<div class="user-profile" :class="isMobile" v-if="!isLoading && responseCondition">
 					<div class="user-content" :class="avatarClass">
@@ -239,6 +244,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import _ from 'lodash';
 import {
 	mapActions,
@@ -261,6 +267,7 @@ export default {
 	data() {
 		return {
 			isLoading: true,
+			isLoadingError: false,
 			isUserProfileClass: 'is-user-profile',
 			iconForQuestions: 'fa fa-question-circle-o',
 			iconForAnswers: 'fa fa-comment-o',
@@ -376,8 +383,10 @@ export default {
 			}
 			return this.activePanels.includes(panel);
 		},
-		loadData() {
-			if (!this.$route.params.userId) {
+		async loadData() {
+			const userId = this.$route.params.userId;
+
+			if (!userId) {
 				this.$router.push({
 					...this.$route,
 					params: {
@@ -387,7 +396,7 @@ export default {
 				});
 				return;
 			}
-			const userId = this.$route.params.userId;
+
 			const dataForQnaQuestions = {
 				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles',
 				user_id: userId
@@ -396,61 +405,69 @@ export default {
 				include: 'reactions',
 				user_id: userId
 			};
-			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`));
-			const promisedAllComments = axios.get(getApiUrl('comments/query'), {params: {
-				user_id: userId
-			}});
-			const promisedQnaQuestionsCompetency = axios.get(getApiUrl('qna_questions/query'), {
-				params: dataForQnaQuestions
-			});
-			const promisedAllAnswers = axios.get(getApiUrl('qna_answers/query'), {
-				params: dataForQnaAnswers
-			});
 
 			this.isLoading = true;
 
-			return Promise.all([promisedProfile, promisedAllComments, promisedQnaQuestionsCompetency, promisedAllAnswers]).then(([profile, allComments, questionsWithIncludes, allAnswers]) => {
+			try {
+				const [
+					profile,
+					allComments,
+					questionsWithIncludes,
+					allAnswers
+				] = await Promise.all([
+					axios.get(getApiUrl(`users/${userId}/profile`)),
+					axios.get(getApiUrl('comments/query'), {params: {user_id: userId}}),
+					axios.get(getApiUrl('qna_questions/query'), {params: dataForQnaQuestions}),
+					axios.get(getApiUrl('qna_answers/query'), {params: dataForQnaAnswers})
+				]);
+
 				this.profile = profile.data;
 				this.allComments = allComments.data;
 				this.allAnswers = allAnswers.data;
-
-				const {included, ...allQuestions} = questionsWithIncludes.data;
-				this.allQuestions = allQuestions;
-
-				this.setUserQnaQuestions(questionsWithIncludes.data);
-
-				const questionsIds = this.sortedAnswers.map((element) => {return element.qna_questions;});
-
-				return this.loadQuestionsForAnswers(questionsIds);
-			}).then((questionsForAnswersWithIncludes) => {
-				const {included, ...allQuestionsForAnswers} = questionsForAnswersWithIncludes.data;
-				this.allQuestionsForAnswers = allQuestionsForAnswers;
-
-				this.setUserQnaQuestions(questionsForAnswersWithIncludes.data);
-
-				const config = {
-					highlighted: {}
-				};
-
-				const sortedAnswersCopy = [...this.sortedAnswers];
-
-				sortedAnswersCopy.reverse().forEach((answer) => {
-					config.highlighted[answer.qna_questions] = answer.id;
-				});
-
-				this.qnaConfig = config;
+				this.allQuestions = this.loadQuestions(questionsWithIncludes);
+				this.allQuestionsForAnswers = await this.loadQuestionsForAnswers();
+				this.qnaConfig = this.loadConfig();
 
 				this.$emit('userDataLoaded', {
 					profile: this.profile
 				});
+			} catch (exception) {
+				$wnl.logger.capture(exception);
+				this.isLoadingError = true;
+			} finally {
 				this.isLoading = false;
-			}).catch(exception => $wnl.logger.capture(exception));
+			}
 		},
-		loadQuestionsForAnswers(questionsIds) {
-			return axios.post(getApiUrl('qna_questions/byIds'), {
+		loadQuestions({data}) {
+			this.setUserQnaQuestions(data);
+			const {included: _, ...allQuestions} = data;
+			return allQuestions;
+		},
+		async loadQuestionsForAnswers() {
+			const questionsIds = this.sortedAnswers.map((element) => {return element.qna_questions;});
+
+			const {data} = await axios.post(getApiUrl('qna_questions/byIds'), {
 				ids: questionsIds,
 				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
 			});
+			const {included, ...allQuestionsForAnswers} = data;
+
+			this.setUserQnaQuestions(data);
+
+			return allQuestionsForAnswers;
+		},
+		loadConfig() {
+			const config = {
+				highlighted: {}
+			};
+
+			const sortedAnswersCopy = [...this.sortedAnswers];
+
+			sortedAnswersCopy.reverse().forEach((answer) => {
+				config.highlighted[answer.qna_questions] = answer.id;
+			});
+
+			return config;
 		},
 	},
 	mounted() {

@@ -4,11 +4,11 @@
 		<div class="has-text-centered">
 			<p class="title is-4">Twoje konto zostało zablokowane... 🙁</p>
 			<p v-if="instalmentsNotPaid" class="text-dimmed">
-				Zaległe raty możesz opłacić w zakładce <router-link :to="{name: 'my-orders'}">KONTO > Twoje zamówienia.</router-link>
+				Zaległe raty możesz opłacić w zakładce <router-link :to="{name: 'my-orders'}">KONTO > Twoje zamówienia</router-link>.
 			</p>
 			<p v-else class="text-dimmed">
 				Aby uzyskać więcej informacji napisz do nas na Messengerze
-				lub wyślij maila na adres: <a href="mailto:info@wiecejnizlek.pl.">info@wiecejnizlek.pl.</a>
+				lub wyślij maila na adres: <a href="mailto:info@wiecejnizlek.pl.">info@wiecejnizlek.pl</a>.
 			</p>
 		</div>
 	</div>
@@ -24,6 +24,7 @@
 
 <script>
 import moment from 'moment';
+import { PAYMENT_METHODS } from 'js/consts/products';
 
 export default {
 	props: {
@@ -35,7 +36,7 @@ export default {
 	computed: {
 		instalmentsNotPaid() {
 			return this.orders.filter(order => {
-				return order.method === 'instalments' && order.paid;
+				return order.method === PAYMENT_METHODS.INSTALMENTS && order.paid;
 			}).some((order) => {
 				return order.instalments.instalments.some(instalment => {
 					return instalment.amount > instalment.paid_amount && moment(instalment.due_date).isBefore(new Date(), 'day');

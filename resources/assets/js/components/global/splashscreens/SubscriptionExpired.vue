@@ -10,7 +10,7 @@
 			</template>
 			<template v-else>
 				<p class="margin vertical">Aktualnie zapisy na kurs są zamknięte.</p>
-				<p class="margin vertical">Możemy powiadomić Cię, gdy zostaną otwarte. 🙂</p>
+				<p class="margin vertical">Możemy powiadomić Cię mailowo, gdy zostaną otwarte. 🙂</p>
 				<a target="_blank" href="https://wiecejnizlek.pl/newsletter/" class="button is-primary margin vertical">Dołącz do newslettera</a>
 			</template>
 		</div>

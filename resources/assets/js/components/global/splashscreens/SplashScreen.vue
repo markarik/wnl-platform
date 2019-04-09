@@ -70,7 +70,7 @@ export default {
 	},
 	methods: {
 		async getIsLatestCourseWaitingForPayment() {
-			const {data: orders} = await axios.get(getApiUrl('orders/all'));
+			const {data: orders} = await axios.get(getApiUrl('users/current/orders/all'));
 			const courseOrders = orders.filter(order => order.product.slug === PRODUCTS_SLUGS.SLUG_ONLINE);
 
 			if (courseOrders.length === 0) {

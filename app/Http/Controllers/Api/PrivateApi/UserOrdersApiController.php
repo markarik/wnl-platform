@@ -5,7 +5,7 @@ use App\Jobs\OrderPaid;
 use App\Jobs\OrderStudyBuddy;
 use App\Models\Coupon;
 use App\Models\Order;
-use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +13,7 @@ use League\Fractal\Resource\Collection;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\Transformers\OrderTransformer;
 
-class OrdersApiController extends ApiController
+class UserOrdersApiController extends ApiController
 {
 	public function __construct(Request $request)
 	{
@@ -21,9 +21,13 @@ class OrdersApiController extends ApiController
 		$this->resourceName = config('papi.resources.orders');
 	}
 
-	public function get($id)
+	public function getOrders($userId, $id)
 	{
-		$user = Auth::user();
+		$user = User::fetch($userId);
+
+		if (!Auth::user()->can('view', $user)) {
+			return $this->respondForbidden();
+		}
 
 		if ($id === 'all') {
 			$orders = $user->orders;
@@ -38,9 +42,14 @@ class OrdersApiController extends ApiController
 		return response()->json($data);
 	}
 
-	public function putCoupon(UseCoupon $request)
+	public function putCoupon($userId, UseCoupon $request)
 	{
-		$user = Auth::user();
+		$user = User::fetch($userId);
+
+		if (!Auth::user()->can('view', $user)) {
+			return $this->respondForbidden();
+		}
+
 		$orderId = $request->route('id');
 		/** @var Order $order */
 		$order = $user->orders()->find($orderId);
@@ -106,9 +115,16 @@ class OrdersApiController extends ApiController
 		return $errors;
 	}
 
-	public function cancel($id)
+	public function cancel($userId, $id)
 	{
-		$order = Order::find($id);
+		$user = User::fetch($userId);
+
+		if (!Auth::user()->can('view', $user)) {
+			return $this->respondForbidden();
+		}
+
+		/** @var Order $order */
+		$order = $user->orders()->find($id);
 
 		if (!$order) {
 			return $this->respondNotFound();

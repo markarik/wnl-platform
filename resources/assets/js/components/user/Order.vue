@@ -509,7 +509,7 @@ export default {
 			return this.order.hasOwnProperty('studyBuddy') && this.order.studyBuddy.status !== 'expired';
 		},
 		couponUrl() {
-			return `orders/${this.order.id}/coupon`;
+			return `users/current/orders/${this.order.id}/coupon`;
 		},
 		amountToBePaidNext() {
 			if (this.order.method === 'instalments') {
@@ -571,7 +571,7 @@ export default {
 		},
 		async checkStatus() {
 			try{
-				const response = await axios.get(getApiUrl(`orders/${this.order.id}?include=payments`));
+				const response = await axios.get(getApiUrl(`users/current/orders/${this.order.id}?include=payments`));
 
 				const {included = {}, ...order} = response.data;
 				const {payments = {}} = included;
@@ -590,7 +590,7 @@ export default {
 			}
 		},
 		couponSubmitSuccess() {
-			axios.get(getApiUrl(`orders/${this.order.id}`))
+			axios.get(getApiUrl(`users/current/orders/${this.order.id}`))
 				.then(response => {
 					this.order = {
 						...this.order,
@@ -623,7 +623,7 @@ export default {
 				confirmButtonClass: 'button is-danger',
 				reverseButtons: true
 			}))
-				.then(() => axios.get(getApiUrl(`orders/${this.order.id}/.cancel`)))
+				.then(() => axios.get(getApiUrl(`users/current/orders/${this.order.id}/.cancel`)))
 				.then(response => this.order = response.data)
 				.catch(error => {
 					if (error !== 'cancel') {

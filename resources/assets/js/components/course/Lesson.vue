@@ -15,7 +15,7 @@
 							</div>
 						</div>
 					</div>
-					<router-view @userEvent="onUserEvent"/>
+					<router-view v-if="!isLessonLoading" @userEvent="onUserEvent"/>
 				</div>
 				<div class="wnl-lesson-previous-next-nav">
 					<wnl-previous-next></wnl-previous-next>
@@ -124,7 +124,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapState('course', ['isPlanBuilderEnabled']),
+		...mapState('course', ['isPlanBuilderEnabled', 'isLessonLoading']),
 		...mapGetters('course', [
 			'entryExamLessonId',
 			'getScreensForLesson',
@@ -145,7 +145,7 @@ export default {
 		...mapGetters([
 			'currentUserProfileId',
 			'currentUserHasFinishedEntryExam',
-			'getSetting'
+			'getSetting',
 		]),
 		breadcrumb() {
 			return {

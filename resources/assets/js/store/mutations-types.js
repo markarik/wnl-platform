@@ -16,6 +16,7 @@ export const USERS_SET_STATS        = 'USERS_SET_STATS';
 export const USERS_SET_SUBSCRIPTION = 'USERS_SET_SUBSCRIPTIONS';
 export const USERS_SET_IDENTITY      = 'USERS_SET_IDENTITY';
 export const USERS_SET_ACCOUNT_SUSPENDED = 'USERS_SET_ACCOUNT_SUSPENDED';
+export const USERS_SET_LOADING_ERROR = 'USERS_SET_LOADING_ERROR';
 
 // Site Wide Messages
 export const SITE_WIDE_MESSAGES_SET_MESSAGES = 'SITE_WIDE_MESSAGES_SET_MESSAGES';
@@ -26,6 +27,7 @@ export const SET_COURSE                      = 'SET_COURSE';
 export const SET_SCREENS                     = 'SET_SCREENS';
 export const SET_SECTIONS                    = 'SET_SECTIONS';
 export const SET_SUBSECTIONS                 = 'SET_SUBSECTIONS';
+export const SET_IS_LESSON_LOADING           = 'SET_IS_LESSON_LOADING';
 export const COURSE_READY                    = 'COURSE_READY';
 
 // Sidenav

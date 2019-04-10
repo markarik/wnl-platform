@@ -33,7 +33,7 @@
 								v-if="methodEnabled(method.id)"
 								name="start_date"
 								:config="datepickerConfig"
-								:value="getDate(method.id, 'start_date')"
+								:value="getDateForPaymentMethod(method.id, 'start_date')"
 								@closed="onDatePickerClosed($event, method.id, 'start_date')"
 						/>
 					</td>
@@ -42,7 +42,7 @@
 								v-if="methodEnabled(method.id)"
 								name="end_date"
 								:config="datepickerConfig"
-								:value="getDate(method.id, 'end_date')"
+								:value="getDateForPaymentMethod(method.id, 'end_date')"
 								@closed="onDatePickerClosed($event, method.id, 'end_date')"
 						/>
 					</td>
@@ -77,7 +77,7 @@
 									v-if="!instalment.due_days"
 									name="end_date"
 									:config="datepickerConfig"
-									:value="instalment.due_date"
+									:value="instalment.due_date * 1000"
 									@closed="dueDateUpdated($event, instalment.order_number)"
 							/>
 							<span v-else>-</span>
@@ -93,10 +93,8 @@
 
 <script>
 import {mapActions} from 'vuex';
-import {isEmpty} from 'lodash';
 
 import {getApiUrl} from 'js/utils/env';
-import {swalConfig} from 'js/utils/swal';
 
 import WnlDatepicker from 'js/components/global/Datepicker';
 
@@ -171,7 +169,7 @@ export default {
 			return type === 'percentage' ? '%' : 'zł';
 		},
 
-		getDate(id, date) {
+		getDateForPaymentMethod(id, date) {
 			const method = this.selectedMethods.find(item => item.id === id);
 			return method[date] * 1000 || null;
 		},
@@ -252,8 +250,8 @@ export default {
 
 			this.instalments = this.instalments.map(item => {
 				const instalment = instalments.find(instalment => instalment.order_number === item.order_number);
-				if(instalment){
-					item.due_date = instalment.due_date * 1000;
+				if (instalment){
+					item.due_date = instalment.due_date;
 				}
 				return item;
 			});

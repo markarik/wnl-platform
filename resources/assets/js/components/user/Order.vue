@@ -372,8 +372,16 @@ import {nextTick} from 'vue';
 import * as types from 'js/store/mutations-types';
 
 export default {
-	name: 'Order',
-	props: ['orderInstance', 'loaderVisible'],
+	props: {
+		orderInstance: {
+			type: Object,
+			required: true,
+		},
+		shouldCheckPaymentStatus: {
+			type: Boolean,
+			default: true,
+		}
+	},
 	components: {
 		'wnl-form': Form,
 		'wnl-form-text': Text,
@@ -501,7 +509,7 @@ export default {
 			return this.order.hasOwnProperty('studyBuddy') && this.order.studyBuddy.status !== 'expired';
 		},
 		couponUrl() {
-			return `orders/${this.order.id}/coupon`;
+			return `users/${this.order.user_id}/orders/${this.order.id}/coupon`;
 		},
 		amountToBePaidNext() {
 			if (this.order.method === 'instalments') {
@@ -563,7 +571,7 @@ export default {
 		},
 		async checkStatus() {
 			try{
-				const response = await axios.get(getApiUrl(`orders/${this.order.id}?include=payments`));
+				const response = await axios.get(getApiUrl(`users/${this.order.user_id}/orders/${this.order.id}?include=payments`));
 
 				const {included = {}, ...order} = response.data;
 				const {payments = {}} = included;
@@ -582,7 +590,7 @@ export default {
 			}
 		},
 		couponSubmitSuccess() {
-			axios.get(getApiUrl(`orders/${this.order.id}`))
+			axios.get(getApiUrl(`users/${this.order.user_id}/orders/${this.order.id}`))
 				.then(response => {
 					this.order = {
 						...this.order,
@@ -615,7 +623,7 @@ export default {
 				confirmButtonClass: 'button is-danger',
 				reverseButtons: true
 			}))
-				.then(() => axios.get(getApiUrl(`orders/${this.order.id}/.cancel`)))
+				.then(() => axios.get(getApiUrl(`users/${this.order.user_id}/orders/${this.order.id}/.cancel`)))
 				.then(response => this.order = response.data)
 				.catch(error => {
 					if (error !== 'cancel') {
@@ -628,10 +636,10 @@ export default {
 
 			const [{data: paymentData}, {data: userData}] = await Promise.all([
 				axios.post(getApiUrl('payments'), {
-					    order_id: this.order.id,
+					order_id: this.order.id,
 					amount: this.amountToBePaidNext
 				}),
-				axios.get(getApiUrl('users/current/address'))
+				axios.get(getApiUrl(`users/${this.order.user_id}/address`))
 			]);
 			this.paymentData = paymentData;
 			this.userData = userData;
@@ -645,7 +653,7 @@ export default {
 		},
 	},
 	mounted() {
-		if (this.isPending) this.checkStatus();
+		if (this.isPending && this.shouldCheckPaymentStatus) this.checkStatus();
 		if (this.$route.query.hasOwnProperty('payment')) {
 			gaEvent('Payment', this.order.method);
 		}

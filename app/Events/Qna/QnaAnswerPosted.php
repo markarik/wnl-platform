@@ -49,7 +49,6 @@ class QnaAnswerPosted extends Event
 				'first_name'   => $this->model->user->profile->first_name,
 				'last_name'    => $this->model->user->profile->last_name,
 				'full_name'    => $this->model->user->profile->full_name,
-				'display_name' => $this->model->user->profile->display_name,
 				'avatar'       => $this->model->user->profile->avatar_url,
 			],
 			'referer' => $this->referer,

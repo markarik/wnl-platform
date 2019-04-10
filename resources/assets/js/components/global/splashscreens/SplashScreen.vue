@@ -100,7 +100,7 @@ export default {
 	},
 	methods: {
 		async fetchOrders() {
-			const {data: orders} = await axios.get(getApiUrl('orders/all'));
+			const {data: orders} = await axios.get(getApiUrl('users/current/orders/all'));
 			this.orders = orders;
 		},
 	},

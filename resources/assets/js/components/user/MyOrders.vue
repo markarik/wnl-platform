@@ -98,7 +98,7 @@ export default {
 	},
 	methods: {
 		getOrders() {
-			axios.get(getApiUrl('orders/all?include=invoices,payments,study_buddy'))
+			axios.get(getApiUrl('users/current/orders/all?include=invoices,payments,study_buddy'))
 				.then((response) => {
 					if (_.isEmpty(response.data)) {
 						this.orders = [];

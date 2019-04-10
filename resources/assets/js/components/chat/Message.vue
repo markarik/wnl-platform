@@ -14,7 +14,7 @@
 					<strong
 						class="author"
 						:class="{'author-forgotten': author.deleted_at}"
-						@click="showModal">{{ nameToDisplay }}</strong>
+						@click="showModal">{{ fullName }}</strong>
 					<small class="wnl-message-time">{{ formattedTime }}</small>
 				</p>
 				<p class="wnl-message-content" v-html="content"></p>
@@ -72,7 +72,6 @@
 					margin: 0
 </style>
 <script>
-import { mapActions } from 'vuex';
 import { timeFromMs } from 'js/utils/time';
 
 import Modal from 'js/components/global/Modal.vue';
@@ -95,9 +94,6 @@ export default{
 		formattedTime () {
 			return timeFromMs(this.time);
 		},
-		nameToDisplay() {
-			return this.author.display_name || this.fullName;
-		}
 	},
 	methods: {
 		showModal() {

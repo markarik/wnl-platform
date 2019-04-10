@@ -2,7 +2,7 @@
 	<div :class="{'active-in-route': isActive, 'conversation-snippet': true}">
 		<figure class="media-left">
 			<wnl-avatar
-				:full-name="profile.display_name"
+				:full-name="profile.full_name"
 				:url="profile.avatar"
 				size="medium">
 			</wnl-avatar>
@@ -11,7 +11,7 @@
 			<div class="content">
 				<div class="conversation-meta">
 					<div class="conversation-names">
-						<span class="display-name">{{ profile.display_name }}</span>
+						<span class="full-name">{{ profile.full_name }}</span>
 					</div>
 
 					<div class="conversation-time" v-if="room && room.last_message_time">
@@ -72,7 +72,7 @@
 					white-space: nowrap
 					text-overflow: ellipsis
 
-					.display-name
+					.full-name
 						font-size: $font-size-base
 
 				.conversation-time

@@ -15,7 +15,6 @@ class UserProfile extends Model
 		'last_name',
 		'public_email',
 		'public_phone',
-		'display_name',
 		'username',
 		'city',
 		'university',
@@ -46,23 +45,35 @@ class UserProfile extends Model
 		return (new Bethink)->getAssetPublicUrl($this->avatar) ?? null;
 	}
 
+	public function getFirstNameAttribute()
+	{
+		if (!is_null($this->deleted_at)) {
+			return trans('profile.account-deleted-first-name');
+		}
+
+		return $this->original['first_name'];
+	}
+
+	public function getLastNameAttribute()
+	{
+		if (!is_null($this->deleted_at)) {
+			return trans('profile.account-deleted-last-name');
+		}
+
+		return $this->original['last_name'];
+	}
+
 	public function getFullNameAttribute()
 	{
-		return "$this->first_name $this->last_name";
+		if (!is_null($this->deleted_at)) {
+			return trans('profile.account-deleted-full-name');
+		}
+
+		return $this->first_name . ' ' . $this->last_name;
 	}
 
 	public function setUsernameAttribute($value)
 	{
 		$this->attributes['username'] = $value === '' ? null : $value;
-	}
-
-	public function getDisplayNameAttribute()
-	{
-		if ($this->attributes['display_name']) {
-			return $this->attributes['display_name'];
-		} else {
-			return $this->full_name;
-		}
-
 	}
 }

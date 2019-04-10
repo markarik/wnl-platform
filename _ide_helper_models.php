@@ -227,7 +227,6 @@ namespace App\Models{
  * @property string|null $learning_location
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $display_name
  * @property string|null $deleted_at
  * @property-read mixed $avatar_url
  * @property-read mixed $full_name
@@ -241,7 +240,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereCity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereDisplayName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereFirstName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereHelp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereId($value)

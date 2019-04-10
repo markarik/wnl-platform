@@ -76,7 +76,7 @@
 						:sorting-enabled="false"
 						:read-only="true"
 						:reactions-disabled="true"
-						:passed-questions="sortedQuestions"
+						:passed-questions="bestQuestions"
 						:show-context="true"
 						></wnl-qna>
 						<wnl-qna
@@ -88,7 +88,7 @@
 						:sorting-enabled="false"
 						:read-only="true"
 						:reactions-disabled="true"
-						:passed-questions="sortedQuestionsForAnswers"
+						:passed-questions="sortedQuestionsForBestAnswers"
 						:show-context="true"
 						:config="qnaConfig"
 						></wnl-qna>
@@ -275,7 +275,7 @@ export default {
 			profile: {},
 			allAnswers: {},
 			allQuestions: {},
-			allQuestionsForAnswers: {},
+			questionsForBestAnswers: {},
 			qnaConfig: {}
 		};
 	},
@@ -343,33 +343,30 @@ export default {
 		ifAnyAnswers() {
 			return this.howManyAnswers !== 0;
 		},
-		sortedQuestionsForAnswers() {
-			const questionsIds = this.sortedAnswers.map((answer) => answer.qna_questions);
+		sortedQuestionsForBestAnswers() {
+			const questionsIds = this.bestAnswers.map((answer) => answer.qna_questions);
 
-			const sortedQuestionsForAnswers = [];
+			const sortedQuestionsForBestAnswers = [];
 
 			questionsIds.forEach((id) => {
-				const value = Object.values(this.allQuestionsForAnswers).find((question) => {
+				const value = Object.values(this.questionsForBestAnswers).find((question) => {
 					return question.id === id;
 				});
-				if (sortedQuestionsForAnswers.indexOf(value) === -1) {
-					sortedQuestionsForAnswers.push(value);
+				if (sortedQuestionsForBestAnswers.indexOf(value) === -1) {
+					sortedQuestionsForBestAnswers.push(value);
 				}
 			});
-			return sortedQuestionsForAnswers;
+			return sortedQuestionsForBestAnswers;
 		},
-		sortedAnswers() {
-			const sortedAnswers =  Object.values(this.allAnswers).sort((a, b) => {
-				return b.upvote.count - a.upvote.count;
-			});
-			return sortedAnswers.slice(0,2);
+		bestAnswers() {
+			return Object.values(this.allAnswers)
+				.sort((a, b) => b.upvote.count - a.upvote.count)
+				.slice(0, 2);
 		},
-		sortedQuestions() {
-			const sortedQuestions = Object.values(this.allQuestions).sort((a, b) => {
-				return b.upvote.count - a.upvote.count;
-			});
-			const bestQuestions = sortedQuestions.slice(0,2);
-			return this.getSortedQuestions('votes', bestQuestions);
+		bestQuestions() {
+			return Object.values(this.allQuestions)
+				.sort((a, b) => b.upvote.count - a.upvote.count)
+				.slice(0, 2);
 		},
 	},
 	methods: {
@@ -425,7 +422,7 @@ export default {
 				this.allComments = allComments.data;
 				this.allAnswers = allAnswers.data;
 				this.allQuestions = this.loadQuestions(questionsWithIncludes);
-				this.allQuestionsForAnswers = await this.loadQuestionsForAnswers();
+				this.questionsForBestAnswers = await this.loadQuestionsForBestAnswers();
 				this.qnaConfig = this.loadConfig();
 
 				this.$emit('userDataLoaded', {
@@ -443,27 +440,25 @@ export default {
 			const {included: _, ...allQuestions} = data;
 			return allQuestions;
 		},
-		async loadQuestionsForAnswers() {
-			const questionsIds = this.sortedAnswers.map((element) => {return element.qna_questions;});
+		async loadQuestionsForBestAnswers() {
+			const questionsIds = this.bestAnswers.map((element) => {return element.qna_questions;});
 
 			const {data} = await axios.post(getApiUrl('qna_questions/byIds'), {
 				ids: questionsIds,
 				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
 			});
-			const {included, ...allQuestionsForAnswers} = data;
+			const {included, ...questionsForBestAnswers} = data;
 
 			this.setUserQnaQuestions(data);
 
-			return allQuestionsForAnswers;
+			return questionsForBestAnswers;
 		},
 		loadConfig() {
 			const config = {
 				highlighted: {}
 			};
 
-			const sortedAnswersCopy = [...this.sortedAnswers];
-
-			sortedAnswersCopy.reverse().forEach((answer) => {
+			[...this.bestAnswers].reverse().forEach((answer) => {
 				config.highlighted[answer.qna_questions] = answer.id;
 			});
 

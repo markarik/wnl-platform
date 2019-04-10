@@ -178,7 +178,20 @@ export default {
 						method: 'push',
 						iconClass: 'fa-mortar-board',
 						iconTitle: 'Pomoc w nauce',
-					});
+					},
+					{
+						text: 'Najcześciej zadawane pytania',
+						itemClass: 'has-icon',
+						to: {
+							name: 'help-faq',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-question-circle',
+						iconTitle: 'Najcześciej zadawane pytania',
+					}
+				);
 			}
 
 			return navItems;

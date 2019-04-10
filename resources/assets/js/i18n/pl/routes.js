@@ -11,7 +11,8 @@ export const routes = {
 		'help-new': 'Nad czym pracujemy?',
 		'help-service': 'Obsługa platformy',
 		'satisfaction-guarantee': 'Gwarancja satysfakcji',
-		'key-shortcuts': 'Skróty klawiszowe'
+		'key-shortcuts': 'Skróty klawiszowe',
+		'help-faq': 'Najczęsciej zadawane pytanie'
 	},
 	myself: {
 		main: 'Konto',

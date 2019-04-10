@@ -94,9 +94,6 @@ class OrdersHandleUnpaid extends CommandWithMonitoring
 				$reminder = $order->paymentReminders->last();
 
 				if ($now->diffInWeekdays($reminder->created_at) >= 4) {
-					if (!$this->isProductAlreadyBought($order)) {
-						$this->mail($order, 'canceled');
-					}
 					$order->cancel();
 				}
 			}

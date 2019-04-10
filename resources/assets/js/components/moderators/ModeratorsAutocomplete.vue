@@ -63,8 +63,7 @@ export default {
 			}
 
 			return this.usersList.filter(moderator => {
-				const name = moderator.display_name ? moderator.display_name : moderator.full_name;
-				return name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1;
+				return moderator.full_name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1;
 			});
 		},
 	},

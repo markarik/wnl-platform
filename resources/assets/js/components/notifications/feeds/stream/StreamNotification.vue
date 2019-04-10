@@ -14,7 +14,7 @@
 			</div>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ displayName }}</span>
+					<span class="actor">{{ message.actors.full_name }}</span>
 					<span class="action">{{ action }}</span>
 					<span class="object">{{ object }}</span>
 					<span class="context">{{ contextInfo }}</span>
@@ -180,7 +180,7 @@
 </style>
 
 <script>
-import { truncate, camelCase, get } from 'lodash';
+import { camelCase } from 'lodash';
 import { mapActions, mapGetters } from 'vuex';
 
 import Avatar from 'js/components/global/Avatar';
@@ -188,7 +188,6 @@ import UserProfileModal from 'js/components/users/UserProfileModal';
 import Modal from 'js/components/global/Modal';
 import { notification } from 'js/components/notifications/notification';
 import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time';
-import { sanitizeName } from 'js/store/modules/users';
 import context from 'js/consts/events_map/context.json';
 
 export default {
@@ -219,9 +218,6 @@ export default {
 				...this.message.actors,
 				user_id: this.message.actors.id
 			};
-		},
-		displayName() {
-			return sanitizeName(this.message.actors.display_name);
 		},
 		action() {
 			return this.$t(`notifications.events.${camelCase(this.message.event)}`);

@@ -31,7 +31,6 @@
 								</wnl-message-link>
 								<span class="user-info-header-names">
 									<p class="fullname-title">{{ profile.full_name }}</p>
-									<p class="display-name-title">{{ displayNameToPrint }}</p>
 								</span>
 							</div>
 							<span v-if="cityToDisplay" class="user-info-city">
@@ -154,11 +153,6 @@
 						font-weight: $font-weight-bold
 						margin-bottom: $margin-small
 						line-height: $line-height-none
-					.display-name-title
-						color: $color-ocean-blue-opacity
-						font-size: $font-size-plus-2
-						font-weight: $font-weight-regular
-						margin-bottom: $margin-small
 				.user-info-city
 					align-items: center
 					color: $color-gray
@@ -293,9 +287,6 @@ export default {
 		},
 		fullName() {
 			return this.profile.full_name;
-		},
-		displayNameToPrint() {
-			return this.profile.full_name === this.profile.display_name ? null : this.profile.display_name;
 		},
 		helpToDisplay() {
 			return this.currentUserProfile ? this.profile.help || this.$t('user.userProfile.helpDefaultDescription') : this.profile.help || false;

@@ -10,7 +10,7 @@ if [[ $? -eq 1 ]]; then
     exit 1
 fi
 
-P24_STATUS_URL="$NGROK_URL/payment/status" APP_URL="http://nginx" SESSION_DOMAIN="nginx" DEBUG_BAR="false" docker-compose -f docker-compose.yaml -f docker-compose.dusk.yml up --remove-orphans -d php
+P24_STATUS_URL="$NGROK_URL/payment/status" docker-compose -f docker-compose.yaml -f docker-compose.dusk.yml up --remove-orphans -d php
 
 printf "=======================================================\n"
 printf "If you want to run specific test use an argument, e.g.:\n"
@@ -28,6 +28,7 @@ then
     DUSK_ARGS=$1
 fi
 
+docker exec -it php php artisan migrate
 docker exec -it php /bin/sh -c "php artisan dusk $DUSK_ARGS"
 
 ./ngrok-disable.sh -r 0

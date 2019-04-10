@@ -7,11 +7,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev.php
+    env_file:
+      - .env
+      - .env.testing
     environment:
-      # Required for browser tests
-      - APP_URL
-      - DEBUG_BAR
-      - SESSION_DOMAIN
       # Required for ngrok
       - P24_STATUS_URL
     ports:

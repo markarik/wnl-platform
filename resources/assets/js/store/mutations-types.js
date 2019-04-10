@@ -27,6 +27,7 @@ export const SET_COURSE                      = 'SET_COURSE';
 export const SET_SCREENS                     = 'SET_SCREENS';
 export const SET_SECTIONS                    = 'SET_SECTIONS';
 export const SET_SUBSECTIONS                 = 'SET_SUBSECTIONS';
+export const SET_IS_LESSON_LOADING           = 'SET_IS_LESSON_LOADING';
 export const COURSE_READY                    = 'COURSE_READY';
 
 // Sidenav

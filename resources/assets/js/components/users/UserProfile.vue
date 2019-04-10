@@ -12,6 +12,11 @@
 				</div>
 			</div>
 
+			<div v-else-if="isLoadingError" class="notification is-danger">
+				Nie udało się załadować profilu dla tego użytkownika.
+				Odśwież stronę, żeby spróbować ponownie lub <router-link :to="{name: 'dashboard'}">przejdź na dashboard</router-link>.
+			</div>
+
 			<div v-else>
 				<div class="user-profile" :class="isMobile" v-if="!isLoading && responseCondition">
 					<div class="user-content" :class="avatarClass">
@@ -31,7 +36,6 @@
 								</wnl-message-link>
 								<span class="user-info-header-names">
 									<p class="fullname-title">{{ profile.full_name }}</p>
-									<p class="display-name-title">{{ displayNameToPrint }}</p>
 								</span>
 							</div>
 							<span v-if="cityToDisplay" class="user-info-city">
@@ -71,7 +75,7 @@
 						:sorting-enabled="false"
 						:read-only="true"
 						:reactions-disabled="true"
-						:passed-questions="sortedQuestions"
+						:passed-questions="bestQuestions"
 						:show-context="true"
 						></wnl-qna>
 						<wnl-qna
@@ -83,7 +87,7 @@
 						:sorting-enabled="false"
 						:read-only="true"
 						:reactions-disabled="true"
-						:passed-questions="sortedQuestionsForAnswers"
+						:passed-questions="sortedQuestionsForBestAnswers"
 						:show-context="true"
 						:config="qnaConfig"
 						></wnl-qna>
@@ -154,11 +158,6 @@
 						font-weight: $font-weight-bold
 						margin-bottom: $margin-small
 						line-height: $line-height-none
-					.display-name-title
-						color: $color-ocean-blue-opacity
-						font-size: $font-size-plus-2
-						font-weight: $font-weight-regular
-						margin-bottom: $margin-small
 				.user-info-city
 					align-items: center
 					color: $color-gray
@@ -239,6 +238,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import _ from 'lodash';
 import {
 	mapActions,
@@ -261,6 +261,7 @@ export default {
 	data() {
 		return {
 			isLoading: true,
+			isLoadingError: false,
 			isUserProfileClass: 'is-user-profile',
 			iconForQuestions: 'fa fa-question-circle-o',
 			iconForAnswers: 'fa fa-comment-o',
@@ -268,7 +269,7 @@ export default {
 			profile: {},
 			allAnswers: {},
 			allQuestions: {},
-			allQuestionsForAnswers: {},
+			questionsForBestAnswers: {},
 			qnaConfig: {}
 		};
 	},
@@ -293,9 +294,6 @@ export default {
 		},
 		fullName() {
 			return this.profile.full_name;
-		},
-		displayNameToPrint() {
-			return this.profile.full_name === this.profile.display_name ? null : this.profile.display_name;
 		},
 		helpToDisplay() {
 			return this.currentUserProfile ? this.profile.help || this.$t('user.userProfile.helpDefaultDescription') : this.profile.help || false;
@@ -336,33 +334,30 @@ export default {
 		ifAnyAnswers() {
 			return this.howManyAnswers !== 0;
 		},
-		sortedQuestionsForAnswers() {
-			const questionsIds = this.sortedAnswers.map((answer) => answer.qna_questions);
+		sortedQuestionsForBestAnswers() {
+			const questionsIds = this.bestAnswers.map((answer) => answer.qna_questions);
 
-			const sortedQuestionsForAnswers = [];
+			const sortedQuestionsForBestAnswers = [];
 
 			questionsIds.forEach((id) => {
-				const value = Object.values(this.allQuestionsForAnswers).find((question) => {
+				const value = Object.values(this.questionsForBestAnswers).find((question) => {
 					return question.id === id;
 				});
-				if (sortedQuestionsForAnswers.indexOf(value) === -1) {
-					sortedQuestionsForAnswers.push(value);
+				if (sortedQuestionsForBestAnswers.indexOf(value) === -1) {
+					sortedQuestionsForBestAnswers.push(value);
 				}
 			});
-			return sortedQuestionsForAnswers;
+			return sortedQuestionsForBestAnswers;
 		},
-		sortedAnswers() {
-			const sortedAnswers =  Object.values(this.allAnswers).sort((a, b) => {
-				return b.upvote.count - a.upvote.count;
-			});
-			return sortedAnswers.slice(0,2);
+		bestAnswers() {
+			return Object.values(this.allAnswers)
+				.sort((a, b) => b.upvote.count - a.upvote.count)
+				.slice(0, 2);
 		},
-		sortedQuestions() {
-			const sortedQuestions = Object.values(this.allQuestions).sort((a, b) => {
-				return b.upvote.count - a.upvote.count;
-			});
-			const bestQuestions = sortedQuestions.slice(0,2);
-			return this.getSortedQuestions('votes', bestQuestions);
+		bestQuestions() {
+			return Object.values(this.allQuestions)
+				.sort((a, b) => b.upvote.count - a.upvote.count)
+				.slice(0, 2);
 		},
 	},
 	methods: {
@@ -376,8 +371,12 @@ export default {
 			}
 			return this.activePanels.includes(panel);
 		},
-		loadData() {
-			if (!this.$route.params.userId) {
+		async loadData() {
+			this.isLoadingError = false;
+
+			const userId = this.$route.params.userId;
+
+			if (!userId) {
 				this.$router.push({
 					...this.$route,
 					params: {
@@ -385,8 +384,9 @@ export default {
 						userId: this.currentUserId
 					}
 				});
+				return;
 			}
-			const userId = this.$route.params.userId;
+
 			const dataForQnaQuestions = {
 				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles',
 				user_id: userId
@@ -395,61 +395,67 @@ export default {
 				include: 'reactions',
 				user_id: userId
 			};
-			const promisedProfile = axios.get(getApiUrl(`users/${userId}/profile`));
-			const promisedAllComments = axios.get(getApiUrl('comments/query'), {params: {
-				user_id: userId
-			}});
-			const promisedQnaQuestionsCompetency = axios.get(getApiUrl('qna_questions/query'), {
-				params: dataForQnaQuestions
-			});
-			const promisedAllAnswers = axios.get(getApiUrl('qna_answers/query'), {
-				params: dataForQnaAnswers
-			});
 
 			this.isLoading = true;
 
-			return Promise.all([promisedProfile, promisedAllComments, promisedQnaQuestionsCompetency, promisedAllAnswers]).then(([profile, allComments, questionsWithIncludes, allAnswers]) => {
+			try {
+				const [
+					profile,
+					allComments,
+					questionsWithIncludes,
+					allAnswers
+				] = await Promise.all([
+					axios.get(getApiUrl(`users/${userId}/profile`)),
+					axios.get(getApiUrl('comments/query'), {params: {user_id: userId}}),
+					axios.get(getApiUrl('qna_questions/query'), {params: dataForQnaQuestions}),
+					axios.get(getApiUrl('qna_answers/query'), {params: dataForQnaAnswers})
+				]);
+
 				this.profile = profile.data;
 				this.allComments = allComments.data;
 				this.allAnswers = allAnswers.data;
-
-				const {included, ...allQuestions} = questionsWithIncludes.data;
-				this.allQuestions = allQuestions;
-
-				this.setUserQnaQuestions(questionsWithIncludes.data);
-
-				const questionsIds = this.sortedAnswers.map((element) => {return element.qna_questions;});
-
-				return this.loadQuestionsForAnswers(questionsIds);
-			}).then((questionsForAnswersWithIncludes) => {
-				const {included, ...allQuestionsForAnswers} = questionsForAnswersWithIncludes.data;
-				this.allQuestionsForAnswers = allQuestionsForAnswers;
-
-				this.setUserQnaQuestions(questionsForAnswersWithIncludes.data);
-
-				const config = {
-					highlighted: {}
-				};
-
-				const sortedAnswersCopy = [...this.sortedAnswers];
-
-				sortedAnswersCopy.reverse().forEach((answer) => {
-					config.highlighted[answer.qna_questions] = answer.id;
-				});
-
-				this.qnaConfig = config;
+				this.allQuestions = this.loadQuestions(questionsWithIncludes);
+				this.questionsForBestAnswers = await this.loadQuestionsForBestAnswers();
+				this.qnaConfig = this.loadConfig();
 
 				this.$emit('userDataLoaded', {
 					profile: this.profile
 				});
+			} catch (exception) {
+				$wnl.logger.capture(exception);
+				this.isLoadingError = true;
+			} finally {
 				this.isLoading = false;
-			}).catch(exception => $wnl.logger.capture(exception));
+			}
 		},
-		loadQuestionsForAnswers(questionsIds) {
-			return axios.post(getApiUrl('qna_questions/byIds'), {
+		loadQuestions({data}) {
+			this.setUserQnaQuestions(data);
+			const {included: _, ...allQuestions} = data;
+			return allQuestions;
+		},
+		async loadQuestionsForBestAnswers() {
+			const questionsIds = this.bestAnswers.map((element) => {return element.qna_questions;});
+
+			const {data} = await axios.post(getApiUrl('qna_questions/byIds'), {
 				ids: questionsIds,
 				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
 			});
+			const {included, ...questionsForBestAnswers} = data;
+
+			this.setUserQnaQuestions(data);
+
+			return questionsForBestAnswers;
+		},
+		loadConfig() {
+			const config = {
+				highlighted: {}
+			};
+
+			[...this.bestAnswers].reverse().forEach((answer) => {
+				config.highlighted[answer.qna_questions] = answer.id;
+			});
+
+			return config;
 		},
 	},
 	mounted() {

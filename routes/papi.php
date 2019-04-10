@@ -335,9 +335,9 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 	Route::delete("{$r['users']}/{userId}/{$r['user-collections']}", 'UserCollectionsApiController@delete');
 
 	// Orders
-	Route::get("{$r['orders']}/{id}", 'OrdersApiController@get');
-	Route::put("{$r['orders']}/{id}/coupon", 'OrdersApiController@putCoupon');
-	Route::get("{$r['orders']}/{id}/.cancel", 'OrdersApiController@cancel');
+	Route::get("{$r['users']}/{userId}/{$r['orders']}/{id}", 'UserOrdersApiController@getOrders');
+	Route::put("{$r['users']}/{userId}/{$r['orders']}/{id}/coupon", 'UserOrdersApiController@putCoupon');
+	Route::get("{$r['users']}/{userId}/{$r['orders']}/{id}/.cancel", 'UserOrdersApiController@cancel');
 
 	// Invoices
 	Route::get("{$r['invoices']}/{id}", 'InvoicesApiController@getFile');

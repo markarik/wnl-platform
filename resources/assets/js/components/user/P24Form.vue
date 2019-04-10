@@ -5,7 +5,7 @@
 		<input type="hidden" name="p24_merchant_id" :value="paymentData.merchant_id"/>
 		<input type="hidden" name="p24_amount" :value="amount"/>
 		<input type="hidden" name="p24_currency" value="PLN"/>
-		<input type="hidden" name="p24_description" :value="productName"/>
+		<input type="hidden" name="p24_description" :value="description"/>
 		<input type="hidden" name="p24_client" :value="this.currentUserProfile.full_name"/>
 		<input type="hidden" name="p24_address" :value="userData.street"/>
 		<input type="hidden" name="p24_zip" :value="userData.zip"/>
@@ -36,8 +36,8 @@ export default {
 			type: Object,
 			default: () => ({})
 		},
-		productName: {
-			type: String,
+		order: {
+			type: Object,
 			required: true
 		}
 	},
@@ -53,6 +53,9 @@ export default {
 		},
 		amount() {
 			    return this.paymentData.amount * 100;
+		},
+		description() {
+			return `Zamówienie: ${this.order.id}, ${this.order.product.name}`;
 		}
 	}
 };

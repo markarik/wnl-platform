@@ -75,7 +75,7 @@
 						<input type="hidden" name="p24_pos_id" value="{{ config('przelewy24.merchant_id') }}"/>
 						<input type="hidden" name="p24_amount" value="{{ $amount }}"/>
 						<input type="hidden" name="p24_currency" value="PLN"/>
-						<input type="hidden" name="p24_description" value="{{ $order->product->name }}"/>
+						<input type="hidden" name="p24_description" value="Zamówienie: {{$order->id}}, {{ $order->product->name }}"/>
 						<input type="hidden" name="p24_client" value="{{ $user->full_name }}"/>
 						<input type="hidden" name="p24_address" value="{{ $user->userAddress->street}}"/>
 						<input type="hidden" name="p24_zip" value="{{ $user->userAddress->zip }}"/>
@@ -113,7 +113,7 @@
 							<input type="hidden" name="p24_pos_id" value="{{ config('przelewy24.merchant_id') }}"/>
 							<input type="hidden" name="p24_amount" value="{{ (int)$instalments[0]['amount'] * 100 }}"/>
 							<input type="hidden" name="p24_currency" value="PLN"/>
-							<input type="hidden" name="p24_description" value="{{ $order->product->name }}"/>
+							<input type="hidden" name="p24_description" value="Zamówienie: {{$order->id}}, {{ $order->product->name }}"/>
 							<input type="hidden" name="p24_client" value="{{ $user->full_name }}"/>
 							<input type="hidden" name="p24_address" value="{{ $user->userAddress->street}}"/>
 							<input type="hidden" name="p24_zip" value="{{ $user->userAddress->zip }}"/>

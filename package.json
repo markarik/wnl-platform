@@ -8,7 +8,7 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "sync": "cross-env NODE_ENV=development SYNC=on node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "setup": "yarn install --pure-lockfile",
-    "test": "cross-env BABEL_ENV=test mochapack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require resources/assets/js/tests/index.js --glob '*.spec.js' --recursive resources/assets/js"
+    "test": "cross-env NODE_ENV=testing mochapack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require resources/assets/js/tests/index.js --glob '*.spec.js' --recursive resources/assets/js"
   },
   "dependencies": {
     "append-query": "^2.0.1",

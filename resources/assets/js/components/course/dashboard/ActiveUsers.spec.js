@@ -1,8 +1,8 @@
 import {shallowMount, createLocalVue} from '@vue/test-utils';
 import {describe, it, beforeEach} from 'mocha';
 import {expect} from 'chai';
-
 import Vuex from 'vuex';
+
 import ActiveUsers from 'js/components/course/dashboard/ActiveUsers';
 import Avatar from 'js/components/global/Avatar.vue';
 

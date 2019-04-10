@@ -1,5 +1,4 @@
 const mix = require('laravel-mix');
-const nodeExternals = require('webpack-node-externals');
 
 const sassOptions = {
 	implementation: require('node-sass')
@@ -31,7 +30,7 @@ if (mix.inProduction()) {
 	mix.version();
 }
 
-mix.webpackConfig({
+const webpackConfig = {
 	resolve: {
 		extensions: ['*', '.js', '.jsx', '.vue'],
 
@@ -42,6 +41,11 @@ mix.webpackConfig({
 			'vendor': path.resolve(__dirname, 'resources/vendor')
 		},
 	},
-	// Required for mocha
-	externals: [nodeExternals()],
-});
+};
+
+if (process.env.NODE_ENV === 'testing') {
+	// See https://github.com/zinserjan/mocha-webpack/blob/master/docs/installation/webpack-configuration.md
+	webpackConfig.externals = [require('webpack-node-externals')()];
+}
+
+mix.webpackConfig(webpackConfig);

@@ -98,6 +98,7 @@ import {breadcrumb} from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 import {USER_SETTING_NAMES} from 'js/consts/settings';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
 	name: 'Lesson',
@@ -394,7 +395,7 @@ export default {
 					$wnl.logger.error(e);
 					this.addAutoDismissableAlert({
 						text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
-						type: 'error',
+						type: ALERT_TYPES.ERROR,
 					});
 				}
 
@@ -412,6 +413,11 @@ export default {
 				}
 			} catch (e) {
 				$wnl.logger.error(e);
+
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+					type: ALERT_TYPES.ERROR,
+				});
 			}
 
 			this.toggleOverlay({source: 'lesson', display: false});

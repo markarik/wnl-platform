@@ -11,6 +11,7 @@ let getCurrentUserPromise;
 // Initial state
 const state = {
 	loading: true,
+	loadingError: false,
 	id: 0,
 	profile: {
 		id: 0,
@@ -75,7 +76,8 @@ const getters = {
 	currentUserSubscriptionDates: state => state.subscription && state.subscription.subscription_dates,
 	currentUserSubscriptionStatus: state => state.subscription && state.subscription.subscription_status,
 	currentUserSubscriptionActive: state => state.subscription && state.subscription.subscription_status === SUBSCRIPTION_STATUS.ACTIVE,
-	currentUserHasLatestProduct: state => state.hasLatestCourseProduct.has_latest_course_product,
+	currentUserHasLatestProduct: state => state.hasLatestCourseProduct && state.hasLatestCourseProduct.has_latest_course_product,
+	currentUserLoadingError: state => state.loadingError,
 };
 
 // Mutations
@@ -103,6 +105,9 @@ const mutations = {
 	[types.USERS_SET_ACCOUNT_SUSPENDED] (state, payload) {
 		set(state, 'accountSuspended', payload);
 	},
+	[types.USERS_SET_LOADING_ERROR] (state, payload) {
+		set(state, 'loadingError', payload);
+	},
 };
 
 // Actions
@@ -114,11 +119,11 @@ const actions = {
 				.all([
 					dispatch('fetchCurrentUser'),
 				])
-				.then(() => commit(types.IS_LOADING, false))
 				.catch((error) => {
 					$wnl.logger.error(error);
-					commit(types.IS_LOADING, false);
-				});
+					commit(types.USERS_SET_LOADING_ERROR, true);
+				})
+				.finally(() => commit(types.IS_LOADING, false));
 		}
 
 		return getCurrentUserPromise;

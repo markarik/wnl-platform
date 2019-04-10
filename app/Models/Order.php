@@ -11,6 +11,8 @@ class Order extends Model
 {
 	use Searchable;
 
+	const PAYMENT_METHOD_INSTALMENTS = 'instalments';
+
 	protected $casts = [
 		'paid'        => 'boolean',
 		'canceled'    => 'boolean',
@@ -188,7 +190,7 @@ class Order extends Model
 	public function getIsOverdueAttribute()
 	{
 		$now = Carbon::now();
-		if ($this->method === 'instalments') {
+		if ($this->method === self::PAYMENT_METHOD_INSTALMENTS) {
 			return (bool) $this->orderInstalments()
 				->whereRaw('paid_amount < amount')
 				->where('due_date', '<', $now)
@@ -217,7 +219,7 @@ class Order extends Model
 
 	public function paidAmountSufficient()
 	{
-		if ($this->method === 'instalments') {
+		if ($this->method === self::PAYMENT_METHOD_INSTALMENTS) {
 			/** @var Collection $instalments */
 			$instalments = $this->instalments['instalments'];
 			/** @var OrderInstalment $firstInstalment */

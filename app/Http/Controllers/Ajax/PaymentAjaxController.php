@@ -31,6 +31,10 @@ class PaymentAjaxController extends Controller
 		$order->method = $method;
 		$order->save();
 
+		if ($method !== Order::PAYMENT_METHOD_INSTALMENTS) {
+			$order->orderInstalments()->delete();
+		}
+
 		// TODO this payment probably should have some amount - from where should I fetch it?
 		Payment::firstOrCreate([
 			'session_id' => $sessionId

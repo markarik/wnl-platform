@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:5.7.22
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=wnl
+      - MYSQL_DATABASE=wnl
+      - MYSQL_USER=wnl
+      - MYSQL_PASSWORD=Spoko200!
+    volumes:
+      - mysql-volume:/var/lib/mysql
+volumes:
+  nfsmount:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
+      device: ":${NFS_SOURCE_DIR}"
+
+  mysql-volume:

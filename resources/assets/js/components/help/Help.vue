@@ -180,7 +180,7 @@ export default {
 						iconTitle: 'Pomoc w nauce',
 					},
 					{
-						text: 'Najcześciej zadawane pytania',
+						text: 'Najczęściej zadawane pytania',
 						itemClass: 'has-icon',
 						to: {
 							name: 'help-faq',
@@ -189,7 +189,7 @@ export default {
 						isDisabled: false,
 						method: 'push',
 						iconClass: 'fa-question-circle',
-						iconTitle: 'Najcześciej zadawane pytania',
+						iconTitle: 'Najczęściej zadawane pytania',
 					}
 				);
 			}

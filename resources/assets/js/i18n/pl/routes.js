@@ -12,7 +12,7 @@ export const routes = {
 		'help-service': 'Obsługa platformy',
 		'satisfaction-guarantee': 'Gwarancja satysfakcji',
 		'key-shortcuts': 'Skróty klawiszowe',
-		'help-faq': 'Najczęsciej zadawane pytanie'
+		'help-faq': 'Najczęściej zadawane pytanie'
 	},
 	myself: {
 		main: 'Konto',

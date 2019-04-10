@@ -191,7 +191,7 @@ class OrdersHandleUnpaid extends CommandWithMonitoring
 			->first();
 	}
 
-	protected function isProductAlreadyBought($order) {
+	protected function isProductAlreadyBought(Order $order): bool {
 		return !empty($order->user->getProducts()->first(function($product) use ($order) {
 			return $product->id === $order->product->id;
 		}));

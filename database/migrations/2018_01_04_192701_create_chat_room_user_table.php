@@ -16,6 +16,7 @@ class CreateChatRoomUserTable extends Migration
         Schema::create('chat_room_user', function (Blueprint $table) {
             $table->unsignedInteger('user_id')->index();
             $table->unsignedInteger('chat_room_id')->index();
+            $table->bigIncrements('id');
         });
     }
 

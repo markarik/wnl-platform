@@ -14,6 +14,7 @@ class CreateUserQuizResultsTable extends Migration
 	public function up()
 	{
 		Schema::create('user_quiz_results', function (Blueprint $table) {
+			$table->increments('id');
 			$table->unsignedInteger('quiz_question_id');
 			$table->unsignedInteger('quiz_answer_id');
 			$table->unsignedInteger('user_id');

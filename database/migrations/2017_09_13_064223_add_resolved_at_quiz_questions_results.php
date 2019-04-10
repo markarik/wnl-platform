@@ -16,8 +16,6 @@ class AddResolvedAtQuizQuestionsResults extends Migration
 		Schema::table('user_quiz_results', function (Blueprint $table) {
 			$table->timestamps();
 		});
-
-		DB::statement('ALTER TABLE user_quiz_results ADD id INTEGER NOT NULL UNIQUE AUTO_INCREMENT;');
 	}
 
 	/**
@@ -30,7 +28,5 @@ class AddResolvedAtQuizQuestionsResults extends Migration
 		Schema::table('user_quiz_results', function (Blueprint $table) {
 			$table->dropTimestamps();
 		});
-
-		DB::statement('ALTER TABLE user_quiz_results DROP id;');
 	}
 }

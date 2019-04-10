@@ -1,35 +1,30 @@
-import Vue from 'vue';
-import {mount} from 'avoriaz';
+import {shallowMount, createLocalVue} from '@vue/test-utils';
+import {describe, it, beforeEach} from 'mocha';
 import {expect} from 'chai';
+
 import Vuex from 'vuex';
-import ActiveUsers from './ActiveUsers.vue';
+import ActiveUsers from 'js/components/course/dashboard/ActiveUsers';
 import Avatar from 'js/components/global/Avatar.vue';
-import VueI18n from 'vue-i18n';
-import { pl } from 'js/i18n';
 
-Vue.use(Vuex);
-Vue.use(VueI18n);
-Vue.config.lang = 'pl';
-
-const messages = {pl};
-const i18n = new VueI18n({fallbackLocal: 'pl', locale: 'pl', messages});
-
-Vue.component('wnl-avatar', Avatar);
+const localVue = createLocalVue();
+localVue.use(Vuex);
+localVue.component('wnl-avatar', Avatar);
+localVue.directive('t', (args) => ({...args}));
 
 describe('ActiveUsers.vue', () => {
 	let store;
 	let getters;
 	let modules;
 
-	context('when users active', () => {
+	describe('when users active', () => {
 		beforeEach(() => {
 			modules = {
 				users: {
 					namespaced: true,
 					getters: {
 						activeUsers: () => (channel) => [
-							{fullName: 'foo bar', avatar: null, id: 7},
-							{fullName: 'buzz fizz', avatar: null, id: 10}
+							{id: 7, profile: {full_name: 'foo bar', avatar: null}},
+							{id: 10, profile: {full_name: 'buzz fizz', avatar: null}},
 						]
 					}
 				}
@@ -44,12 +39,12 @@ describe('ActiveUsers.vue', () => {
 		});
 
 		it('Counts users correctly', () => {
-			const wrapper = mount(ActiveUsers, {store, i18n});
+			const wrapper = shallowMount(ActiveUsers, {store, localVue, sync: false});
 			expect(wrapper.vm.activeUsersCount).to.equal(1);
 		});
 	});
 
-	context('when no users', () => {
+	describe('when no users', () => {
 		beforeEach(() => {
 			modules = {
 				users: {
@@ -69,10 +64,10 @@ describe('ActiveUsers.vue', () => {
 		});
 
 		it('Renders message', () => {
-			const wrapper = mount(ActiveUsers, {store, i18n});
-			expect(wrapper.find(Avatar).length).to.equal(0);
+			const wrapper = shallowMount(ActiveUsers, {localVue, store, sync: false});
+			expect(wrapper.findAll('.avatar').length).to.equal(0);
 			expect(wrapper.vm.activeUsersCount).to.equal(0);
-			expect(wrapper.find('.active-users-container').length).to.equal(0);
+			expect(wrapper.findAll('.active-users-container').length).to.equal(0);
 		});
 	});
 });

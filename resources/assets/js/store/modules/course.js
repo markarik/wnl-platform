@@ -26,6 +26,7 @@ const state = {
 	id: 0,
 	name: '',
 	isPlanBuilderEnabled: false,
+	isLessonLoading: false,
 	groups: [],
 	sections: {},
 	subsections: {},
@@ -202,6 +203,9 @@ const mutations = {
 	[types.SET_STRUCTURE](state, payload) {
 		set(state, 'structure', payload);
 	},
+	[types.SET_IS_LESSON_LOADING](state, payload) {
+		set(state, 'isLessonLoading', payload);
+	},
 	[types.SET_SCREENS](state, screens) {
 		set(state, 'screens', {
 			...state.screens,
@@ -255,6 +259,7 @@ const actions = {
 		});
 	},
 	async setupLesson({commit}, lessonId) {
+		commit(types.SET_IS_LESSON_LOADING, true);
 		const { data } = await axios.get(getApiUrl(`lessons/${lessonId}/screens`), {
 			params: {
 				include: 'sections.subsections'
@@ -271,6 +276,7 @@ const actions = {
 		commit(types.SET_SCREENS, screens);
 		commit(types.SET_SECTIONS, sections);
 		commit(types.SET_SUBSECTIONS, subsections);
+		commit(types.SET_IS_LESSON_LOADING, false);
 	},
 	async setStructure({commit}, courseId = 1) {
 		const response = await _getCourseStructure(courseId);

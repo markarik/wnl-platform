@@ -15,7 +15,7 @@
 							</div>
 						</div>
 					</div>
-					<router-view @userEvent="onUserEvent"/>
+					<router-view v-if="!isLessonLoading" @userEvent="onUserEvent"/>
 				</div>
 				<div class="wnl-lesson-previous-next-nav">
 					<wnl-previous-next></wnl-previous-next>
@@ -98,6 +98,7 @@ import {breadcrumb} from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
 import {USER_SETTING_NAMES} from 'js/consts/settings';
+import {ALERT_TYPES} from 'js/consts/alert';
 
 export default {
 	name: 'Lesson',
@@ -124,7 +125,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapState('course', ['isPlanBuilderEnabled']),
+		...mapState('course', ['isPlanBuilderEnabled', 'isLessonLoading']),
 		...mapGetters('course', [
 			'entryExamLessonId',
 			'getScreensForLesson',
@@ -145,7 +146,7 @@ export default {
 		...mapGetters([
 			'currentUserProfileId',
 			'currentUserHasFinishedEntryExam',
-			'getSetting'
+			'getSetting',
 		]),
 		breadcrumb() {
 			return {
@@ -394,7 +395,7 @@ export default {
 					$wnl.logger.error(e);
 					this.addAutoDismissableAlert({
 						text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
-						type: 'error',
+						type: ALERT_TYPES.ERROR,
 					});
 				}
 
@@ -412,6 +413,11 @@ export default {
 				}
 			} catch (e) {
 				$wnl.logger.error(e);
+
+				this.addAutoDismissableAlert({
+					text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+					type: ALERT_TYPES.ERROR,
+				});
 			}
 
 			this.toggleOverlay({source: 'lesson', display: false});

@@ -167,24 +167,28 @@ describe('SplashScreen.vue', () => {
 			},
 		});
 
-		fakeFetchOrders([{
-			product: {
-				slug: 'wnl-album',
+		fakeFetchOrders([
+			{
+				product: {
+					slug: 'wnl-album',
+				},
+				canceled: false,
 			},
-			canceled: false,
-		}, {
-			product: {
-				slug: 'wnl-online',
+			{
+				product: {
+					slug: 'wnl-online',
+				},
+				canceled: false,
+				paid: false,
 			},
-			canceled: false,
-			paid: false,
-		}, {
-			product: {
-				slug: 'wnl-online',
-			},
-			canceled: true,
-			paid: false,
-		}]);
+			{
+				product: {
+					slug: 'wnl-online',
+				},
+				canceled: true,
+				paid: false,
+			}
+		]);
 
 		const component = getComponent({store});
 		await waitForLoadingState();

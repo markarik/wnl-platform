@@ -107,4 +107,18 @@ class MyOrdersModule
 			->waitForText('Zamówienie numer ' . $order->id)
 			->assertSeeIn('.order[data-order-id="' . $order->id . '"]', 'Twój Study Buddy dołączył już do kursu!');
 	}
+
+	public function assertAlbumLinkNotVisible(BethinkBrowser $browser)
+	{
+		$browser
+			->on(new MyOrdersPage)
+			->assertMissing('@album-order-link');
+	}
+
+	public function initiateAlbumOrder(BethinkBrowser $browser)
+	{
+		$browser
+			->on(new MyOrdersPage)
+			->click('@album-order-link');
+	}
 }

@@ -38,7 +38,8 @@ class MyOrdersPage extends BasePage
 		return [
 			'@discounts-tab' => '.fa-gift',
 			'@add-discount' => '[data-button="add-coupon"]',
-			'@use' => '[data-button="coupon-submit"]'
+			'@use' => '[data-button="coupon-submit"]',
+			'@album-order-link' => '[data-button="order-album"]',
 		];
 	}
 }

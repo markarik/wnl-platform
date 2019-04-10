@@ -381,6 +381,8 @@ export default {
 			return this.activePanels.includes(panel);
 		},
 		async loadData() {
+			this.isLoadingError = false;
+
 			const userId = this.$route.params.userId;
 
 			if (!userId) {

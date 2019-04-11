@@ -1,5 +1,6 @@
+import {describe, it} from 'mocha';
 import {expect} from 'chai';
-import injectArguments from './injectArguments.js';
+import injectArguments from 'js/utils/injectArguments.js';
 
 describe('injectArguments util', () => {
 	it('parses existing arguments', () => {

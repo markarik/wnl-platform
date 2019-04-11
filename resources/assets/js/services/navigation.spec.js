@@ -1,11 +1,8 @@
-import Vue from 'vue';
+import {describe, it} from 'mocha';
 import {expect} from 'chai';
-import navigation from './navigation.js';
+import navigation from 'js/services/navigation.js';
 
 describe('navigation service', () => {
-	let store;
-	let getters;
-
 	describe('composeItem', () => {
 		it('default arguments as set as expected', () => {
 			expect(navigation.composeItem({

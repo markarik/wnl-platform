@@ -3,10 +3,6 @@ import * as types from 'js/store/mutations-types';
 
 const namespaced = true;
 
-export const sanitizeName = (name) => {
-	return name === 'account deleted' ? 'Konto usunięte' : name;
-};
-
 export const state = {
 	activeUsers: [],
 	activeFilters: [],

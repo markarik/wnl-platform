@@ -1,8 +1,8 @@
 <template>
 	<div v-if="user.orders.length">
-		<order v-for="(order, index) in user.orders" :order-instance="order" :key="index">
+		<wnl-order v-for="(order, index) in user.orders" :order-instance="order" :should-check-payment-status="false" :key="index">
 			<span slot="order-tags" class="tag">{{$t('orders.tags.shipping.status')}}: {{translateShippingStatus(order)}}</span>
-		</order>
+		</wnl-order>
 	</div>
 	<p v-else>
 		Ten użytkownik nie posiada żadnych zamówień.
@@ -14,11 +14,11 @@
 </style>
 
 <script>
-import Order from 'js/components/user/Order';
+import WnlOrder from 'js/components/user/Order';
 
 export default {
 	name: 'UserOrders',
-	components: { Order },
+	components: { WnlOrder },
 	props: {
 		user: {
 			type: Object,

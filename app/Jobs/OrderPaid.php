@@ -38,6 +38,7 @@ class OrderPaid implements ShouldQueue
 		$this->handleCoupon();
 		$this->handleInstalments();
 		$this->sendConfirmation();
+		$this->cancelRemainingOrders();
 	}
 
 	protected function handleCoupon()
@@ -81,5 +82,18 @@ class OrderPaid implements ShouldQueue
 			$this->order->user->suspended = false;
 			$this->order->user->save();
 		}
+	}
+
+	private function cancelRemainingOrders()
+	{
+		$this->order->user->orders->each(function(Order $order) {
+			if (
+				!$order->paid
+				&& $order->id !== $this->order->id
+				&& $order->product->id === $this->order->product->id
+			) {
+				$order->cancel();
+			}
+		});
 	}
 }

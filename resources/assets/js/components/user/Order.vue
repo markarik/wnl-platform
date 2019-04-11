@@ -270,7 +270,7 @@
 		<wnl-p24-form
 				:user-data="userData"
 				:payment-data="paymentData"
-				:product-name="order.product.name"
+				:order="order"
 				ref="p24Form"
 		/>
 	</div>

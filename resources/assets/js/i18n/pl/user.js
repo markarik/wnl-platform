@@ -4,8 +4,6 @@ export const user = {
 		previewYourProfileButtonEnabled: 'Zobacz swój profil',
 		previewYourProfileButtonDisabled: 'Zapisz, aby zobaczyć profil',
 		editYourProfile: 'Edytuj profil',
-		displayName: 'Podpisuj mnie jako...',
-		displayNamePlaceholder: 'Jak chcesz być przedstawiany na platformie?',
 		city: 'Miasto, w którym mieszkasz',
 		university: 'Twój uniwersytet',
 		specialization: 'Twoja obecna lub przyszła specjalizacja',

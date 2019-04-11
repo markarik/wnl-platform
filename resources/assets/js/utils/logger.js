@@ -61,7 +61,7 @@ export default class Logger {
 	}
 
 	capture(exception) {
-		if (this.useExternal()) {
+		if (!isDev()) {
 			Raven.captureException(exception);
 		}
 

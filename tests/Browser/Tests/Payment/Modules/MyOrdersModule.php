@@ -56,6 +56,7 @@ class MyOrdersModule
 
 		$browser
 			->visit(new MyOrdersPage())
+			->waitFor('@discounts-tab', 30)
 			->click('@discounts-tab')
 			->click('@add-discount')
 			->type('code', $coupon->code)

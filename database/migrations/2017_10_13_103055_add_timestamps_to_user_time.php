@@ -15,6 +15,7 @@ class AddTimestampsToUserTime extends Migration
 	{
 		Schema::table('user_time', function (Blueprint $table) {
 			$table->timestamps();
+			$table->increments('id')->first('user_id');
 			$table->unique(
 				[
 					'user_id',
@@ -36,6 +37,7 @@ class AddTimestampsToUserTime extends Migration
 	{
 		Schema::table('user_time', function (Blueprint $table) {
 			$table->dropTimestamps();
+			$table->dropColumn(['id']);
 			$table->dropUnique('user_time_per_day');
 		});
  	}

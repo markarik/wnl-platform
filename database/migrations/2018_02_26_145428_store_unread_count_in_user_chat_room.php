@@ -16,6 +16,7 @@ class StoreUnreadCountInUserChatRoom extends Migration
 		Schema::table('chat_room_user', function (Blueprint $table) {
 			$table->nullableTimestamps();
 			$table->bigInteger('unread_count')->default(0);
+			$table->bigIncrements('id');
 		});
 	}
 
@@ -29,6 +30,7 @@ class StoreUnreadCountInUserChatRoom extends Migration
 		Schema::table('chat_room_user', function (Blueprint $table) {
 			$table->dropTimestamps();
 			$table->dropColumn('unread_count');
+			$table->dropColumn('id');
 		});
 	}
 }

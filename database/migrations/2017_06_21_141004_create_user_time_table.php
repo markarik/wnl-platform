@@ -16,7 +16,6 @@ class CreateUserTimeTable extends Migration
         Schema::create('user_time', function (Blueprint $table) {
             $table->unsignedInteger('user_id')->unique();
             $table->unsignedInteger('time');
-            $table->increments('id');
         });
     }
 

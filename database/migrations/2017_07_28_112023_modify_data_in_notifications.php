@@ -18,7 +18,7 @@ class ModifyDataInNotifications extends Migration
 		});
 
         Schema::table('notifications', function (Blueprint $table) {
-			$table->json('data')->after('notifiable_type')->nullable();
+			$table->json('data')->after('notifiable_type');
         });
     }
 

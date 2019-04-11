@@ -43,7 +43,12 @@ function fakeFetchOrders(data = null) {
 }
 
 async function waitForLoadingState() {
-// We need to wait for `this.isLoading = true`, didn't find a better method yet
+	// We need to wait for `this.isLoading = true` which is set after two async calls
+	// Alternatives would be to:
+	// - Pass `isLoading: false` to the `shallowMount` function - we'd modify component's behavior
+	// - Emit `isLoaded` event from the component - we'd add logic to component useful only in testing
+	// - Use `setTimeout` 🤢
+	// If you find a better alternative, feel free to replace this hack
 	await localVue.nextTick();
 	await localVue.nextTick();
 }

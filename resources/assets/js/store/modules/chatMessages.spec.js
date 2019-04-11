@@ -1,3 +1,4 @@
+import {describe, it} from 'mocha';
 import chai from 'chai';
 import chatMessagesModule from 'js/store/modules/chatMessages';
 import * as types from 'js/store/mutations-types';
@@ -9,10 +10,6 @@ const expect = chai.expect;
 const {actions} = chatMessagesModule;
 
 chai.use(sinonChai);
-
-const getInitialState = () => {
-	return {};
-};
 
 describe('chatMessages module', () => {
 	describe('actions', () => {
@@ -33,6 +30,7 @@ describe('chatMessages module', () => {
 				actions.updateFromEventLog({dispatch: dispatchSpy}, payload);
 				expect(dispatchSpy).to.have.been.calledWith('markRoomAsRead', payload[0].room.id);
 			});
+
 			it('update from event log mark room as read', () => {
 				const payload = [
 					{
@@ -47,6 +45,7 @@ describe('chatMessages module', () => {
 				actions.updateFromEventLog({dispatch: dispatchSpy}, payload);
 				expect(dispatchSpy).to.have.been.calledWith('onNewMessage', payload[0]);
 			});
+
 			it('update from event log when more than one event', () => {
 				const payload = [
 					{
@@ -87,7 +86,8 @@ describe('chatMessages module', () => {
 					{type: types.CHAT_MESSAGES_ADD_PROFILES, payload: []},
 					{type: types.CHAT_MESSAGES_ADD_MESSAGE, payload: {roomId: payload.room.id, message: payload.message}}
 				], done);
-			}),
+			});
+
 			it('new message in private room', done => {
 				const payload = {
 					room: {
@@ -114,7 +114,8 @@ describe('chatMessages module', () => {
 					{type: types.CHAT_MESSAGES_ADD_MESSAGE, payload: {roomId: payload.room.id, message: payload.message}},
 					{type: types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, payload: {roomId: payload.room.id, newIndex: 0}}
 				], done);
-			}),
+			});
+
 			it('new message in private room from different user', done => {
 				const payload = {
 					room: {

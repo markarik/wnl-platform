@@ -30,7 +30,7 @@ if (mix.inProduction()) {
 	mix.version();
 }
 
-mix.webpackConfig({
+const webpackConfig = {
 	resolve: {
 		extensions: ['*', '.js', '.jsx', '.vue'],
 
@@ -40,5 +40,12 @@ mix.webpackConfig({
 			'sass': path.resolve(__dirname, 'resources/assets/sass'),
 			'vendor': path.resolve(__dirname, 'resources/vendor')
 		},
-	}
-});
+	},
+};
+
+if (process.env.NODE_ENV === 'testing') {
+	// See https://github.com/zinserjan/mocha-webpack/blob/master/docs/installation/webpack-configuration.md
+	webpackConfig.externals = [require('webpack-node-externals')()];
+}
+
+mix.webpackConfig(webpackConfig);

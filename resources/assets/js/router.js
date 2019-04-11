@@ -260,6 +260,11 @@ const routes = [
 				name: 'key-shortcuts',
 				path: 'shortcuts',
 				component: Page,
+			},
+			{
+				name: 'help-faq',
+				path: 'faq',
+				component: Page,
 			}
 		]
 	},

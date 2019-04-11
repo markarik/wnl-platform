@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Serializer;
 
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderInstalment;
 use App\Models\Product;
@@ -15,10 +16,49 @@ class OrderTest extends TestCase
 	public function testGetInstalmentsAttributeAllPaid() {
 		$order = $this->createOrder(1000, 1000);
 
-		$this->assertEquals([
-			'allPaid' => true,
-			'instalments' => Collection::make()
-		], $order->instalments);
+		$this->assertTrue($order->instalments['allPaid']);
+	}
+
+	public function testGetInstalmentsAttributeOverpaid()
+	{
+		$coupon = factory(Coupon::class)->create([
+			'value' => 100,
+			'type' => 'amount',
+			'kind' => Coupon::KIND_VOUCHER,
+		]);
+		$order = $this->createOrder(1500, 1500);
+		$order->coupon_id = $coupon->id;
+		$order->save();
+
+		$expectedInstalments = [
+			[
+				'due_date' => $this->getDueDateForFirstInstalment(),
+				'amount' => 700.0,
+				'paid_amount' => 700.0,
+				'order_number' => 1,
+			],
+			[
+				'due_date' => $this->getDueDateForSecondInstalment(),
+				'amount' => 350.0,
+				'paid_amount' => 350.0,
+				'order_number' => 2,
+			],
+			[
+				'due_date' => $this->getDueDateForThirdInstalment(),
+				'amount' => 350.0,
+				'paid_amount' => 450.0,
+				'order_number' => 3,
+			],
+		];
+
+		$instalments = $order->instalments['instalments'];
+		for ($i = 0; $i < $instalments->count(); $i++) {
+			$this->assertTrue($expectedInstalments[$i]['due_date']->isSameDay($instalments[$i]->due_date));
+			$this->assertEquals($expectedInstalments[$i]['amount'], $instalments[$i]->amount);
+			$this->assertEquals($expectedInstalments[$i]['paid_amount'], $instalments[$i]->paid_amount);
+		}
+
+		$this->assertTrue($order->instalments['allPaid']);
 	}
 
 	/**
@@ -107,7 +147,7 @@ class OrderTest extends TestCase
 
 	public function getInstalmentsAttributeDataProvider()
 	{
-		$dueDateForFirstInstalment = Carbon::now()->addDays(7);
+		$dueDateForFirstInstalment = $this->getDueDateForFirstInstalment();
 		$dueDateForSecondInstalment = $this->getDueDateForSecondInstalment();
 		$dueDateForThirdInstalment = $this->getDueDateForThirdInstalment();
 
@@ -282,6 +322,10 @@ class OrderTest extends TestCase
 				]
 			],
 		];
+	}
+
+	private function getDueDateForFirstInstalment() {
+		return Carbon::now()->addDays(7);
 	}
 
 	private function getDueDateForSecondInstalment(): Carbon

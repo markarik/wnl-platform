@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import {expect} from 'chai';
 
 export const testAction = (action, payload, ctx = {}, expectedMutations, done) => {
 	let count = 0;
@@ -7,16 +7,14 @@ export const testAction = (action, payload, ctx = {}, expectedMutations, done) =
 	const commit = (type, payload) => {
 		const mutation = expectedMutations[count];
 
-		try {
-			expect(mutation.type).to.equal(type);
-			if (payload) {
-				expect(mutation.payload).to.deep.equal(payload);
-			}
-		} catch (error) {
-			done(error);
+		expect(mutation.type).to.equal(type);
+
+		if (payload) {
+			expect(mutation.payload).to.deep.equal(payload);
 		}
 
 		count++;
+
 		if (count >= expectedMutations.length) {
 			done();
 		}

@@ -1,3 +1,4 @@
+import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {mutations, actions} from 'js/store/modules/users';
 import * as types from 'js/store/mutations-types';
@@ -7,7 +8,7 @@ const getInitialState = () => {
 	return {};
 };
 
-describe('activeUsers module', () => {
+describe('users vuex module', () => {
 	describe('mutations', () => {
 		it(types.ACTIVE_USERS_SET, () => {
 			const state = getInitialState();

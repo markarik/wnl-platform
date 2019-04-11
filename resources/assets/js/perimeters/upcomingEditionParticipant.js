@@ -1,4 +1,5 @@
 import { createPerimeter } from 'vue-kindergarten';
+import {SUBSCRIPTION_STATUS} from 'js/consts/user';
 
 export default createPerimeter({
 	purpose: 'upcomingEditionParticipant',
@@ -12,6 +13,6 @@ export default createPerimeter({
 	isUpcomingEditionParticipant() {
 		return this.child &&
 			this.child.subscription &&
-			this.child.subscription.subscription_status === 'awaiting';
+			this.child.subscription.subscription_status === SUBSCRIPTION_STATUS.AWAITING;
 	},
 });

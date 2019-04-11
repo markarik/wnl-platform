@@ -24,6 +24,7 @@ class PaymentTest extends DuskTestCase
 	{
 		$this->browse(function (BethinkBrowser $browser) {
 			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoInvoice($browser);
 			(new ConfirmOrderModule())->payOnlineNow($browser);
 			(new OnlinePaymentModule())->successfulPayment($browser, '1500.00');
@@ -36,6 +37,7 @@ class PaymentTest extends DuskTestCase
 	{
 		$this->browse(function (BethinkBrowser $browser) {
 			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoInvoice($browser);
 			(new ConfirmOrderModule())->payOnlineLater($browser);
 			(new MyOrdersModule())->assertOrderPlaced($browser);
@@ -47,6 +49,7 @@ class PaymentTest extends DuskTestCase
 	{
 		$this->browse(function (BethinkBrowser $browser) {
 			(new AccountModule())->logInUsingModal($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoInvoice($browser);
 			(new ConfirmOrderModule())->payOnlineLater($browser);
 			(new MyOrdersModule())->assertOrderPlaced($browser);
@@ -59,6 +62,7 @@ class PaymentTest extends DuskTestCase
 		$this->browse(function (BethinkBrowser $browser) {
 			(new UserModule())->existingUser($browser);
 			(new VoucherModule())->skip($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoInvoice($browser);
 			(new ConfirmOrderModule())->editData($browser);
 			(new PersonalDataModule())->submitCustomInvoice($browser);
@@ -73,6 +77,7 @@ class PaymentTest extends DuskTestCase
 	{
 		$this->browse(function (BethinkBrowser $browser) {
 			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoInvoice($browser);
 			(new ConfirmOrderModule())->assertInstalments($browser);
 			(new ConfirmOrderModule())->payByInstalmentsLater($browser);
@@ -100,6 +105,7 @@ class PaymentTest extends DuskTestCase
 		$this->browse(function (BethinkBrowser $browser) {
 			(new VoucherModule())->code10Percent($browser);
 			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoInvoice($browser);
 			(new ConfirmOrderModule())->payOnlineLater($browser);
 			(new MyOrdersModule())->assertOrderPlaced($browser);
@@ -113,6 +119,7 @@ class PaymentTest extends DuskTestCase
 	public function testOrderWithCouponLaterNoStuddyBuddy() {
 		$this->browse(function (BethinkBrowser $browser) {
 			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoInvoice($browser);
 			(new ConfirmOrderModule())->payOnlineLater($browser);
 			(new MyOrdersModule())->assertOrderPlaced($browser);
@@ -128,6 +135,7 @@ class PaymentTest extends DuskTestCase
 	{
 		$this->browse(function (BethinkBrowser $browser) {
 			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoInvoice($browser);
 			(new ConfirmOrderModule())->assertInstalments($browser);
 			(new ConfirmOrderModule())->payByInstalmentsNow($browser);
@@ -153,6 +161,7 @@ class PaymentTest extends DuskTestCase
 		$this->browse(function (BethinkBrowser $browser) {
 			(new VoucherModule())->code10Percent($browser);
 			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoInvoice($browser);
 			(new ConfirmOrderModule())->assertInstalments($browser, '675zł', '337.5zł', '337.5zł', '1350zł');
 			(new ConfirmOrderModule())->payByInstalmentsNow($browser);
@@ -177,6 +186,7 @@ class PaymentTest extends DuskTestCase
 	{
 		$this->browse(function (BethinkBrowser $browser1, BethinkBrowser $browser2) {
 			(new AccountModule())->signUp($browser1);
+			(new PersonalDataModule())->assertCartContainsCourse($browser1);
 			(new PersonalDataModule())->submitNoInvoice($browser1);
 			(new ConfirmOrderModule())->payOnlineNow($browser1);
 			(new OnlinePaymentModule())->successfulPayment($browser1, '1500.00');
@@ -186,6 +196,7 @@ class PaymentTest extends DuskTestCase
 
 			(new VoucherModule())->codeStudyBuddy($browser2, $studyBuddy);
 			(new AccountModule())->signUp($browser2);
+			(new PersonalDataModule())->assertCartContainsCourse($browser2);
 			(new PersonalDataModule())->submitNoInvoice($browser2);
 			(new ConfirmOrderModule())->payOnlineNow($browser2);
 			(new OnlinePaymentModule())->successfulPayment($browser2, '1400.00');
@@ -199,6 +210,7 @@ class PaymentTest extends DuskTestCase
 	{
 		$this->browse(function (BethinkBrowser $browser1, BethinkBrowser $browser2) {
 			(new AccountModule())->signUp($browser1);
+			(new PersonalDataModule())->assertCartContainsCourse($browser1);
 			(new PersonalDataModule())->submitNoInvoice($browser1);
 			(new ConfirmOrderModule())->assertInstalments($browser1);
 			(new ConfirmOrderModule())->payByInstalmentsNow($browser1);
@@ -212,6 +224,7 @@ class PaymentTest extends DuskTestCase
 
 			(new VoucherModule())->codeStudyBuddy($browser2, $studyBuddy);
 			(new AccountModule())->signUp($browser2);
+			(new PersonalDataModule())->assertCartContainsCourse($browser2);
 			(new PersonalDataModule())->submitNoInvoice($browser2);
 			(new ConfirmOrderModule())->payOnlineNow($browser2);
 			(new OnlinePaymentModule())->successfulPayment($browser2, '1400.00');
@@ -238,6 +251,7 @@ class PaymentTest extends DuskTestCase
 		$this->browse(function (BethinkBrowser $browser) {
 			(new VoucherModule())->code100Percent($browser);
 			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoInvoice($browser);
 			(new ConfirmOrderModule())->payByCoupon100Percent($browser);
 			(new MyOrdersModule())->assertOrderPlaced($browser);
@@ -256,6 +270,7 @@ class PaymentTest extends DuskTestCase
 	{
 		$this->browse(function (BethinkBrowser $browser) {
 			(new UserModule())->existingUserWithOrder($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoInvoiceExistingOrder($browser);
 			(new ConfirmOrderModule())->payOnlineNow($browser);
 			(new OnlinePaymentModule())->successfulPayment($browser, '1500.00');
@@ -268,11 +283,46 @@ class PaymentTest extends DuskTestCase
 	{
 		$this->browse(function (BethinkBrowser $browser) {
 			(new UserModule())->existingProlongingUser($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
 			(new PersonalDataModule())->submitNoAddress($browser);
 			(new ConfirmOrderModule())->payOnlineNow($browser);
 			(new OnlinePaymentModule())->successfulPayment($browser, '750.00');
 			(new MyOrdersModule())->assertOrderPlaced($browser);
 			(new MyOrdersModule())->assertPaid($browser, '750zł / 750zł');
+		});
+	}
+
+	public function testCantBuyAlbumToFirstOrder()
+	{
+		$this->browse(function (BethinkBrowser $browser) {
+			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
+			(new PersonalDataModule())->submitNoInvoice($browser);
+			(new ConfirmOrderModule())->payOnlineNow($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '1500.00');
+			(new MyOrdersModule())->assertOrderPlaced($browser);
+			(new MyOrdersModule())->assertPaid($browser, '1500zł / 1500zł');
+			(new MyOrdersModule())->assertAlbumLinkNotVisible($browser);
+		});
+	}
+
+	public function testAlbumOrder()
+	{
+		$this->browse(function (BethinkBrowser $browser) {
+			(new UserModule())->existingProlongingUser($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
+			(new PersonalDataModule())->submitNoAddress($browser);
+			(new ConfirmOrderModule())->payOnlineNow($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '750.00');
+			(new MyOrdersModule())->assertOrderPlaced($browser);
+			(new MyOrdersModule())->assertPaid($browser, '750zł / 750zł');
+			$browser->coupon = null;
+			(new MyOrdersModule())->initiateAlbumOrder($browser);
+			(new PersonalDataModule())->assertCartContainsAlbum($browser);
+			(new PersonalDataModule())->submitNoInvoice($browser);
+			(new ConfirmOrderModule())->payOnlineNow($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '300.00');
+			(new MyOrdersModule())->assertPaid($browser, '300zł / 300zł');
 		});
 	}
 }

@@ -64,6 +64,7 @@ return [
 	"url"                  => "Ten adres URL jest nieprawidłowy.",
 	"timezone"             => "Ta wartość musi być prawidłową strefą czasową.",
 	"morph_exists"         => "Wybrana wartość nie istnieje.",
+	'identity_number'      => 'Pesel jest nieprawidłowy.',
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Language Lines

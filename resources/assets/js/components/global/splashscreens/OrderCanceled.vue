@@ -2,11 +2,12 @@
 	<div>
 		<img class="splash-screen-image" :src="logoImageUrl" alt="Logo kursu">
 		<div class="has-text-centered">
-			<p class="title is-4">Twoje konto zostało zablokowane</p>
+			<p class="title is-4">Twoje zamówienie zostało anulowane ze względu na brak płatności.</p>
+			<p class="text-dimmed">
+				Aby uzyskać dostęp do kursu złóż i opłać nowe zamówienie.
+			</p>
 			<p>
-				Niestety, Twoje konto zostało zablokowane. 🙁 <br/>
-				Sprawdź w zakładce <router-link :to="{name: 'my-orders'}">KONTO > Moje zamówienia</router-link>, czy Twoje zamówienie jest opłacone. <br/>
-				W razie pytań pisz do nas na <a href="mailto:info@wiecejnizlek.pl">info@wiecejnizlek.pl.</a> 🙂
+				<a href="/payment" class="button is-primary margin top">Złóż nowe zamówienie</a>
 			</p>
 		</div>
 	</div>

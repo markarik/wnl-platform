@@ -344,6 +344,7 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	// Payments
 	Route::post("{$r['payments']}", 'PaymentsApiController@post');
+	Route::post("{$r['payments']}/method", 'PaymentsApiController@setPaymentMethod');
 
 	// Tags
 	Route::get("{$r['tags']}/{id}", 'TagsApiController@get');

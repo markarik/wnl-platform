@@ -202,33 +202,28 @@ function confirmOrderForm() {
 		}
 
 		$(this).addClass('-loading');
+
 		if (paymentMethod === 'now') {
-			$.ajax({
+			$.ajax(`${$('body').data('base')}/papi/v2/payments/method`, {
 				data: {
-					controller: 'PaymentAjaxController',
-					method: 'setPaymentMethod',
 					payment: customPaymentMethod,
-					sess_id: $('[name="p24_session_id"]').val()
+					sess_id: $('[name="p24_session_id"]').val(),
+					order_id: $('[name="order_id"]').val(),
 				},
+				headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+				method: 'POST',
 				success: function (response) {
 					if (response.status === 'success') {
 						$(instalmentsSelected ? '#instalmentsP24Form' : '#fullPaymentP24Form').submit();
 					}
+				},
+				error: function (error) {
+					console.error(error);
 				}
 			});
 		} else {
 			$('#customPaymentMethodInput').val(customPaymentMethod);
 			$('#customPaymentForm').submit();
-		}
-	});
-
-	$.ajaxSetup({
-		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-		url: $('body').data('base') + '/ax',
-		data: {},
-		method: 'POST',
-		error: function (error) {
-			console.log(error);
 		}
 	});
 }

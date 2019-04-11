@@ -27,6 +27,7 @@
 			<form action="{{route('payment-confirm-order-post')}}" method="post" id="customPaymentForm">
 				{!! csrf_field() !!}
 				<input id="customPaymentMethodInput" type="hidden" name="method" value=""/>
+				<input type="hidden" name="order_id" value="{{ $order->id }}"/>
 			</form>
 
 			<div class="o-paymentOptions">

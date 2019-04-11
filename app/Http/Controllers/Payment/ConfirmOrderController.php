@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Payment;
 
+use App\Http\Requests\Payment\PostConfirmOrder;
 use App\Models\Order;
 use App\Models\OrderInstalment;
 use App\Models\Payment as PaymentModel;
@@ -16,13 +17,15 @@ use Illuminate\Support\Facades\Session;
 
 class ConfirmOrderController extends Controller
 {
-	public function index(Payment $payment)
+	public function index(Request $request, Payment $payment)
 	{
 		$user = Auth::user();
 		Log::debug('Order confirmation');
 
+		$orderId = $request->get('orderId') ?? Session::get('orderId');
+
 		/** @var Order $order */
-		$order = $user->orders()->find(Session::get('orderId'));
+		$order = $user->orders()->find($orderId);
 
 		if (!$order instanceof Order) {
 			return redirect(route('payment-personal-data', ['slug' => Product::SLUG_WNL_ONLINE]));
@@ -66,11 +69,11 @@ class ConfirmOrderController extends Controller
 		return view('payment.confirm-order', $viewData);
 	}
 
-	public function handle(Request $request)
+	public function handle(PostConfirmOrder $request)
 	{
 		$user = Auth::user();
 		Log::debug('Saving payment method and redirecting to dashboard.');
-		$order = $user->orders()->recent();
+		$order = $user->orders()->find($request->get('order_id'));
 		$order->method = $request->input('method');
 		$order->save();
 

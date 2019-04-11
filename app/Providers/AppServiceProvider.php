@@ -146,7 +146,7 @@ class AppServiceProvider extends ServiceProvider
 
 	private function forceHttpsLinks() {
 		$url = app(UrlGenerator::class);
-		if (env('APP_ENV') !== 'dev') {
+		if (env('APP_ENV') !== 'dev' && env('APP_ENV') !== 'testing') {
 			$url->forceScheme('https');
 		}
 	}

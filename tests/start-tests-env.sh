@@ -3,7 +3,10 @@
 DIR=$(dirname $0)
 cd ${DIR}/..
 
-docker-compose -f docker-compose.yaml -f docker-compose.dusk.yml up --remove-orphans -d
+docker-compose -f docker-compose.dusk.yml up -d
+
+printf "Wait 15 seconds for containers to boot...\n"
+sleep 15
 
 NGROK_URL=$(./ngrok-enable.sh -r 0)
 
@@ -12,7 +15,7 @@ if [[ $? -eq 1 ]]; then
     exit 1
 fi
 
-P24_STATUS_URL="$NGROK_URL/payment/status" docker-compose -f docker-compose.yaml -f docker-compose.dusk.yml up -d php
+P24_STATUS_URL="$NGROK_URL/payment/status" docker-compose -f docker-compose.dusk.yml up -d php
 
 printf "=======================================================\n"
 printf "If you want to run specific test use an argument, e.g.:\n"

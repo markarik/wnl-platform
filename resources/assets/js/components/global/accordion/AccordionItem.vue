@@ -161,8 +161,6 @@
 </style>
 
 <script>
-import {size} from 'lodash';
-
 export default {
 	name: 'AccordionItem',
 	props: {
@@ -235,7 +233,7 @@ export default {
 		onChildItemToggled(payload) {
 			this.$emit('itemToggled', payload);
 		},
-		onItemClick(event) {
+		onItemClick() {
 			if (this.isDisabled || this.loading) return false;
 
 			if (this.isSelectable) {

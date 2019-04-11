@@ -1,4 +1,3 @@
-import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
 
 // Initial state
@@ -18,7 +17,7 @@ const getters = {
 
 // Actions
 const actions = {
-	saveMentions({ commit }, data) {
+	saveMentions({}, data) {
 		return axios.post(getApiUrl('events/mentions'), data);
 	}
 };

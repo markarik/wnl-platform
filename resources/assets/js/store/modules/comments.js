@@ -184,7 +184,7 @@ export const commentsActions = {
 	setProfiles({commit}, payload) {
 		commit(types.SET_COMMENTS_PROFILES, payload);
 	},
-	async setupComments({commit, dispatch}, {resource, ...args}) {
+	async setupComments({dispatch}, {resource, ...args}) {
 		const model = getModelByResource(resource);
 		try {
 			await dispatch('fetchComments', {commentable_type: model, ...args});

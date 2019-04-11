@@ -37,7 +37,7 @@ const actions = {
 			$wnl.logger.error(e);
 		}
 	},
-	async updateSiteWideMessage({commit}, messageId) {
+	async updateSiteWideMessage({}, messageId) {
 		try {
 			await axios.put(getApiUrl(`site_wide_messages/${messageId}/read`), {
 				read_at: new Date()

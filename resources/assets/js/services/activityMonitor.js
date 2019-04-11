@@ -1,4 +1,4 @@
-import {throttle, forOwn} from 'lodash';
+import {throttle} from 'lodash';
 
 const THROTTLE_TIME = 1000 * 30;
 const EVENTS = ['click', 'touchstart', 'keyup', 'mousemove', 'scroll'];

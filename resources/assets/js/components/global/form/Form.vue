@@ -225,7 +225,7 @@ export default {
 		formData(newVal) {
 			this.$emit('change', {formData: newVal});
 		},
-		resourceRoute(val) {
+		resourceRoute() {
 			this.mutation(
 				types.FORM_UPDATE_URL,
 				getApiUrl(this.resourceRoute)

@@ -77,8 +77,7 @@
 </style>
 
 <script>
-import _ from 'lodash';
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 
 import QuestionsNotification from 'js/components/notifications/feeds/questions/QuestionsNotification';
 import { CommentPosted } from 'js/components/notifications/events';

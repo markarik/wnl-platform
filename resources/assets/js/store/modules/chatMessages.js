@@ -7,7 +7,6 @@ import {getApiUrl} from 'js/utils/env';
 import {
 	SOCKET_EVENT_SEND_MESSAGE,
 	SOCKET_EVENT_MARK_ROOM_AS_READ,
-	SOCKET_EVENT_USER_SENT_MESSAGE
 } from 'js/plugins/chat-connection';
 
 const namespaced = true;
@@ -155,7 +154,7 @@ const mutations = {
 
 //Actions
 const actions = {
-	async fetchUserRoomsWithMessages({commit, getters}, {limit=20, page=1}) {
+	async fetchUserRoomsWithMessages({commit}, {limit=20, page=1}) {
 		const {payload, pagination, log_pointer} = await fetchUserRooms({limit, page});
 
 		commit(types.CHAT_MESSAGES_ADD_PROFILES, Object.values(payload.profiles));
@@ -204,7 +203,7 @@ const actions = {
 	setConnectionStatus({commit}, payload) {
 		commit(types.CHAT_MESSAGES_SET_STATUS, payload);
 	},
-	async createPrivateRoom({commit, rootGetters, state}, {users}) {
+	async createPrivateRoom({commit}, {users}) {
 		const uniqUsers = uniq(users);
 		const response = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
 			name: `private-${uniqUsers.join('-')}`,
@@ -279,7 +278,7 @@ const actions = {
 		commit(types.CHAT_MESSAGES_MARK_ROOM_AS_READ, roomId);
 	},
 
-	updateFromEventLog({commit, dispatch}, events) {
+	updateFromEventLog({dispatch}, events) {
 		events.forEach(event => {
 			switch (event.name) {
 			case SOCKET_EVENT_SEND_MESSAGE:

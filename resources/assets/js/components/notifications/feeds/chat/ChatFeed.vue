@@ -51,7 +51,7 @@
 </style>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import Dropdown from 'js/components/global/Dropdown';
 import NotificationsToggle from 'js/components/notifications/feeds/personal/NotificationsToggle';
 import ConversationsList from 'js/components/messages/ConversationsList';
@@ -94,7 +94,7 @@ export default {
 		toggle(isActive) {
 			this.isActive = isActive;
 		},
-		toggleNotifications(data) {
+		toggleNotifications() {
 			this.isOn = this.data;
 		}
 	}

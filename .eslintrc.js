@@ -35,11 +35,14 @@ module.exports = {
 			'error',
 			'always'
 		],
+		'no-unused-vars': [
+			'error',
+			{
+				'ignoreRestSiblings': true
+			}
+		],
 
 		// TODO enable eslint:recommended rules below
-		'no-unused-vars': [
-			'off'
-		],
 		'no-undef': [
 			'off'
 		],

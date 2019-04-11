@@ -183,7 +183,7 @@ export default {
 			}
 
 			this.images.forEach((image, index) => {
-				image.addEventListener('click', (event) => {
+				image.addEventListener('click', () => {
 					this.isVisible = true;
 					this.goToImage(index);
 				});
@@ -193,7 +193,7 @@ export default {
 			if (!this.imagesLoaded) {
 				this.images = document.querySelectorAll(this.imagesSelector);
 				this.images.forEach((image, index) => {
-					image.addEventListener('click', (event) => {
+					image.addEventListener('click', () => {
 						this.isVisible = true;
 						this.goToImage(index);
 					});

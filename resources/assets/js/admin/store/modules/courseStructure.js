@@ -27,7 +27,7 @@ const include = '?include=groups,lessons';
 // Getters
 const getters = {
 	...nestedSetGetters,
-	getStructurableIcon: state => structurable => {
+	getStructurableIcon: () => structurable => {
 		return COURSE_STRUCTURE_TYPE_ICONS[structurable.type];
 	}
 };

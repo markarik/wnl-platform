@@ -124,7 +124,6 @@
 </style>
 
 <script>
-import { truncate } from 'lodash';
 import { mapActions, mapGetters } from 'vuex';
 
 import Avatar from 'js/components/global/Avatar';

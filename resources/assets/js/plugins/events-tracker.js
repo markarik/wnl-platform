@@ -42,7 +42,7 @@ const EventsTracker = {
 			$wnl.logger.error(`Sad socket error: ${error}`);
 		};
 
-		const onSocketConnectionError = (err) => {
+		const onSocketConnectionError = () => {
 			socket.off('connect_error');
 		};
 

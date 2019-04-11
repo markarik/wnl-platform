@@ -72,7 +72,6 @@
 </style>
 
 <script>
-import _ from 'lodash';
 import { mapGetters } from 'vuex';
 import { resource } from 'js/utils/config';
 

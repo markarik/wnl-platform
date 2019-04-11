@@ -189,7 +189,6 @@
 
 <script>
 import {mapActions, mapGetters, mapMutations} from 'vuex';
-import {nextTick} from 'vue';
 import {get} from 'lodash';
 import {scrollToElement} from 'js/utils/animations';
 import * as mutationsTypes from 'js/store/mutations-types';

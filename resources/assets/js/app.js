@@ -80,7 +80,7 @@ $wnl.logger = new Logger();
 // Set up App
 $wnl.logger.debug('Starting application...');
 
-const app = new Vue({
+new Vue({
 	router,
 	store,
 	i18n,

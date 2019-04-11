@@ -24,7 +24,7 @@ export default {
 	methods: {
 		updateCharts() {
 			axios.get(getUrl('admin/update-charts'))
-				.then(response => {
+				.then(() => {
 					this.successFading('OK, to może trochę potrwać. Kiedy skończę, dam znać na slacku.', 4000);
 				})
 				.catch(error => {

@@ -412,7 +412,7 @@ export default {
 				slackDays: this.slackDays,
 				preserveProgress: this.preserveProgress
 			})
-				.then(({status, data}) => this.plan = data)
+				.then(({data}) => this.plan = data)
 				.then(this.fetchDynamicFilters)
 				.then(() => {
 					this.saving = false;
@@ -481,7 +481,7 @@ export default {
 			return this.fetchDynamicFilters();
 		},
 		setFilters(filters) {
-			return new Promise((resolve, reject) => {
+			return new Promise((resolve) => {
 				if (!isEmpty(this.filters)) {
 					this.activeFiltersSet(filters);
 					return resolve();

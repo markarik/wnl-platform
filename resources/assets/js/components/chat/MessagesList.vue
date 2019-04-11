@@ -186,7 +186,7 @@ export default {
 		highlightedMessageId() {
 			if (this.highlightedMessageId) this.scrollToMessageById(this.highlightedMessageId);
 		},
-		'loaded' (newVal) {
+		'loaded' () {
 			// required by firefox
 			this.scrollToBottom();
 		}

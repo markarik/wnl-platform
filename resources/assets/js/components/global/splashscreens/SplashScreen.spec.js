@@ -210,7 +210,7 @@ describe('SplashScreen.vue', () => {
 		const component = getComponent({store});
 		await waitForLoadingState();
 
-		expect(component.html()).to.include('<wnl-splash-screen-subscription-expired');
+		expect(component.html()).to.include('<wnl-splash-screen-subscription-expired-stub');
 	});
 
 	it('renders wnl-splash-screen-default', async () => {
@@ -227,6 +227,6 @@ describe('SplashScreen.vue', () => {
 		const component = getComponent({store});
 		await waitForLoadingState();
 
-		expect(component.html()).to.include('<wnl-splash-screen-default');
+		expect(component.html()).to.include('<wnl-splash-screen-default-stub');
 	});
 });

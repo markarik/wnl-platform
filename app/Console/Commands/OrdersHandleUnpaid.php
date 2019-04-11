@@ -48,12 +48,8 @@ class OrdersHandleUnpaid extends CommandWithMonitoring
 			Carbon::setTestNow(Carbon::now()->addDays((int) $timeShift));
 		}
 
-		$expired = Carbon::today()->subDays(30);
-
 		$this->handleUnpaidOrders();
 		$this->handleUnpaidInstalment();
-
-		PaymentReminder::where('created_at', '<', $expired)->delete();
 
 		return;
 	}
@@ -107,7 +103,8 @@ class OrdersHandleUnpaid extends CommandWithMonitoring
 			function ($query) use ($beforeDue) {
 				$query
 					->whereRaw('order_instalments.paid_amount < order_instalments.amount')
-					->whereDate('due_date', "<=", $beforeDue);
+					->whereDate('due_date', "<=", $beforeDue)
+					->whereDate('due_date', ">=", Carbon::today()->subDays(7));
 			})
 			->where('method', 'instalments')
 			->where('canceled', '!=', 1)

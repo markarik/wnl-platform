@@ -1,7 +1,7 @@
 module.exports = {
 	extends: [
+		'eslint:recommended',
 		// TODO use recommended rules
-		// 'eslint:recommended',
 		// 'plugin:vue/recommended'
 		'plugin:vue/strongly-recommended'
 	],
@@ -35,6 +35,39 @@ module.exports = {
 			'error',
 			'always'
 		],
+
+		// TODO enable eslint:recommended rules below
+		'no-unused-vars': [
+			'off'
+		],
+		'no-undef': [
+			'off'
+		],
+		'no-mixed-spaces-and-tabs': [
+			'off'
+		],
+		'no-console': [
+			'off'
+		],
+		'no-irregular-whitespace': [
+			'off'
+		],
+		'no-empty-pattern': [
+			'off'
+		],
+		'no-extra-boolean-cast': [
+			'off'
+		],
+		'no-useless-escape': [
+			'off'
+		],
+		'no-case-declarations': [
+			'off'
+		],
+		'no-redeclare': [
+			'off'
+		],
+
 		'import/no-relative-parent-imports': 'error',
 		'vue/component-name-in-template-casing': [
 			'error',

@@ -7,7 +7,7 @@
 				</div>
 			</div>
 			<div v-if="displayAlbumLink">
-				<a :href="orderAlbumUrl" title="Zamów album map myśli">
+				<a :href="orderAlbumUrl" title="Zamów album map myśli" data-button="order-album">
 					<span class="icon is-small status-icon">
 						<i class="fa fa-shopping-cart"></i>
 					</span> Zamów album map myśli ({{getAlbum.price}}zł)

@@ -2,6 +2,17 @@ version: '3'
 
 services:
 
+  mysql:
+    container_name: mysql
+    image: mysql:5.7.22
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=wnl
+      - MYSQL_DATABASE=testing
+      - MYSQL_USER=wnl
+      - MYSQL_PASSWORD=Spoko200!
+
   php:
     container_name: php
     build:

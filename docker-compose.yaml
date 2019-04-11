@@ -76,7 +76,7 @@ services:
     ports:
       - "8755:8755"
     volumes:
-      - ${NFS_SOURCE_DIR}/wnl-platform/laravel-echo-server.json:/src/laravel-echo-server.json:ro
+      - ${LOCAL_CODE_PATH}/wnl-platform/laravel-echo-server.json:/src/laravel-echo-server.json:ro
 
   nginx:
     container_name: nginx

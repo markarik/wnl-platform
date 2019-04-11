@@ -89,7 +89,11 @@ class OrderPaid implements ShouldQueue
 	private function cancelRemainingOrders()
 	{
 		$this->order->user->orders->each(function(Order $order) {
-			if (!$order->paid && $order->id !== $this->order->id) {
+			if (
+				!$order->paid
+				&& $order->id !== $this->order->id
+				&& $order->product->id === $this->order->product->id
+			) {
 				$order->cancel();
 			}
 		});

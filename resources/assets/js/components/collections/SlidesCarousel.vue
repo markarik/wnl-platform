@@ -74,6 +74,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import { mapActions, mapGetters } from 'vuex';
 import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue';
 import {getApiUrl} from 'js/utils/env';
@@ -189,7 +190,7 @@ export default {
 							});
 						}).then(() => {
 							return this._fetchBookmarkedSlideshow();
-						}).then( () => {
+						}).then(({data}) => {
 							const slidesIds = this.currentSlideshowSlides.map(slide => slide.id);
 							this.loadedHtmlContents[this.contentModes.bookmark] = data;
 							const sortedSlides = this.sortSlidesByOrderNumber(slidesIds);

@@ -33,6 +33,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import {size} from 'lodash';
 import {mapGetters} from 'vuex';
 

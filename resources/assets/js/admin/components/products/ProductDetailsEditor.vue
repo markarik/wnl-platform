@@ -73,6 +73,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import {
 	Form as WnlForm,
 	Text as WnlText,

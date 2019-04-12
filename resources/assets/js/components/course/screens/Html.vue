@@ -118,7 +118,7 @@ import $ from 'jquery';
 
 imageviewer($, window, document);
 function showImage(src) {
-	ImageViewer($('.image-gallery-wrapper .image-container'), {snapViewPersist: false}).load(src);
+	window.ImageViewer($('.image-gallery-wrapper .image-container'), {snapViewPersist: false}).load(src);
 }
 
 

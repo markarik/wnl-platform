@@ -45,6 +45,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import {mapActions} from 'vuex';
 import {isEmpty} from 'lodash';
 

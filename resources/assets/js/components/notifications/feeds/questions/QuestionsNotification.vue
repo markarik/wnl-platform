@@ -124,6 +124,7 @@
 </style>
 
 <script>
+import { camelCase } from 'lodash';
 import { mapActions, mapGetters } from 'vuex';
 
 import Avatar from 'js/components/global/Avatar';
@@ -156,7 +157,7 @@ export default {
 	computed: {
 		...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
 		action() {
-			return this.$t(`notifications.events.${_.camelCase(this.message.event)}`);
+			return this.$t(`notifications.events.${camelCase(this.message.event)}`);
 		},
 		justDate() {
 			return justMonthAndDayFromS(this.message.timestamp);
@@ -170,7 +171,7 @@ export default {
 			const type = !!objects ? objects.type : subject.type;
 			const choice = !!objects ? this.currentUserId === objects.author ? 2 : 1 : 1;
 
-			return this.$tc(`notifications.objects.${_.camelCase(type)}`, choice);
+			return this.$tc(`notifications.objects.${camelCase(type)}`, choice);
 		},
 	},
 	methods: {

@@ -1,5 +1,5 @@
 import {set} from 'vue';
-import {get, isEmpty, isNumber, size} from 'lodash';
+import {get, each, isEmpty, isNumber, size} from 'lodash';
 import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import {parseFilters} from 'js/services/apiFiltering';
@@ -174,7 +174,7 @@ const mutations = {
 		});
 	},
 	[types.QUESTIONS_SET_QUESTION_DATA] (state, {id, included, comments, slides}) {
-		if (_.size(included) === 0) return;
+		if (size(included) === 0) return;
 
 		comments && set(state.quiz_questions[id], 'comments', comments);
 
@@ -184,9 +184,9 @@ const mutations = {
 			set(state.quiz_questions[id], 'slides', slides.map((slideId) => includedSlides[slideId]));
 		}
 
-		_.each(resources, (items, resource) => {
+		each(resources, (items, resource) => {
 			let resourceObject = state[resource];
-			_.each(items, (item) => {
+			each(items, (item) => {
 				set(resourceObject, item.id, item);
 			});
 		});
@@ -234,9 +234,9 @@ const mutations = {
 		});
 	},
 	[types.UPDATE_INCLUDED] (state, included) {
-		_.each(included, (items, resource) => {
+		each(included, (items, resource) => {
 			let resourceObject = state[resource];
-			_.each(items, (item) => {
+			each(items, (item) => {
 				set(resourceObject, item.id, item);
 			});
 		});
@@ -367,7 +367,7 @@ const actions = {
 		if (!id) return Promise.resolve();
 		return _fetchQuestionsData(id)
 			.then(({data}) => {
-				_.get(data, 'included.comments') && dispatch('comments/setComments', data.included.comments, {root:true});
+				get(data, 'included.comments') && dispatch('comments/setComments', data.included.comments, {root:true});
 				commit(types.QUESTIONS_SET_QUESTION_DATA, data);
 			});
 	},
@@ -394,7 +394,7 @@ const actions = {
 			cachedPagination: false
 		}).then(response => {
 			const {answers, questions, slides, included} = _handleResponse(response, commit);
-			const comments = _.get(included, 'comments');
+			const comments = get(included, 'comments');
 			comments && dispatch('comments/setComments', comments, {root:true});
 
 			commit(types.QUESTIONS_SET_TEST, {answers, questions, slides});
@@ -411,7 +411,7 @@ const actions = {
 			limit: ids.length
 		}).then(response => {
 			const {answers, questions, slides, included} = _handleResponse(response, commit);
-			const comments = _.get(included, 'comments');
+			const comments = get(included, 'comments');
 
 			comments && dispatch('comments/setComments', comments, {root:true});
 

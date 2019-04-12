@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import {mapActions} from 'vuex';
 
 import {getApiUrl} from 'js/utils/env';

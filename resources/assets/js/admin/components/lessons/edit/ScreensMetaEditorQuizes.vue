@@ -15,6 +15,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import { forEach } from 'lodash';
 
 import WnlSelect from 'js/admin/components/forms/Select';

@@ -106,7 +106,7 @@
 
 <script>
 import { decode } from 'he';
-import { truncate, camelCase } from 'lodash';
+import { last, truncate, camelCase } from 'lodash';
 import {mapGetters} from 'vuex';
 
 export default {
@@ -124,7 +124,7 @@ export default {
 	computed: {
 		...mapGetters('course', ['getLesson']),
 		lastEvent() {
-			return _.last(this.events);
+			return last(this.events);
 		},
 		iconClass() {
 			return this.expanded ? 'fa-chevron-up' : 'fa-chevron-down';
@@ -164,10 +164,10 @@ export default {
 
 			// Qna Quesiton posted
 			if (subject && !objects) {
-				return this.$tc(`notifications.objects.${_.camelCase(subject.type)}`, 1);
+				return this.$tc(`notifications.objects.${camelCase(subject.type)}`, 1);
 			}
 
-			return this.$tc(`notifications.objects.${_.camelCase(objects.type)}`, 1);
+			return this.$tc(`notifications.objects.${camelCase(objects.type)}`, 1);
 		},
 	}
 };

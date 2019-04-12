@@ -72,6 +72,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import {mapActions} from 'vuex';
 import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea, Color as WnlFormColor} from 'js/components/global/form';
 import WnlTaxonomyTermsEditor from 'js/admin/components/taxonomies/TaxonomyTermsEditor';

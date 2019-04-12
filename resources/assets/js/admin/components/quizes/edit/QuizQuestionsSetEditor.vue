@@ -108,6 +108,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import {isEqual, isEmpty} from 'lodash';
 import {mapState, mapActions} from 'vuex';
 import WnlDraggable from 'vuedraggable';

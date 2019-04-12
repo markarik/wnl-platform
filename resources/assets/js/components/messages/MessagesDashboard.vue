@@ -52,6 +52,7 @@ import MainNav from 'js/components/MainNav';
 import PrivateChat from 'js/components/chat/PrivateChat';
 import SidenavSlot from 'js/components/global/SidenavSlot';
 import ConversationsList from 'js/components/messages/ConversationsList';
+import { first } from 'lodash';
 
 export default {
 	name: 'MessagesDashboard',
@@ -105,7 +106,7 @@ export default {
 				context.afterLimit = 0;
 				context.beforeLimit = PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT;
 			} else if (room.messages && room.messages.length) {
-				context.messageTime = _.first(room.messages).time;
+				context.messageTime = first(room.messages).time;
 				context.afterLimit = 0;
 				context.beforeLimit = PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT;
 			}

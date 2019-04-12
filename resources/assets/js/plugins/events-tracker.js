@@ -1,4 +1,5 @@
 import * as io from 'socket.io-client';
+import {snakeCase} from 'lodash';
 import {envValue} from 'js/utils/env';
 import {gaEvent, gaPageView} from 'js/utils/tracking';
 const EVENTS = {
@@ -73,7 +74,7 @@ const EventsTracker = {
 			const contextRoute = {};
 			Object.keys(router.currentRoute.params).forEach(key => {
 				const param = router.currentRoute.params[key];
-				const column = _.snakeCase(key);
+				const column = snakeCase(key);
 				const value = isNaN(param) ? param : Number(param);
 				contextRoute[column] = value;
 			});

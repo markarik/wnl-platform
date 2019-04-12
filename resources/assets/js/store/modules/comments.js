@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { set, delete as destroy } from 'vue';
+import { each, uniqBy } from 'lodash';
 
 import * as types from 'js/store/mutations-types';
 import { getApiUrl } from 'js/utils/env';
@@ -118,7 +119,7 @@ export const commentsMutations = {
 	[types.SET_COMMENTABLE_COMMENTS] (state, comments) {
 		const commentsResourceObj = {};
 
-		_.each(comments, (comment) => {
+		each(comments, (comment) => {
 			let resource = modelToResourceMap[comment.commentable_type],
 				resourceId = comment.commentable_id;
 
@@ -136,7 +137,7 @@ export const commentsMutations = {
 		Object.keys(commentsResourceObj).forEach(resource => {
 			Object.keys(commentsResourceObj[resource]).forEach(resourceId => {
 				const oldComments = state[resource][resourceId].comments || [];
-				const commentsIds = _.uniqBy(
+				const commentsIds = uniqBy(
 					oldComments.concat(Object.keys(commentsResourceObj[resource][resourceId])),
 					commentId => commentId.toString()
 				);

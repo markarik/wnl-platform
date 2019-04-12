@@ -207,6 +207,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import {isEmpty} from 'lodash';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';

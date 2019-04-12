@@ -1,3 +1,4 @@
+import axios from 'axios';
 import _ from 'lodash';
 import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';

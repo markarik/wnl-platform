@@ -43,9 +43,6 @@ module.exports = {
 		],
 
 		// TODO enable eslint:recommended rules below
-		'no-undef': [
-			'off'
-		],
 		'no-mixed-spaces-and-tabs': [
 			'off'
 		],
@@ -113,6 +110,9 @@ module.exports = {
 	},
 	globals: {
 		$: true,
-		$wnl: true
+		$wnl: true,
+		Echo: true,
+		fbq: true,
+		ga: true,
 	}
 };

@@ -194,6 +194,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import {mapActions} from 'vuex';
 import {getApiUrl} from 'js/utils/env';
 import Form from 'js/classes/forms/Form';

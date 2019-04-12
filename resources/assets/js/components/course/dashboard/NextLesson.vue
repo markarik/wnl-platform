@@ -83,9 +83,6 @@ export default {
 			'getFirstLessonIdInProgress',
 			'isLessonComplete',
 		]),
-		buttonClass() {
-			return this.getParam('buttonClass');
-		},
 		callToAction() {
 			return this.$t(`dashboard.progress.${this.status}-CTA`);
 		},
@@ -128,9 +125,6 @@ export default {
 		},
 	},
 	methods: {
-		getParam(name) {
-			return statusParams[this.status][name];
-		},
 		trackNextLessonClick() {
 			this.$trackUserEvent({
 				feature: context.dashboard.features.next_lesson.value,

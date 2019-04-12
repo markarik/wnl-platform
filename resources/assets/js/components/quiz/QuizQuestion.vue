@@ -272,6 +272,7 @@
 
 </style>
 <script>
+import axios from 'axios';
 import { isNumber, trim, get } from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 import { getApiUrl } from 'js/utils/env';
@@ -389,10 +390,10 @@ export default {
 		slideLink(slide) {
 			let linkText = '';
 
-			if (_.get(slide, 'context.lesson.id')) {
+			if (get(slide, 'context.lesson.id')) {
 				linkText += this.getLesson(slide.context.lesson.id).name;
 
-				if (_.get(slide, 'context.section.id')) {
+				if (get(slide, 'context.section.id')) {
 					linkText += ` / ${get(slide, 'context.section.name')}`;
 				}
 			}

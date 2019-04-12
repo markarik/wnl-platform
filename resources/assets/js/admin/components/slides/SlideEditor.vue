@@ -109,6 +109,8 @@
 </style>
 
 <script>
+import axios from 'axios';
+import { get } from 'lodash';
 import {mapActions} from 'vuex';
 
 import WnlCode from 'js/admin/components/forms/Code';
@@ -216,7 +218,7 @@ export default {
 					this.successFading('Zapisano', 2000);
 					this.loading = false;
 				})
-				.catch(() => {
+				.catch((error) => {
 					this.errorFading('Ups... Coś poszło nie tak.', 4000);
 					$wnl.logger.capture(error);
 					this.loading = false;
@@ -299,7 +301,7 @@ export default {
 		resourceUrl(newValue) {
 			newValue !== '' && this.form.populate(`${this.resourceUrl}?include=quiz_questions`, this.excluded)
 				.catch(error => {
-					const statusCode = _.get(error, 'response.status');
+					const statusCode = get(error, 'response.status');
 					statusCode === 404 && this.addAutoDismissableAlert({
 						type: 'error',
 						text: 'Slajd o tym ID nie istnieje'

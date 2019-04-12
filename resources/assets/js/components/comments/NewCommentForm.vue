@@ -38,6 +38,7 @@
 
 <script>
 import {mapActions, mapState, mapMutations} from 'vuex';
+import { debounce } from 'lodash';
 import { Form, Quill, Submit } from 'js/components/global/form';
 import {SET_COMMENTS_COMMENTABLE_COMMENT_DRAFT} from 'js/store/mutations-types';
 
@@ -76,7 +77,7 @@ export default {
 		onSubmitSuccess(data) {
 			this.$emit('submitSuccess', data);
 		},
-		setNewCommentDraft: _.debounce(function(data) {
+		setNewCommentDraft: debounce(function(data) {
 			this.commitNewCommentDraft(
 				{ commentableResource: this.commentableResource, content: data }
 			);

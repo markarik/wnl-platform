@@ -1,6 +1,6 @@
 import * as types from 'js/store/mutations-types';
 import { set, delete as destroy } from 'vue';
-import { isString, pickBy, values } from 'lodash';
+import { isString, pickBy, size, values } from 'lodash';
 import {USER_SETTING_NAMES} from 'js/consts/settings';
 
 // Initial state
@@ -47,7 +47,7 @@ const getters = {
 	isChatToggleVisible: (state, getters) => !getters.isMobile && !getters.isChatVisible,
 	canShowCloseIconInChat: (state, getters) => !getters.isMobile,
 	canShowChat: state => state.canShowChat,
-	isOverlayVisible: state => _.size(state.overlays) > 0,
+	isOverlayVisible: state => size(state.overlays) > 0,
 	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0,
 	isNavigationGroupExpanded: state => groupId => state.navigationToggleState[groupId],
 	overviewView: state => state.overviewView,

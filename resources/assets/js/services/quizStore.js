@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
 
 const saveQuizProgress = (userId, state, recordedAnswers = []) => {

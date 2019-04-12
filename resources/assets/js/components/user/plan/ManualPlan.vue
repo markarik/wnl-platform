@@ -114,6 +114,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import WnlTextOverlay from 'js/components/global/TextOverlay.vue';
 import { mapGetters, mapActions } from 'vuex';
 import moment from 'moment';

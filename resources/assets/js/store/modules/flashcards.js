@@ -1,4 +1,7 @@
-import {set} from 'vue';
+import axios from 'axios';
+import { get } from 'lodash';
+import { set } from 'vue';
+
 import {getApiUrl} from 'js/utils/env';
 import * as mutationsTypes from 'js/store/mutations-types';
 
@@ -48,7 +51,7 @@ const actions = {
 				const flashcard = included.flashcards[flashcardId];
 				return {
 					...flashcard,
-					answer: _.get(userResponseData, `${flashcardId}.answer`, 'unsolved'),
+					answer: get(userResponseData, `${flashcardId}.answer`, 'unsolved'),
 					note: flashcard.user_flashcard_notes ? included.user_flashcard_notes[flashcard.user_flashcard_notes[0]] : null,
 				};
 			});

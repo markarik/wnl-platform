@@ -14,6 +14,7 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex';
+import { debounce } from 'lodash';
 
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
@@ -47,7 +48,7 @@ export default {
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister', 'resetFocus']),
-		loadTerms: _.debounce(async function (slideId) {
+		loadTerms: debounce(async function (slideId) {
 			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId]});
 		}, 300, {leading: false, trailing: true}),
 		onUpdateIsActive(isActive) {

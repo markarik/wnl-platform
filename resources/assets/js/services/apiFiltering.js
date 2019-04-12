@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {get} from 'lodash';
 
 export const buildFiltersByPath = (filters = {}) => {
 	const filtersByPath = {};
@@ -29,7 +30,7 @@ export const parseFilters = (activeFilters, filters, userId) => {
 
 	activeFilters.forEach((path) => {
 		const [filterGroup, ] = path.split('.');
-		const filterValue = _.get(filters, path, {}).value;
+		const filterValue = get(filters, path, {}).value;
 
 		groupedFilters[filterGroup] = groupedFilters[filterGroup] || [];
 		groupedFilters[filterGroup].push(filterValue);

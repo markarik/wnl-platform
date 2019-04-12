@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {set} from 'vue';
 import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';

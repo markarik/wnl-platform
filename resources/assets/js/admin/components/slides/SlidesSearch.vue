@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import {resource} from 'js/utils/config';
 import {getApiUrl} from 'js/utils/env';
 

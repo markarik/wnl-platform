@@ -1,6 +1,6 @@
 import axios from 'axios';
+import { cloneDeep, get } from 'lodash';
 import Errors from './Errors';
-import {cloneDeep} from 'lodash';
 
 export default class Form {
 	/**
@@ -102,7 +102,7 @@ export default class Form {
 				})
 				.catch(error => {
 					if (error.response.status === 422) {
-						this.errors.record(_.get(error.response, 'data.errors', error.response.data));
+						this.errors.record(get(error.response, 'data.errors', error.response.data));
 					}
 					reject(error);
 				});

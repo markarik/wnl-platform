@@ -93,6 +93,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import moment from 'moment';
 import {nextTick} from 'vue';
 import {mapActions, mapState} from 'vuex';

@@ -115,6 +115,7 @@
 </style>
 
 <script>
+import {camelCase} from 'lodash';
 import { mapGetters } from 'vuex';
 
 import Avatar from 'js/components/global/Avatar';
@@ -150,14 +151,14 @@ export default {
 			};
 		},
 		action() {
-			return this.$t(`notifications.events.${_.camelCase(this.message.event)}`);
+			return this.$t(`notifications.events.${camelCase(this.message.event)}`);
 		},
 		object() {
 			const objects = this.message.objects;
 			if (!objects) return false;
 
 			return this.$tc(
-				`notifications.objects.${_.camelCase(objects.type)}`,
+				`notifications.objects.${camelCase(objects.type)}`,
 				this.currentUserId === objects.author ? 2 : 1
 			);
 		},

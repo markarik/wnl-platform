@@ -1,3 +1,4 @@
+import axios from 'axios';
 import _ from 'lodash';
 import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';

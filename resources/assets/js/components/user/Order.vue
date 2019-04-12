@@ -356,15 +356,16 @@
 </style>
 
 <script>
-import moment from 'moment';
 import axios from 'axios';
-import {mapActions, mapGetters} from 'vuex';
-import {getUrl, getApiUrl} from 'js/utils/env';
-import {gaEvent} from 'js/utils/tracking';
-import {Form, Text, Submit} from 'js/components/global/form';
+import { get } from 'lodash';
+import moment from 'moment';
+import { nextTick } from 'vue';
+import { mapActions, mapGetters } from 'vuex';
+import { getUrl, getApiUrl } from 'js/utils/env';
+import { gaEvent } from 'js/utils/tracking';
+import { Form, Text, Submit } from 'js/components/global/form';
 import P24Form from 'js/components/user/P24Form';
 import { swalConfig } from 'js/utils/swal';
-import {nextTick} from 'vue';
 
 export default {
 	props: {
@@ -423,7 +424,7 @@ export default {
 			return true;
 		},
 		canRetryPayment() {
-			if (!_.get(this.order, 'payments.length', 0)) {
+			if (!get(this.order, 'payments.length', 0)) {
 				return !this.order.paid;
 			}
 			return !this.order.payments.find(payment => payment.status === 'success');
@@ -439,7 +440,7 @@ export default {
 		},
 		isPending() {
 			// show loader only if there is an online payment waiting for confirmation
-			const payments = _.get(this.order, 'payments', []);
+			const payments = get(this.order, 'payments', []);
 
 			if (this.order.canceled) return false;
 			if (payments.find(payment => payment.status === 'success')) return false;

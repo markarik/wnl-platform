@@ -16,6 +16,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import { alerts } from 'js/mixins/alerts';
 import {getUrl} from 'js/utils/env';
 

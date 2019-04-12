@@ -208,7 +208,7 @@
 </style>
 
 <script>
-import {isEmpty, isNumber} from 'lodash';
+import { isEmpty, isEqual, isNumber } from 'lodash';
 import {mapActions} from 'vuex';
 
 import WnlActiveQuestion from 'js/components/questions/ActiveQuestion';
@@ -403,7 +403,7 @@ export default {
 			this.$emit('activeViewChange', this.activeView);
 		},
 		questionsIds(newValue, oldValue) {
-			if (_.isEqual(newValue, oldValue)) return;
+			if (isEqual(newValue, oldValue)) return;
 
 			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
 		}

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from 'js/store/store';

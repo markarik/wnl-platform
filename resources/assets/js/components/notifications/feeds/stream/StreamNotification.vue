@@ -180,7 +180,7 @@
 </style>
 
 <script>
-import { camelCase } from 'lodash';
+import { camelCase, get } from 'lodash';
 import { mapActions, mapGetters } from 'vuex';
 
 import Avatar from 'js/components/global/Avatar';
@@ -271,7 +271,7 @@ export default {
 			}
 		},
 		trackNotificationClick() {
-			const lessonId = _.get(this.routeContext, 'params.lessonId');
+			const lessonId = get(this.routeContext, 'params.lessonId');
 			const payload = {
 				feature: context.dashboard.features.news_feed.value,
 				action: context.dashboard.features.news_feed.actions.click_link.value,

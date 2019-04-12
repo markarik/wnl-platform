@@ -331,6 +331,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import {isEmpty} from 'lodash';
 import {mapActions, mapGetters} from 'vuex';
 import moment from 'moment';

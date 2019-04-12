@@ -37,6 +37,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import { mapActions } from 'vuex';
 import moment from 'moment';
 import {getApiUrl} from 'js/utils/env';

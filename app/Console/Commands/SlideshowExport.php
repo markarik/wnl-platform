@@ -55,14 +55,16 @@ class SlideshowExport extends Command
 
 		$slideshow = $screen->slideshow;
 		$slides = $slideshow->slides;
+		dd($slides->count());
+		die;
+
+
 		$sections = $screen->sections;
 		$subsections = $this->getSubsections($sections);
 		$presentables = collect()
 			->merge($this->getPresentables($slideshow->id, Slideshow::class))
 			->merge($this->getPresentables($sections->pluck('id'), Section::class))
 			->merge($this->getPresentables($subsections->pluck('id'), Subsection::class));
-
-
 
 		$data = [
 			'screen' => $screen->toArray(),
@@ -80,13 +82,13 @@ class SlideshowExport extends Command
 		unset($data['screen']['sections']);
 
 		//delete unwanted keys for slides
+//		dd($data['slides'][0]);
+//		foreach ($data['slides'] as $slide) {
+//			unset($slide['id']);
+//			dd($slide);
+//		}
 
-		foreach ($data['slides'] as $slide) {
-			unset($slide['id']);
-			// dd($slide);
-		}
-
-		dd($data['slides']);
+//		dd($data['slides']);
 
 		// TODO: Generate sensible filename or take if from argument.
 		Storage::put('exports/slideshow_export.json', json_encode($data));

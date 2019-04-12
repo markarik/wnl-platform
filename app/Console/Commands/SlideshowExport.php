@@ -73,7 +73,6 @@ class SlideshowExport extends Command
 			'presentables' => $presentables->toArray(),
 		];
 
-<<<<<<< HEAD:app/Console/Commands/ExportSlideshow.php
 		//delete unwanted keys for screen
 		unset($data['screen']['id']);
 		unset($data['screen']['discussion_id']);
@@ -89,9 +88,7 @@ class SlideshowExport extends Command
 
 		dd($data['slides']);
 
-=======
 		// TODO: Generate sensible filename or take if from argument.
->>>>>>> 3c6ed63805acd43ab22f9b990304cbefc9b5d492:app/Console/Commands/SlideshowExport.php
 		Storage::put('exports/slideshow_export.json', json_encode($data));
 
 		return 0;

@@ -51,6 +51,15 @@ Route::group(['middleware' => 'auth'], function () {
 		->where('path', '(.*)')
 		->middleware('terms');
 
+	//Ajax common route
+	Route::match(['get', 'post'], '/ax', function () {
+		abort_unless(Input::has('controller') && Input::has('method'), 404);
+		$controller = Input::get('controller');
+		$method = Input::get('method');
+
+		return App::make('App\\Http\\Controllers\\Ajax\\' . $controller)->{$method}();
+	});
+
 });
 
 Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'admin'], function () {

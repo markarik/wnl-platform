@@ -500,7 +500,7 @@ export default {
 			return !this.order.paid && !this.order.canceled && this.order.total > 0;
 		},
 		paymentMethodChangeUrl() {
-			return `${getUrl('payment/confirm-order')}?orderId=${this.order.id}`;
+			return getUrl('payment/confirm-order');
 		},
 		orderNumber() {
 			return `Zamówienie numer ${this.order.id}`;

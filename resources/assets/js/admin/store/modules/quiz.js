@@ -125,7 +125,7 @@ const actions = {
 	setupFreshQuestion({ commit }) {
 		commit(types.CLEAR_QUIZ_QUESTION);
 	},
-	getSlideDataForQuizEditor({}, { slideNumber, screenId }) {
+	getSlideDataForQuizEditor(_, { slideNumber, screenId }) {
 		return getSlideshowId(screenId)
 			.then(slideshowId => {
 				return getSlideId(slideshowId, slideNumber);

@@ -18,7 +18,7 @@ const getters = {
 
 // Actions
 const actions = {
-	saveMentions({}, data) {
+	saveMentions(_, data) {
 		return axios.post(getApiUrl('events/mentions'), data);
 	}
 };

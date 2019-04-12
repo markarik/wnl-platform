@@ -28,22 +28,22 @@ const mutations = {
 // Actions
 const actions = {
 	...nestedSetActions,
-	async _fetch({}, taxonomyId) {
+	async _fetch(_, taxonomyId) {
 		const { data: { included, ...terms } } = await axios.get(getApiUrl(`${resource}/byTaxonomy/${taxonomyId}${include}`));
 		return Object.values(terms).map(term => includeTag(term, included));
 	},
-	async _post({}, termData) {
+	async _post(_, termData) {
 		const { data: { included, ...term } } = await axios.post(getApiUrl(`${resource}${include}`), termData);
 		return includeTag(term, included);
 	},
-	async _put({}, termData) {
+	async _put(_, termData) {
 		const { data: { included, ...term } } = await axios.put(getApiUrl(`${resource}/${termData.id}${include}`), termData);
 		return includeTag(term, included);
 	},
-	async _delete({}, term) {
+	async _delete(_, term) {
 		await axios.delete(getApiUrl(`${resource}/${term.id}`));
 	},
-	async _move({}, { node, direction }) {
+	async _move(_, { node, direction }) {
 		await axios.put(getApiUrl(`${resource}/move`), { id: node.id, direction });
 	},
 };

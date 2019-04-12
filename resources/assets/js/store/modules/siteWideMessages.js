@@ -38,7 +38,7 @@ const actions = {
 			$wnl.logger.error(e);
 		}
 	},
-	async updateSiteWideMessage({}, messageId) {
+	async updateSiteWideMessage(_, messageId) {
 		try {
 			await axios.put(getApiUrl(`site_wide_messages/${messageId}/read`), {
 				read_at: new Date()

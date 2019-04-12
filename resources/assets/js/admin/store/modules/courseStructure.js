@@ -40,22 +40,22 @@ const mutations = {
 // Actions
 const actions = {
 	...nestedSetActions,
-	async _fetch({}, courseId) {
+	async _fetch(_, courseId) {
 		const { data: { included, ...nodes } } = await axios.get(getApiUrl(`${resource}/${courseId}${include}`));
 		return Object.values(nodes).map(node => _parseIncludes(node, included));
 	},
-	async _post({}, nodeData) {
+	async _post(_, nodeData) {
 		const { data: { included, ...node } } = await axios.post(getApiUrl(`${resource}${include}`), nodeData);
 		return _parseIncludes(node, included);
 	},
-	async _put({}, nodeData) {
+	async _put(_, nodeData) {
 		const { data: { included, ...node } } = await axios.put(getApiUrl(`${resource}/${nodeData.id}${include}`), nodeData);
 		return _parseIncludes(node, included);
 	},
-	async _delete({}, node) {
+	async _delete(_, node) {
 		await axios.delete(getApiUrl(`${resource}/${node.id}`));
 	},
-	async _move({}, { node, direction }) {
+	async _move(_, { node, direction }) {
 		await axios.put(getApiUrl(`${resource}/move`), { id: node.id, direction });
 	},
 };

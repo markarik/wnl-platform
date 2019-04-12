@@ -1,21 +1,21 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-				:is-visible="isSidenavVisible"
-				:is-detached="!isSidenavMounted"
+			:is-visible="isSidenavVisible"
+			:is-detached="!isSidenavMounted"
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside help-sidenav">
 				<wnl-sidenav :items="sidenavItems"
-							 items-heading="Pomoc"></wnl-sidenav>
+					items-heading="Pomoc"></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
 				<router-view
-						:arguments="templateArguments"
-						:slug="$route.name"
-						@userEvent="onUserEvent"
+					:arguments="templateArguments"
+					:slug="$route.name"
+					@userEvent="onUserEvent"
 				></router-view>
 			</div>
 		</div>
@@ -63,7 +63,7 @@
 </style>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import MainNav from 'js/components/MainNav';
 import PublicChat from 'js/components/chat/PublicChat';

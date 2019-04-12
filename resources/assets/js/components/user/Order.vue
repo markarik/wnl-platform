@@ -225,7 +225,7 @@
 							title="Dodaj lub zmień kod rabatowy"
 							@click="toggleCouponInput"
 							v-if="order.status !== 'closed'"
-						  data-button="add-coupon"
+							data-button="add-coupon"
 						>
 							<span class="icon is-small margin right"><i class="fa fa-plus"></i></span>
 							<span>Dodaj lub zmień kod rabatowy</span>
@@ -233,11 +233,11 @@
 					</div>
 					<div class="voucher-code" v-if="couponInputVisible">
 						<wnl-form class="margin vertical"
-									name="CouponCode"
-									method="put"
-									:resource-route="couponUrl"
-									hide-default-submit="true"
-									@submitSuccess="couponSubmitSuccess">
+							name="CouponCode"
+							method="put"
+							:resource-route="couponUrl"
+							hide-default-submit="true"
+							@submitSuccess="couponSubmitSuccess">
 							<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
 							<wnl-submit data-button="coupon-submit">Wykorzystaj kod</wnl-submit>
 						</wnl-form>
@@ -264,10 +264,10 @@
 		</div>
 
 		<wnl-p24-form
-				:user-data="userData"
-				:payment-data="paymentData"
-				:order="order"
-				ref="p24Form"
+			:user-data="userData"
+			:payment-data="paymentData"
+			:order="order"
+			ref="p24Form"
 		/>
 	</div>
 </template>
@@ -339,11 +339,14 @@
 
 		&__title
 			flex: 1 0 auto
+
 	.payment
 		&--in-progress
 			color: $warning
+
 		&--error
 			color: $danger
+
 		&--success
 			color: $success
 
@@ -534,12 +537,12 @@ export default {
 				link.setAttribute('download', `${invoice.id}.pdf`);
 				link.click();
 
-				setTimeout(function() {
+				setTimeout(function () {
 					// For Firefox it is necessary to delay revoking the ObjectURL
 					window.URL.revokeObjectURL(link.href);
 					document.removeChild(link);
 				}, 100);
-			} catch(err) {
+			} catch (err) {
 				if (err.response.status === 404) {
 					return this.addAutoDismissableAlert({
 						text: 'Nie udało się znaleźć faktury. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
@@ -563,13 +566,13 @@ export default {
 			}
 		},
 		async checkStatus() {
-			try{
+			try {
 				const response = await axios.get(getApiUrl(`users/${this.order.user_id}/orders/${this.order.id}?include=payments`));
 
 				const {included = {}, ...order} = response.data;
 				const {payments = {}} = included;
 				if (order.paid) {
-					this.order.paid        = true;
+					this.order.paid = true;
 					this.order.paid_amount = order.paid_amount;
 					this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
 					this.fetchUserSubscription();
@@ -593,7 +596,7 @@ export default {
 				})
 				.catch(exception => $wnl.logger.capture(exception));
 		},
-		voucherUrl(code){
+		voucherUrl(code) {
 			return code ? getUrl(`payment/voucher?code=${code}`) : getUrl('payment/voucher');
 		},
 		instalmentDate(date) {
@@ -602,10 +605,10 @@ export default {
 		getCouponValue(coupon) {
 			return coupon.type === 'amount' ? `${coupon.value}zł` : `${coupon.value}%`;
 		},
-		toggleCouponInput(){
+		toggleCouponInput() {
 			this.couponInputVisible = !this.couponInputVisible;
 		},
-		cancelOrder(){
+		cancelOrder() {
 			this.$swal(swalConfig({
 				title: this.$t('orders.cancel.title'),
 				text: this.$t('orders.cancel.text', {id: this.order.id}),

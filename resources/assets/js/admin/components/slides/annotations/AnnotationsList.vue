@@ -32,7 +32,7 @@
 				</span>
 				<span class="icon is-small  annotation-item__header__item annotation-item__header__item--chevron">
 					<i class="toggle fa fa-angle-down"
-						 :class="{'fa-rotate-180': isOpen(annotation)}">
+						:class="{'fa-rotate-180': isOpen(annotation)}">
 					</i>
 				</span>
 			</div>

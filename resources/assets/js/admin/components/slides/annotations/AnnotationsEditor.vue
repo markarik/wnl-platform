@@ -123,13 +123,13 @@
 			</template>
 			<div class="level-item">
 				<a class="button is-danger"
-					 :disabled="!annotation.id"
-					 @click="onDelete">Usuń
+					:disabled="!annotation.id"
+					@click="onDelete">Usuń
 				</a>
 				<a class="button" @click="isVisible = true">Podgląd</a>
 				<a class="button is-primary"
-					 :disabled="form.errors.any() || !annotation.description"
-					 @click="onSubmit">Zapisz
+					:disabled="form.errors.any() || !annotation.description"
+					@click="onSubmit">Zapisz
 				</a>
 			</div>
 		</form>

@@ -1,6 +1,6 @@
 <template>
 	<div class="dropdown-container">
-	 	<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
+		<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
 			<div slot="activator" class="notifications-toggle"
 				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }">
 				<div v-if="isOn && !!unseenCount" class="counter">{{ unseenCount }}</div>
@@ -30,11 +30,11 @@
 
 				<div class="feed-footer">
 					<router-link :to="{ name: 'messages' }">
-			   			<span class="messages-dashboard-redirect" v-t="'notifications.chat.footer'"/>
-			    	</router-link>
+						<span class="messages-dashboard-redirect" v-t="'notifications.chat.footer'"/>
+					</router-link>
 				</div>
 			</div>
-	 	</wnl-dropdown>
+		</wnl-dropdown>
 	</div>
 </template>
 

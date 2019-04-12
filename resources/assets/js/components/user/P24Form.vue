@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
-import {isEmpty} from 'lodash';
+import { mapGetters } from 'vuex';
+import { isEmpty } from 'lodash';
 
 export default {
 	props: {
@@ -52,7 +52,7 @@ export default {
 			return window.location.href;
 		},
 		amount() {
-			    return this.paymentData.amount * 100;
+			return this.paymentData.amount * 100;
 		},
 		description() {
 			return `Zamówienie: ${this.order.id}, ${this.order.product.name}`;

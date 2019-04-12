@@ -43,9 +43,6 @@ module.exports = {
 		],
 
 		// TODO enable eslint:recommended rules below
-		'no-mixed-spaces-and-tabs': [
-			'off'
-		],
 		'no-console': [
 			'off'
 		],

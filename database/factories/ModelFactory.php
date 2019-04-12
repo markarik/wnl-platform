@@ -354,3 +354,7 @@ $factory->define(App\Models\UserSettings::class, function () {
 	return [];
 });
 
+$factory->define(App\Models\OrderInstalment::class, function () {
+	return [];
+});
+

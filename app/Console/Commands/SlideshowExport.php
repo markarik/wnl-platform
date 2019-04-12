@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Section;
+use App\Models\Slideshow;
 use Illuminate\Console\Command;
 use App\Models\Screen;
 use App\Models\Subsection;
@@ -9,7 +11,7 @@ use Illuminate\Support\Collection;
 use DB;
 use Storage;
 
-class ExportSlideshow extends Command
+class SlideshowExport extends Command
 {
 	const IMAGE_PATTERN = '/<img.*src="(.*?)".*>/';
     /**
@@ -71,6 +73,7 @@ class ExportSlideshow extends Command
 			'images' => $images,
 		];
 
+		// TODO: Generate sensible filename or take if from argument.
 		Storage::put('exports/slideshow_export.json', json_encode($data));
 
 		return 0;
@@ -83,7 +86,7 @@ class ExportSlideshow extends Command
 
 	private function getPresentables($ids, $modelName)
 	{
-		$presentables = DB::table('presentables')
+		return DB::table('presentables')
 	            ->where('presentable_type', 'App\\Models\\' . $modelName)
 	            ->whereIn('presentable_id', (array) $ids)
 	            ->get();

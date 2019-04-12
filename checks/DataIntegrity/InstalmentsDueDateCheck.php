@@ -8,6 +8,7 @@ class InstalmentsDueDateCheck extends DataIntegrityCheck {
 			->join('order_instalments', 'orders.id', '=', 'order_instalments.order_id')
 			->join('products', 'orders.product_id', '=', 'products.id')
 			->whereRaw('order_instalments.due_date < products.signups_start')
+			->whereRaw('orders.product_id <> 8')
 			->groupBy('orders.id')
 			->get();
 

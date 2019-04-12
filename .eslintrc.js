@@ -50,9 +50,6 @@ module.exports = {
 		'no-console': [
 			'off'
 		],
-		'no-extra-boolean-cast': [
-			'off'
-		],
 		'no-useless-escape': [
 			'off'
 		],

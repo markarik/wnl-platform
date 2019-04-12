@@ -231,8 +231,8 @@ export default {
 		object() {
 			const objects = this.message.objects;
 			const subject = this.message.subject;
-			const type = !!objects ? objects.type : subject.type;
-			const choice = !!objects ? this.currentUserId === objects.author ? 2 : 1 : 1;
+			const type = objects ? objects.type : subject.type;
+			const choice = objects ? this.currentUserId === objects.author ? 2 : 1 : 1;
 
 			return this.$tc(`notifications.objects.${camelCase(type)}`, choice);
 		},

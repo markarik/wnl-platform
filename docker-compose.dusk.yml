@@ -26,59 +26,6 @@ services:
     depends_on:
       - redis
 
-  notifications-queue-worker:
-    container_name: notifications-queue-worker
-    build:
-      context: .
-      dockerfile: Dockerfile.dev.php
-    volumes:
-      - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
-      - ${LOCAL_CODE_PATH}/wnl-platform/.env.testing:${CONTAINER_CODE_PATH}/wnl-platform/.env:ro
-    command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:work --queue=notifications --tries=3 --daemon
-    depends_on:
-      - redis
-
-  chat-queue-worker:
-    container_name: chat-queue-worker
-    build:
-      context: .
-      dockerfile: Dockerfile.dev.php
-    volumes:
-      - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
-      - ${LOCAL_CODE_PATH}/wnl-platform/.env.testing:${CONTAINER_CODE_PATH}/wnl-platform/.env:ro
-    command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan chat:process-queue
-    depends_on:
-      - redis
-      - rabbit
-    restart: always
-
-  echo:
-    container_name: echo
-    image: bethink/echo-server:1.2.8-build2
-    ports:
-      - "8755:8755"
-    volumes:
-      - ${LOCAL_CODE_PATH}/wnl-platform/laravel-echo-server.json:/src/laravel-echo-server.json:ro
-
-  chat:
-    container_name: chat
-    image: node:8.11.1-alpine
-    volumes:
-      - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
-    command: node ${CONTAINER_CODE_PATH}/wnl-chat/server.js
-    ports:
-      - "9663:9663"
-    depends_on:
-      - rabbit
-      - redis
-    working_dir: ${CONTAINER_CODE_PATH}/wnl-chat
-
-  rabbit:
-    container_name: rabbit
-    image: rabbitmq:3.7.6-management-alpine
-    ports:
-      - "5672:5672"
-
   mysql:
     container_name: mysql
     image: mysql:5.7.22

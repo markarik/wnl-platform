@@ -115,6 +115,9 @@ class UserLessonApiController extends ApiController
 		}
 
 		$csvData = $user->getLessonsAvailability()
+			->filter(function($userLesson) {
+				return $userLesson->is_required;
+			})
 			->sortBy(function($userLesson) {
 				return $userLesson->getStartDate();
 			})

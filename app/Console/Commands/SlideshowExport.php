@@ -61,7 +61,6 @@ class SlideshowExport extends Command
 			->merge($this->getPresentables($slideshow->id, Slideshow::class))
 			->merge($this->getPresentables($sections->pluck('id'), Section::class))
 			->merge($this->getPresentables($subsections->pluck('id'), Subsection::class));
-		$images = $this->getImages($slides);
 
 
 
@@ -72,7 +71,6 @@ class SlideshowExport extends Command
 			'sections' => $sections->toArray(),
 			'subsections' => $subsections->toArray(),
 			'presentables' => $presentables->toArray(),
-			'images' => $images,
 		];
 
 <<<<<<< HEAD:app/Console/Commands/ExportSlideshow.php
@@ -110,34 +108,5 @@ class SlideshowExport extends Command
 	            ->where('presentable_type', 'App\\Models\\' . $modelName)
 	            ->whereIn('presentable_id', (array) $ids)
 	            ->get();
-	}
-
-	private function getImages($slides) {
-
-		$matchedImages = [];
-		foreach ($slides as $slide) {
-			$match = $this->match(self::IMAGE_PATTERN, $slide->content);
-			if ($match) {
-				array_push($matchedImages, $match);
-			}
-		}
-		return $matchedImages;
-	}
-
-	private function match($pattern, $data, \Closure $errback = null)
-	// nie mogę wykorzystać funkcji z Parser'a korzystając z Parser::match()
-	{
-		$match = [];
-		$matchingResult = preg_match_all($pattern, $data, $match, PREG_SET_ORDER);
-
-		if (!$matchingResult) {
-			if (is_callable($errback)) {
-				$errback();
-			}
-
-			return false;
-		}
-
-		return $match;
 	}
 }

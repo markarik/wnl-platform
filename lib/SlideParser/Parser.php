@@ -457,7 +457,7 @@ class Parser
 		return $snippet;
 	}
 
-	public function handleImages($html)
+	public function handleImages($html, bool $force = false)
 	{
 		$matches = $this->match(self::IMAGE_PATTERN, $html);
 
@@ -469,7 +469,7 @@ class Parser
 			$imgTag = $match[0];
 			$imageUrl = $match[1];
 
-			if (stripos($imgTag, 'data-') === false) {
+			if (stripos($imgTag, 'data-') === false || $force) {
 				// Check if img tag contains data attributes - if not we don't need to migrate it
 				continue;
 			}

@@ -78,8 +78,6 @@ class OrderPaid implements ShouldQueue
 		\Log::notice("OrderPaid: handleInstalments called for order #{$this->order->id}");
 		if ($this->order->method !== 'instalments') return;
 
-		$this->order->generateAndSavePaymentSchedule();
-
 		if ($this->order->user->suspended && !$this->order->is_overdue) {
 			$this->order->user->suspended = false;
 			$this->order->user->save();

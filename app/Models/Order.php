@@ -110,11 +110,9 @@ class Order extends Model
 
 	public function getInstalmentsAttribute()
 	{
+		$allPaid = false;
 		if ($this->paid_amount >= $this->total_with_coupon) {
-			return [
-				'allPaid'     => true,
-				'instalments' => Collection::make(),
-			];
+			$allPaid = true;
 		}
 
 		$orderInstalments = $this->generateAndSavePaymentSchedule();
@@ -132,7 +130,7 @@ class Order extends Model
 		}, 0.0);
 
 		return [
-			'allPaid'     => false,
+			'allPaid'     => $allPaid,
 			'instalments' => $orderInstalments,
 			'nextPayment' => $nextPayment,
 			'total'       => $totalLeft,
@@ -159,7 +157,7 @@ class Order extends Model
 
 				$valueToDistribute -= $amount;
 
-				if ($paidToDistribute >= $amount) {
+				if ($paidToDistribute >= $amount && $orderNumber !== $this->product->instalments->count()) {
 					$paidAmount = $amount;
 					$paidToDistribute -= $amount;
 				} else {

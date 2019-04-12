@@ -92,6 +92,7 @@
 							</button>
 						</p>
 						<p class="metadata aligncenter margin top">Kwota do zapłaty: {{this.order.total}}zł</p>
+						<p class="aligncenter" v-if="canChangePaymentMethod">Aby zapłacić na raty, anuluj to zamówienie i złóż kolejne.</p>
 					</div>
 					<!-- PAY ORDER ENDS -->
 
@@ -140,6 +141,8 @@
 									<td>{{ order.total }}zł</td>
 								</tr>
 							</table>
+
+							<p class="aligncenter">Możesz opłacić wszystkie raty przed terminem, nawet dziś, klikając ponownie ZAPŁAĆ KOLEJNĄ RATĘ. 🙂</p>
 
 							<!-- Transfer details -->
 							<div class="transfer-details notification" v-if="transferDetails">
@@ -250,13 +253,6 @@
 					<i class="fa" :class="iconClass"></i>
 				</span>
 				{{ paymentStatus }}
-			</div>
-			<div class="card-footer-item payment-status" :class="paymentStatusClass" v-if="canChangePaymentMethod">
-				<a :href="paymentMethodChangeUrl" title="Zmień metodę płatności">
-					<span class="icon is-small status-icon">
-						<i class="fa fa-pencil-square-o"></i>
-					</span> Zmień metodę płatności
-				</a>
 			</div>
 			<div class="card-footer-item cancel-order" v-if="!order.paid && !order.canceled && order.total > 0">
 				<a title="Anuluj zamówienie" @click="cancelOrder">
@@ -497,9 +493,6 @@ export default {
 		},
 		canChangePaymentMethod() {
 			return !this.order.paid && !this.order.canceled && this.order.total > 0;
-		},
-		paymentMethodChangeUrl() {
-			return getUrl('payment/confirm-order');
 		},
 		orderNumber() {
 			return `Zamówienie numer ${this.order.id}`;

@@ -52,7 +52,7 @@
 </style>
 
 <script>
-import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection';
+import { SOCKET_EVENT_USER_SENT_MESSAGE } from 'js/plugins/chat-connection';
 import MessageForm from './MessageForm.vue';
 import MessagesList from './MessagesList.vue';
 
@@ -99,16 +99,16 @@ export default {
 		getMessageAuthor(message) {
 			return this.getProfileByUserId(message.user_id);
 		},
-		onMessageSent({sent, ...data}) {
+		onMessageSent({ sent, ...data }) {
 			this.onNewMessage(data);
 		},
 		pullMore() {
-			return this.fetchRoomMessages({room: this.room, currentCursor: this.cursor, limit: this.PRIVATE_CHAT_MESSAGES_LIMIT, append: true})
+			return this.fetchRoomMessages({ room: this.room, currentCursor: this.cursor, limit: this.PRIVATE_CHAT_MESSAGES_LIMIT, append: true })
 				.catch(error => $wnl.logger.error(error));
 		},
-		markAsRead({room}) {
+		markAsRead({ room }) {
 			if (room.id === this.room.id) {
-				const {messages, ...room} = this.room;
+				const { messages, ...room } = this.room;
 				this.$socketMarkRoomAsRead(room)
 					.then(() => this.markRoomAsRead(this.room.id))
 					.catch(err => $wnl.logger.error(err));

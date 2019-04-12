@@ -81,9 +81,9 @@ import {
 	Datepicker as WnlDatepicker,
 	Select as WnlSelect,
 } from 'js/components/global/form';
-import {mapActions} from 'vuex';
-import {getApiUrl} from 'js/utils/env';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { mapActions } from 'vuex';
+import { getApiUrl } from 'js/utils/env';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	data() {
@@ -128,14 +128,14 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		onSubmitSucess(data) {
 			if (!this.isEdit) {
-				this.$router.push({name: 'product-edit', params: {id: data.id}});
+				this.$router.push({ name: 'product-edit', params: { id: data.id } });
 			}
 		},
 	},
 	async mounted() {
 		try {
-			const {data} = await axios.get(getApiUrl('products/getVatRates'));
-			this.vatRates = data.vat_rates.map(value => ({value, text: value}));
+			const { data } = await axios.get(getApiUrl('products/getVatRates'));
+			this.vatRates = data.vat_rates.map(value => ({ value, text: value }));
 		} catch (error) {
 			$wnl.logger.error(error);
 			this.addAutoDismissableAlert({

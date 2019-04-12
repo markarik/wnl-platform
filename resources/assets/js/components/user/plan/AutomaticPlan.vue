@@ -208,17 +208,17 @@
 
 <script>
 import axios from 'axios';
-import {isEmpty} from 'lodash';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
-import {mapGetters, mapActions} from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 import TextOverlay from 'js/components/global/TextOverlay.vue';
 import Datepicker from 'js/components/global/Datepicker';
 
 import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import { swalConfig } from 'js/utils/swal';
 
 export default {

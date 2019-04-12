@@ -50,11 +50,11 @@
 <script>
 import axios from 'axios';
 import _ from 'lodash';
-import {getUrl, getApiUrl} from 'js/utils/env';
-import {mapGetters} from 'vuex';
+import { getUrl, getApiUrl } from 'js/utils/env';
+import { mapGetters } from 'vuex';
 import Order from './Order';
 import moment from 'moment';
-import {envValue} from 'js/utils/env';
+import { envValue } from 'js/utils/env';
 
 export default {
 	name: 'MyOrders',
@@ -104,8 +104,8 @@ export default {
 						this.orders = [];
 					}
 
-					const {included = {}, ...orders} = response.data;
-					const {invoices, payments} = included;
+					const { included = {}, ...orders } = response.data;
+					const { invoices, payments } = included;
 
 					this.orders = _.reverse(Object.values(orders)
 						.filter(this.isConfirmed))
@@ -113,7 +113,7 @@ export default {
 							return {
 								...order,
 								invoices: (order.invoices || []).map(invoiceId => invoices[invoiceId]),
-								...(order.study_buddy && {studyBuddy: included.study_buddies[order.study_buddy[0]]}),
+								...(order.study_buddy && { studyBuddy: included.study_buddies[order.study_buddy[0]] }),
 								payments: (order.payments || []).map(paymentId => payments[paymentId])
 							};
 						});
@@ -131,8 +131,8 @@ export default {
 	},
 	created() {
 		if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {
-			const {payment, amount, ...query} = this.$route.query;
-			typeof fbq === 'function' && fbq('track', 'Purchase', {value: amount / 100, currency: 'PLN', platform: envValue('appInstanceName')});
+			const { payment, amount, ...query } = this.$route.query;
+			typeof fbq === 'function' && fbq('track', 'Purchase', { value: amount / 100, currency: 'PLN', platform: envValue('appInstanceName') });
 			this.$router.push({
 				...this.$route,
 				query

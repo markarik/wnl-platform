@@ -24,14 +24,14 @@ import WnlUsersList from './UsersList';
 import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
 export default {
-	components: {WnlUsersList, WnlPaginatedList},
+	components: { WnlUsersList, WnlPaginatedList },
 	data() {
 		return {
 			requestParams: { include: 'roles' },
 			searchAvailableFields: [
-				{value: 'id', title: 'ID'},
-				{value: 'email', title: 'Email'},
-				{value: 'full_name', title: 'Imię i nazwisko'},
+				{ value: 'id', title: 'ID' },
+				{ value: 'email', title: 'Email' },
+				{ value: 'full_name', title: 'Imię i nazwisko' },
 			]
 		};
 	},

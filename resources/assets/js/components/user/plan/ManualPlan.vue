@@ -168,7 +168,7 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('course', ['setStructure']),
-		onStartDateChange({newStartDate, lesson}) {
+		onStartDateChange({ newStartDate, lesson }) {
 			if (!newStartDate[0]) return;
 
 			const lessonWithStartDate = {

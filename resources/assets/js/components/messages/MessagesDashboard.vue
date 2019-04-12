@@ -46,7 +46,7 @@
 </style>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import MainNav from 'js/components/MainNav';
 import PrivateChat from 'js/components/chat/PrivateChat';
@@ -89,10 +89,10 @@ export default {
 	methods: {
 		...mapActions(['toggleOverlay']),
 		...mapActions('chatMessages', ['markRoomAsRead', 'fetchRoomMessages']),
-		switchRoom({room, users}){
+		switchRoom({ room, users }){
 			this.currentRoom = room;
 			this.currentRoomUsers = users;
-			const {messages, ...roomNoMessages} = room;
+			const { messages, ...roomNoMessages } = room;
 			room.id && this.$socketMarkRoomAsRead(roomNoMessages)
 				.then(() => this.markRoomAsRead(room.id))
 				.catch(err => $wnl.logger.capture(err));
@@ -122,10 +122,10 @@ export default {
 		openRoomById(roomId) {
 			const room = this.getRoomById(roomId);
 			if (room.id) {
-				this.switchRoom({room, users: this.getRoomProfiles(roomId)});
+				this.switchRoom({ room, users: this.getRoomProfiles(roomId) });
 				return true;
 			} else {
-				const {roomId, ...query} = this.$route.query;
+				const { roomId, ...query } = this.$route.query;
 				this.$router.replace({
 					...this.$route,
 					query
@@ -154,11 +154,11 @@ export default {
 		},
 		ready(newValue, oldValue) {
 			!oldValue && newValue && this.openInitialRoom();
-			newValue && this.toggleOverlay({source: 'messagesDashboard', display: false});
+			newValue && this.toggleOverlay({ source: 'messagesDashboard', display: false });
 		}
 	},
 	mounted() {
-		!this.ready && this.toggleOverlay({source: 'messagesDashboard', display: true});
+		!this.ready && this.toggleOverlay({ source: 'messagesDashboard', display: true });
 		this.ready && this.openInitialRoom();
 	}
 };

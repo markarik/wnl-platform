@@ -52,7 +52,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 import EditSlideButton from 'js/admin/components/slides/EditSlideButton';
 import CommentsList from 'js/components/comments/CommentsList';

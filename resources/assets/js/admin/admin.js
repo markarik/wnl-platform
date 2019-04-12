@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 // Sync vue-router and vuex
-import {sync} from 'vuex-router-sync';
+import { sync } from 'vuex-router-sync';
 import store from 'js/admin/store/store';
 import router from 'js/admin/router';
 import WnlAxios from 'js/plugins/axios';
@@ -13,17 +13,17 @@ sync(store, router);
 import VueSweetAlert from 'vue-sweetalert';
 import ShortcutKeys from 'js/plugins/shortcut-keys';
 Vue.use(VueSweetAlert);
-Vue.use(WnlAxios, {store, router});
-Vue.use(ShortcutKeys, {store});
+Vue.use(WnlAxios, { store, router });
+Vue.use(ShortcutKeys, { store });
 
 // i18n
 import VueI18n from 'vue-i18n';
-import {pl} from 'js/i18n';
+import { pl } from 'js/i18n';
 Vue.use(VueI18n);
 Vue.config.lang = 'pl';
 
-const messages = {pl};
-const i18n = new VueI18n({fallbackLocal: 'pl', locale: 'pl', messages});
+const messages = { pl };
+const i18n = new VueI18n({ fallbackLocal: 'pl', locale: 'pl', messages });
 
 // Import and register global components
 import Alert from 'js/components/global/Alert.vue';

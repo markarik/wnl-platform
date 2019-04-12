@@ -98,7 +98,7 @@
 
 <script>
 import { shortTimeFromMs } from 'js/utils/time';
-import {last} from 'lodash';
+import { last } from 'lodash';
 
 export default {
 	name: 'ConversationSnippet',

@@ -47,11 +47,11 @@
 </style>
 
 <script>
-import {mapState, mapActions} from 'vuex';
-import {uniqBy} from 'lodash';
+import { mapState, mapActions } from 'vuex';
+import { uniqBy } from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	props: {

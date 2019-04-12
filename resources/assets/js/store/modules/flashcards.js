@@ -2,7 +2,7 @@ import axios from 'axios';
 import { get } from 'lodash';
 import { set } from 'vue';
 
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import * as mutationsTypes from 'js/store/mutations-types';
 
 const state = () => {
@@ -21,7 +21,7 @@ const mutations = {
 		set(state.sets, payload.id, payload);
 	},
 	[mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD](state, updatedFlashcard) {
-		const {flashcards_sets: setId} = updatedFlashcard;
+		const { flashcards_sets: setId } = updatedFlashcard;
 
 		const updatedFlashcards = state.sets[setId].flashcards.map(flashcard => {
 			if (flashcard.id === updatedFlashcard.id) {
@@ -35,14 +35,14 @@ const mutations = {
 };
 
 const actions = {
-	async setFlashcardsSet({commit}, {setId, ...requestParams}) {
+	async setFlashcardsSet({ commit }, { setId, ...requestParams }) {
 		try {
-			const {data} = await axios.get(getApiUrl(`flashcards_sets/${setId}`), {
+			const { data } = await axios.get(getApiUrl(`flashcards_sets/${setId}`), {
 				params: requestParams
 			});
-			const {included, ...flashcardSet} = data;
+			const { included, ...flashcardSet } = data;
 
-			const {data: userResponseData} = await axios.post(getApiUrl('user_flashcards_results/current'), {
+			const { data: userResponseData } = await axios.post(getApiUrl('user_flashcards_results/current'), {
 				...requestParams,
 				flashcards_ids: flashcardSet.flashcards
 			});
@@ -61,7 +61,7 @@ const actions = {
 			$wnl.logger.error(e);
 		}
 	},
-	async postAnswer({commit}, {flashcard, answer, ...requestParams}) {
+	async postAnswer({ commit }, { flashcard, answer, ...requestParams }) {
 		try {
 			await axios.post(
 				getApiUrl(`user_flashcards_results/current/${flashcard.id}`),

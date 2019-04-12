@@ -105,19 +105,19 @@
 
 <script>
 import axios from 'axios';
-import {mapActions, mapGetters} from 'vuex';
-import {uniqBy, cloneDeep} from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
+import { uniqBy, cloneDeep } from 'lodash';
 
-import {getApiUrl} from 'js/utils/env';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { getApiUrl } from 'js/utils/env';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 import WnlContentClassifierEditorRecentTerms from 'js/components/global/contentClassifier/ContentClassifierEditorRecentTerms';
 import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 import WnlTaxonomyTermSelector from 'js/components/global/taxonomies/TaxonomyTermSelector';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 import contentClassifierStore from 'js/services/contentClassifierStore';
-import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
-import {scrollToElement} from 'js/utils/animations';
+import { CONTENT_CLASSIFIER_STORE_KEYS } from 'js/services/contentClassifierStore';
+import { scrollToElement } from 'js/utils/animations';
 
 export default {
 	components: {

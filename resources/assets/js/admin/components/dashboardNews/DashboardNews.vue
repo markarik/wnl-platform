@@ -40,8 +40,8 @@
 import axios from 'axios';
 import { mapActions } from 'vuex';
 import moment from 'moment';
-import {getApiUrl} from 'js/utils/env';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { getApiUrl } from 'js/utils/env';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	name: 'DashboardNews',
@@ -74,7 +74,7 @@ export default {
 	},
 	async mounted() {
 		try {
-			const {data} = await axios.get(getApiUrl('site_wide_messages/dashboard_news'));
+			const { data } = await axios.get(getApiUrl('site_wide_messages/dashboard_news'));
 			this.dashboardNewsList = Object.values(data);
 		} catch (error) {
 			$wnl.logger.error(error);

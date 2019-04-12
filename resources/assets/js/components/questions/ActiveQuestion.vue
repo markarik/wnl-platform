@@ -76,17 +76,17 @@
 </style>
 
 <script>
-import {nextTick} from 'vue';
-import {isNumber} from 'lodash';
+import { nextTick } from 'vue';
+import { isNumber } from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
 import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
-import {KEYS} from 'js/consts/keys';
+import { KEYS } from 'js/consts/keys';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 export default {
 	name: 'ActiveQuestion',
@@ -187,9 +187,9 @@ export default {
 					return false;
 				}
 				if (this.selectedAnswerIndex < 1) {
-					this.selectAnswer({id: this.question.id, answer: this.question.answers.length - 1});
+					this.selectAnswer({ id: this.question.id, answer: this.question.answers.length - 1 });
 				} else {
-					this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex - 1});
+					this.selectAnswer({ id: this.question.id, answer: this.selectedAnswerIndex - 1 });
 				}
 				return false;
 			}
@@ -203,9 +203,9 @@ export default {
 					return false;
 				}
 				if (this.selectedAnswerIndex > this.question.answers.length - 2) {
-					this.selectAnswer({id: this.question.id, answer: 0});
+					this.selectAnswer({ id: this.question.id, answer: 0 });
 				} else {
-					this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex + 1});
+					this.selectAnswer({ id: this.question.id, answer: this.selectedAnswerIndex + 1 });
 				}
 				return false;
 			}

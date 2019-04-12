@@ -196,7 +196,7 @@ export default {
 	},
 	methods: {
 		assign(user = {}) {
-			this.$emit('assign', {assignee_id: user && user.user_id || null, id: this.task.id});
+			this.$emit('assign', { assignee_id: user && user.user_id || null, id: this.task.id });
 		},
 	},
 };

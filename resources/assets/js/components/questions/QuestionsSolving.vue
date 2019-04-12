@@ -209,7 +209,7 @@
 
 <script>
 import { isEmpty, isEqual, isNumber } from 'lodash';
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 
 import WnlActiveQuestion from 'js/components/questions/ActiveQuestion';
 import WnlQuestionsTestBuilder from 'js/components/questions/QuestionsTestBuilder';
@@ -218,8 +218,8 @@ import WnlPagination from 'js/components/global/Pagination';
 
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
-import {VIEWS} from 'js/consts/questionsSolving';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { VIEWS } from 'js/consts/questionsSolving';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 
 const views = [
@@ -323,7 +323,7 @@ export default {
 			const filters = isEmpty(this.activeFilters)
 				? this.$t('questions.filters.allQuestions')
 				: this.activeFilters.join(', ');
-			return this.$t('questions.filters.activeFiltersReview', {filters});
+			return this.$t('questions.filters.activeFiltersReview', { filters });
 		},
 		count() {
 			return this.questions.length;
@@ -368,10 +368,10 @@ export default {
 				: '';
 		},
 		selectAnswer(payload, position) {
-			this.$emit('selectAnswer', {...payload, ...position});
+			this.$emit('selectAnswer', { ...payload, ...position });
 		},
 		setQuestion(index) {
-			this.$emit('setQuestion', {page: this.meta.currentPage, index});
+			this.$emit('setQuestion', { page: this.meta.currentPage, index });
 			this.activeView = VIEWS.CURRENT_QUESTION;
 		},
 		onVerify(payload) {
@@ -383,7 +383,7 @@ export default {
 			this.activeView = this.presetOptions.activeView;
 		}
 		this.$emit('activeViewChange', this.activeView);
-		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
 	},
 	watch: {
 		activeFilters() {
@@ -405,7 +405,7 @@ export default {
 		questionsIds(newValue, oldValue) {
 			if (isEqual(newValue, oldValue)) return;
 
-			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
+			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
 		}
 	}
 };

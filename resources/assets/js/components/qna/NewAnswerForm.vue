@@ -77,7 +77,7 @@ export default {
 				['bold', 'italic', 'underline', 'link'],
 				[{ color: fontColors }],
 				['clean'],
-				[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+				[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
 			];
 		}
 	},

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import * as types from 'js/store/mutations-types';
-import {getApiUrl} from 'js/utils/env';
-import {modelToResourceMap} from 'js/utils/config';
-import {set} from 'vue';
+import { getApiUrl } from 'js/utils/env';
+import { modelToResourceMap } from 'js/utils/config';
+import { set } from 'vue';
 
 function _getReactions() {
 	return axios.get(getApiUrl('users/current/reactions/byCategory/bookmark'));
@@ -68,16 +68,16 @@ const mutations = {
 		set(state, 'slidesContent', [...slidesContent, slide]);
 	},
 	[types.COLLECTIONS_REMOVE_SLIDE] (state, slideId) {
-		const updatedSlides = state.slidesContent.filter(({id}) => slideId !== id);
+		const updatedSlides = state.slidesContent.filter(({ id }) => slideId !== id);
 
 		set(state, 'slidesContent', updatedSlides);
 	}
 };
 
 const actions = {
-	fetchReactions({commit}) {
+	fetchReactions({ commit }) {
 		return _getReactions()
-			.then(({data: { reactions }}) => {
+			.then(({ data: { reactions } }) => {
 				if (Array.isArray(reactions) && reactions.length === 0) {
 					commit(types.IS_LOADING, false);
 				}
@@ -103,31 +103,31 @@ const actions = {
 
 			});
 	},
-	fetchCategories({commit}) {
+	fetchCategories({ commit }) {
 		return axios.get(getApiUrl('categories/all'))
-			.then(({data: categories}) => commit(types.COLLECTIONS_SET_CATEGORIES, categories));
+			.then(({ data: categories }) => commit(types.COLLECTIONS_SET_CATEGORIES, categories));
 	},
-	fetchSlidesByTagName({commit}, {tagName, ids}) {
+	fetchSlidesByTagName({ commit }, { tagName, ids }) {
 		commit(types.SLIDES_LOADING, true);
 		return axios.post(getApiUrl('slides/category'), {
 			tagName,
 			slideIds: ids
-		}).then(({data}) => {
+		}).then(({ data }) => {
 			commit(types.COLLECTIONS_SET_SLIDES, data);
 			commit(types.SLIDES_LOADING, false);
 		}).catch(() => {
 			commit(types.SLIDES_LOADING, false);
 		});
 	},
-	addSlideToCollection({commit}, slideId) {
-		return axios.get(getApiUrl(`slides/${slideId}`)).then(({data}) => {
+	addSlideToCollection({ commit }, slideId) {
+		return axios.get(getApiUrl(`slides/${slideId}`)).then(({ data }) => {
 			data && data.length && commit(types.COLLECTIONS_APPEND_SLIDE, data[0]);
 		});
 	},
-	removeSlideFromCollection({commit}, slideId) {
+	removeSlideFromCollection({ commit }, slideId) {
 		commit(types.COLLECTIONS_REMOVE_SLIDE, slideId);
 	},
-	deleteCollection({rootGetters}) {
+	deleteCollection({ rootGetters }) {
 		const url = getApiUrl(`users/${rootGetters.currentUserId}/user_collections`);
 		return axios.delete(url);
 	}

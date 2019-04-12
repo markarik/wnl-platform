@@ -57,11 +57,11 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
-import {nextTick} from 'vue';
-import {mapActions, mapState} from 'vuex';
-import {orderBy} from 'lodash';
+import { nextTick } from 'vue';
+import { mapActions, mapState } from 'vuex';
+import { orderBy } from 'lodash';
 
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import { swalConfig } from 'js/utils/swal';
 import WnlDatepicker from 'js/components/global/Datepicker';
 import WnlSortableTable from 'js/admin/components/lists/SortableTable';
@@ -115,11 +115,11 @@ export default {
 	computed: {
 		...mapState('lessons', ['lessons']),
 		visibleProductLessons() {
-			const {sortDirection: sort, activeSortColumnName: key} = this.activeSort;
+			const { sortDirection: sort, activeSortColumnName: key } = this.activeSort;
 
 			const filteredLessons = this.filterPhrase ?
 				this.productLessons
-					.filter(({lesson_name}) => lesson_name.toLowerCase().startsWith(this.filterPhrase.toLowerCase()))
+					.filter(({ lesson_name }) => lesson_name.toLowerCase().startsWith(this.filterPhrase.toLowerCase()))
 				: this.productLessons;
 
 			return orderBy(filteredLessons, key, [sort]);
@@ -137,8 +137,8 @@ export default {
 			};
 		},
 		async onAddLesson(lesson) {
-			if (!this.productLessons.some(({lesson_id}) => lesson_id === lesson.lessonId)) {
-				const {data: productLesson} = await axios.post(getApiUrl('lesson_product'), {
+			if (!this.productLessons.some(({ lesson_id }) => lesson_id === lesson.lessonId)) {
+				const { data: productLesson } = await axios.post(getApiUrl('lesson_product'), {
 					product_id: this.id,
 					lesson_id: lesson.lessonId,
 					start_date: moment.utc(lesson.startDate).unix(),
@@ -149,7 +149,7 @@ export default {
 		async performLessonRemoval(productLesson) {
 			try {
 				await axios.delete(getApiUrl(`lesson_product/${productLesson.id}`));
-				const index = this.productLessons.findIndex(({lesson_id}) => productLesson.lesson_id === lesson_id);
+				const index = this.productLessons.findIndex(({ lesson_id }) => productLesson.lesson_id === lesson_id);
 				this.productLessons.splice(index, 1);
 				this.addAutoDismissableAlert({
 					text: 'Usunięto!',
@@ -178,7 +178,7 @@ export default {
 			}
 		},
 		getProductLessons(productLessonResponse) {
-			const { data: {...productLessons}} = productLessonResponse;
+			const { data: { ...productLessons } } = productLessonResponse;
 
 			const productLessonsList = Object.values(productLessons);
 

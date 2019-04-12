@@ -19,7 +19,7 @@ import axios from 'axios';
 import { forEach } from 'lodash';
 
 import WnlSelect from 'js/admin/components/forms/Select';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 export default {
 	name: 'ScreensMetaEditorQuizes',

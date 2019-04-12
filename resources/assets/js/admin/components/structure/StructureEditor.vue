@@ -34,7 +34,7 @@
 </style>
 
 <script>
-import {mapActions, mapState, mapGetters} from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 
 import WnlNestedSetEditor from 'js/admin/components/nestedSet/NestedSetEditor';
 import WnlStructureNodesList from 'js/admin/components/structure/StructureNodesList';

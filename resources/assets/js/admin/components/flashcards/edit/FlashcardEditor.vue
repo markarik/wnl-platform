@@ -59,14 +59,14 @@
 </style>
 
 <script>
-import {isEqual} from 'lodash';
-import {mapActions} from 'vuex';
+import { isEqual } from 'lodash';
+import { mapActions } from 'vuex';
 
 import Form from 'js/classes/forms/Form';
-import {getApiUrl} from 'js/utils/env';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { getApiUrl } from 'js/utils/env';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
-import {Tags as WnlTags} from 'js/components/global/form';
+import { Tags as WnlTags } from 'js/components/global/form';
 import WnlTextarea from 'js/admin/components/forms/Textarea';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
@@ -140,13 +140,13 @@ export default {
 				});
 		},
 		onTagsChanged(tags) {
-			this.form.tags = tags.map(({id}) => id);
+			this.form.tags = tags.map(({ id }) => id);
 		}
 	},
 	async mounted() {
 		if (this.isEdit) {
 			await this.setupCurrentUser();
-			await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.FLASHCARD, contentIds: [this.flashcardId]});
+			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.FLASHCARD, contentIds: [this.flashcardId] });
 
 			const response = await this.form.populate(this.flashcardResourceUrl, ['include']);
 			const tags = response.tags;
@@ -158,7 +158,7 @@ export default {
 	watch: {
 		async flashcardId() {
 			// This is called only after user saves new flashcard and we put ID in the URL
-			await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.FLASHCARD, contentIds: [this.flashcardId]});
+			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.FLASHCARD, contentIds: [this.flashcardId] });
 		}
 	}
 };

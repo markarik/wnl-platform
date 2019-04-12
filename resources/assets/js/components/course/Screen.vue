@@ -26,7 +26,7 @@
 </style>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import End from 'js/components/course/screens/End';
 import Html from 'js/components/course/screens/Html';

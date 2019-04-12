@@ -61,7 +61,7 @@
 </style>
 
 <script>
-import {getImageUrl} from 'js/utils/env';
+import { getImageUrl } from 'js/utils/env';
 
 export default {
 	data() {

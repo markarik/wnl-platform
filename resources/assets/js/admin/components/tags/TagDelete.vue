@@ -32,9 +32,9 @@
 
 <script>
 import axios from 'axios';
-import {get} from 'lodash';
-import {mapActions} from 'vuex';
-import {getApiUrl} from 'js/utils/env';
+import { get } from 'lodash';
+import { mapActions } from 'vuex';
+import { getApiUrl } from 'js/utils/env';
 import WnlModal from 'js/components/global/Modal';
 import WnlTaggablesMover from 'js/admin/components/tags/TaggablesMover';
 
@@ -76,7 +76,7 @@ export default {
 				});
 
 				this.$emit('tagDeleted');
-			} catch ({response}) {
+			} catch ({ response }) {
 				this.addAutoDismissableAlert({
 					text: get(response, 'data.message') || 'Usuwanie taga nie powiodło się.',
 					type: 'error',

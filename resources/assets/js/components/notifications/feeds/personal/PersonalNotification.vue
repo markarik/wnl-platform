@@ -115,7 +115,7 @@
 </style>
 
 <script>
-import {camelCase} from 'lodash';
+import { camelCase } from 'lodash';
 import { mapGetters } from 'vuex';
 
 import Avatar from 'js/components/global/Avatar';
@@ -180,7 +180,7 @@ export default {
 			this.loading = true;
 
 			if (!this.isRead) {
-				this.markAsRead({notification: this.message, channel: this.channel})
+				this.markAsRead({ notification: this.message, channel: this.channel })
 					.then(() => {
 						this.dispatchGoToContext();
 					});

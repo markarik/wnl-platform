@@ -178,7 +178,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'Dropdown',
@@ -201,7 +201,7 @@ export default {
 		...mapGetters(['isMobile'])
 	},
 	methods: {
-		clickHandler({target}) {
+		clickHandler({ target }) {
 			if (this.isActive && !this.$el.contains(target)) {
 				this.isActive = false;
 				this.$emit('toggled', false);

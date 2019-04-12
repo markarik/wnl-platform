@@ -1,7 +1,7 @@
 import * as io from 'socket.io-client';
-import {snakeCase} from 'lodash';
-import {envValue} from 'js/utils/env';
-import {gaEvent, gaPageView} from 'js/utils/tracking';
+import { snakeCase } from 'lodash';
+import { envValue } from 'js/utils/env';
+import { gaEvent, gaPageView } from 'js/utils/tracking';
 const EVENTS = {
 	USER_EVENT: 'track_user_event',
 	USER_ACTIVITY_EVENT: 'track_user_activity_event',
@@ -28,7 +28,7 @@ const createEventsQueue = () => {
 };
 
 const EventsTracker = {
-	install(Vue, {store, router}) {
+	install(Vue, { store, router }) {
 		const onSocketError = (error) => {
 			// Happens e.g. when server is restared or session expires
 			// Socket.io handles it by reconnecting or creating new session

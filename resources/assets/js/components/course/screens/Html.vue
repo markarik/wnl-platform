@@ -112,13 +112,13 @@
 
 <script>
 import _ from 'lodash';
-import {imageviewer} from 'vendor/imageviewer/imageviewer';
+import { imageviewer } from 'vendor/imageviewer/imageviewer';
 import { nextTick } from 'vue';
 import $ from 'jquery';
 
 imageviewer($, window, document);
 function showImage(src) {
-	window.ImageViewer($('.image-gallery-wrapper .image-container'), {snapViewPersist: false}).load(src);
+	window.ImageViewer($('.image-gallery-wrapper .image-container'), { snapViewPersist: false }).load(src);
 }
 
 

@@ -34,11 +34,11 @@
 
 <script>
 import axios from 'axios';
-import {size} from 'lodash';
-import {mapGetters} from 'vuex';
+import { size } from 'lodash';
+import { mapGetters } from 'vuex';
 
 import SlideSearchResult from 'js/components/global/search/SlideSearchResult';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 export default {
 	name: 'SlidesSearch',

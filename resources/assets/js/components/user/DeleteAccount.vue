@@ -71,7 +71,7 @@ export default {
 					this.inputValue = this.$swal.getInput().value;
 				});
 				await this.deleteAccount(this.inputValue);
-				await this.$router.push({name: 'logout'});
+				await this.$router.push({ name: 'logout' });
 			}
 			catch (error) {
 				this.handleError(error);

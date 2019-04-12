@@ -166,7 +166,7 @@ export default {
 		pullConversations: debounce(function (event) {
 			if (!this.userSearchVisible && this.hasMoreRooms) {
 				if (event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
-					return this.fetchUserRoomsWithMessages({page: this.currentPage + 1});
+					return this.fetchUserRoomsWithMessages({ page: this.currentPage + 1 });
 				}
 			}
 		}),

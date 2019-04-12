@@ -146,12 +146,12 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 import { debounce } from 'lodash';
 
 import SlidesSearch from 'js/components/global/search/SlidesSearch';
 
-import {scrollToY} from 'js/utils/animations';
+import { scrollToY } from 'js/utils/animations';
 
 export default {
 	name: 'Search',
@@ -169,7 +169,7 @@ export default {
 		...mapGetters(['isTouchScreen']),
 	},
 	methods: {
-		debounceInput: debounce(function({target: {value}}) {
+		debounceInput: debounce(function({ target: { value } }) {
 			this.phrase = value;
 		}, 500),
 		hideOverlay() {

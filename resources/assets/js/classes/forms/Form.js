@@ -94,7 +94,7 @@ export default class Form {
 	 */
 	submit(requestType, url, payload) {
 		return new Promise((resolve, reject) => {
-			axios[requestType](url, {...this.data(), ...payload})
+			axios[requestType](url, { ...this.data(), ...payload })
 				.then(response => {
 					this.onSuccess();
 

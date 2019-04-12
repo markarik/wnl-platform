@@ -92,7 +92,7 @@ export default {
 	methods: {
 		changePage(page) {
 			this.$emit('changePage', page);
-			this.$router.push({ query: { ...this.$route.query, page }});
+			this.$router.push({ query: { ...this.$route.query, page } });
 		},
 		isPage(item) {
 			return typeof item === 'number';
@@ -110,7 +110,7 @@ export default {
 			}
 
 			if (this.routerPage !== newVal) {
-				this.$router.push({ query: { ...this.$route.query, page: newVal }});
+				this.$router.push({ query: { ...this.$route.query, page: newVal } });
 			}
 		}
 	}

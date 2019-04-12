@@ -140,7 +140,7 @@
 
 <script>
 import moment from 'moment';
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';

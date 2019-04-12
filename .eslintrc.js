@@ -41,6 +41,10 @@ module.exports = {
 				'ignoreRestSiblings': true
 			}
 		],
+		'object-curly-spacing': [
+			'error',
+			'always'
+		],
 
 		// TODO enable eslint:recommended rules below
 		'no-console': [

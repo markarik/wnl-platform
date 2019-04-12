@@ -332,15 +332,15 @@
 
 <script>
 import axios from 'axios';
-import {isEmpty} from 'lodash';
-import {mapActions, mapGetters} from 'vuex';
+import { isEmpty } from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment';
 
 import QuestionsFeed from 'js/components/notifications/feeds/questions/QuestionsFeed';
 import QuestionsNavigation from 'js/components/questions/QuestionsNavigation';
 import QuestionsPlanProgress from 'js/components/questions/QuestionsPlanProgress';
 import SidenavSlot from 'js/components/global/SidenavSlot';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import { swalConfig } from 'js/utils/swal';
 import withChat from 'js/mixins/with-chat';
 import features from 'js/consts/events_map/features.json';
@@ -426,7 +426,7 @@ export default {
 		getPlan() {
 			return new Promise((resolve, reject) => {
 				return axios.get(getApiUrl(`user_plan/${this.currentUserId}`))
-					.then(({status, data}) => {
+					.then(({ status, data }) => {
 						let plan = data;
 						if (status === 204) {
 							plan = {};
@@ -441,7 +441,7 @@ export default {
 		getStats() {
 			return new Promise(() => {
 				return axios.get(getApiUrl('quiz_questions/stats'))
-					.then(({data}) => this.stats = data)
+					.then(({ data }) => this.stats = data)
 					.catch(() => this.stats = null);
 			});
 		},
@@ -485,12 +485,12 @@ export default {
 				confirmButtonClass: 'button is-danger',
 				reverseButtons: true
 			})).then(() => {
-				this.toggleOverlay({source: 'questionsDashboard', display: true});
+				this.toggleOverlay({ source: 'questionsDashboard', display: true });
 				this.deleteProgress()
 					.then(() => {
 						this.getPlan();
 						this.getStats();
-						this.toggleOverlay({source: 'questionsDashboard', display: false});
+						this.toggleOverlay({ source: 'questionsDashboard', display: false });
 
 						isEmpty(this.filters)
 							? this.fetchDynamicFilters().then(this.setPlanRoute)

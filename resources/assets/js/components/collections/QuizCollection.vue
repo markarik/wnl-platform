@@ -38,7 +38,7 @@
 </style>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 import QuizWidget from 'js/components/quiz/QuizWidget';
 import Pagination from 'js/components/global/Pagination';
@@ -81,13 +81,13 @@ export default {
 			this.resolveQuestion(id);
 		},
 		performChangeQuestion(index) {
-			this.shuffleAnswers({id: this.getQuestionsWithAnswers[index].id});
+			this.shuffleAnswers({ id: this.getQuestionsWithAnswers[index].id });
 			this.changeQuestion(index);
 		},
-		onSelectAnswer({id, answer}) {
+		onSelectAnswer({ id, answer }) {
 			answer === this.getQuestion(id).selectedAnswer
 				? this.trackAndResolve(id)
-				: !this.isComplete && this.commitSelectAnswer({id, answer});
+				: !this.isComplete && this.commitSelectAnswer({ id, answer });
 		},
 		changePage(page) {
 			this.$emit('changeQuizQuestionsPage', page);

@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import {nextTick} from 'vue';
-import {mapGetters, mapActions} from 'vuex';
+import { nextTick } from 'vue';
+import { mapGetters, mapActions } from 'vuex';
 
-import {scrollToElement} from 'js/utils/animations';
+import { scrollToElement } from 'js/utils/animations';
 
 export default {
 	data() {

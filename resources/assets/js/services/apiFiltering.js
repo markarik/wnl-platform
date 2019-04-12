@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {get} from 'lodash';
+import { get } from 'lodash';
 
 export const buildFiltersByPath = (filters = {}) => {
 	const filtersByPath = {};

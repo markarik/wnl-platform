@@ -127,12 +127,12 @@
 </style>
 
 <script>
-import {isEmpty} from 'lodash';
-import {mapGetters} from 'vuex';
+import { isEmpty } from 'lodash';
+import { mapGetters } from 'vuex';
 
 import QuestionsTest from 'js/components/questions/QuestionsTest';
 
-import {timeBaseOnQuestions} from 'js/services/testBuilder';
+import { timeBaseOnQuestions } from 'js/services/testBuilder';
 import emits_events from 'js/mixins/emits-events';
 import context from 'js/consts/events_map/context.json';
 
@@ -209,7 +209,7 @@ export default {
 	},
 	methods: {
 		buildTest() {
-			this.$emit('buildTest', {count: this.testQuestionsCount, time: this.time});
+			this.$emit('buildTest', { count: this.testQuestionsCount, time: this.time });
 		},
 		selectAnswer(payload) {
 			this.$emit('selectAnswer', payload);

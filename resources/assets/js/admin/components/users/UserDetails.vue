@@ -48,7 +48,7 @@
 <script>
 import _ from 'lodash';
 import axios from 'axios';
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 import { getApiUrl } from 'js/utils/env';
 import { getColourForStr } from 'js/utils/colors.js';
 import moment from 'moment';
@@ -122,7 +122,7 @@ export default {
 					'roles', 'profile', 'subscription', 'orders.invoices', 'billing', 'settings', 'coupons','user_address', 'orders.payments', 'orders.study_buddy'
 				].join(',');
 				const response = await axios.get(getApiUrl(`users/${userId}?include=${include}`));
-				const {included, ...user} = response.data;
+				const { included, ...user } = response.data;
 				this.user = user;
 				this.parseIncluded(included);
 			} catch (error) {
@@ -141,7 +141,7 @@ export default {
 					return {
 						...order,
 						invoices: (order.invoices || []).map(invoiceId => included.invoices[invoiceId]),
-						...(order.study_buddy && {studyBuddy: included.study_buddies[order.study_buddy[0]]}),
+						...(order.study_buddy && { studyBuddy: included.study_buddies[order.study_buddy[0]] }),
 						payments: (order.payments || []).map(paymentId => included.payments[paymentId])
 					};
 				});

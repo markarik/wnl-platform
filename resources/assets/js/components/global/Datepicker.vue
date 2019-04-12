@@ -34,7 +34,7 @@
 <script>
 import moment from 'moment';
 import Flatpickr from 'flatpickr';
-import {pl} from 'flatpickr/dist/l10n/pl.js';
+import { pl } from 'flatpickr/dist/l10n/pl.js';
 
 export default {
 	name: 'Datepicker',

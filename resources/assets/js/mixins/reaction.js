@@ -1,4 +1,4 @@
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 
 export const reaction = {
 	props: ['module', 'reactableResource', 'reactableId', 'updateLocally', 'state', 'reactionsDisabled'],

@@ -37,11 +37,11 @@
 
 <script>
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
-import {Checkbox as WnlFormCheckbox, Form as WnlForm, Text as WnlFormText} from 'js/components/global/form';
+import { getApiUrl } from 'js/utils/env';
+import { Checkbox as WnlFormCheckbox, Form as WnlForm, Text as WnlFormText } from 'js/components/global/form';
 
 export default {
-	components: {WnlForm, WnlFormText, WnlFormCheckbox},
+	components: { WnlForm, WnlFormText, WnlFormCheckbox },
 	props: {
 		resourceUrl: {
 			type: String,

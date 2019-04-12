@@ -45,8 +45,8 @@ import { isEmpty } from 'lodash';
 import Navbar from 'js/components/global/Navbar.vue';
 import Alerts from 'js/components/global/GlobalAlerts';
 import sessionStore from 'js/services/sessionStore';
-import {startActivityTracking} from 'js/services/activityMonitor';
-import {getApiUrl} from 'js/utils/env';
+import { startActivityTracking } from 'js/services/activityMonitor';
+import { getApiUrl } from 'js/utils/env';
 
 export default {
 	name: 'App',
@@ -97,7 +97,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.toggleOverlay({source: 'course', display: true});
+		this.toggleOverlay({ source: 'course', display: true });
 		sessionStore.clearAll();
 
 		// Setup current products
@@ -136,9 +136,9 @@ export default {
 
 				// Setup active users
 				window.Echo.join('active-users')
-					.here(users => this.setActiveUsers({users, channel: 'activeUsers'}))
-					.joining(user => this.userJoined({user, channel: 'activeUsers'}))
-					.leaving(user => this.userLeft({user, channel: 'activeUsers'}));
+					.here(users => this.setActiveUsers({ users, channel: 'activeUsers' }))
+					.joining(user => this.userJoined({ user, channel: 'activeUsers' }))
+					.leaving(user => this.userLeft({ user, channel: 'activeUsers' }));
 
 				this.setLayout(this.$breakpoints.currentBreakpoint());
 				this.$breakpoints.on('breakpointChange', (previousLayout, currentLayout) => {
@@ -148,11 +148,11 @@ export default {
 				return this.courseSetup(1);
 			})
 			.then(() => {
-				this.toggleOverlay({source: 'course', display: false});
+				this.toggleOverlay({ source: 'course', display: false });
 			})
 			.catch(error => {
 				$wnl.logger.error(error);
-				this.toggleOverlay({source: 'course', display: false});
+				this.toggleOverlay({ source: 'course', display: false });
 			});
 	},
 	watch: {

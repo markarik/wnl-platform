@@ -10,7 +10,7 @@
 
 <script>
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import { debounce, isEmpty } from 'lodash';
 
 const defaultMessage = 'Szukam powiązanych pytań...';
@@ -35,7 +35,7 @@ export default {
 	methods: {
 		debouncedGetLinkedQuestions: debounce(function () {
 			this.setLinkedQuestions();
-		}, 300, {leading: false, trailing: true}),
+		}, 300, { leading: false, trailing: true }),
 		getLinkedQuestions() {
 			this.linkedQuestions = defaultMessage;
 			return axios.get(getApiUrl(this.slideApiUrl))

@@ -27,11 +27,11 @@ const mutations = {
 
 // Actions
 const actions = {
-	async fetchAll({commit}) {
+	async fetchAll({ commit }) {
 		commit(types.SETUP_GROUPS, []);
 		commit(types.SET_GROUPS_LOADING, true);
 		try {
-			const {data: groups} = await axios.get(getApiUrl('groups/all'));
+			const { data: groups } = await axios.get(getApiUrl('groups/all'));
 			commit(types.SETUP_GROUPS, groups);
 		} catch (error) {
 			throw error;
@@ -39,8 +39,8 @@ const actions = {
 			commit(types.SET_GROUPS_LOADING, false);
 		}
 	},
-	async create({commit}, name) {
-		const {data: group} = await axios.post(getApiUrl('groups'), {
+	async create({ commit }, name) {
+		const { data: group } = await axios.post(getApiUrl('groups'), {
 			name
 		});
 		commit(types.ADD_GROUP, group);

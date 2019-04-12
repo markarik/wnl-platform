@@ -186,11 +186,11 @@ export default {
 			this.loading = true;
 
 			if (this.isRead) {
-				return this.markAsUnread({notification: this.message, channel: this.channel})
+				return this.markAsUnread({ notification: this.message, channel: this.channel })
 					.then(() => this.loading = false);
 			}
 
-			return this.markAsRead({notification: this.message, channel: this.channel})
+			return this.markAsRead({ notification: this.message, channel: this.channel })
 				.then(() => this.loading = false);
 		},
 		dispatchMarkAsSeen() {
@@ -199,7 +199,7 @@ export default {
 			this.loading = true;
 
 			if (!this.isSeen) {
-				this.markAsSeen({notification: this.message, channel: this.channel})
+				this.markAsSeen({ notification: this.message, channel: this.channel })
 					.then(() => {
 						this.loading = false;
 					});

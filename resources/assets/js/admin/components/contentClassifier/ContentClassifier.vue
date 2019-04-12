@@ -113,11 +113,11 @@
 
 <script>
 import axios from 'axios';
-import {mapActions} from 'vuex';
-import {groupBy} from 'lodash';
+import { mapActions } from 'vuex';
+import { groupBy } from 'lodash';
 
-import {getApiUrl} from 'js/utils/env';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { getApiUrl } from 'js/utils/env';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 import WnlHtmlResult from 'js/admin/components/contentClassifier/HtmlResult';
 import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
@@ -126,8 +126,8 @@ import WnlAnnotationResult from 'js/admin/components/contentClassifier/Annotatio
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 import WnlContentClassifierFilterByIds from 'js/admin/components/contentClassifier/ContentClassifierFilterByIds';
 import WnlContentClassifierFilterByClassification from 'js/admin/components/contentClassifier/ContentClassifierFilterByClassification';
-import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { parseTaxonomyTermsFromIncludes } from 'js/utils/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 const TABS = {
 	BY_CLASSIFICATION: 'by-classification',
@@ -188,7 +188,7 @@ export default {
 
 			if (filter !== '') {
 				filters.push({
-					by_ids: {ids: filter.split(',')},
+					by_ids: { ids: filter.split(',') },
 				});
 			}
 
@@ -214,14 +214,14 @@ export default {
 				return [];
 			}
 
-			const {data} = await axios.post(getApiUrl(resourceName), {
+			const { data } = await axios.post(getApiUrl(resourceName), {
 				filters,
 				include: 'taxonomy_terms.tag,taxonomy_terms.taxonomy,taxonomy_terms.ancestors.tag',
 				// TODO use wnl-paginated-list instead
 				limit: 10000,
 			});
 
-			const {data: {included = {}, ...items}} = data;
+			const { data: { included = {}, ...items } } = data;
 
 			return Object.values(items).map(item => {
 				item.type = contentType;
@@ -235,7 +235,7 @@ export default {
 
 			this.onSearch(promises);
 		},
-		async onSearchByTag({byTagsFilter, byTaxonomyTermsFilter, activeContentTypesMap}) {
+		async onSearchByTag({ byTagsFilter, byTaxonomyTermsFilter, activeContentTypesMap }) {
 			const promises = Object.entries(this.contentTypes)
 				.filter(([contentType]) => activeContentTypesMap[contentType])
 				.map(([contentType, meta]) => this.fetchContentByTag(contentType, meta, byTagsFilter, byTaxonomyTermsFilter));
@@ -265,14 +265,14 @@ export default {
 		},
 		onTaxonomyTermAttached(term) {
 			this.filteredContent.forEach((item) => {
-				if (!item.taxonomyTerms.find(({id}) => id === term.id)) {
+				if (!item.taxonomyTerms.find(({ id }) => id === term.id)) {
 					item.taxonomyTerms.push(term);
 				}
 			});
 		},
 		onTaxonomyTermDetached(term) {
 			this.filteredContent.forEach((item) => {
-				const index = item.taxonomyTerms.findIndex(({id}) => id === term.id);
+				const index = item.taxonomyTerms.findIndex(({ id }) => id === term.id);
 
 				if (index > -1) {
 					item.taxonomyTerms.splice(index, 1);

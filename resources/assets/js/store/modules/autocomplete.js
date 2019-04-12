@@ -1,7 +1,7 @@
 import axios from 'axios';
-import {set} from 'vue';
+import { set } from 'vue';
 import * as types from 'js/store/mutations-types';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 // Initial state
 const state = {
@@ -28,7 +28,7 @@ const actions = {
 	requestTagsAutocomplete({}, { name, tags }) {
 		return axios.post(getApiUrl('tags/byName'), {
 			name,
-			excludedIds: tags.map(({id}) => id)
+			excludedIds: tags.map(({ id }) => id)
 		});
 	}
 };

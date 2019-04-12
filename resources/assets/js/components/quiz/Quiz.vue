@@ -52,7 +52,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 import QuizList from 'js/components/quiz/QuizList';
 import QuizSummary from 'js/components/quiz/QuizSummary';
-import {scrollToTop, scrollToElement} from 'js/utils/animations';
+import { scrollToTop, scrollToElement } from 'js/utils/animations';
 import { swalConfig } from 'js/utils/swal';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
@@ -91,7 +91,7 @@ export default {
 		},
 		tryAgainAlert() {
 			return {
-				text: this.$t('quiz.alert.tryAgain.text', {count: this.getUnresolved.length}),
+				text: this.$t('quiz.alert.tryAgain.text', { count: this.getUnresolved.length }),
 				title: this.$t('quiz.alert.tryAgain.title'),
 				type: 'info',
 			};

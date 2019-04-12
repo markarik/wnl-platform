@@ -13,12 +13,12 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { debounce } from 'lodash';
 
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 export default {
 	components: {
@@ -49,8 +49,8 @@ export default {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister', 'resetFocus']),
 		loadTerms: debounce(async function (slideId) {
-			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId]});
-		}, 300, {leading: false, trailing: true}),
+			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId] });
+		}, 300, { leading: false, trailing: true }),
 		onUpdateIsActive(isActive) {
 			if (isActive) {
 				this.setActiveInstance(this.activateWithShortcutKeyId);

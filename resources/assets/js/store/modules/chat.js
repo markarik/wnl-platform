@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 // Initial state
 const state = {

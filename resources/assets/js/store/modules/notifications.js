@@ -1,8 +1,8 @@
 import axios from 'axios';
 import _ from 'lodash';
 import * as types from 'js/store/mutations-types';
-import {getApiUrl} from 'js/utils/env';
-import {set} from 'vue';
+import { getApiUrl } from 'js/utils/env';
+import { set } from 'vue';
 
 const namespaced = true;
 
@@ -69,10 +69,10 @@ const mutations = {
 	[types.ADD_NOTIFICATION] (state, notification) {
 		set(state.notifications, notification.id, notification);
 	},
-	[types.CHANNEL_HAS_MORE] (state, {channel, hasMore}) {
+	[types.CHANNEL_HAS_MORE] (state, { channel, hasMore }) {
 		set(state.hasMore, channel, hasMore);
 	},
-	[types.IS_FETCHING] (state, {channel, isFetching}) {
+	[types.IS_FETCHING] (state, { channel, isFetching }) {
 		set(state.fetching, channel, isFetching);
 	},
 	[types.MODIFY_NOTIFICATION] (state, payload) {
@@ -87,14 +87,14 @@ const mutations = {
 };
 
 const actions = {
-	pullNotifications({commit, rootGetters}, [ channel, options ]) {
-		commit(types.IS_FETCHING, {channel, isFetching: true});
+	pullNotifications({ commit, rootGetters }, [ channel, options ]) {
+		commit(types.IS_FETCHING, { channel, isFetching: true });
 		return new Promise ((resolve) => {
 			_getNotifications(channel, rootGetters.currentUserId, options)
 				.then(response => {
 					if (typeof response.data[0] !== 'object') {
-						commit(types.CHANNEL_HAS_MORE, {channel, hasMore: false});
-						commit(types.IS_FETCHING, {channel, isFetching: false});
+						commit(types.CHANNEL_HAS_MORE, { channel, hasMore: false });
+						commit(types.IS_FETCHING, { channel, isFetching: false });
 						resolve(response);
 					}
 
@@ -106,46 +106,46 @@ const actions = {
 						channel,
 						hasMore: !!options.limit && response.data.length >= options.limit
 					});
-					commit(types.IS_FETCHING, {channel, isFetching: false});
+					commit(types.IS_FETCHING, { channel, isFetching: false });
 
 					resolve(response);
 				});
 		});
 	},
-	setupLiveNotifications({commit}, channel) {
+	setupLiveNotifications({ commit }, channel) {
 		Echo.channel(channel)
 			.listen('.App.Events.Live.LiveNotificationCreated', (notification) => {
-				commit(types.ADD_NOTIFICATION, {...notification, channel});
+				commit(types.ADD_NOTIFICATION, { ...notification, channel });
 			});
 	},
-	markAsRead({commit, rootGetters}, {notification}) {
-		return _updateNotification(rootGetters.currentUserId, notification.id, {'read_at': 'now'})
+	markAsRead({ commit, rootGetters }, { notification }) {
+		return _updateNotification(rootGetters.currentUserId, notification.id, { 'read_at': 'now' })
 			.then((response) => {
-				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'});
+				commit(types.MODIFY_NOTIFICATION, { notification, value: response.data.read_at, field: 'read_at' });
 			})
 			.catch(() => {
-				commit(types.MODIFY_NOTIFICATION, {notification, value: true, field: 'deleted'});
+				commit(types.MODIFY_NOTIFICATION, { notification, value: true, field: 'deleted' });
 			});
 	},
-	markAsSeen({commit, rootGetters}, {notification}) {
-		return _updateNotification(rootGetters.currentUserId, notification.id, {'seen_at': 'now'})
+	markAsSeen({ commit, rootGetters }, { notification }) {
+		return _updateNotification(rootGetters.currentUserId, notification.id, { 'seen_at': 'now' })
 			.then((response) => {
-				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.seen_at, field: 'seen_at'});
+				commit(types.MODIFY_NOTIFICATION, { notification, value: response.data.seen_at, field: 'seen_at' });
 			})
 			.catch(() => {
-				commit(types.MODIFY_NOTIFICATION, {notification, value: true, field: 'deleted'});
+				commit(types.MODIFY_NOTIFICATION, { notification, value: true, field: 'deleted' });
 			});
 
 	},
-	markAsUnread({commit, rootGetters}, {notification}) {
-		return _updateNotification(rootGetters.currentUserId, notification.id, {'read_at': null})
+	markAsUnread({ commit, rootGetters }, { notification }) {
+		return _updateNotification(rootGetters.currentUserId, notification.id, { 'read_at': null })
 			.then((response) => {
-				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'});
+				commit(types.MODIFY_NOTIFICATION, { notification, value: response.data.read_at, field: 'read_at' });
 			});
 	},
-	markAllAsSeen({commit, getters, rootGetters}, channel) {
+	markAllAsSeen({ commit, getters, rootGetters }, channel) {
 		let data = _.mapValues(getters.getUnseen(channel), () => {
-			return {'seen_at': 'now'};
+			return { 'seen_at': 'now' };
 		});
 
 		_updateMany(rootGetters.currentUserId, data)
@@ -155,9 +155,9 @@ const actions = {
 				});
 			});
 	},
-	markAllAsRead({commit, getters, rootGetters}, channel) {
+	markAllAsRead({ commit, getters, rootGetters }, channel) {
 		let data = _.mapValues(getters.getUnread(channel), () => {
-			return {'read_at': 'now'};
+			return { 'read_at': 'now' };
 		});
 
 		return _updateMany(rootGetters.currentUserId, data)
@@ -168,11 +168,11 @@ const actions = {
 				return response;
 			});
 	},
-	initNotifications({getters, dispatch}) {
-		dispatch('pullNotifications', [getters.userChannel, {limit: 15}]);
+	initNotifications({ getters, dispatch }) {
+		dispatch('pullNotifications', [getters.userChannel, { limit: 15 }]);
 		dispatch('setupLiveNotifications', getters.userChannel);
 
-		dispatch('pullNotifications', [getters.streamChannel, {limit: 100, unread: true}]);
+		dispatch('pullNotifications', [getters.streamChannel, { limit: 100, unread: true }]);
 		dispatch('setupLiveNotifications', getters.streamChannel);
 	}
 };

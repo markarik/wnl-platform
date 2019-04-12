@@ -18,7 +18,7 @@
 <script>
 import axios from 'axios';
 import { alerts } from 'js/mixins/alerts';
-import {getUrl} from 'js/utils/env';
+import { getUrl } from 'js/utils/env';
 
 export default {
 	mixins: [ alerts ],

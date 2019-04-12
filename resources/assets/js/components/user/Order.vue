@@ -569,8 +569,8 @@ export default {
 			try {
 				const response = await axios.get(getApiUrl(`users/${this.order.user_id}/orders/${this.order.id}?include=payments`));
 
-				const {included = {}, ...order} = response.data;
-				const {payments = {}} = included;
+				const { included = {}, ...order } = response.data;
+				const { payments = {} } = included;
 				if (order.paid) {
 					this.order.paid = true;
 					this.order.paid_amount = order.paid_amount;
@@ -611,7 +611,7 @@ export default {
 		cancelOrder() {
 			this.$swal(swalConfig({
 				title: this.$t('orders.cancel.title'),
-				text: this.$t('orders.cancel.text', {id: this.order.id}),
+				text: this.$t('orders.cancel.text', { id: this.order.id }),
 				showCancelButton: true,
 				confirmButtonText: this.$t('ui.confirm.confirm'),
 				cancelButtonText: this.$t('ui.confirm.cancel'),
@@ -630,7 +630,7 @@ export default {
 		async pay() {
 			this.paymentLoading = true;
 
-			const [{data: paymentData}, {data: userData}] = await Promise.all([
+			const [{ data: paymentData }, { data: userData }] = await Promise.all([
 				axios.post(getApiUrl('payments'), {
 					order_id: this.order.id,
 					amount: this.amountToBePaidNext

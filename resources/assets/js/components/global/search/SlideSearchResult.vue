@@ -203,7 +203,7 @@ export default {
 			}
 		},
 		truncate(text, length) {
-			return truncate(text, {length});
+			return truncate(text, { length });
 		},
 	}
 };

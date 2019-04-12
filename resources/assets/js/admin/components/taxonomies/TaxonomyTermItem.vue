@@ -89,8 +89,8 @@
 
 
 <script>
-import {mapActions, mapState, mapGetters} from 'vuex';
-import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
+import { mapActions, mapState, mapGetters } from 'vuex';
+import { NESTED_SET_EDITOR_MODES } from 'js/consts/nestedSet';
 
 export default {
 	props: {

@@ -71,7 +71,7 @@
 
 <script>
 import _ from 'lodash';
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 
 import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
@@ -80,7 +80,7 @@ import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcu
 import { scrollToElement } from 'js/utils/animations';
 import { swalConfig } from 'js/utils/swal';
 import emits_events from 'js/mixins/emits-events';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 
 export default {
@@ -175,13 +175,13 @@ export default {
 		},
 	},
 	mounted() {
-		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
 	},
 	watch: {
 		questionsIds(newValue, oldValue) {
 			if (_.isEqual(newValue, oldValue)) return;
 
-			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
+			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
 		}
 	},
 };

@@ -56,7 +56,7 @@
 </style>
 
 <script>
-import {Form as WnlForm, Text as WnlText, Textarea as WnlTextarea, Datepicker as WnlDatepicker} from 'js/components/global/form';
+import { Form as WnlForm, Text as WnlText, Textarea as WnlTextarea, Datepicker as WnlDatepicker } from 'js/components/global/form';
 import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
 import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
 
@@ -100,7 +100,7 @@ export default {
 				this.$router.push({ name: 'dashboard-news-edit', params: { id: data.id } });
 			}
 		},
-		onChange({formData}) {
+		onChange({ formData }) {
 			this.formData = formData;
 		},
 		escapeArgumentKey(key) {

@@ -198,7 +198,7 @@ export default {
 		},
 		chatRooms() {
 			return [
-				{name: '#pomoc', channel: 'help-tech'},
+				{ name: '#pomoc', channel: 'help-tech' },
 			];
 		},
 		hasChat() {

@@ -1,5 +1,5 @@
 import * as io from 'socket.io-client';
-import {envValue} from 'js/utils/env';
+import { envValue } from 'js/utils/env';
 import { SOCKET_CONNECTION_ERROR, SOCKET_CONNECTION_RECONNECTED } from 'js/store/mutations-types';
 
 export const SOCKET_EVENT_SEND_MESSAGE = 'sendMessage';
@@ -31,7 +31,7 @@ const createEventsQueue = () => {
 };
 
 const WnlSocket = {
-	install(Vue, {store}) {
+	install(Vue, { store }) {
 		const onSocketError = (error) => {
 			// Happens e.g. when server is restared or session expires
 			// Socket.io handles it by reconnecting or creating new session
@@ -73,7 +73,7 @@ const WnlSocket = {
 		const joinRoom = (room, pointer = null) => {
 			return new Promise((resolve, reject) => {
 				eventsQueue.push(() => {
-					socket.emit(SOCKET_EVENT_JOIN_ROOM, {room, pointer});
+					socket.emit(SOCKET_EVENT_JOIN_ROOM, { room, pointer });
 
 					const timerId = setTimeout(() => {
 						$wnl.logger.error('Failed to connect to room', room);
@@ -152,7 +152,7 @@ const WnlSocket = {
 		Vue.prototype.$socketChatSetup = async () => {
 			store.dispatch('chatMessages/setConnectionStatus', false);
 			const userChannel = 'authenticated-user';
-			const pointer = await store.dispatch('chatMessages/fetchUserRoomsWithMessages', {page: 1});
+			const pointer = await store.dispatch('chatMessages/fetchUserRoomsWithMessages', { page: 1 });
 			const data = await joinRoom(userChannel, pointer);
 			store.dispatch('chatMessages/updateFromEventLog', data.events);
 			store.dispatch('chatMessages/setConnectionStatus', true);

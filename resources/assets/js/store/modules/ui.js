@@ -1,7 +1,7 @@
 import * as types from 'js/store/mutations-types';
 import { set, delete as destroy } from 'vue';
 import { isString, pickBy, size, values } from 'lodash';
-import {USER_SETTING_NAMES} from 'js/consts/settings';
+import { USER_SETTING_NAMES } from 'js/consts/settings';
 
 // Initial state
 const state = {
@@ -101,7 +101,7 @@ const mutations = {
 			destroy(state.overlays, payload.source);
 		}
 	},
-	[types.UI_TOGGLE_NAVIGATION_GROUP] (state, {groupIndex, isOpen}) {
+	[types.UI_TOGGLE_NAVIGATION_GROUP] (state, { groupIndex, isOpen }) {
 		set(state.navigationToggleState, groupIndex, isOpen);
 	},
 	[types.UI_CHANGE_OVERVIEW_VIEW] (state, view) {
@@ -135,23 +135,23 @@ const actions = {
 	toggleOverlay({ commit }, payload) {
 		commit(types.UI_DISPLAY_OVERLAY, payload);
 	},
-	toggleNavigationGroup({commit}, payload) {
+	toggleNavigationGroup({ commit }, payload) {
 		commit(types.UI_TOGGLE_NAVIGATION_GROUP, payload);
 	},
-	changeOverviewView({commit}, view) {
+	changeOverviewView({ commit }, view) {
 		commit(types.UI_CHANGE_OVERVIEW_VIEW, view);
 	},
-	showNotification({commit}, {type = 'success', message, timeout = 3000}) {
-		commit(types.UI_SHOW_GLOBAL_NOTIFICATION, {type, message});
+	showNotification({ commit }, { type = 'success', message, timeout = 3000 }) {
+		commit(types.UI_SHOW_GLOBAL_NOTIFICATION, { type, message });
 
 		setTimeout(() => {
 			commit(types.UI_SHOW_GLOBAL_NOTIFICATION, false);
 		}, timeout);
 	},
-	[types.SOCKET_CONNECTION_ERROR]({commit}) {
+	[types.SOCKET_CONNECTION_ERROR]({ commit }) {
 		commit(`chatMessages/${types.CHAT_MESSAGES_SET_STATUS}`, false);
 	},
-	[types.SOCKET_CONNECTION_RECONNECTED]({commit}) {
+	[types.SOCKET_CONNECTION_RECONNECTED]({ commit }) {
 		commit(`chatMessages/${types.CHAT_MESSAGES_SET_STATUS}`, true);
 	},
 };

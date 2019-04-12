@@ -37,10 +37,10 @@
 </style>
 
 <script>
-import {mapActions, mapState, mapMutations} from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 import { debounce } from 'lodash';
 import { Form, Quill, Submit } from 'js/components/global/form';
-import {SET_COMMENTS_COMMENTABLE_COMMENT_DRAFT} from 'js/store/mutations-types';
+import { SET_COMMENTS_COMMENTABLE_COMMENT_DRAFT } from 'js/store/mutations-types';
 
 export default {
 	name: 'NewCommentForm',

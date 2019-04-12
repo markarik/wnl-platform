@@ -522,7 +522,8 @@ const _handleResponse = (response) => {
 		included                = {};
 
 	if (size(data) > 0) {
-		// this var is here on purpose due to error in babel and problems with spread operator :(
+		// we can't use proper ES6 spread because of https://github.com/babel/babel/issues/7710
+		// eslint-disable-next-line no-redeclare
 		var { included: { quiz_answers, slides, ...included }, ...quizQuestions } = data;
 	}
 

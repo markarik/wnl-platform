@@ -50,9 +50,6 @@ module.exports = {
 		'no-console': [
 			'off'
 		],
-		'no-redeclare': [
-			'off'
-		],
 
 		'import/no-relative-parent-imports': 'error',
 		'vue/component-name-in-template-casing': [

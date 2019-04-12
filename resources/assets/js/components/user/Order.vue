@@ -55,7 +55,7 @@
 						<p class="strong has-text-centered">
 							Dziękujemy za opłacenie zamówienia! Możesz teraz skorzystać z promocji Study Buddy!
 						</p>
-						Znajdź jedną osobę, która po wejściu na <a :href="voucherUrl()">{{voucherUrl()}}</a> zapisze się
+						Znajdź jedną osobę, która po wejściu na <a :href="voucherUrl()">{{voucherUrl()}}</a> zapisze się
 						z Twoim unikalnym kodem. <strong>Gdy opłaci zamówienie</strong> - zniżka zostanie naliczona także Tobie, a my wykonamy w ciągu 14 dni zwrot na konto, z którego opłacony został kurs!&nbsp;😉
 						<p class="metadata aligncenter">Twój unikalny kod:</p>
 						<span class="code">{{order.studyBuddy.code}}</span>

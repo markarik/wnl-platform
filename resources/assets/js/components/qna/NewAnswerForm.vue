@@ -12,7 +12,7 @@
 		<wnl-quill
 			class="margin bottom"
 			name="text"
-			:options="{ theme: 'snow', placeholder: 'Zacznij swoją odpowiedź...' }"
+			:options="{ theme: 'snow', placeholder: 'Zacznij swoją odpowiedź...' }"
 			:toolbar="toolbar">
 		</wnl-quill>
 

@@ -46,9 +46,6 @@ module.exports = {
 		'no-console': [
 			'off'
 		],
-		'no-irregular-whitespace': [
-			'off'
-		],
 		'no-empty-pattern': [
 			'off'
 		],

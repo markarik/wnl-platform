@@ -13,7 +13,7 @@
 		<wnl-quill
 			class="margin bottom"
 			name="text"
-			:options="{ placeholder: 'Zacznij swój komentarz...', theme: 'snow' }"
+			:options="{ placeholder: 'Zacznij swój komentarz...', theme: 'snow' }"
 			:value="newCommentDraft"
 			@input="setNewCommentDraft"
 		>

@@ -37,12 +37,12 @@
 				<div class="box has-text-centered">
 					<p class="title is-5">Brak potwierdzonych zamówień <wnl-emoji name="package"></wnl-emoji></p>
 					<p class="has-text-centered">
-						<a :href="paymentUrl" class="button is-primary">Zapisz się na kurs</a>
+						<a :href="paymentUrl" class="button is-primary">Zapisz się na kurs</a>
 					</p>
 				</div>
 			</div>
 		</div>
-		<wnl-text-loader v-else>Wczytuję zamówienia...</wnl-text-loader>
+		<wnl-text-loader v-else>Wczytuję zamówienia...</wnl-text-loader>
 	</div>
 
 </template>

@@ -49,7 +49,7 @@ function getSlideData(slideId) {
 	return axios.get(getApiUrl(`slides/${slideId}?include=context`));
 }
 
-function getEmptyAnswers(stateAnswers) {
+function getEmptyAnswers() {
 	return [
 		{
 			text: '',
@@ -109,7 +109,7 @@ const mutations = {
 	[types.UPDATE_QUIZ_QUESTION](state, data) {
 		state.question = {...state.question, ...data};
 	},
-	[types.CLEAR_QUIZ_QUESTION](state, data) {
+	[types.CLEAR_QUIZ_QUESTION](state) {
 		set(state, 'answers', getEmptyAnswers());
 	}
 };
@@ -125,7 +125,7 @@ const actions = {
 	setupFreshQuestion({commit}) {
 		commit(types.CLEAR_QUIZ_QUESTION);
 	},
-	getSlideDataForQuizEditor({commit}, {slideNumber, screenId}) {
+	getSlideDataForQuizEditor({}, {slideNumber, screenId}) {
 		return getSlideshowId(screenId)
 			.then(slideshowId => {
 				return getSlideId(slideshowId, slideNumber);
@@ -146,7 +146,7 @@ const actions = {
 		commit(types.UPDATE_QUIZ_QUESTION, {deleted_at: new Date()});
 	},
 	async undeleteQuizQuestion({commit}, id) {
-		const {data} = await axios.put(getApiUrl(`quiz_questions/${id}/restore`));
+		await axios.put(getApiUrl(`quiz_questions/${id}/restore`));
 
 		commit(types.UPDATE_QUIZ_QUESTION, {deleted_at: null});
 	}

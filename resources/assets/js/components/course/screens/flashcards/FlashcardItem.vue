@@ -196,7 +196,6 @@
 
 <script>
 import {mapActions, mapMutations} from 'vuex';
-import {nextTick} from 'vue';
 import * as mutationsTypes from 'js/store/mutations-types';
 import {Quill as WnlQuill, Form as WnlForm, Submit as WnlSubmit} from 'js/components/global/form/index';
 import WnlTextButton from 'js/components/global/TextButton';

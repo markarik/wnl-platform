@@ -116,7 +116,7 @@
 
 <script>
 import {nextTick} from 'vue';
-import {cloneDeep, isEqual, get} from 'lodash';
+import {get} from 'lodash';
 
 export default {
 	name: 'ActiveFilters',

@@ -462,7 +462,7 @@ export default {
 		this.loadData();
 	},
 	watch: {
-		'$route' (newRoute, oldRoute) {
+		'$route' () {
 			if ( this.id !== this.$route.params.userId ) {
 				 this.loadData();
 			}

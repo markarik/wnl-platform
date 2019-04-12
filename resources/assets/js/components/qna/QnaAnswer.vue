@@ -202,7 +202,7 @@ export default {
 		}
 	},
 	watch: {
-		'$route' (newRoute, oldRoute) {
+		'$route' () {
 			if (this.shouldHighlight) {
 				this.refreshAnswer()
 					.then(() => {

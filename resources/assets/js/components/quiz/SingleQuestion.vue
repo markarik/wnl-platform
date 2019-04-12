@@ -111,7 +111,7 @@ export default {
 				.then(response => {
 					if (!response.data) this.hasError = true;
 				})
-				.catch(error => {
+				.catch(() => {
 					this.hasError = true;
 				});
 		},

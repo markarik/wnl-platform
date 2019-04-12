@@ -273,7 +273,7 @@ const mutations = {
 const actions = {
 	...reactionsActions,
 	...commentsActions,
-	changeSorting({commit, dispatch}, sorting) {
+	changeSorting({commit}, sorting) {
 		commit(types.QNA_CHANGE_SORTING, sorting);
 	},
 
@@ -331,7 +331,7 @@ const actions = {
 		});
 	},
 
-	fetchQuestion({commit, dispatch}, questionId) {
+	fetchQuestion({commit}, questionId) {
 		return new Promise((resolve, reject) => {
 			_getAnswers(questionId)
 				.then((response) => {
@@ -349,22 +349,22 @@ const actions = {
 				});
 		});
 	},
-	removeQuestion({commit, dispatch}, questionId) {
-		return new Promise((resolve, reject) => {
+	removeQuestion({commit}, questionId) {
+		return new Promise((resolve) => {
 			commit(types.QNA_REMOVE_QUESTION, {questionId});
 			resolve();
 		});
 	},
-	resolveQuestion({commit, dispatch}, questionId) {
+	resolveQuestion({commit}, questionId) {
 		return _resolveQuestion(questionId)
 			.then(() => commit(types.QNA_RESOLVE_QUESTION, {questionId}));
 	},
-	unresolveQuestion({commit, dispatch}, questionId) {
+	unresolveQuestion({commit}, questionId) {
 		return _resolveQuestion(questionId, false)
 			.then(() => commit(types.QNA_UNRESOLVE_QUESTION, {questionId}));
 	},
-	removeAnswer({commit, dispatch}, payload) {
-		return new Promise((resolve, reject) => {
+	removeAnswer({commit}, payload) {
+		return new Promise((resolve) => {
 			commit(types.QNA_REMOVE_ANSWER, {
 				questionId: payload.questionId,
 				answerId: payload.answerId,

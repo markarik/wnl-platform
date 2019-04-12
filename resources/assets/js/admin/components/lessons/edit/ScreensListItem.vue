@@ -99,8 +99,8 @@ export default {
 				type: 'warning',
 			}))
 				.then(
-					(resolve) => this.$emit('deleteScreen', this.screen.id),
-					(reject) => false
+					() => this.$emit('deleteScreen', this.screen.id),
+					() => false
 				);
 		}
 	},

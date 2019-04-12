@@ -27,7 +27,7 @@ const highlight = {
 			const element = {el: this.$refs.highlight, value: 0};
 			this.$refs.highlight.style.transition = 'background 5s';
 
-			const tween = new Tween(element)
+			new Tween(element)
 				.to({value: 1}, 2000)
 				.on('update', function() {
 					this.object.el.style.background = 'rgba(15, 150, 152, 0.2)';

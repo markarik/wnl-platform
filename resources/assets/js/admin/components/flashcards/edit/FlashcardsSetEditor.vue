@@ -105,7 +105,7 @@
 
 <script>
 import {isEqual} from 'lodash';
-import {mapGetters, mapActions, mapState} from 'vuex';
+import {mapActions, mapState} from 'vuex';
 import draggable from 'vuedraggable';
 
 import Form from 'js/classes/forms/Form';

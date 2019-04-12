@@ -438,10 +438,10 @@ export default {
 			});
 		},
 		getStats() {
-			return new Promise((resolve, reject) => {
+			return new Promise(() => {
 				return axios.get(getApiUrl('quiz_questions/stats'))
 					.then(({data}) => this.stats = data)
-					.catch(e => this.stats = null);
+					.catch(() => this.stats = null);
 			});
 		},
 		parseStats(source) {
@@ -495,7 +495,7 @@ export default {
 							? this.fetchDynamicFilters().then(this.setPlanRoute)
 							: this.setPlanRoute();
 					});
-			}).catch(e => false);
+			}).catch(() => false);
 		}
 	},
 	mounted() {
@@ -511,7 +511,7 @@ export default {
 		});
 	},
 	watch: {
-		'$route' (to, from) {
+		'$route' () {
 			!this.isChatMounted && this.isChatVisible && this.toggleChat();
 		},
 		'$route.query.chatChannel' (newVal) {

@@ -111,7 +111,7 @@ const mutations = {
 
 // Actions
 const actions = {
-	setLayout({ commit, getters }, layout) {
+	setLayout({ commit }, layout) {
 		commit(types.UI_CHANGE_LAYOUT, layout);
 	},
 	toggleSidenav({ commit }) {

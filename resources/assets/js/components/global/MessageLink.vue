@@ -11,7 +11,6 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import {getApiUrl} from 'js/utils/env';
 
 export default {
 	name: 'MessageLink',

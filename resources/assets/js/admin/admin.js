@@ -49,7 +49,7 @@ $wnl.logger = new Logger();
 $wnl.logger.debug('Starting admin application...');
 
 import Admin from 'js/admin/components/Admin.vue';
-const admin = new Vue({
+new Vue({
 	router,
 	store,
 	i18n,

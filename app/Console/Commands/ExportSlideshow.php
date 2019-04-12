@@ -61,6 +61,8 @@ class ExportSlideshow extends Command
 			->merge($this->getPresentables($subsections->pluck('id'), Subsection::class));
 		$images = $this->getImages($slides);
 
+
+
 		$data = [
 			'screen' => $screen->toArray(),
 			'slideshow' => $slideshow->toArray(),
@@ -70,6 +72,21 @@ class ExportSlideshow extends Command
 			'presentables' => $presentables->toArray(),
 			'images' => $images,
 		];
+
+		//delete unwanted keys for screen
+		unset($data['screen']['id']);
+		unset($data['screen']['discussion_id']);
+		unset($data['screen']['is_discussable']);
+		unset($data['screen']['sections']);
+
+		//delete unwanted keys for slides
+
+		foreach ($data['slides'] as $slide) {
+			unset($slide['id']);
+			// dd($slide);
+		}
+
+		dd($data['slides']);
 
 		Storage::put('exports/slideshow_export.json', json_encode($data));
 

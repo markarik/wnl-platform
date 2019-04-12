@@ -50,9 +50,6 @@ module.exports = {
 		'no-console': [
 			'off'
 		],
-		'no-case-declarations': [
-			'off'
-		],
 		'no-redeclare': [
 			'off'
 		],

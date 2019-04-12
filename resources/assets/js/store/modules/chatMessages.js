@@ -285,10 +285,11 @@ const actions = {
 			case SOCKET_EVENT_SEND_MESSAGE:
 				dispatch('onNewMessage', event);
 				break;
-			case SOCKET_EVENT_MARK_ROOM_AS_READ:
+			case SOCKET_EVENT_MARK_ROOM_AS_READ: {
 				const roomId = _.get(event, 'room.id');
 				roomId && dispatch('markRoomAsRead', roomId);
 				break;
+			}
 			}
 		});
 	},

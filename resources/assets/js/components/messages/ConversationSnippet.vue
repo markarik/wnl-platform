@@ -98,7 +98,6 @@
 
 <script>
 import { shortTimeFromMs } from 'js/utils/time';
-import { mapGetters } from 'vuex';
 import {last} from 'lodash';
 
 export default {

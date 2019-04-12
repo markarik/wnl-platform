@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash';
 import axios from 'axios';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';

@@ -38,7 +38,7 @@ const actions = {
 	pullTasks({commit, dispatch}, params) {
 		commit(types.IS_FETCHING, true);
 
-		return new Promise ((resolve, reject) => {
+		return new Promise ((resolve) => {
 			_getTasks(params)
 				.then(({data: response}) => {
 					_handleResponse({commit,dispatch}, response, resolve);
@@ -51,7 +51,7 @@ const actions = {
 				commit(types.ADD_TASK, task);
 			});
 	},
-	initModeratorsFeedListener({getters, dispatch}) {
+	initModeratorsFeedListener({dispatch}) {
 		dispatch('setupLiveListener', 'private-group.moderators');
 	},
 	updateTask({commit, dispatch}, payload) {

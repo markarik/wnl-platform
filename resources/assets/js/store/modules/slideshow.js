@@ -156,7 +156,7 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
-	setup({commit, dispatch, getters}, {id, type='App\\Models\\Slideshow'}) {
+	setup({dispatch}, {id, type='App\\Models\\Slideshow'}) {
 		return new Promise((resolve, reject) => {
 			dispatch('setupPresentablesWithReactions', {id, type})
 				.then(resolve)
@@ -200,7 +200,7 @@ const actions = {
 			})
 			.catch(() => commit(types.SLIDESHOW_LOADING_COMMENTS, false));
 	},
-	setupSlideComments({commit, dispatch}, {id, ...args}) {
+	setupSlideComments({dispatch}, {id, ...args}) {
 		return dispatch('setupSlideshowComments', {commentable_id: id, ...args});
 	},
 	resetModule({commit}) {

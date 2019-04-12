@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import * as types from 'js/store/mutations-types';
-import { set, delete as destroy } from 'vue';
+import { set} from 'vue';
 
 // Initial state
 const state = {

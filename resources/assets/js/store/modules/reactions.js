@@ -37,7 +37,7 @@ export const reactionsMutations = {
 };
 
 export const reactionsActions = {
-	setReaction({commit, dispatch}, payload) {
+	setReaction({commit}, payload) {
 		return new Promise((resolve, reject) => {
 			let data = {
 					'reactable_resource' : payload.reactableResource,

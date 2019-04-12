@@ -41,7 +41,6 @@
 </style>
 
 <script>
-import {nextTick} from 'vue';
 import {mapState, mapGetters} from 'vuex';
 import {uniqBy} from 'lodash';
 

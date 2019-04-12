@@ -1,4 +1,3 @@
-import * as types from 'js/store/mutations-types';
 import { mapActions } from 'vuex';
 
 const withChat = {

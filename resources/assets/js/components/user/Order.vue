@@ -362,14 +362,13 @@
 <script>
 import moment from 'moment';
 import axios from 'axios';
-import {mapActions, mapGetters, mapMutations} from 'vuex';
-import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env';
+import {mapActions, mapGetters} from 'vuex';
+import {getUrl, getApiUrl} from 'js/utils/env';
 import {gaEvent} from 'js/utils/tracking';
 import {Form, Text, Submit} from 'js/components/global/form';
 import P24Form from 'js/components/user/P24Form';
 import { swalConfig } from 'js/utils/swal';
 import {nextTick} from 'vue';
-import * as types from 'js/store/mutations-types';
 
 export default {
 	props: {

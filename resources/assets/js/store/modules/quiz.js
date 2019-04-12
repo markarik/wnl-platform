@@ -242,7 +242,7 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
-	async setupQuestions({commit, rootGetters, getters, state, dispatch}, resource) {
+	async setupQuestions({commit, rootGetters, dispatch}, resource) {
 		commit(types.QUIZ_IS_LOADED, false);
 
 		await dispatch('setupCurrentUser', {}, { root: true });
@@ -413,7 +413,7 @@ const actions = {
 		});
 	},
 
-	resolveQuestion({state, commit}, id) {
+	resolveQuestion({commit}, id) {
 		commit(types.QUIZ_RESOLVE_QUESTION, {id});
 	},
 
@@ -438,7 +438,7 @@ const actions = {
 		commit(types.QUIZ_COMPLETE);
 	},
 
-	resetState({state, commit}) {
+	resetState({commit}) {
 		commit(types.QUIZ_RESET_PROGRESS);
 		commit(types.QUIZ_IS_LOADED, true);
 		commit(types.QUIZ_SET_PAGINATION, {page: 1, last_page: 1});

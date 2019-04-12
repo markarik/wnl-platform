@@ -96,7 +96,7 @@ export default class Form {
 		return new Promise((resolve, reject) => {
 			axios[requestType](url, {...this.data(), ...payload})
 				.then(response => {
-					this.onSuccess(response.data);
+					this.onSuccess();
 
 					resolve(response.data);
 				})
@@ -131,10 +131,8 @@ export default class Form {
 
 	/**
 	 * Handle a successful form submission.
-	 *
-	 * @param {object} data
 	 */
-	onSuccess(data) {
+	onSuccess() {
 		this.errors.clear();
 	}
 

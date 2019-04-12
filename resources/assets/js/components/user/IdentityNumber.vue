@@ -120,7 +120,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { getApiUrl } from 'js/utils/env';
-import { get, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 
 export default {
 	name: 'IdentityNumber',

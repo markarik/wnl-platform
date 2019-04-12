@@ -33,7 +33,7 @@ const getters = {
 	getSection: (state) => (courseId, lessonId, screenId, sectionId) => {
 		return _.get(state.courses[courseId], `lessons[${lessonId}].screens[${screenId}].sections[${sectionId}]`);
 	},
-	getSavedLesson: (state, getters) => (courseId, lessonId, profileId) => {
+	getSavedLesson: (state) => (courseId, lessonId, profileId) => {
 		const storeValue = _.get(state.courses[courseId], `lessons[${lessonId}]`);
 
 		if (storeValue) {

@@ -172,7 +172,7 @@ export default {
 				this.allowDoubleclick = true;
 			}, 500);
 		},
-		onAnswerDoubleClick({answer}) {
+		onAnswerDoubleClick() {
 			this.allowDoubleclick && this.displayResults && this.nextQuestion();
 		},
 		trackQuizQuestionChanged() {

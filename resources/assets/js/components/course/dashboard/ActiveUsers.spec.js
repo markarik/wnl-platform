@@ -22,7 +22,7 @@ describe('ActiveUsers.vue', () => {
 				users: {
 					namespaced: true,
 					getters: {
-						activeUsers: () => (channel) => [
+						activeUsers: () => () => [
 							{id: 7, profile: {full_name: 'foo bar', avatar: null}},
 							{id: 10, profile: {full_name: 'buzz fizz', avatar: null}},
 						]
@@ -50,7 +50,7 @@ describe('ActiveUsers.vue', () => {
 				users: {
 					namespaced: true,
 					getters: {
-						activeUsers: () => (channel) => []
+						activeUsers: () => () => []
 					}
 				}
 			};

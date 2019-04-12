@@ -47,8 +47,9 @@ class MyOrdersModule
 		$browser->click('.order[data-order-id="' . $order->id . '"] [data-button="pay-next-instalment"]');
 	}
 
-	public function useCoupon(BethinkBrowser $browser, $value) {
+	public function useCoupon(BethinkBrowser $browser, $value, $type = 'percentage') {
 		$coupon = factory(Coupon::class)->create([
+			'type' => $type,
 			'value' => $value
 		]);
 
@@ -56,6 +57,7 @@ class MyOrdersModule
 
 		$browser
 			->visit(new MyOrdersPage())
+			->waitUntilMissing('@loading-overlay')
 			->click('@discounts-tab')
 			->click('@add-discount')
 			->type('code', $coupon->code)
@@ -120,5 +122,15 @@ class MyOrdersModule
 		$browser
 			->on(new MyOrdersPage)
 			->click('@album-order-link');
+	}
+
+	public function getRefund(BethinkBrowser $browser, int $amount)
+	{
+		$order = $browser->order;
+		$order->refresh();
+		// That's what we do in InvoiceIncorrect command
+		$order->paid_amount -= $amount;
+		$order->save();
+		$browser->refresh();
 	}
 }

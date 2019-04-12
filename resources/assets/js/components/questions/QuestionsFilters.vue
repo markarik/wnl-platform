@@ -89,17 +89,12 @@
 </style>
 
 <script>
-import {isEmpty, uniq} from 'lodash';
+import {uniq} from 'lodash';
 import {mapActions, mapGetters} from 'vuex';
 
 import Accordion from 'js/components/global/accordion/Accordion';
 import ActiveFilters from 'js/components/questions/ActiveFilters';
 import QuestionsSearch from 'js/components/questions/QuestionsSearch';
-
-const config = {
-	flattened: ['resolution'],
-	expanded: ['subjects'],
-};
 
 export default {
 	name: 'QuestionsFilters',

@@ -28,7 +28,7 @@ export default class Logger {
 		};
 	}
 
-	constructor(options = {}) {
+	constructor() {
 		this.level     = envValue('APP_LOG_LEVEL');
 		this.levelCode = Logger.LEVELS[this.level];
 

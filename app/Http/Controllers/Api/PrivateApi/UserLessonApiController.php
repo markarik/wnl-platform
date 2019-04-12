@@ -114,16 +114,17 @@ class UserLessonApiController extends ApiController
 			return $this->respondForbidden();
 		}
 
-		$userLessons = UserLesson::where('user_id', $userId)->get();
-
-		$csvData = [];
-
-		$csvData = $userLessons
-			->sortBy('start_date')
+		$csvData = $user->getLessonsAvailability()
+			->filter(function($userLesson) {
+				return $userLesson->is_required;
+			})
+			->sortBy(function($userLesson) {
+				return $userLesson->getStartDate();
+			})
 			->map(function($userLesson) {
 				return [
-					"name" => $userLesson->lesson->name,
-					"start_date" => $userLesson->start_date->format('m/d/Y')
+					"name" => $userLesson->name,
+					"start_date" => $userLesson->getStartDate()->setTimezone('Europe/Warsaw')->format('m/d/Y')
 				];
 			});
 

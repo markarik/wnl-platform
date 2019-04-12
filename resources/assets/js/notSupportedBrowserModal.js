@@ -61,11 +61,11 @@
 
 	function supportedBrowsersRules() {
 		return buildRules([
-			['chrome', /(?!Chrom.*OPR)Chrom(?:e|ium)\/([0-9\.]+)(:?\s|$)/],
-			['firefox', /Firefox\/([0-9\.]+)(?:\s|$)/],
-			['ios', /Version\/([0-9\._]+).*Mobile.*Safari.*/],
-			['safari', /Version\/([0-9\._]+).*Safari/],
-			['chrome-ios', /CriOS\/([0-9\.]+).*Mobile.*Safari.*/]
+			['chrome', /(?!Chrom.*OPR)Chrom(?:e|ium)\/([0-9.]+)(:?\s|$)/],
+			['firefox', /Firefox\/([0-9.]+)(?:\s|$)/],
+			['ios', /Version\/([0-9._]+).*Mobile.*Safari.*/],
+			['safari', /Version\/([0-9._]+).*Safari/],
+			['chrome-ios', /CriOS\/([0-9.]+).*Mobile.*Safari.*/]
 		]);
 	}
 

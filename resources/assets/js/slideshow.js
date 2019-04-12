@@ -66,7 +66,7 @@ const setupHandshake = () => {
 	return new Postmate.Model({
 		changeBackground: (background) => {
 			let containerClass = container.className,
-				backgroundClassExp = /[a-z]+\-custom\-background/g;
+				backgroundClassExp = /[a-z]+-custom-background/g;
 
 			if (backgroundClassExp.test(containerClass)) {
 				container.className = containerClass.replace(backgroundClassExp, `${background}-custom-background`);

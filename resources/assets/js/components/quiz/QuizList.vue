@@ -147,7 +147,7 @@ export default {
 							reject();
 						}
 					})
-					.catch(e => reject());
+					.catch(() => reject());
 			});
 		},
 		verify() {

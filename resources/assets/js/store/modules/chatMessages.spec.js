@@ -64,7 +64,7 @@ describe('chatMessages module', () => {
 				expect(dispatchSpy).to.have.been.callCount(payload.length);
 			});
 		});
-		describe('onNewMessage', done => {
+		describe('onNewMessage', () => {
 			it('new message in public room', done => {
 				const payload = {
 					room: {

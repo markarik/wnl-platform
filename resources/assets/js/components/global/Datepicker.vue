@@ -81,7 +81,7 @@ export default {
 			this.datepicker.redraw();
 			this.datepicker.jumpToDate();
 		},
-		setDate(newDate, oldDate) {
+		setDate(newDate) {
 			newDate && this.datepicker.setDate(newDate);
 		},
 	},

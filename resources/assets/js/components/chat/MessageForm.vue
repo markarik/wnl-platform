@@ -101,8 +101,8 @@ export default{
 					tab: false,
 					handleEnter: {
 						key: 13,
-						handler: (event) => {
-							this.sendMessage(event);
+						handler: () => {
+							this.sendMessage();
 							return false;
 						}
 					}
@@ -149,7 +149,7 @@ export default{
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		sendMessage(event) {
+		sendMessage() {
 			if (this.sendingDisabled) {
 				return false;
 			}
@@ -205,7 +205,7 @@ export default{
 				}
 			}
 		},
-		onInput(input) {
+		onInput() {
 			this.message = this.quillEditor.quill.getText().trim();
 			this.mentions = this.getMentions();
 			this.content = this.quillEditor.editor.innerHTML;

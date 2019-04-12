@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import * as types from 'js/store/mutations-types';
 import {getApiUrl} from 'js/utils/env';
 import {modelToResourceMap} from 'js/utils/config';
@@ -35,7 +34,7 @@ const getters = {
 	},
 	categories: (state) => state.categories,
 	slidesContent: (state) => state.slidesContent,
-	getCategoryByName: (state, getters) => (categoryName) => getters.categories.find((category) => {
+	getCategoryByName: (state, getters) => () => getters.categories.find(() => {
 		return false;
 	})
 };
@@ -115,7 +114,7 @@ const actions = {
 		}).then(({data}) => {
 			commit(types.COLLECTIONS_SET_SLIDES, data);
 			commit(types.SLIDES_LOADING, false);
-		}).catch((error) => {
+		}).catch(() => {
 			commit(types.SLIDES_LOADING, false);
 		});
 	},
@@ -124,7 +123,7 @@ const actions = {
 			data && data.length && commit(types.COLLECTIONS_APPEND_SLIDE, data[0]);
 		});
 	},
-	removeSlideFromCollection({commit, state}, slideId) {
+	removeSlideFromCollection({commit}, slideId) {
 		commit(types.COLLECTIONS_REMOVE_SLIDE, slideId);
 	},
 	deleteCollection({rootGetters}) {

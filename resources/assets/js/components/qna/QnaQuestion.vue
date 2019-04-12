@@ -363,7 +363,7 @@ export default {
 		}
 	},
 	watch: {
-		'$route' (newRoute, oldRoute) {
+		'$route' () {
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
 				this.dispatchFetchQuestion()
 					.then(() => this.scrollAndHighlight());

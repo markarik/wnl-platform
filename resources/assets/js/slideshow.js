@@ -181,7 +181,7 @@ const setupHandshake = () => {
 	});
 };
 
-const promisedChild = setupHandshake()
+setupHandshake()
 	.then((parentWindow) => {
 		parent = parentWindow;
 		parent.emit('loaded', true);
@@ -310,7 +310,7 @@ function keyDown(e, parent) {
 }
 
 function setBookmarkClickListener(parent) {
-	$('.bookmark').click(function (event) {
+	$('.bookmark').click(function () {
 		toggleBookmark(parent);
 	});
 }

@@ -387,10 +387,10 @@ export default {
 		this.scrollableContainer.removeEventListener('scroll', this.onScroll);
 	},
 	watch: {
-		hasStickyHeader(to, from) {
+		hasStickyHeader(to) {
 			this.hideTime = to;
 		},
-		lastPage(to, from) {
+		lastPage(to) {
 			if (to < this.currentPage) this.currentPage = to;
 		},
 	}

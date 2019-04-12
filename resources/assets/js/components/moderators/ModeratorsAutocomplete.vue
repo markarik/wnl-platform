@@ -31,8 +31,6 @@
 </style>
 
 <script>
-import {KEYS} from 'js/consts/keys';
-
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
 

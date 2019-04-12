@@ -182,7 +182,6 @@
 </style>
 
 <script>
-import { nextTick } from 'vue';
 import { mapActions, mapGetters } from 'vuex';
 import _ from 'lodash';
 

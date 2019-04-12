@@ -31,10 +31,10 @@ export const actions = {
 		commit(types.GLOBAL_ALERTS_ADD_ALERT, {id, ...paylaod});
 		return id;
 	},
-	closeAlert({commit, state}, payload) {
+	closeAlert({commit}, payload) {
 		commit(types.GLOBAL_ALERTS_CLOSE_ALERT, payload);
 	},
-	addAutoDismissableAlert({commit, dispatch}, {timeout, ...payload}) {
+	addAutoDismissableAlert({dispatch}, {timeout, ...payload}) {
 		const timeoutWithDefault = timeout || 5000;
 		dispatch('addAlert', payload)
 			.then(id => {

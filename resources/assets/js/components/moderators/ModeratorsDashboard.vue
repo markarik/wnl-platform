@@ -341,7 +341,6 @@ export default {
 			this.pullTasks(this.buildRequestParams());
 		},
 		search(user = {}) {
-			const {filters, ...rest} = this.buildRequestParams();
 			this.autocompleteUser = user;
 
 			this.pullTasks(this.buildRequestParams())
@@ -401,7 +400,7 @@ export default {
 		});
 
 		Promise.all([promisedTasks, promisedFilters])
-			.then(([tasks, filtersList]) => {
+			.then(([, filtersList]) => {
 				this.moderators = filtersList.data['task-assignee'];
 
 				this.labelFilters = this.parseSubjectFilters(filtersList.data['task-labels']);

@@ -61,7 +61,7 @@ const WnlSocket = {
 			eventsQueue.start();
 		});
 
-		const onSocketConnectionError = (err) => {
+		const onSocketConnectionError = () => {
 			store.dispatch(SOCKET_CONNECTION_ERROR);
 			socket.off('connect_error');
 		};

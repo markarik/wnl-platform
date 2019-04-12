@@ -11,7 +11,7 @@
 <script>
 import axios from 'axios';
 import {getApiUrl} from 'js/utils/env';
-import {debounce, isEmpty} from 'lodash';
+import {isEmpty} from 'lodash';
 
 const defaultMessage = 'Szukam powiązanych pytań...';
 
@@ -33,7 +33,7 @@ export default {
 		},
 	},
 	methods: {
-		debouncedGetLinkedQuestions: _.debounce(function (to, from) {
+		debouncedGetLinkedQuestions: _.debounce(function () {
 			this.setLinkedQuestions();
 		}, 300, {leading: false, trailing: true}),
 		getLinkedQuestions() {
@@ -58,7 +58,7 @@ export default {
 				.then((response) => {
 					this.linkedQuestions = response;
 				})
-				.catch((e) => {
+				.catch(() => {
 					this.linkedQuestions = 'Nie powiodło się...';
 				});
 		},

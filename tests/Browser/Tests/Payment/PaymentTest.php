@@ -101,6 +101,62 @@ class PaymentTest extends DuskTestCase
 		});
 	}
 
+	public function testPayTwoInstalmentsAndAddCoupon()
+	{
+		$this->browse(function (BethinkBrowser $browser) {
+			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
+			(new PersonalDataModule())->submitNoInvoice($browser);
+			(new ConfirmOrderModule())->assertInstalments($browser);
+			(new ConfirmOrderModule())->payByInstalmentsNow($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '750.00');
+			(new MyOrdersModule())->assertOrderPlaced($browser);
+			(new MyOrdersModule())->assertInstalment($browser, 1, '750zł / 750zł');
+			(new MyOrdersModule())->assertInstalment($browser, 2, '0zł / 375zł');
+			(new MyOrdersModule())->assertInstalment($browser, 3, '0zł / 375zł');
+			(new MyOrdersModule())->payNextInstalment($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '375.00');
+			(new MyOrdersModule())->assertInstalment($browser, 1, '750zł / 750zł');
+			(new MyOrdersModule())->assertInstalment($browser, 2, '375zł / 375zł');
+			(new MyOrdersModule())->assertInstalment($browser, 3, '0zł / 375zł');
+			(new MyOrdersModule())->useCoupon($browser, 100, 'amount');
+			(new MyOrdersModule())->assertInstalment($browser, 1, '700zł / 700zł');
+			(new MyOrdersModule())->assertInstalment($browser, 2, '350zł / 350zł');
+			(new MyOrdersModule())->assertInstalment($browser, 3, '75zł / 350zł');
+			(new MyOrdersModule())->payNextInstalment($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '275.00');
+			(new MyOrdersModule())->assertPaid($browser, '1400zł / 1400zł');
+		});
+	}
+
+	public function testPayThreeInstalmentsAndAddCoupon()
+	{
+		$this->browse(function (BethinkBrowser $browser) {
+			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
+			(new PersonalDataModule())->submitNoInvoice($browser);
+			(new ConfirmOrderModule())->assertInstalments($browser);
+			(new ConfirmOrderModule())->payByInstalmentsNow($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '750.00');
+			(new MyOrdersModule())->assertOrderPlaced($browser);
+			(new MyOrdersModule())->assertInstalment($browser, 1, '750zł / 750zł');
+			(new MyOrdersModule())->assertInstalment($browser, 2, '0zł / 375zł');
+			(new MyOrdersModule())->assertInstalment($browser, 3, '0zł / 375zł');
+			(new MyOrdersModule())->payNextInstalment($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '375.00');
+			(new MyOrdersModule())->assertInstalment($browser, 1, '750zł / 750zł');
+			(new MyOrdersModule())->assertInstalment($browser, 2, '375zł / 375zł');
+			(new MyOrdersModule())->assertInstalment($browser, 3, '0zł / 375zł');
+			(new MyOrdersModule())->payNextInstalment($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '375.00');
+			(new MyOrdersModule())->assertPaid($browser, '1500zł / 1500zł');
+			(new MyOrdersModule())->useCoupon($browser, 100, 'amount');
+			(new MyOrdersModule())->assertPaid($browser, '1500zł, do zwrotu 100zł');
+			(new MyOrdersModule())->getRefund($browser, 100);
+			(new MyOrdersModule())->assertPaid($browser, '1400zł / 1400zł');
+		});
+	}
+
 	public function testOrderWithCouponNoStuddyBuddy() {
 		$this->browse(function (BethinkBrowser $browser) {
 			(new VoucherModule())->code10Percent($browser);

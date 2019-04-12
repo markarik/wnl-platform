@@ -5,7 +5,7 @@ import {getApiUrl} from 'js/utils/env';
 export const STATUS_IN_PROGRESS = 'in-progress';
 export const STATUS_COMPLETE = 'complete';
 
-const setCourseProgress = ({courseId, lessonId, profileId, ...props}, value) => {
+const setCourseProgress = ({courseId, profileId}, value) => {
 	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}`), value);
 };
 
@@ -16,7 +16,6 @@ const setLessonProgress = ({courseId, lessonId, profileId}, value) => {
 };
 
 const completeSection = (lessonState, payload) => {
-	const {screenId, sectionId} = payload;
 	const stateWithScreen = _getScreenProgress(lessonState, payload);
 	const stateWithSections = _getSectionProgress(stateWithScreen, payload);
 
@@ -26,7 +25,7 @@ const completeSection = (lessonState, payload) => {
 };
 
 const completeSubsection = (lessonState, payload) => {
-	const {sectionId, screenId, subsectionId, route} = payload;
+	const {sectionId, screenId, subsectionId} = payload;
 	const stateWithScreen = _getScreenProgress(lessonState, payload);
 	const stateWithSections = _getSectionProgress(stateWithScreen, payload);
 
@@ -136,7 +135,7 @@ const _getScreenProgress = (lessonState = {}, {route, screenId}) => {
 	return updatedState;
 };
 
-const _getSectionProgress = (lessonState = {}, {route, screenId, sectionId}) => {
+const _getSectionProgress = (lessonState = {}, {screenId, sectionId}) => {
 	const updatedState = {...lessonState};
 
 	if (!updatedState.screens[screenId].sections) {

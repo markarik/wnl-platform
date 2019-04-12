@@ -241,7 +241,7 @@ const mutations = {
 
 // Actions
 const actions = {
-	setup({commit, dispatch, rootGetters}, courseId) {
+	setup({commit, dispatch}, courseId) {
 		return new Promise((resolve, reject) => {
 			Promise.all([
 				dispatch('setStructure', courseId),

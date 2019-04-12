@@ -11,6 +11,8 @@ class Order extends Model
 {
 	use Searchable;
 
+	const PAYMENT_METHOD_INSTALMENTS = 'instalments';
+
 	protected $casts = [
 		'paid'        => 'boolean',
 		'canceled'    => 'boolean',
@@ -110,11 +112,9 @@ class Order extends Model
 
 	public function getInstalmentsAttribute()
 	{
+		$allPaid = false;
 		if ($this->paid_amount >= $this->total_with_coupon) {
-			return [
-				'allPaid'     => true,
-				'instalments' => Collection::make(),
-			];
+			$allPaid = true;
 		}
 
 		$orderInstalments = $this->generateAndSavePaymentSchedule();
@@ -132,7 +132,7 @@ class Order extends Model
 		}, 0.0);
 
 		return [
-			'allPaid'     => false,
+			'allPaid'     => $allPaid,
 			'instalments' => $orderInstalments,
 			'nextPayment' => $nextPayment,
 			'total'       => $totalLeft,
@@ -159,7 +159,7 @@ class Order extends Model
 
 				$valueToDistribute -= $amount;
 
-				if ($paidToDistribute >= $amount) {
+				if ($paidToDistribute >= $amount && $orderNumber !== $this->product->instalments->count()) {
 					$paidAmount = $amount;
 					$paidToDistribute -= $amount;
 				} else {
@@ -188,7 +188,7 @@ class Order extends Model
 	public function getIsOverdueAttribute()
 	{
 		$now = Carbon::now();
-		if ($this->method === 'instalments') {
+		if ($this->method === self::PAYMENT_METHOD_INSTALMENTS) {
 			return (bool) $this->orderInstalments()
 				->whereRaw('paid_amount < amount')
 				->where('due_date', '<', $now)
@@ -217,7 +217,7 @@ class Order extends Model
 
 	public function paidAmountSufficient()
 	{
-		if ($this->method === 'instalments') {
+		if ($this->method === self::PAYMENT_METHOD_INSTALMENTS) {
 			/** @var Collection $instalments */
 			$instalments = $this->instalments['instalments'];
 			/** @var OrderInstalment $firstInstalment */

@@ -116,7 +116,7 @@ export const nestedSetActions = {
 			commit(types.SET_NESTED_SET_LOADING, false);
 		}
 	},
-	async create({commit, state, getters, dispatch}, nodeData) {
+	async create({commit, getters, dispatch}, nodeData) {
 		commit(types.SET_NESTED_SET_SAVING, true);
 		try {
 			const node = await dispatch('_post', nodeData);
@@ -132,7 +132,7 @@ export const nestedSetActions = {
 		}
 	},
 
-	async update({commit, state, getters, dispatch}, nodeData) {
+	async update({commit, getters, dispatch}, nodeData) {
 		commit(types.SET_NESTED_SET_SAVING, true);
 		try {
 			const node = await dispatch('_put', nodeData);
@@ -152,7 +152,7 @@ export const nestedSetActions = {
 		}
 	},
 
-	async delete({commit, state, getters, dispatch}, node) {
+	async delete({commit, getters, dispatch}, node) {
 		commit(types.SET_NESTED_SET_SAVING, true);
 		try {
 			await dispatch('_delete', node);

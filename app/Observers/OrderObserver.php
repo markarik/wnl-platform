@@ -58,6 +58,10 @@ class OrderObserver
 		) {
 			$this->handleCouponChange($order);
 		}
+
+		if($order->isDirty(['paid_amount'])){
+			$order->generateAndSavePaymentSchedule();
+		}
 	}
 
 	public function routeNotificationForSlack()

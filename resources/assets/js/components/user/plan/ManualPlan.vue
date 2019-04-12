@@ -223,7 +223,7 @@ export default {
 					$wnl.logger.capture(error);
 					this.addAutoDismissableAlert(this.alertError);
 				}
-			}).catch(e => {
+			}).catch(() => {
 				// ignore cancellation of swal
 			});
 		},

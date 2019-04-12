@@ -385,7 +385,7 @@ const routes = [
 					...data,
 					query: to.query
 				});
-			}).catch(err => {
+			}).catch(() => {
 				return next(from);
 			});
 		}
@@ -400,7 +400,7 @@ const routes = [
 const router =  new Router({
 	mode: 'history',
 	linkActiveClass: 'is-active',
-	scrollBehavior: (to, from, savedPosition) => {
+	scrollBehavior: (to, from) => {
 		if (to.query && to.query.noScroll) {
 			return;
 		}

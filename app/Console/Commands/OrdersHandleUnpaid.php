@@ -104,6 +104,7 @@ class OrdersHandleUnpaid extends CommandWithMonitoring
 				$query
 					->whereRaw('order_instalments.paid_amount < order_instalments.amount')
 					->whereDate('due_date', "<=", $beforeDue)
+					// Account is suspended after 4 days from the last sent reminder. For safety use longer period and double-check
 					->whereDate('due_date', ">=", Carbon::today()->subDays(7));
 			})
 			->where('method', 'instalments')

@@ -55,10 +55,6 @@ class SlideshowExport extends Command
 
 		$slideshow = $screen->slideshow;
 		$slides = $slideshow->slides;
-		dd($slides->count());
-		die;
-
-
 		$sections = $screen->sections;
 		$subsections = $this->getSubsections($sections);
 		$presentables = collect()
@@ -82,11 +78,10 @@ class SlideshowExport extends Command
 		unset($data['screen']['sections']);
 
 		//delete unwanted keys for slides
-//		dd($data['slides'][0]);
-//		foreach ($data['slides'] as $slide) {
-//			unset($slide['id']);
-//			dd($slide);
-//		}
+		foreach ($data['slides'] as $key => $slide) {
+			unset($slide['id']);
+			$slides[$key] = $slide;
+		}
 
 //		dd($data['slides']);
 

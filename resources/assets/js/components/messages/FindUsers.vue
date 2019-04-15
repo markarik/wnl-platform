@@ -10,7 +10,7 @@
 			/>
 		</div>
 		<div class="wnl-find-users-info notification aligncenter" v-if="info">
-			{{ info }}
+			{{info}}
 		</div>
 	</div>
 </template>

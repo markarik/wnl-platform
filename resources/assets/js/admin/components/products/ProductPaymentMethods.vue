@@ -26,7 +26,7 @@
 					/>
 				</td>
 				<td>
-					<label :for="method.id">{{ methodNames[method.slug] }}</label>
+					<label :for="method.id">{{methodNames[method.slug]}}</label>
 				</td>
 				<td>
 					<wnl-datepicker
@@ -68,10 +68,10 @@
 				</thead>
 				<tbody>
 				<tr v-for="(instalment, index) in instalments" :key="index">
-					<td>{{ instalment.order_number }}</td>
-					<td>{{ instalmentTypes[instalment.value_type] }}</td>
-					<td>{{ instalment.value }}{{ instalmentValueUnit(instalment.value_type) }}</td>
-					<td>{{ instalment.due_days || '-'}}</td>
+					<td>{{instalment.order_number}}</td>
+					<td>{{instalmentTypes[instalment.value_type]}}</td>
+					<td>{{instalment.value}}{{instalmentValueUnit(instalment.value_type)}}</td>
+					<td>{{instalment.due_days || '-'}}</td>
 					<td>
 						<wnl-datepicker
 							v-if="!instalment.due_days"

@@ -14,8 +14,8 @@
 					<strong
 						class="author"
 						:class="{'author-forgotten': author.deleted_at}"
-						@click="showModal">{{ fullName }}</strong>
-					<small class="wnl-message-time">{{ formattedTime }}</small>
+						@click="showModal">{{fullName}}</strong>
+					<small class="wnl-message-time">{{formattedTime}}</small>
 				</p>
 				<p class="wnl-message-content" v-html="content"></p>
 			</div>

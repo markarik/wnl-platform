@@ -4,7 +4,7 @@
 			<wnl-avatar :full-name="item.full_name" :url="item.avatar"></wnl-avatar>
 		</div>
 		<div class="autocomplete-box__text">
-			{{ item.full_name }}
+			{{item.full_name}}
 		</div>
 	</div>
 </template>

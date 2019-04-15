@@ -5,14 +5,14 @@
 
 		<div class="welcome-container">
 			<div class="welcome">
-				{{ $t('dashboard.welcome', {currentUserName}) }} <wnl-emoji name="wave"/>
+				{{$t('dashboard.welcome', {currentUserName})}} <wnl-emoji name="wave"/>
 			</div>
 			<div class="access-display" v-if="currentUserSubscriptionActive">
 				<div>
 					Twój dostęp do kursu jest aktywny do:&nbsp;
 				</div>
 				<div class="access-display__date">
-					{{ userFriendlySubscriptionDate }}
+					{{userFriendlySubscriptionDate}}
 				</div>
 			</div>
 		</div>
@@ -27,9 +27,9 @@
 		</div>
 
 		<div class="news-heading metadata">
-			{{ $t('dashboard.news.heading') }}
+			{{$t('dashboard.news.heading')}}
 			<span class="news-heading-description">
-				{{ $t('dashboard.news.description') }}
+				{{$t('dashboard.news.description')}}
 			</span>
 		</div>
 		<div class="current-view-controls">

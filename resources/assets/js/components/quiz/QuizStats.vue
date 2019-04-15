@@ -4,7 +4,7 @@
 			<div class="level-item has-text-centered">
 				<div>
 					<p class="heading">Pierwszy wynik</p>
-					<p class="title">{{ firstAttemptScore }}</p>
+					<p class="title">{{firstAttemptScore}}</p>
 				</div>
 			</div>
 		</div>

@@ -3,7 +3,7 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.progressReset.header') }}
+					{{$t('user.progressReset.header')}}
 				</div>
 			</div>
 		</div>

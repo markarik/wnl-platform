@@ -9,12 +9,12 @@
 		</div>
 
 		<wnl-form class="margin vertical" name="MyBillingData" method="put" :resource-route="resourceRoute" populate="true">
-			<wnl-form-text name="company_name">{{ $t('user.address.companyName') }}</wnl-form-text>
-			<wnl-form-text name="vat_id">{{ $t('user.address.vatId') }}</wnl-form-text>
-			<wnl-form-text name="address">{{ $t('user.address.street') }}</wnl-form-text>
-			<wnl-form-text name="zip">{{ $t('user.address.zip') }}</wnl-form-text>
-			<wnl-form-text name="city">{{ $t('user.address.city') }}</wnl-form-text>
-			<wnl-form-text name="country">{{ $t('user.address.country') }}</wnl-form-text>
+			<wnl-form-text name="company_name">{{$t('user.address.companyName')}}</wnl-form-text>
+			<wnl-form-text name="vat_id">{{$t('user.address.vatId')}}</wnl-form-text>
+			<wnl-form-text name="address">{{$t('user.address.street')}}</wnl-form-text>
+			<wnl-form-text name="zip">{{$t('user.address.zip')}}</wnl-form-text>
+			<wnl-form-text name="city">{{$t('user.address.city')}}</wnl-form-text>
+			<wnl-form-text name="country">{{$t('user.address.country')}}</wnl-form-text>
 		</wnl-form>
 	</div>
 </template>

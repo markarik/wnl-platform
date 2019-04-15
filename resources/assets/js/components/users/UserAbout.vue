@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-user-about">
 		<div class="about-title">
-			<p>{{ $t('user.userProfile.about') }}</p>
+			<p>{{$t('user.userProfile.about')}}</p>
 		</div>
 		<div class="user-infos">
 			<wnl-user-info

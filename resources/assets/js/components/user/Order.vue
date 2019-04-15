@@ -8,10 +8,10 @@
 					</figure>
 				</div>
 				<div class="media-content">
-					<p class="title is-4">{{ order.product.name }}</p>
-					<p class="subtitle is-6">{{ orderNumber }}
+					<p class="title is-4">{{order.product.name}}</p>
+					<p class="subtitle is-6">{{orderNumber}}
 						<br>
-						<small>Cena produktu: {{ order.product.price }}zł, zamówienie złożono {{ order.created_at }}
+						<small>Cena produktu: {{order.product.price}}zł, zamówienie złożono {{order.created_at}}
 						</small>
 					</p>
 				</div>
@@ -19,8 +19,8 @@
 			<div class="level">
 				<div class="level-left">
 					<div class="tags">
-						<span :class="{'is-success': order.paid, 'tag': true }">{{ paymentStatus }}</span>
-						<span class="tag">Metoda płatności: {{ paymentMethod }}</span>
+						<span :class="{'is-success': order.paid, 'tag': true }">{{paymentStatus}}</span>
+						<span class="tag">Metoda płatności: {{paymentMethod}}</span>
 						<slot name="order-tags"></slot>
 					</div>
 				</div>
@@ -29,8 +29,8 @@
 			<div v-if="!order.canceled">
 				<!-- COUPONS BEGINS -->
 				<p v-if="coupon">
-					<strong>Naliczona zniżka: "{{ coupon.name }}" o wartości {{ getCouponValue(coupon) }}</strong><br>
-					Cena ze zniżką: {{ order.total }}zł
+					<strong>Naliczona zniżka: "{{coupon.name}}" o wartości {{getCouponValue(coupon)}}</strong><br>
+					Cena ze zniżką: {{order.total}}zł
 				</p>
 
 				<!-- STUDY BUDDY BEGINS -->
@@ -99,7 +99,7 @@
 					<!-- Instalments -->
 					<div class="payment-details" v-if="!isFullyPaid">
 						<p class="big strong" v-if="order.method === 'transfer'">
-							Kwota: {{ order.total }}zł
+							Kwota: {{order.total}}zł
 						</p>
 						<div v-if="order.method === 'instalments'">
 
@@ -116,8 +116,8 @@
 								</button>
 							</p>
 							<p class="metadata aligncenter margin vertical">
-								Kolejna rata: <strong>{{ order.instalments.nextPayment.left_amount }}zł do
-								{{ instalmentDate(order.instalments.nextPayment.due_date) }}</strong>
+								Kolejna rata: <strong>{{order.instalments.nextPayment.left_amount}}zł do
+								{{instalmentDate(order.instalments.nextPayment.due_date)}}</strong>
 							</p>
 
 							<table class="table is-striped">
@@ -129,7 +129,7 @@
 								<tr v-for="(instalment, index) in order.instalments.instalments" :key="instalment.id">
 									<td>{{index + 1}}</td>
 									<td>
-										{{ instalmentDate(instalment.due_date) }}
+										{{instalmentDate(instalment.due_date)}}
 									</td>
 									<td class="instalment-amount" :data-instalment="index + 1">
 										{{instalment.amount - instalment.left_amount}}zł / {{instalment.amount}}zł
@@ -138,7 +138,7 @@
 								<tr>
 									<td>Razem</td>
 									<td></td>
-									<td>{{ order.total }}zł</td>
+									<td>{{order.total}}zł</td>
 								</tr>
 							</table>
 
@@ -149,7 +149,7 @@
 								<p>Dane do przelewu</p>
 								<small>
 									<p class="big">Tytuł przelewu:</p>
-									<strong>Zamówienie numer {{ order.id }}</strong><br>
+									<strong>Zamówienie numer {{order.id}}</strong><br>
 									bethink sp. z o.o.<br>
 									ul. Henryka Sienkiewicza 8/1<br>
 									60-817, Poznań<br>
@@ -173,7 +173,7 @@
 								<span class="icon is-small">
 									<i :class="`fa fa-${tabContent.icon}`"></i>
 								</span>
-								{{ tabContent.text }}
+								{{tabContent.text}}
 							</a>
 						</li>
 					</ul>
@@ -252,13 +252,13 @@
 				<span class="icon is-small status-icon">
 					<i class="fa" :class="iconClass"></i>
 				</span>
-				{{ paymentStatus }}
+				{{paymentStatus}}
 			</div>
 			<div class="card-footer-item cancel-order" v-if="!order.paid && !order.canceled && order.total > 0">
 				<a title="Anuluj zamówienie" @click="cancelOrder">
 					<span class="icon is-small status-icon">
 						<i class="fa fa-times"></i>
-					</span> {{ $t('orders.cancel.button') }}
+					</span> {{$t('orders.cancel.button')}}
 				</a>
 			</div>
 		</div>

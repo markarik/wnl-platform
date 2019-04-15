@@ -7,7 +7,7 @@
 						Twój dostęp do kursu jest aktywny do:&nbsp;
 					</div>
 					<div class="big strong">
-						{{ userFriendlySubscriptionDate }}
+						{{userFriendlySubscriptionDate}}
 					</div>
 				</div>
 			</div>
@@ -24,7 +24,7 @@
 		<div class="wnl-screen-title">
 			<div class="level-left">
 				<div class="big strong">
-					{{ $t('lessonsAvailability.viewsExplanation') }}
+					{{$t('lessonsAvailability.viewsExplanation')}}
 				</div>
 			</div>
 		</div>
@@ -34,7 +34,7 @@
 				:class="{'is-active': view.isActive}"
 				:key="view.title"
 				@click="toggleView(view)"
-			>{{ view.title }}
+			>{{view.title}}
 				<span class="icon is-small">
 					<i class="fa"
 						:class="[view.isActive ? 'fa-check-circle' : 'fa-circle-o']"></i>

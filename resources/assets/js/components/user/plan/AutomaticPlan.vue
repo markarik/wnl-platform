@@ -5,7 +5,7 @@
 			<div class="wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item big strong">
-						{{ $t('lessonsAvailability.sections.workDays') }}
+						{{$t('lessonsAvailability.sections.workDays')}}
 					</div>
 				</div>
 			</div>
@@ -15,7 +15,7 @@
 					:class="{'is-active': isDayActive(day.dayNumber)}"
 					:key="day.dayNumber"
 					@click="toggleDay(day.dayNumber)"
-				>{{ $t(day.dayName) }}
+				>{{$t(day.dayName)}}
 					<span class="icon is-small">
 						<i class="fa"
 							:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
@@ -25,7 +25,7 @@
 			<div class="wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item big strong">
-						{{ $t('lessonsAvailability.sections.availablePresets') }}
+						{{$t('lessonsAvailability.sections.availablePresets')}}
 					</div>
 				</div>
 			</div>
@@ -35,7 +35,7 @@
 					:class="{'is-active': isPresetActive(preset.preset)}"
 					:key="preset.preset"
 					@click="togglePreset(preset.preset)"
-				>{{ $t(preset.title) }}
+				>{{$t(preset.title)}}
 					<span class="icon is-small">
 						<i class="fa"
 							:class="[isPresetActive(preset.preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
@@ -45,7 +45,7 @@
 			<div class="work-load-toggle" v-if="isPresetActive('daysPerLesson')">
 				<div class="level wnl-screen-title">
 					<div class="level-item">
-						{{ $t('lessonsAvailability.secondSection.daysPerLesson') }}
+						{{$t('lessonsAvailability.secondSection.daysPerLesson')}}
 					</div>
 				</div>
 				<div class="work-load-control">
@@ -54,7 +54,7 @@
 						@click="chooseWorkload(workLoad.workLoad)"
 						class="panel-toggle work-load-button"
 						:class="{'is-active': isWorkLoadActive(workLoad.workLoad)}"
-					>{{ $t(workLoad.translation) }}
+					>{{$t(workLoad.translation)}}
 						<span class="icon is-small">
 							<i class="fa"
 								:class="[isWorkLoadActive(workLoad.workLoad) ? 'fa-check-circle' : 'fa-circle-o']">
@@ -64,7 +64,7 @@
 				</div>
 				<div class="wnl-screen-title">
 					<div class="level-item">
-						{{ $t('lessonsAvailability.secondSection.startDate') }}
+						{{$t('lessonsAvailability.secondSection.startDate')}}
 					</div>
 				</div>
 				<div class="dates">
@@ -91,7 +91,7 @@
 			<div class="" v-if="isPresetActive('dateToDate')">
 				<div class="level">
 					<div class="level-item">
-						{{ $t('lessonsAvailability.secondSection.dateToDate') }}
+						{{$t('lessonsAvailability.secondSection.dateToDate')}}
 					</div>
 				</div>
 				<div class="dates">
@@ -137,15 +137,15 @@
 				<div class="level wnl-screen-title">
 					<div class="level-left">
 						<div class="level-item big strong">
-							{{ $t('lessonsAvailability.sections.acceptPlan') }}
+							{{$t('lessonsAvailability.sections.acceptPlan')}}
 						</div>
 					</div>
 				</div>
 				<div class="annotation">
 					<div class="level">
 						<div class="level-item" v-if="this.completedLessonsLength > 0">
-							{{ $t('lessonsAvailability.annotation.header') }}
-							{{ this.completedLessonsLength}}{{ $t('lessonsAvailability.annotation.info') }}
+							{{$t('lessonsAvailability.annotation.header')}}
+							{{this.completedLessonsLength}}{{$t('lessonsAvailability.annotation.info')}}
 						</div>
 					</div>
 				</div>
@@ -156,7 +156,7 @@
 				:disabled="isSubmitDisabled"
 				@click="!isSubmitDisabled && acceptPlan()"
 				class="button is-primary is-outlined is-big"
-			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+			>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 			</a>
 		</div>
 	</div>

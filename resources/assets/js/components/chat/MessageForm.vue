@@ -25,9 +25,9 @@
 						@input="onInput"
 					></wnl-quill>
 				</wnl-form>
-				<span class="characters-counter metadata">{{ `${message.length} / 5000` }}</span>
+				<span class="characters-counter metadata">{{`${message.length} / 5000`}}</span>
 				<div class="message is-warning" v-if="error.length > 0">
-					<div class="message-body">{{ error }}</div>
+					<div class="message-body">{{error}}</div>
 				</div>
 			</div>
 			<div class="media-right">

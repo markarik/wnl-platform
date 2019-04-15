@@ -81,9 +81,9 @@
 				>
 					<div class="questions-list-numbering">
 						<span class="matched-count">
-							{{ $t('questions.solving.withNumber', {number: questionNumber(index)}) }}/{{questionsListCount}}
+							{{$t('questions.solving.withNumber', {number: questionNumber(index)})}}/{{questionsListCount}}
 							<a @click="setQuestion(index)">
-								{{ $t('questions.solving.setAsCurrent') }}
+								{{$t('questions.solving.setAsCurrent')}}
 							</a>
 						</span>
 						<span class="question-id">#{{question.id}}</span>

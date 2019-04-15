@@ -12,7 +12,7 @@
 					<wnl-avatar/>
 					<div class="user-links">
 						<p class="metadata">
-							{{ currentUserFullName }}
+							{{currentUserFullName}}
 							<span v-if="currentUserEmail" class="user-email">{{currentUserEmail}}</span>
 						</p>
 						<ul>

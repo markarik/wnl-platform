@@ -1,13 +1,13 @@
 <template>
 	<div class="your-progress">
-		<p class="heading">{{ $t('dashboard.progress.howYouDoin') }}</p>
+		<p class="heading">{{$t('dashboard.progress.howYouDoin')}}</p>
 		<wnl-progress
 			:value="progressValue"
 			:max="progressMax"
 			:has-numbers="progressHasNumbers"
 			:modifying-class="progressModifyingClass">
 		</wnl-progress>
-		<p class="progress-message">{{ progressMessage }}</p>
+		<p class="progress-message">{{progressMessage}}</p>
 	</div>
 </template>
 

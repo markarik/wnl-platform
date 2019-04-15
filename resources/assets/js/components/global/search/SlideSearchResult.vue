@@ -29,7 +29,7 @@
 				<span class="icon is-tiny">
 					<i class="fa" :class="media.icon"></i>
 				</span>
-				{{ media.text }}
+				{{media.text}}
 			</div>
 			<div v-if="page" class="page">{{page}}</div>
 		</div>

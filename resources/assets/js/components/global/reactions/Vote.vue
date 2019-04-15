@@ -3,7 +3,7 @@
 		<span class="icon is-small">
 			<i class="fa" :class="hasReactedClass"></i>
 		</span>
-		<span class="count">{{ count }}</span>
+		<span class="count">{{count}}</span>
 		<span class="flash-bg" :class="{'flash': wasJustClicked}"></span>
 	</div>
 </template>

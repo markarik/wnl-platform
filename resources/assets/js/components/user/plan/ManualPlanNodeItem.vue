@@ -30,7 +30,7 @@
 		<template v-else>
 			<div class="lesson-left-side">
 				<div class="not-accesible" v-if="!node.model.isAccessible">
-					{{ $t('lessonsAvailability.lessonNotAvailable') }}
+					{{$t('lessonsAvailability.lessonNotAvailable')}}
 				</div>
 				<div v-else :class="{'is-default-start-date': isDefaultStartDate}">
 					<wnl-datepicker

@@ -63,11 +63,13 @@ module.exports = {
 		'vue/require-prop-types': [
 			'off'
 		],
+		// Doesn't seem useful
 		'vue/singleline-html-element-content-newline': [
 			'off'
 		],
 		'vue/mustache-interpolation-spacing': [
-			'off'
+			'error',
+			'never',
 		],
 		'vue/max-attributes-per-line': [
 			'off'

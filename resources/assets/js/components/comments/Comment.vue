@@ -14,7 +14,7 @@
 			<wnl-vote type="up" :reactable-id="id" reactable-resource="comments" :state="voteState" module="comments"/>
 		</div>
 		<div class="media-content comment-content">
-			<span class="author" :class="{'author-forgotten': profile.deleted_at}" @click="showModal">{{ profile.full_name }}</span>
+			<span class="author" :class="{'author-forgotten': profile.deleted_at}" @click="showModal">{{profile.full_name}}</span>
 			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">

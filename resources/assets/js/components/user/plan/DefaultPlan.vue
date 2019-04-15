@@ -4,12 +4,12 @@
 		<div class="default-plan">
 			<div class="level">
 				<div class="level-item">
-					{{ $t('lessonsAvailability.defaultPlan.header')}}
+					{{$t('lessonsAvailability.defaultPlan.header')}}
 				</div>
 			</div>
 			<div class="level">
 				<div class="level-item">
-					{{ $t('lessonsAvailability.defaultPlan.annotation')}}
+					{{$t('lessonsAvailability.defaultPlan.annotation')}}
 				</div>
 			</div>
 		</div>
@@ -17,7 +17,7 @@
 			<a
 				@click="acceptPlan"
 				class="button button is-primary is-outlined is-big"
-			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+			>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 			</a>
 		</div>
 	</div>

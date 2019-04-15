@@ -26,7 +26,7 @@
 			<a
 				@click="downloadPlan"
 				class="button button is-primary is-outlined is-big"
-			>{{ $t('lessonsAvailability.buttons.downloadPlan') }}
+			>{{$t('lessonsAvailability.buttons.downloadPlan')}}
 			</a>
 		</div>
 	</div>

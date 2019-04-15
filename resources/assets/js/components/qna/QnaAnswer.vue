@@ -20,7 +20,7 @@
 							size="medium">
 						</wnl-avatar>
 						<span class="qna-meta-info">
-							{{ author.full_name }} ·
+							{{author.full_name}} ·
 						</span>
 					</div>
 					<span class="qna-meta-info">

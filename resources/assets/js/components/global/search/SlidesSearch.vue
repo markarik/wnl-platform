@@ -9,7 +9,7 @@
 			/>
 		</div>
 		<div v-else-if="hasSearched" class="slides-zero-state">
-			{{ $t('search.zeroState', {phrase}) }}
+			{{$t('search.zeroState', {phrase})}}
 		</div>
 	</div>
 </template>

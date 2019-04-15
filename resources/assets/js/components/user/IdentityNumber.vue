@@ -3,22 +3,22 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.personalData.identityNumber.header') }}
+					{{$t('user.personalData.identityNumber.header')}}
 				</div>
 			</div>
 		</div>
 		<div class="id-number" v-if="isLoaded">
 			<!-- HEADER -->
 			<div class="id-number--has-personal-id" v-if="idNumberAvailable">
-				{{ $t('user.personalData.identityNumber.yourNumber', {number: idNumber}) }}
-				{{ $t('user.personalData.identityNumber.yourNumberChange') }}
+				{{$t('user.personalData.identityNumber.yourNumber', {number: idNumber})}}
+				{{$t('user.personalData.identityNumber.yourNumberChange')}}
 			</div>
 
 			<!-- INPUT -->
 			<div class="id-number--no-personal-id" v-else>
 				<div class="message is-primary">
 					<div class="message-header">
-						{{ $t('user.personalData.identityNumber.header') }}
+						{{$t('user.personalData.identityNumber.header')}}
 					</div>
 					<div class="message-body" v-html="$t('user.personalData.identityNumber.explanation')"></div>
 				</div>
@@ -37,7 +37,7 @@
 				<div class="id-number__errors" v-if="errors.length">
 					<ul v-for="(error, index) in activeErrors" :key="index">
 						<li>
-							{{ $t(`user.personalData.errors.${error.errorCode}`) }}
+							{{$t(`user.personalData.errors.${error.errorCode}`)}}
 						</li>
 					</ul>
 				</div>
@@ -48,7 +48,7 @@
 						class="id-number__personal-identity-number-input__change"
 						@click="otherIdentity=true"
 						v-if="!otherIdentity">
-						{{ $t('user.personalData.identityNumber.changeNumberType') }}
+						{{$t('user.personalData.identityNumber.changeNumberType')}}
 					</div>
 					<div
 						class="id-number--other-identitification"
@@ -62,7 +62,7 @@
 								:name="this.identityTypes.personalId"
 								value="personal_identity_number"
 								v-model="identity.identityType">
-							<label for="personal_identity_number">{{ $t('user.personalData.identityNumber.types.personal') }}</label>
+							<label for="personal_identity_number">{{$t('user.personalData.identityNumber.types.personal')}}</label>
 							<input
 								@click="disableErrors"
 								class="is-checkradio"
@@ -71,7 +71,7 @@
 								:name="this.identityTypes.passport"
 								value="passport_number"
 								v-model="identity.identityType">
-							<label for="passport">{{ $t('user.personalData.identityNumber.types.passport') }}</label>
+							<label for="passport">{{$t('user.personalData.identityNumber.types.passport')}}</label>
 						</div>
 					</div>
 				</div>

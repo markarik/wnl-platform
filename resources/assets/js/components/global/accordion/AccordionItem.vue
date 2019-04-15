@@ -18,7 +18,7 @@
 			</div>
 			<div class="wai-content">
 				<span class="text">{{content}}</span>
-				<span class="count" v-if="!loading && count !== false">{{ `(${count})` }}</span>
+				<span class="count" v-if="!loading && count !== false">{{`(${count})`}}</span>
 				<span class="loader" v-if="loading"></span>
 			</div>
 			<div v-if="hasChildren" class="wai-expand-icon" @click.stop="toggleExpanded">

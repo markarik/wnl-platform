@@ -4,18 +4,18 @@
 		<div class="all-lessons-view">
 			<div class="level-left all-lessons-annotation-header">
 				<div class="level">
-					{{ $t('lessonsAvailability.allLessonsAnnotation.header')}}
+					{{$t('lessonsAvailability.allLessonsAnnotation.header')}}
 				</div>
 			</div>
 			<div class="level-left all-lessons-annotation-explanation">
 				<div class="level">
-					{{ $t('lessonsAvailability.allLessonsAnnotation.explanation')}}
+					{{$t('lessonsAvailability.allLessonsAnnotation.explanation')}}
 				</div>
 			</div>
 			<div class="manual-start-dates" v-if="manualStartDates.length > 0">
 				<div class="level-left">
 					<div class="level-item">
-						{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
+						{{$t('lessonsAvailability.lessonsToBeChangedList')}}
 					</div>
 				</div>
 				<table class="table is-fullwidth">
@@ -25,22 +25,22 @@
 						<th>Nowa data</th>
 					</tr>
 					<tr v-for="(manualStartDate, index) in sortedManualStartDates" :key="index">
-						<td>{{ manualStartDate.lessonName }}</td>
-						<td>{{ manualStartDate.oldDate }}</td>
-						<td>{{ manualStartDate.formatedStartDate }}</td>
+						<td>{{manualStartDate.lessonName}}</td>
+						<td>{{manualStartDate.oldDate}}</td>
+						<td>{{manualStartDate.formatedStartDate}}</td>
 					</tr>
 				</table>
 				<div class="accept-plan">
 					<a
 						@click="acceptPlan"
 						class="button button is-primary is-outlined is-big"
-					>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+					>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 					</a>
 				</div>
 			</div>
 			<div class="level-left">
 				<div class="level-item big strong margin bottom">
-					{{ $t('lessonsAvailability.viewsDropdownInfo') }}
+					{{$t('lessonsAvailability.viewsDropdownInfo')}}
 				</div>
 			</div>
 			<wnl-manual-plan-nodes-list
@@ -52,7 +52,7 @@
 			<div class="manual-start-dates" v-show="manualStartDates.length > 0">
 				<div class="level-left">
 					<div class="level-item">
-						{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
+						{{$t('lessonsAvailability.lessonsToBeChangedList')}}
 					</div>
 				</div>
 				<table class="table is-fullwidth">
@@ -62,9 +62,9 @@
 						<th>Nowa data</th>
 					</tr>
 					<tr v-for="(manualStartDate, index) in sortedManualStartDates" :key="index">
-						<td>{{ manualStartDate.lessonName }}</td>
-						<td>{{ manualStartDate.oldDate }}</td>
-						<td>{{ manualStartDate.formatedStartDate }}</td>
+						<td>{{manualStartDate.lessonName}}</td>
+						<td>{{manualStartDate.oldDate}}</td>
+						<td>{{manualStartDate.formatedStartDate}}</td>
 					</tr>
 				</table>
 			</div>
@@ -73,7 +73,7 @@
 			<a
 				@click="acceptPlan"
 				class="button button is-primary is-outlined is-big"
-			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+			>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 			</a>
 		</div>
 	</div>

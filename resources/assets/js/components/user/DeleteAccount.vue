@@ -3,7 +3,7 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.deleteAccount.header') }}
+					{{$t('user.deleteAccount.header')}}
 				</div>
 			</div>
 		</div>

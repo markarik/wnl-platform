@@ -9,17 +9,17 @@
 		<div class="personal-notification" @click="markAsReadAndGo" :class="{'deleted': deleted || resolved}">
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ message.actors.full_name }}</span>
-					<span class="action">{{ action }}</span>
-					<span class="object" v-if="object">{{ object }}</span>
-					<span class="context" v-if="contextInfo">{{ contextInfo }}</span>
-					<span class="object-text wrap" v-if="objectText">{{ objectText }}</span>
+					<span class="actor">{{message.actors.full_name}}</span>
+					<span class="action">{{action}}</span>
+					<span class="object" v-if="object">{{object}}</span>
+					<span class="context" v-if="contextInfo">{{contextInfo}}</span>
+					<span class="object-text wrap" v-if="objectText">{{objectText}}</span>
 				</div>
-				<div class="subject wrap" v-if="subjectText">{{ subjectText }}</div>
+				<div class="subject wrap" v-if="subjectText">{{subjectText}}</div>
 				<div class="time">
 					<span class="icon is-small">
 						<i class="fa" :class="icon"></i>
-					</span>{{ formattedTime }}
+					</span>{{formattedTime}}
 				</div>
 			</div>
 			<div class="link-symbol">

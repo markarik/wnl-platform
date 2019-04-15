@@ -14,13 +14,13 @@
 			</div>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ message.actors.full_name }}</span>
-					<span class="action">{{ action }}</span>
-					<span class="object">{{ object }}</span>
-					<span class="context">{{ contextInfo }}</span>
+					<span class="actor">{{message.actors.full_name}}</span>
+					<span class="action">{{action}}</span>
+					<span class="object">{{object}}</span>
+					<span class="context">{{contextInfo}}</span>
 				</div>
-				<div class="object-text wrap" v-if="objectText">{{ objectText }}</div>
-				<div class="subject wrap" :class="{'unseen': !isSeen}" v-if="subjectText">{{ subjectText }}</div>
+				<div class="object-text wrap" v-if="objectText">{{objectText}}</div>
+				<div class="subject wrap" :class="{'unseen': !isSeen}" v-if="subjectText">{{subjectText}}</div>
 				<div class="time">
 				</div>
 			</div>

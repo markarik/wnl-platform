@@ -6,7 +6,7 @@
 			<div class="tabs">
 				<ul>
 					<li :class="{ 'is-active': name === activeTabName }" v-for="(tab, name) in tabs" :key="name">
-						<router-link :to="{ hash: `#${name}` }">{{ tab.text }}</router-link>
+						<router-link :to="{ hash: `#${name}` }">{{tab.text}}</router-link>
 					</li>
 				</ul>
 			</div>

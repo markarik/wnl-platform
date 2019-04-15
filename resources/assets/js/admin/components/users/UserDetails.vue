@@ -3,22 +3,22 @@
 		<wnl-text-loader v-if="isLoading"></wnl-text-loader>
 		<div v-else>
 			<div class="user-details__head">
-				<p>#{{ user.id }}</p>
-				<p class="user-details__head__name">{{ user.full_name }}</p>
+				<p>#{{user.id}}</p>
+				<p class="user-details__head__name">{{user.full_name}}</p>
 				<span
 					class="tag"
 					v-for="role in user.roles"
 					:key="role.name"
 					:style="{backgroundColor: getColourForStr(role.name)}">
-					{{ role.name }}
+					{{role.name}}
 				</span>
-				<p>Dołączył/-a: {{ dateCreated }}</p>
+				<p>Dołączył/-a: {{dateCreated}}</p>
 			</div>
 
 			<div class="tabs">
 				<ul>
 					<li :class="{ 'is-active': name === activeTabName }" v-for="(tab, name) in tabs" :key="name">
-						<router-link :to="{ hash: `#${name}` }">{{ tab.text }}</router-link>
+						<router-link :to="{ hash: `#${name}` }">{{tab.text}}</router-link>
 					</li>
 				</ul>
 			</div>

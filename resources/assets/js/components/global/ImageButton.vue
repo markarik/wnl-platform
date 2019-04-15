@@ -9,7 +9,7 @@
 			<wnl-icon :name="icon"></wnl-icon>
 		</button>
 		<label :for="name" class="wnl-image-button-label" v-if="label">
-			{{ label }}
+			{{label}}
 		</label>
 	</div>
 </template>

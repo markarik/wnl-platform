@@ -2,13 +2,13 @@
 	<div class="wnl-user-profile" :class="{mobile: isMobileProfile}">
 		<div class="text-loader" v-if="isLoading">
 			<wnl-text-loader>
-				{{ $t('user.userProfile.textLoader') }}
+				{{$t('user.userProfile.textLoader')}}
 			</wnl-text-loader>
 		</div>
 
 		<div class="profile-deleted notification" v-if="profile.deleted_at">
 			<div class="profile-deleted__annotation">
-				{{ $t('ui.accountDeleted') }}
+				{{$t('ui.accountDeleted')}}
 			</div>
 		</div>
 
@@ -28,26 +28,26 @@
 						<div class="user-info-header-edit">
 							<span v-if="currentUserProfile">
 								<router-link :to="{ name: 'my-profile' }">
-									<a class="edit-profile button is-primary is-outlined is-small">{{ $t('user.userProfile.editProfileButton') }}</a>
+									<a class="edit-profile button is-primary is-outlined is-small">{{$t('user.userProfile.editProfileButton')}}</a>
 								</router-link>
 							</span>
 							<wnl-message-link :user-id="profile.user_id">
 								<a class="button is-primary is-outlined is-small">Wyślij wiadomość</a>
 							</wnl-message-link>
 							<span class="user-info-header-names">
-								<p class="fullname-title">{{ profile.full_name }}</p>
+								<p class="fullname-title">{{profile.full_name}}</p>
 							</span>
 						</div>
 						<span v-if="cityToDisplay" class="user-info-city">
 							<span class="icon is-small">
 								<i class="fa fa-map-marker"></i>
 							</span>
-							<span class="city-title">{{ cityToDisplay }}</span>
+							<span class="city-title">{{cityToDisplay}}</span>
 						</span>
 						<span v-if="helpToDisplay" class="user-info-help">
-							<span class="help-title">{{ $t('user.userProfile.helpTitle') }}</span>
+							<span class="help-title">{{$t('user.userProfile.helpTitle')}}</span>
 							<div class="notification">
-								<span class="user-help">{{ helpToDisplay }}</span>
+								<span class="user-help">{{helpToDisplay}}</span>
 							</div>
 						</span>
 					</div>
@@ -59,9 +59,9 @@
 							<span class="icon is-large">
 								<i :class="activity.iconClassToUse"></i>
 							</span>
-							<span class="activity-meter-number">{{ activity.statistic }}</span>
+							<span class="activity-meter-number">{{activity.statistic}}</span>
 						</div>
-						<p class="activity-title">{{ activity.name }}</p>
+						<p class="activity-title">{{activity.name}}</p>
 					</div>
 				</div>
 

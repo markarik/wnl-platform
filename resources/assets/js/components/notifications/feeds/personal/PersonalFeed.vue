@@ -3,7 +3,7 @@
 		<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
 			<div slot="activator" class="notifications-toggle"
 				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }">
-				<div v-if="isOn && !!unseenCount" class="counter">{{ unseenCount }}</div>
+				<div v-if="isOn && !!unseenCount" class="counter">{{unseenCount}}</div>
 				<span class="icon">
 					<i class="fa" :class="iconClass"></i>
 				</span>

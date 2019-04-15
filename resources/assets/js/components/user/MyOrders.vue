@@ -21,7 +21,7 @@
 						Twój dostęp do kursu jest aktywny do:&nbsp;
 					</div>
 					<div class="big strong">
-						{{ userFriendlySubscriptionDate }}
+						{{userFriendlySubscriptionDate}}
 					</div>
 				</div>
 			</div>

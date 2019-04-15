@@ -29,7 +29,7 @@
 		<div v-if="searchPhrase" class="active-search">
 			<span>Aktualne wyszukiwanie:</span>
 			<span class="tag is-success">
-				{{ searchPhrase }}
+				{{searchPhrase}}
 				<button class="delete is-small" @click="clearSearch"></button>
 			</span>
 		</div>

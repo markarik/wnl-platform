@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Quill from 'quill';
 
 const EmbedBlot = Quill.import('blots/embed');
@@ -30,7 +31,6 @@ class MentionBlot extends EmbedBlot {
 		this._removedBlot = false;
 	}
 	
-	// eslint-disable-next-line no-unused-vars
 	index(node, offset) {
 		// https://github.com/quilljs/parchment/blob/master/src/blot/abstract/leaf.ts
 		return 1;

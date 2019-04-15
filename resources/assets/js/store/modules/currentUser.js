@@ -238,7 +238,7 @@ const actions = {
 		commit(types.USERS_SET_IDENTITY, payload);
 	},
 
-	changeUserSettingAndSync({ commit, dispatch }, payload) {
+	changeUserSettingAndSync({ dispatch }, payload) {
 		dispatch('changeUserSetting', payload);
 		dispatch('syncSettings');
 	},
@@ -249,7 +249,7 @@ const actions = {
 		});
 	},
 
-	syncSettings({ commit, getters }) {
+	syncSettings({ getters }) {
 		return axios.put(getApiUrl('users/current/settings'), getters.getAllSettings);
 	},
 

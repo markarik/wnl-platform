@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import * as types from 'js/store/mutations-types';
-import {getApiUrl, envValue as env} from 'js/utils/env';
-import {set, delete as destroy} from 'vue';
+import {getApiUrl} from 'js/utils/env';
+import {set} from 'vue';
 
 const namespaced = true;
 
@@ -88,7 +88,7 @@ const mutations = {
 const actions = {
 	pullNotifications({commit, rootGetters}, [ channel, options ]) {
 		commit(types.IS_FETCHING, {channel, isFetching: true});
-		return new Promise ((resolve, reject) => {
+		return new Promise ((resolve) => {
 			_getNotifications(channel, rootGetters.currentUserId, options)
 				.then(response => {
 					if (typeof response.data[0] !== 'object') {
@@ -117,33 +117,33 @@ const actions = {
 				commit(types.ADD_NOTIFICATION, {...notification, channel});
 			});
 	},
-	markAsRead({commit, getters, rootGetters}, {notification, channel}) {
+	markAsRead({commit, rootGetters}, {notification}) {
 		return _updateNotification(rootGetters.currentUserId, notification.id, {'read_at': 'now'})
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'});
 			})
-			.catch((error) => {
+			.catch(() => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: true, field: 'deleted'});
 			});
 	},
-	markAsSeen({commit, getters, rootGetters}, {notification, channel}) {
+	markAsSeen({commit, rootGetters}, {notification}) {
 		return _updateNotification(rootGetters.currentUserId, notification.id, {'seen_at': 'now'})
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.seen_at, field: 'seen_at'});
 			})
-			.catch((error) => {
+			.catch(() => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: true, field: 'deleted'});
 			});
 
 	},
-	markAsUnread({commit, getters, rootGetters}, {notification, channel}) {
+	markAsUnread({commit, rootGetters}, {notification}) {
 		return _updateNotification(rootGetters.currentUserId, notification.id, {'read_at': null})
 			.then((response) => {
 				commit(types.MODIFY_NOTIFICATION, {notification, value: response.data.read_at, field: 'read_at'});
 			});
 	},
 	markAllAsSeen({commit, getters, rootGetters}, channel) {
-		let data = _.mapValues(getters.getUnseen(channel), (notification) => {
+		let data = _.mapValues(getters.getUnseen(channel), () => {
 			return {'seen_at': 'now'};
 		});
 
@@ -155,7 +155,7 @@ const actions = {
 			});
 	},
 	markAllAsRead({commit, getters, rootGetters}, channel) {
-		let data = _.mapValues(getters.getUnread(channel), (notification) => {
+		let data = _.mapValues(getters.getUnread(channel), () => {
 			return {'read_at': 'now'};
 		});
 

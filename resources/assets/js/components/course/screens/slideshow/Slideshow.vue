@@ -304,7 +304,7 @@ export default {
 			};
 
 			return this.postmateHandshake(postmateOptions)
-				.then(child => {
+				.then(() => {
 					if (this.$route.query.slide) {
 						const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide));
 						if (newSlideIndex > -1) {
@@ -444,7 +444,7 @@ export default {
 				}
 			}
 		},
-		fullscreenChangeHandler(event) {
+		fullscreenChangeHandler() {
 			this.child.call('toggleFullscreen', screenfull.isFullscreen);
 		},
 		keydownNavigationHandler(event) {

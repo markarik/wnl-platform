@@ -296,7 +296,7 @@ export default {
 			}).then(() => this.switchOverlay(false, 'testBuilding'));
 		},
 		changePage(page) {
-			return new Promise((resolve, reject) => {
+			return new Promise((resolve) => {
 				if (this.getPage(page)) {
 					this.setPage(page);
 					resolve();
@@ -491,7 +491,7 @@ export default {
 					});
 				});
 		},
-		setupFilters(activeFilters = []) {
+		setupFilters() {
 			if (!isEmpty(this.filters)) return Promise.resolve(this.filters);
 
 			return this.fetchDynamicFilters();
@@ -602,7 +602,7 @@ export default {
 					.then(this.fetchDynamicFilters)
 					.then(this.getPosition)
 					.then(({data = {}}) => {
-						return new Promise((resolve, reject) => {
+						return new Promise((resolve) => {
 							this.fetchQuestions({
 								saveFilters: false,
 								useSavedFilters: false,

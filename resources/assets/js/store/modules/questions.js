@@ -20,8 +20,6 @@ import {
 
 const namespaced = true;
 
-const LIMIT = 25;
-
 // Initial state
 const state = {
 	...commentsState,
@@ -149,7 +147,7 @@ const mutations = {
 			state.activeFilters.splice(index, 1);
 		}
 	},
-	[types.ACTIVE_FILTERS_RESET] (state, payload) {
+	[types.ACTIVE_FILTERS_RESET] (state) {
 		state.activeFilters = [];
 	},
 	[types.QUESTIONS_DYNAMIC_FILTERS_SET] (state, data) {
@@ -188,7 +186,7 @@ const mutations = {
 
 		_.each(resources, (items, resource) => {
 			let resourceObject = state[resource];
-			_.each(items, (item, index) => {
+			_.each(items, (item) => {
 				set(resourceObject, item.id, item);
 			});
 		});
@@ -238,7 +236,7 @@ const mutations = {
 	[types.UPDATE_INCLUDED] (state, included) {
 		_.each(included, (items, resource) => {
 			let resourceObject = state[resource];
-			_.each(items, (item, index) => {
+			_.each(items, (item) => {
 				set(resourceObject, item.id, item);
 			});
 		});
@@ -277,13 +275,13 @@ const actions = {
 		data.filters = parseFilters(data.activeFilters, state.filters, rootGetters.currentUserId);
 		return axios.post(getApiUrl(`user_plan/${rootGetters.currentUserId}`), data);
 	},
-	changeCurrentQuestion({state, getters, commit}, {page, index}) {
-		return new Promise((resolve, reject) => {
+	changeCurrentQuestion({getters, commit}, {page, index}) {
+		return new Promise((resolve) => {
 			commit(types.QUESTIONS_SET_CURRENT, {page, index});
 			return resolve(getters.currentQuestion);
 		});
 	},
-	checkQuestions({commit, getters, dispatch}, meta) {
+	checkQuestions({getters, dispatch}, meta) {
 		const results = {
 			unanswered: [],
 			incorrect: [],
@@ -379,7 +377,7 @@ const actions = {
 			include: 'reactions'
 		}).then(({data}) => commit(types.QUESTIONS_UPDATE, data));
 	},
-	fetchPage({state, commit, dispatch}, page) {
+	fetchPage({state, dispatch}, page) {
 		return new Promise(resolve => {
 			return dispatch('fetchQuestions', {filters: state.activeFilters, page})
 				.then(response => resolve(response));
@@ -405,7 +403,7 @@ const actions = {
 			return response;
 		});
 	},
-	fetchQuestionsByIds({commit, state, dispatch, rootGetters}, ids) {
+	fetchQuestionsByIds({commit, dispatch}, ids) {
 		return axios.post(getApiUrl('quiz_questions/query'), {
 			ids,
 			include: 'quiz_answers,reactions,comments.profiles,slides',
@@ -423,7 +421,7 @@ const actions = {
 			return response;
 		});
 	},
-	saveQuestionsResults({commit, dispatch, getters, rootGetters, state}, {questions, meta={}}) {
+	saveQuestionsResults({dispatch, getters, rootGetters, state}, {questions, meta={}}) {
 		const results = questions.map((questionId) => {
 			const question = getters.getQuestion(questionId);
 

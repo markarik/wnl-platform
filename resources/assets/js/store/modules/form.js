@@ -91,7 +91,7 @@ export default {
 					$wnl.logger.error(error);
 				});
 		},
-		populateFormFromValue({state, commit}, {payload, formName}) {
+		populateFormFromValue({commit}, {payload, formName}) {
 			commit(types.FORM_POPULATE, {payload, formName});
 			commit(types.FORM_UPDATE_ORIGINAL_DATA, {formName});
 		},

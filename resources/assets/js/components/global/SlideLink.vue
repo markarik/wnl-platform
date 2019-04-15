@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import {truncate} from 'lodash';
-import {mapGetters} from 'vuex';
 
 export default {
 	name: 'SlideLink',

@@ -216,7 +216,7 @@ export default {
 					this.successFading('Zapisano', 2000);
 					this.loading = false;
 				})
-				.catch(exception => {
+				.catch(() => {
 					this.errorFading('Ups... Coś poszło nie tak.', 4000);
 					$wnl.logger.capture(error);
 					this.loading = false;
@@ -296,7 +296,7 @@ export default {
 		}
 	},
 	watch: {
-		resourceUrl(newValue, oldValue) {
+		resourceUrl(newValue) {
 			newValue !== '' && this.form.populate(`${this.resourceUrl}?include=quiz_questions`, this.excluded)
 				.catch(error => {
 					const statusCode = _.get(error, 'response.status');
@@ -306,7 +306,7 @@ export default {
 					});
 				});
 		},
-		content(newValue, oldValue) {
+		content() {
 			this.removeCourseTags();
 		}
 	}

@@ -47,7 +47,7 @@ const actions = {
 	setup({ commit, dispatch }) {
 		Promise.all([
 			dispatch('fetchAllLessons'),
-		]).then(resolutions => {
+		]).then(() => {
 			$wnl.logger.debug('Lessons editor ready');
 			commit(types.LESSONS_READY);
 		}, reason => {

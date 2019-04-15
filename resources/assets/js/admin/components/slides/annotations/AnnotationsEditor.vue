@@ -195,7 +195,6 @@
 
 <script>
 import {mapActions} from 'vuex';
-import {set} from 'vue';
 import {getApiUrl} from 'js/utils/env';
 import Form from 'js/classes/forms/Form';
 import { Tags } from 'js/components/global/form/index';

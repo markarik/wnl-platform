@@ -37,7 +37,6 @@
 
 <script>
 import {getApiUrl} from 'js/utils/env';
-import {isEqual} from 'lodash';
 import {Checkbox as WnlFormCheckbox, Form as WnlForm, Text as WnlFormText} from 'js/components/global/form';
 
 

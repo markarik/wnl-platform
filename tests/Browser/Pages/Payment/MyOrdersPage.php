@@ -40,6 +40,7 @@ class MyOrdersPage extends BasePage
 			'@add-discount' => '[data-button="add-coupon"]',
 			'@use' => '[data-button="coupon-submit"]',
 			'@album-order-link' => '[data-button="order-album"]',
+			'@loading-overlay' => '.wnl-overlay'
 		];
 	}
 }

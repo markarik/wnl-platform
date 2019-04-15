@@ -45,12 +45,6 @@ module.exports = {
 			'error',
 			'always'
 		],
-
-		// TODO enable eslint:recommended rules below
-		'no-console': [
-			'off'
-		],
-
 		'import/no-relative-parent-imports': 'error',
 		'vue/component-name-in-template-casing': [
 			'error',

@@ -95,7 +95,7 @@ export default {
 						this.error = false;
 					})
 					.catch(exception => {
-						console.error(exception);
+						$wnl.logger.error(exception);
 						this.loading = false;
 						this.error = true;
 					});

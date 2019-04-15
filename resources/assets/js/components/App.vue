@@ -58,6 +58,7 @@ export default {
 		...mapGetters([
 			'currentUserId',
 			'currentUserRoles',
+			'currentUserSubscriptionActive',
 			'isCurrentUserLoading',
 			'overlayTexts',
 			'shouldDisplayOverlay',
@@ -112,9 +113,6 @@ export default {
 					this.handleSiteWideMessages();
 				});
 
-				// Setup Chat
-				this.$socketChatSetup();
-
 				// Setup time tracking
 				const activitiesConfig = {
 					sadActivity: {
@@ -145,7 +143,10 @@ export default {
 					this.setLayout(currentLayout);
 				});
 
-				return this.courseSetup(1);
+				if (this.currentUserSubscriptionActive) {
+					this.$socketChatSetup();
+					return this.courseSetup();
+				}
 			})
 			.then(() => {
 				this.toggleOverlay({ source: 'course', display: false });

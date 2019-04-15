@@ -520,7 +520,7 @@ export default {
 			'addAutoDismissableAlert',
 			'fetchUserSubscription',
 		]),
-		...mapActions('course', ['setStructure']),
+		...mapActions('course', { courseSetup: 'setup' }),
 		async downloadInvoice(invoice) {
 			try {
 				const response = await axios.request({
@@ -576,7 +576,7 @@ export default {
 					this.order.paid_amount = order.paid_amount;
 					this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
 					this.fetchUserSubscription();
-					this.setStructure();
+					this.courseSetup();
 					this.$socketChatSetup();
 				} else {
 					setTimeout(this.checkStatus, 10000);

@@ -96,8 +96,8 @@ class SlideshowExport extends Command
 	}
 
 	/**
-	 * @param $ids
-	 * @param $modelName
+	 * @param array $ids
+	 * @param string $modelName
 	 * @return Collection
 	 */
 	private function getPresentables(array $ids, string $modelName):Collection

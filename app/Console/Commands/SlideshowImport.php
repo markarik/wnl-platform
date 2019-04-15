@@ -69,7 +69,7 @@ class SlideshowImport extends Command
 		}
 
 		// TODO: Generate sensible filename or take if from argument.
-		$fileContents = Storage::get('exports/slideshow_export.json');
+		$fileContents = Storage::drive()->get('exports/slideshow_export.json');
 		$data = json_decode($fileContents, true);
 
 		DB::beginTransaction();

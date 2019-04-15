@@ -103,7 +103,7 @@ class SlideshowImport extends Command
 	{
 		$screenData['meta']['resources'][0]['id'] = $slideshow->id;
 		$screenData['lesson_id'] = $lesson->id;
-		unset($screenData['id']);
+
 		return Screen::create($screenData);
 	}
 
@@ -114,6 +114,10 @@ class SlideshowImport extends Command
 	private function saveSlideshow(array $slideshowData): Slideshow
 	{
 		unset($slideshowData['id']);
+
+		$parser = new Parser;
+		$slideshowData['background'] = $parser->downloadBackground($slideshowData['background_url']);
+
 		return Slideshow::create($slideshowData);
 	}
 

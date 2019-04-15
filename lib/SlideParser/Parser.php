@@ -319,6 +319,11 @@ class Parser
 
 		$url = $match[0][1];
 
+		return $this->downloadBackground($url);
+	}
+
+	public function downloadBackground($url)
+	{
 		$canvas = Image::canvas(1920, 1080, '#fff');
 
 		$background = Image::make($url)->resize(1920, 1080);

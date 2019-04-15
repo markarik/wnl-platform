@@ -7,10 +7,8 @@ use App\Models\Slideshow;
 use Illuminate\Console\Command;
 use App\Models\Screen;
 use App\Models\Subsection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use DB;
-use phpDocumentor\Reflection\Types\Mixed_;
 use Storage;
 
 class SlideshowExport extends Command
@@ -58,7 +56,7 @@ class SlideshowExport extends Command
 
 		$data = [
 			'screen' => $this->removeUnwantedFieldsFromScreen($screen),
-			'slideshow' => $slideshow->toArray(),
+			'slideshow' => $this->getSlideshowWithBackgroundUrl($slideshow),
 			'slides' => $slides->toArray(),
 			'sections' => $sections->toArray(),
 			'subsections' => $subsections->toArray(),
@@ -75,7 +73,7 @@ class SlideshowExport extends Command
 	 * @param Screen $screen
 	 * @return array
 	 */
-	private function removeUnwantedFieldsFromScreen(Screen $screen):array
+	private function removeUnwantedFieldsFromScreen(Screen $screen): array
 	{
 		$screenData = $screen->toArray();
 
@@ -86,11 +84,18 @@ class SlideshowExport extends Command
 		return $screenData;
 	}
 
+	private function getSlideshowWithBackgroundUrl(Slideshow $slideshow): array
+	{
+		$slideshowData = $slideshow->toArray();
+		$slideshowData['background_url'] = $slideshow->background_url;
+		return $slideshowData;
+	}
+
 	/**
 	 * @param Collection $sections
 	 * @return Collection
 	 */
-	private function getSubsections(Collection $sections):Collection
+	private function getSubsections(Collection $sections): Collection
 	{
 		return Subsection::whereIn('section_id', $sections->pluck('id'))->get();
 	}
@@ -100,7 +105,7 @@ class SlideshowExport extends Command
 	 * @param string $modelName
 	 * @return Collection
 	 */
-	private function getPresentables(array $ids, string $modelName):Collection
+	private function getPresentables(array $ids, string $modelName): Collection
 	{
 		return DB::table('presentables')
 			->where('presentable_type', $modelName)

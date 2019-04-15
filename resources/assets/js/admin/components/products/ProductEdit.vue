@@ -6,9 +6,9 @@
 			<div class="tabs">
 				<ul>
 					<li
-						:class="{ 'is-active': name === activeTabName }"
 						v-for="(tab, name) in tabs"
 						:key="name"
+						:class="{ 'is-active': name === activeTabName }"
 					>
 						<router-link :to="{ hash: `#${name}` }">{{tab.text}}</router-link>
 					</li>
@@ -18,9 +18,9 @@
 			<component :is="activeComponent" :id="id"></component>
 		</template>
 		<wnl-product-details-editor
+			v-else
 			:id="id"
 			:is-edit="isEdit"
-			v-else
 		/>
 	</div>
 

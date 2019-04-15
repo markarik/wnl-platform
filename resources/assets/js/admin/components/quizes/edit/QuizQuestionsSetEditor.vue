@@ -19,17 +19,17 @@
 				</button>
 			</div>
 			<wnl-form-input
+				v-model="form.name"
 				name="name"
 				:form="form"
-				v-model="form.name"
 			>Nazwa
 			</wnl-form-input>
 			<label class="label">Lekcja, której dotyczy zestaw</label>
 			<span class="select quiz-questions-set-editor-select">
 				<wnl-select
+					v-model="form.lesson_id"
 					:form="form"
 					:options="lessonsOptions"
-					v-model="form.lesson_id"
 					name="lesson_id"
 				/>
 			</span>
@@ -44,10 +44,10 @@
 			/>
 			<h4 class="title margin top">Dodaj pytanie</h4>
 			<input
+				v-model="quizQuestionInput"
 				class="quiz-question-id-input"
 				type="number"
 				name="quizQuestionInput"
-				v-model="quizQuestionInput"
 				placeholder="Podaj numer id pytania"
 			>
 			<button
@@ -58,7 +58,7 @@
 			>Dodaj
 			</button>
 			<h4 class="title margin top">Lista pytań</h4>
-			<div class="quiz-questions-admin" v-if="form.quiz_questions && formPopulated">
+			<div v-if="form.quiz_questions && formPopulated" class="quiz-questions-admin">
 				<wnl-draggable
 					v-model="form.quiz_questions"
 					@start="drag=true"
@@ -66,8 +66,8 @@
 				>
 					<wnl-quiz-questions-set-list-item
 						v-for="questionId in form.quiz_questions"
-						:key="questionId"
 						:id="questionId"
+						:key="questionId"
 						:content="getQuizQuestionContent(questionId)"
 						@remove="removeQuestion(questionId)"
 					/>

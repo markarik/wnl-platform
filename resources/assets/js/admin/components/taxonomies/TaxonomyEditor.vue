@@ -5,9 +5,9 @@
 			:resource-route="resourceRoute"
 			:populate="isEdit"
 			:hide-default-submit="true"
+			name="TaxonomyEditor"
 			@formIsLoaded="onFormIsLoaded"
 			@submitSuccess="onSubmitSuccess"
-			name="TaxonomyEditor"
 		>
 			<div class="header">
 				<h2 class="title is-2">
@@ -54,7 +54,7 @@
 				>Opis</wnl-textarea>
 			</div>
 		</wnl-form>
-		<wnl-taxonomy-terms-editor :taxonomy-id="id" v-if="isEdit" />
+		<wnl-taxonomy-terms-editor v-if="isEdit" :taxonomy-id="id" />
 	</div>
 </template>
 

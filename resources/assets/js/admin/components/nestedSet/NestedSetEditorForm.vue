@@ -16,8 +16,8 @@
 		<div class="has-text-centered">
 			<button
 				class="button"
-				@click="onSubmit"
 				:disabled="submitDisabled"
+				@click="onSubmit"
 			>{{submitLabel}}</button>
 		</div>
 	</div>

@@ -1,18 +1,18 @@
 <template>
 	<div class="scrollable-main-container">
-		<div class="level wnl-screen-title tabs" v-if="!isMobile">
+		<div v-if="!isMobile" class="level wnl-screen-title tabs">
 			<ul>
 				<li
 					v-for="(tab, index) in tabs"
-					@click="activeTabIndex = index"
-					:class="[index === activeTabIndex ? 'is-active' : '', 'big', 'strong']"
 					:key="tab.title"
+					:class="[index === activeTabIndex ? 'is-active' : '', 'big', 'strong']"
+					@click="activeTabIndex = index"
 				>
 					<a>{{tab.title}}</a>
 				</li>
 			</ul>
 		</div>
-		<div class="dropdown-container" v-else>
+		<div v-else class="dropdown-container">
 			<wnl-dropdown>
 				<div slot="activator" class="dropdown-trigger is-active">
 					{{activeTab.title}}
@@ -23,9 +23,9 @@
 						<ul>
 							<li
 								v-for="tab in tabs"
-								@click="onTabSelect(tab)"
 								:key="tab.title"
 								class="dropdown-menu__item"
+								@click="onTabSelect(tab)"
 							>
 								<a class="dropdown-menu__item">{{tab.title}}</a>
 							</li>

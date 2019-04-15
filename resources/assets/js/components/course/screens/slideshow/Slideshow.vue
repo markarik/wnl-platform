@@ -5,7 +5,7 @@
 				<div class="controls-left">
 					<wnl-slideshow-navigation @navigateToSlide="navigateToSlide"></wnl-slideshow-navigation>
 				</div>
-				<small class="slide-meta" v-if="$moderatorFeatures.isAllowed('access')">
+				<small v-if="$moderatorFeatures.isAllowed('access')" class="slide-meta">
 					{{currentSlideId}}
 					<wnl-linked-questions :slide-id="currentSlideId" />
 				</small>
@@ -25,11 +25,11 @@
 			<div class="slideshow-menu">
 				<wnl-annotations
 					:slideshow-id="presentableId"
-					@commentsHidden="onCommentsHidden"
-					@annotationsUpdated="onAnnotationsUpdated"
 					:screen-id="Number(screenId)"
 					:current-slide-id="currentSlideId"
 					:is-loading-comments="isLoadingComments"
+					@commentsHidden="onCommentsHidden"
+					@annotationsUpdated="onAnnotationsUpdated"
 				></wnl-annotations>
 			</div>
 		</div>

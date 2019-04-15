@@ -4,8 +4,8 @@
 			<div class="field has-addons">
 				<div class="control">
 					<input
-						class="input"
 						v-model="currentPhrase"
+						class="input"
 						placeholder="Szukaj..."
 						@keyup.enter="search"
 					/>
@@ -16,13 +16,13 @@
 					</a>
 				</div>
 			</div>
-			<div class="search-settings__field field" v-if="availableFields.length > 1">
+			<div v-if="availableFields.length > 1" class="search-settings__field field">
 				<input
-					type="checkbox"
 					id="allFields"
+					type="checkbox"
 					:checked="!searchFields.length"
-					@change="onSelectAll"
 					class="search-settings__field__input is-checkradio"
+					@change="onSelectAll"
 				>
 				<label for="allFields" class="search-settings__field__label checkbox">Wszystkie Pola</label>
 			</div>
@@ -32,9 +32,9 @@
 				class="search-settings__field field"
 			>
 				<input
-					type="checkbox"
-					v-model="searchFields"
 					:id="field.value"
+					v-model="searchFields"
+					type="checkbox"
 					:value="field.value"
 					class="search-settings__field__input is-checkradio"
 				>

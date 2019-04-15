@@ -1,7 +1,7 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
 		<template v-if="!shouldDisplaySatisfactionGuaranteeModal">
-			<div class="wnl-lesson" v-if="shouldShowLesson">
+			<div v-if="shouldShowLesson" class="wnl-lesson">
 				<div class="wnl-lesson-view">
 					<div class="level wnl-screen-title">
 						<div class="level-left">

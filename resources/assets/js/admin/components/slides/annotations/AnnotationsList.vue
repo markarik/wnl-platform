@@ -21,7 +21,7 @@
 						:tag="tag"
 					/>
 				</div>
-				<span class="annotation-item__header__item  annotation-item__header__item--small" v-if="modifiedAnnotationId === annotation.id">
+				<span v-if="modifiedAnnotationId === annotation.id" class="annotation-item__header__item  annotation-item__header__item--small">
 					...niezapisany
 				</span>
 				<span
@@ -39,8 +39,8 @@
 				</span>
 			</div>
 			<div
-				class="annotation-item__description"
 				v-if="isOpen(annotation)"
+				class="annotation-item__description"
 				v-html="annotation.description"
 			>
 			</div>

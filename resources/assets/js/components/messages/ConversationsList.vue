@@ -1,14 +1,14 @@
 <template>
 	<div class="scrollable-container" @scroll="pullConversations">
-		<div class="rooms-header" v-if="withSearch">
+		<div v-if="withSearch" class="rooms-header">
 			<header>{{$t('messages.dashboard.privateMessages')}}</header>
 			<div class="rooms-list-controls">
 				<span class="rooms-list-controls-item is-active" @click="toggleUserSearch">
-					<div class="search-icon" v-if="!userSearchVisible">
+					<div v-if="!userSearchVisible" class="search-icon">
 						<i class="fa fa-search" :title="$t('messages.search.searchButton')"></i>
 						<span class="text">{{$t('messages.search.searchButton')}}</span>
 					</div>
-					<div class="close-icon" v-else>
+					<div v-else class="close-icon">
 						<i class="fa fa-times" :title="$t('messages.search.closeButton')"></i>
 						<span class="text">{{$t('messages.search.closeButton')}}</span>
 					</div>

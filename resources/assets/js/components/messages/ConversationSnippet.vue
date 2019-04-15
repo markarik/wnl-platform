@@ -15,7 +15,7 @@
 						<span class="full-name">{{profile.full_name}}</span>
 					</div>
 
-					<div class="conversation-time" v-if="room && room.last_message_time">
+					<div v-if="room && room.last_message_time" class="conversation-time">
 						<small>{{time(room.last_message_time)}}</small>
 					</div>
 				</div>

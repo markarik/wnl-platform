@@ -4,9 +4,9 @@
 		:resource-route="resourceRoute"
 		:populate="isEdit"
 		name="GroupEditor"
-		@submitSuccess="onSubmitSuccess"
 		:hide-default-submit="true"
 		class="editor"
+		@submitSuccess="onSubmitSuccess"
 	>
 		<div class="header">
 			<h2 class="title is-2">Edycja grupy <span v-if="isEdit">(Id: {{id}})</span></h2>

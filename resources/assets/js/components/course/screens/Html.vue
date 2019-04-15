@@ -6,7 +6,7 @@
 	>
 		<div class="content" v-html="content">
 		</div>
-		<p class="end-button has-text-centered" v-if="showBacklink">
+		<p v-if="showBacklink" class="end-button has-text-centered">
 			<router-link :to="{name: 'dashboard'}" class="button is-primary is-outlined">
 				Wróć do auli
 			</router-link>

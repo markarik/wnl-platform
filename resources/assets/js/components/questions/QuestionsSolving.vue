@@ -1,7 +1,7 @@
 <template>
 	<div class="questions-solving-container" :class="{'is-mobile': isMobile}">
-		<div class="questions-solving-view" v-if="!testMode">
-			<div class="tabs" v-if="!isMobile">
+		<div v-if="!testMode" class="questions-solving-view">
+			<div v-if="!isMobile" class="tabs">
 				<ul>
 					<li
 						v-for="(view, index) in views"
@@ -37,7 +37,7 @@
 				</span>
 			</div>
 		</div>
-		<div class="questions-list-info" v-if="!testMode">
+		<div v-if="!testMode" class="questions-list-info">
 			<div class="active-filters">
 				{{activeFiltersForDisplay}}
 			</div>
@@ -79,8 +79,8 @@
 
 				<div
 					v-for="(question, index) in questionsCurrentPage"
-					class="questions-list-item"
 					:key="index"
+					class="questions-list-item"
 				>
 					<div class="questions-list-numbering">
 						<span class="matched-count">
@@ -92,14 +92,14 @@
 						<span class="question-id">#{{question.id}}</span>
 					</div>
 					<wnl-quiz-question
+						:id="question.id"
+						:key="`question-${question.id}`"
 						:class="`quiz-question-${question.id}`"
 						:get-reaction="getReaction"
-						:id="question.id"
 						:module="module"
 						:question="question"
 						:read-only="showListResults"
 						:hide-comments="true"
-						:key="`question-${question.id}`"
 						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
 						@userEvent="proxyUserEvent"
 					/>

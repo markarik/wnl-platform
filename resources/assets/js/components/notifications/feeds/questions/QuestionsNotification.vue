@@ -28,11 +28,11 @@
 							<span class="object">{{object}}</span>
 							<span class="context">{{contextInfo}}</span>
 						</div>
-						<div class="object-text wrap" v-if="objectText">{{objectText}}</div>
+						<div v-if="objectText" class="object-text wrap">{{objectText}}</div>
 						<div
+							v-if="subjectText"
 							class="subject wrap"
 							:class="{'unseen': !isSeen}"
-							v-if="subjectText"
 						>{{subjectText}}</div>
 						<div class="time">
 						</div>
@@ -40,8 +40,8 @@
 				</router-link>
 			</div>
 		</div>
-		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
+		<div v-if="deleted" class="delete-message">{{$t('notifications.messages.deleted')}}</div>
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
 			<wnl-user-profile-modal :author="message.actors" />
 		</wnl-modal>
 	</div>

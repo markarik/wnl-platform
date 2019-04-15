@@ -1,9 +1,9 @@
 <template>
 	<div class="wnl-main-nav wnl-column" :class="{ 'horizontal': isHorizontal }">
 		<router-link
+			v-if="isOnboardingFinished"
 			class="wnl-main-nav-item"
 			:to="{ name: 'courses', params: { courseId: 1, keepsNavOpen: true }}"
-			v-if="isOnboardingFinished"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-home"></i>
@@ -11,9 +11,9 @@
 			<span class="text">Kurs</span>
 		</router-link>
 		<router-link
+			v-if="!isOnboardingFinished"
 			class="wnl-main-nav-item"
 			:to="{ name: 'onboarding' }"
-			v-if="!isOnboardingFinished"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-play"></i>
@@ -21,9 +21,9 @@
 			<span class="text">Start</span>
 		</router-link>
 		<router-link
+			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 			class="wnl-main-nav-item"
 			:to="{ name: 'collections', params: { keepsNavOpen: true } }"
-			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-star-o"></i>
@@ -31,9 +31,9 @@
 			<span class="text">Kolekcje</span>
 		</router-link>
 		<router-link
+			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 			class="wnl-main-nav-item"
 			:to="{name: 'questions-dashboard', params: { keepsNavOpen: true } }"
-			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-check-square-o"></i>
@@ -69,9 +69,9 @@
 			<span class="text">Zapisz się!</span>
 		</a>
 		<router-link
+			v-if="$moderatorFeatures.isAllowed('access') && isOnboardingFinished"
 			class="wnl-main-nav-item"
 			:to="{name: 'moderatorFeed'}"
-			v-if="$moderatorFeatures.isAllowed('access') && isOnboardingFinished"
 		>
 			<span class="icon is-medium">
 				<i class="fa fa-list"></i>

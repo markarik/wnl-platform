@@ -9,8 +9,8 @@
 		</template>
 
 		<wnl-sortable-table
-			slot-scope="slotProps"
 			slot="list"
+			slot-scope="slotProps"
 			:columns="columns"
 			:active-sort-column-name="activeSortColumnName"
 			:sort-direction="sortDirection"

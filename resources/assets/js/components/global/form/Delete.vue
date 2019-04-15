@@ -7,9 +7,9 @@
 	>
 		<wnl-alert
 			v-for="(alert, timestamp) in alerts"
+			:key="timestamp"
 			css-class="fixed"
 			:alert="alert"
-			:key="timestamp"
 			:timestamp="timestamp"
 			@delete="onDelete"
 		></wnl-alert>

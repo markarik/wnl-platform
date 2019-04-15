@@ -4,12 +4,12 @@
 			Idź do slajdu
 		</label>
 		<input
+			v-model.number="slideNumber"
 			class="input"
 			type="number"
 			size="3"
 			maxlength="3"
 			min="1"
-			v-model.number="slideNumber"
 			@input="onChange"
 		>
 	</div>

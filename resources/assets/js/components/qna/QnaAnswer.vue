@@ -1,5 +1,5 @@
 <template>
-	<div class="qna-answer-container" ref="highlight">
+	<div ref="highlight" class="qna-answer-container">
 		<div class="qna-answer">
 			<wnl-vote
 				type="up"
@@ -54,7 +54,7 @@
 			>
 			</wnl-comments-list>
 		</div>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
 			<wnl-user-profile-modal :author="author" />
 		</wnl-modal>
 	</div>

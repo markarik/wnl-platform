@@ -6,18 +6,18 @@
 		</label>
 
 		<textarea
+			:id="name"
 			class="textarea is-medium"
 			:name="name"
 			:value="form[name]"
-			@input="$emit('input', $event.target.value)"
 			:placeholder="name"
-			:id="name"
+			@input="$emit('input', $event.target.value)"
 		>
 		</textarea>
 
 		<span
-			class="help is-danger"
 			v-if="form.errors.has(name)"
+			class="help is-danger"
 			v-text="form.errors.get(name)"
 		></span>
 	</div>

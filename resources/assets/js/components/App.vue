@@ -1,10 +1,10 @@
 <template>
 	<div
-		id="app"
 		v-if="!isCurrentUserLoading"
+		id="app"
 		:class="{'modal-active': modalVisible}"
 	>
-		<div class="wnl-overlay" v-if="shouldDisplayOverlay">
+		<div v-if="shouldDisplayOverlay" class="wnl-overlay">
 			<span class="loader"></span>
 			<span class="loader-text">{{currentOverlayText}}</span>
 		</div>

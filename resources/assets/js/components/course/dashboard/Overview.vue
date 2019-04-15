@@ -1,5 +1,5 @@
 <template>
-	<div class="scrollable-main-container" ref="overviewContainer">
+	<div ref="overviewContainer" class="scrollable-main-container">
 		<!-- Dashboard news -->
 		<wnl-dashboard-news />
 
@@ -7,7 +7,7 @@
 			<div class="welcome">
 				{{$t('dashboard.welcome', {currentUserName})}} <wnl-emoji name="wave" />
 			</div>
-			<div class="access-display" v-if="currentUserSubscriptionActive">
+			<div v-if="currentUserSubscriptionActive" class="access-display">
 				<div>
 					Twój dostęp do kursu jest aktywny do:&nbsp;
 				</div>
@@ -35,9 +35,9 @@
 		<div class="current-view-controls">
 			<a
 				v-for="(panel, index) in panels"
+				:key="index"
 				class="panel-toggle"
 				:class="{'is-active': overviewView === panel.slug}"
-				:key="index"
 				@click="changeOverviewView(panel.slug)"
 			>
 				{{panel.name}}
@@ -48,9 +48,9 @@
 		</div>
 		<wnl-stream-feed v-show="overviewView === 'stream'" />
 		<wnl-qna
+			v-show="overviewView === 'qna'"
 			:sorting-enabled="true"
 			:numbers-disabled="true"
-			v-show="overviewView === 'qna'"
 			:hide-title="true"
 			class="wnl-overview-qna"
 		/>

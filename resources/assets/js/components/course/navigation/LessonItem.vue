@@ -8,19 +8,19 @@
 			<div class="sidenav-icon-wrapper">
 				<span class="icon is-small">
 					<i
+						v-if="isInProgress"
 						title="W trakcie..."
 						class="fa fa-ellipsis-h"
-						v-if="isInProgress"
 					></i>
 					<i
+						v-else-if="isComplete"
 						title="Zrobione!"
 						class="fa fa-check-square-o"
-						v-else-if="isComplete"
 					></i>
 					<i
+						v-else
 						title="Jeszcze przed Tobą"
 						class="fa fa-square-o"
-						v-else
 					></i>
 				</span>
 			</div>

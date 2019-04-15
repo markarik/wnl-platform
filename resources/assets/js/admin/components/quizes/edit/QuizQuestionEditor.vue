@@ -1,6 +1,7 @@
 <template>
 	<div class="quiz-question-editor">
 		<wnl-form
+			ref="quizQuestionForm"
 			:attach="attach"
 			class="chat-message-form"
 			hide-default-submit="true"
@@ -9,13 +10,12 @@
 			:suppress-enter="true"
 			:resource-route="formResourceRoute"
 			@submitSuccess="onSubmitSuccess"
-			ref="quizQuestionForm"
 		>
 			<header class="question-form-header">
 				<h4 v-if="isEdit">
 					Edycja pytania
 						<strong>{{quizQuestionId}}</strong>
-						<strong class="has-text-danger" v-if="questionIsDeleted">Usunięte</strong>
+						<strong v-if="questionIsDeleted" class="has-text-danger">Usunięte</strong>
 				</h4>
 				<h4 v-else>Tworzenie nowego pytania</h4>
 				<div class="field save-button-field">
@@ -70,7 +70,7 @@
 			</fieldset>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Tagi</legend>
-				<wnl-tags :default-tags="questionTags" ref="tags"></wnl-tags>
+				<wnl-tags ref="tags" :default-tags="questionTags"></wnl-tags>
 			</fieldset>
 			<wnl-content-item-classifier-editor
 				v-if="isEdit"
@@ -87,7 +87,7 @@
 			</div>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Powiązane slajdy</legend>
-				<wnl-slide-ids :default-slides="questionSlides" ref="slides"></wnl-slide-ids>
+				<wnl-slide-ids ref="slides" :default-slides="questionSlides"></wnl-slide-ids>
 			</fieldset>
 			<fieldset class="question-form-fieldset">
 				<label class="label checkbox-label">
@@ -101,10 +101,10 @@
 				</label>
 			</fieldset>
 			<div
-				class="field answer-field"
 				v-for="(answer, index) in questionAnswers"
-				:data-id="answer.id"
 				:key="answer.id"
+				class="field answer-field"
+				:data-id="answer.id"
 			>
 				<fieldset class="question-form-fieldset">
 					<legend class="question-form-legend">Odpowiedź {{index + 1}}</legend>

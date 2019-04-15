@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-app-layout wnl-course-layout" v-if="ready">
+	<div v-if="ready" class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
 			:is-visible="canRenderSidenav"
 			:is-detached="!isSidenavMounted"
@@ -12,7 +12,7 @@
 			>
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
-		<div class="wnl-course-content wnl-column" v-if="isCurrentEditionParcitipantAllowedAccess">
+		<div v-if="isCurrentEditionParcitipantAllowedAccess" class="wnl-course-content wnl-column">
 			<router-view :presence-channel="presenceChannel" />
 		</div>
 		<wnl-splash-screen v-else />

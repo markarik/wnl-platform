@@ -1,12 +1,12 @@
 <template>
 	<div class="flashcards">
 		<div class="flashcards__title content">
-			<h2 class="flashcards__title__header" id="flashacardsSetHeader">Zestawy powtórkowe na dziś</h2>
+			<h2 id="flashacardsSetHeader" class="flashcards__title__header">Zestawy powtórkowe na dziś</h2>
 			<ul class="flashcards__title__list">
 				<li
-					class="flashcards__title__list__item"
 					v-for="set in sets"
 					:key="set.id"
+					class="flashcards__title__list__item"
 					@click="scrollToSet(set.id)"
 				>{{set.name}}
 				</li>
@@ -14,14 +14,14 @@
 		</div>
 		<div class="flashcards__description content" v-html="screenData.content" />
 		<div
-			class="flashcards-set"
 			v-for="set in sets"
 			:key="set.id"
+			class="flashcards-set"
 		>
 			<div
+				:id="`set-${set.id}`"
 				class="flashcards-set__title"
 				:name="set.name"
-				:id="`set-${set.id}`"
 			>
 				<h3 class="flashcards-set__title__header">
 					{{set.name}}
@@ -54,8 +54,8 @@
 
 				<button
 					type="button"
-					@click="onRetakeSet(set)"
 					class="flashcards-set__retake button"
+					@click="onRetakeSet(set)"
 				>
 					<span class="icon"><i class="fa fa-undo"></i></span>
 					ponów cały zestaw

@@ -1,7 +1,7 @@
 <template>
-	<th @click="$emit('click')" class="column-name">
+	<th class="column-name" @click="$emit('click')">
 		{{label}}
-		<span class="icon is-small" v-if="isActive">
+		<span v-if="isActive" class="icon is-small">
 			<i :class="['fa', sortDirection === 'asc' ? 'fa-chevron-up': 'fa-chevron-down']"></i>
 		</span>
 	</th>

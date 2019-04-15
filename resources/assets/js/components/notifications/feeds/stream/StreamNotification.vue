@@ -21,11 +21,11 @@
 					<span class="object">{{object}}</span>
 					<span class="context">{{contextInfo}}</span>
 				</div>
-				<div class="object-text wrap" v-if="objectText">{{objectText}}</div>
+				<div v-if="objectText" class="object-text wrap">{{objectText}}</div>
 				<div
+					v-if="subjectText"
 					class="subject wrap"
 					:class="{'unseen': !isSeen}"
-					v-if="subjectText"
 				>{{subjectText}}</div>
 				<div class="time">
 				</div>
@@ -90,16 +90,16 @@
 			</div>
 		</div>
 		<div
-			class="delete-message"
 			v-if="deleted"
 			v-t="'notifications.messages.deleted'"
+			class="delete-message"
 		/>
 		<div
-			class="delete-message"
 			v-if="resolved"
 			v-t="'notifications.messages.resolved'"
+			class="delete-message"
 		/>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
 			<wnl-user-profile-modal :author="userForModal" />
 		</wnl-modal>
 	</div>

@@ -1,6 +1,6 @@
 <template>
 	<nav class="wnl-navbar has-shadow" :class="{'is-desktop': !isTouchScreen}">
-		<div class="wnl-navbar-item wnl-navbar-sidenav-toggle" v-if="canShowSidenavTrigger">
+		<div v-if="canShowSidenavTrigger" class="wnl-navbar-item wnl-navbar-sidenav-toggle">
 			<a class="wnl-navbar-sidenav-trigger" @click="toggleSidenav">
 				<span class="icon">
 					<i class="fa" :class="sidenavIconClass"></i>
@@ -22,7 +22,7 @@
 				>
 			</router-link>
 		</div>
-		<div class="wnl-navbar-signup" v-if="!currentUserHasLatestProduct && getCurrentCourseProductSignupsOpen">
+		<div v-if="!currentUserHasLatestProduct && getCurrentCourseProductSignupsOpen" class="wnl-navbar-signup">
 			<a
 				target="_blank"
 				:href="signUpLink"
@@ -47,15 +47,15 @@
 			<wnl-personal-feed />
 		</div>
 		<div
-			class="wnl-navbar-item wnl-navbar-messages"
 			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
+			class="wnl-navbar-item wnl-navbar-messages"
 		>
 			<wnl-chat-feed />
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
 			<wnl-user-dropdown />
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-chat-toggle" v-if="canShowChatToggleInNavbar">
+		<div v-if="canShowChatToggleInNavbar" class="wnl-navbar-item wnl-navbar-chat-toggle">
 			<span class="icon is-big">
 				<i
 					class="fa"

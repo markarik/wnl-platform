@@ -10,18 +10,18 @@
 		</div>
 		<div
 			class="personal-notification"
-			@click="markAsReadAndGo"
 			:class="{'deleted': deleted || resolved}"
+			@click="markAsReadAndGo"
 		>
 			<div class="notification-content">
 				<div class="notification-header">
 					<span class="actor">{{message.actors.full_name}}</span>
 					<span class="action">{{action}}</span>
-					<span class="object" v-if="object">{{object}}</span>
-					<span class="context" v-if="contextInfo">{{contextInfo}}</span>
-					<span class="object-text wrap" v-if="objectText">{{objectText}}</span>
+					<span v-if="object" class="object">{{object}}</span>
+					<span v-if="contextInfo" class="context">{{contextInfo}}</span>
+					<span v-if="objectText" class="object-text wrap">{{objectText}}</span>
 				</div>
-				<div class="subject wrap" v-if="subjectText">{{subjectText}}</div>
+				<div v-if="subjectText" class="subject wrap">{{subjectText}}</div>
 				<div class="time">
 					<span class="icon is-small">
 						<i class="fa" :class="icon"></i>
@@ -40,16 +40,16 @@
 			</div>
 		</div>
 		<div
-			class="delete-message"
 			v-if="deleted"
 			v-t="'notifications.messages.deleted'"
+			class="delete-message"
 		/>
 		<div
-			class="delete-message"
 			v-if="resolved"
 			v-t="'notifications.messages.resolved'"
+			class="delete-message"
 		/>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
 			<wnl-user-profile-modal :author="userForModal" />
 		</wnl-modal>
 	</div>

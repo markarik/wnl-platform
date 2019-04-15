@@ -1,6 +1,6 @@
 <template>
 	<div class="qna-thread" :class="{'is-mobile': isMobile}">
-		<div class="qna-question" ref="highlight">
+		<div ref="highlight" class="qna-question">
 			<wnl-vote
 				type="up"
 				:reactable-id="questionId"
@@ -20,11 +20,11 @@
 						module="qna"
 					></wnl-bookmark>
 				</div>
-				<div class="tags" v-if="tags.length > 0">
+				<div v-if="tags.length > 0" class="tags">
 					<span
 						v-for="(tag, key) in tags"
-						class="tag is-light"
 						:key="key"
+						class="tag is-light"
 					>
 						<span>{{tag}}</span>
 					</span>
@@ -57,8 +57,8 @@
 						></wnl-delete>
 					</span>
 					<wnl-resolve
-						@resolveResource="resolveQuestion(id)"
 						:resource="question"
+						@resolveResource="resolveQuestion(id)"
 						@unresolveResource="unresolveQuestion(id)"
 					/>
 				</div>
@@ -78,10 +78,10 @@
 					>
 					</wnl-watch>
 				</div>
-				<div class="level-right" v-if="!readOnly">
+				<div v-if="!readOnly" class="level-right">
 					<a
-						class="button is-small"
 						v-if="!showAnswerForm"
+						class="button is-small"
 						@click="showAnswerForm = true"
 					>
 						<span>Odpowiedz</span>
@@ -90,8 +90,8 @@
 						</span>
 					</a>
 					<a
-						class="button is-small"
 						v-if="showAnswerForm"
+						class="button is-small"
 						@click="showAnswerForm = false"
 					>
 						<span>Ukryj</span>
@@ -114,23 +114,23 @@
 				:refresh="refreshQuestionAndShowAnswers"
 			></wnl-qna-answer>
 			<wnl-qna-answer
-				v-else-if="showAllAnswers"
 				v-for="answer in allAnswers"
+				v-else-if="showAllAnswers"
+				:key="answer.id"
 				:answer="answer"
 				:question-id="questionId"
-				:key="answer.id"
 				:read-only="readOnly"
 				:refresh="refreshQuestionAndShowAnswers"
 			></wnl-qna-answer>
 			<a
-				class="qna-answers-show-all"
 				v-if="!showAllAnswers && otherAnswers.length > 0"
+				class="qna-answers-show-all"
 				@click="showAllAnswers = true"
 			>
 				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
 			<wnl-user-profile-modal :author="author" />
 		</wnl-modal>
 	</div>

@@ -12,7 +12,7 @@
 		<div class="quiz-answer-content">
 			{{answer.text}}
 		</div>
-		<div class="quiz-answer-stats" v-if="isNumber(stats)">
+		<div v-if="isNumber(stats)" class="quiz-answer-stats">
 			<span class="tag" :title="`${stats}% osób wybrało tę odpowiedź`">
 				{{stats}}%
 			</span>

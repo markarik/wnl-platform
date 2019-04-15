@@ -16,12 +16,12 @@
 			:columns="columns"
 			class="products"
 		>
-			<tbody slot-scope="slotProps" slot="tbody">
+			<tbody slot="tbody" slot-scope="slotProps">
 			<tr
 				v-for="product in slotProps.list"
 				:key="product.id"
-				@click="goToEdit(product.id)"
 				class="clickable"
+				@click="goToEdit(product.id)"
 			>
 				<td>{{product.id}}</td>
 				<td>{{product.name}}</td>

@@ -2,11 +2,11 @@
 	<div class="field wnl-form-checkbox">
 
 		<input
+			:id="name"
 			type="checkbox"
 			:name="name"
 			:checked="form[name]"
 			@change="$emit('input', $event.target.checked)"
-			:id="name"
 		>
 
 		<label :for="name" class="label">
@@ -14,8 +14,8 @@
 		</label>
 
 		<span
-			class="help is-danger"
 			v-if="form.errors.has(name)"
+			class="help is-danger"
 			v-text="form.errors.get(name)"
 		></span>
 	</div>

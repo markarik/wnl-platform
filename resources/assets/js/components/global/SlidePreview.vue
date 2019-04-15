@@ -5,8 +5,8 @@
 		:class="{'is-active': showModal}"
 	>
 		<div
-			class="previous-slide"
 			v-show="hasManySlides"
+			class="previous-slide"
 		>
 			<span class="icon" @click="$emit('switchSlide', -1)">
 				<i class="fa fa-angle-left"></i>
@@ -19,10 +19,10 @@
 			</header>
 			<div class="modal-card-body">
 				<iframe
+					v-show="!isLoading"
 					name="slidePreview"
 					:srcdoc="content"
 					@load="onLoad"
-					v-show="!isLoading"
 				/>
 			</div>
 			<footer class="modal-card-footer">
@@ -30,8 +30,8 @@
 			</footer>
 		</div>
 		<div
-			class="next-slide"
 			v-if="hasManySlides"
+			class="next-slide"
 		>
 			<span class="icon" @click="$emit('switchSlide', 1)">
 				<i class="fa fa-angle-right"></i>

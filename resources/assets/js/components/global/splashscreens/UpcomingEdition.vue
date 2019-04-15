@@ -25,7 +25,7 @@
 				</div>
 			</div>
 			<!-- TODO PLAT-1201 clean up and do it correctly -->
-			<p class="splash-screen__info text-dimmed" v-if="courseSlug === 'ldek'">
+			<p v-if="courseSlug === 'ldek'" class="splash-screen__info text-dimmed">
 				Album map myśli wyślemy do Ciebie w 2. połowie maja.
 			</p>
 			<p class="splash-screen__info text-dimmed">

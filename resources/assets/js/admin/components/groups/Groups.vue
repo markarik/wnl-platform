@@ -3,7 +3,7 @@
 		<wnl-paginated-list
 			:resource-name="'groups/.filter'"
 		>
-			<h3 class="title is-3" slot="header">
+			<h3 slot="header" class="title is-3">
 				Edycja grup
 				<router-link class="button is-success" :to="{name: 'group-edit', params: { id: 'new' } }">+ Dodaj grupę</router-link>
 			</h3>
@@ -11,8 +11,8 @@
 				<wnl-groups-list-item
 					v-for="group in slotParams.list"
 					:id="group.id"
-					:name="group.name"
 					:key="group.id"
+					:name="group.name"
 				/>
 			</ul>
 		</wnl-paginated-list>

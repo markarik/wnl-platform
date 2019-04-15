@@ -1,15 +1,15 @@
 <template>
 	<div class="field">
 		<wnl-toggler
-			@toggle="onToggle"
 			:value="inputValue"
 			:name="name"
+			@toggle="onToggle"
 		>
 		</wnl-toggler>
 		<label
+			v-if="$slots.default"
 			:for="name"
 			class="label"
-			v-if="$slots.default"
 		>
 			<slot></slot>
 		</label>

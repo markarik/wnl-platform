@@ -7,9 +7,9 @@
 		>
 			<label class="label">{{meta.name}}</label>
 			<input
+				v-model="filters[contentType]"
 				class="input"
 				placeholder="Wpisz id po przecinku: 36,45,..."
-				v-model="filters[contentType]"
 			/>
 		</div>
 		<button

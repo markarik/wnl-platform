@@ -6,8 +6,8 @@
 		>
 			<wnl-structure-node-item
 				v-for="node in nodes"
-				:node="node"
 				:key="node.id"
+				:node="node"
 			/>
 		</vue-draggable>
 	</ul>

@@ -2,9 +2,9 @@
 	<div>
 		<h2 class="title is-3 margin bottom">Nowy Użytkownik</h2>
 		<user-edit-form
+			:resource-url="resourceUrl"
 			@success="onSuccess"
 			@error="onError"
-			:resource-url="resourceUrl"
 		/>
 	</div>
 </template>

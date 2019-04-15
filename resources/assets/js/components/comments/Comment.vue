@@ -4,8 +4,8 @@
 			<figure class="media-left">
 				<div
 					class="avatar-activator"
-					@click="showModal"
 					:class="{'author-forgotten': profile.deleted_at}"
+					@click="showModal"
 				>
 					<p class="image is-32x32">
 						<wnl-avatar
@@ -47,7 +47,7 @@
 				@unresolveResource="$emit('unresolveComment', id)"
 			/>
 		</div>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
 			<wnl-user-profile-modal :author="profile" />
 		</wnl-modal>
 	</article>

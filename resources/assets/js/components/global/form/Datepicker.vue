@@ -5,20 +5,20 @@
 		</label>
 
 		<input
+			ref="input"
+			v-model="inputValue"
 			class="input datepicker"
 			:name="name"
-			ref="input"
 			:placeholder="placeholder"
-			v-model="inputValue"
 			@input="onDateInput"
 		/>
 
 		<template v-if="hasErrors">
 			<span
-				class="help is-danger"
 				v-for="(error, index) in getErrors"
-				v-text="error"
 				:key="index"
+				class="help is-danger"
+				v-text="error"
 			></span>
 		</template>
 	</div>

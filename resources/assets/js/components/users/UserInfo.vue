@@ -1,6 +1,6 @@
 <template>
 	<div class="user-info full-width-sidenav-slot">
-		<span class="label" v-t="label"></span>
+		<span v-t="label" class="label"></span>
 		<span class="info">{{info}}</span>
 	</div>
 </template>

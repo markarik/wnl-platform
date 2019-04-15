@@ -7,40 +7,40 @@
 			<div class="flashcards-list__item__text__container">
 				<p class="flashcards-list__item__text">{{flashcard.content}}</p>
 				<div
+					v-if="flashcard.answer === 'unsolved'"
 					class="flashcards-list__item__buttons"
 					:class="{'wnl-is-loading': isLoading}"
-					v-if="flashcard.answer === 'unsolved'"
 				>
 					<a
 						class="flashcards-list__item__buttons__button text--easy"
-						@click="submitAnswer(flashcard, 'easy')"
 						:title="ANSWERS_MAP.easy.text"
+						@click="submitAnswer(flashcard, 'easy')"
 					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span>
 					</a>
 					<a
 						class="flashcards-list__item__buttons__button text--hard"
-						@click="submitAnswer(flashcard, 'hard')"
 						:title="ANSWERS_MAP.hard.text"
+						@click="submitAnswer(flashcard, 'hard')"
 					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span>
 					</a>
 					<a
 						class="flashcards-list__item__buttons__button text--do-not-know"
-						@click="submitAnswer(flashcard, 'do_not_know')"
 						:title="ANSWERS_MAP.do_not_know.text"
+						@click="submitAnswer(flashcard, 'do_not_know')"
 					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span>
 					</a>
 				</div>
 				<div
-					class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
 					v-else
+					class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
 				>
 					<span
 						class="flashcards-list__item__buttons__button"
-						@click="onRetakeFlashcard(flashcard)"
 						title="Ponów"
+						@click="onRetakeFlashcard(flashcard)"
 					>
 						<span class="icon"><i class="fa fa-undo"></i></span>
 					</span>
@@ -57,15 +57,15 @@
 			<div v-if="flashcard.answer !== 'unsolved'">
 				<wnl-text-button
 					v-if="!flashcard.note && !isNoteEditorOpen"
-					@click="toggleNoteEditor"
 					type="button"
+					@click="toggleNoteEditor"
 				>+ DODAJ NOTATKĘ</wnl-text-button>
 				<div v-if="flashcard.note && !isNoteEditorOpen">
 					<label class="label">TWOJA NOTATKA
 					<wnl-text-button
 						type="button"
-						@click="toggleNoteEditor"
 						icon="edit"
+						@click="toggleNoteEditor"
 					>EDYTUJ</wnl-text-button>
 					</label>
 					<span class="flashcards-list__item__note-content content" v-html="flashcard.note.note" />
@@ -83,16 +83,16 @@
 					<label class="label">TWOJA NOTATKA
 					<wnl-text-button
 						type="button"
-						@click="toggleNoteEditor"
 						icon="close"
+						@click="toggleNoteEditor"
 					>ANULUJ</wnl-text-button>
 					</label>
 					<wnl-quill
+						v-model="note"
 						name="note"
 						class="margin bottom flashcards-list__item__note-editor"
 						:options="{ theme: 'snow', placeholder: 'Wpisz swoją notatkę...' }"
 						:toolbar="[['bold', 'italic', 'underline', 'link'], [{ color: fontColors }], ['clean']]"
-						v-model="note"
 					/>
 					<div class="level">
 						<div class="level-item">

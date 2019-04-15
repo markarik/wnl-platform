@@ -29,11 +29,11 @@
 					<ul class="set-sizes">
 						<li
 							v-for="(size, index) in sizesToChoose"
+							:key="index"
 							class="set-sizes-option"
 							:class="{'is-selected': size === testQuestionsCount}"
-							:key="index"
-							v-text="size"
 							@click="testQuestionsCount = size"
+							v-text="size"
 						></li>
 					</ul>
 				</section>
@@ -45,11 +45,11 @@
 						{{$t('questions.solving.test.headers.time')}}
 					</p>
 					<input
+						v-model="time"
 						class="input-clean"
 						max="999"
 						maxlength="3"
 						type="number"
-						v-model="time"
 					/>
 					<span class="time-unit">{{$t('units.time.minutes')}}</span>
 				</section>

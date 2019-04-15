@@ -25,11 +25,11 @@
 		<div class="slide-thumb" @click="onThumbnailClick">
 			<div class="thumb-meta">
 				<span class="slide-number">{{slideNumber}}</span>
-				<span class="icon is-tiny" v-if="media"><i class="fa" :class="media.icon"></i></span>
+				<span v-if="media" class="icon is-tiny"><i class="fa" :class="media.icon"></i></span>
 			</div>
 			<p class="thumb-heading metadata" v-html="header"></p>
 			<div class="slide-snippet" v-html="snippet"></div>
-			<div class="slide-snippet has-media" v-if="media">
+			<div v-if="media" class="slide-snippet has-media">
 				<span class="icon is-tiny">
 					<i class="fa" :class="media.icon"></i>
 				</span>

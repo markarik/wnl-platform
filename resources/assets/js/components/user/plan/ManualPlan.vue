@@ -12,7 +12,7 @@
 					{{$t('lessonsAvailability.allLessonsAnnotation.explanation')}}
 				</div>
 			</div>
-			<div class="manual-start-dates" v-if="manualStartDates.length > 0">
+			<div v-if="manualStartDates.length > 0" class="manual-start-dates">
 				<div class="level-left">
 					<div class="level-item">
 						{{$t('lessonsAvailability.lessonsToBeChangedList')}}
@@ -32,8 +32,8 @@
 				</table>
 				<div class="accept-plan">
 					<a
-						@click="acceptPlan"
 						class="button button is-primary is-outlined is-big"
+						@click="acceptPlan"
 					>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 					</a>
 				</div>
@@ -49,7 +49,7 @@
 				@change="onStartDateChange"
 			/>
 
-			<div class="manual-start-dates" v-show="manualStartDates.length > 0">
+			<div v-show="manualStartDates.length > 0" class="manual-start-dates">
 				<div class="level-left">
 					<div class="level-item">
 						{{$t('lessonsAvailability.lessonsToBeChangedList')}}
@@ -71,8 +71,8 @@
 		</div>
 		<div class="accept-plan">
 			<a
-				@click="acceptPlan"
 				class="button button is-primary is-outlined is-big"
+				@click="acceptPlan"
 			>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 			</a>
 		</div>

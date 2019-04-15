@@ -2,9 +2,9 @@
 	<div v-if="user.orders.length">
 		<wnl-order
 			v-for="(order, index) in user.orders"
+			:key="index"
 			:order-instance="order"
 			:should-check-payment-status="false"
-			:key="index"
 		>
 			<span slot="order-tags" class="tag">{{$t('orders.tags.shipping.status')}}: {{translateShippingStatus(order)}}</span>
 		</wnl-order>

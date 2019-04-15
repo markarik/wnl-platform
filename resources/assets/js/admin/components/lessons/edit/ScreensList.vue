@@ -39,9 +39,9 @@
 		<div class="margin top">
 			<wnl-alert
 				v-for="(alert, timestamp) in alerts"
+				:key="timestamp"
 				:alert="alert"
 				:timestamp="timestamp"
-				:key="timestamp"
 				@delete="onDelete"
 			>
 			</wnl-alert>

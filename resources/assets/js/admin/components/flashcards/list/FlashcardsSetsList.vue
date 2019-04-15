@@ -13,9 +13,9 @@
 			<template slot="list" slot-scope="slotParams">
 				<wnl-flashcards-sets-list-item
 					v-for="flashcardsSet in slotParams.list"
+					:id="flashcardsSet.id"
 					:key="flashcardsSet.id"
 					:name="flashcardsSet.name"
-					:id="flashcardsSet.id"
 				/>
 			</template>
 		</wnl-paginated-list>

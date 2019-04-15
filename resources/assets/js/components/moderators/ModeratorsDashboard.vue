@@ -18,8 +18,8 @@
 				<wnl-moderators-autocomplete
 					class="margin"
 					:users-list="moderators"
-					@change="search"
 					:selected="autocompleteUser"
+					@change="search"
 				/>
 				<wnl-accordion
 					:data-source="labelFilters"
@@ -37,21 +37,21 @@
 						<span v-t="'tasks.quickFilters.title'" />
 						<a
 							v-for="(quickFilter, index) in quickFilters"
+							:key="index"
+							v-t="quickFilter.name"
 							class="panel-toggle"
 							:class="{'is-active': quickFilter.isActive}"
 							@click="onQuickFilterChange(quickFilter)"
-							:key="index"
-							v-t="quickFilter.name"
 						/>
 					</div>
 					<div class="quick-action">
 						<span v-t="'tasks.sorting.title'" />
 						<a
 							v-for="(sort, index) in sorting"
+							:key="index"
 							class="panel-toggle"
 							:class="{'is-active': sort.isActive}"
 							@click="onSortClick(sort)"
-							:key="index"
 						>
 							{{sort.name}}
 							<span class="icon is-small">
@@ -68,9 +68,9 @@
 					<div class="notification-container">
 						<span class="notification-text">Pojawiły się nowe notyfikacje.</span>
 						<button
-							@click="onRefresh"
-							class="button"
 							v-t="'ui.action.refresh'"
+							class="button"
+							@click="onRefresh"
 						/>
 					</div>
 				</wnl-alert>

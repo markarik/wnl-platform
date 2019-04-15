@@ -1,8 +1,8 @@
 <template>
 	<wnl-nested-set-panel-right :active-mode="editorMode" @setEditorMode="setEditorMode">
 		<component
-			slot="activeView"
 			:is="activeComponent"
+			slot="activeView"
 			:course-id="courseId"
 		/>
 	</wnl-nested-set-panel-right>

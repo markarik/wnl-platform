@@ -4,8 +4,8 @@
 			<slot />
 			<button
 				v-if="dismissable"
-				@click="$emit('onDismiss', {id: id})"
 				class="delete"
+				@click="$emit('onDismiss', {id: id})"
 			></button>
 		</div>
 	</div>

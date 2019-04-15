@@ -1,6 +1,6 @@
 <template>
 	<div class="slides-search">
-		<div class="notification is-danger has-text-centered" v-show="error">
+		<div v-show="error" class="notification is-danger has-text-centered">
 			Nie udało się znaleźć slajdu dla podanych argumentów
 		</div>
 
@@ -13,18 +13,18 @@
 							<input
 								type="text"
 								class="input"
-								@keyup.enter="getSlide"
 								:value="screenId"
+								@keyup.enter="getSlide"
 								@input="(event) => $emit('screenIdChange', event)"
 							>
 						</div>
 						<div class="control">
 							<label class="label">Numer slajdu</label>
 							<input
-								@keyup.enter="getSlide"
+								v-model="slideOrderNo"
 								type="text"
 								class="input"
-								v-model="slideOrderNo"
+								@keyup.enter="getSlide"
 							>
 						</div>
 					</div>
@@ -36,8 +36,8 @@
 							<input
 								type="text"
 								class="input"
-								@keyup.enter="getSlide"
 								:value="slideId"
+								@keyup.enter="getSlide"
 								@input="(event) => $emit('slideIdChange', event)"
 							>
 						</div>
@@ -48,8 +48,8 @@
 				<div class="level-item">
 					<a
 						class="button is-outlined"
-						@click="getSlide"
 						:class="{'is-loading': loading}"
+						@click="getSlide"
 					>
 						Zaciung slajd
 					</a>

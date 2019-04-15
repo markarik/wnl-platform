@@ -12,10 +12,10 @@
 		</wnl-sidenav-slot>
 		<div class="scrollable-main-container chat-container">
 			<wnl-private-chat
+				v-if="currentRoom.id"
 				:room="currentRoom"
 				:users="currentRoomUsers"
 				:messages-loaded="messagesLoaded"
-				v-if="currentRoom.id"
 			></wnl-private-chat>
 		</div>
 	</div>

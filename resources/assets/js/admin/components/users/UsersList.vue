@@ -13,17 +13,17 @@
 				<tbody>
 				<tr
 					v-for="user in users"
+					:key="user.id"
 					class="users-users__item"
 					@click="goToDetails(user.id)"
-					:key="user.id"
 				>
 					<td>{{user.id}}</td>
 					<td>
 						{{user.full_name}}
 						<span
-							class="tag"
 							v-for="(role, index) in user.roles"
 							:key="index"
+							class="tag"
 							:style="{backgroundColor: getColourForStr(role.name)}"
 						>{{role.name}}</span>
 					</td>

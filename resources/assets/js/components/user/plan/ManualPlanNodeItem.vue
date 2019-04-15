@@ -19,8 +19,8 @@
 			</span>
 
 			<wnl-manual-plan-nodes-list
-				class="nodes-list"
 				v-if="isOpen"
+				class="nodes-list"
 				:manual-start-dates="manualStartDates"
 				:nodes="childrenNodes"
 				@change="$emit('change', $event)"
@@ -29,7 +29,7 @@
 
 		<template v-else>
 			<div class="lesson-left-side">
-				<div class="not-accesible" v-if="!node.model.isAccessible">
+				<div v-if="!node.model.isAccessible" class="not-accesible">
 					{{$t('lessonsAvailability.lessonNotAvailable')}}
 				</div>
 				<div v-else :class="{'is-default-start-date': isDefaultStartDate}">

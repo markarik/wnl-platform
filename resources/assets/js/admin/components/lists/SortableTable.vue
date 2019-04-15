@@ -5,10 +5,10 @@
 			<wnl-sortable-table-column-header
 				v-for="column in columns"
 				:key="column.name"
-				@click="changeOrder(column)"
 				:label="column.label"
 				:is-active="column.name === activeSortColumnName"
 				:sort-direction="sortDirection"
+				@click="changeOrder(column)"
 			/>
 		</tr>
 		</thead>

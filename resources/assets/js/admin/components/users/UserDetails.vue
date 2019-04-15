@@ -6,9 +6,9 @@
 				<p>#{{user.id}}</p>
 				<p class="user-details__head__name">{{user.full_name}}</p>
 				<span
-					class="tag"
 					v-for="role in user.roles"
 					:key="role.name"
+					class="tag"
 					:style="{backgroundColor: getColourForStr(role.name)}"
 				>
 					{{role.name}}
@@ -19,9 +19,9 @@
 			<div class="tabs">
 				<ul>
 					<li
-						:class="{ 'is-active': name === activeTabName }"
 						v-for="(tab, name) in tabs"
 						:key="name"
+						:class="{ 'is-active': name === activeTabName }"
 					>
 						<router-link :to="{ hash: `#${name}` }">{{tab.text}}</router-link>
 					</li>

@@ -13,13 +13,13 @@
 				</span>
 			</a>
 		</p>
-		<div class="slides-carousel-container" v-if="bookmarkedSlidesIds.length > 0">
+		<div v-if="bookmarkedSlidesIds.length > 0" class="slides-carousel-container">
 			<div class="slides-carousel">
 				<wnl-slide-thumb
-					:key="index"
 					v-for="(slide, index) in sortedSlides"
-					@slideClick="showSlide(index)"
+					:key="index"
 					:slide="slide"
+					@slideClick="showSlide(index)"
 				>
 					{{getSlideDisplayNumberFromIndex(index)}}
 				</wnl-slide-thumb>
@@ -29,8 +29,8 @@
 			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
 		</div>
 		<wnl-slideshow
-			ref="slideshow"
 			v-if="htmlContent"
+			ref="slideshow"
 			:html-content="htmlContent"
 			:preserve-route="true"
 			:screen-data="screenData"

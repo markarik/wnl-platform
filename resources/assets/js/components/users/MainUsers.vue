@@ -8,15 +8,15 @@
 		</wnl-sidenav-slot>
 		<div class="scrollable-main-container wnl-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
 			<router-view
-				@userDataLoaded="onDataLoaded"
 				:filter-by-help="filterByHelp"
 				:filter-by-location="filterByLocation"
+				@userDataLoaded="onDataLoaded"
 			>
 			</router-view>
 		</div>
 		<wnl-sidenav-slot
-			class="full-width-sidenav-slot scrollable-container"
 			v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
+			class="full-width-sidenav-slot scrollable-container"
 			:is-visible="true"
 			:is-detached="false"
 		>

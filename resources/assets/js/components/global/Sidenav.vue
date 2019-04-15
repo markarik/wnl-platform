@@ -1,15 +1,15 @@
 <template>
 	<div class="wnl-sidenav" :class="{ mobile: isMobileNavigation }">
-		<ul class="items" v-if="items">
-			<li class="item heading small" v-if="itemsHeading">
+		<ul v-if="items" class="items">
+			<li v-if="itemsHeading" class="item heading small">
 				<span class="item-wrapper">
 					{{itemsHeading}}
 				</span>
 			</li>
 			<wnl-sidenav-group
 				v-for="(item, index) in items"
-				:item="item"
 				:key="index"
+				:item="item"
 				:force-group-open="isOption('forceGroupsOpen')"
 				:show-subitems-count="isOption('showSubitemsCount')"
 			>

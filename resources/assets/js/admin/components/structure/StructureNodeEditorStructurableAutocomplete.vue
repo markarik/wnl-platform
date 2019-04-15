@@ -6,10 +6,10 @@
 		</div>
 		<wnl-autocomplete
 			v-else
+			v-model="search"
 			placeholder="Wpisz nazwę lekcji/grupy, którą chcesz dołączyć lub utworzyć"
 			:items="autocompleteItems"
 			@change="onSelect"
-			v-model="search"
 		>
 			<div slot-scope="slotProps">
 				<span class="icon is-small">
@@ -18,7 +18,7 @@
 
 				{{slotProps.item.name}}
 			</div>
-			<div slot="footer" v-if="search !== ''">
+			<div v-if="search !== ''" slot="footer">
 				<div class="margin">
 					Nie mamy lekcji ani grupy o nazwie <strong>{{search}}</strong>
 				</div>

@@ -9,9 +9,9 @@
 			</h3>
 
 			<table
-				class="table"
-				slot-scope="slotProps"
 				slot="list"
+				slot-scope="slotProps"
+				class="table"
 			>
 				<thead>
 				<tr>

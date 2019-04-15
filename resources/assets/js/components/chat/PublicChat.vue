@@ -25,13 +25,13 @@
 			</span>
 		</a>
 		<wnl-chat
+			ref="messagesList"
 			:room="currentRoom"
 			:messages="messages"
 			:highlighted-message-id="highlightedMessageId"
 			:has-more="hasMore"
 			:on-scroll-top="pullMore"
 			:loaded="loaded"
-			ref="messagesList"
 		/>
 		<wnl-message-form
 			:room-id="currentRoom.id"

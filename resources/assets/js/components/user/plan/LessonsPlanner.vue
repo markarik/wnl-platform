@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="level" v-if="currentUserSubscriptionActive">
+		<div v-if="currentUserSubscriptionActive" class="level">
 			<div class="level-left">
 				<div class="level-item">
 					<div>
@@ -31,9 +31,9 @@
 		<div class="views-control">
 			<a
 				v-for="view in views"
+				:key="view.title"
 				class="panel-toggle view"
 				:class="{'is-active': view.isActive}"
-				:key="view.title"
 				@click="toggleView(view)"
 			>{{view.title}}
 				<span class="icon is-small">

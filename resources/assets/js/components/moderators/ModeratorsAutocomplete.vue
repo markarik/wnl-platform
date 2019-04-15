@@ -13,7 +13,7 @@
 			:items="usersListFiltered"
 			@change="onChange"
 		>
-			<wnl-user-autocomplete-item :item="slotProps.item" slot-scope="slotProps" />
+			<wnl-user-autocomplete-item slot-scope="slotProps" :item="slotProps.item" />
 		</wnl-autocomplete>
 
 	</div>

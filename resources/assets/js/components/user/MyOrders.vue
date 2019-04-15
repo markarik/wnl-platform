@@ -18,7 +18,7 @@
 				</a>
 			</div>
 		</div>
-		<div class="level" v-if="currentUserSubscriptionActive">
+		<div v-if="currentUserSubscriptionActive" class="level">
 			<div class="level-left">
 				<div class="level-item">
 					<div>
@@ -30,15 +30,15 @@
 				</div>
 			</div>
 		</div>
-		<div class="notification is-success strong has-text-centered" v-if="orderSuccess">
+		<div v-if="orderSuccess" class="notification is-success strong has-text-centered">
 			Dziękujemy za złożenie zamówienia!<br>Potwierdzenie znajdziesz na podanym przez siebie adresie e-mail.
 		</div>
 		<div v-if="loaded">
 			<div v-if="hasOrders">
 				<wnl-order
-					:order-instance="order"
 					v-for="(order, index) in orders"
 					:key="index"
+					:order-instance="order"
 				></wnl-order>
 			</div>
 			<div v-else>

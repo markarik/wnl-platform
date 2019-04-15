@@ -2,14 +2,14 @@
 	<div class="wnl-find-users">
 		<div class="wnl-find-users-input control" :class="{'is-loading': loading}">
 			<input
-				:placeholder="$t('messages.search.placeholder')"
+				ref="input"
 				v-model="textInputValue"
+				:placeholder="$t('messages.search.placeholder')"
 				@input="onInput"
 				@keydown="onKeyDown"
-				ref="input"
 			/>
 		</div>
-		<div class="wnl-find-users-info notification aligncenter" v-if="info">
+		<div v-if="info" class="wnl-find-users-info notification aligncenter">
 			{{info}}
 		</div>
 	</div>

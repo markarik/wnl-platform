@@ -2,9 +2,9 @@
 	<div class="slides-editor">
 		<wnl-alert
 			v-for="(alert, timestamp) in alerts"
+			:key="timestamp"
 			:alert="alert"
 			css-class="fixed"
-			:key="timestamp"
 			:timestamp="timestamp"
 			@delete="onDelete"
 		/>
@@ -13,8 +13,8 @@
 		<slot name="above-content" />
 
 		<div
-			class="notification is-danger has-text-centered"
 			v-show="submissionFailed"
+			class="notification is-danger has-text-centered"
 		>
 			Coś poszło nie tak...
 		</div>
@@ -38,10 +38,10 @@
 
 			<div class="slide-content-editor">
 				<wnl-code
+					v-model="form.content"
 					type="text"
 					name="content"
 					:form="form"
-					v-model="form.content"
 				/>
 			</div>
 
@@ -52,18 +52,18 @@
 					<div class="level-item">
 						<p class="control">
 							<wnl-checkbox
+								v-model="form.is_functional"
 								type="text"
 								name="is_functional"
 								:form="form"
-								v-model="form.is_functional"
 							>
 								Slajd funkcjonalny?
 							</wnl-checkbox>
 						</p>
 					</div>
 				</div>
-				<div class="level-center" v-if="remove">
-					<div class="level-item confirm-detach" v-if="confirmDetach">
+				<div v-if="remove" class="level-center">
+					<div v-if="confirmDetach" class="level-item confirm-detach">
 						<div>Na pewno?</div>
 						<a class="button" @click="confirmDetach=false">Nie</a>
 						<a
@@ -73,7 +73,7 @@
 							Tak
 						</a>
 					</div>
-					<div class="level-item" v-else="">
+					<div v-else="" class="level-item">
 						<a
 							class="button is-danger"
 							:class="{'is-loading': detachingSlide}"
@@ -85,9 +85,9 @@
 				<div class="level-right">
 					<div class="level-item">
 						<a
+							v-if="chartReady"
 							class="button is-primary"
 							:class="{'is-loading': updatingChart}"
-							v-if="chartReady"
 							@click="updateChart"
 						>Aktualizuj diagram</a>
 					</div>

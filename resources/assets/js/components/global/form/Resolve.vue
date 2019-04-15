@@ -1,14 +1,14 @@
 <template>
 	<p
-		@click="$emit('unresolveResource')"
-		class="resolvable icon"
 		v-if="$moderatorFeatures.isAllowed('access') && resource.resolved"
+		class="resolvable icon"
+		@click="$emit('unresolveResource')"
 	>
 		&nbsp;·
 		<i class="fa fa-undo" />
 		<span v-t="'ui.action.undo'" />
 	</p>
-	<span class="resolvable icon" v-else-if="$moderatorFeatures.isAllowed('access')">
+	<span v-else-if="$moderatorFeatures.isAllowed('access')" class="resolvable icon">
 		&nbsp;·
 		<i class="fa fa-check" @click="$emit('resolveResource')" />
 	</span>

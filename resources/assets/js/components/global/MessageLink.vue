@@ -1,12 +1,12 @@
 <template>
 	<router-link
-		:to="{ name: 'messages', query: {roomId: roomIdParam} }"
 		v-if="roomIdParam"
+		:to="{ name: 'messages', query: {roomId: roomIdParam} }"
 		@click="$emit('navigate')"
 	>
 		<slot></slot>
 	</router-link>
-	<a @click="createPrivateRoomAndRedirect" v-else><slot></slot></a>
+	<a v-else @click="createPrivateRoomAndRedirect"><slot></slot></a>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-comments" ref="highlight">
+	<div ref="highlight" class="wnl-comments">
 		<div class="separate-controls">
 			<div class="comments-controls">
 				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>

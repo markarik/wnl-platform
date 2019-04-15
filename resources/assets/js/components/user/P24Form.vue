@@ -1,8 +1,8 @@
 <template>
 	<form
+		v-if="!isEmpty(userData) && !isEmpty(paymentData)"
 		method="post"
 		:action="paymentData.transaction_url"
-		v-if="!isEmpty(userData) && !isEmpty(paymentData)"
 	>
 		<input
 			type="hidden"

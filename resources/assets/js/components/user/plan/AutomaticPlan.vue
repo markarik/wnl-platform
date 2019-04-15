@@ -12,9 +12,9 @@
 			<div class="days">
 				<a
 					v-for="day in days"
+					:key="day.dayNumber"
 					class="panel-toggle day"
 					:class="{'is-active': isDayActive(day.dayNumber)}"
-					:key="day.dayNumber"
 					@click="toggleDay(day.dayNumber)"
 				>{{$t(day.dayName)}}
 					<span class="icon is-small">
@@ -35,9 +35,9 @@
 			<div class="presets-control">
 				<a
 					v-for="preset in presets"
+					:key="preset.preset"
 					class="panel-toggle preset preset"
 					:class="{'is-active': isPresetActive(preset.preset)}"
-					:key="preset.preset"
 					@click="togglePreset(preset.preset)"
 				>{{$t(preset.title)}}
 					<span class="icon is-small">
@@ -48,7 +48,7 @@
 					</span>
 				</a>
 			</div>
-			<div class="work-load-toggle" v-if="isPresetActive('daysPerLesson')">
+			<div v-if="isPresetActive('daysPerLesson')" class="work-load-toggle">
 				<div class="level wnl-screen-title">
 					<div class="level-item">
 						{{$t('lessonsAvailability.secondSection.daysPerLesson')}}
@@ -58,9 +58,9 @@
 					<a
 						v-for="workLoad in availableWorkLoads"
 						:key="workLoad.workLoad"
-						@click="chooseWorkload(workLoad.workLoad)"
 						class="panel-toggle work-load-button"
 						:class="{'is-active': isWorkLoadActive(workLoad.workLoad)}"
+						@click="chooseWorkload(workLoad.workLoad)"
 					>{{$t(workLoad.translation)}}
 						<span class="icon is-small">
 							<i
@@ -86,8 +86,8 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:with-border="true"
 								v-model="startDate"
+								:with-border="true"
 								:config="startDateConfigWithMin"
 								@onChange="onPresetStartDateChange"
 							/>
@@ -98,7 +98,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="" v-if="isPresetActive('dateToDate')">
+			<div v-if="isPresetActive('dateToDate')" class="">
 				<div class="level">
 					<div class="level-item">
 						{{$t('lessonsAvailability.secondSection.dateToDate')}}
@@ -114,8 +114,8 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:with-border="true"
 								v-model="startDate"
+								:with-border="true"
 								:config="startDateConfigWithMin"
 								@onChange="onPresetStartDateChange"
 							/>
@@ -133,8 +133,8 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:with-border="true"
 								v-model="endDate"
+								:with-border="true"
 								:config="endDateConfig"
 								@onChange="onEndDateChange"
 							/>
@@ -155,7 +155,7 @@
 				</div>
 				<div class="annotation">
 					<div class="level">
-						<div class="level-item" v-if="this.completedLessonsLength > 0">
+						<div v-if="this.completedLessonsLength > 0" class="level-item">
 							{{$t('lessonsAvailability.annotation.header')}}
 							{{this.completedLessonsLength}}{{$t('lessonsAvailability.annotation.info')}}
 						</div>
@@ -166,8 +166,8 @@
 		<div class="accept-plan">
 			<a
 				:disabled="isSubmitDisabled"
-				@click="!isSubmitDisabled && acceptPlan()"
 				class="button is-primary is-outlined is-big"
+				@click="!isSubmitDisabled && acceptPlan()"
 			>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 			</a>
 		</div>

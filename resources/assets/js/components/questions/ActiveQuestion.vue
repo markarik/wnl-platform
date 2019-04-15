@@ -19,8 +19,8 @@
 		</div>
 		<wnl-quiz-question
 			v-if="question"
-			:class="`quiz-question-${question.id}`"
 			:id="question.id"
+			:class="`quiz-question-${question.id}`"
 			:question="question"
 			:show-comments="displayResults"
 			:get-reaction="getReaction"

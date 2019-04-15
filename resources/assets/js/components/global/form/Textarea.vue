@@ -6,21 +6,21 @@
 		</label>
 
 		<textarea
+			v-model="inputValue"
 			class="textarea normal"
 			:name="name"
-			@input="onTextInput"
 			:placeholder="placeholder"
-			v-model="inputValue"
+			@input="onTextInput"
 			@keydown.enter.stop
 		>
 		</textarea>
 
 		<template v-if="hasErrors">
 			<span
-				class="help is-danger"
 				v-for="(error, index) in getErrors"
-				v-text="error"
 				:key="index"
+				class="help is-danger"
+				v-text="error"
 			></span>
 		</template>
 	</div>

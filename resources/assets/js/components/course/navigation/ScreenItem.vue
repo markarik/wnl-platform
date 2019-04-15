@@ -9,8 +9,8 @@
 		<wnl-section-item
 			v-for="section in screenSections"
 			:key="section.id"
-			:item="section"
 			slot="children"
+			:item="section"
 		/>
 	</wnl-lesson-navigation-item>
 </template>

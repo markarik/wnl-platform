@@ -3,13 +3,13 @@
 		<header class="card-header">
 			<p class="card-header-title">{{title}}</p>
 			<p class="events-counter">
-				<span class="tag is-light is-medium" v-t="'tasks.task.fields.eventsCount'" />
+				<span v-t="'tasks.task.fields.eventsCount'" class="tag is-light is-medium" />
 				<span class="tag is-danger is-medium">{{eventsCount}}</span>
 			</p>
 		</header>
 		<div class="card-content task-summary">
 			<div class="tags field has-addons">
-				<span class="tag is-light is-medium" v-t="'tasks.task.fields.status'" />
+				<span v-t="'tasks.task.fields.status'" class="tag is-light is-medium" />
 				<wnl-dropdown>
 					<p
 						slot="activator"
@@ -23,10 +23,10 @@
 					</p>
 					<div slot="content">
 						<div
-							@click="$emit('statusSelected', {status: st, id: task.id})"
-							class="dropdown-item"
 							v-for="(st, index) in status"
 							:key="index"
+							class="dropdown-item"
+							@click="$emit('statusSelected', {status: st, id: task.id})"
 						>
 							{{$t(`tasks.task.status.${st}`)}}
 						</div>
@@ -34,11 +34,11 @@
 				</wnl-dropdown>
 			</div>
 			<div class="tags field has-addons is-relative">
-				<span class="tag is-light is-medium" v-t="'tasks.task.fields.createdAt'" />
+				<span v-t="'tasks.task.fields.createdAt'" class="tag is-light is-medium" />
 				<span class="tag is-medium">{{formatedCreatedAt}}</span>
 			</div>
 			<div class="tags field has-addons is-relative">
-				<span class="tag is-light is-medium" v-t="'tasks.task.fields.assignee'" />
+				<span v-t="'tasks.task.fields.assignee'" class="tag is-light is-medium" />
 				<wnl-moderators-autocomplete
 					class="margin horizontal"
 					:selected="task.assignee"
@@ -47,7 +47,7 @@
 				/>
 			</div>
 			<div class="tags field has-addons is-relative">
-				<span class="tag is-light is-medium" v-t="'tasks.task.fields.updatedAt'" />
+				<span v-t="'tasks.task.fields.updatedAt'" class="tag is-light is-medium" />
 				<span class="tag is-medium">{{formatedUpdatedAt}}</span>
 			</div>
 		</div>

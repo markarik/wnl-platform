@@ -3,15 +3,15 @@
 		<form @submit.prevent="lessonFormSubmit">
 			<div class="field is-grouped">
 				<wnl-input
+					v-model="form.name"
 					:form="form"
 					name="name"
-					v-model="form.name"
 				></wnl-input>
 				<wnl-form-checkbox
+					v-model="form.is_required"
 					class="checkbox button"
 					:form="form"
 					name="is_required"
-					v-model="form.is_required"
 				>Lekcja obowiązkowa</wnl-form-checkbox>
 				<div class="control">
 					<a

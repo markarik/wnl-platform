@@ -1,11 +1,11 @@
 <template>
 	<div class="wnl-alerts">
 		<wnl-alert
-			class="wnl-alert"
 			v-for="alert in alerts"
-			:key="alert.id"
-			:type="alert.type"
 			:id="alert.id"
+			:key="alert.id"
+			class="wnl-alert"
+			:type="alert.type"
 			@onDismiss="onDismiss(alert)"
 		>
 			<div v-html="alert.text"></div>

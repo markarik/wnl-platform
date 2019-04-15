@@ -10,21 +10,21 @@
 			</aside>
 		</wnl-sidenav-slot>
 		<div
+			v-if="!isLoading"
 			class="wnl-middle wnl-app-layout-main"
 			:class="{'full-width': isTouchScreen}"
-			v-if="!isLoading"
 		>
-			<div class="scrollable-main-container" v-if="rootCategoryName && categoryName">
+			<div v-if="rootCategoryName && categoryName" class="scrollable-main-container">
 				<div class="collections-header">
 					<div class="collections-breadcrumbs">
 						<div class="breadcrumb">
 							<span class="icon is-small"><i class="fa fa-star-o"></i></span>
 						</div>
-						<div class="breadcrumb" v-if="rootCategoryName">
+						<div v-if="rootCategoryName" class="breadcrumb">
 							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
 							<span>{{rootCategoryName}}</span>
 						</div>
-						<div class="breadcrumb" v-if="categoryName">
+						<div v-if="categoryName" class="breadcrumb">
 							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
 							<span>{{categoryName}}</span>
 						</div>
@@ -32,9 +32,9 @@
 					<div class="collections-controls">
 						<a
 							v-for="(name, panel) in panels"
+							:key="panel"
 							class="panel-toggle"
 							:class="{'is-active': isPanelActive(panel), 'is-single': isSinglePanelView}"
-							:key="panel"
 							@click="togglePanel(panel)"
 						>
 							{{name}}
@@ -45,7 +45,7 @@
 					</div>
 				</div>
 				<div class="columns">
-					<div class="column" v-show="isSlidesPanelVisible">
+					<div v-show="isSlidesPanelVisible" class="column">
 						<wnl-slides-carousel
 							:category-id="categoryId"
 							:category-name="categoryName"
@@ -59,7 +59,7 @@
 							:root-category-name="rootCategoryName"
 						></wnl-qna-collection>
 					</div>
-					<div class="column" v-show="isQuizPanelVisible">
+					<div v-show="isQuizPanelVisible" class="column">
 						<wnl-quiz-collection
 							:category-name="categoryName"
 							:root-category-name="rootCategoryName"
@@ -73,7 +73,7 @@
 			<div v-else class="collections-placeholder">
 				<span class="icon main"><i class="fa fa-star-o"></i></span>
 				<span class="welcome">Witaj w Kolekcjach!</span>
-				<span>Wybierz temat z menu <span class="icon is-small" v-if="isTouchScreen"><i class="fa fa-bars"></i></span> i&nbsp;przeglądaj&nbsp;zapisane&nbsp;fragmenty&nbsp;kursu</span>
+				<span>Wybierz temat z menu <span v-if="isTouchScreen" class="icon is-small"><i class="fa fa-bars"></i></span> i&nbsp;przeglądaj&nbsp;zapisane&nbsp;fragmenty&nbsp;kursu</span>
 			</div>
 		</div>
 	</div>

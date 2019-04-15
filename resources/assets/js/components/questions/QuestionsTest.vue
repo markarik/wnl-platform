@@ -2,14 +2,14 @@
 	<div>
 		<div class="questions-test-header-container" :class="{'is-mobile': isMobile, 'is-complete': isComplete}">
 			<div
+				ref="header"
 				class="questions-test-header"
 				:class="{'is-sticky': hasStickyHeader}"
-				ref="header"
 			>
 				<div v-if="!isComplete">
 					<div class="in-progress">
 						<span>
-							<span class="answered" v-if="!isMobile || unansweredCount === 0">
+							<span v-if="!isMobile || unansweredCount === 0" class="answered">
 								{{$t('questions.solving.test.headers.answered', {
 									answered: answeredCount,
 									total: totalCount,
@@ -75,8 +75,8 @@
 						</span>
 						<span
 							v-for="(questions, status) in testResultsWithQuestions"
-							:class="[{'is-active': filterResults === status}, `results-${status}`]"
 							:key="status"
+							:class="[{'is-active': filterResults === status}, `results-${status}`]"
 							@click="toggleFilter(status)"
 						>
 							{{$t(`questions.solving.results.${status}`)}} ({{questions.length}})
@@ -96,8 +96,8 @@
 		</div>
 
 		<wnl-quiz-list
-			module="questions"
 			ref="quizlist"
+			module="questions"
 			:all-questions="questionsCurrentPage"
 			:get-reaction="getReaction"
 			:is-complete="isComplete"

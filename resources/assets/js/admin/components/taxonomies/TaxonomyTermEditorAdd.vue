@@ -31,12 +31,12 @@
 				@change="onSelectTag"
 			></wnl-tag-autocomplete>
 
-			<div class="field" slot="extra-fields">
+			<div slot="extra-fields" class="field">
 				<label class="label is-uppercase"><strong>Notatka</strong></label>
 				<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
 				<textarea
-					class="textarea margin bottom"
 					v-model="description"
+					class="textarea margin bottom"
 					placeholder="Wpisz tekst"
 				/>
 			</div>

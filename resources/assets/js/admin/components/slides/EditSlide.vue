@@ -9,16 +9,16 @@
 	>
 		<wnl-slide-search
 			slot="above-content"
+			:slide-id="Number(slideId) || 0"
+			:screen-id="Number(screenId) || 0"
 			@screenIdChange="saveScreenId"
 			@slideIdChange="saveSlideId"
 			@resourceUrlFetched="onResourceUrlFetched"
-			:slide-id="Number(slideId) || 0"
-			:screen-id="Number(screenId) || 0"
 		/>
 		<wnl-content-item-classifier-editor
 			v-if="slideId > 0"
-			class="margin bottom"
 			slot="below-content"
+			class="margin bottom"
 			:is-always-active="true"
 			:content-item-id="slideId"
 			:content-item-type="CONTENT_TYPES.SLIDE"

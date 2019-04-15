@@ -1,8 +1,8 @@
 <template>
 	<div class="field select">
 		<select
-			v-model="selected"
 			ref="select"
+			v-model="selected"
 			@keyup.esc="onEscape"
 		>
 			<option

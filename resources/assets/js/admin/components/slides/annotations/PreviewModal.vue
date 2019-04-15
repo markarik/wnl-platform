@@ -2,29 +2,29 @@
 	<div>
 		<h4 class="title is-4">Podgląd Przypisu</h4>
 		<div
-			v-html="content"
 			:class="['control annotation-preview__content', `control annotation-preview__content--${screenSize}`]"
+			v-html="content"
 		/>
 		<div>
 			Rozdzielczość Ekranu:
 			<div>
 				<div class="field">
 					<input
+						id="typeMobile"
+						v-model="screenSize"
 						class="is-checkradio"
 						type="radio"
 						name="keywordType"
 						value="mobile"
-						v-model="screenSize"
-						id="typeMobile"
 					>
 					<label for="typeMobile">Telefon Komórkowy</label>
 					<input
+						id="typeDesktop"
+						v-model="screenSize"
 						class="is-checkradio"
 						type="radio"
 						name="screenSize"
 						value="desktop"
-						v-model="screenSize"
-						id="typeDesktop"
 					>
 					<label for="typeDesktop">Monitor</label>
 				</div>

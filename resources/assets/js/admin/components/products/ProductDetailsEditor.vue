@@ -5,8 +5,8 @@
 		:method="formMethod"
 		:resource-route="formResourceRoute"
 		:suppress-enter="true"
-		@submitSuccess="onSubmitSucess"
 		class="product-form"
+		@submitSuccess="onSubmitSucess"
 	>
 		<div class="columns">
 			<div class="column left">

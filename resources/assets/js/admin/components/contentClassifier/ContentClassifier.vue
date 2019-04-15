@@ -30,7 +30,7 @@
 			@search="onSearchById"
 		/>
 
-		<div class="content-classifier__panels" v-if="filteredContent !== null">
+		<div v-if="filteredContent !== null" class="content-classifier__panels">
 			<div class="content-classifier__panel-results">
 				<div class="content-classifier__panel-results__header">
 					<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
@@ -50,9 +50,9 @@
 								class="content-classifier__result-list margin bottom"
 							>
 								<component
+									:is="meta.component"
 									v-for="contentItem in groupedFilteredContent[contentType]"
 									:key="contentItem.id"
-									:is="meta.component"
 									:item="contentItem"
 									:is-active="selectedItems.findIndex(item => item.id === contentItem.id && item.type === contentItem.type) > -1"
 									@click="toggleSelected(contentItem)"
@@ -65,8 +65,8 @@
 			</div>
 			<div class="content-classifier__panel-editor">
 				<wnl-content-classifier-editor
-					class="content-classifier__panel-editor__editor"
 					v-show="!isLoading"
+					class="content-classifier__panel-editor__editor"
 					:items="selectedItems"
 					@taxonomyTermAttached="onTaxonomyTermAttached"
 					@taxonomyTermDetached="onTaxonomyTermDetached"

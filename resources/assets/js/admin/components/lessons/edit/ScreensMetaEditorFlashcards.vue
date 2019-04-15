@@ -1,7 +1,7 @@
 <template>
 	<div class="margin left">
 		<h5 class="title is-5">Zarządzaj zestawami pytań</h5>
-		<div class="meta-flashcards" v-if="areFlashcardsSetsReady">
+		<div v-if="areFlashcardsSetsReady" class="meta-flashcards">
 			<div class="margin right">
 				<strong>Wybrane zestawy</strong>
 				<ul>
@@ -32,14 +32,14 @@
 				</ul>
 			</div>
 			<wnl-autocomplete
-				class="flashcards-set-add"
 				v-model="flashcardsSetInput"
+				class="flashcards-set-add"
 				:items="flashcardsSetsAutocompleteItems"
-				@change="addFlashcardsSet"
 				label="Wybierz zestaw pytań"
 				placeholder="Id lub treść aby wyszukać"
+				@change="addFlashcardsSet"
 			>
-				<wnl-flashcards-set-autocomplete-item :item="slotProps.item" slot-scope="slotProps" />
+				<wnl-flashcards-set-autocomplete-item slot-scope="slotProps" :item="slotProps.item" />
 			</wnl-autocomplete>
 		</div>
 	</div>

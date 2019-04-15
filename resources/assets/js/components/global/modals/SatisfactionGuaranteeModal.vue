@@ -1,5 +1,5 @@
 <template>
-	<wnl-modal @closeModal="$emit('closeModal')" v-if="visible">
+	<wnl-modal v-if="visible" @closeModal="$emit('closeModal')">
 		<div class="satisfaction-guarantee-modal normal">
 			<h4 class="margin bottom">
 				<slot name="title"></slot>

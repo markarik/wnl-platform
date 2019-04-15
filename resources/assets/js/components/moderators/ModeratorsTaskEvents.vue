@@ -6,23 +6,23 @@
 				<div class="notification-header">
 					<span class="actor">{{lastEvent.data.actors.full_name}}</span>
 					<span class="action">{{eventAction(lastEvent)}}</span>
-					<span class="object" v-if="eventObject(lastEvent)">{{eventObject(lastEvent)}}</span>
-					<span class="object-text wrap" v-if="objectText">{{objectText}}</span>
+					<span v-if="eventObject(lastEvent)" class="object">{{eventObject(lastEvent)}}</span>
+					<span v-if="objectText" class="object-text wrap">{{objectText}}</span>
 					<span class="subject wrap">{{eventText(lastEvent)}}</span>
 				</div>
 			</div>
 		</div>
 		<div
-			class="moderators-notification"
-			v-show="expanded"
 			v-for="(event, index) in rest"
+			v-show="expanded"
 			:key="index"
+			class="moderators-notification"
 		>
 			<div class="notification-content">
 				<div class="notification-header">
 					<span class="actor">{{event.data.actors.full_name}}</span>
 					<span class="action">{{eventAction(event)}}</span>
-					<span class="object" v-if="eventObject(event)">{{eventObject(event)}}</span>
+					<span v-if="eventObject(event)" class="object">{{eventObject(event)}}</span>
 					<span class="subject wrap">{{eventText(event)}}</span>
 				</div>
 			</div>

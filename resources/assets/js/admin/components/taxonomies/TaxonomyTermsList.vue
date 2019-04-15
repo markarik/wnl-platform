@@ -6,8 +6,8 @@
 		>
 			<wnl-taxonomy-term-item
 				v-for="term in terms"
-				:term="term"
 				:key="term.id"
+				:term="term"
 			/>
 		</vue-draggable>
 	</ul>

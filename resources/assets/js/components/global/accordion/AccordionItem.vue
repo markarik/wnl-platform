@@ -26,8 +26,8 @@
 			</div>
 			<div class="wai-content">
 				<span class="text">{{content}}</span>
-				<span class="count" v-if="!loading && count !== false">{{`(${count})`}}</span>
-				<span class="loader" v-if="loading"></span>
+				<span v-if="!loading && count !== false" class="count">{{`(${count})`}}</span>
+				<span v-if="loading" class="loader"></span>
 			</div>
 			<div
 				v-if="hasChildren"
@@ -47,9 +47,9 @@
 		>
 			<accordion-item
 				v-for="(childItem, index) in item.items"
+				:key="index"
 				:config="config"
 				:item="childItem"
-				:key="index"
 				:level="level + 1"
 				:loading="loading"
 				:path="`${path}.items[${index}]`"

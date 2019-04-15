@@ -9,10 +9,10 @@
 		</div>
 		<template v-if="userLessons.length">
 			<input
+				ref="filterInput"
 				v-model="filterPhrase"
 				class="input margin bottom"
 				placeholder="filtruj..."
-				ref="filterInput"
 			>
 			<table class="table is-bordered">
 				<thead>
@@ -44,15 +44,15 @@
 				</div>
 			</div>
 			<wnl-autocomplete
-				class="margin bottom big"
 				v-model="lessonInput"
+				class="margin bottom big"
 				placeholder="wpisz nazwę aby wyszukać..."
 				label="Wyszukaj Lekcję"
 				:items="autocompleteLessonsItems"
-				@change="addLesson"
 				:is-down="false"
+				@change="addLesson"
 			>
-				<span class="lesson-autocomplete-item" slot-scope="row">{{row.item.id}}. {{row.item.name}}</span>
+				<span slot-scope="row" class="lesson-autocomplete-item">{{row.item.id}}. {{row.item.name}}</span>
 			</wnl-autocomplete>
 			<div v-if="selectedLessons.length">
 				<table class="table user-plan__add-lesson">

@@ -7,7 +7,7 @@
 		>
 			<span class="sidenav-item-content">
 				<slot name="title"></slot>
-				<span class="sidenav-item-meta" v-if="meta">{{meta}}</span>
+				<span v-if="meta" class="sidenav-item-meta">{{meta}}</span>
 			</span>
 		</router-link>
 		<slot name="children">

@@ -1,31 +1,31 @@
 <template>
 	<li class="item" :class="[itemClass, { disabled: item.isDisabled }]">
 		<router-link
-			class="item-wrapper"
 			v-if="isLink"
+			class="item-wrapper"
 			:class="{'router-link-exact-active': item.active, 'is-disabled': item.isDisabled, 'is-completed': item.completed}"
 			:replace="replace"
 			:to="to"
 		>
 			<div class="sidenav-icon-wrapper">
-				<span class="icon is-small" v-if="hasProgress">
+				<span v-if="hasProgress" class="icon is-small">
 					<i
+						v-if="isInProgress"
 						title="W trakcie..."
 						class="fa fa-ellipsis-h"
-						v-if="isInProgress"
 					></i>
 					<i
+						v-else-if="isComplete"
 						title="Zrobione!"
 						class="fa fa-check-square-o"
-						v-else-if="isComplete"
 					></i>
 					<i
+						v-else
 						title="Jeszcze przed Tobą"
 						class="fa fa-square-o"
-						v-else
 					></i>
 				</span>
-				<span class="icon is-small" v-if="hasIcon">
+				<span v-if="hasIcon" class="icon is-small">
 					<i
 						:title="item.iconTitle"
 						class="fa"
@@ -35,36 +35,36 @@
 			</div>
 			<span class="sidenav-item-content">
 				<slot></slot>
-				<span class="sidenav-item-meta" v-if="hasMeta">{{meta}}</span>
+				<span v-if="hasMeta" class="sidenav-item-meta">{{meta}}</span>
 			</span>
 		</router-link>
 		<span v-else class="item-wrapper">
 			<div class="sidenav-icon-wrapper">
-				<span class="icon is-small" v-if="hasProgress">
+				<span v-if="hasProgress" class="icon is-small">
 					<i
+						v-if="isInProgress"
 						title="W trakcie..."
 						class="fa fa-ellipsis-h"
-						v-if="isInProgress"
 					></i>
 					<i
+						v-else-if="isComplete"
 						title="Zrobione!"
 						class="fa fa-check-square-o"
-						v-else-if="isComplete"
 					></i>
 					<i
+						v-else
 						title="Jeszcze przed Tobą"
 						class="fa fa-square-o"
-						v-else
 					></i>
 				</span>
-				<span class="icon is-small" v-if="hasIcon">
+				<span v-if="hasIcon" class="icon is-small">
 					<i
 						:title="item.iconTitle"
 						class="fa"
 						:class="item.iconClass"
 					></i>
 				</span>
-				<span class="icon is-small" v-if="hasSubitems">
+				<span v-if="hasSubitems" class="icon is-small">
 					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
 				</span>
 			</div>

@@ -5,10 +5,10 @@
 			:resource-route="resourceRoute"
 			:populate="isEdit"
 			:hide-default-submit="true"
-			@change="onChange"
-			@submitSuccess="onSubmitSuccess"
 			name="TagEditor"
 			class="editor"
+			@change="onChange"
+			@submitSuccess="onSubmitSuccess"
 		>
 			<div class="header">
 				<h2 class="title is-2">Edycja tagu <span v-if="isEdit">(Id: {{id}})</span></h2>
@@ -46,34 +46,34 @@
 				<h3 class="title is-3">Lista elementów powiązanych</h3>
 				<div class="filters">
 					<div
-						class="field"
 						v-for="(filter, model) in taggableTypeFilters"
 						:key="model"
+						class="field"
 					>
 						<input
-							type="checkbox"
 							:id="`filter${model}`"
-							:value="model"
 							v-model="selectedFilters"
+							type="checkbox"
+							:value="model"
 							class="is-checkradio"
 						>
 						<label :for="`filter${model}`" class="checkbox">{{filter.label}}</label>
 					</div>
 				</div>
 			</div>
-			<tbody slot-scope="slotProps" slot="tbody">
+			<tbody slot="tbody" slot-scope="slotProps">
 			<tr v-for="taggable in slotProps.list" :key="taggable.id">
 				<td>{{taggable.taggable_id}}</td>
 				<td>{{taggable.taggable_type}}</td>
 				<td>
 					<a
-						:href="getTaggableLink(taggable)"
 						v-if="getTaggableLink(taggable)"
+						:href="getTaggableLink(taggable)"
 						target="_blank"
 					>
 						Przejdź do elementu
 					</a>
-					<span class="table-cell--no-link" v-else>nie umiemy zrobić linka dla tego zasobu</span>
+					<span v-else class="table-cell--no-link">nie umiemy zrobić linka dla tego zasobu</span>
 				</td>
 			</tr>
 			</tbody>

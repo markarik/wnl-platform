@@ -45,8 +45,8 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:with-border="true"
 								v-model="startDate"
+								:with-border="true"
 								:config="startDateConfig"
 								@onChange="onStartDateChange"
 							/>
@@ -62,8 +62,8 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:with-border="true"
 								v-model="endDate"
+								:with-border="true"
 								:config="endDateConfig"
 								@onChange="onEndDateChange"
 							/>
@@ -79,10 +79,10 @@
 						</div>
 						<div class="slack-days">
 							<input
+								v-model="slackDays"
 								class="slack-days-input"
 								min="0"
 								:max="maxSlack"
-								v-model="slackDays"
 								type="number"
 							/>
 							<p class="tip">{{$t('questions.plan.tips.slackDays')}}</p>
@@ -106,12 +106,12 @@
 								</p>
 							</div>
 						</div>
-						<div class="preserveProgress control" v-if="hasPlan">
+						<div v-if="hasPlan" class="preserveProgress control">
 							<input
 								id="preserveProgress"
+								v-model="preserveProgress"
 								type="checkbox"
 								class="checkbox"
-								v-model="preserveProgress"
 							>
 							<label for="preserveProgress">{{$t('questions.filters.preserveProgress')}}</label>
 						</div>

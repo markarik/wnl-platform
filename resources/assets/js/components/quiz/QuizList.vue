@@ -4,11 +4,11 @@
 			<a class="button is-primary is-outlined" @click="$emit('resetState')">Rozwiąż pytania ponownie</a>
 		</p>
 
-		<p class="title is-5" v-if="!plainList && !displayResults">Pozostało pytań: {{howManyLeft}}</p>
+		<p v-if="!plainList && !displayResults" class="title is-5">Pozostało pytań: {{howManyLeft}}</p>
 		<div
-			class="question"
 			v-for="(question, index) in questions"
 			:key="index"
+			class="question"
 		>
 			<span v-if="!hideCount" class="question-number">
 				<slot name="question-number" :index="index">

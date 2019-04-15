@@ -70,6 +70,9 @@ module.exports = {
 				'singleline': 2,
 			}
 		],
+		'vue/attributes-order': [
+			'error',
+		],
 		// Doesn't seem useful
 		'vue/singleline-html-element-content-newline': [
 			'off'

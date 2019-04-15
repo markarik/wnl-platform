@@ -7,17 +7,17 @@
 		<transition name="fade">
 			<div
 				v-show="active"
-				class="search-overlay"
 				ref="overlay"
+				class="search-overlay"
 				:class="{'is-touch-screen': isTouchScreen}"
 				@click.stop="$refs.input.focus()"
 			>
 				<div class="search-input">
 					<div class="control" :class="{'is-loading': loading}">
 						<input
+							ref="input"
 							class="input"
 							placeholder="Szukaj..."
-							ref="input"
 							type="text"
 							@input="debounceInput"
 						>

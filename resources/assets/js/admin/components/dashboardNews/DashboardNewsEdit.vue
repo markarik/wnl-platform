@@ -20,9 +20,9 @@
 			<p>Możesz użyć następujących parametrów:</p>
 			<ul class="message-arguments">
 				<li
-					class="message-argument"
 					v-for="(value, key) in messageArguments"
 					:key="key"
+					class="message-argument"
 				>
 					<code>{{escapeArgumentKey(key)}}</code> - {{value.description}}
 				</li>

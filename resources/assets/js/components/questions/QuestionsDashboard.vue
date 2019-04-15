@@ -43,7 +43,7 @@
 							:plan="plan"
 							@userEvent="onUserEvent"
 						/>
-						<div class="questions-plan-create" v-else>
+						<div v-else class="questions-plan-create">
 							<p class="questions-plan-create-heading">
 								{{$t('questions.dashboard.plan.create.heading')}}
 							</p>
@@ -76,9 +76,9 @@
 						<div class="questions-stats margin bottom">
 							<div
 								v-for="(stats, index) in parseStats(stats)"
+								:key="index"
 								class="stats-item stats-resolved"
 								:class="{'is-first': index === 0}"
-								:key="index"
 							>
 								<span class="stats-title">{{stats.title}}</span>
 								<div class="progress-bar">
@@ -100,11 +100,11 @@
 								{{$t('questions.dashboard.stats.mockExam')}}
 							</div>
 							<div
-								class="questions-stats stats-exam"
 								v-for="(mockExam, index) in stats.mock_exams"
 								:key="index"
+								class="questions-stats stats-exam"
 							>
-								<div @click="toggleExamExpand(index)" :class="{'exam-header': true, 'is-expanded': expandedExams.includes(index)}">
+								<div :class="{'exam-header': true, 'is-expanded': expandedExams.includes(index)}" @click="toggleExamExpand(index)">
 									<span class="exam-header__name">
 										{{mockExam.exam_name}}
 									</span>
@@ -133,8 +133,8 @@
 						</div>
 						<div class="questions-dashboard-heading margin vertical" />
 						<button
-							@click="satisfactionGuaranteeModalVisible = true"
 							class="button is-danger to-right"
+							@click="satisfactionGuaranteeModalVisible = true"
 						>{{$t('questions.dashboard.stats.resetButton')}}</button>
 					</div>
 				</div>

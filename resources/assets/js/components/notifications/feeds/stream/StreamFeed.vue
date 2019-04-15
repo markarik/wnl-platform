@@ -11,13 +11,13 @@
 					<div class="stream-line"></div>
 					<component
 						:is="getEventComponent(message)"
-						:message="message"
-						:key="message.id"
-						:notification-component="StreamNotification"
 						v-for="message in filtered"
+						:key="message.id"
+						:message="message"
+						:notification-component="StreamNotification"
 					/>
 				</div>
-				<div class="all-seen" v-if="!showRead && unreadCount > 0">
+				<div v-if="!showRead && unreadCount > 0" class="all-seen">
 					<a
 						v-if="!marking"
 						class="link"

@@ -22,8 +22,8 @@
 						<ul>
 							<li
 								v-for="(item, index) in items"
-								class="user-link"
 								:key="index"
+								class="user-link"
 							>
 								<span class="icon is-small">
 									<i class="fa" :class="item.icon"></i>

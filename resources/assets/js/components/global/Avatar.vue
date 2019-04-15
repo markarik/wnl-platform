@@ -1,15 +1,15 @@
 <template>
 	<div class="wnl-avatar" :class="[sizeClass, colorClass, imageClass]">
 		<img
+			v-if="isCustom"
 			:title="usernameToUse"
 			:src="urlToUse"
 			class="wnl-avatar-custom"
-			v-if="isCustom"
 		>
 		<div
+			v-else
 			:title="usernameToUse"
 			class="wnl-avatar-automatic"
-			v-else
 		>{{initials}}</div>
 	</div>
 </template>

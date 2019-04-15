@@ -19,26 +19,26 @@
 				</button>
 			</div>
 			<wnl-form-input
+				v-model="form.name"
 				name="name"
 				:form="form"
-				v-model="form.name"
 			>
 				Nazwa
 			</wnl-form-input>
 			<wnl-form-input
+				v-model="form.mind_maps_text"
 				name="mind_maps_text"
 				:form="form"
-				v-model="form.mind_maps_text"
 			>
 				Mind mapy
 			</wnl-form-input>
 			<label class="label">Lekcja, której dotyczy zestaw</label>
 			<span class="select flashcards-set-editor-select">
 				<wnl-select
+					v-model="form.lesson_id"
 					:form="form"
 					:options="lessonsOptions"
 					name="lesson_id"
-					v-model="form.lesson_id"
 				/>
 			</span>
 			<label class="label">Opis</label>
@@ -52,15 +52,15 @@
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="flashcards-admin">
 				<draggable
+					v-if="areFlashcardsReady"
 					v-model="form.flashcards"
 					@start="drag=true"
 					@end="drag=false"
-					v-if="areFlashcardsReady"
 				>
 					<wnl-flashcards-set-list-item
 						v-for="flashcardId in form.flashcards"
-						:key="flashcardId"
 						:id="flashcardId"
+						:key="flashcardId"
 						:content="allFlashcards.find(flashcard => flashcard.id === flashcardId).content"
 						@remove="removeFlashcard(flashcardId)"
 					/>
@@ -69,11 +69,11 @@
 				<wnl-autocomplete
 					v-model="flashcardInput"
 					:items="flashcardAutocompleteItems"
-					@change="addFlashcard"
 					placeholder="Id lub treść aby wyszukać"
 					label="Wybierz pytanie"
+					@change="addFlashcard"
 				>
-					<wnl-flashcard-autocomplete-item :item="slotProps.item" slot-scope="slotProps" />
+					<wnl-flashcard-autocomplete-item slot-scope="slotProps" :item="slotProps.item" />
 				</wnl-autocomplete>
 			</div>
 		</form>

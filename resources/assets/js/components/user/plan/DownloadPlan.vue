@@ -24,8 +24,8 @@
 		</article>
 		<div class="download-plan">
 			<a
-				@click="downloadPlan"
 				class="button button is-primary is-outlined is-big"
+				@click="downloadPlan"
 			>{{$t('lessonsAvailability.buttons.downloadPlan')}}
 			</a>
 		</div>

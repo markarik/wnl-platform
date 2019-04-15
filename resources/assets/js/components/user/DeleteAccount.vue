@@ -14,9 +14,9 @@
 			<div class="message-body" v-html="htmlWarning" />
 			<div class="reset-button">
 				<button
-					@click="confirmAndDelete"
-					class="button is-danger to-right"
 					v-t="'user.deleteAccount.header'"
+					class="button is-danger to-right"
+					@click="confirmAndDelete"
 				/>
 			</div>
 		</div>

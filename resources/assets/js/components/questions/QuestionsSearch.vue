@@ -3,13 +3,13 @@
 		<div class="search-input">
 			<div class="control" :class="{'is-loading': loading}">
 				<input
+					ref="input"
+					v-model="searchPhrase"
 					class="input is-hovered"
 					:placeholder="$t('questions.filters.searchPlaceholder')"
-					ref="input"
 					type="text"
 					:disabled="loading"
 					@keydown.enter="onEnter"
-					v-model="searchPhrase"
 				>
 			</div>
 		</div>

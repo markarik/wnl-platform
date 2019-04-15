@@ -14,7 +14,7 @@
 		<wnl-text-loader v-if="isLoading" />
 
 		<template v-else>
-			<div class="margin-top-huge" v-if="isReturningUser">
+			<div v-if="isReturningUser" class="margin-top-huge">
 				<img
 					:src="imageUrl"
 					alt=""
@@ -27,7 +27,7 @@
 				</div>
 			</div>
 
-			<div class="margin-top-huge" v-else>
+			<div v-else class="margin-top-huge">
 				<p class="text-dimmed margin bottom">💡 Plan zakłada optymalną kolejność przerabiania przedmiotów. Jeśli chcesz stworzyć indywidualny plan lub go edytować, będziesz mieć taką możliwość w zakładce KONTO > Plan pracy.</p>
 				<div class="margin-top-huge">
 					<img
@@ -44,7 +44,7 @@
 						</p>
 					</div>
 				</div>
-				<div class="onboarding-planner-wrapper" v-if="isEditorVisible">
+				<div v-if="isEditorVisible" class="onboarding-planner-wrapper">
 					<button class="delete onboarding-planner-close clickable" @click="isEditorVisible=false"></button>
 					<wnl-automatic-plan
 						:show-annotation="false"

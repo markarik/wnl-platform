@@ -17,7 +17,7 @@
 			<p class="big">
 				Po każdym podejściu, na ekranie pozostaną tylko błędnie rozwiązane pytania. Aby zakończyć test, odpowiadasz do skutku! Żeby nie było zbyt łatwo, kolejność odpowiedzi będzie każdorazowo zmieniana. Powodzenia!
 			</p>
-			<p class="has-text-centered" v-if="isAdmin">
+			<p v-if="isAdmin" class="has-text-centered">
 				<a class="button is-primary is-outlined" @click="autoResolve">
 					Rozwiąż wszystkie pytania
 				</a>
@@ -35,7 +35,7 @@
 				@checkQuiz="onCheckQuiz"
 				@userEvent="onUserEvent"
 			/>
-			<wnl-text-loader class="margin vertical" v-else></wnl-text-loader>
+			<wnl-text-loader v-else class="margin vertical"></wnl-text-loader>
 		</div>
 	</div>
 </template>

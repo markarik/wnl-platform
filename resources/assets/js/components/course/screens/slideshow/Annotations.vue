@@ -23,9 +23,9 @@
 			@commentsUpdated="onCommentsUpdated"
 		>
 			<wnl-edit-slide-button
+				v-if="isAdmin"
 				:current-slide-id="Number(currentSlideId)"
 				:screen-id="Number(screenId)"
-				v-if="isAdmin"
 			/>
 		</wnl-comments-list>
 	</div>

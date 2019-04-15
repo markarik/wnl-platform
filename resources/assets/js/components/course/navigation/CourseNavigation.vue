@@ -3,8 +3,8 @@
 		<div class="items">
 			<wnl-group-item
 				v-for="item in rootItems"
-				:item="item"
 				:key="item.id"
+				:item="item"
 			/>
 		</div>
 	</div>

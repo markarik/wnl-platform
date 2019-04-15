@@ -13,7 +13,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="control" v-else>
+		<div v-else class="control">
 			<span class="select">
 				<select @input="changeSortingWithSelect">
 					<option

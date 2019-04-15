@@ -1,12 +1,12 @@
 <template>
 	<div class="wnl-user-profile" :class="{mobile: isMobileProfile}">
-		<div class="text-loader" v-if="isLoading">
+		<div v-if="isLoading" class="text-loader">
 			<wnl-text-loader>
 				{{$t('user.userProfile.textLoader')}}
 			</wnl-text-loader>
 		</div>
 
-		<div class="profile-deleted notification" v-if="profile.deleted_at">
+		<div v-if="profile.deleted_at" class="profile-deleted notification">
 			<div class="profile-deleted__annotation">
 				{{$t('ui.accountDeleted')}}
 			</div>
@@ -19,9 +19,9 @@
 
 		<div v-else>
 			<div
+				v-if="!isLoading && responseCondition"
 				class="user-profile"
 				:class="isMobile"
-				v-if="!isLoading && responseCondition"
 			>
 				<div class="user-content" :class="avatarClass">
 					<wnl-avatar
@@ -61,9 +61,9 @@
 
 				<div class="user-activity-content">
 					<div
-						class="wnl-activity-meter"
 						v-for="(activity, index) in activityMeterArray"
 						:key="index"
+						class="wnl-activity-meter"
 					>
 						<div class="activity-stat">
 							<span class="icon is-large">
@@ -75,13 +75,13 @@
 					</div>
 				</div>
 
-				<div class="top-activities" v-if="ifAnyQuestions || ifAnyAnswers">
+				<div v-if="ifAnyQuestions || ifAnyAnswers" class="top-activities">
 					<wnl-qna
+						v-if="!isLoading && ifAnyQuestions"
 						:is-user-profile-class="isUserProfileClass"
 						:numbers-disabled="true"
 						:title="$t('user.userProfile.bestQuestions')"
 						:icon="iconForQuestions"
-						v-if="!isLoading && ifAnyQuestions"
 						:sorting-enabled="false"
 						:read-only="true"
 						:reactions-disabled="true"
@@ -89,11 +89,11 @@
 						:show-context="true"
 					></wnl-qna>
 					<wnl-qna
+						v-if="!isLoading && ifAnyAnswers"
 						:is-user-profile-class="isUserProfileClass"
 						:numbers-disabled="true"
 						:icon="iconForAnswers"
 						:title="$t('user.userProfile.bestAnswers')"
-						v-if="!isLoading && ifAnyAnswers"
 						:sorting-enabled="false"
 						:read-only="true"
 						:reactions-disabled="true"

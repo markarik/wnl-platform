@@ -11,9 +11,9 @@
 				<label for="autorefresh">{{$t('questions.filters.autorefresh')}}</label>
 				<input
 					id="autorefresh"
+					v-model="autorefresh"
 					type="checkbox"
 					class="checkbox"
-					v-model="autorefresh"
 				>
 			</div>
 		</div>
@@ -35,8 +35,8 @@
 		<div v-if="this.activeFilters.length > 0" class="active-filters-list">
 			<span
 				v-for="(filter, index) in activeFiltersObjects"
-				class="tag is-success"
 				:key="index"
+				class="tag is-success"
 			>
 				{{filterDisplayName(filter)}}
 				<button class="delete is-tiny" @click="removeFilter(filter.path)"></button>

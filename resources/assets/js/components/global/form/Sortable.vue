@@ -7,9 +7,9 @@
 				@end="drag=false"
 			>
 				<li
-					class="item"
 					v-for="item in inputValue"
 					:key="item"
+					class="item"
 				>
 					<slot :item="formData.included[name][item]" />
 				</li>
@@ -18,10 +18,10 @@
 
 		<template v-if="hasErrors">
 			<span
-				class="help is-danger"
 				v-for="(error, index) in getErrors"
-				v-text="error"
 				:key="index"
+				class="help is-danger"
+				v-text="error"
 			></span>
 		</template>
 	</div>

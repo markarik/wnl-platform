@@ -2,9 +2,9 @@
 	<div class="wnl-previous-next">
 		<div class="previous">
 			<router-link
+				v-if="previousScreenId"
 				class="nxt-prvs-link"
 				:to="previousScreenRoute"
-				v-if="previousScreenId"
 			>
 				<span class="icon is-small">
 					<i class="fa fa-arrow-circle-left"></i>
@@ -14,9 +14,9 @@
 		</div>
 		<div class="next">
 			<router-link
+				v-if="nextScreenId"
 				class="nxt-prvs-link"
 				:to="nextScreenRoute"
-				v-if="nextScreenId"
 			>
 				<span>{{nextScreenName}}</span>
 				<span class="icon is-small">

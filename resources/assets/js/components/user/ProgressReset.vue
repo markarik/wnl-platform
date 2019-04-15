@@ -12,11 +12,11 @@
 			<div class="message-header">
 				<strong v-t="'user.progressReset.progressHeader'"></strong>
 			</div>
-			<div class="message-body" v-t="'progress.reset.info'"></div>
+			<div v-t="'progress.reset.info'" class="message-body"></div>
 			<button
-				@click="resetProgress"
-				class="button is-danger to-right"
 				v-t="'user.progressReset.progressButton'"
+				class="button is-danger to-right"
+				@click="resetProgress"
 			/>
 		</div>
 
@@ -24,11 +24,11 @@
 			<div class="message-header">
 				<strong v-t="'user.progressReset.questionsHeader'" />
 			</div>
-			<div class="message-body" v-t="'user.progressReset.questionsWarning'" />
+			<div v-t="'user.progressReset.questionsWarning'" class="message-body" />
 			<button
-				@click="resetQuestions"
-				class="button is-danger to-right"
 				v-t="'user.progressReset.questionsButton'"
+				class="button is-danger to-right"
+				@click="resetQuestions"
 			/>
 		</div>
 
@@ -36,11 +36,11 @@
 			<div class="message-header">
 				<strong v-t="'user.progressReset.collectionsHeader'"></strong>
 			</div>
-			<div class="message-body" v-t="'user.progressReset.collectionsWarning'" />
+			<div v-t="'user.progressReset.collectionsWarning'" class="message-body" />
 			<button
-				@click="resetCollections"
-				class="button is-danger to-right"
 				v-t="'user.progressReset.questionsButton'"
+				class="button is-danger to-right"
+				@click="resetCollections"
 			/>
 		</div>
 		<wnl-satisfaction-guarantee-modal

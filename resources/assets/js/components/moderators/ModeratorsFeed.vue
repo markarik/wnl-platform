@@ -3,9 +3,9 @@
 		<div v-if="emptyTasks" v-t="'tasks.empty'" />
 		<div v-else>
 			<wnl-task
-				class="wnl-task-card"
 				v-for="(task, index) in tasks"
 				:key="index"
+				class="wnl-task-card"
 				:task="task"
 				:available-moderators="moderators"
 				:close-dropdown="closeDropdowns"

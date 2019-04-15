@@ -15,9 +15,9 @@
 					<div class="field">
 						<div class="control">
 							<input
+								v-model="annotation.title"
 								class="input"
 								type="text"
-								v-model="annotation.title"
 								@input="onFieldChange"
 							>
 						</div>
@@ -32,9 +32,9 @@
 					<div class="field">
 						<div class="control">
 							<input
+								v-model="annotation.keywords"
 								class="input"
 								type="text"
-								v-model="annotation.keywords"
 								@input="onFieldChange"
 							>
 						</div>
@@ -45,9 +45,9 @@
 			<div class="annotation-input-description">
 				<div>
 					<quill
+						v-model="annotation.description"
 						:form="form"
 						name="content"
-						v-model="annotation.description"
 						@input="onFieldChange"
 					>
 					</quill>
@@ -56,8 +56,8 @@
 			<fieldset class="annotation-tags">
 				<legend class="annotation-tags__legend">Tagi</legend>
 				<wnl-tags
-					:default-tags="annotation.tags || []"
 					ref="tags"
+					:default-tags="annotation.tags || []"
 					@insertTag="onFieldChange"
 				></wnl-tags>
 			</fieldset>
@@ -74,39 +74,39 @@
 				<div class="control annotation-type__form">
 					<div class="field">
 						<input
+							id="typeNeutral"
+							v-model="keywordType"
 							class="is-checkradio"
 							type="radio"
 							name="keywordType"
 							:value="ANNOTATIONS_TYPES.NEUTRAL"
-							v-model="keywordType"
-							id="typeNeutral"
 						>
 						<label for="typeNeutral">Neutralny</label>
 						<input
+							id="typeBasic"
+							v-model="keywordType"
 							class="is-checkradio"
 							type="radio"
 							name="keywordType"
 							:value="ANNOTATIONS_TYPES.BASIC"
-							v-model="keywordType"
-							id="typeBasic"
 						>
 						<label for="typeBasic">Wiedza podstawowa</label>
 						<input
+							id="typeExpert"
+							v-model="keywordType"
 							class="is-checkradio"
 							type="radio"
 							name="keywordType"
 							:value="ANNOTATIONS_TYPES.EXPERT"
-							v-model="keywordType"
-							id="typeExpert"
 						>
 						<label for="typeExpert">Wiedza specjalistyczna</label>
 						<input
+							id="typeImage"
+							v-model="keywordType"
 							class="is-checkradio"
 							type="radio"
 							name="keywordType"
 							:value="ANNOTATIONS_TYPES.IMAGE"
-							v-model="keywordType"
-							id="typeImage"
 						>
 						<label for="typeImage">Zdjęcie</label>
 					</div>
@@ -118,9 +118,9 @@
 					</div>
 					<div class="field-body">
 						<div
-							class="field field--keyword"
 							v-for="tag in parserTags"
 							:key="tag"
+							class="field field--keyword"
 						>
 							<div class="control">
 								<wnl-keyword-field :content="tag" :show="annotation.id" />
@@ -135,9 +135,9 @@
 					</div>
 					<div class="field-body">
 						<div
-							class="field field--keyword"
 							v-for="tag in htmlTags"
 							:key="tag"
+							class="field field--keyword"
 						>
 							<div class="control">
 								<wnl-keyword-field :content="tag" :show="annotation.id" />
@@ -162,7 +162,7 @@
 				</a>
 			</div>
 		</form>
-		<wnl-modal @closeModal="isVisible = false" v-if="isVisible">
+		<wnl-modal v-if="isVisible" @closeModal="isVisible = false">
 			<wnl-preview-modal :content="annotation.description" />
 		</wnl-modal>
 	</div>

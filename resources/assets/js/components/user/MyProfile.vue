@@ -23,10 +23,10 @@
 				<label class="label">Avatar</label>
 			</div>
 			<wnl-upload
+				endpoint="users/current/avatar"
 				@uploadStarted="onUploadStarted"
 				@success="onUploadSuccess"
 				@uploadError="onUploadError"
-				endpoint="users/current/avatar"
 			>
 				<wnl-avatar size="extraextralarge" class="clickable-avatar"></wnl-avatar>
 				<a class="change-avatar-button button is-small is-outlined is-primary margin top" :class="{'is-loading': loading}">
@@ -36,12 +36,12 @@
 		</div>
 
 		<wnl-form
+			ref="form"
 			class="margin vertical"
 			name="MyProfile"
 			method="put"
 			resource-route="users/current/profile"
 			populate="true"
-			ref="form"
 			@formIsLoaded="onFormLoaded"
 		>
 			<div class="form-input-group">

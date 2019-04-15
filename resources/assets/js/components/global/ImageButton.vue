@@ -11,9 +11,9 @@
 			<wnl-icon :name="icon"></wnl-icon>
 		</button>
 		<label
+			v-if="label"
 			:for="name"
 			class="wnl-image-button-label"
-			v-if="label"
 		>
 			{{label}}
 		</label>

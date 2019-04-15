@@ -1,9 +1,9 @@
 <template>
 	<div>
-		<div class="qna-loader" v-if="loading">
+		<div v-if="loading" class="qna-loader">
 			<wnl-text-loader></wnl-text-loader>
 		</div>
-		<div class="wnl-qna" v-if="!loading">
+		<div v-if="!loading" class="wnl-qna">
 			<div class="wnl-qna-header level">
 				<div class="level-left">
 					<div>
@@ -14,11 +14,11 @@
 							<p v-if="!hideTitle" class="wnl-qna-header-title">
 								{{displayedTitle}}&nbsp;
 							</p>
-							<p class="wnl-qna-header-title" v-if="!numbersDisabled">
+							<p v-if="!numbersDisabled" class="wnl-qna-header-title">
 								({{howManyQuestions}})
 							</p>
 						</div>
-						<div class="tags" v-if="contextTags">
+						<div v-if="contextTags" class="tags">
 							<span
 								v-for="tag in contextTags"
 								:key="tag.id"
@@ -28,18 +28,18 @@
 						</div>
 					</div>
 				</div>
-				<div class="level-right" v-if="!readOnly">
+				<div v-if="!readOnly" class="level-right">
 					<a
+						v-if="showForm"
 						class="button is-small"
 						@click="showForm = false"
-						v-if="showForm"
 					>
 						<span>Ukryj</span>
 					</a>
 					<a
+						v-if="!showForm"
 						class="button is-small is-primary"
 						@click="showForm = true"
-						v-if="!showForm"
 					>
 						<span>Zadaj pytanie</span>
 						<span id="question-icon" class="icon is-small">
@@ -49,11 +49,11 @@
 				</div>
 			</div>
 			<transition name="fade">
-				<div class="qna-new-question" v-if="showForm && discussionId">
+				<div v-if="showForm && discussionId" class="qna-new-question">
 					<wnl-new-question
 						:context-tags="contextTags"
-						@submitSuccess="showForm = false"
 						:discussion-id="discussionId"
+						@submitSuccess="showForm = false"
 					/>
 				</div>
 			</transition>
@@ -75,7 +75,7 @@
 						>{{$t('user.userProfile.showContext')}}</router-link>
 					</wnl-qna-question>
 				</div>
-				<div class="qna-no-questions" v-else>
+				<div v-else class="qna-no-questions">
 					Ten filtr nie zawiera żadnych pytań.
 				</div>
 			</div>

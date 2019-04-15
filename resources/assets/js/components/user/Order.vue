@@ -34,7 +34,7 @@
 				</p>
 
 				<!-- STUDY BUDDY BEGINS -->
-				<div class="box margin bottom" v-else-if="studyBuddy && order.paid">
+				<div v-else-if="studyBuddy && order.paid" class="box margin bottom">
 					<div v-if="order.studyBuddy.status === 'awaiting-refund'">
 						<p class="strong has-text-centered">
 							Twój Study Buddy dołączył już do kursu!
@@ -78,7 +78,7 @@
 				<div class="current-payment">
 
 					<!-- PAY ORDER BEGINS -->
-					<div class="margin top aligncenter" v-if="!isPending && !order.paid && order.method === 'online' && order.total > 0">
+					<div v-if="!isPending && !order.paid && order.method === 'online' && order.total > 0" class="margin top aligncenter">
 						<p>
 							<button
 								:class="{
@@ -93,13 +93,13 @@
 							</button>
 						</p>
 						<p class="metadata aligncenter margin top">Kwota do zapłaty: {{this.order.total}}zł</p>
-						<p class="aligncenter" v-if="canChangePaymentMethod">Aby zapłacić na raty, anuluj to zamówienie i złóż kolejne.</p>
+						<p v-if="canChangePaymentMethod" class="aligncenter">Aby zapłacić na raty, anuluj to zamówienie i złóż kolejne.</p>
 					</div>
 					<!-- PAY ORDER ENDS -->
 
 					<!-- Instalments -->
-					<div class="payment-details" v-if="!isFullyPaid">
-						<p class="big strong" v-if="order.method === 'transfer'">
+					<div v-if="!isFullyPaid" class="payment-details">
+						<p v-if="order.method === 'transfer'" class="big strong">
 							Kwota: {{order.total}}zł
 						</p>
 						<div v-if="order.method === 'instalments'">
@@ -147,7 +147,7 @@
 							<p class="aligncenter">Możesz opłacić wszystkie raty przed terminem, nawet dziś, klikając ponownie ZAPŁAĆ KOLEJNĄ RATĘ. 🙂</p>
 
 							<!-- Transfer details -->
-							<div class="transfer-details notification" v-if="transferDetails">
+							<div v-if="transferDetails" class="transfer-details notification">
 								<p>Dane do przelewu</p>
 								<small>
 									<p class="big">Tytuł przelewu:</p>
@@ -167,9 +167,9 @@
 				<div class="tabs">
 					<ul>
 						<li
-							:class="{'is-active': activeTab === tab}"
 							v-for="(tabContent, tab) in orderTabs"
 							:key="tab"
+							:class="{'is-active': activeTab === tab}"
 							@click="activeTab = tab"
 						>
 							<a>
@@ -183,7 +183,7 @@
 				</div>
 
 				<!-- PAYMENTS BEGIN -->
-				<div class="content" v-if="activeTab === 'payments'">
+				<div v-if="activeTab === 'payments'" class="content">
 					<div v-if="!order.payments.length" class="margin vertical">
 						Brak płatności
 					</div>
@@ -207,7 +207,7 @@
 				<!-- PAYMENTS END -->
 
 				<!-- INVOICES BEGIN -->
-				<div class="content" v-if="activeTab === 'invoices'">
+				<div v-if="activeTab === 'invoices'" class="content">
 					<div v-if="!order.invoices.length" class="margin vertical">
 						Brak faktur
 					</div>
@@ -227,23 +227,23 @@
 				<!-- INVOICES END -->
 
 				<!-- COUPONS BEGIN -->
-				<div class="content" v-if="activeTab === 'coupons'">
+				<div v-if="activeTab === 'coupons'" class="content">
 					<template v-if="couponsDisabled">
 						<p>{{$t('orders.messages.product-coupons-disabled')}}</p>
 					</template>
-					<div class="add-coupon" v-else>
+					<div v-else class="add-coupon">
 						<a
+							v-if="order.status !== 'closed'"
 							class=""
 							title="Dodaj lub zmień kod rabatowy"
-							@click="toggleCouponInput"
-							v-if="order.status !== 'closed'"
 							data-button="add-coupon"
+							@click="toggleCouponInput"
 						>
 							<span class="icon is-small margin right"><i class="fa fa-plus"></i></span>
 							<span>Dodaj lub zmień kod rabatowy</span>
 						</a>
 					</div>
-					<div class="voucher-code" v-if="couponInputVisible">
+					<div v-if="couponInputVisible" class="voucher-code">
 						<wnl-form
 							class="margin vertical"
 							name="CouponCode"
@@ -268,7 +268,7 @@
 				</span>
 				{{paymentStatus}}
 			</div>
-			<div class="card-footer-item cancel-order" v-if="!order.paid && !order.canceled && order.total > 0">
+			<div v-if="!order.paid && !order.canceled && order.total > 0" class="card-footer-item cancel-order">
 				<a title="Anuluj zamówienie" @click="cancelOrder">
 					<span class="icon is-small status-icon">
 						<i class="fa fa-times"></i>
@@ -278,10 +278,10 @@
 		</div>
 
 		<wnl-p24-form
+			ref="p24Form"
 			:user-data="userData"
 			:payment-data="paymentData"
 			:order="order"
-			ref="p24Form"
 		/>
 	</div>
 </template>

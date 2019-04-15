@@ -5,10 +5,10 @@
 				<div class="stream-line"></div>
 				<component
 					:is="getEventComponent(message)"
-					:message="message"
-					:key="message.id"
-					:notification-component="QuestionsNotification"
 					v-for="message in filtered"
+					:key="message.id"
+					:message="message"
+					:notification-component="QuestionsNotification"
 				/>
 			</div>
 			<div class="show-more">
@@ -25,7 +25,7 @@
 				</span>
 			</div>
 		</div>
-		<wnl-text-loader class="margin vertical" v-else />
+		<wnl-text-loader v-else class="margin vertical" />
 	</div>
 </template>
 

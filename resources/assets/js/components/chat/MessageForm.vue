@@ -15,9 +15,9 @@
 					resource-route="qna_questions"
 				>
 					<wnl-quill
+						id="elo-elo"
 						ref="editor"
 						name="text"
-						id="elo-elo"
 						:options="quillOptions"
 						:keyboard="keyboard"
 						:toolbar="toolbar"
@@ -26,7 +26,7 @@
 					></wnl-quill>
 				</wnl-form>
 				<span class="characters-counter metadata">{{`${message.length} / 5000`}}</span>
-				<div class="message is-warning" v-if="error.length > 0">
+				<div v-if="error.length > 0" class="message is-warning">
 					<div class="message-body">{{error}}</div>
 				</div>
 			</div>

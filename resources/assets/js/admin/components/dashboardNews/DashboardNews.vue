@@ -16,10 +16,10 @@
 				<th>Wyświetlaj do</th>
 			</tr>
 			<tr
-				class="dashboard-news__item"
-				:class="{'has-text-success': dashboardNewsItem.id === activeItemId}"
 				v-for="dashboardNewsItem in dashboardNewsList"
 				:key="dashboardNewsItem.id"
+				class="dashboard-news__item"
+				:class="{'has-text-success': dashboardNewsItem.id === activeItemId}"
 				@click="goToEdit(dashboardNewsItem.id)"
 			>
 				<td>{{dashboardNewsItem.slug}}</td>

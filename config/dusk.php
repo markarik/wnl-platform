@@ -33,4 +33,6 @@ return [
 		'login'    => env('DUSK_LOGIN'),
 		'password' => env('DUSK_PASSWORD'),
 	],
+
+	'selenium_host' => env('SELENIUM_HOST', 'selenium'),
 ];

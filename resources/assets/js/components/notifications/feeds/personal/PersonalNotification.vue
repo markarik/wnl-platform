@@ -1,12 +1,18 @@
 <template>
 	<div class="notification-wrapper">
 		<div class="avatar" @click.stop="showModal">
-			<wnl-avatar size="medium"
+			<wnl-avatar
+				size="medium"
 				:full-name="message.actors.full_name"
-				:url="message.actors.avatar">
+				:url="message.actors.avatar"
+			>
 			</wnl-avatar>
 		</div>
-		<div class="personal-notification" @click="markAsReadAndGo" :class="{'deleted': deleted || resolved}">
+		<div
+			class="personal-notification"
+			@click="markAsReadAndGo"
+			:class="{'deleted': deleted || resolved}"
+		>
 			<div class="notification-content">
 				<div class="notification-header">
 					<span class="actor">{{message.actors.full_name}}</span>
@@ -23,16 +29,28 @@
 				</div>
 			</div>
 			<div class="link-symbol">
-				<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
+				<span
+					v-if="hasContext"
+					class="icon"
+					:class="{'unread': !isRead}"
+				>
 					<i v-if="loading" class="loader"></i>
 					<i v-else class="fa fa-angle-right"></i>
 				</span>
 			</div>
 		</div>
-		<div class="delete-message" v-if="deleted" v-t="'notifications.messages.deleted'"/>
-		<div class="delete-message" v-if="resolved" v-t="'notifications.messages.resolved'"/>
+		<div
+			class="delete-message"
+			v-if="deleted"
+			v-t="'notifications.messages.deleted'"
+		/>
+		<div
+			class="delete-message"
+			v-if="resolved"
+			v-t="'notifications.messages.resolved'"
+		/>
 		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="userForModal"/>
+			<wnl-user-profile-modal :author="userForModal" />
 		</wnl-modal>
 	</div>
 </template>

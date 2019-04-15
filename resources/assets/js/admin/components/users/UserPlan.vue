@@ -8,7 +8,12 @@
 			</div>
 		</div>
 		<template v-if="userLessons.length">
-			<input v-model="filterPhrase" class="input margin bottom" placeholder="filtruj..." ref="filterInput">
+			<input
+				v-model="filterPhrase"
+				class="input margin bottom"
+				placeholder="filtruj..."
+				ref="filterInput"
+			>
 			<table class="table is-bordered">
 				<thead>
 					<tr>

@@ -5,8 +5,16 @@
 			:search-available-fields="searchAvailableFields"
 			:custom-request-params="requestParams"
 		>
-			<router-link class="button is-primary margin bottom" :to="{'name': 'users-add'}" slot="header">Dodaj Użytkownika</router-link>
-			<wnl-users-list :users-response="slotParams.list" slot="list" slot-scope="slotParams"/>
+			<router-link
+				class="button is-primary margin bottom"
+				:to="{'name': 'users-add'}"
+				slot="header"
+			>Dodaj Użytkownika</router-link>
+			<wnl-users-list
+				:users-response="slotParams.list"
+				slot="list"
+				slot-scope="slotParams"
+			/>
 		</wnl-paginated-list>
 	</div>
 </template>

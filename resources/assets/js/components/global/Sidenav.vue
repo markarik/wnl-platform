@@ -6,7 +6,8 @@
 					{{itemsHeading}}
 				</span>
 			</li>
-			<wnl-sidenav-group v-for="(item, index) in items"
+			<wnl-sidenav-group
+				v-for="(item, index) in items"
 				:item="item"
 				:key="index"
 				:force-group-open="isOption('forceGroupsOpen')"

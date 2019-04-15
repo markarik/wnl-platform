@@ -9,7 +9,7 @@
 				<slot name="body">{{$t('ui.satisfactionGuarantee.body')}}</slot>
 			</p>
 			<p class="margin bottom text-dimmed satisfaction-guarantee-modal__extra-info">
-				<i class="fa fa-info-circle"/>
+				<i class="fa fa-info-circle" />
 				<slot name="footer">
 					<span v-html="$t('ui.satisfactionGuarantee.note', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
 				</slot>

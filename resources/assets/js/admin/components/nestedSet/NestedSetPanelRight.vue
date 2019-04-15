@@ -15,7 +15,7 @@
 			</ul>
 		</nav>
 
-		<slot name="activeView"/>
+		<slot name="activeView" />
 	</div>
 </template>
 

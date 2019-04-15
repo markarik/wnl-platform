@@ -1,14 +1,20 @@
 <template>
 	<div class="wnl-image-button-container" :class="{ 'is-reverse': isReverse, 'loading': loading }">
-		<button class="button wnl-image-button without-image"
+		<button
+			class="button wnl-image-button without-image"
 			:class="[iconClass, iconSizeClass]"
 			:name="name"
 			:disabled="disabled"
 			:title="title"
-			@click="emitClick">
+			@click="emitClick"
+		>
 			<wnl-icon :name="icon"></wnl-icon>
 		</button>
-		<label :for="name" class="wnl-image-button-label" v-if="label">
+		<label
+			:for="name"
+			class="wnl-image-button-label"
+			v-if="label"
+		>
 			{{label}}
 		</label>
 	</div>

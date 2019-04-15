@@ -9,7 +9,12 @@
 			</div>
 			<div class="autorefresh control">
 				<label for="autorefresh">{{$t('questions.filters.autorefresh')}}</label>
-				<input id="autorefresh" type="checkbox" class="checkbox" v-model="autorefresh">
+				<input
+					id="autorefresh"
+					type="checkbox"
+					class="checkbox"
+					v-model="autorefresh"
+				>
 			</div>
 		</div>
 		<div class="filtering-result">
@@ -24,11 +29,12 @@
 				{{$t('questions.filters.activeHeading')}}
 			</span>
 			<span class="active-filters-heading-slot">
-				<slot name="heading"/>
+				<slot name="heading" />
 			</span>
 		</div>
 		<div v-if="this.activeFilters.length > 0" class="active-filters-list">
-			<span v-for="(filter, index) in activeFiltersObjects"
+			<span
+				v-for="(filter, index) in activeFiltersObjects"
 				class="tag is-success"
 				:key="index"
 			>

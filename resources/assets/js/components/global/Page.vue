@@ -5,7 +5,8 @@
 			:context-tags="tags"
 			:reactions-disabled="true"
 			:discussion-id="discussion_id"
-			v-if="hasQna"/>
+			v-if="hasQna"
+		/>
 	</div>
 </template>
 

@@ -6,7 +6,12 @@
 		:meta="meta"
 	>
 		<span slot="title">{{item.name}}</span>
-		<wnl-section-item v-for="section in screenSections" :key="section.id" :item="section" slot="children"/>
+		<wnl-section-item
+			v-for="section in screenSections"
+			:key="section.id"
+			:item="section"
+			slot="children"
+		/>
 	</wnl-lesson-navigation-item>
 </template>
 

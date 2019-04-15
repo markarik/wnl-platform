@@ -14,7 +14,8 @@
 			method="put"
 			resource-route="users/current/password"
 			@submitError="submitError"
-			:submit-error="true">
+			:submit-error="true"
+		>
 			<wnl-form-password name="old_password">Stare hasło</wnl-form-password>
 			<wnl-form-password name="new_password">Nowe hasło</wnl-form-password>
 			<wnl-form-password name="new_password_confirmation">Powtórz nowe hasło</wnl-form-password>

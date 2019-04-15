@@ -3,9 +3,15 @@
 		<label class="label" for="wnl-slideshow-navigation-">
 			Idź do slajdu
 		</label>
-		<input class="input" type="number" size="3" maxlength="3" min="1"
+		<input
+			class="input"
+			type="number"
+			size="3"
+			maxlength="3"
+			min="1"
 			v-model.number="slideNumber"
-			@input="onChange">
+			@input="onChange"
+		>
 	</div>
 </template>
 

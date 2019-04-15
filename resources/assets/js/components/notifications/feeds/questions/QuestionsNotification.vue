@@ -1,16 +1,20 @@
 <template>
 	<div class="notification-wrapper" :class="{'is-desktop': !isTouchScreen}">
 		<div class="questions-notification" :class="{'is-read': isRead, deleted}">
-			<div class="notification-container" :class="{'unseen': !isSeen}"
+			<div
+				class="notification-container"
+				:class="{'unseen': !isSeen}"
 				@click="dispatchMarkAsSeen"
 				@contextmenu="dispatchMarkAsSeen"
 			>
 				<router-link class="notification-link" :to="routeContext">
 					<div class="meta">
 						<div class="avatar meta-actor" @click="showModal">
-							<wnl-avatar :size="isMobile ? 'medium' : 'large'"
+							<wnl-avatar
+								:size="isMobile ? 'medium' : 'large'"
 								:full-name="message.actors.full_name"
-								:url="message.actors.avatar">
+								:url="message.actors.avatar"
+							>
 							</wnl-avatar>
 						</div>
 						<span class="icon is-small"><i class="fa" :class="icon"></i></span>
@@ -25,7 +29,11 @@
 							<span class="context">{{contextInfo}}</span>
 						</div>
 						<div class="object-text wrap" v-if="objectText">{{objectText}}</div>
-						<div class="subject wrap" :class="{'unseen': !isSeen}" v-if="subjectText">{{subjectText}}</div>
+						<div
+							class="subject wrap"
+							:class="{'unseen': !isSeen}"
+							v-if="subjectText"
+						>{{subjectText}}</div>
 						<div class="time">
 						</div>
 					</div>
@@ -34,7 +42,7 @@
 		</div>
 		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
 		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="message.actors"/>
+			<wnl-user-profile-modal :author="message.actors" />
 		</wnl-modal>
 	</div>
 </template>

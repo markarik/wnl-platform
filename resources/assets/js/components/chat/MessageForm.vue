@@ -37,7 +37,8 @@
 					alt="Wyślij wiadomość"
 					:disabled="sendingDisabled || sendingMessage"
 					:loading="sendingMessage"
-					@buttonclicked="sendMessage">
+					@buttonclicked="sendMessage"
+				>
 				</wnl-image-button>
 			</div>
 		</article>

@@ -11,13 +11,15 @@
 					:class="{'wnl-is-loading': isLoading}"
 					v-if="flashcard.answer === 'unsolved'"
 				>
-					<a class="flashcards-list__item__buttons__button text--easy"
+					<a
+						class="flashcards-list__item__buttons__button text--easy"
 						@click="submitAnswer(flashcard, 'easy')"
 						:title="ANSWERS_MAP.easy.text"
 					>
 						<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span>
 					</a>
-					<a class="flashcards-list__item__buttons__button text--hard"
+					<a
+						class="flashcards-list__item__buttons__button text--hard"
 						@click="submitAnswer(flashcard, 'hard')"
 						:title="ANSWERS_MAP.hard.text"
 					>
@@ -46,18 +48,27 @@
 						:class="['flashcards-list__item__buttons__button is-disabled', ANSWERS_MAP[flashcard.answer].buttonClass]"
 						:title="ANSWERS_MAP[flashcard.answer].text"
 					>
-						<span class="icon"><i
-							:class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i></span>
+						<span class="icon">
+							<i :class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i>
+						</span>
 					</span>
 				</div>
 			</div>
 			<div v-if="flashcard.answer !== 'unsolved'">
-				<wnl-text-button v-if="!flashcard.note && !isNoteEditorOpen" @click="toggleNoteEditor" type="button">+ DODAJ NOTATKĘ</wnl-text-button>
+				<wnl-text-button
+					v-if="!flashcard.note && !isNoteEditorOpen"
+					@click="toggleNoteEditor"
+					type="button"
+				>+ DODAJ NOTATKĘ</wnl-text-button>
 				<div v-if="flashcard.note && !isNoteEditorOpen">
 					<label class="label">TWOJA NOTATKA
-					<wnl-text-button type="button" @click="toggleNoteEditor" icon="edit">EDYTUJ</wnl-text-button>
+					<wnl-text-button
+						type="button"
+						@click="toggleNoteEditor"
+						icon="edit"
+					>EDYTUJ</wnl-text-button>
 					</label>
-					<span class="flashcards-list__item__note-content content" v-html="flashcard.note.note"/>
+					<span class="flashcards-list__item__note-content content" v-html="flashcard.note.note" />
 				</div>
 				<wnl-form
 					v-if="isNoteEditorOpen"
@@ -67,9 +78,14 @@
 					:name="`flashcardNote-${flashcard.id}`"
 					:suppress-enter="true"
 					:hide-default-submit="true"
-					@submitSuccess="onSubmitSuccess">
+					@submitSuccess="onSubmitSuccess"
+				>
 					<label class="label">TWOJA NOTATKA
-					<wnl-text-button type="button" @click="toggleNoteEditor" icon="close">ANULUJ</wnl-text-button>
+					<wnl-text-button
+						type="button"
+						@click="toggleNoteEditor"
+						icon="close"
+					>ANULUJ</wnl-text-button>
 					</label>
 					<wnl-quill
 						name="note"

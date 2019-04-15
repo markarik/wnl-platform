@@ -1,6 +1,11 @@
 <template>
-	<form :name="name" @keydown="keyEvent" @submit.prevent="onSubmitForm">
-		<wnl-alert v-for="(alert, timestamp) in alerts"
+	<form
+		:name="name"
+		@keydown="keyEvent"
+		@submit.prevent="onSubmitForm"
+	>
+		<wnl-alert
+			v-for="(alert, timestamp) in alerts"
 			css-class="fixed"
 			:alert="alert"
 			:key="timestamp"

@@ -31,15 +31,18 @@
 					<i class="fa fa-pencil"></i>
 				</span>
 				<span class="icon is-small  annotation-item__header__item annotation-item__header__item--chevron">
-					<i class="toggle fa fa-angle-down"
-						:class="{'fa-rotate-180': isOpen(annotation)}">
+					<i
+						class="toggle fa fa-angle-down"
+						:class="{'fa-rotate-180': isOpen(annotation)}"
+					>
 					</i>
 				</span>
 			</div>
 			<div
 				class="annotation-item__description"
 				v-if="isOpen(annotation)"
-				v-html="annotation.description">
+				v-html="annotation.description"
+			>
 			</div>
 		</li>
 	</ul>

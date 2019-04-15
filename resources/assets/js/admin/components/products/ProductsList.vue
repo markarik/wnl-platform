@@ -1,5 +1,5 @@
 <template>
-	<div >
+	<div>
 		<h3 class="title is-3">
 			Produkty
 			<router-link
@@ -17,7 +17,12 @@
 			class="products"
 		>
 			<tbody slot-scope="slotProps" slot="tbody">
-			<tr v-for="product in slotProps.list" :key="product.id" @click="goToEdit(product.id)" class="clickable">
+			<tr
+				v-for="product in slotProps.list"
+				:key="product.id"
+				@click="goToEdit(product.id)"
+				class="clickable"
+			>
 				<td>{{product.id}}</td>
 				<td>{{product.name}}</td>
 				<td>{{product.quantity}}/{{product.initial}}</td>

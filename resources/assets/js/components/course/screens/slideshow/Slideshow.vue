@@ -7,7 +7,7 @@
 				</div>
 				<small class="slide-meta" v-if="$moderatorFeatures.isAllowed('access')">
 					{{currentSlideId}}
-					<wnl-linked-questions :slide-id="currentSlideId"/>
+					<wnl-linked-questions :slide-id="currentSlideId" />
 				</small>
 				<div class="controls-right">
 					<div class="controls-item">

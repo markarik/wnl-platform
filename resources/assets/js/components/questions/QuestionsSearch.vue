@@ -9,11 +9,14 @@
 					type="text"
 					:disabled="loading"
 					@keydown.enter="onEnter"
-					v-model="searchPhrase">
+					v-model="searchPhrase"
+				>
 			</div>
 		</div>
-		<a class="search-button button is-primary is-outlined is-small"
-			@click="search">
+		<a
+			class="search-button button is-primary is-outlined is-small"
+			@click="search"
+		>
 			{{$t('questions.filters.searchButton')}}
 		</a>
 	</div>

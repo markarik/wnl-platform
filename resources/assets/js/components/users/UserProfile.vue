@@ -18,9 +18,15 @@
 		</div>
 
 		<div v-else>
-			<div class="user-profile" :class="isMobile" v-if="!isLoading && responseCondition">
+			<div
+				class="user-profile"
+				:class="isMobile"
+				v-if="!isLoading && responseCondition"
+			>
 				<div class="user-content" :class="avatarClass">
-					<wnl-avatar class="user-avatar image" size="extraextralarge"
+					<wnl-avatar
+						class="user-avatar image"
+						size="extraextralarge"
 						:full-name="fullName"
 						:url="profile.avatar"
 					></wnl-avatar>
@@ -54,7 +60,11 @@
 				</div>
 
 				<div class="user-activity-content">
-					<div class="wnl-activity-meter" v-for="(activity, index) in activityMeterArray" :key="index">
+					<div
+						class="wnl-activity-meter"
+						v-for="(activity, index) in activityMeterArray"
+						:key="index"
+					>
 						<div class="activity-stat">
 							<span class="icon is-large">
 								<i :class="activity.iconClassToUse"></i>

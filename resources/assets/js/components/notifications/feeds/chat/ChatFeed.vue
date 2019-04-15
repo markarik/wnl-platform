@@ -1,8 +1,15 @@
 <template>
 	<div class="dropdown-container">
-		<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
-			<div slot="activator" class="notifications-toggle"
-				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }">
+		<wnl-dropdown
+			:options="{isWide: true}"
+			@toggled="toggle"
+			ref="dropdown"
+		>
+			<div
+				slot="activator"
+				class="notifications-toggle"
+				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }"
+			>
 				<div v-if="isOn && !!unseenCount" class="counter">{{unseenCount}}</div>
 				<span v-if="!connecting" class="loader"><i class="fas fa-circle-notch fa-pulse"></i></span>
 				<span class="icon">
@@ -11,26 +18,28 @@
 			</div>
 			<div slot="content">
 				<div class="feed-header">
-					<span class="feed-heading" v-t="'notifications.chat.heading'"/>
-					<wnl-notifications-toggle :setting="setting" :icons="icons"/>
+					<span class="feed-heading" v-t="'notifications.chat.heading'" />
+					<wnl-notifications-toggle :setting="setting" :icons="icons" />
 				</div>
 
 				<div class="feed-body">
 					<div class="zero-state" v-if="isEmpty">
-						<img class="zero-state-image"
+						<img
+							class="zero-state-image"
 							:alt="$t('notifications.personal.zeroStateImage')"
 							:src="zeroStateImage"
-							:title="$t('notifications.personal.zeroStateImage')">
-						<p class="zero-state-text" v-t="'notifications.chat.zeroState'"/>
+							:title="$t('notifications.personal.zeroStateImage')"
+						>
+						<p class="zero-state-text" v-t="'notifications.chat.zeroState'" />
 					</div>
 					<div class="feed-content" v-else>
-						<wnl-conversations-list :with-search="false"/>
+						<wnl-conversations-list :with-search="false" />
 					</div>
 				</div>
 
 				<div class="feed-footer">
 					<router-link :to="{ name: 'messages' }">
-						<span class="messages-dashboard-redirect" v-t="'notifications.chat.footer'"/>
+						<span class="messages-dashboard-redirect" v-t="'notifications.chat.footer'" />
 					</router-link>
 				</div>
 			</div>

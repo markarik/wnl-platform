@@ -6,7 +6,8 @@
 					Edycja zestawu pytań
 					<span v-if="isEdit">(Id: {{flashcardsSetId}})</span>
 				</h3>
-				<button class="button is-small is-success"
+				<button
+					class="button is-small is-success"
 					:class="{'is-loading': loading}"
 					:disabled="!hasChanged"
 					type="submit"
@@ -33,7 +34,8 @@
 			</wnl-form-input>
 			<label class="label">Lekcja, której dotyczy zestaw</label>
 			<span class="select flashcards-set-editor-select">
-				<wnl-select :form="form"
+				<wnl-select
+					:form="form"
 					:options="lessonsOptions"
 					name="lesson_id"
 					v-model="form.lesson_id"
@@ -49,7 +51,12 @@
 			/>
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="flashcards-admin">
-				<draggable v-model="form.flashcards" @start="drag=true" @end="drag=false" v-if="areFlashcardsReady">
+				<draggable
+					v-model="form.flashcards"
+					@start="drag=true"
+					@end="drag=false"
+					v-if="areFlashcardsReady"
+				>
 					<wnl-flashcards-set-list-item
 						v-for="flashcardId in form.flashcards"
 						:key="flashcardId"
@@ -66,7 +73,7 @@
 					placeholder="Id lub treść aby wyszukać"
 					label="Wybierz pytanie"
 				>
-					<wnl-flashcard-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
+					<wnl-flashcard-autocomplete-item :item="slotProps.item" slot-scope="slotProps" />
 				</wnl-autocomplete>
 			</div>
 		</form>

@@ -8,7 +8,12 @@
 			</div>
 		</div>
 		<template v-if="productLessons.length">
-			<input v-model="filterPhrase" class="input margin bottom" placeholder="filtruj..." ref="filterInput">
+			<input
+				v-model="filterPhrase"
+				class="input margin bottom"
+				placeholder="filtruj..."
+				ref="filterInput"
+			>
 			<wnl-sortable-table
 				:columns="tableColumns"
 				:active-sort-column-name="activeSort.activeSortColumnName"

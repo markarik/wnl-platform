@@ -1,5 +1,6 @@
 <template>
-	<button class="wnl-text-button"
+	<button
+		class="wnl-text-button"
 		:disabled="disabled"
 		:type="type"
 		@click="$emit('click', $event)"

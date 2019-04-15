@@ -1,5 +1,9 @@
 <template>
-	<div class="wnl-screen-html" :class="{'wnl-repetitions': isRepetitions}" @click="onClick">
+	<div
+		class="wnl-screen-html"
+		:class="{'wnl-repetitions': isRepetitions}"
+		@click="onClick"
+	>
 		<div class="content" v-html="content">
 		</div>
 		<p class="end-button has-text-centered" v-if="showBacklink">

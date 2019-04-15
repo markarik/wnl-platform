@@ -1,8 +1,10 @@
 <template>
 	<div class="moderators-feed">
-		<div v-if="emptyTasks" v-t="'tasks.empty'"/>
+		<div v-if="emptyTasks" v-t="'tasks.empty'" />
 		<div v-else>
-			<wnl-task class="wnl-task-card" v-for="(task, index) in tasks"
+			<wnl-task
+				class="wnl-task-card"
+				v-for="(task, index) in tasks"
 				:key="index"
 				:task="task"
 				:available-moderators="moderators"
@@ -10,7 +12,8 @@
 				@statusSelected="updateTask"
 				@assign="updateTask"
 			/>
-			<wnl-pagination v-if="paginationMeta.lastPage > 1"
+			<wnl-pagination
+				v-if="paginationMeta.lastPage > 1"
 				:current-page="paginationMeta.currentPage"
 				:last-page="paginationMeta.lastPage"
 				@changePage="(page) => $emit('changePage', {page})"

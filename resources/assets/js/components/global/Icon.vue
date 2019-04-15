@@ -1,5 +1,5 @@
 <template>
-	<svg><use :xlink:href="href"/></svg>
+	<svg><use :xlink:href="href" /></svg>
 </template>
 
 <script>

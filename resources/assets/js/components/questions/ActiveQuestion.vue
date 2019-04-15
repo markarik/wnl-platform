@@ -40,10 +40,19 @@
 			@editorDestroyed="onContentItemClassifierEditorDestroyed"
 		/>
 		<p class="active-question-button has-text-centered">
-			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
+			<a
+				v-if="!question.isResolved"
+				class="button is-primary"
+				:disabled="!hasAnswer"
+				@click="verify"
+			>
 				Sprawdź odpowiedź
 			</a>
-			<a v-else class="button is-primary is-outlined" @click="nextQuestion()">
+			<a
+				v-else
+				class="button is-primary is-outlined"
+				@click="nextQuestion()"
+			>
 				Następne
 			</a>
 		</p>

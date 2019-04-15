@@ -1,11 +1,11 @@
 <template>
 	<div class="scrollable-main-container" ref="overviewContainer">
 		<!-- Dashboard news -->
-		<wnl-dashboard-news/>
+		<wnl-dashboard-news />
 
 		<div class="welcome-container">
 			<div class="welcome">
-				{{$t('dashboard.welcome', {currentUserName})}} <wnl-emoji name="wave"/>
+				{{$t('dashboard.welcome', {currentUserName})}} <wnl-emoji name="wave" />
 			</div>
 			<div class="access-display" v-if="currentUserSubscriptionActive">
 				<div>
@@ -18,12 +18,12 @@
 		</div>
 		<!-- Next lesson -->
 		<div class="overview-progress box">
-			<wnl-next-lesson @userEvent="trackUserEvent"/>
-			<wnl-your-progress/>
+			<wnl-next-lesson @userEvent="trackUserEvent" />
+			<wnl-your-progress />
 		</div>
 
 		<div class="active-users">
-			<wnl-active-users/>
+			<wnl-active-users />
 		</div>
 
 		<div class="news-heading metadata">
@@ -33,7 +33,9 @@
 			</span>
 		</div>
 		<div class="current-view-controls">
-			<a v-for="(panel, index) in panels" class="panel-toggle"
+			<a
+				v-for="(panel, index) in panels"
+				class="panel-toggle"
 				:class="{'is-active': overviewView === panel.slug}"
 				:key="index"
 				@click="changeOverviewView(panel.slug)"
@@ -44,7 +46,7 @@
 				</span>
 			</a>
 		</div>
-		<wnl-stream-feed v-show="overviewView === 'stream'"/>
+		<wnl-stream-feed v-show="overviewView === 'stream'" />
 		<wnl-qna
 			:sorting-enabled="true"
 			:numbers-disabled="true"

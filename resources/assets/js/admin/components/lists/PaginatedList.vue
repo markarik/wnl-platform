@@ -19,7 +19,11 @@
 		/>
 
 		<template v-if="!isLoading">
-			<slot name="list" v-if="!isEmpty(list)" :list="list"/>
+			<slot
+				name="list"
+				v-if="!isEmpty(list)"
+				:list="list"
+			/>
 			<div class="title is-6" v-else>Nic tu nie ma...</div>
 		</template>
 		<wnl-text-loader v-else></wnl-text-loader>

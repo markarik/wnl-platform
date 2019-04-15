@@ -1,7 +1,11 @@
 <template>
 	<div class="field">
 		<ol>
-			<draggable v-model="inputValue" @start="drag=true" @end="drag=false">
+			<draggable
+				v-model="inputValue"
+				@start="drag=true"
+				@end="drag=false"
+			>
 				<li
 					class="item"
 					v-for="item in inputValue"

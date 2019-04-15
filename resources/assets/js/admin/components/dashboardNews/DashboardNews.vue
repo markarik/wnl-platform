@@ -1,5 +1,5 @@
 <template>
-	<div >
+	<div>
 		<h3 class="title is-3">
 			Newsy
 			<router-link

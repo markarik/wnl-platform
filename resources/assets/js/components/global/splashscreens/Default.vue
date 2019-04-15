@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<img class="splash-screen-image" :src="countdownImageUrl" alt="">
+		<img
+			class="splash-screen-image"
+			:src="countdownImageUrl"
+			alt=""
+		>
 		<div class="has-text-centered">
 			<p class="title is-4">W tym momencie nie posiadasz dostępu do kursu</p>
 			<p>

@@ -3,7 +3,12 @@
 		<span class="item-wrapper heading">
 			{{lesson.name}}
 		</span>
-		<wnl-screen-item v-for="screen in screens" :key="screen.id" :item="screen" :lesson-id="lessonId"></wnl-screen-item>
+		<wnl-screen-item
+			v-for="screen in screens"
+			:key="screen.id"
+			:item="screen"
+			:lesson-id="lessonId"
+		></wnl-screen-item>
 	</div>
 </template>
 

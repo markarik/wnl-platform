@@ -29,19 +29,22 @@
 			</div>
 		</div>
 		<div class="views-control">
-			<a v-for="view in views"
+			<a
+				v-for="view in views"
 				class="panel-toggle view"
 				:class="{'is-active': view.isActive}"
 				:key="view.title"
 				@click="toggleView(view)"
 			>{{view.title}}
 				<span class="icon is-small">
-					<i class="fa"
-						:class="[view.isActive ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					<i
+						class="fa"
+						:class="[view.isActive ? 'fa-check-circle' : 'fa-circle-o']"
+					></i>
 				</span>
 			</a>
 		</div>
-		<component :is="activeViewComponent" @userEvent="proxyUserEvent"/>
+		<component :is="activeViewComponent" @userEvent="proxyUserEvent" />
 	</div>
 </template>
 

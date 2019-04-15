@@ -3,9 +3,11 @@
 		<div class="stream-notification" :class="{'is-read': isRead, 'deleted': deleted || resolved}">
 			<div class="meta">
 				<div class="avatar meta-actor" @click="showModal">
-					<wnl-avatar :size="isMobile ? 'medium' : 'large'"
+					<wnl-avatar
+						:size="isMobile ? 'medium' : 'large'"
 						:full-name="message.actors.full_name"
-						:url="message.actors.avatar">
+						:url="message.actors.avatar"
+					>
 					</wnl-avatar>
 				</div>
 				<span class="icon is-small"><i class="fa" :class="icon"></i></span>
@@ -20,41 +22,85 @@
 					<span class="context">{{contextInfo}}</span>
 				</div>
 				<div class="object-text wrap" v-if="objectText">{{objectText}}</div>
-				<div class="subject wrap" :class="{'unseen': !isSeen}" v-if="subjectText">{{subjectText}}</div>
+				<div
+					class="subject wrap"
+					:class="{'unseen': !isSeen}"
+					v-if="subjectText"
+				>{{subjectText}}</div>
 				<div class="time">
 				</div>
 			</div>
 			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
 				<div @click="dispatchMarkAsSeen" @contextmenu="dispatchMarkAsSeen">
-					<router-link v-if="hasDynamicContext" :to="dynamicRoute" @click.native="trackNotificationClick">
-						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
+					<router-link
+						v-if="hasDynamicContext"
+						:to="dynamicRoute"
+						@click.native="trackNotificationClick"
+					>
+						<span
+							v-if="hasContext"
+							class="icon go-to-link"
+							:class="{'unseen': !isSeen}"
+						>
 							<span v-if="loading" class="loader"></span>
 							<i v-else class="fa fa-angle-right"></i>
 						</span>
 					</router-link>
-					<router-link v-else-if="hasFullContext" :to="routeContext" @click.native="trackNotificationClick">
-						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
+					<router-link
+						v-else-if="hasFullContext"
+						:to="routeContext"
+						@click.native="trackNotificationClick"
+					>
+						<span
+							v-if="hasContext"
+							class="icon go-to-link"
+							:class="{'unseen': !isSeen}"
+						>
 							<span v-if="loading" class="loader"></span>
 							<i v-else class="fa fa-angle-right"></i>
 						</span>
 					</router-link>
-					<a v-else :href="routeContext" @click.native="trackNotificationClick">
-						<span v-if="hasContext" class="icon go-to-link" :class="{'unseen': !isSeen}">
+					<a
+						v-else
+						:href="routeContext"
+						@click.native="trackNotificationClick"
+					>
+						<span
+							v-if="hasContext"
+							class="icon go-to-link"
+							:class="{'unseen': !isSeen}"
+						>
 							<span v-if="loading" class="loader"></span>
 							<i v-else class="fa fa-angle-right"></i>
 						</span>
 					</a>
 				</div>
-				<span class="icon is-small toggle-hidden" :title="$t('notifications.stream.hideNotification')" @click="toggleNotification">
+				<span
+					class="icon is-small toggle-hidden"
+					:title="$t('notifications.stream.hideNotification')"
+					@click="toggleNotification"
+				>
 					<span v-if="loading" class="loader"></span>
-					<i v-else class="fa" :class="isRead ? 'fa-eye' : 'fa-eye-slash'"></i>
+					<i
+						v-else
+						class="fa"
+						:class="isRead ? 'fa-eye' : 'fa-eye-slash'"
+					></i>
 				</span>
 			</div>
 		</div>
-		<div class="delete-message" v-if="deleted" v-t="'notifications.messages.deleted'"/>
-		<div class="delete-message" v-if="resolved" v-t="'notifications.messages.resolved'"/>
+		<div
+			class="delete-message"
+			v-if="deleted"
+			v-t="'notifications.messages.deleted'"
+		/>
+		<div
+			class="delete-message"
+			v-if="resolved"
+			v-t="'notifications.messages.resolved'"
+		/>
 		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="userForModal"/>
+			<wnl-user-profile-modal :author="userForModal" />
 		</wnl-modal>
 	</div>
 </template>

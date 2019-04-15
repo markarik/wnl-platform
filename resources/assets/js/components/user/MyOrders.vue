@@ -7,7 +7,11 @@
 				</div>
 			</div>
 			<div v-if="displayAlbumLink">
-				<a :href="orderAlbumUrl" title="Zamów album map myśli" data-button="order-album">
+				<a
+					:href="orderAlbumUrl"
+					title="Zamów album map myśli"
+					data-button="order-album"
+				>
 					<span class="icon is-small status-icon">
 						<i class="fa fa-shopping-cart"></i>
 					</span> Zamów album map myśli ({{getAlbum.price}}zł)
@@ -31,7 +35,11 @@
 		</div>
 		<div v-if="loaded">
 			<div v-if="hasOrders">
-				<wnl-order :order-instance="order" v-for="(order, index) in orders" :key="index"></wnl-order>
+				<wnl-order
+					:order-instance="order"
+					v-for="(order, index) in orders"
+					:key="index"
+				></wnl-order>
 			</div>
 			<div v-else>
 				<div class="box has-text-centered">

@@ -15,7 +15,7 @@
 							</div>
 						</div>
 					</div>
-					<router-view v-if="!isLessonLoading" @userEvent="onUserEvent"/>
+					<router-view v-if="!isLessonLoading" @userEvent="onUserEvent" />
 				</div>
 				<div class="wnl-lesson-previous-next-nav">
 					<wnl-previous-next></wnl-previous-next>
@@ -23,7 +23,7 @@
 			</div>
 			<div v-else-if="isPlanBuilderEnabled">
 				<p class="has-text-centered margin vertical">
-					<img src="https://media.giphy.com/media/BCfw7hyQeq9TNsC7st/giphy.gif"/>
+					<img src="https://media.giphy.com/media/BCfw7hyQeq9TNsC7st/giphy.gif" />
 				</p>
 				<h5 class="title is-5 has-text-centered">Zgodnie z Twoim planem, ta lekcja otworzy się <strong>{{lessonStartDate}}</strong></h5>
 				<p class="has-text-centered margin vertical">Jeżeli chcesz zrealizować tę lekcję dziś, <router-link :to="{name: 'lessons-availabilites'}">zmień swój plan pracy</router-link>.</p>
@@ -31,7 +31,7 @@
 			<div v-else>
 				<h2 class="title is-2 has-text-centered margin vertical">{{lesson.name}}️</h2>
 				<p class="has-text-centered margin vertical">
-					<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
+					<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif" />
 				</p>
 				<h3 class="title is-3 has-text-centered"><strong>Lekcja nieaktywna</strong>🛡️</h3>
 				<h5 class="title is-5 has-text-centered">Lekcja będzie dostępna od <strong>{{lessonStartDate}}</strong></h5>

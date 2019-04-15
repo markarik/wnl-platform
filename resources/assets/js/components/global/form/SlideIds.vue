@@ -2,7 +2,12 @@
 	<div class="field">
 		<div class="control screens-control">
 			<div class="screens-wrapper">
-				<div class="slide-snippet" v-for="slide in slides" :context="slide.context" :key="slide.id">
+				<div
+					class="slide-snippet"
+					v-for="slide in slides"
+					:context="slide.context"
+					:key="slide.id"
+				>
 					<h5>{{slide.snippet.header}}</h5>
 					<p>{{slide.snippet.subheader}}</p>
 					<i class="fa fa-times close-icon" @click="removeSlide(slide)"></i>

@@ -1,10 +1,15 @@
 <template>
 	<div class="control">
-		<label :for="name" class="label" v-if="this.$slots.default">
+		<label
+			:for="name"
+			class="label"
+			v-if="this.$slots.default"
+		>
 			<slot></slot>
 		</label>
 
-		<input :type="type"
+		<input
+			:type="type"
 			class="input"
 			:name="name"
 			:value="form[name]"
@@ -12,7 +17,9 @@
 			:placeholder="name"
 			:id="name"
 		>
-		<span class="help is-danger" v-if="form.errors.has(name)"
+		<span
+			class="help is-danger"
+			v-if="form.errors.has(name)"
 			v-text="form.errors.get(name)"
 		></span>
 	</div>

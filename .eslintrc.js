@@ -60,27 +60,25 @@ module.exports = {
 				]
 			}
 		],
-		'vue/require-prop-types': [
-			'off'
-		],
-		// Doesn't seem useful
-		'vue/singleline-html-element-content-newline': [
-			'off'
-		],
 		'vue/mustache-interpolation-spacing': [
 			'error',
 			'never',
 		],
 		'vue/max-attributes-per-line': [
+			'error',
+			{
+				'singleline': 2,
+			}
+		],
+		// Doesn't seem useful
+		'vue/singleline-html-element-content-newline': [
+			'off'
+		],
+		// TODO enable vue/strongly-recommended rules below
+		'vue/require-prop-types': [
 			'off'
 		],
 		'vue/html-self-closing': [
-			'off'
-		],
-		'vue/html-closing-bracket-newline': [
-			'off'
-		],
-		'vue/html-closing-bracket-spacing': [
 			'off'
 		],
 		'vue/multiline-html-element-content-newline': [

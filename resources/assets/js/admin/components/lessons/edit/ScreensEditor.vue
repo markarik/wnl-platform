@@ -2,20 +2,30 @@
 	<div class="screens-editor">
 		<div class="screens-list">
 			<p class="title is-5">Ekrany</p>
-			<wnl-screens-list :lesson-id="lessonId" :screens="screens" ref="ScreensList"></wnl-screens-list>
+			<wnl-screens-list
+				:lesson-id="lessonId"
+				:screens="screens"
+				ref="ScreensList"
+			></wnl-screens-list>
 		</div>
 		<div class="screen-editor" v-if="loaded">
 			<form>
 				<!-- Screen meta -->
 				<div class="field is-grouped">
 					<div class="control">
-						<wnl-form-input :form="screenForm" name="name" v-model="screenForm.name"></wnl-form-input>
+						<wnl-form-input
+							:form="screenForm"
+							name="name"
+							v-model="screenForm.name"
+						></wnl-form-input>
 					</div>
 					<div class="control">
-						<a class="button is-success is-small"
+						<a
+							class="button is-success is-small"
 							:class="{'is-loading': loading}"
 							:disabled="!hasChanged"
-							@click="onSubmit">
+							@click="onSubmit"
+						>
 							<span class="margin right">Zapisz</span>
 							<span class="icon is-small">
 								<i class="fa fa-save"></i>
@@ -48,7 +58,8 @@
 					<quill
 						:form="screenForm"
 						name="content"
-						v-model="screenForm.content">
+						v-model="screenForm.content"
+					>
 					</quill>
 				</div>
 			</form>

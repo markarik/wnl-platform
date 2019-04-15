@@ -16,29 +16,32 @@
 			<button
 				@click="resetProgress"
 				class="button is-danger to-right"
-				v-t="'user.progressReset.progressButton'"/>
+				v-t="'user.progressReset.progressButton'"
+			/>
 		</div>
 
 		<div class="message is-danger reset-container">
 			<div class="message-header">
-				<strong v-t="'user.progressReset.questionsHeader'"/>
+				<strong v-t="'user.progressReset.questionsHeader'" />
 			</div>
-			<div class="message-body" v-t="'user.progressReset.questionsWarning'"/>
+			<div class="message-body" v-t="'user.progressReset.questionsWarning'" />
 			<button
 				@click="resetQuestions"
 				class="button is-danger to-right"
-				v-t="'user.progressReset.questionsButton'"/>
+				v-t="'user.progressReset.questionsButton'"
+			/>
 		</div>
 
 		<div class="message is-danger reset-container">
 			<div class="message-header">
 				<strong v-t="'user.progressReset.collectionsHeader'"></strong>
 			</div>
-			<div class="message-body" v-t="'user.progressReset.collectionsWarning'"/>
+			<div class="message-body" v-t="'user.progressReset.collectionsWarning'" />
 			<button
 				@click="resetCollections"
 				class="button is-danger to-right"
-				v-t="'user.progressReset.questionsButton'"/>
+				v-t="'user.progressReset.questionsButton'"
+			/>
 		</div>
 		<wnl-satisfaction-guarantee-modal
 			:visible="satisfactionGuaranteeModalVisible"

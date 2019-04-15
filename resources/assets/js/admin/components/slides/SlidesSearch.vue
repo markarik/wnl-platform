@@ -11,14 +11,21 @@
 						<div class="control">
 							<label class="label">Numer screena</label>
 							<input
-								type="text" class="input"
+								type="text"
+								class="input"
 								@keyup.enter="getSlide"
-								:value="screenId" @input="(event) => $emit('screenIdChange', event)"
+								:value="screenId"
+								@input="(event) => $emit('screenIdChange', event)"
 							>
 						</div>
 						<div class="control">
 							<label class="label">Numer slajdu</label>
-							<input @keyup.enter="getSlide" type="text" class="input" v-model="slideOrderNo">
+							<input
+								@keyup.enter="getSlide"
+								type="text"
+								class="input"
+								v-model="slideOrderNo"
+							>
 						</div>
 					</div>
 				</div>
@@ -27,16 +34,23 @@
 						<div class="control">
 							<label class="label">lub ID slajdu</label>
 							<input
-								type="text" class="input"
+								type="text"
+								class="input"
 								@keyup.enter="getSlide"
-								:value="slideId" @input="(event) => $emit('slideIdChange', event)">
+								:value="slideId"
+								@input="(event) => $emit('slideIdChange', event)"
+							>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="level-right">
 				<div class="level-item">
-					<a class="button is-outlined" @click="getSlide" :class="{'is-loading': loading}">
+					<a
+						class="button is-outlined"
+						@click="getSlide"
+						:class="{'is-loading': loading}"
+					>
 						Zaciung slajd
 					</a>
 				</div>

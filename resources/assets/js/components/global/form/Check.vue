@@ -6,7 +6,11 @@
 			:name="name"
 		>
 		</wnl-toggler>
-		<label :for="name" class="label" v-if="$slots.default">
+		<label
+			:for="name"
+			class="label"
+			v-if="$slots.default"
+		>
 			<slot></slot>
 		</label>
 	</div>

@@ -12,7 +12,7 @@
 				</span>
 			</span>
 		</template>
-		<wnl-taxonomy-terms-list slot="nodes-list" :terms="getRootNodes"/>
+		<wnl-taxonomy-terms-list slot="nodes-list" :terms="getRootNodes" />
 		<wnl-taxonomy-term-editor-right
 			slot="panel-right"
 			:taxonomy-id="taxonomyId"

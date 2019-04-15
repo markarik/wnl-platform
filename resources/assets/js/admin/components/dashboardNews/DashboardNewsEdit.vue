@@ -21,7 +21,8 @@
 			<ul class="message-arguments">
 				<li
 					class="message-argument"
-					v-for="(value, key) in messageArguments" :key="key"
+					v-for="(value, key) in messageArguments"
+					:key="key"
 				>
 					<code>{{escapeArgumentKey(key)}}</code> - {{value.description}}
 				</li>

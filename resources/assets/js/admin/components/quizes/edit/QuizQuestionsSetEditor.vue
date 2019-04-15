@@ -6,7 +6,8 @@
 					Edycja zestawu pytań zamkniętych
 					<span v-if="isEdit">(Id: {{quizQuestionsSetId}})</span>
 				</h3>
-				<button class="button is-small is-success"
+				<button
+					class="button is-small is-success"
 					:class="{'is-loading': loading}"
 					:disabled="!hasChanged"
 					type="submit"
@@ -25,7 +26,8 @@
 			</wnl-form-input>
 			<label class="label">Lekcja, której dotyczy zestaw</label>
 			<span class="select quiz-questions-set-editor-select">
-				<wnl-select :form="form"
+				<wnl-select
+					:form="form"
 					:options="lessonsOptions"
 					v-model="form.lesson_id"
 					name="lesson_id"
@@ -48,7 +50,8 @@
 				v-model="quizQuestionInput"
 				placeholder="Podaj numer id pytania"
 			>
-			<button class="button is-small is-success"
+			<button
+				class="button is-small is-success"
 				type="button"
 				name="button"
 				@click="addQuizQuestion(quizQuestionInput)"
@@ -56,7 +59,11 @@
 			</button>
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="quiz-questions-admin" v-if="form.quiz_questions && formPopulated">
-				<wnl-draggable v-model="form.quiz_questions" @start="drag=true" @end="drag=false">
+				<wnl-draggable
+					v-model="form.quiz_questions"
+					@start="drag=true"
+					@end="drag=false"
+				>
 					<wnl-quiz-questions-set-list-item
 						v-for="questionId in form.quiz_questions"
 						:key="questionId"

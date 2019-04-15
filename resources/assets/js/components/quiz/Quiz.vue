@@ -5,7 +5,7 @@
 				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
-			<wnl-quiz-summary @userEvent="onUserEvent"/>
+			<wnl-quiz-summary @userEvent="onUserEvent" />
 		</div>
 		<div v-else-if="emptyQuizSet" class="has-text-centered">
 			Oho, wygląda że nie ma pytań kontrolnych dla tej lekcji.
@@ -22,7 +22,8 @@
 					Rozwiąż wszystkie pytania
 				</a>
 			</p>
-			<wnl-quiz-list v-if="isLoaded"
+			<wnl-quiz-list
+				v-if="isLoaded"
 				module="quiz"
 				:all-questions="getQuestionsWithAnswers"
 				:can-end-quiz="canEndQuiz"

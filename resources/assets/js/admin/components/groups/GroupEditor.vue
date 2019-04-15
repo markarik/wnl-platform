@@ -10,7 +10,7 @@
 	>
 		<div class="header">
 			<h2 class="title is-2">Edycja grupy <span v-if="isEdit">(Id: {{id}})</span></h2>
-			<wnl-submit class="submit"/>
+			<wnl-submit class="submit" />
 		</div>
 		<wnl-form-text
 			name="name"

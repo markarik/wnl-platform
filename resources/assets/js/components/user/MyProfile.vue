@@ -8,7 +8,11 @@
 			</div>
 			<div class="level-right preview-button" :class="{mobile: isMobileProfile}">
 				<span>
-					<router-link class="link" :to="{ name: 'user', params: { userId: currentUserId }}" :event="handleLink">
+					<router-link
+						class="link"
+						:to="{ name: 'user', params: { userId: currentUserId }}"
+						:event="handleLink"
+					>
 						<a class="my-profile-preview-button button is-primary is-outlined is-small" :disabled="hasChanges">{{buttonNameToDisplay}}</a>
 					</router-link>
 				</span>
@@ -31,7 +35,15 @@
 			</wnl-upload>
 		</div>
 
-		<wnl-form class="margin vertical" name="MyProfile" method="put" resource-route="users/current/profile" populate="true" ref="form" @formIsLoaded="onFormLoaded">
+		<wnl-form
+			class="margin vertical"
+			name="MyProfile"
+			method="put"
+			resource-route="users/current/profile"
+			populate="true"
+			ref="form"
+			@formIsLoaded="onFormLoaded"
+		>
 			<div class="form-input-group">
 				<wnl-form-text name="help" :placeholder="$t('user.myProfile.helpPlaceholder')">{{$t('user.myProfile.help')}}</wnl-form-text>
 				<wnl-form-text name="specialization">{{$t('user.myProfile.specialization')}}</wnl-form-text>

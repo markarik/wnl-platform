@@ -36,7 +36,7 @@
 				>{{currentStep.buttonText || 'Dalej'}}</button>
 			</div>
 		</div>
-		<wnl-splash-screen v-else/>
+		<wnl-splash-screen v-else />
 	</div>
 </template>
 

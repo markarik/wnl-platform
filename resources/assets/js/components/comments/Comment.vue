@@ -2,29 +2,53 @@
 	<article class="wnl-comment media">
 		<div class="wnl-comment-side">
 			<figure class="media-left">
-				<div class="avatar-activator" @click="showModal" :class="{'author-forgotten': profile.deleted_at}">
+				<div
+					class="avatar-activator"
+					@click="showModal"
+					:class="{'author-forgotten': profile.deleted_at}"
+				>
 					<p class="image is-32x32">
-						<wnl-avatar size="medium"
+						<wnl-avatar
+							size="medium"
 							:full-name="profile.full_name"
-							:url="profile.avatar">
+							:url="profile.avatar"
+						>
 						</wnl-avatar>
 					</p>
 				</div>
 			</figure>
-			<wnl-vote type="up" :reactable-id="id" reactable-resource="comments" :state="voteState" module="comments"/>
+			<wnl-vote
+				type="up"
+				:reactable-id="id"
+				reactable-resource="comments"
+				:state="voteState"
+				module="comments"
+			/>
 		</div>
 		<div class="media-content comment-content">
-			<span class="author" :class="{'author-forgotten': profile.deleted_at}" @click="showModal">{{profile.full_name}}</span>
+			<span
+				class="author"
+				:class="{'author-forgotten': profile.deleted_at}"
+				@click="showModal"
+			>{{profile.full_name}}</span>
 			<div class="comment-text wrap content" v-html="comment.text"></div>
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
 				&nbsp;·
-				<wnl-delete :request-route="requestRoute" :target="target" @deleteSuccess="onDeleteSuccess"></wnl-delete>
+				<wnl-delete
+					:request-route="requestRoute"
+					:target="target"
+					@deleteSuccess="onDeleteSuccess"
+				></wnl-delete>
 			</span>
-			<wnl-resolve :resource="comment" @resolveResource="$emit('resolveComment', id)" @unresolveResource="$emit('unresolveComment', id)" />
+			<wnl-resolve
+				:resource="comment"
+				@resolveResource="$emit('resolveComment', id)"
+				@unresolveResource="$emit('unresolveComment', id)"
+			/>
 		</div>
 		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="profile"/>
+			<wnl-user-profile-modal :author="profile" />
 		</wnl-modal>
 	</article>
 </template>

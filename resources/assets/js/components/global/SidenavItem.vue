@@ -9,12 +9,28 @@
 		>
 			<div class="sidenav-icon-wrapper">
 				<span class="icon is-small" v-if="hasProgress">
-					<i title="W trakcie..." class="fa fa-ellipsis-h" v-if="isInProgress"></i>
-					<i title="Zrobione!" class="fa fa-check-square-o" v-else-if="isComplete"></i>
-					<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
+					<i
+						title="W trakcie..."
+						class="fa fa-ellipsis-h"
+						v-if="isInProgress"
+					></i>
+					<i
+						title="Zrobione!"
+						class="fa fa-check-square-o"
+						v-else-if="isComplete"
+					></i>
+					<i
+						title="Jeszcze przed Tobą"
+						class="fa fa-square-o"
+						v-else
+					></i>
 				</span>
 				<span class="icon is-small" v-if="hasIcon">
-					<i :title="item.iconTitle" class="fa" :class="item.iconClass"></i>
+					<i
+						:title="item.iconTitle"
+						class="fa"
+						:class="item.iconClass"
+					></i>
 				</span>
 			</div>
 			<span class="sidenav-item-content">
@@ -25,12 +41,28 @@
 		<span v-else class="item-wrapper">
 			<div class="sidenav-icon-wrapper">
 				<span class="icon is-small" v-if="hasProgress">
-					<i title="W trakcie..." class="fa fa-ellipsis-h" v-if="isInProgress"></i>
-					<i title="Zrobione!" class="fa fa-check-square-o" v-else-if="isComplete"></i>
-					<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
+					<i
+						title="W trakcie..."
+						class="fa fa-ellipsis-h"
+						v-if="isInProgress"
+					></i>
+					<i
+						title="Zrobione!"
+						class="fa fa-check-square-o"
+						v-else-if="isComplete"
+					></i>
+					<i
+						title="Jeszcze przed Tobą"
+						class="fa fa-square-o"
+						v-else
+					></i>
 				</span>
 				<span class="icon is-small" v-if="hasIcon">
-					<i :title="item.iconTitle" class="fa" :class="item.iconClass"></i>
+					<i
+						:title="item.iconTitle"
+						class="fa"
+						:class="item.iconClass"
+					></i>
 				</span>
 				<span class="icon is-small" v-if="hasSubitems">
 					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>

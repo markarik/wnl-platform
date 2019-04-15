@@ -42,13 +42,13 @@
 						<p>
 							Jeśli wysłałeś już do nas w odpowiedzi na maila dane do przelewu, w ciągu najbliższych dni
 							otrzymasz zwrot.
-							<wnl-emoji name="+1"/>
+							<wnl-emoji name="+1" />
 						</p>
 						<p>
 							Jeżeli nie, prosimy sprawdź swoją skrzynkę mailową. Znajdziesz tam wiadomość od nas o tytule
 							"Twój Study Buddy dołączył właśnie do kursu! (Zamówienie {{order.id}})". W odpowiedzi wyślij
 							nam dane do przelewu, których możemy użyć do zwrotu.
-							<wnl-emoji name="wink"/>
+							<wnl-emoji name="wink" />
 						</p>
 					</div>
 					<div v-else>
@@ -87,7 +87,8 @@
 									'is-loading': this.paymentLoading
 								}"
 								data-button="pay-now"
-								@click="pay">
+								@click="pay"
+							>
 								Opłać zamówienie
 							</button>
 						</p>
@@ -111,7 +112,8 @@
 										'is-primary': true,
 										'is-loading': this.paymentLoading
 									}"
-									@click="pay">
+									@click="pay"
+								>
 									Zapłać kolejną ratę
 								</button>
 							</p>
@@ -164,7 +166,8 @@
 				<!-- TABS BEGIN -->
 				<div class="tabs">
 					<ul>
-						<li :class="{'is-active': activeTab === tab}"
+						<li
+							:class="{'is-active': activeTab === tab}"
 							v-for="(tabContent, tab) in orderTabs"
 							:key="tab"
 							@click="activeTab = tab"
@@ -190,7 +193,11 @@
 							<a class="payments__retry-link" @click="pay">Powtórz płatność</a>
 						</template>
 						<ul class="payments__list">
-							<li v-for="payment in order.payments" :key="payment.id" class="payments__link">
+							<li
+								v-for="payment in order.payments"
+								:key="payment.id"
+								class="payments__link"
+							>
 								<span>{{formatTime(payment.created_at)}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
 							</li>
 						</ul>
@@ -207,7 +214,11 @@
 					<div v-else class="invoices">
 						<p class="metadata">Kliknij, aby pobrać faktury:</p>
 						<ul>
-							<li v-for="invoice in order.invoices" :key="invoice.id" class="invoices__link">
+							<li
+								v-for="invoice in order.invoices"
+								:key="invoice.id"
+								class="invoices__link"
+							>
 								<a @click="downloadInvoice(invoice)">{{invoice.number}}</a>
 							</li>
 						</ul>
@@ -221,7 +232,8 @@
 						<p>{{$t('orders.messages.product-coupons-disabled')}}</p>
 					</template>
 					<div class="add-coupon" v-else>
-						<a class=""
+						<a
+							class=""
 							title="Dodaj lub zmień kod rabatowy"
 							@click="toggleCouponInput"
 							v-if="order.status !== 'closed'"
@@ -232,12 +244,14 @@
 						</a>
 					</div>
 					<div class="voucher-code" v-if="couponInputVisible">
-						<wnl-form class="margin vertical"
+						<wnl-form
+							class="margin vertical"
 							name="CouponCode"
 							method="put"
 							:resource-route="couponUrl"
 							hide-default-submit="true"
-							@submitSuccess="couponSubmitSuccess">
+							@submitSuccess="couponSubmitSuccess"
+						>
 							<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
 							<wnl-submit data-button="coupon-submit">Wykorzystaj kod</wnl-submit>
 						</wnl-form>

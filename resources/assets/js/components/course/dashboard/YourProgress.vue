@@ -5,7 +5,8 @@
 			:value="progressValue"
 			:max="progressMax"
 			:has-numbers="progressHasNumbers"
-			:modifying-class="progressModifyingClass">
+			:modifying-class="progressModifyingClass"
+		>
 		</wnl-progress>
 		<p class="progress-message">{{progressMessage}}</p>
 	</div>

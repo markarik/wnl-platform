@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-app-layout">
-		<wnl-questions-navigation/>
+		<wnl-questions-navigation />
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
 				<div class="questions-header">
@@ -17,7 +17,11 @@
 							<span>#{{id}}</span>
 						</div>
 					</div>
-					<a v-if="isMobile" class="toggle-notifications" @click="toggleChat">
+					<a
+						v-if="isMobile"
+						class="toggle-notifications"
+						@click="toggleChat"
+					>
 						<span>{{$t('questions.dashboard.notifications.toggle')}}</span>
 						<span class="icon is-small">
 							<i class="fa fa-commenting-o"></i>
@@ -31,9 +35,14 @@
 							{{$t('questions.dashboard.plan.heading')}}
 						</div>
 						<div v-if="plan === null" class="margin vertical">
-							<wnl-text-loader/>
+							<wnl-text-loader />
 						</div>
-						<wnl-questions-plan-progress v-else-if="hasPlan" :allow-change="false" :plan="plan" @userEvent="onUserEvent"/>
+						<wnl-questions-plan-progress
+							v-else-if="hasPlan"
+							:allow-change="false"
+							:plan="plan"
+							@userEvent="onUserEvent"
+						/>
 						<div class="questions-plan-create" v-else>
 							<p class="questions-plan-create-heading">
 								{{$t('questions.dashboard.plan.create.heading')}}
@@ -52,7 +61,7 @@
 						{{$t('questions.dashboard.stats.error')}}
 					</div>
 					<div v-else-if="!hasStats" class="margin vertical">
-						<wnl-text-loader/>
+						<wnl-text-loader />
 					</div>
 					<div v-else>
 						<!-- All questions -->
@@ -65,16 +74,19 @@
 							{{$t('questions.dashboard.stats.scores')}}
 						</div>
 						<div class="questions-stats margin bottom">
-							<div v-for="(stats, index) in parseStats(stats)"
+							<div
+								v-for="(stats, index) in parseStats(stats)"
 								class="stats-item stats-resolved"
 								:class="{'is-first': index === 0}"
 								:key="index"
 							>
 								<span class="stats-title">{{stats.title}}</span>
 								<div class="progress-bar">
-									<progress class="progress"
+									<progress
+										class="progress"
 										:value="stats.progress"
-										:max="stats.total"/>
+										:max="stats.total"
+									/>
 									<span class="progress-number">{{stats.progressNumber}}</span>
 									<div class="score" :class="scoreClass(stats.score)">{{stats.score}}%</div>
 								</div>
@@ -87,7 +99,11 @@
 								<span class="icon is-small"><i class="fa fa-tachometer"></i></span>
 								{{$t('questions.dashboard.stats.mockExam')}}
 							</div>
-							<div class="questions-stats stats-exam" v-for="(mockExam, index) in stats.mock_exams" :key="index">
+							<div
+								class="questions-stats stats-exam"
+								v-for="(mockExam, index) in stats.mock_exams"
+								:key="index"
+							>
 								<div @click="toggleExamExpand(index)" :class="{'exam-header': true, 'is-expanded': expandedExams.includes(index)}">
 									<span class="exam-header__name">
 										{{mockExam.exam_name}}
@@ -102,7 +118,8 @@
 									</span>
 								</div>
 								<div v-show="expandedExams.includes(index)">
-									<div v-for="(stats, index) in parseStats(mockExam)"
+									<div
+										v-for="(stats, index) in parseStats(mockExam)"
 										:key="index"
 										class="stats-item stats-exam"
 										:class="{'is-first': index === 0}"
@@ -114,14 +131,18 @@
 								</div>
 							</div>
 						</div>
-						<div class="questions-dashboard-heading margin vertical"/>
+						<div class="questions-dashboard-heading margin vertical" />
 						<button
 							@click="satisfactionGuaranteeModalVisible = true"
 							class="button is-danger to-right"
 						>{{$t('questions.dashboard.stats.resetButton')}}</button>
 					</div>
 				</div>
-				<router-view v-else :id="id" @userEvent="onUserEvent"/>
+				<router-view
+					v-else
+					:id="id"
+					@userEvent="onUserEvent"
+				/>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -142,7 +163,7 @@
 						</span>
 					</div>
 				</div>
-				<wnl-questions-feed/>
+				<wnl-questions-feed />
 			</div>
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">

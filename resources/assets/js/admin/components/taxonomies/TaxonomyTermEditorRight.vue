@@ -1,6 +1,10 @@
 <template>
 	<wnl-nested-set-panel-right :active-mode="editorMode" @setEditorMode="setEditorMode">
-		<component slot="activeView" :is="activeComponent" :taxonomy-id="taxonomyId" />
+		<component
+			slot="activeView"
+			:is="activeComponent"
+			:taxonomy-id="taxonomyId"
+		/>
 	</wnl-nested-set-panel-right>
 </template>
 

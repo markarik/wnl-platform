@@ -47,12 +47,14 @@
 					<div
 						class="id-number__personal-identity-number-input__change"
 						@click="otherIdentity=true"
-						v-if="!otherIdentity">
+						v-if="!otherIdentity"
+					>
 						{{$t('user.personalData.identityNumber.changeNumberType')}}
 					</div>
 					<div
 						class="id-number--other-identitification"
-						v-if="otherIdentity">
+						v-if="otherIdentity"
+					>
 						<div class="id_number__radio field">
 							<input
 								@click="disableErrors"
@@ -61,7 +63,8 @@
 								id="personal_identity_number"
 								:name="this.identityTypes.personalId"
 								value="personal_identity_number"
-								v-model="identity.identityType">
+								v-model="identity.identityType"
+							>
 							<label for="personal_identity_number">{{$t('user.personalData.identityNumber.types.personal')}}</label>
 							<input
 								@click="disableErrors"
@@ -70,7 +73,8 @@
 								id="passport"
 								:name="this.identityTypes.passport"
 								value="passport_number"
-								v-model="identity.identityType">
+								v-model="identity.identityType"
+							>
 							<label for="passport">{{$t('user.personalData.identityNumber.types.passport')}}</label>
 						</div>
 					</div>

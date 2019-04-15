@@ -1,5 +1,6 @@
 <template>
-	<li class="quiz-answer"
+	<li
+		class="quiz-answer"
 		:class="{
 			'is-selected': isSelected && !showCorrect,
 			'is-correct': showCorrect,

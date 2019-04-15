@@ -5,7 +5,11 @@
 		</p>
 
 		<p class="title is-5" v-if="!plainList && !displayResults">Pozostało pytań: {{howManyLeft}}</p>
-		<div class="question" v-for="(question, index) in questions" :key="index">
+		<div
+			class="question"
+			v-for="(question, index) in questions"
+			:key="index"
+		>
 			<span v-if="!hideCount" class="question-number">
 				<slot name="question-number" :index="index">
 					{{index+1}}/{{questions.length}}
@@ -39,7 +43,11 @@
 			</wnl-activate-with-shortcut-key>
 		</div>
 		<p v-if="!plainList && !displayResults" class="has-text-centered">
-			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
+			<a
+				class="button is-primary"
+				:class="{'is-loading': isProcessing}"
+				@click="verify"
+			>
 				Sprawdź wyniki
 			</a>
 		</p>

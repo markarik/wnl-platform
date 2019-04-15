@@ -34,17 +34,20 @@
 				<a target="_blank" href="https://calendar.google.com/calendar/embed?src=l6tmct14qhf222s5r6mf9uprgg%40group.calendar.google.com&ctz=Europe%2FWarsaw">Grafik</a>
 				<div class="quick-actions-container">
 					<div class="quick-action">
-						<span v-t="'tasks.quickFilters.title'"/>
-						<a v-for="(quickFilter, index) in quickFilters"
-							class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
+						<span v-t="'tasks.quickFilters.title'" />
+						<a
+							v-for="(quickFilter, index) in quickFilters"
+							class="panel-toggle"
+							:class="{'is-active': quickFilter.isActive}"
 							@click="onQuickFilterChange(quickFilter)"
 							:key="index"
 							v-t="quickFilter.name"
 						/>
 					</div>
 					<div class="quick-action">
-						<span v-t="'tasks.sorting.title'"/>
-						<a v-for="(sort, index) in sorting"
+						<span v-t="'tasks.sorting.title'" />
+						<a
+							v-for="(sort, index) in sorting"
 							class="panel-toggle"
 							:class="{'is-active': sort.isActive}"
 							@click="onSortClick(sort)"
@@ -57,10 +60,18 @@
 						</a>
 					</div>
 				</div>
-				<wnl-alert v-if="updatedTasks.length > 0" type="info" @onDismiss="updatedTasks.length = 0">
+				<wnl-alert
+					v-if="updatedTasks.length > 0"
+					type="info"
+					@onDismiss="updatedTasks.length = 0"
+				>
 					<div class="notification-container">
 						<span class="notification-text">Pojawiły się nowe notyfikacje.</span>
-						<button @click="onRefresh" class="button" v-t="'ui.action.refresh'"/>
+						<button
+							@click="onRefresh"
+							class="button"
+							v-t="'ui.action.refresh'"
+						/>
 					</div>
 				</wnl-alert>
 
@@ -79,7 +90,11 @@
 		>
 			<wnl-public-chat :rooms="chatRooms" title="USZANOWANKO"></wnl-public-chat>
 		</wnl-sidenav-slot>
-		<div v-if="isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
+		<div
+			v-if="isChatToggleVisible"
+			class="wnl-chat-toggle"
+			@click="toggleChat"
+		>
 			<span class="icon is-big">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż czat</span>

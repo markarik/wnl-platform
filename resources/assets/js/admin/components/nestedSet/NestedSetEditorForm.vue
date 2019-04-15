@@ -14,7 +14,11 @@
 
 		<slot name="extra-fields"></slot>
 		<div class="has-text-centered">
-			<button class="button" @click="onSubmit" :disabled="submitDisabled">{{submitLabel}}</button>
+			<button
+				class="button"
+				@click="onSubmit"
+				:disabled="submitDisabled"
+			>{{submitLabel}}</button>
 		</div>
 	</div>
 </template>

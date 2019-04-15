@@ -10,10 +10,13 @@
 			<router-view
 				@userDataLoaded="onDataLoaded"
 				:filter-by-help="filterByHelp"
-				:filter-by-location="filterByLocation">
+				:filter-by-location="filterByLocation"
+			>
 			</router-view>
 		</div>
-		<wnl-sidenav-slot class="full-width-sidenav-slot scrollable-container" v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
+		<wnl-sidenav-slot
+			class="full-width-sidenav-slot scrollable-container"
+			v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
 			:is-visible="true"
 			:is-detached="false"
 		>

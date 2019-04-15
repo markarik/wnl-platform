@@ -4,13 +4,13 @@
 			<div class="splash-screen__content">
 				<wnl-text-loader v-if="isLoading"></wnl-text-loader>
 				<template v-else>
-					<wnl-splash-screen-generic-error v-if="currentUserLoadingError"/>
-					<wnl-splash-screen-account-suspended v-else-if="currentUserAccountSuspended" :orders="orders"/>
-					<wnl-splash-screen-order-canceled v-else-if="allOrdersCanceled"/>
-					<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
-					<wnl-splash-screen-order-not-paid v-else-if="latestCourseWaitingForPayment"/>
-					<wnl-splash-screen-subscription-expired v-else-if="currentUserSubscriptionStatus === EXPIRED"/>
-					<wnl-splash-screen-default v-else/>
+					<wnl-splash-screen-generic-error v-if="currentUserLoadingError" />
+					<wnl-splash-screen-account-suspended v-else-if="currentUserAccountSuspended" :orders="orders" />
+					<wnl-splash-screen-order-canceled v-else-if="allOrdersCanceled" />
+					<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')" />
+					<wnl-splash-screen-order-not-paid v-else-if="latestCourseWaitingForPayment" />
+					<wnl-splash-screen-subscription-expired v-else-if="currentUserSubscriptionStatus === EXPIRED" />
+					<wnl-splash-screen-default v-else />
 				</template>
 			</div>
 		</div>

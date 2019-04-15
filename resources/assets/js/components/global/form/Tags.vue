@@ -1,7 +1,12 @@
 <template>
 	<div class="field">
 		<div class="control tags-control">
-			<div class="tag" v-for="tag in tags" :key="tag.id" @click="removeTag(tag)">
+			<div
+				class="tag"
+				v-for="tag in tags"
+				:key="tag.id"
+				@click="removeTag(tag)"
+			>
 				{{tag.name}}
 				<span class="icon is-small">
 					<i class="fa fa-times"></i>

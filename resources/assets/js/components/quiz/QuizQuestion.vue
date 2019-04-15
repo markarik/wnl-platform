@@ -1,6 +1,7 @@
 <template>
 	<div class="wnl-quiz-question-container">
-		<div class="wnl-quiz-question card"
+		<div
+			class="wnl-quiz-question card"
 			:class="{
 				'is-correct': displayResults && !isUnanswered && isCorrect,
 				'is-incorrect': displayResults && !isUnanswered && !isCorrect,
@@ -8,10 +9,15 @@
 				'is-unanswered': isUnanswered,
 				'is-large-desktop': isLargeDesktop,
 				'is-mobile': isMobile,
-			}">
+			}"
+		>
 			<header class="quiz-header card-header">
 				<div class="quiz-header-top">
-					<div class="card-header-title" :class="{'clickable': headerOnly, 'is-short-form': headerOnly}" @click="$emit('headerClicked')">
+					<div
+						class="card-header-title"
+						:class="{'clickable': headerOnly, 'is-short-form': headerOnly}"
+						@click="$emit('headerClicked')"
+					>
 						<div v-html="question.text"></div>
 					</div>
 					<div class="card-header-icons">
@@ -27,7 +33,8 @@
 			</header>
 			<div class="quiz-answers card-content" v-if="!headerOnly">
 				<ul>
-					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
+					<wnl-quiz-answer
+						v-for="(answer, answerIndex) in answers"
 						:answer="answer"
 						:index="answerIndex"
 						:question-id="question.id"
@@ -44,7 +51,8 @@
 					<div class="quiz-question-tags">
 						<template v-if="displayResults && question.tags">
 							<span>{{$t('questions.question.tags')}}:</span>
-							<span v-for="(tag, index) in question.tags"
+							<span
+								v-for="(tag, index) in question.tags"
 								class="quiz-question-tag"
 								:key="index"
 							>{{trim(tag.name)}}</span>
@@ -71,7 +79,7 @@
 				<div v-if="question.explanation" class="card-item relative">
 					<header>
 						<span class="icon is-small comment-icon"><i class="fa fa-info"></i></span>
-						<span v-t="'quiz.annotations.explanation.header'"/>&nbsp;·&nbsp;<a class="secondary-link" @click="toggleExplanation">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
+						<span v-t="'quiz.annotations.explanation.header'" />&nbsp;·&nbsp;<a class="secondary-link" @click="toggleExplanation">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
 					<div :class="{'collapsed': !showExplanation}" v-html="explanation"></div>
 				</div>
@@ -83,7 +91,12 @@
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
 					<template v-if="slidesExpanded">
-						<a class="slide-list-item" v-for="(slide, index) in slides" :key="index" @click="currentSlideIndex = index">
+						<a
+							class="slide-list-item"
+							v-for="(slide, index) in slides"
+							:key="index"
+							@click="currentSlideIndex = index"
+						>
 							{{slideLink(slide)}}
 						</a>
 					</template>
@@ -92,7 +105,8 @@
 						:content="slideContent"
 						:slides-count="hasSlides"
 						@closeModal="hideSlidePreview"
-						@switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id"
+						@switchSlide="changeSlide"
+						v-if="slideContent && currentModalSlide.id"
 						@userEvent="onRelatedSlideUserEvent"
 					>
 						<span slot="header">{{slideLink(currentModalSlide)}}</span>
@@ -100,7 +114,8 @@
 							class="button is-primary is-outlined is-small"
 							slot="footer"
 							:context="currentModalSlide.context"
-							:blank-page="blankPage">
+							:blank-page="blankPage"
+						>
 							{{$t('quiz.slideModal.goToPrezentation')}}
 						</wnl-slide-link>
 					</wnl-slide-preview>
@@ -111,7 +126,8 @@
 						url-param="quiz_question"
 						:module="module"
 						:commentable-id="question.id"
-						:is-unique="showComments">
+						:is-unique="showComments"
+					>
 					</wnl-comments-list>
 				</div>
 			</div>

@@ -16,7 +16,7 @@
 			</div>
 		</div>
 		<div v-if="userSearchVisible">
-			<wnl-conversations-search @close="closeUserSearch"/>
+			<wnl-conversations-search @close="closeUserSearch" />
 		</div>
 		<div v-else-if="roomsToShow.length" class="conversation-list scrollable-container">
 			<wnl-message-link

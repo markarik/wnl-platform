@@ -34,7 +34,7 @@
 				</div>
 			</wnl-dropdown>
 		</div>
-		<component :is="activeView" @userEvent="onUserEvent"/>
+		<component :is="activeView" @userEvent="onUserEvent" />
 	</div>
 </template>
 

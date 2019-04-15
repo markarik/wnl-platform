@@ -4,7 +4,8 @@
 			<slot></slot>
 		</label>
 
-		<input class="input datepicker"
+		<input
+			class="input datepicker"
 			:name="name"
 			ref="input"
 			:placeholder="placeholder"

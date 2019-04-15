@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<div v-if="hasHits" class="wnl-slides-search" :class="{'is-mobile': isMobile}">
+		<div
+			v-if="hasHits"
+			class="wnl-slides-search"
+			:class="{'is-mobile': isMobile}"
+		>
 			<wnl-slide-thumbnail
 				v-for="(hit, index) in hits"
 				:key="index"

@@ -19,11 +19,16 @@
 				</h2>
 				<div class="field is-grouped">
 					<!-- TODO PLAT-924 unblock deleting "reserved" taxonomies -->
-					<button v-if="isEdit && id > 3" class="button is-danger margin right" type="button" @click="onDelete">
+					<button
+						v-if="isEdit && id > 3"
+						class="button is-danger margin right"
+						type="button"
+						@click="onDelete"
+					>
 						<span class="icon is-small"><i class="fa fa-trash"></i></span>
 						<span>Usuń</span>
 					</button>
-					<wnl-submit v-if="!isEdit || isEditFormVisible" class="submit"/>
+					<wnl-submit v-if="!isEdit || isEditFormVisible" class="submit" />
 					<button
 						v-if="isEdit && !isEditFormVisible"
 						class="button"

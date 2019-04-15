@@ -6,7 +6,9 @@
 			<iframe
 				class="onboarding-video"
 				src="https://www.youtube.com/embed/Gttl8H08C3E"
-				frameborder="0" allow="encrypted-media" allowfullscreen
+				frameborder="0"
+				allow="encrypted-media"
+				allowfullscreen
 			></iframe>
 		</div>
 	</div>

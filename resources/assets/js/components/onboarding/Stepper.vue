@@ -1,6 +1,7 @@
 <template>
 	<div class="o-stepper">
-		<div class="o-stepper__step"
+		<div
+			class="o-stepper__step"
 			v-for="(step, index) in steps"
 			:key="index"
 			:class="{

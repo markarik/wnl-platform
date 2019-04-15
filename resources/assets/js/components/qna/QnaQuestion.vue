@@ -21,16 +21,26 @@
 					></wnl-bookmark>
 				</div>
 				<div class="tags" v-if="tags.length > 0">
-					<span v-for="(tag, key) in tags" class="tag is-light" :key="key">
+					<span
+						v-for="(tag, key) in tags"
+						class="tag is-light"
+						:key="key"
+					>
 						<span>{{tag}}</span>
 					</span>
 				</div>
 				<div class="qna-question-meta qna-meta">
-					<div class="modal-activator" :class="{'author-forgotten': author.deleted_at}" @click="showModal">
-						<wnl-avatar class="avatar"
+					<div
+						class="modal-activator"
+						:class="{'author-forgotten': author.deleted_at}"
+						@click="showModal"
+					>
+						<wnl-avatar
+							class="avatar"
 							:full-name="author.full_name"
 							:url="author.avatar"
-							size="medium">
+							size="medium"
+						>
 						</wnl-avatar>
 						<span class="qna-meta-info">
 							{{author.full_name}}
@@ -46,7 +56,11 @@
 							@deleteSuccess="onDeleteSuccess"
 						></wnl-delete>
 					</span>
-					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question" @unresolveResource="unresolveQuestion(id)"/>
+					<wnl-resolve
+						@resolveResource="resolveQuestion(id)"
+						:resource="question"
+						@unresolveResource="unresolveQuestion(id)"
+					/>
 				</div>
 				<slot name="context"></slot>
 			</div>
@@ -65,21 +79,31 @@
 					</wnl-watch>
 				</div>
 				<div class="level-right" v-if="!readOnly">
-					<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
+					<a
+						class="button is-small"
+						v-if="!showAnswerForm"
+						@click="showAnswerForm = true"
+					>
 						<span>Odpowiedz</span>
 						<span class="icon is-small answer-icon">
 							<i class="fa fa-comment-o"></i>
 						</span>
 					</a>
-					<a class="button is-small" v-if="showAnswerForm" @click="showAnswerForm = false">
+					<a
+						class="button is-small"
+						v-if="showAnswerForm"
+						@click="showAnswerForm = false"
+					>
 						<span>Ukryj</span>
 					</a>
 				</div>
 			</div>
 			<transition name="fade">
-				<wnl-qna-new-answer-form v-if="showAnswerForm"
+				<wnl-qna-new-answer-form
+					v-if="showAnswerForm"
 					:question-id="this.id"
-					@submitSuccess="onSubmitSuccess">
+					@submitSuccess="onSubmitSuccess"
+				>
 				</wnl-qna-new-answer-form>
 			</transition>
 			<wnl-qna-answer
@@ -89,7 +113,8 @@
 				:read-only="readOnly"
 				:refresh="refreshQuestionAndShowAnswers"
 			></wnl-qna-answer>
-			<wnl-qna-answer v-else-if="showAllAnswers"
+			<wnl-qna-answer
+				v-else-if="showAllAnswers"
 				v-for="answer in allAnswers"
 				:answer="answer"
 				:question-id="questionId"
@@ -97,14 +122,16 @@
 				:read-only="readOnly"
 				:refresh="refreshQuestionAndShowAnswers"
 			></wnl-qna-answer>
-			<a class="qna-answers-show-all"
+			<a
+				class="qna-answers-show-all"
 				v-if="!showAllAnswers && otherAnswers.length > 0"
-				@click="showAllAnswers = true">
+				@click="showAllAnswers = true"
+			>
 				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
 		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="author"/>
+			<wnl-user-profile-modal :author="author" />
 		</wnl-modal>
 	</div>
 </template>

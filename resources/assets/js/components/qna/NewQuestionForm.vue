@@ -8,11 +8,13 @@
 		reset-after-submit="true"
 		resource-route="qna_questions"
 		:attach="attachedData"
-		@submitSuccess="onSubmitSuccess">
+		@submitSuccess="onSubmitSuccess"
+	>
 		<wnl-quill
 			class="margin bottom"
 			name="text"
-			:options="{ theme: 'snow', placeholder: 'O co chcesz zapytać?' }">
+			:options="{ theme: 'snow', placeholder: 'O co chcesz zapytać?' }"
+		>
 		</wnl-quill>
 
 		<div class="level">

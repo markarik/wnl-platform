@@ -1,7 +1,10 @@
 <template>
 	<div class="annotations-editor">
 		<span class="title is-5 annotations-editor__title">{{title}}</span>
-		<form action="" method="POST" @submit.prevent="onSubmit"
+		<form
+			action=""
+			method="POST"
+			@submit.prevent="onSubmit"
 			@keydown="form.errors.clear($event.target.name)"
 		>
 			<div class="field annotation-input-text is-horizontal">
@@ -11,7 +14,12 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<input class="input" type="text" v-model="annotation.title" @input="onFieldChange">
+							<input
+								class="input"
+								type="text"
+								v-model="annotation.title"
+								@input="onFieldChange"
+							>
 						</div>
 					</div>
 				</div>
@@ -23,7 +31,12 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<input class="input" type="text" v-model="annotation.keywords" @input="onFieldChange">
+							<input
+								class="input"
+								type="text"
+								v-model="annotation.keywords"
+								@input="onFieldChange"
+							>
 						</div>
 						<p class="help">Lista słów kluczowych oddzielonych przecinkami</p>
 					</div>
@@ -42,7 +55,11 @@
 			</div>
 			<fieldset class="annotation-tags">
 				<legend class="annotation-tags__legend">Tagi</legend>
-				<wnl-tags :default-tags="annotation.tags || []" ref="tags" @insertTag="onFieldChange"></wnl-tags>
+				<wnl-tags
+					:default-tags="annotation.tags || []"
+					ref="tags"
+					@insertTag="onFieldChange"
+				></wnl-tags>
 			</fieldset>
 			<wnl-content-item-classifier-editor
 				v-if="annotation.id"
@@ -100,9 +117,13 @@
 						<label class="label">Tagi do slides.com</label>
 					</div>
 					<div class="field-body">
-						<div class="field field--keyword" v-for="tag in parserTags" :key="tag">
+						<div
+							class="field field--keyword"
+							v-for="tag in parserTags"
+							:key="tag"
+						>
 							<div class="control">
-								<wnl-keyword-field :content="tag" :show="annotation.id"/>
+								<wnl-keyword-field :content="tag" :show="annotation.id" />
 							</div>
 						</div>
 					</div>
@@ -113,28 +134,36 @@
 						<label class="label">Tagi do edytora</label>
 					</div>
 					<div class="field-body">
-						<div class="field field--keyword" v-for="tag in htmlTags" :key="tag">
+						<div
+							class="field field--keyword"
+							v-for="tag in htmlTags"
+							:key="tag"
+						>
 							<div class="control">
-								<wnl-keyword-field :content="tag" :show="annotation.id"/>
+								<wnl-keyword-field :content="tag" :show="annotation.id" />
 							</div>
 						</div>
 					</div>
 				</div>
 			</template>
 			<div class="level-item">
-				<a class="button is-danger"
+				<a
+					class="button is-danger"
 					:disabled="!annotation.id"
-					@click="onDelete">Usuń
+					@click="onDelete"
+				>Usuń
 				</a>
 				<a class="button" @click="isVisible = true">Podgląd</a>
-				<a class="button is-primary"
+				<a
+					class="button is-primary"
 					:disabled="form.errors.any() || !annotation.description"
-					@click="onSubmit">Zapisz
+					@click="onSubmit"
+				>Zapisz
 				</a>
 			</div>
 		</form>
 		<wnl-modal @closeModal="isVisible = false" v-if="isVisible">
-			<wnl-preview-modal :content="annotation.description"/>
+			<wnl-preview-modal :content="annotation.description" />
 		</wnl-modal>
 	</div>
 </template>

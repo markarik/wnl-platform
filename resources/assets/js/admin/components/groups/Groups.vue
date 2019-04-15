@@ -8,7 +8,12 @@
 				<router-link class="button is-success" :to="{name: 'group-edit', params: { id: 'new' } }">+ Dodaj grupę</router-link>
 			</h3>
 			<ul slot="list" slot-scope="slotParams">
-				<wnl-groups-list-item v-for="group in slotParams.list" :id="group.id" :name="group.name" :key="group.id"/>
+				<wnl-groups-list-item
+					v-for="group in slotParams.list"
+					:id="group.id"
+					:name="group.name"
+					:key="group.id"
+				/>
 			</ul>
 		</wnl-paginated-list>
 	</div>

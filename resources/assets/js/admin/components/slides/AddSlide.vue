@@ -12,11 +12,19 @@
 					<div class="field is-grouped">
 						<div class="control">
 							<label class="label">Numer screena</label>
-							<input type="text" class="input" v-model="screenId">
+							<input
+								type="text"
+								class="input"
+								v-model="screenId"
+							>
 						</div>
 						<div class="control">
 							<label class="label">Numer slajdu</label>
-							<input type="text" class="input" v-model="slideOrderNo">
+							<input
+								type="text"
+								class="input"
+								v-model="slideOrderNo"
+							>
 						</div>
 					</div>
 				</div>

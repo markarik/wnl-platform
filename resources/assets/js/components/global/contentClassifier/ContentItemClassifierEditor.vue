@@ -24,7 +24,11 @@
 					@taxonomyTermDetached="onTaxonomyTermDetached"
 				/>
 			</div>
-			<div v-else class="clickable content-item-classifier__tag-names" @click="updateIsActive(true)">
+			<div
+				v-else
+				class="clickable content-item-classifier__tag-names"
+				@click="updateIsActive(true)"
+			>
 				<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
 				<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
 				<span v-else>brak</span>

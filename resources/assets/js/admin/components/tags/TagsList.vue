@@ -11,7 +11,12 @@
 			</h3>
 
 			<tbody slot-scope="slotProps" slot="tbody">
-			<tr v-for="tag in parseIncludes(slotProps.list)" :key="tag.id" class="row" @click="goToTag(tag)">
+			<tr
+				v-for="tag in parseIncludes(slotProps.list)"
+				:key="tag.id"
+				class="row"
+				@click="goToTag(tag)"
+			>
 				<td>{{tag.id}}</td>
 				<td>{{tag.name}}</td>
 				<td>{{tag.taggables_count}}</td>

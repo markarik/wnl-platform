@@ -5,7 +5,8 @@
 		</span>
 
 		<transition name="fade">
-			<div v-show="active"
+			<div
+				v-show="active"
 				class="search-overlay"
 				ref="overlay"
 				:class="{'is-touch-screen': isTouchScreen}"

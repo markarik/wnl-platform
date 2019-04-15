@@ -3,14 +3,26 @@
 		<div class="flashcards__title content">
 			<h2 class="flashcards__title__header" id="flashacardsSetHeader">Zestawy powtórkowe na dziś</h2>
 			<ul class="flashcards__title__list">
-				<li class="flashcards__title__list__item" v-for="set in sets" :key="set.id"
-					@click="scrollToSet(set.id)">{{set.name}}
+				<li
+					class="flashcards__title__list__item"
+					v-for="set in sets"
+					:key="set.id"
+					@click="scrollToSet(set.id)"
+				>{{set.name}}
 				</li>
 			</ul>
 		</div>
-		<div class="flashcards__description content" v-html="screenData.content"/>
-		<div class="flashcards-set" v-for="set in sets" :key="set.id">
-			<div class="flashcards-set__title" :name="set.name" :id="`set-${set.id}`">
+		<div class="flashcards__description content" v-html="screenData.content" />
+		<div
+			class="flashcards-set"
+			v-for="set in sets"
+			:key="set.id"
+		>
+			<div
+				class="flashcards-set__title"
+				:name="set.name"
+				:id="`set-${set.id}`"
+			>
 				<h3 class="flashcards-set__title__header">
 					{{set.name}}
 				</h3>
@@ -40,7 +52,11 @@
 					</tr>
 				</table>
 
-				<button type="button" @click="onRetakeSet(set)" class="flashcards-set__retake button">
+				<button
+					type="button"
+					@click="onRetakeSet(set)"
+					class="flashcards-set__retake button"
+				>
 					<span class="icon"><i class="fa fa-undo"></i></span>
 					ponów cały zestaw
 				</button>

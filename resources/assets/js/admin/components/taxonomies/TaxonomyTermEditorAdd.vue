@@ -34,7 +34,11 @@
 			<div class="field" slot="extra-fields">
 				<label class="label is-uppercase"><strong>Notatka</strong></label>
 				<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
-				<textarea class="textarea margin bottom" v-model="description" placeholder="Wpisz tekst" />
+				<textarea
+					class="textarea margin bottom"
+					v-model="description"
+					placeholder="Wpisz tekst"
+				/>
 			</div>
 		</wnl-nested-set-editor-form>
 	</div>

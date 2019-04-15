@@ -1,14 +1,22 @@
 <template>
 	<div class="media">
 		<div class="media-left">
-			<span class="icon is-small" @click="moveScreen('up')" v-if="!isFirst">
+			<span
+				class="icon is-small"
+				@click="moveScreen('up')"
+				v-if="!isFirst"
+			>
 				<i class="fa fa-arrow-up"></i>
 			</span>
 			<span class="icon is-small is-disabled" v-else>
 				<i class="fa fa-arrow-up"></i>
 			</span>
 
-			<span class="icon is-small" @click="moveScreen('down')" v-if="!isLast">
+			<span
+				class="icon is-small"
+				@click="moveScreen('down')"
+				v-if="!isLast"
+			>
 				<i class="fa fa-arrow-down"></i>
 			</span>
 			<span class="icon is-small is-disabled" v-else>

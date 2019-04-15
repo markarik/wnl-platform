@@ -22,7 +22,8 @@
 			<div v-else class="questions-solving-select control">
 				<span class="select">
 					<select @input="changeViewWithSelect">
-						<option v-for="(view, index) in views"
+						<option
+							v-for="(view, index) in views"
 							:key="index"
 							:value="view.name"
 							:selected="view.name === activeView"
@@ -40,7 +41,8 @@
 			<div class="active-filters">
 				{{activeFiltersForDisplay}}
 			</div>
-			<a v-if="activeView === VIEWS.LIST"
+			<a
+				v-if="activeView === VIEWS.LIST"
 				class="button is-small is-outlined is-primary"
 				@click="showListResults = !showListResults"
 			>
@@ -67,7 +69,8 @@
 			<!-- List -->
 			<div v-if="activeView === VIEWS.LIST" class="questions-list">
 				<div class="pagination-container">
-					<wnl-pagination v-if="meta.lastPage && meta.lastPage > 1"
+					<wnl-pagination
+						v-if="meta.lastPage && meta.lastPage > 1"
 						:current-page="meta.currentPage"
 						:last-page="meta.lastPage"
 						@changePage="changePage"
@@ -103,7 +106,8 @@
 				</div>
 
 				<div v-if="questionsCurrentPage.length > 5" class="pagination-container">
-					<wnl-pagination v-if="meta.lastPage && meta.lastPage > 1"
+					<wnl-pagination
+						v-if="meta.lastPage && meta.lastPage > 1"
 						:current-page="meta.currentPage"
 						:last-page="meta.lastPage"
 						@changePage="changePage"

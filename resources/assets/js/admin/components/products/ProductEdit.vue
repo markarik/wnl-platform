@@ -5,7 +5,11 @@
 		<template v-if="isEdit">
 			<div class="tabs">
 				<ul>
-					<li :class="{ 'is-active': name === activeTabName }" v-for="(tab, name) in tabs" :key="name">
+					<li
+						:class="{ 'is-active': name === activeTabName }"
+						v-for="(tab, name) in tabs"
+						:key="name"
+					>
 						<router-link :to="{ hash: `#${name}` }">{{tab.text}}</router-link>
 					</li>
 				</ul>
@@ -13,7 +17,11 @@
 
 			<component :is="activeComponent" :id="id"></component>
 		</template>
-		<wnl-product-details-editor :id="id" :is-edit="isEdit" v-else/>
+		<wnl-product-details-editor
+			:id="id"
+			:is-edit="isEdit"
+			v-else
+		/>
 	</div>
 
 </template>

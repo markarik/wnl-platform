@@ -9,14 +9,15 @@
 		</div>
 		<div class="message is-danger reset-container">
 			<div class="message-header">
-				<strong v-t="'user.deleteAccount.warningHeader'"/>
+				<strong v-t="'user.deleteAccount.warningHeader'" />
 			</div>
-			<div class="message-body" v-html="htmlWarning"/>
+			<div class="message-body" v-html="htmlWarning" />
 			<div class="reset-button">
 				<button
 					@click="confirmAndDelete"
 					class="button is-danger to-right"
-					v-t="'user.deleteAccount.header'"/>
+					v-t="'user.deleteAccount.header'"
+				/>
 			</div>
 		</div>
 	</div>

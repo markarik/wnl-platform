@@ -1,6 +1,7 @@
 <template>
 	<div class="questions-test-builder" :class="{'is-desktop': isLargeDesktop}">
-		<wnl-questions-test v-if="hasQuestions"
+		<wnl-questions-test
+			v-if="hasQuestions"
 			:questions="questions"
 			:time="time * 60"
 			:on-select-answer="selectAnswer"
@@ -26,7 +27,8 @@
 						{{$t('questions.solving.test.headers.count')}}
 					</p>
 					<ul class="set-sizes">
-						<li v-for="(size, index) in sizesToChoose"
+						<li
+							v-for="(size, index) in sizesToChoose"
 							class="set-sizes-option"
 							:class="{'is-selected': size === testQuestionsCount}"
 							:key="index"
@@ -42,7 +44,13 @@
 						</span>
 						{{$t('questions.solving.test.headers.time')}}
 					</p>
-					<input class="input-clean" max="999" maxlength="3" type="number" v-model="time"/>
+					<input
+						class="input-clean"
+						max="999"
+						maxlength="3"
+						type="number"
+						v-model="time"
+					/>
 					<span class="time-unit">{{$t('units.time.minutes')}}</span>
 				</section>
 				<section v-else>

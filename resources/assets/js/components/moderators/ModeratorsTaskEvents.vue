@@ -12,7 +12,12 @@
 				</div>
 			</div>
 		</div>
-		<div class="moderators-notification" v-show="expanded" v-for="(event, index) in rest" :key="index">
+		<div
+			class="moderators-notification"
+			v-show="expanded"
+			v-for="(event, index) in rest"
+			:key="index"
+		>
 			<div class="notification-content">
 				<div class="notification-header">
 					<span class="actor">{{event.data.actors.full_name}}</span>

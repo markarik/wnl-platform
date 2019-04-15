@@ -2,10 +2,12 @@
 	<div>
 		<div class="media-container">
 			<div class="left">
-				<wnl-avatar class="avatar"
+				<wnl-avatar
+					class="avatar"
 					:full-name="author.full_name"
 					:url="author.avatar"
-					size="extralarge"/>
+					size="extralarge"
+				/>
 			</div>
 			<div class="right">
 				<div class="content">

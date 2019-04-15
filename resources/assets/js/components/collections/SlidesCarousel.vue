@@ -1,7 +1,12 @@
 <template>
 	<div class="wnl-slides-collection">
 		<p class="title is-4">{{$t('collections.slides.savedSlidesTitle')}} <span>({{savedSlidesCount}})</span>
-			<a v-if="!!savedSlidesCount" class="saved-slides-toggle panel-toggle" :class="{'is-active': mode === contentModes.bookmark}" @click="toggleBookmarked()">
+			<a
+				v-if="!!savedSlidesCount"
+				class="saved-slides-toggle panel-toggle"
+				:class="{'is-active': mode === contentModes.bookmark}"
+				@click="toggleBookmarked()"
+			>
 				{{$t('collections.slides.showOnlySaved')}}
 				<span class="icon is-small">
 					<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']"></i>
@@ -10,7 +15,12 @@
 		</p>
 		<div class="slides-carousel-container" v-if="bookmarkedSlidesIds.length > 0">
 			<div class="slides-carousel">
-				<wnl-slide-thumb :key="index" v-for="(slide, index) in sortedSlides" @slideClick="showSlide(index)" :slide="slide">
+				<wnl-slide-thumb
+					:key="index"
+					v-for="(slide, index) in sortedSlides"
+					@slideClick="showSlide(index)"
+					:slide="slide"
+				>
 					{{getSlideDisplayNumberFromIndex(index)}}
 				</wnl-slide-thumb>
 			</div>

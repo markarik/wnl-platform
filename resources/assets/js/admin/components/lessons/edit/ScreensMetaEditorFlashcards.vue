@@ -5,7 +5,11 @@
 			<div class="margin right">
 				<strong>Wybrane zestawy</strong>
 				<ul>
-					<draggable v-model="flashcardsSetIds" @start="drag=true" @end="drag=false">
+					<draggable
+						v-model="flashcardsSetIds"
+						@start="drag=true"
+						@end="drag=false"
+					>
 						<li
 							v-for="flashcardsSetId in flashcardsSetIds"
 							:key="flashcardsSetId"
@@ -14,7 +18,11 @@
 							<div class="flashcards-set-content">
 								{{flashcardsSetId}}. {{allFlashcardsSets.find(flashcardset => flashcardset.id === flashcardsSetId).name}}
 							</div>
-							<button class="flashcards-set-remove" type="button" @click="removeFlashcardsSet(flashcardsSetId)">
+							<button
+								class="flashcards-set-remove"
+								type="button"
+								@click="removeFlashcardsSet(flashcardsSetId)"
+							>
 								<span class="icon is-small">
 									<i class="fa fa-trash"></i>
 								</span>
@@ -31,7 +39,7 @@
 				label="Wybierz zestaw pytań"
 				placeholder="Id lub treść aby wyszukać"
 			>
-				<wnl-flashcards-set-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
+				<wnl-flashcards-set-autocomplete-item :item="slotProps.item" slot-scope="slotProps" />
 			</wnl-autocomplete>
 		</div>
 	</div>

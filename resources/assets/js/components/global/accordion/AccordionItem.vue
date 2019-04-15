@@ -1,16 +1,24 @@
 <template>
-	<div class="wnl-accordion-item-container" :class="{
-		'is-expanded': expanded,
-		'is-flat': flattened,
-		'is-mobile': config.isMobile,
-	}">
-		<div v-if="!flattened" class="wnl-accordion-item" :class="[`level-${level}`, {
-			'has-children': hasChildren,
-			'is-disabled': isDisabled,
-			'is-selected': isSelected,
-			'is-selectable': isSelectable,
-			'loading': loading,
-		}]" @click="onItemClick">
+	<div
+		class="wnl-accordion-item-container"
+		:class="{
+			'is-expanded': expanded,
+			'is-flat': flattened,
+			'is-mobile': config.isMobile,
+		}"
+	>
+		<div
+			v-if="!flattened"
+			class="wnl-accordion-item"
+			:class="[`level-${level}`, {
+				'has-children': hasChildren,
+				'is-disabled': isDisabled,
+				'is-selected': isSelected,
+				'is-selectable': isSelectable,
+				'loading': loading,
+			}]"
+			@click="onItemClick"
+		>
 			<div v-if="isSelectable" class="wai-checkbox">
 				<span class="icon is-small">
 					<i class="fa" :class="[isSelected ? 'fa-check-square-o' : 'fa-square-o']"></i>
@@ -21,14 +29,22 @@
 				<span class="count" v-if="!loading && count !== false">{{`(${count})`}}</span>
 				<span class="loader" v-if="loading"></span>
 			</div>
-			<div v-if="hasChildren" class="wai-expand-icon" @click.stop="toggleExpanded">
+			<div
+				v-if="hasChildren"
+				class="wai-expand-icon"
+				@click.stop="toggleExpanded"
+			>
 				<span class="icon is-small">
 					<i class="fa fa-angle-down" :class="[expanded ? 'fa-rotate-180' : '']"></i>
 				</span>
 			</div>
 		</div>
-		<div v-if="hasChildren" v-show="expanded || flattened"
-			class="wnl-accordion-item-children" :class="[`level-${level}`]">
+		<div
+			v-if="hasChildren"
+			v-show="expanded || flattened"
+			class="wnl-accordion-item-children"
+			:class="[`level-${level}`]"
+		>
 			<accordion-item
 				v-for="(childItem, index) in item.items"
 				:config="config"

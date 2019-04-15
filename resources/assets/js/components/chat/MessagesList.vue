@@ -1,7 +1,10 @@
 <template>
 	<div class="wnl-chat">
-		<div class="wnl-chat-messages" @scroll="onScroll"
-			ref="messagesContainer">
+		<div
+			class="wnl-chat-messages"
+			@scroll="onScroll"
+			ref="messagesContainer"
+		>
 			<div class="wnl-chat-content">
 				<div class="wnl-chat-content-inside" v-if="loaded">
 					<div class="notification aligncenter" v-if="!hasMore">
@@ -11,7 +14,8 @@
 						Ładuję wiadomości...
 					</wnl-text-loader>
 					<div v-if="messages.length > 0">
-						<wnl-message v-for="(message, index) in messages"
+						<wnl-message
+							v-for="(message, index) in messages"
 							:key="index"
 							:show-author="isAuthorUnique[index]"
 							:id="getMessageClientId(message)"

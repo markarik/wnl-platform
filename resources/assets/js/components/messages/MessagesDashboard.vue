@@ -7,7 +7,7 @@
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside rooms-sidenav">
-				<wnl-conversations-list/>
+				<wnl-conversations-list />
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="scrollable-main-container chat-container">

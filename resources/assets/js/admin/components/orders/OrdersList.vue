@@ -4,7 +4,11 @@
 			:resource-name="'orders/.filter'"
 		>
 			<h3 slot="header">Lista zamówień</h3>
-			<table class="table" slot-scope="slotProps" slot="list">
+			<table
+				class="table"
+				slot-scope="slotProps"
+				slot="list"
+			>
 				<thead>
 				<tr>
 					<th>ID</th>
@@ -17,7 +21,12 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr v-for="order in slotProps.list" @click="goToOrder(order)" :class="['row', {'canceled': order.canceled}]" :key="order.id">
+				<tr
+					v-for="order in slotProps.list"
+					@click="goToOrder(order)"
+					:class="['row', {'canceled': order.canceled}]"
+					:key="order.id"
+				>
 					<td>{{order.id}}</td>
 					<td>{{order.created_at}}</td>
 					<td>{{order.user_id}}</td>
@@ -27,7 +36,13 @@
 						<span class="icon has-text-success" v-if="order.paid"><i class="fa fa-check"></i></span>
 						{{order.paid_amount}} / {{order.total}}PLN
 					</td>
-					<td><span class="icon has-text-success" v-if="order.coupon" :title="order.coupon.name"><i class="fa fa-check"></i></span></td>
+					<td>
+						<span
+							class="icon has-text-success"
+							v-if="order.coupon"
+							:title="order.coupon.name"
+						><i class="fa fa-check"></i></span>
+					</td>
 				</tr>
 				</tbody>
 			</table>

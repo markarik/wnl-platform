@@ -4,7 +4,8 @@
 			<wnl-avatar
 				:full-name="profile.full_name"
 				:url="profile.avatar"
-				size="medium">
+				size="medium"
+			>
 			</wnl-avatar>
 		</figure>
 		<div class="media-content">
@@ -22,7 +23,7 @@
 					<span class="full-name">{{profile.full_name}}</span>
 				</div>
 
-				<div class="conversation-message" v-html="lastMessageContent"/>
+				<div class="conversation-message" v-html="lastMessageContent" />
 			</div>
 		</div>
 	</div>

@@ -19,7 +19,7 @@
 						:taggables-count="formData.taggables_count"
 						@tagDeleted="onTagDeleted"
 					>Usuń</wnl-tag-delete>
-					<wnl-submit class="submit"/>
+					<wnl-submit class="submit" />
 				</div>
 			</div>
 			<wnl-form-text
@@ -45,8 +45,18 @@
 			<div slot="header">
 				<h3 class="title is-3">Lista elementów powiązanych</h3>
 				<div class="filters">
-					<div class="field" v-for="(filter, model) in taggableTypeFilters" :key="model">
-						<input type="checkbox" :id="`filter${model}`" :value="model" v-model="selectedFilters" class="is-checkradio">
+					<div
+						class="field"
+						v-for="(filter, model) in taggableTypeFilters"
+						:key="model"
+					>
+						<input
+							type="checkbox"
+							:id="`filter${model}`"
+							:value="model"
+							v-model="selectedFilters"
+							class="is-checkradio"
+						>
 						<label :for="`filter${model}`" class="checkbox">{{filter.label}}</label>
 					</div>
 				</div>

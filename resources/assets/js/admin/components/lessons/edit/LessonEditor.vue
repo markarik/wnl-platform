@@ -2,7 +2,8 @@
 	<div class="lesson-editor">
 		<form @submit.prevent="lessonFormSubmit">
 			<div class="field is-grouped">
-				<wnl-input :form="form"
+				<wnl-input
+					:form="form"
 					name="name"
 					v-model="form.name"
 				></wnl-input>
@@ -13,10 +14,12 @@
 					v-model="form.is_required"
 				>Lekcja obowiązkowa</wnl-form-checkbox>
 				<div class="control">
-					<a class="button is-small is-success"
+					<a
+						class="button is-small is-success"
 						:class="{'is-loading': loading}"
 						:disabled="!hasChanged"
-						@click="lessonFormSubmit">
+						@click="lessonFormSubmit"
+					>
 						<span class="margin right">Zapisz</span>
 						<span class="icon is-small">
 							<i class="fa fa-save"></i>

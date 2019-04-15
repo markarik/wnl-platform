@@ -9,7 +9,8 @@
 				v-for="(option, key) in options"
 				:key="key"
 				:value="option.value"
-				v-text="option.text">
+				v-text="option.text"
+			>
 			</option>
 		</select>
 	</div>

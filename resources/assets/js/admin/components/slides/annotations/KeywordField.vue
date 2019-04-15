@@ -1,7 +1,18 @@
 <template>
 	<div>
-		<input class="input" type="text" ref="annotationTag" :value="content" readonly tabindex="-1">
-		<span class="copy-tag" v-if="show && !copied" @click="copyTag">Kopiuj tag</span>
+		<input
+			class="input"
+			type="text"
+			ref="annotationTag"
+			:value="content"
+			readonly
+			tabindex="-1"
+		>
+		<span
+			class="copy-tag"
+			v-if="show && !copied"
+			@click="copyTag"
+		>Kopiuj tag</span>
 		<span class="copy-tag copy-tag--success" v-if="show && copied">Skopiowano do schowka!</span>
 	</div>
 </template>

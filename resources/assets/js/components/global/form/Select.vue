@@ -1,6 +1,10 @@
 <template>
 	<div class="field">
-		<label :for="name" class="label" v-if="$slots.default">
+		<label
+			:for="name"
+			class="label"
+			v-if="$slots.default"
+		>
 			<slot></slot>
 		</label>
 		<div class="control" :class="{'is-loading': isLoading}">
@@ -16,7 +20,8 @@
 					v-for="(option, key) in options"
 					:key="key"
 					:value="option.value"
-					v-text="option.text">
+					v-text="option.text"
+				>
 				</option>
 			</select>
 		</div>

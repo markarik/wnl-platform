@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<wnl-alert v-for="(alert, timestamp) in alerts"
+		<wnl-alert
+			v-for="(alert, timestamp) in alerts"
 			:alert="alert"
 			css-class="fixed"
 			:key="timestamp"

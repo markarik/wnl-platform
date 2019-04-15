@@ -13,11 +13,17 @@
 					<div class="qna-answer-content content" v-html="content"></div>
 				</div>
 				<div class="qna-meta">
-					<div class="modal-activator" :class="{'author-forgotten': author.deleted_at}" @click="showModal">
-						<wnl-avatar class="avatar"
+					<div
+						class="modal-activator"
+						:class="{'author-forgotten': author.deleted_at}"
+						@click="showModal"
+					>
+						<wnl-avatar
+							class="avatar"
 							:full-name="author.full_name"
 							:url="author.avatar"
-							size="medium">
+							size="medium"
+						>
 						</wnl-avatar>
 						<span class="qna-meta-info">
 							{{author.full_name}} ·
@@ -49,7 +55,7 @@
 			</wnl-comments-list>
 		</div>
 		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="author"/>
+			<wnl-user-profile-modal :author="author" />
 		</wnl-modal>
 	</div>
 </template>

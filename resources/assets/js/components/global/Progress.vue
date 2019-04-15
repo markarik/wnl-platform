@@ -1,9 +1,18 @@
 <template>
 	<div class="progress-container">
-		<progress class="progress progress-bar is-large" :class="modifyingClass" :value="value" :max="maxValue">
+		<progress
+			class="progress progress-bar is-large"
+			:class="modifyingClass"
+			:value="value"
+			:max="maxValue"
+		>
 			{{percentageValue}}
 		</progress>
-		<span v-if="hasNumbers" class="progress-numbers margin left" :class="modifyingClass">
+		<span
+			v-if="hasNumbers"
+			class="progress-numbers margin left"
+			:class="modifyingClass"
+		>
 			{{value}}/{{max}}
 		</span>
 	</div>

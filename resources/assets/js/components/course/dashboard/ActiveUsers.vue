@@ -5,12 +5,17 @@
 		<div class="active-users-container">
 			<div class="absolute-container">
 				<ul class="avatars-list" ref="avatarsList">
-					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
+					<li
+						v-for="(user, index) in usersToCount"
+						class="avatar"
+						:key="index"
+					>
 						<div class="activator" @click="toggleModal(true, user.profile)">
 							<wnl-avatar
 								:full-name="user.profile.full_name"
 								:url="user.profile.avatar"
-								size="medium">
+								size="medium"
+							>
 							</wnl-avatar>
 						</div>
 					</li>
@@ -18,7 +23,7 @@
 			</div>
 		</div>
 		<wnl-modal @closeModal="toggleModal(false)" v-if="modalVisible">
-			<wnl-user-profile-modal :author="modalUser"/>
+			<wnl-user-profile-modal :author="modalUser" />
 		</wnl-modal>
 	</div>
 </template>

@@ -11,7 +11,7 @@
 							<span v-if="icon" class="icon is-big user-profile-icon">
 								<i :class="icon"></i>
 							</span>
-							<p v-if="!hideTitle" class="wnl-qna-header-title" >
+							<p v-if="!hideTitle" class="wnl-qna-header-title">
 								{{displayedTitle}}&nbsp;
 							</p>
 							<p class="wnl-qna-header-title" v-if="!numbersDisabled">
@@ -19,15 +19,28 @@
 							</p>
 						</div>
 						<div class="tags" v-if="contextTags">
-							<span v-for="tag in contextTags" :key="tag.id" class="tag is-light" v-text="tag.name"></span>
+							<span
+								v-for="tag in contextTags"
+								:key="tag.id"
+								class="tag is-light"
+								v-text="tag.name"
+							></span>
 						</div>
 					</div>
 				</div>
 				<div class="level-right" v-if="!readOnly">
-					<a class="button is-small" @click="showForm = false" v-if="showForm">
+					<a
+						class="button is-small"
+						@click="showForm = false"
+						v-if="showForm"
+					>
 						<span>Ukryj</span>
 					</a>
-					<a class="button is-small is-primary" @click="showForm = true" v-if="!showForm">
+					<a
+						class="button is-small is-primary"
+						@click="showForm = true"
+						v-if="!showForm"
+					>
 						<span>Zadaj pytanie</span>
 						<span id="question-icon" class="icon is-small">
 							<i class="fa fa-question-circle-o"></i>
@@ -44,17 +57,22 @@
 					/>
 				</div>
 			</transition>
-			<wnl-qna-sorting v-if="sortingEnabled"/>
+			<wnl-qna-sorting v-if="sortingEnabled" />
 			<div>
 				<div v-if="howManyQuestions > 0">
-					<wnl-qna-question v-for="question in questionsList"
+					<wnl-qna-question
+						v-for="question in questionsList"
 						:key="question.id"
 						:question-id="question.id"
 						:read-only="readOnly"
 						:reactions-disabled="reactionsDisabled"
 						:config="config"
 					>
-						<router-link v-if="showContext && question.meta && question.meta.context" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{$t('user.userProfile.showContext')}}</router-link>
+						<router-link
+							v-if="showContext && question.meta && question.meta.context"
+							slot="context"
+							:to="{ name: question.meta.context.name, params: question.meta.context.params }"
+						>{{$t('user.userProfile.showContext')}}</router-link>
 					</wnl-qna-question>
 				</div>
 				<div class="qna-no-questions" v-else>

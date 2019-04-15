@@ -1,6 +1,10 @@
 <template>
 	<div class="field">
-		<label :for="name" class="label" v-if="$slots.default">
+		<label
+			:for="name"
+			class="label"
+			v-if="$slots.default"
+		>
 			<slot></slot>
 		</label>
 		<div class="control" :class="{'is-loading': isLoading}">
@@ -11,7 +15,8 @@
 				:placeholder="placeholder || $slots.default[0].text || ''"
 				:disabled="disabled"
 				@input="onInput"
-				v-model="inputValue">
+				v-model="inputValue"
+			>
 		</div>
 
 		<template v-if="hasErrors">

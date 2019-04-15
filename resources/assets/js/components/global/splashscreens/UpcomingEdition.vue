@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<img class="splash-screen-image" :src="logoImageUrl" alt="Logo kursu">
+		<img
+			class="splash-screen-image"
+			:src="logoImageUrl"
+			alt="Logo kursu"
+		>
 		<div v-if="diff >= 0">
 			<p class="title is-4">Twoja przygoda z kursem zacznie się już za:</p>
 			<div class="splash-screen-counter">

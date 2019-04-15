@@ -54,8 +54,17 @@
 			</div>
 
 			<div class="content-classifier-filter__type-filters">
-				<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier-filter__type-filters__item">
-					<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="activeContentTypesMap[contentType]"/>
+				<div
+					v-for="(meta, contentType) in contentTypes"
+					:key="contentType"
+					class="field is-grouped content-classifier-filter__type-filters__item"
+				>
+					<input
+						:id="`type-${contentType}`"
+						type="checkbox"
+						class="checkbox"
+						v-model="activeContentTypesMap[contentType]"
+					/>
 					<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
 				</div>
 			</div>

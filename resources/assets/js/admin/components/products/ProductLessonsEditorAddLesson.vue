@@ -37,7 +37,11 @@
 				@onChange="value => newLesson.startDate = value[0]"
 			/>
 		</div>
-		<button class="button is-primary is-outlined is-big margin top" @click="addLesson" :disabled="!newLesson.lessonId">Dodaj lekcję</button>
+		<button
+			class="button is-primary is-outlined is-big margin top"
+			@click="addLesson"
+			:disabled="!newLesson.lessonId"
+		>Dodaj lekcję</button>
 	</div>
 </template>
 

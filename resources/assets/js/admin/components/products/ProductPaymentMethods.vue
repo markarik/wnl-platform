@@ -19,7 +19,8 @@
 			<tbody>
 			<tr v-for="method in methods" :key="method.id">
 				<td>
-					<input type="checkbox"
+					<input
+						type="checkbox"
 						:checked="methodEnabled(method.id)"
 						:id="method.id"
 						@change="toggleMethod($event, method.id)"
@@ -87,7 +88,11 @@
 			</table>
 		</div>
 
-		<a class="button is-primary is-wide" v-if="!loadingMethods" @click="save">Zapisz</a>
+		<a
+			class="button is-primary is-wide"
+			v-if="!loadingMethods"
+			@click="save"
+		>Zapisz</a>
 	</div>
 </template>
 

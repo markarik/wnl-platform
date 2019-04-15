@@ -2,7 +2,12 @@
 	<div @click="click" class="wnl-upload">
 		<slot></slot>
 		<form @submit.prevent>
-			<input :id="inputId" @change="inputChanged" type="file" class="form-control"/>
+			<input
+				:id="inputId"
+				@change="inputChanged"
+				type="file"
+				class="form-control"
+			/>
 		</form>
 	</div>
 

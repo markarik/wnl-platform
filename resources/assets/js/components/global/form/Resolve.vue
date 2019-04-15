@@ -6,11 +6,11 @@
 	>
 		&nbsp;·
 		<i class="fa fa-undo" />
-		<span v-t="'ui.action.undo'"/>
+		<span v-t="'ui.action.undo'" />
 	</p>
 	<span class="resolvable icon" v-else-if="$moderatorFeatures.isAllowed('access')">
 		&nbsp;·
-		<i class="fa fa-check" @click="$emit('resolveResource')"/>
+		<i class="fa fa-check" @click="$emit('resolveResource')" />
 	</span>
 </template>
 

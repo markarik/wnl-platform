@@ -58,35 +58,17 @@ class SlideshowExport extends Command
 
 		$data = [
 			'screen' => $this->removeUnwantedFieldsFromScreen($screen),
-			'slideshow' => $this->removeId($slideshow),
-			'slides' => $this->removeId($slides),
-			'sections' => $this->removeId($sections),
-			'subsections' => $this->removeId($subsections),
-			'presentables' => $this->removeId($presentables),
+			'slideshow' => $slideshow->toArray(),
+			'slides' => $slides->toArray(),
+			'sections' => $sections->toArray(),
+			'subsections' => $subsections->toArray(),
+			'presentables' => $presentables->toArray(),
 		];
-
 
 		// TODO: Generate sensible filename or take if from argument.
 		Storage::put('exports/slideshow_export.json', json_encode($data));
 
 		return 0;
-	}
-
-	/**
-	 * @param $data
-	 * @return Collection|Model
-	 */
-	private function removeId($data)
-	{
-		if ($data instanceof Collection) {
-			return $data->except(['id'])->toArray();
-		}
-
-		if ($data instanceof Model) {
-			$data->toArray();
-			unset($data['id']);
-			return $data;
-		}
 	}
 
 	/**
@@ -97,7 +79,6 @@ class SlideshowExport extends Command
 	{
 		$screenData = $screen->toArray();
 
-		unset($screenData['id']);
 		unset($screenData['discussion_id']);
 		unset($screenData['is_discussable']);
 		unset($screenData['sections']);

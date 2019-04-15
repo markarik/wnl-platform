@@ -1,13 +1,13 @@
-import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
-import {nestedSetMutations, nestedSetGetters, nestedSetActions, initialState} from 'js/store/modules/shared/nestedSet';
+import { COURSE_STRUCTURE_TYPES } from 'js/consts/courseStructure';
+import { nestedSetMutations, nestedSetGetters, nestedSetActions, initialState } from 'js/store/modules/shared/nestedSet';
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
-import {COURSE_STRUCTURE_TYPE_ICONS} from 'js/consts/courseStructure';
+import { getApiUrl } from 'js/utils/env';
+import { COURSE_STRUCTURE_TYPE_ICONS } from 'js/consts/courseStructure';
 
 // Namespace
 const namespaced = true;
 
-const state = {...initialState};
+const state = { ...initialState };
 
 const _parseIncludes = (node, included) => {
 	if (node.hasOwnProperty('groups')) {
@@ -40,23 +40,23 @@ const mutations = {
 // Actions
 const actions = {
 	...nestedSetActions,
-	async _fetch({}, courseId) {
-		const {data: {included, ...nodes}} = await axios.get(getApiUrl(`${resource}/${courseId}${include}`));
+	async _fetch(_, courseId) {
+		const { data: { included, ...nodes } } = await axios.get(getApiUrl(`${resource}/${courseId}${include}`));
 		return Object.values(nodes).map(node => _parseIncludes(node, included));
 	},
-	async _post({}, nodeData) {
-		const {data: {included, ...node}} = await axios.post(getApiUrl(`${resource}${include}`), nodeData);
+	async _post(_, nodeData) {
+		const { data: { included, ...node } } = await axios.post(getApiUrl(`${resource}${include}`), nodeData);
 		return _parseIncludes(node, included);
 	},
-	async _put({}, nodeData) {
-		const {data: {included, ...node}} = await axios.put(getApiUrl(`${resource}/${nodeData.id}${include}`), nodeData);
+	async _put(_, nodeData) {
+		const { data: { included, ...node } } = await axios.put(getApiUrl(`${resource}/${nodeData.id}${include}`), nodeData);
 		return _parseIncludes(node, included);
 	},
-	async _delete({}, node) {
+	async _delete(_, node) {
 		await axios.delete(getApiUrl(`${resource}/${node.id}`));
 	},
-	async _move({}, {node, direction}) {
-		await axios.put(getApiUrl(`${resource}/move`), {id: node.id, direction});
+	async _move(_, { node, direction }) {
+		await axios.put(getApiUrl(`${resource}/move`), { id: node.id, direction });
 	},
 };
 

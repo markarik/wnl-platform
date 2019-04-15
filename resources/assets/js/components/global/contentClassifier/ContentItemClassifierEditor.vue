@@ -67,13 +67,13 @@
 </style>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
-import {CONTENT_CLASSIFIER_ATTACH_TERM, CONTENT_CLASSIFIER_DETACH_TERM} from 'js/store/mutations-types';
-import {REQUEST_STATES} from 'js/consts/state';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
+import { CONTENT_CLASSIFIER_ATTACH_TERM, CONTENT_CLASSIFIER_DETACH_TERM } from 'js/store/mutations-types';
+import { REQUEST_STATES } from 'js/consts/state';
 
 const CONTENT_TYPE_NAMES = {
 	[CONTENT_TYPES.FLASHCARD]: 'Pytanie otwarte',
@@ -116,7 +116,7 @@ export default {
 	computed: {
 		...mapGetters('contentClassifier', ['getContentItem', 'canAccess', 'getContentItemState']),
 		contentItem() {
-			return this.getContentItem({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) || null;
+			return this.getContentItem({ contentItemType: this.contentItemType, contentItemId: this.contentItemId }) || null;
 		},
 		hasContentItem() {
 			return this.contentItem;
@@ -125,7 +125,7 @@ export default {
 			return this.contentItem.taxonomyTerms && this.contentItem.taxonomyTerms.length > 0;
 		},
 		isError() {
-			return this.getContentItemState({contentItemType: this.contentItemType, contentItemId: this.contentItemId}) === REQUEST_STATES.ERROR;
+			return this.getContentItemState({ contentItemType: this.contentItemType, contentItemId: this.contentItemId }) === REQUEST_STATES.ERROR;
 		},
 	},
 	methods: {

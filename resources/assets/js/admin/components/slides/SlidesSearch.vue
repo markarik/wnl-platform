@@ -46,8 +46,9 @@
 </template>
 
 <script>
-import {resource} from 'js/utils/config';
-import {getApiUrl} from 'js/utils/env';
+import axios from 'axios';
+import { resource } from 'js/utils/config';
+import { getApiUrl } from 'js/utils/env';
 
 export default {
 	name: 'SlidesSearch',

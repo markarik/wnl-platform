@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 import store from 'js/services/messagesStore';
 import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
 import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
@@ -43,7 +43,7 @@ export default {
 			this.showNews = false;
 			store.set(this.newsStoreKey, true);
 		},
-		contentClicked({target}) {
+		contentClicked({ target }) {
 			const href = target.getAttribute('href');
 
 			if (target && href) {

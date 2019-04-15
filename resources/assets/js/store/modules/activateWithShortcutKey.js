@@ -1,4 +1,4 @@
-import {set} from 'vue';
+import { set } from 'vue';
 import * as types from 'js/store/mutations-types';
 
 // Initial state
@@ -44,20 +44,20 @@ export const mutations = {
 
 // Actions
 export const actions = {
-	register({commit}, options) {
+	register({ commit }, options) {
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_REGISTER_INSTANCE, options);
 	},
-	deregister({commit, getters}, uid) {
+	deregister({ commit, getters }, uid) {
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_DEREGISTER_INSTANCE, getters.indexByUid(uid));
 	},
-	setActiveInstance({commit, getters}, uid) {
+	setActiveInstance({ commit, getters }, uid) {
 		const index = getters.indexByUid(uid);
 
 		if (index > -1) {
 			commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, index);
 		}
 	},
-	setNextInstanceAsActive({commit, state}) {
+	setNextInstanceAsActive({ commit, state }) {
 		const length = state.instances.length;
 
 		if (length === 0) {
@@ -68,7 +68,7 @@ export const actions = {
 
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, index);
 	},
-	setPreviousInstanceAsActive({commit, state}) {
+	setPreviousInstanceAsActive({ commit, state }) {
 		const length = state.instances.length;
 
 		if (length === 0) {
@@ -79,10 +79,10 @@ export const actions = {
 
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, index);
 	},
-	resetActiveInstance({commit}) {
+	resetActiveInstance({ commit }) {
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_ACTIVE_INSTANCE_INDEX, -1);
 	},
-	focusActiveInstance({commit, state}) {
+	focusActiveInstance({ commit, state }) {
 		if (state.instances.length === 0) {
 			return;
 		}
@@ -93,7 +93,7 @@ export const actions = {
 			commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_FOCUSED);
 		}
 	},
-	resetFocus({commit}) {
+	resetFocus({ commit }) {
 		commit(types.ACTIVATE_WITH_SHORTCUT_KEY_SET_FOCUSED, false);
 	}
 };

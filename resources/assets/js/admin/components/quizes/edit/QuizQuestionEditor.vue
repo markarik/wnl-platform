@@ -193,7 +193,7 @@ import {
 } from 'js/components/global/form';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 export default {
 	components: {
@@ -304,7 +304,7 @@ export default {
 			} else {
 				//Timeout for the user to see the success banner
 				setTimeout(() => {
-					this.$router.push({name: 'quiz-editor', params: { quizQuestionId: data.id }});
+					this.$router.push({ name: 'quiz-editor', params: { quizQuestionId: data.id } });
 				}, 2000);
 			}
 		},
@@ -348,7 +348,7 @@ export default {
 		},
 		quizQuestionId(quizQuestionId) {
 			this.getQuizQuestion(quizQuestionId);
-			this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [quizQuestionId]});
+			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [quizQuestionId] });
 		}
 	},
 	created() {
@@ -361,7 +361,7 @@ export default {
 	async mounted() {
 		if (this.isEdit) {
 			await this.setupCurrentUser();
-			await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [this.quizQuestionId]});
+			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [this.quizQuestionId] });
 		}
 	},
 };

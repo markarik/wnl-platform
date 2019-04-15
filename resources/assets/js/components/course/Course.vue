@@ -118,13 +118,13 @@ export default {
 				lessonChatRoom = courseChatRoom + `-lessons-${this.lessonId}`;
 			if (this.isLesson) {
 				return [
-					{name: '#lekcja', channel: lessonChatRoom},
-					{name: '#aula', channel: courseChatRoom}
+					{ name: '#lekcja', channel: lessonChatRoom },
+					{ name: '#aula', channel: courseChatRoom }
 				];
 			}
 
 			return [
-				{name: '#aula', channel: courseChatRoom},
+				{ name: '#aula', channel: courseChatRoom },
 			];
 		},
 		canRenderSidenav() {

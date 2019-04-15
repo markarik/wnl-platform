@@ -41,33 +41,13 @@ module.exports = {
 				'ignoreRestSiblings': true
 			}
 		],
+		'object-curly-spacing': [
+			'error',
+			'always'
+		],
 
 		// TODO enable eslint:recommended rules below
-		'no-undef': [
-			'off'
-		],
-		'no-mixed-spaces-and-tabs': [
-			'off'
-		],
 		'no-console': [
-			'off'
-		],
-		'no-irregular-whitespace': [
-			'off'
-		],
-		'no-empty-pattern': [
-			'off'
-		],
-		'no-extra-boolean-cast': [
-			'off'
-		],
-		'no-useless-escape': [
-			'off'
-		],
-		'no-case-declarations': [
-			'off'
-		],
-		'no-redeclare': [
 			'off'
 		],
 
@@ -113,6 +93,9 @@ module.exports = {
 	},
 	globals: {
 		$: true,
-		$wnl: true
+		$wnl: true,
+		Echo: true,
+		fbq: true,
+		ga: true,
 	}
 };

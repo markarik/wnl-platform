@@ -1,7 +1,8 @@
+import axios from 'axios';
 import { set } from 'vue';
 import * as types from 'js/store/mutations-types';
-import {getApiUrl} from 'js/utils/env';
-import {PRODUCTS_SLUGS} from 'js/consts/products';
+import { getApiUrl } from 'js/utils/env';
+import { PRODUCTS_SLUGS } from 'js/consts/products';
 
 const namespaced = true;
 
@@ -31,7 +32,7 @@ const mutations = {
 const actions = {
 	async fetchCurrentProducts({ commit }) {
 		try{
-			const {data} = await axios.get(getApiUrl('products/current/all'));
+			const { data } = await axios.get(getApiUrl('products/current/all'));
 			commit(types.SET_PRODUCTS, data);
 		} catch (e) {
 			$wnl.logger.capture(e);

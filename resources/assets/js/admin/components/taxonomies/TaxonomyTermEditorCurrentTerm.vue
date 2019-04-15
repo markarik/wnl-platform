@@ -21,7 +21,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 

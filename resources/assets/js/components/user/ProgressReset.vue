@@ -76,7 +76,7 @@ import features from 'js/consts/events_map/features.json';
 import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
 export default {
-	components: {WnlSatisfactionGuaranteeModal},
+	components: { WnlSatisfactionGuaranteeModal },
 	mixins: [emits_events],
 	data() {
 		return {
@@ -88,7 +88,7 @@ export default {
 	methods: {
 		...mapActions(['toggleOverlay']),
 		...mapActions('progress', ['deleteProgress', 'setupCourse']),
-		...mapActions('questions', {deleteQuestions: 'deleteProgress'}),
+		...mapActions('questions', { deleteQuestions: 'deleteProgress' }),
 		...mapActions('collections', ['deleteCollection']),
 		...mapActions(['addAutoDismissableAlert']),
 		async resetAndReloadProgress() {

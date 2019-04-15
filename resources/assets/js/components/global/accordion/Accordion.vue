@@ -18,7 +18,7 @@
 </style>
 
 <script>
-import {size} from 'lodash';
+import { size } from 'lodash';
 import AccordionItem from 'js/components/global/accordion/AccordionItem';
 
 const defaultConfig = {

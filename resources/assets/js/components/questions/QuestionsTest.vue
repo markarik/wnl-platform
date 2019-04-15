@@ -228,8 +228,8 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
-import {debounce, isEmpty, isNumber, size} from 'lodash';
+import { mapGetters } from 'vuex';
+import { debounce, isEmpty, isNumber, size } from 'lodash';
 
 import QuizList from 'js/components/quiz/QuizList';
 import QuizTimer from 'js/components/quiz/QuizTimer';
@@ -238,7 +238,7 @@ import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 import context from 'js/consts/events_map/context.json';
 
-import {scrollToElement} from 'js/utils/animations';
+import { scrollToElement } from 'js/utils/animations';
 
 export default {
 	name: 'QuestionsTest',
@@ -343,7 +343,7 @@ export default {
 			}
 		},
 		checkQuiz() {
-			this.$emit('checkQuiz', {unansweredCount: this.unansweredCount});
+			this.$emit('checkQuiz', { unansweredCount: this.unansweredCount });
 			if (this.unansweredCount > 0) {
 				this.$refs.quizlist.scrollToFirstUnanswered();
 			}
@@ -351,7 +351,7 @@ export default {
 		toggleFilter(status) {
 			this.filterResults = this.filterResults === status ? '' : status;
 		},
-		onScroll: debounce(function({target: {scrollTop}}) {
+		onScroll: debounce(function({ target: { scrollTop } }) {
 			if (this.isMobile) {
 				this.canShowStickyHeader = scrollTop < this.currentScroll;
 			}

@@ -54,7 +54,7 @@
 		margin-top: $margin-base
 </style>
 <script>
-import {isEqual} from 'lodash';
+import { isEqual } from 'lodash';
 
 export default {
 	props: {

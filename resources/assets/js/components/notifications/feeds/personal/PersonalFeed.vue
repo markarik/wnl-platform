@@ -76,7 +76,7 @@ import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned,
 	from 'js/components/notifications/events';
 import { feed } from 'js/components/notifications/feed';
 import { getImageUrl } from 'js/utils/env';
-import {USER_SETTING_NAMES} from 'js/consts/settings';
+import { USER_SETTING_NAMES } from 'js/consts/settings';
 
 export default {
 	name: 'PersonalFeed',

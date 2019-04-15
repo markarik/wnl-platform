@@ -94,7 +94,7 @@ export default {
 		...mapGetters(['isSidenavVisible', 'isSidenavMounted', 'isMobile']),
 		...mapGetters('quiz', ['isLoaded', 'getQuestionsWithAnswers', 'getReaction']),
 		title() {
-			return this.hasError ? this.$t('quiz.single.errorTitle') : this.$t('quiz.single.title', {id: this.quizQuestionId});
+			return this.hasError ? this.$t('quiz.single.errorTitle') : this.$t('quiz.single.title', { id: this.quizQuestionId });
 		},
 	},
 	methods: {

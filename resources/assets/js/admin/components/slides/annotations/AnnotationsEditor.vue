@@ -123,13 +123,13 @@
 			</template>
 			<div class="level-item">
 				<a class="button is-danger"
-					 :disabled="!annotation.id"
-					 @click="onDelete">Usuń
+					:disabled="!annotation.id"
+					@click="onDelete">Usuń
 				</a>
 				<a class="button" @click="isVisible = true">Podgląd</a>
 				<a class="button is-primary"
-					 :disabled="form.errors.any() || !annotation.description"
-					 @click="onSubmit">Zapisz
+					:disabled="form.errors.any() || !annotation.description"
+					@click="onSubmit">Zapisz
 				</a>
 			</div>
 		</form>
@@ -194,8 +194,9 @@
 </style>
 
 <script>
-import {mapActions} from 'vuex';
-import {getApiUrl} from 'js/utils/env';
+import axios from 'axios';
+import { mapActions } from 'vuex';
+import { getApiUrl } from 'js/utils/env';
 import Form from 'js/classes/forms/Form';
 import { Tags } from 'js/components/global/form/index';
 import KeywordField from './KeywordField';
@@ -203,7 +204,7 @@ import PreviewModal from './PreviewModal';
 import Quill from 'js/admin/components/forms/Quill.vue';
 import Modal from 'js/components/global/Modal';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 export default {
 	name: 'AnnotationsEditor',
@@ -288,7 +289,7 @@ export default {
 					event = 'editSuccess';
 					await axios.put(getApiUrl(`annotations/${this.annotation.id}`), annotation);
 				} else {
-					const {data} = await axios.post(getApiUrl('annotations'), annotation);
+					const { data } = await axios.post(getApiUrl('annotations'), annotation);
 					annotation.id = data.id;
 				}
 
@@ -325,11 +326,11 @@ export default {
 	async mounted() {
 		if (!this.annotation.id) return;
 
-		await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id]});
+		await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id] });
 	},
 	watch: {
 		async 'annotation.id'() {
-			await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id]});
+			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id] });
 		}
 	}
 };

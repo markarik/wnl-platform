@@ -50,7 +50,7 @@ import { getApiUrl } from 'js/utils/env';
 import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue';
 import Input from 'js/admin/components/forms/Input.vue';
 import Checkbox from 'js/admin/components/forms/Checkbox.vue';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	name: 'LessonEditor',

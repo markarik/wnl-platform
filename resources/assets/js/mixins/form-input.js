@@ -41,11 +41,11 @@ export var formInput = {
 			return this.$store.getters[`form/${getter}`](this.parentName)(payload);
 		},
 		mutation(mutation, payload = {}) {
-			return this.$store.commit(`form/${mutation}`, {payload, formName: this.parentName});
+			return this.$store.commit(`form/${mutation}`, { payload, formName: this.parentName });
 		},
 		async onInput($event) {
 			if (this.hasErrors) {
-				this.mutation(types.ERRORS_CLEAR_SINGLE, {name: this.name});
+				this.mutation(types.ERRORS_CLEAR_SINGLE, { name: this.name });
 			}
 			await nextTick();
 			this.$emit('input', $event);

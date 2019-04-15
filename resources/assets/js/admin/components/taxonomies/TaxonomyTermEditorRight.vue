@@ -5,16 +5,16 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import WnlTaxonomyTermEditorAdd from 'js/admin/components/taxonomies/TaxonomyTermEditorAdd';
 import WnlTaxonomyTermEditorDelete from 'js/admin/components/taxonomies/TaxonomyTermEditorDelete';
 import WnlTaxonomyTermEditorEdit from 'js/admin/components/taxonomies/TaxonomyTermEditorEdit';
-import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
+import { NESTED_SET_EDITOR_MODES } from 'js/consts/nestedSet';
 import WnlNestedSetPanelRight from 'js/admin/components/nestedSet/NestedSetPanelRight';
 
 export default {
-	components: {WnlNestedSetPanelRight},
+	components: { WnlNestedSetPanelRight },
 	props: {
 		taxonomyId: {
 			type: [String, Number],

@@ -55,7 +55,7 @@ export default {
 		},
 	},
 	methods: {
-		changeOrder({name, sortable = true}) {
+		changeOrder({ name, sortable = true }) {
 			if (!sortable) return;
 			const sortDirection = this.activeSortColumnName === name && this.sortDirection === 'asc' ? 'desc' : 'asc';
 
@@ -64,7 +64,7 @@ export default {
 				activeSortColumnName: name,
 			});
 
-			this.$router.push({ query: { ...this.$route.query, sortDirection, sort: name }, hash: this.$route.hash});
+			this.$router.push({ query: { ...this.$route.query, sortDirection, sort: name }, hash: this.$route.hash });
 		},
 	},
 	mounted() {
@@ -78,12 +78,12 @@ export default {
 	watch: {
 		sortDirection(newVal) {
 			if (this.routerSortDirection !== newVal) {
-				this.$router.push({ query: { ...this.$route.query, sortDirection: newVal }});
+				this.$router.push({ query: { ...this.$route.query, sortDirection: newVal } });
 			}
 		},
 		activeSortColumnName(newVal) {
 			if (this.routerSort !== newVal) {
-				this.$router.push({ query: { ...this.$route.query, sort: newVal }});
+				this.$router.push({ query: { ...this.$route.query, sort: newVal } });
 			}
 		}
 	}

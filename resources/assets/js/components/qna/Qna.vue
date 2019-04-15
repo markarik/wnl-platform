@@ -132,7 +132,7 @@
 </style>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import QnaSorting from 'js/components/qna/QnaSorting';
 import QnaQuestion from 'js/components/qna/QnaQuestion';
@@ -165,7 +165,7 @@ export default {
 		},
 		config: {
 			type: Object,
-			default: () => ({highlighted: {}})
+			default: () => ({ highlighted: {} })
 		},
 		discussionId: {
 			type: Number,

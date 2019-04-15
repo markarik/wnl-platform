@@ -21,7 +21,7 @@
 
 <script>
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 export default {
 	props: ['endpoint'],

@@ -1,4 +1,4 @@
-import {resources} from 'js/utils/constants';
+import { resources } from 'js/utils/constants';
 
 export function configValue(key) {
 	return $wnl.config[key];

@@ -11,14 +11,14 @@
 			</div>
 			<div class="days">
 				<a v-for="day in days"
-					 class="panel-toggle day"
-					 :class="{'is-active': isDayActive(day.dayNumber)}"
-					 :key="day.dayNumber"
-					 @click="toggleDay(day.dayNumber)"
+					class="panel-toggle day"
+					:class="{'is-active': isDayActive(day.dayNumber)}"
+					:key="day.dayNumber"
+					@click="toggleDay(day.dayNumber)"
 				>{{ $t(day.dayName) }}
 					<span class="icon is-small">
 							<i class="fa"
-								 :class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+								:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
 						</span>
 				</a>
 			</div>
@@ -31,14 +31,14 @@
 			</div>
 			<div class="presets-control">
 				<a v-for="preset in presets"
-					 class="panel-toggle preset preset"
-					 :class="{'is-active': isPresetActive(preset.preset)}"
-					 :key="preset.preset"
-					 @click="togglePreset(preset.preset)"
+					class="panel-toggle preset preset"
+					:class="{'is-active': isPresetActive(preset.preset)}"
+					:key="preset.preset"
+					@click="togglePreset(preset.preset)"
 				>{{ $t(preset.title) }}
 					<span class="icon is-small">
 						<i class="fa"
-							 :class="[isPresetActive(preset.preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+							:class="[isPresetActive(preset.preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
 					</span>
 				</a>
 			</div>
@@ -50,14 +50,14 @@
 				</div>
 				<div class="work-load-control">
 					<a v-for="workLoad in availableWorkLoads"
-						 :key="workLoad.workLoad"
-						 @click="chooseWorkload(workLoad.workLoad)"
-						 class="panel-toggle work-load-button"
-						 :class="{'is-active': isWorkLoadActive(workLoad.workLoad)}"
+						:key="workLoad.workLoad"
+						@click="chooseWorkload(workLoad.workLoad)"
+						class="panel-toggle work-load-button"
+						:class="{'is-active': isWorkLoadActive(workLoad.workLoad)}"
 					>{{ $t(workLoad.translation) }}
 						<span class="icon is-small">
 							<i class="fa"
-								 :class="[isWorkLoadActive(workLoad.workLoad) ? 'fa-check-circle' : 'fa-circle-o']">
+								:class="[isWorkLoadActive(workLoad.workLoad) ? 'fa-check-circle' : 'fa-circle-o']">
 							</i>
 						</span>
 					</a>
@@ -207,17 +207,18 @@
 </style>
 
 <script>
-import {isEmpty} from 'lodash';
+import axios from 'axios';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
-import {mapGetters, mapActions} from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 import TextOverlay from 'js/components/global/TextOverlay.vue';
 import Datepicker from 'js/components/global/Datepicker';
 
 import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import { swalConfig } from 'js/utils/swal';
 
 export default {

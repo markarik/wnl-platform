@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { set, delete as destroy } from 'vue';
+import { each, uniqBy } from 'lodash';
 
 import * as types from 'js/store/mutations-types';
 import { getApiUrl } from 'js/utils/env';
 import { getModelByResource, modelToResourceMap } from 'js/utils/config';
-import {reactionsGetters, reactionsMutations, reactionsActions, convertToReactable} from 'js/store/modules/reactions';
+import { reactionsGetters, reactionsMutations, reactionsActions, convertToReactable } from 'js/store/modules/reactions';
 
-function _fetchComments({...commentsQuery}) {
+function _fetchComments({ ...commentsQuery }) {
 	if (!commentsQuery.hasOwnProperty('commentable_type')) {
 		return Promise.reject('Commentable type not defined');
 	}
@@ -24,7 +25,7 @@ function _fetchComments({...commentsQuery}) {
 	if (commentsQuery.hasOwnProperty('comment_id')) {
 		requestParams.id = commentsQuery.comment_id;
 	}
-	return axios.get(getApiUrl('comments/query'), {params: requestParams})
+	return axios.get(getApiUrl('comments/query'), { params: requestParams })
 		.then((data) => {
 			return data;
 		});
@@ -100,9 +101,9 @@ export const commentsMutations = {
 			comment = state.comments[payload.id],
 			resource = payload.commentableResource,
 			resourceId = payload.commentableId,
-			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? {...comment, resolved: true} : comment);
+			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? { ...comment, resolved: true } : comment);
 
-		set(state.comments, payload.id, {...comment, resolved: true});
+		set(state.comments, payload.id, { ...comment, resolved: true });
 		set(state[resource][resourceId], 'comments', comments);
 	},
 	[types.UNRESOLVE_COMMENT] (state, payload) {
@@ -110,15 +111,15 @@ export const commentsMutations = {
 			comment = state.comments[payload.id],
 			resource = payload.commentableResource,
 			resourceId = payload.commentableId,
-			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? {...comment, resolved: false} : comment);
+			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? { ...comment, resolved: false } : comment);
 
-		set(state.comments, payload.id, {...comment, resolved: false});
+		set(state.comments, payload.id, { ...comment, resolved: false });
 		set(state[resource][resourceId], 'comments', comments);
 	},
 	[types.SET_COMMENTABLE_COMMENTS] (state, comments) {
 		const commentsResourceObj = {};
 
-		_.each(comments, (comment) => {
+		each(comments, (comment) => {
 			let resource = modelToResourceMap[comment.commentable_type],
 				resourceId = comment.commentable_id;
 
@@ -136,7 +137,7 @@ export const commentsMutations = {
 		Object.keys(commentsResourceObj).forEach(resource => {
 			Object.keys(commentsResourceObj[resource]).forEach(resourceId => {
 				const oldComments = state[resource][resourceId].comments || [];
-				const commentsIds = _.uniqBy(
+				const commentsIds = uniqBy(
 					oldComments.concat(Object.keys(commentsResourceObj[resource][resourceId])),
 					commentId => commentId.toString()
 				);
@@ -154,51 +155,51 @@ export const commentsMutations = {
 			...state.profiles, ...payload
 		});
 	},
-	[types.SET_COMMENTS_COMMENTABLE_COMMENT_DRAFT] (state, {commentableResource, content}) {
+	[types.SET_COMMENTS_COMMENTABLE_COMMENT_DRAFT] (state, { commentableResource, content }) {
 		set(state.drafts, commentableResource, content);
 	}
 };
 
 export const commentsActions = {
 	...reactionsActions,
-	addComment({commit, dispatch}, payload) {
-		const {comment} = payload;
+	addComment({ commit, dispatch }, payload) {
+		const { comment } = payload;
 		const withReaction = convertToReactable(comment);
-		dispatch('comments/setComments', {[withReaction.id]: withReaction}, {root:true});
+		dispatch('comments/setComments', { [withReaction.id]: withReaction }, { root:true });
 		commit(types.ADD_COMMENT, payload);
 	},
-	removeComment({commit}, payload) {
+	removeComment({ commit }, payload) {
 		commit(types.REMOVE_COMMENT, payload);
 	},
-	resolveComment({commit}, payload) {
+	resolveComment({ commit }, payload) {
 		_resolveComment(payload.id)
 			.then(() => commit(types.RESOLVE_COMMENT, payload));
 	},
-	unresolveComment({commit}, payload) {
+	unresolveComment({ commit }, payload) {
 		_resolveComment(payload.id, false)
 			.then(() => commit(types.UNRESOLVE_COMMENT, payload));
 	},
-	setComments({commit}, {included, ...comments}) {
+	setComments({ commit }, { included, ...comments }) {
 		commit(types.SET_COMMENTS, comments);
 	},
-	setProfiles({commit}, payload) {
+	setProfiles({ commit }, payload) {
 		commit(types.SET_COMMENTS_PROFILES, payload);
 	},
-	async setupComments({dispatch}, {resource, ...args}) {
+	async setupComments({ dispatch }, { resource, ...args }) {
 		const model = getModelByResource(resource);
 		try {
-			await dispatch('fetchComments', {commentable_type: model, ...args});
+			await dispatch('fetchComments', { commentable_type: model, ...args });
 		} catch (e) {
 			$wnl.logger.error(e);
 		}
 	},
-	async fetchComments({commit, dispatch}, {...args}) {
-		const response = await _fetchComments({...args});
+	async fetchComments({ commit, dispatch }, { ...args }) {
+		const response = await _fetchComments({ ...args });
 		if (!response.data.hasOwnProperty('included')) {
 			return;
 		}
 
-		const {included, ...comments} = response.data;
+		const { included, ...comments } = response.data;
 		const serializedComments = {};
 		Object.values(comments).map(comment => {
 			serializedComments[comment.id] = comment;

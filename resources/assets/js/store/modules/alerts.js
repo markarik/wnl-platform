@@ -1,4 +1,4 @@
-import {set} from 'vue';
+import { set } from 'vue';
 import * as types from 'js/store/mutations-types';
 import uuidv1 from 'uuid/v1';
 
@@ -18,7 +18,7 @@ export const mutations = {
 	[types.GLOBAL_ALERTS_ADD_ALERT] (state, alert) {
 		set(state, 'alerts', [...state.alerts, alert]);
 	},
-	[types.GLOBAL_ALERTS_CLOSE_ALERT] (state, {id}) {
+	[types.GLOBAL_ALERTS_CLOSE_ALERT] (state, { id }) {
 		const filteredList = state.alerts.filter(alert => alert.id !== id);
 		set(state, 'alerts', filteredList);
 	},
@@ -26,20 +26,20 @@ export const mutations = {
 
 // Actions
 export const actions = {
-	addAlert({commit}, paylaod) {
+	addAlert({ commit }, paylaod) {
 		const id = uuidv1();
-		commit(types.GLOBAL_ALERTS_ADD_ALERT, {id, ...paylaod});
+		commit(types.GLOBAL_ALERTS_ADD_ALERT, { id, ...paylaod });
 		return id;
 	},
-	closeAlert({commit}, payload) {
+	closeAlert({ commit }, payload) {
 		commit(types.GLOBAL_ALERTS_CLOSE_ALERT, payload);
 	},
-	addAutoDismissableAlert({dispatch}, {timeout, ...payload}) {
+	addAutoDismissableAlert({ dispatch }, { timeout, ...payload }) {
 		const timeoutWithDefault = timeout || 5000;
 		dispatch('addAlert', payload)
 			.then(id => {
 				setTimeout(() => {
-					dispatch('closeAlert', {id});
+					dispatch('closeAlert', { id });
 				}, timeoutWithDefault);
 			});
 	},

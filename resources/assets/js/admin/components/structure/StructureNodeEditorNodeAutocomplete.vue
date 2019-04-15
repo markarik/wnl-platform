@@ -46,8 +46,8 @@
 </style>
 
 <script>
-import {mapState, mapGetters} from 'vuex';
-import {uniqBy} from 'lodash';
+import { mapState, mapGetters } from 'vuex';
+import { uniqBy } from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 

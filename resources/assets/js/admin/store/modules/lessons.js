@@ -54,8 +54,8 @@ const actions = {
 			$wnl.logger.error(reason);
 		});
 	},
-	async create({commit}, name) {
-		const {data: lesson} = await axios.post(getApiUrl('lessons'), {
+	async create({ commit }, name) {
+		const { data: lesson } = await axios.post(getApiUrl('lessons'), {
 			name
 		});
 		commit(types.ADD_LESSON, lesson);

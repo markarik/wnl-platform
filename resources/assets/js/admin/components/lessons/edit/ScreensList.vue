@@ -51,7 +51,8 @@
 </style>
 
 <script>
-import _ from 'lodash';
+import axios from 'axios';
+import { forEach } from 'lodash';
 
 import { getApiUrl } from 'js/utils/env';
 import { alerts } from 'js/mixins/alerts';
@@ -91,7 +92,7 @@ export default {
 			this.loading = true;
 
 			let promises = [];
-			_.forEach(this.screens, (screen, index) => {
+			forEach(this.screens, (screen, index) => {
 				promises.push(
 					axios.patch(getApiUrl(`screens/${screen.id}`), {
 						order_number: index

@@ -49,8 +49,8 @@ export default {
 							['bold', 'italic', 'underline', 'link'],
 							[{ color: fontColors }],
 							['clean'],
-							[{'align': []}],
-							[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+							[{ 'align': [] }],
+							[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
 							['blockquote', 'video'],
 						]
 					},

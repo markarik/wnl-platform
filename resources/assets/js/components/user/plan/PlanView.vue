@@ -63,7 +63,7 @@
 </style>
 
 <script>
-import {mapGetters, mapState} from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 import LessonsPlanner from './LessonsPlanner';
 import PlannerGuide from './PlannerGuide';

@@ -41,11 +41,11 @@ export const notification = {
 				const slide = route.params.slide;
 
 				let contextInfo = this.$t('notifications.context.lesson', {
-					lesson: truncate(this.getLesson(lessonId).name, {length: 30}),
+					lesson: truncate(this.getLesson(lessonId).name, { length: 30 }),
 				});
 
 				if (get(this.message, 'objects.type') === 'slide' && slide) {
-					contextInfo = `${this.$t('notifications.context.slide', {slide})} ${contextInfo}`;
+					contextInfo = `${this.$t('notifications.context.slide', { slide })} ${contextInfo}`;
 				}
 
 				return contextInfo;
@@ -86,7 +86,7 @@ export const notification = {
 			if (!this.message.objects) return false;
 
 			if (this.objectTextLength > 0) {
-				return decode(truncate(this.message.objects.text, {length: this.objectTextLength}));
+				return decode(truncate(this.message.objects.text, { length: this.objectTextLength }));
 			}
 
 			return decode(this.message.objects.text);
@@ -95,16 +95,16 @@ export const notification = {
 			if (!this.message.subject) return false;
 
 			if (this.objectTextLength > 0) {
-				return decode(truncate(this.message.subject.text, {length: this.subjectTextLength}));
+				return decode(truncate(this.message.subject.text, { length: this.subjectTextLength }));
 			}
 
 			return decode(this.message.subject.text);
 		},
 		hasDynamicContext() {
-			return !!_.get(this.message, 'context.dynamic');
+			return !!get(this.message, 'context.dynamic');
 		},
 		dynamicRoute() {
-			const {query, dynamic} = this.routeContext;
+			const { query, dynamic } = this.routeContext;
 
 			return {
 				name: 'dynamicContextMiddleRoute',

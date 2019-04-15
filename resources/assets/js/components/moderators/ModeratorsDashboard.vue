@@ -143,12 +143,13 @@
 </style>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
-import {nextTick} from 	'vue';
+import axios from 'axios';
+import { mapActions, mapGetters } from 'vuex';
+import { nextTick } from 	'vue';
 
 import { getApiUrl } from 'js/utils/env';
-import {scrollToTop} from 'js/utils/animations';
-import {FILTER_TYPES, buildFiltersByPath, parseFilters} from 'js/services/apiFiltering';
+import { scrollToTop } from 'js/utils/animations';
+import { FILTER_TYPES, buildFiltersByPath, parseFilters } from 'js/services/apiFiltering';
 
 import MainNav from 'js/components/MainNav';
 import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed';
@@ -197,7 +198,7 @@ export default {
 		...mapGetters(['currentUserId']),
 		chatRooms() {
 			return [
-				{name: '#moderatorzy', channel: 'moderatorzy'},
+				{ name: '#moderatorzy', channel: 'moderatorzy' },
 			];
 		},
 		accordionConfig() {
@@ -225,11 +226,11 @@ export default {
 	methods: {
 		...mapActions(['toggleChat', 'toggleOverlay']),
 		...mapActions('tasks', ['pullTasks']),
-		onItemToggled({path, selected}) {
+		onItemToggled({ path, selected }) {
 			this.selectedByTypeFilters[path] = selected;
 			this.fetchTasks();
 		},
-		onTagSelect({path, selected}) {
+		onTagSelect({ path, selected }) {
 			this.selectedByLabelFilters[path] = selected;
 			this.fetchTasks();
 		},
@@ -246,7 +247,7 @@ export default {
 
 			if (this.autocompleteUser) {
 				parsedFilters.push({
-					'task-assignee': {user_id: this.autocompleteUser.user_id}
+					'task-assignee': { user_id: this.autocompleteUser.user_id }
 				});
 			}
 
@@ -260,12 +261,12 @@ export default {
 				order
 			};
 		},
-		fetchTasks({...params}) {
-			this.toggleOverlay({source: 'moderatorsFeed', display: true});
-			this.pullTasks({...this.buildRequestParams(), ...params})
+		fetchTasks({ ...params }) {
+			this.toggleOverlay({ source: 'moderatorsFeed', display: true });
+			this.pullTasks({ ...this.buildRequestParams(), ...params })
 				.then(() => {
 					scrollToTop();
-					this.toggleOverlay({source: 'moderatorsFeed', display: false});
+					this.toggleOverlay({ source: 'moderatorsFeed', display: false });
 				});
 		},
 		onRefresh() {
@@ -282,7 +283,7 @@ export default {
 					dir: 'desc',
 					isActive: true,
 					order: (dir = 'desc') => {
-						return {'created_at': dir};
+						return { 'created_at': dir };
 					}
 				},
 				{
@@ -290,7 +291,7 @@ export default {
 					dir: 'desc',
 					isActive: false,
 					order: (dir = 'desc') => {
-						return {'updated_at': dir};
+						return { 'updated_at': dir };
 					}
 				}
 			];
@@ -299,7 +300,7 @@ export default {
 			return [
 				{
 					group: 'task-assignee',
-					value: () => ({user_id: this.currentUserId}),
+					value: () => ({ user_id: this.currentUserId }),
 					isActive: true,
 					name: this.$t('tasks.quickFilters.filters.my')
 				},
@@ -314,7 +315,7 @@ export default {
 				},
 				{
 					group: 'task-assignee',
-					value: () => ({user_id: null}),
+					value: () => ({ user_id: null }),
 					isActive: false,
 					name: this.$t('tasks.quickFilters.filters.unassigned')
 				}
@@ -392,7 +393,7 @@ export default {
 	mounted() {
 		document.addEventListener('click', this.clickHandler);
 
-		this.toggleOverlay({source: 'moderatorsFeed', display: true});
+		this.toggleOverlay({ source: 'moderatorsFeed', display: true });
 
 		const promisedTasks = this.pullTasks(this.buildRequestParams());
 		const promisedFilters = axios.post(getApiUrl('tasks/.filterList'), {
@@ -409,9 +410,9 @@ export default {
 				this.subjectTypeFilters = this.parseSubjectTypeFilters(filtersList.data['task-subject_type']);
 				this.selectedByTypeFilters = this.buildByTypeFiltering();
 
-				this.toggleOverlay({source: 'moderatorsFeed', display: false});
+				this.toggleOverlay({ source: 'moderatorsFeed', display: false });
 			}).catch(error => {
-				this.toggleOverlay({source: 'moderatorsFeed', display: false});
+				this.toggleOverlay({ source: 'moderatorsFeed', display: false });
 				this.$store.dispatch('addAlert', {
 					text: this.$t('ui.error.somethingWentWrongUnofficial'),
 					type: 'error'

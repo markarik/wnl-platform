@@ -1,15 +1,15 @@
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 // TODO: Mar 9, 2017 - Use config when it's ready
 export const STATUS_IN_PROGRESS = 'in-progress';
 export const STATUS_COMPLETE = 'complete';
 
-const setCourseProgress = ({courseId, profileId}, value) => {
+const setCourseProgress = ({ courseId, profileId }, value) => {
 	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}`), value);
 };
 
-const setLessonProgress = ({courseId, lessonId, profileId}, value) => {
+const setLessonProgress = ({ courseId, lessonId, profileId }, value) => {
 	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}/lesson/${lessonId}`), {
 		lesson: value
 	});
@@ -25,7 +25,7 @@ const completeSection = (lessonState, payload) => {
 };
 
 const completeSubsection = (lessonState, payload) => {
-	const {sectionId, screenId, subsectionId} = payload;
+	const { sectionId, screenId, subsectionId } = payload;
 	const stateWithScreen = _getScreenProgress(lessonState, payload);
 	const stateWithSections = _getSectionProgress(stateWithScreen, payload);
 
@@ -49,7 +49,7 @@ const completeSubsection = (lessonState, payload) => {
 	return stateWithSections;
 };
 
-const completeScreen = (lessonState, {screenId, route, ...payload}) => {
+const completeScreen = (lessonState, { screenId, route, ...payload }) => {
 	lessonState.route = route;
 	lessonState.screens = lessonState.screens || {};
 	lessonState.screens[screenId] = lessonState.screens[screenId] || {};
@@ -108,18 +108,18 @@ const startLesson = (courseState, payload) => {
 	return updatedLessonState;
 };
 
-const getCourseProgress = async ({courseId, profileId}) => {
+const getCourseProgress = async ({ courseId, profileId }) => {
 	const { data: { lessons } = {} } = await axios.get(getApiUrl(`users/${profileId}/state/course/${courseId}`));
 
 	return { lessons };
 };
 
-const getLessonProgress = async ({courseId, lessonId, profileId}) => {
+const getLessonProgress = async ({ courseId, lessonId, profileId }) => {
 	const { data: { lesson } = {} } = await axios.get(getApiUrl(`users/${profileId}/state/course/${courseId}/lesson/${lessonId}`));
 	return lesson;
 };
 
-const _getScreenProgress = (lessonState = {}, {route, screenId}) => {
+const _getScreenProgress = (lessonState = {}, { route, screenId }) => {
 	const updatedState = {
 		screens: {},
 		...lessonState,
@@ -135,8 +135,8 @@ const _getScreenProgress = (lessonState = {}, {route, screenId}) => {
 	return updatedState;
 };
 
-const _getSectionProgress = (lessonState = {}, {screenId, sectionId}) => {
-	const updatedState = {...lessonState};
+const _getSectionProgress = (lessonState = {}, { screenId, sectionId }) => {
+	const updatedState = { ...lessonState };
 
 	if (!updatedState.screens[screenId].sections) {
 		updatedState.screens[screenId].sections = {

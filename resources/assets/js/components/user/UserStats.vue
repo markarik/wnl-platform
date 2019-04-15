@@ -62,7 +62,7 @@ import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/Satisfact
 
 export default {
 	name: 'UserStats',
-	components: {WnlSatisfactionGuaranteeModal},
+	components: { WnlSatisfactionGuaranteeModal },
 	mixins: [emits_events],
 	data() {
 		return {
@@ -72,14 +72,14 @@ export default {
 	computed: {
 		...mapGetters(['isMobileProfile', 'currentUserStats']),
 		timeSpent() {
-			return moment.duration({...this.currentUserStats.time}).asMinutes();
+			return moment.duration({ ...this.currentUserStats.time }).asMinutes();
 		},
 		lessonsStartedPerc() {
-			const {started, total} = this.currentUserStats.lessons;
+			const { started, total } = this.currentUserStats.lessons;
 			return Math.floor(started / total * 100);
 		},
 		lessonsCompletedPerc() {
-			const {total, completed} = this.currentUserStats.lessons;
+			const { total, completed } = this.currentUserStats.lessons;
 			return Math.floor(completed / total * 100);
 		},
 		lessonsTotal(){
@@ -92,7 +92,7 @@ export default {
 			return this.currentUserStats.lessons.started;
 		},
 		questionsSolvedPerc() {
-			const {total, solved} = this.currentUserStats.quiz_questions;
+			const { total, solved } = this.currentUserStats.quiz_questions;
 			return Math.floor(solved / total * 100);
 		},
 		questionsTotal() {
@@ -116,13 +116,13 @@ export default {
 					features: features.progress.value,
 					action: features.progress.actions.erase_progress.value
 				});
-				this.toggleOverlay({source: 'userStats', display: true});
+				this.toggleOverlay({ source: 'userStats', display: true });
 				await this.deleteProgress();
 				await Promise.all([this.fetchCurrentUserStats(), this.setupCourse()]);
 			} catch (error) {
 				$wnl.logger.error(error);
 			} finally {
-				this.toggleOverlay({source: 'userStats', display: false});
+				this.toggleOverlay({ source: 'userStats', display: false });
 			}
 		}
 	},

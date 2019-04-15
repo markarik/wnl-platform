@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 import WnlStructureNodeEditorNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
 import WnlStructureNodeEditorStructurableAutocomplete from 'js/admin/components/structure/StructureNodeEditorStructurableAutocomplete';

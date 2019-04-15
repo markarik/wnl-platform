@@ -45,7 +45,7 @@ export default {
 			return this.title || 'Usuń';
 		},
 		targetText() {
-			return `Chcesz usunąć ${this.target}?`;
+			return `Chcesz usunąć ${this.target}?`;
 		},
 	},
 	methods: {

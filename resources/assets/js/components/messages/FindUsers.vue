@@ -53,8 +53,8 @@
 <script>
 import _ from 'lodash';
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
-import {KEYS} from 'js/consts/keys';
+import { getApiUrl } from 'js/utils/env';
+import { KEYS } from 'js/consts/keys';
 
 export default {
 	name: 'FindUsers',
@@ -67,7 +67,7 @@ export default {
 		};
 	},
 	methods: {
-		onInput: _.debounce(function ({target: {value}}) {
+		onInput: _.debounce(function ({ target: { value } }) {
 			if (value.length === 0) return;
 
 			this.loadingStart();

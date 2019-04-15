@@ -100,7 +100,7 @@ export default {
 				return this.value.resources.map(flashcardsSet => flashcardsSet.id);
 			},
 			set: function (flashcardsSetIds) {
-				this.$emit('input', { resources: flashcardsSetIds.map(id => ({id, name: 'flashcards_sets'})) });
+				this.$emit('input', { resources: flashcardsSetIds.map(id => ({ id, name: 'flashcards_sets' })) });
 			}
 		},
 		flashcardsSetsAutocompleteItems: function() {

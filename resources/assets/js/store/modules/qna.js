@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import axios from 'axios';
 import * as types from 'js/store/mutations-types';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import { set, delete as destroy } from 'vue';
 import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions';
-import {commentsGetters, commentsMutations, commentsActions, commentsState} from 'js/store/modules/comments';
+import { commentsGetters, commentsMutations, commentsActions, commentsState } from 'js/store/modules/comments';
 
 const include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles';
 const discussionsInclude = 'qna_questions,qna_questions.profiles,qna_questions.reactions,qna_questions.qna_answers.profiles,qna_questions.qna_answers.comments,qna_questions.qna_answers.comments.profiles';
@@ -39,13 +39,13 @@ function _getQuestionsForDiscussion(discussionId) {
 	});
 }
 
-function _handleGetQuestionsSuccess({commit, dispatch}, {data}) {
+function _handleGetQuestionsSuccess({ commit, dispatch }, { data }) {
 	commit(types.QNA_DESTROY);
 
 	if (!_.isUndefined(data.included)) {
 		commit(types.UPDATE_INCLUDED, data.included);
 
-		data.included.comments && dispatch('comments/setComments', data.included.comments, {root:true});
+		data.included.comments && dispatch('comments/setComments', data.included.comments, { root:true });
 
 		destroy(data, 'included');
 		commit(types.QNA_SET_QUESTIONS, data);
@@ -224,13 +224,13 @@ const mutations = {
 		let id = payload.questionId,
 			question = state.qna_questions[id];
 
-		set(state.qna_questions, id, {...question, resolved: true});
+		set(state.qna_questions, id, { ...question, resolved: true });
 	},
 	[types.QNA_UNRESOLVE_QUESTION] (state, payload) {
 		let id = payload.questionId,
 			question = state.qna_questions[id];
 
-		set(state.qna_questions, id, {...question, resolved: false});
+		set(state.qna_questions, id, { ...question, resolved: false });
 	},
 	[types.QNA_UPDATE_ANSWER] (state, payload) {
 		let id = payload.answerId,
@@ -273,17 +273,17 @@ const mutations = {
 const actions = {
 	...reactionsActions,
 	...commentsActions,
-	changeSorting({commit}, sorting) {
+	changeSorting({ commit }, sorting) {
 		commit(types.QNA_CHANGE_SORTING, sorting);
 	},
 
-	fetchLatestQuestions({commit, dispatch}, limit = 10) {
+	fetchLatestQuestions({ commit, dispatch }, limit = 10) {
 		commit(types.IS_LOADING, true);
 
 		return new Promise((resolve, reject) => {
 			_getQuestionsLatest(limit)
 				.then((response) => {
-					_handleGetQuestionsSuccess({commit, dispatch}, response);
+					_handleGetQuestionsSuccess({ commit, dispatch }, response);
 					resolve();
 				})
 				.catch((error) => {
@@ -293,20 +293,20 @@ const actions = {
 		});
 	},
 
-	async fetchQuestionsForDiscussion({commit, dispatch}, discussionId) {
+	async fetchQuestionsForDiscussion({ commit, dispatch }, discussionId) {
 		commit(types.IS_LOADING, true);
 
 		try {
-			const {data} = await _getQuestionsForDiscussion(discussionId);
+			const { data } = await _getQuestionsForDiscussion(discussionId);
 			commit(types.QNA_DESTROY);
 
 
 			if (!_.isUndefined(data.included)) {
-				const {qna_questions, ...included} = data.included;
+				const { qna_questions, ...included } = data.included;
 				commit(types.UPDATE_INCLUDED, included);
 				commit(types.QNA_SET_QUESTIONS, qna_questions);
 
-				included.comments && dispatch('comments/setComments', included.comments, {root:true});
+				included.comments && dispatch('comments/setComments', included.comments, { root:true });
 			}
 
 			commit(types.IS_LOADING, false);
@@ -315,13 +315,13 @@ const actions = {
 		}
 	},
 
-	fetchQuestionsByTagName({commit, dispatch}, {tagName, ids}) {
+	fetchQuestionsByTagName({ commit, dispatch }, { tagName, ids }) {
 		commit(types.IS_LOADING, true);
 
 		return new Promise((resolve, reject) => {
 			_getQuestionsByTagName(tagName, ids)
 				.then((response) => {
-					_handleGetQuestionsSuccess({commit, dispatch}, response);
+					_handleGetQuestionsSuccess({ commit, dispatch }, response);
 					resolve();
 				})
 				.catch((error) => {
@@ -331,7 +331,7 @@ const actions = {
 		});
 	},
 
-	fetchQuestion({commit}, questionId) {
+	fetchQuestion({ commit }, questionId) {
 		return new Promise((resolve, reject) => {
 			_getAnswers(questionId)
 				.then((response) => {
@@ -340,7 +340,7 @@ const actions = {
 
 					commit(types.UPDATE_INCLUDED, included);
 					delete(data.included);
-					commit(types.QNA_UPDATE_QUESTION, {questionId, data});
+					commit(types.QNA_UPDATE_QUESTION, { questionId, data });
 					resolve();
 				})
 				.catch((error) => {
@@ -349,21 +349,21 @@ const actions = {
 				});
 		});
 	},
-	removeQuestion({commit}, questionId) {
+	removeQuestion({ commit }, questionId) {
 		return new Promise((resolve) => {
-			commit(types.QNA_REMOVE_QUESTION, {questionId});
+			commit(types.QNA_REMOVE_QUESTION, { questionId });
 			resolve();
 		});
 	},
-	resolveQuestion({commit}, questionId) {
+	resolveQuestion({ commit }, questionId) {
 		return _resolveQuestion(questionId)
-			.then(() => commit(types.QNA_RESOLVE_QUESTION, {questionId}));
+			.then(() => commit(types.QNA_RESOLVE_QUESTION, { questionId }));
 	},
-	unresolveQuestion({commit}, questionId) {
+	unresolveQuestion({ commit }, questionId) {
 		return _resolveQuestion(questionId, false)
-			.then(() => commit(types.QNA_UNRESOLVE_QUESTION, {questionId}));
+			.then(() => commit(types.QNA_UNRESOLVE_QUESTION, { questionId }));
 	},
-	removeAnswer({commit}, payload) {
+	removeAnswer({ commit }, payload) {
 		return new Promise((resolve) => {
 			commit(types.QNA_REMOVE_ANSWER, {
 				questionId: payload.questionId,
@@ -372,13 +372,13 @@ const actions = {
 			resolve();
 		});
 	},
-	destroyQna({commit}) {
+	destroyQna({ commit }) {
 		commit(types.QNA_DESTROY);
 	},
-	setUserQnaQuestions({commit, dispatch}, {included, ...qnaQuestions}) {
+	setUserQnaQuestions({ commit, dispatch }, { included, ...qnaQuestions }) {
 		commit(types.QNA_SET_QUESTIONS, qnaQuestions);
 		commit(types.UPDATE_INCLUDED, included);
-		included && included.comments && dispatch('comments/setComments', included.comments, {root:true});
+		included && included.comments && dispatch('comments/setComments', included.comments, { root:true });
 	},
 };
 

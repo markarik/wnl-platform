@@ -74,7 +74,7 @@
 import WnlModal from 'js/components/global/Modal';
 
 export default {
-	components: {WnlModal},
+	components: { WnlModal },
 	props: {
 		visible: {
 			type: Boolean,

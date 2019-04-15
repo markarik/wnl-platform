@@ -21,7 +21,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 import WnlScreenItem from 'js/components/course/navigation/ScreenItem';
 
 export default {

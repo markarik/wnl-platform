@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 import WnlTaxonomyTermEditorCurrentTerm from 'js/admin/components/taxonomies/TaxonomyTermEditorCurrentTerm';
 
@@ -36,7 +36,7 @@ export default {
 		WnlTaxonomyTermEditorCurrentTerm,
 	},
 	computed: {
-		...mapGetters('taxonomyTerms', {termById: 'nodeById'}),
+		...mapGetters('taxonomyTerms', { termById: 'nodeById' }),
 		...mapState('taxonomyTerms', {
 			isSaving: 'isSaving',
 			selectedTerms: 'selectedNodes'

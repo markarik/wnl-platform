@@ -73,7 +73,7 @@ export default {
 		}
 	},
 	methods: {
-		changeOrder({activeSortColumnName, sortDirection}) {
+		changeOrder({ activeSortColumnName, sortDirection }) {
 			this.sortDirection = sortDirection;
 			this.activeSortColumnName = activeSortColumnName;
 		},

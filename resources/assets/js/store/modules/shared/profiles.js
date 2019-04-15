@@ -10,7 +10,7 @@ const profiles = {
 	},
 
 	actions: {
-		setProfiles({commit}, profiles) {
+		setProfiles({ commit }, profiles) {
 			commit(types.PROFILES_SET, profiles);
 		}
 

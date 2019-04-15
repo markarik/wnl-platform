@@ -1,5 +1,5 @@
 import * as types from 'js/store/mutations-types';
-import {set} from 'vue';
+import { set } from 'vue';
 
 const pagination = {
 	state () {
@@ -17,7 +17,7 @@ const pagination = {
 	},
 
 	actions: {
-		setPaginationMeta({commit}, {current_page, has_more, last_page, per_page, total}) {
+		setPaginationMeta({ commit }, { current_page, has_more, last_page, per_page, total }) {
 			commit(types.PAGINATION_SET_META, {
 				currentPage: current_page,
 				hasMore: has_more,
@@ -26,8 +26,8 @@ const pagination = {
 				total
 			});
 		},
-		changePaginationPage({commit}, page) {
-			commit(types.PAGINATION_SET_CURRENT_PAGE, {page});
+		changePaginationPage({ commit }, page) {
+			commit(types.PAGINATION_SET_CURRENT_PAGE, { page });
 		}
 	},
 
@@ -35,7 +35,7 @@ const pagination = {
 		[types.PAGINATION_SET_META](state, payload) {
 			Object.assign(state, payload);
 		},
-		[types.PAGINATION_SET_CURRENT_PAGE](state, {page}) {
+		[types.PAGINATION_SET_CURRENT_PAGE](state, { page }) {
 			set(state, 'currentPage', page);
 			set(state, 'hasMore', page === state.lastPage);
 		}

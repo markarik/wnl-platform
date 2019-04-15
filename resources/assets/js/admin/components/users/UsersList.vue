@@ -72,7 +72,7 @@ export default {
 	},
 	computed: {
 		users() {
-			const {included, ...users} = this.usersResponse;
+			const { included, ...users } = this.usersResponse;
 			return Object.values(users).map(user => ({
 				...user,
 				roles: (user.roles || []).map(roleId => included.roles[roleId])

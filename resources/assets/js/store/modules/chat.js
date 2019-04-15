@@ -1,4 +1,5 @@
-import {getApiUrl} from 'js/utils/env';
+import axios from 'axios';
+import { getApiUrl } from 'js/utils/env';
 
 // Initial state
 const state = {
@@ -17,7 +18,7 @@ const getters = {
 
 // Actions
 const actions = {
-	saveMentions({}, data) {
+	saveMentions(_, data) {
 		return axios.post(getApiUrl('events/mentions'), data);
 	}
 };

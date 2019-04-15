@@ -180,7 +180,7 @@
 </style>
 
 <script>
-import { camelCase } from 'lodash';
+import { camelCase, get } from 'lodash';
 import { mapActions, mapGetters } from 'vuex';
 
 import Avatar from 'js/components/global/Avatar';
@@ -231,8 +231,8 @@ export default {
 		object() {
 			const objects = this.message.objects;
 			const subject = this.message.subject;
-			const type = !!objects ? objects.type : subject.type;
-			const choice = !!objects ? this.currentUserId === objects.author ? 2 : 1 : 1;
+			const type = objects ? objects.type : subject.type;
+			const choice = objects ? this.currentUserId === objects.author ? 2 : 1 : 1;
 
 			return this.$tc(`notifications.objects.${camelCase(type)}`, choice);
 		},
@@ -249,11 +249,11 @@ export default {
 			this.loading = true;
 
 			if (this.isRead) {
-				return this.markAsUnread({notification: this.message, channel: this.channel})
+				return this.markAsUnread({ notification: this.message, channel: this.channel })
 					.then(() => this.loading = false);
 			}
 
-			return this.markAsRead({notification: this.message, channel: this.channel})
+			return this.markAsRead({ notification: this.message, channel: this.channel })
 				.then(() => this.loading = false);
 		},
 		dispatchMarkAsSeen() {
@@ -262,7 +262,7 @@ export default {
 			this.loading = true;
 
 			if (!this.isSeen) {
-				this.markAsSeen({notification: this.message, channel: this.channel})
+				this.markAsSeen({ notification: this.message, channel: this.channel })
 					.then(() => {
 						this.loading = false;
 					});
@@ -271,7 +271,7 @@ export default {
 			}
 		},
 		trackNotificationClick() {
-			const lessonId = _.get(this.routeContext, 'params.lessonId');
+			const lessonId = get(this.routeContext, 'params.lessonId');
 			const payload = {
 				feature: context.dashboard.features.news_feed.value,
 				action: context.dashboard.features.news_feed.actions.click_link.value,

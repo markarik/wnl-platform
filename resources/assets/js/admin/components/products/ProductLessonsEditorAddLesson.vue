@@ -47,7 +47,7 @@
 </style>
 
 <script>
-import {mapActions, mapState} from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlDatepicker from 'js/components/global/Datepicker';
@@ -87,7 +87,7 @@ export default {
 			}
 
 			return this.lessons
-				.filter(lesson => !this.productLessons.find(({lesson_id}) => lesson_id === lesson.id)
+				.filter(lesson => !this.productLessons.find(({ lesson_id }) => lesson_id === lesson.id)
 					&& lesson.name.toLowerCase().startsWith(this.lessonInput.toLowerCase())
 				)
 				.slice(0, 10);

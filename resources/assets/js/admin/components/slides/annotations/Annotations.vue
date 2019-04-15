@@ -77,23 +77,23 @@
 </style>
 
 <script>
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 import WnlAnnotationsList from './AnnotationsList';
 import WnlAnnotationsEditor from './AnnotationsEditor';
 import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
 export default {
-	components: {WnlAnnotationsList, WnlAnnotationsEditor, WnlPaginatedList},
+	components: { WnlAnnotationsList, WnlAnnotationsEditor, WnlPaginatedList },
 	data() {
 		return {
 			requestParams: {
 				include: 'keywords,tags'
 			},
 			searchAvailableFields: [
-				{value: 'id', title: 'ID'},
-				{value: 'title', title: 'Tytuł'},
-				{value: 'description', title: 'Treść'},
-				{value: 'tags.name', title: 'Nazwa Taga'},
+				{ value: 'id', title: 'ID' },
+				{ value: 'title', title: 'Tytuł' },
+				{ value: 'description', title: 'Treść' },
+				{ value: 'tags.name', title: 'Nazwa Taga' },
 			],
 			tabs: {
 				list: {

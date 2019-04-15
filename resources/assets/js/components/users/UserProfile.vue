@@ -455,9 +455,7 @@ export default {
 			return allQuestions;
 		},
 		async loadQuestionsForBestAnswers() {
-			const questionsIds = this.bestAnswers.map((element) => {
-				return element.qna_questions;
-			});
+			const questionsIds = this.bestAnswers.map(element => element.qna_questions);
 
 			const { data } = await axios.post(getApiUrl('qna_questions/byIds'), {
 				ids: questionsIds,

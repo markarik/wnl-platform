@@ -101,8 +101,8 @@ class SlideshowImport extends Command
 	 */
 	private function saveScreen(array $screenData, Slideshow $slideshow, Lesson $lesson): Screen
 	{
-		$data['screen']['meta']['resources'][0]['id'] = $slideshow->id;
-		$data['screen']['lessonId'] = $lesson->id;
+		$screenData['meta']['resources'][0]['id'] = $slideshow->id;
+		$screenData['lesson_id'] = $lesson->id;
 		unset($screenData['id']);
 		return Screen::create($screenData);
 	}
@@ -172,15 +172,16 @@ class SlideshowImport extends Command
 		foreach ($presentables as $presentable) {
 			unset($presentable['id']);
 			$presentable['slide_id'] = $this->slides->get($presentable['slide_id'])->id;
-			if ($presentable['presentable_type'] === 'App\\Models\\' . Slideshow::class) {
+			if ($presentable['presentable_type'] === Slideshow::class) {
 				$presentable['presentable_id'] = $slideshow->id;
 			}
-			if ($presentable['presentable_type'] === 'App\\Models\\' . Section::class) {
+			if ($presentable['presentable_type'] === Section::class) {
 				$presentable['presentable_id'] = $this->sections->get($presentable['presentable_id'])->id;
 			}
-			if ($presentable['presentable_type'] === 'App\\Models\\' . Subsection::class) {
+			if ($presentable['presentable_type'] === Subsection::class) {
 				$presentable['presentable_id'] = $this->subsections->get($presentable['presentable_id'])->id;
 			}
+
 			DB::table('presentables')->insert($presentable);
 		}
 	}

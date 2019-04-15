@@ -48,8 +48,8 @@ class SlideshowExport extends Command
 		}
 
 		$slideshow = $screen->slideshow;
-		$slides = $slideshow->slides;
-		$sections = $screen->sections;
+		$slides = $slideshow->slides()->get();
+		$sections = $screen->sections()->get();
 		$subsections = $this->getSubsections($sections);
 		$presentables = collect()
 			->merge($this->getPresentables([$slideshow->id], Slideshow::class))
@@ -103,9 +103,8 @@ class SlideshowExport extends Command
 	private function getPresentables(array $ids, string $modelName):Collection
 	{
 		return DB::table('presentables')
-			->where('presentable_type', 'App\\Models\\' . $modelName)
+			->where('presentable_type', $modelName)
 			->whereIn('presentable_id', $ids)
-			->get()
-			->except(['id']);
+			->get();
 	}
 }

@@ -14,26 +14,26 @@
 			<header class="question-form-header">
 				<h4 v-if="isEdit">
 					Edycja pytania
-					<strong>{{quizQuestionId}}</strong>
-					<strong class="has-text-danger" v-if="questionIsDeleted">Usunięte</strong>
+						<strong>{{quizQuestionId}}</strong>
+						<strong class="has-text-danger" v-if="questionIsDeleted">Usunięte</strong>
 				</h4>
 				<h4 v-else>Tworzenie nowego pytania</h4>
 				<div class="field save-button-field">
 					<div class="control">
 						<button
-								v-if="isEdit && !questionIsDeleted"
-								class="button is-danger"
-								type="button"
-								@click="onDelete"
+							v-if="isEdit && !questionIsDeleted"
+							class="button is-danger"
+							type="button"
+							@click="onDelete"
 						>
 							<span class="icon"><i class="fa fa-trash"></i></span>
 							<span>Usuń</span>
 						</button>
 						<button
-								v-if="isEdit && questionIsDeleted"
-								class="button is-warning"
-								type="button"
-								@click="onUndelete"
+							v-if="isEdit && questionIsDeleted"
+							class="button is-warning"
+							type="button"
+							@click="onUndelete"
 						>
 							<span class="icon"><i class="fa fa-undo"></i></span>
 							<span>Przywróć</span>
@@ -91,14 +91,14 @@
 			</fieldset>
 			<fieldset class="question-form-fieldset">
 				<label class="label checkbox-label">
-						<span>Czy zagwarantować kolejność odpowiedzi ?</span>
-						<input
-							type="checkbox"
-							name="preserveOrder"
-							class="preserve-order"
-							:checked="preserveOrder"
-						>
-					</label>
+					<span>Czy zagwarantować kolejność odpowiedzi ?</span>
+					<input
+						type="checkbox"
+						name="preserveOrder"
+						class="preserve-order"
+						:checked="preserveOrder"
+					>
+				</label>
 			</fieldset>
 			<div
 				class="field answer-field"
@@ -106,27 +106,27 @@
 				:data-id="answer.id"
 				:key="answer.id"
 			>
-			<fieldset class="question-form-fieldset">
-				<legend class="question-form-legend">Odpowiedź {{index + 1}}</legend>
-				<div class="control answer-control">
-					<label class="label checkbox-label">
-						<span>Prawidłowa?</span>
+				<fieldset class="question-form-fieldset">
+					<legend class="question-form-legend">Odpowiedź {{index + 1}}</legend>
+					<div class="control answer-control">
+						<label class="label checkbox-label">
+							<span>Prawidłowa?</span>
+							<input
+								type="checkbox"
+								:name="'is_correct.' + answer.id"
+								class="answer-correct"
+								:checked="answer.is_correct"
+								@change="onRightAnswerChange"
+							>
+						</label>
 						<input
-							type="checkbox"
-							:name="'is_correct.' + answer.id"
-							class="answer-correct"
-							:checked="answer.is_correct"
-							@change="onRightAnswerChange"
+							class="input answer-text"
+							:value="answer.text"
+							:name="'answer.' + answer.id"
+							type="text"
 						>
-					</label>
-					<input
-						class="input answer-text"
-						:value="answer.text"
-						:name="'answer.' + answer.id"
-						type="text"
-					>
-				</div>
-			</fieldset>
+					</div>
+				</fieldset>
 			</div>
 		</wnl-form>
 	</div>

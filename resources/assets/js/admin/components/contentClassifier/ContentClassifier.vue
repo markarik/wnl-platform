@@ -43,21 +43,21 @@
 						:key="contentType"
 					>
 						<template v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length">
-						<h5 class="title is-5 is-marginless">{{meta.name}}
-							<strong class="content-classifier__result-count">({{getSelectedCountsByContentType(contentType)}}/{{groupedFilteredContent[contentType].length}})</strong>
-						</h5>
-						<ul
-							class="content-classifier__result-list margin bottom"
-						>
-							<component
-								v-for="contentItem in groupedFilteredContent[contentType]"
-								:key="contentItem.id"
-								:is="meta.component"
-								:item="contentItem"
-								:is-active="selectedItems.findIndex(item => item.id === contentItem.id && item.type === contentItem.type) > -1"
-								@click="toggleSelected(contentItem)"
-							/>
-						</ul>
+							<h5 class="title is-5 is-marginless">{{meta.name}}
+								<strong class="content-classifier__result-count">({{getSelectedCountsByContentType(contentType)}}/{{groupedFilteredContent[contentType].length}})</strong>
+							</h5>
+							<ul
+								class="content-classifier__result-list margin bottom"
+							>
+								<component
+									v-for="contentItem in groupedFilteredContent[contentType]"
+									:key="contentItem.id"
+									:is="meta.component"
+									:item="contentItem"
+									:is-active="selectedItems.findIndex(item => item.id === contentItem.id && item.type === contentItem.type) > -1"
+									@click="toggleSelected(contentItem)"
+								/>
+							</ul>
 						</template>
 					</div>
 				</div>

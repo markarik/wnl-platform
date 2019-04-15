@@ -5,18 +5,18 @@
 				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
 				Komentarze ({{comments.length}})
 				<span v-if="comments.length > 0 || this.showComments"> ·
-					<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
+				<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
 				</span> ·
 				<span v-if="!readOnly">
 					<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
 				</span>
 				<wnl-watch
-				v-if="!hideWatchlist"
-				:reactable-id="commentableId"
-				:reactable-resource="commentableResource"
-				:state="watchState"
-				:reactions-disabled="false"
-				:module="module"
+					v-if="!hideWatchlist"
+					:reactable-id="commentableId"
+					:reactable-resource="commentableResource"
+					:state="watchState"
+					:reactions-disabled="false"
+					:module="module"
 				/>
 			</div>
 			<slot/>

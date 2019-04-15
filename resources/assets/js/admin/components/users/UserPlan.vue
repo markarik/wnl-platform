@@ -71,9 +71,9 @@
 							</td>
 							<td>
 								<button
-										class="button is-danger"
-										type="button"
-										@click="unselectLesson(lesson)"
+									class="button is-danger"
+									type="button"
+									@click="unselectLesson(lesson)"
 								>
 									<span class="icon"><i class="fa fa-trash"></i></span>
 								</button>

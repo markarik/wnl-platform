@@ -6,12 +6,12 @@
 		</label>
 
 		<textarea
-					class="textarea normal"
-					:name="name"
-					@input="onTextInput"
-					:placeholder="placeholder"
-					v-model="inputValue"
-					@keydown.enter.stop
+			class="textarea normal"
+			:name="name"
+			@input="onTextInput"
+			:placeholder="placeholder"
+			v-model="inputValue"
+			@keydown.enter.stop
 		>
 		</textarea>
 

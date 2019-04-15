@@ -7,11 +7,11 @@
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside dashboard-sidenav">
 				<wnl-accordion
-						:data-source="subjectTypeFilters"
-						:config="accordionConfig"
-						:loading="false"
-						@itemToggled="onItemToggled"
-					/>
+					:data-source="subjectTypeFilters"
+					:config="accordionConfig"
+					:loading="false"
+					@itemToggled="onItemToggled"
+				/>
 				<div class="filter-title">
 					<span class="text">Filtrowanie Po Ogarniaczu</span>
 				</div>
@@ -73,9 +73,9 @@
 			</div>
 		</div>
 		<wnl-sidenav-slot
-				:is-visible="isChatVisible"
-				:is-detached="!isChatMounted"
-				:has-chat="true"
+			:is-visible="isChatVisible"
+			:is-detached="!isChatMounted"
+			:has-chat="true"
 		>
 			<wnl-public-chat :rooms="chatRooms" title="USZANOWANKO"></wnl-public-chat>
 		</wnl-sidenav-slot>

@@ -1,19 +1,19 @@
 <template>
-			<table class="table">
-				<thead>
-				<tr>
-					<wnl-sortable-table-column-header
-						v-for="column in columns"
-						:key="column.name"
-						@click="changeOrder(column)"
-						:label="column.label"
-						:is-active="column.name === activeSortColumnName"
-						:sort-direction="sortDirection"
-					/>
-				</tr>
-				</thead>
-				<slot name="tbody" :list="list" />
-			</table>
+	<table class="table">
+		<thead>
+		<tr>
+			<wnl-sortable-table-column-header
+				v-for="column in columns"
+				:key="column.name"
+				@click="changeOrder(column)"
+				:label="column.label"
+				:is-active="column.name === activeSortColumnName"
+				:sort-direction="sortDirection"
+			/>
+		</tr>
+		</thead>
+		<slot name="tbody" :list="list" />
+	</table>
 </template>
 
 <style lang="sass">

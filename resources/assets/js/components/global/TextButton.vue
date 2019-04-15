@@ -1,8 +1,8 @@
 <template>
 	<button class="wnl-text-button"
-			:disabled="disabled"
-			:type="type"
-			@click="$emit('click', $event)"
+		:disabled="disabled"
+		:type="type"
+		@click="$emit('click', $event)"
 	>
 		<i v-if="icon" :class="`icon fa fa-${icon}`"></i>
 		<slot />

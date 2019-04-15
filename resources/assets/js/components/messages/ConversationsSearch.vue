@@ -14,14 +14,14 @@
 		</div>
 		<div v-else>
 			<wnl-message-link
-					v-for="(room, index) in roomsToShow"
-					:key="index"
-					:user-id="getInterlocutor(room).user_id"
-					:room-id="room.id"
-					@navigate="onNavigate"
-					@beforeNavigate="onNavigateStart"
-					ref="messageLink"
-				>
+				v-for="(room, index) in roomsToShow"
+				:key="index"
+				:user-id="getInterlocutor(room).user_id"
+				:room-id="room.id"
+				@navigate="onNavigate"
+				@beforeNavigate="onNavigateStart"
+				ref="messageLink"
+			>
 				<wnl-conversation-snippet
 					:key="index"
 					:room="room"

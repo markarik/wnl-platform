@@ -41,10 +41,10 @@
 					</span>
 					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
-						:target="deleteTarget"
-						:request-route="resourceRoute"
-						@deleteSuccess="onDeleteSuccess"
-					></wnl-delete>
+							:target="deleteTarget"
+							:request-route="resourceRoute"
+							@deleteSuccess="onDeleteSuccess"
+						></wnl-delete>
 					</span>
 					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question" @unresolveResource="unresolveQuestion(id)"/>
 				</div>

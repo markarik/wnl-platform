@@ -38,7 +38,7 @@
 			<span class="icon is-medium">
 				<i class="fa fa-check-square-o"></i>
 			</span>
-		<span class="text">{{$t('nav.sideNav.questions')}}</span>
+			<span class="text">{{$t('nav.sideNav.questions')}}</span>
 		</router-link>
 		<router-link
 			class="wnl-main-nav-item"

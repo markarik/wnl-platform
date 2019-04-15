@@ -20,7 +20,7 @@
 				:style="{paddingTop: activeFiltersHeight + 'px'}">
 				<div class="filters-heading">
 					<span class="metadata margin vertical">
-					<span class="icon is-tiny"><i class="fa fa-search"></i></span>
+						<span class="icon is-tiny"><i class="fa fa-search"></i></span>
 						{{$t('questions.filters.searchHeading')}}
 					</span>
 				</div>

@@ -1,20 +1,20 @@
 <template>
 	<wnl-form
-			:method="method"
-			:resource-route="resourceRoute"
-			:populate="isEdit"
-			name="GroupEditor"
-			@submitSuccess="onSubmitSuccess"
-			:hide-default-submit="true"
-			class="editor"
+		:method="method"
+		:resource-route="resourceRoute"
+		:populate="isEdit"
+		name="GroupEditor"
+		@submitSuccess="onSubmitSuccess"
+		:hide-default-submit="true"
+		class="editor"
 	>
 		<div class="header">
 			<h2 class="title is-2">Edycja grupy <span v-if="isEdit">(Id: {{id}})</span></h2>
 			<wnl-submit class="submit"/>
 		</div>
 		<wnl-form-text
-				name="name"
-				class="margin top bottom"
+			name="name"
+			class="margin top bottom"
 		>Nazwa</wnl-form-text>
 	</wnl-form>
 </template>

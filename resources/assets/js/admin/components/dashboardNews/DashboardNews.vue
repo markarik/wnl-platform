@@ -3,8 +3,8 @@
 		<h3 class="title is-3">
 			Newsy
 			<router-link
-					class="button is-primary"
-					:to="{ name: 'dashboard-news-edit', params: { id: 'new' } }"
+				class="button is-primary"
+				:to="{ name: 'dashboard-news-edit', params: { id: 'new' } }"
 			>
 				+ Dodaj nowego newsa
 			</router-link>
@@ -16,11 +16,11 @@
 				<th>Wyświetlaj do</th>
 			</tr>
 			<tr
-					class="dashboard-news__item"
-					:class="{'has-text-success': dashboardNewsItem.id === activeItemId}"
-					v-for="dashboardNewsItem in dashboardNewsList"
-					:key="dashboardNewsItem.id"
-					@click="goToEdit(dashboardNewsItem.id)"
+				class="dashboard-news__item"
+				:class="{'has-text-success': dashboardNewsItem.id === activeItemId}"
+				v-for="dashboardNewsItem in dashboardNewsList"
+				:key="dashboardNewsItem.id"
+				@click="goToEdit(dashboardNewsItem.id)"
 			>
 				<td>{{dashboardNewsItem.slug}}</td>
 				<td>{{formatDate(dashboardNewsItem.start_date)}}</td>

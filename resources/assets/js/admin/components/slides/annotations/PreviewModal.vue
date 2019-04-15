@@ -2,9 +2,9 @@
 	<div>
 		<h4 class="title is-4">Podgląd Przypisu</h4>
 		<div
-      v-html="content"
-      :class="['control annotation-preview__content', `control annotation-preview__content--${screenSize}`]"
-    />
+			v-html="content"
+			:class="['control annotation-preview__content', `control annotation-preview__content--${screenSize}`]"
+		/>
 		<div>
 			Rozdzielczość Ekranu:
 			<div>

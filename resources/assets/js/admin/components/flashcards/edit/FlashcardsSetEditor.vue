@@ -7,55 +7,55 @@
 					<span v-if="isEdit">(Id: {{flashcardsSetId}})</span>
 				</h3>
 				<button class="button is-small is-success"
-						:class="{'is-loading': loading}"
-						:disabled="!hasChanged"
-						type="submit"
+					:class="{'is-loading': loading}"
+					:disabled="!hasChanged"
+					type="submit"
 				>
 					<span class="margin right">Zapisz</span>
 					<span class="icon is-small">
-					<i class="fa fa-save"></i>
-				</span>
+						<i class="fa fa-save"></i>
+					</span>
 				</button>
 			</div>
 			<wnl-form-input
-					name="name"
-					:form="form"
-					v-model="form.name"
+				name="name"
+				:form="form"
+				v-model="form.name"
 			>
 				Nazwa
 			</wnl-form-input>
 			<wnl-form-input
-					name="mind_maps_text"
-					:form="form"
-					v-model="form.mind_maps_text"
+				name="mind_maps_text"
+				:form="form"
+				v-model="form.mind_maps_text"
 			>
 				Mind mapy
 			</wnl-form-input>
 			<label class="label">Lekcja, której dotyczy zestaw</label>
 			<span class="select flashcards-set-editor-select">
 				<wnl-select :form="form"
-							:options="lessonsOptions"
-							name="lesson_id"
-							v-model="form.lesson_id"
+					:options="lessonsOptions"
+					name="lesson_id"
+					v-model="form.lesson_id"
 				/>
 			</span>
 			<label class="label">Opis</label>
 			<wnl-quill
-					ref="descriptionEditor"
-					name="description"
-					:options="{ theme: 'snow', placeholder: 'Opis' }"
-					:value="form.description"
-					@input="onDescriptionInput"
+				ref="descriptionEditor"
+				name="description"
+				:options="{ theme: 'snow', placeholder: 'Opis' }"
+				:value="form.description"
+				@input="onDescriptionInput"
 			/>
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="flashcards-admin">
 				<draggable v-model="form.flashcards" @start="drag=true" @end="drag=false" v-if="areFlashcardsReady">
 					<wnl-flashcards-set-list-item
-							v-for="flashcardId in form.flashcards"
-							:key="flashcardId"
-							:id="flashcardId"
-							:content="allFlashcards.find(flashcard => flashcard.id === flashcardId).content"
-							@remove="removeFlashcard(flashcardId)"
+						v-for="flashcardId in form.flashcards"
+						:key="flashcardId"
+						:id="flashcardId"
+						:content="allFlashcards.find(flashcard => flashcard.id === flashcardId).content"
+						@remove="removeFlashcard(flashcardId)"
 					/>
 				</draggable>
 

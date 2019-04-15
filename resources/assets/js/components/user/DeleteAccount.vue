@@ -9,8 +9,8 @@
 		</div>
 		<div class="message is-danger reset-container">
 			<div class="message-header">
-					<strong v-t="'user.deleteAccount.warningHeader'"/>
-				</div>
+				<strong v-t="'user.deleteAccount.warningHeader'"/>
+			</div>
 			<div class="message-body" v-html="htmlWarning"/>
 			<div class="reset-button">
 				<button

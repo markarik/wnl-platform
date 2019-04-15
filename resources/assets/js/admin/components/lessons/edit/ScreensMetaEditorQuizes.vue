@@ -3,9 +3,9 @@
 		<label class="label">Wybierz zestaw pytań</label>
 		<span class="select">
 			<wnl-select
-					:options="quiz_sets"
-					name="meta"
-					v-model="selectedQuiz"
+				:options="quiz_sets"
+				name="meta"
+				v-model="selectedQuiz"
 			></wnl-select>
 		</span>
 	</div>

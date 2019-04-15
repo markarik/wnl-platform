@@ -2,15 +2,15 @@
 	<wnl-slide-link class="slide-router-link unselectable" :context="context" blank-page="_blank">
 		<div class="slide-context">
 			<div class="group-and-lesson">
-					<span
-						v-for="(groupName, index) in groupNames"
-						:key="index"
-						class="group-name"
-						:title="groupName"
-					>
-						{{truncate(groupName, 15)}}
-						<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
-					</span>
+				<span
+					v-for="(groupName, index) in groupNames"
+					:key="index"
+					class="group-name"
+					:title="groupName"
+				>
+					{{truncate(groupName, 15)}}
+					<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+				</span>
 
 				<span class="lesson-name" :title="lessonName">{{truncate(lessonName, 30)}}</span>
 			</div>

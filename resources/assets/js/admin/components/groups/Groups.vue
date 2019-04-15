@@ -1,7 +1,7 @@
 <template>
 	<div class="groups">
 		<wnl-paginated-list
-				:resource-name="'groups/.filter'"
+			:resource-name="'groups/.filter'"
 		>
 			<h3 class="title is-3" slot="header">
 				Edycja grup

@@ -3,18 +3,18 @@
 		<h3 class="title is-3">
 			Produkty
 			<router-link
-					class="button is-primary"
-					:to="{ name: 'product-edit', params: { id: 'new' } }"
+				class="button is-primary"
+				:to="{ name: 'product-edit', params: { id: 'new' } }"
 			>
 				+ Dodaj nowy produkt
 			</router-link>
 		</h3>
 
 		<wnl-paginated-sortable-table
-				:is-search-enabled="false"
-				:resource-name="'products/.filter'"
-				:columns="columns"
-				class="products"
+			:is-search-enabled="false"
+			:resource-name="'products/.filter'"
+			:columns="columns"
+			class="products"
 		>
 			<tbody slot-scope="slotProps" slot="tbody">
 			<tr v-for="product in slotProps.list" :key="product.id" @click="goToEdit(product.id)" class="clickable">

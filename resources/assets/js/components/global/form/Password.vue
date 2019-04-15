@@ -15,12 +15,12 @@
 		</div>
 
 		<template v-if="hasErrors">
-          <span
-              class="help is-danger"
-              v-for="(error, index) in getErrors"
-              v-text="error"
-              :key="index"
-          ></span>
+			<span
+				class="help is-danger"
+				v-for="(error, index) in getErrors"
+				v-text="error"
+				:key="index"
+			></span>
 		</template>
 	</div>
 </template>

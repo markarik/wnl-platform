@@ -54,24 +54,24 @@
 						class="id-number--other-identitification"
 						v-if="otherIdentity">
 						<div class="id_number__radio field">
-								<input
-									@click="disableErrors"
-									class="is-checkradio"
-									type="radio"
-									id="personal_identity_number"
-									:name="this.identityTypes.personalId"
-									value="personal_identity_number"
-									v-model="identity.identityType">
-								<label for="personal_identity_number">{{ $t('user.personalData.identityNumber.types.personal') }}</label>
-								<input
-									@click="disableErrors"
-									class="is-checkradio"
-									type="radio"
-									id="passport"
-									:name="this.identityTypes.passport"
-									value="passport_number"
-									v-model="identity.identityType">
-								<label for="passport">{{ $t('user.personalData.identityNumber.types.passport') }}</label>
+							<input
+								@click="disableErrors"
+								class="is-checkradio"
+								type="radio"
+								id="personal_identity_number"
+								:name="this.identityTypes.personalId"
+								value="personal_identity_number"
+								v-model="identity.identityType">
+							<label for="personal_identity_number">{{ $t('user.personalData.identityNumber.types.personal') }}</label>
+							<input
+								@click="disableErrors"
+								class="is-checkradio"
+								type="radio"
+								id="passport"
+								:name="this.identityTypes.passport"
+								value="passport_number"
+								v-model="identity.identityType">
+							<label for="passport">{{ $t('user.personalData.identityNumber.types.passport') }}</label>
 						</div>
 					</div>
 				</div>

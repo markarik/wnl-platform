@@ -3,9 +3,9 @@
 		<ol>
 			<draggable v-model="inputValue" @start="drag=true" @end="drag=false">
 				<li
-						class="item"
-						v-for="item in inputValue"
-						:key="item"
+					class="item"
+					v-for="item in inputValue"
+					:key="item"
 				>
 					<slot :item="formData.included[name][item]" />
 				</li>

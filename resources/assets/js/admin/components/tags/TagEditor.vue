@@ -20,7 +20,7 @@
 						@tagDeleted="onTagDeleted"
 					>Usuń</wnl-tag-delete>
 					<wnl-submit class="submit"/>
-					</div>
+				</div>
 			</div>
 			<wnl-form-text
 				name="name"

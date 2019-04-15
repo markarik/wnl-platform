@@ -3,10 +3,10 @@
 		<div v-if="selected" class="selected-container">
 			<span>{{selected.full_name}}</span>
 			<a class="button is-primary is-outlined" @click="onChange(null)">
-			<span class="icon is-small">
-			<i class="fa fa-times"></i>
-			</span>
-		</a></div>
+				<span class="icon is-small">
+					<i class="fa fa-times"></i>
+				</span>
+			</a></div>
 		<wnl-autocomplete
 			v-else
 			v-model="textInputValue"

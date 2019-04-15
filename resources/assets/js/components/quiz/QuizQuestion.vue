@@ -88,12 +88,12 @@
 						</a>
 					</template>
 					<wnl-slide-preview
-							:show-modal="show"
-							:content="slideContent"
-							:slides-count="hasSlides"
-							@closeModal="hideSlidePreview"
-							@switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id"
-							@userEvent="onRelatedSlideUserEvent"
+						:show-modal="show"
+						:content="slideContent"
+						:slides-count="hasSlides"
+						@closeModal="hideSlidePreview"
+						@switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id"
+						@userEvent="onRelatedSlideUserEvent"
 					>
 						<span slot="header">{{slideLink(currentModalSlide)}}</span>
 						<wnl-slide-link
@@ -101,7 +101,7 @@
 							slot="footer"
 							:context="currentModalSlide.context"
 							:blank-page="blankPage">
-								{{$t('quiz.slideModal.goToPrezentation')}}
+							{{$t('quiz.slideModal.goToPrezentation')}}
 						</wnl-slide-link>
 					</wnl-slide-preview>
 				</div>

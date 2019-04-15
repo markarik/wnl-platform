@@ -17,9 +17,9 @@
 					@click="toggleDay(day.dayNumber)"
 				>{{ $t(day.dayName) }}
 					<span class="icon is-small">
-							<i class="fa"
-								:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
-						</span>
+						<i class="fa"
+							:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					</span>
 				</a>
 			</div>
 			<div class="wnl-screen-title">

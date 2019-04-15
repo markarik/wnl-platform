@@ -50,9 +50,15 @@ module.exports = {
 			'error',
 			'kebab-case'
 		],
-		// TODO enable strongly-recommended rules below
 		'vue/html-indent': [
-			'off'
+			'error',
+			'tab',
+			{
+				'ignores': [
+					'VElement[name=thead].children',
+					'VElement[name=tbody].children',
+				]
+			}
 		],
 		'vue/require-prop-types': [
 			'off'

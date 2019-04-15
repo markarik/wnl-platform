@@ -1,11 +1,11 @@
 <template>
 	<wnl-form
-			:method="method"
-			:resource-route="resourceRoute"
-			:populate="isEdit"
-			name="CourseEditor"
-			:hide-default-submit="true"
-			class="editor"
+		:method="method"
+		:resource-route="resourceRoute"
+		:populate="isEdit"
+		name="CourseEditor"
+		:hide-default-submit="true"
+		class="editor"
 	>
 		<div class="header">
 			<h2 class="title is-2">Edycja kursu <span v-if="isEdit">(Id: {{id}})</span></h2>

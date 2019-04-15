@@ -13,15 +13,15 @@
 			</div>
 			<div class="search-settings__field field" v-if="availableFields.length > 1">
 				<input
-						type="checkbox" id="allFields" :checked="!searchFields.length"
-						@change="onSelectAll" class="search-settings__field__input is-checkradio"
+					type="checkbox" id="allFields" :checked="!searchFields.length"
+					@change="onSelectAll" class="search-settings__field__input is-checkradio"
 				>
 				<label for="allFields" class="search-settings__field__label checkbox">Wszystkie Pola</label>
 			</div>
 			<div v-for="field in availableFields" :key="field.value" class="search-settings__field field">
 				<input
-						type="checkbox" v-model="searchFields"
-						:id="field.value" :value="field.value" class="search-settings__field__input is-checkradio"
+					type="checkbox" v-model="searchFields"
+					:id="field.value" :value="field.value" class="search-settings__field__input is-checkradio"
 				>
 				<label :for="field.value" class="search-settings__field__label checkbox">{{field.title}}</label>
 			</div>

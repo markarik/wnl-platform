@@ -1,9 +1,9 @@
 <template>
 	<div class="item todo">
 		<router-link
-				class="item-wrapper"
-				:class="{'is-active': isActive, 'is-completed': isCompleted, 'is-disabled': isDisabled}"
-				:to="to"
+			class="item-wrapper"
+			:class="{'is-active': isActive, 'is-completed': isCompleted, 'is-disabled': isDisabled}"
+			:to="to"
 		>
 			<span class="sidenav-item-content">
 				<slot name="title"></slot>

@@ -107,9 +107,9 @@
 								<button
 									data-button="pay-next-instalment"
 									:class="{
-									'button': true,
-									'is-primary': true,
-									'is-loading': this.paymentLoading
+										'button': true,
+										'is-primary': true,
+										'is-loading': this.paymentLoading
 									}"
 									@click="pay">
 									Zapłać kolejną ratę

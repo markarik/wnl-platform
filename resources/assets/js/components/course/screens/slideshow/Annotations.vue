@@ -22,12 +22,12 @@
 			@commentsHidden="$emit('commentsHidden')"
 			@commentsUpdated="onCommentsUpdated"
 		>
-		<wnl-edit-slide-button
-			:current-slide-id="Number(currentSlideId)"
-			:screen-id="Number(screenId)"
-			v-if="isAdmin"
-		/>
-	</wnl-comments-list>
+			<wnl-edit-slide-button
+				:current-slide-id="Number(currentSlideId)"
+				:screen-id="Number(screenId)"
+				v-if="isAdmin"
+			/>
+		</wnl-comments-list>
 	</div>
 </template>
 

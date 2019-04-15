@@ -7,7 +7,7 @@
 	</div>
 </template>
 <script>
-import {ALERT_TYPES} from 'js/consts/alert';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	props: {

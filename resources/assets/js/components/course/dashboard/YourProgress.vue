@@ -34,7 +34,7 @@ const STATE_FULL = 'full',
 	STATE_DANGER = 'danger',
 	stateData = {
 		[STATE_FULL]: {
-			message: `Świetnie Ci idzie! Wszystkie dostępne lekcje są już zakończone i należy Ci się zasłużony odpoczynek! ${emoji.get('slightly_smiling_face')}`,
+			message: `Świetnie Ci idzie! Wszystkie dostępne lekcje są już zakończone i należy Ci się zasłużony odpoczynek! ${emoji.get('slightly_smiling_face')}`,
 			modifyingClass: 'is-success'
 		},
 		[STATE_GOOD]: {

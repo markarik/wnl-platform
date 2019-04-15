@@ -1,4 +1,4 @@
-import {KEYS} from 'js/consts/keys';
+import { KEYS } from 'js/consts/keys';
 
 export default {
 	data() {

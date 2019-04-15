@@ -27,14 +27,14 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 
 import WnlSlideEditor from 'js/admin/components/slides/SlideEditor';
 import WnlSlideSearch from 'js/admin/components/slides/SlidesSearch';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
-import {getApiUrl} from 'js/utils/env';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { getApiUrl } from 'js/utils/env';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 export default {
 	name: 'EditSlide',
@@ -64,7 +64,7 @@ export default {
 		saveSlideId(event) {
 			this.slideId = event.target.value;
 		},
-		onResourceUrlFetched({url, slideId}) {
+		onResourceUrlFetched({ url, slideId }) {
 			this.slideId = slideId;
 			this.resourceUrl = url;
 		}
@@ -84,7 +84,7 @@ export default {
 		async slideId(slideId) {
 			if (slideId) {
 				await this.setupCurrentUser();
-				await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId]});
+				await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId] });
 			}
 		}
 	}

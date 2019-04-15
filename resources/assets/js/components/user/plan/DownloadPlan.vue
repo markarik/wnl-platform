@@ -44,6 +44,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment';
 import { first,last } from 'lodash';

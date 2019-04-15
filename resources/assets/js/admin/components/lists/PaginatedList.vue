@@ -45,12 +45,13 @@
 </style>
 
 <script>
-import {mapActions} from 'vuex';
-import {isEmpty} from 'lodash';
+import axios from 'axios';
+import { mapActions } from 'vuex';
+import { isEmpty } from 'lodash';
 
 import WnlPagination from 'js/components/global/Pagination';
 import WnlSearchInput from 'js/components/global/SearchInput';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 export default {
 	components: {
@@ -102,7 +103,7 @@ export default {
 
 			if (this.searchPhrase) {
 				params.active = [`search.${this.searchPhrase}`];
-				params.filters = [{search: {phrase: this.searchPhrase, fields: this.searchFields}}];
+				params.filters = [{ search: { phrase: this.searchPhrase, fields: this.searchFields } }];
 			}
 
 			return {
@@ -114,7 +115,7 @@ export default {
 			this.page = page;
 			this.fetch();
 		},
-		async onSearch({phrase, fields}) {
+		async onSearch({ phrase, fields }) {
 			this.searchPhrase = phrase;
 			this.searchFields = fields;
 
@@ -134,14 +135,14 @@ export default {
 					this.getRequestParams(),
 					{ cancelToken: this.requestCancelTokenSource.token }
 				);
-				const {data: {data, ...paginationMeta}} = response;
+				const { data: { data, ...paginationMeta } } = response;
 				this.list = data;
 				this.lastPage = paginationMeta.last_page;
 				this.isLoading = false;
 			} catch (error) {
 				if (!axios.isCancel(error)) {
 					this.addAutoDismissableAlert({
- 						text: 'Ups, nie udało się pobrać listy. Odśwież stronę, żeby spróbować ponownie.',
+						text: 'Ups, nie udało się pobrać listy. Odśwież stronę, żeby spróbować ponownie.',
 						type: 'error'
 					});
 					$wnl.logger.capture(error);

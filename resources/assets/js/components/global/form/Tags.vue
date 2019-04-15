@@ -47,7 +47,7 @@
 import Autocomplete from 'js/components/global/Autocomplete';
 import WnlTagAutocompleteItem from 'js/components/global/TagAutocompleteItem';
 import _ from 'lodash';
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
 	name: 'Tags',

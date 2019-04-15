@@ -1,5 +1,5 @@
 <template>
-	<div class="scrollable-container" @scroll="pullConversations" >
+	<div class="scrollable-container" @scroll="pullConversations">
 		<div class="rooms-header" v-if="withSearch">
 			<header>{{$t('messages.dashboard.privateMessages')}}</header>
 			<div class="rooms-list-controls">
@@ -24,7 +24,7 @@
 				:key="room.id"
 				:user-id="getOtherUser(room).user_id"
 				:room-id="room.id"
-				 class="is-relative is-block"
+				class="is-relative is-block"
 			>
 				<wnl-conversation-snippet
 					:key="room.id"
@@ -33,7 +33,7 @@
 					:is-active="isActive(room)"
 					:class="{'has-unread': room.unread_count > 0}"
 				/>
-				 <div v-if="room.unread_count" class="counter">{{room.unread_count > 9 ? '9+' : room.unread_count}}</div>
+				<div v-if="room.unread_count" class="counter">{{room.unread_count > 9 ? '9+' : room.unread_count}}</div>
 			</wnl-message-link>
 		</div>
 		<div v-else class="notification aligncenter">Nie masz żadnych rozmów</div>
@@ -109,7 +109,8 @@
 import ConversationsSearch from 'js/components/messages/ConversationsSearch';
 import MessageLink from 'js/components/global/MessageLink';
 import ConversationSnippet from 'js/components/messages/ConversationSnippet';
-import {mapGetters, mapActions} from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import { debounce } from 'lodash';
 
 export default {
 	name: 'ConversationsList',
@@ -125,7 +126,7 @@ export default {
 		},
 	},
 	data() {
-		return  {
+		return {
 			userSearchVisible: false,
 		};
 	},
@@ -162,10 +163,10 @@ export default {
 			if (profile.id) return profile;
 			return this.currentUserProfile;
 		},
-		pullConversations: _.debounce(function(event) {
+		pullConversations: debounce(function (event) {
 			if (!this.userSearchVisible && this.hasMoreRooms) {
 				if (event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
-					return this.fetchUserRoomsWithMessages({page: this.currentPage + 1});
+					return this.fetchUserRoomsWithMessages({ page: this.currentPage + 1 });
 				}
 			}
 		}),

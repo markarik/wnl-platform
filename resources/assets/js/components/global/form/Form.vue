@@ -87,16 +87,16 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		action(action, payload = {}) {
-			return this.$store.dispatch(`form/${action}`, {payload, formName: this.name});
+			return this.$store.dispatch(`form/${action}`, { payload, formName: this.name });
 		},
 		getter(getter) {
 			return this.$store.getters[`form/${getter}`](this.name);
 		},
 		getterFunction(getter, payload = {}) {
-			return this.$store.getters[`form/${getter}`]({payload, formName: this.name});
+			return this.$store.getters[`form/${getter}`]({ payload, formName: this.name });
 		},
 		mutation(mutation, payload = {}) {
-			return this.$store.commit(`form/${mutation}`, {payload, formName: this.name});
+			return this.$store.commit(`form/${mutation}`, { payload, formName: this.name });
 		},
 		keyEvent(event) {
 			if (event.keyCode === 13 && !this.suppressEnter) {
@@ -223,7 +223,7 @@ export default {
 	},
 	watch: {
 		formData(newVal) {
-			this.$emit('change', {formData: newVal});
+			this.$emit('change', { formData: newVal });
 		},
 		resourceRoute() {
 			this.mutation(

@@ -118,9 +118,9 @@
 
 
 <script>
-import {mapGetters} from 'vuex';
-import {getModelByResource} from 'js/utils/config';
-import {resources} from 'js/utils/constants';
+import { mapGetters } from 'vuex';
+import { getModelByResource } from 'js/utils/config';
+import { resources } from 'js/utils/constants';
 import WnlDatepicker from 'js/components/global/Datepicker';
 
 export default {

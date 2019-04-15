@@ -272,6 +272,7 @@
 
 </style>
 <script>
+import axios from 'axios';
 import { isNumber, trim, get } from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 import { getApiUrl } from 'js/utils/env';
@@ -342,7 +343,7 @@ export default {
 		},
 		currentModalSlide() {
 			if (this.currentSlideIndex < 0) {
-				return {id: 0};
+				return { id: 0 };
 			}
 			// return 0
 			return this.slides[this.currentSlideIndex];
@@ -365,7 +366,7 @@ export default {
 			this.currentSlideIndex = nextSlideIndex;
 		},
 		selectAnswer(answerIndex) {
-			const data = {id: this.question.id, answer: answerIndex};
+			const data = { id: this.question.id, answer: answerIndex };
 			const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked';
 
 			this.question.selectedAnswer !== answerIndex && this.emitUserEvent({
@@ -389,10 +390,10 @@ export default {
 		slideLink(slide) {
 			let linkText = '';
 
-			if (_.get(slide, 'context.lesson.id')) {
+			if (get(slide, 'context.lesson.id')) {
 				linkText += this.getLesson(slide.context.lesson.id).name;
 
-				if (_.get(slide, 'context.section.id')) {
+				if (get(slide, 'context.section.id')) {
 					linkText += ` / ${get(slide, 'context.section.name')}`;
 				}
 			}
@@ -411,7 +412,7 @@ export default {
 		'currentModalSlide.id'(slideId) {
 			if (!slideId) return;
 			axios.get(getApiUrl(`slideshow_builder/slide/${slideId}`))
-				.then(({data}) => {
+				.then(({ data }) => {
 					this.slideContent = data;
 				}).then(() => {
 					this.show = true;

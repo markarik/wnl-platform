@@ -42,7 +42,7 @@
 </style>
 
 <script>
-import {mapGetters, mapActions} from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 const sortingOptions = [
 	{

@@ -62,12 +62,12 @@
 </style>
 
 <script>
-import {mapState, mapActions, mapGetters} from 'vuex';
-import {uniqBy} from 'lodash';
+import { mapState, mapActions, mapGetters } from 'vuex';
+import { uniqBy } from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
-import {ALERT_TYPES} from 'js/consts/alert';
-import {COURSE_STRUCTURE_TYPES} from 'js/consts/courseStructure';
+import { ALERT_TYPES } from 'js/consts/alert';
+import { COURSE_STRUCTURE_TYPES } from 'js/consts/courseStructure';
 
 export default {
 	props: {

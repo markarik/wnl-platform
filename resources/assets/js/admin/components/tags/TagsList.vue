@@ -58,7 +58,7 @@ export default {
 			this.$router.push({ name: 'tag-edit', params: { id: tag.id } });
 		},
 		parseIncludes(data) {
-			const {included = {}, ...list} = data;
+			const { included = {}, ...list } = data;
 
 			return Object.values(list).map(item => {
 				item.taggables_count = get(included, `taggables_counts.${item.id}.taggables_count`);

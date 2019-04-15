@@ -32,7 +32,7 @@
 				</span>
 				<span class="icon is-small  annotation-item__header__item annotation-item__header__item--chevron">
 					<i class="toggle fa fa-angle-down"
-						 :class="{'fa-rotate-180': isOpen(annotation)}">
+						:class="{'fa-rotate-180': isOpen(annotation)}">
 					</i>
 				</span>
 			</div>
@@ -129,13 +129,13 @@ export default {
 		isOpen(annotation) {
 			return this.openAnnotations.indexOf(annotation.id) > -1;
 		},
-		onAnnotationClick({annotation, event}) {
+		onAnnotationClick({ annotation, event }) {
 			this.$emit('annotationSelect', annotation);
 			event.stopImmediatePropagation();
 		},
 		serializeResponse(response) {
-			const {included, ...annotations} = response;
-			const {tags, keywords} = included;
+			const { included, ...annotations } = response;
+			const { tags, keywords } = included;
 
 			return Object.values(annotations).map(annotation => {
 				return {

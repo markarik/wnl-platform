@@ -6,7 +6,7 @@ const isEditable = (element) => {
 };
 
 export default {
-	install(Vue, {store}) {
+	install(Vue, { store }) {
 		const module = 'activateWithShortcutKey';
 
 		Vue.prototype.$shortcutKeyIsEditable = isEditable;

@@ -7,7 +7,7 @@ import WnlUserAddress from 'js/components/user/UserAddress';
 
 export default {
 	name: 'UserAddress',
-	components: {WnlUserAddress},
+	components: { WnlUserAddress },
 	props: ['user']
 };
 </script>

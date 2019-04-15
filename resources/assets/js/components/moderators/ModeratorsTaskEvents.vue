@@ -106,8 +106,8 @@
 
 <script>
 import { decode } from 'he';
-import { truncate, camelCase } from 'lodash';
-import {mapGetters} from 'vuex';
+import { last, truncate, camelCase } from 'lodash';
+import { mapGetters } from 'vuex';
 
 export default {
 	props: {
@@ -124,18 +124,18 @@ export default {
 	computed: {
 		...mapGetters('course', ['getLesson']),
 		lastEvent() {
-			return _.last(this.events);
+			return last(this.events);
 		},
 		iconClass() {
 			return this.expanded ? 'fa-chevron-up' : 'fa-chevron-down';
 		},
 		text() {
-			return decode(truncate(this.lastEvent.data.subject.text, {length: 256}));
+			return decode(truncate(this.lastEvent.data.subject.text, { length: 256 }));
 		},
 		objectText() {
 			if (!this.lastEvent.data.objects) return false;
 
-			return decode(truncate(this.lastEvent.data.objects.text, {length: 256}));
+			return decode(truncate(this.lastEvent.data.objects.text, { length: 256 }));
 		},
 		hasMore() {
 			return this.events.length > 1;
@@ -155,7 +155,7 @@ export default {
 			return this.$t(`notifications.events.${camelCase(event.data.event)}`);
 		},
 		eventText(event) {
-			return decode(truncate(event.data.subject.text, {length: 256}));
+			return decode(truncate(event.data.subject.text, { length: 256 }));
 		},
 		eventObject(event) {
 			const objects = event.data.objects;
@@ -164,10 +164,10 @@ export default {
 
 			// Qna Quesiton posted
 			if (subject && !objects) {
-				return this.$tc(`notifications.objects.${_.camelCase(subject.type)}`, 1);
+				return this.$tc(`notifications.objects.${camelCase(subject.type)}`, 1);
 			}
 
-			return this.$tc(`notifications.objects.${_.camelCase(objects.type)}`, 1);
+			return this.$tc(`notifications.objects.${camelCase(objects.type)}`, 1);
 		},
 	}
 };

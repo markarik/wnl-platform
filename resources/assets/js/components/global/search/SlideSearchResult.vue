@@ -117,8 +117,8 @@
 </style>
 
 <script>
-import {truncate} from 'lodash';
-import {mapGetters} from 'vuex';
+import { get, truncate } from 'lodash';
+import { mapGetters } from 'vuex';
 
 import SlideLink from 'js/components/global/SlideLink';
 
@@ -189,7 +189,7 @@ export default {
 	},
 	methods: {
 		getHighlight(hit, key) {
-			const highlight = _.get(hit, `highlight["${key}"]`);
+			const highlight = get(hit, `highlight["${key}"]`);
 
 			if (Array.isArray(highlight)) {
 				return highlight.join('...');
@@ -203,7 +203,7 @@ export default {
 			}
 		},
 		truncate(text, length) {
-			return truncate(text, {length});
+			return truncate(text, { length });
 		},
 	}
 };

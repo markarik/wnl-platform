@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as types from 'js/store/mutations-types';
-import {set} from 'vue';
+import { set } from 'vue';
 
 import { getApiUrl } from 'js/utils/env';
 
@@ -24,7 +24,7 @@ export const reactionsGetters = {
 };
 
 export const reactionsMutations = {
-	[types.SET_REACTION] (state, payload) {
+	[types.SET_REACTION](state, payload) {
 		set(
 			state[payload.reactableResource][payload.reactableId],
 			payload.reaction,
@@ -37,15 +37,15 @@ export const reactionsMutations = {
 };
 
 export const reactionsActions = {
-	setReaction({commit}, payload) {
+	setReaction({ commit }, payload) {
 		return new Promise((resolve, reject) => {
 			let data = {
-					'reactable_resource' : payload.reactableResource,
-					'reactable_id'       : payload.reactableId,
-					'reaction_type'      : payload.reaction,
+					'reactable_resource': payload.reactableResource,
+					'reactable_id': payload.reactableId,
+					'reaction_type': payload.reaction,
 				},
 				// hasReacted should represent new state
-	 			method = payload.hasReacted ? 'delete' : 'post',
+				method = payload.hasReacted ? 'delete' : 'post',
 				params = payload.hasReacted ? { params: data } : [data];
 
 			return axios[method](getApiUrl('reactions'), params)
@@ -67,7 +67,7 @@ export const reactionsActions = {
 		});
 	},
 
-	markManyAsReacted({commit}, payload) {
+	markManyAsReacted({ commit }, payload) {
 		if (payload.length === 0) {
 			return Promise.resolve();
 		}
@@ -86,9 +86,9 @@ export const reactionsActions = {
 				});
 
 				return {
-					'reactable_resource' : reaction.reactableResource,
-					'reactable_id'       : reaction.reactableId,
-					'reaction_type'      : reaction.reaction,
+					'reactable_resource': reaction.reactableResource,
+					'reactable_id': reaction.reactableId,
+					'reaction_type': reaction.reaction,
 				};
 			});
 

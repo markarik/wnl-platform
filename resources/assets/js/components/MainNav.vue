@@ -137,11 +137,11 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 import moderatorFeatures from 'js/perimeters/moderator';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
-import {getUrl} from 'js/utils/env';
+import { getUrl } from 'js/utils/env';
 
 export default {
 	name: 'MainNav',

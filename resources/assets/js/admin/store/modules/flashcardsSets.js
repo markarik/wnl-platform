@@ -26,13 +26,13 @@ const mutations = {
 
 // Actions
 const actions = {
-	async fetchAllFlashcardsSets({commit, state}) {
+	async fetchAllFlashcardsSets({ commit, state }) {
 		if (!state.ready) {
 			const { data } = await axios.get(getApiUrl('flashcards_sets/all'));
 			commit(types.SETUP_FLASHCARDS_SETS, data);
 		}
 	},
-	async setup({commit, dispatch}) {
+	async setup({ commit, dispatch }) {
 		try {
 			await dispatch('fetchAllFlashcardsSets');
 			commit(types.FLASHCARDS_SETS_READY, true);
@@ -40,7 +40,7 @@ const actions = {
 			$wnl.logger.error(error);
 		}
 	},
-	invalidateCache({commit}) {
+	invalidateCache({ commit }) {
 		commit(types.FLASHCARDS_SETS_READY, false);
 	}
 };

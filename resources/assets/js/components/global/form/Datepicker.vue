@@ -42,7 +42,7 @@
 <script>
 import Flatpickr from 'flatpickr';
 import { formInput } from 'js/mixins/form-input';
-import {pl} from 'flatpickr/dist/l10n/pl.js';
+import { pl } from 'flatpickr/dist/l10n/pl.js';
 
 export default {
 	name: 'Datepicker',

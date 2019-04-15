@@ -156,7 +156,7 @@ export default{
 			this.sendingMessage = true;
 			this.error = '';
 			this.isWaitingToSendMentions = true;
-			const {messages, ...room} = this.room;
+			const { messages, ...room } = this.room;
 			this.$socketSendMessage({
 				room,
 				message: {
@@ -192,7 +192,7 @@ export default{
 				const mentions = this.getMentions();
 
 				if (mentions && mentions.length) {
-					this.$emit('foundMentions', {mentions, context: data.message});
+					this.$emit('foundMentions', { mentions, context: data.message });
 				}
 
 				this.mentions = [];

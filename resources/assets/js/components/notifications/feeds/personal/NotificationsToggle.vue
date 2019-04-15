@@ -46,7 +46,7 @@ export default {
 			return this.$t(`notifications.personal.${key}`);
 		},
 		toggleNotifications() {
-			this.changeUserSettingAndSync({setting: this.setting, value: !this.isOn});
+			this.changeUserSettingAndSync({ setting: this.setting, value: !this.isOn });
 		},
 	},
 };

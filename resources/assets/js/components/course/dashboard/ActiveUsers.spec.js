@@ -1,6 +1,6 @@
-import {shallowMount, createLocalVue} from '@vue/test-utils';
-import {describe, it, beforeEach} from 'mocha';
-import {expect} from 'chai';
+import { shallowMount, createLocalVue } from '@vue/test-utils';
+import { describe, it, beforeEach } from 'mocha';
+import { expect } from 'chai';
 import Vuex from 'vuex';
 
 import ActiveUsers from 'js/components/course/dashboard/ActiveUsers';
@@ -9,7 +9,7 @@ import Avatar from 'js/components/global/Avatar.vue';
 const localVue = createLocalVue();
 localVue.use(Vuex);
 localVue.component('wnl-avatar', Avatar);
-localVue.directive('t', (args) => ({...args}));
+localVue.directive('t', (args) => ({ ...args }));
 
 describe('ActiveUsers.vue', () => {
 	let store;
@@ -23,8 +23,8 @@ describe('ActiveUsers.vue', () => {
 					namespaced: true,
 					getters: {
 						activeUsers: () => () => [
-							{id: 7, profile: {full_name: 'foo bar', avatar: null}},
-							{id: 10, profile: {full_name: 'buzz fizz', avatar: null}},
+							{ id: 7, profile: { full_name: 'foo bar', avatar: null } },
+							{ id: 10, profile: { full_name: 'buzz fizz', avatar: null } },
 						]
 					}
 				}
@@ -39,7 +39,7 @@ describe('ActiveUsers.vue', () => {
 		});
 
 		it('Counts users correctly', () => {
-			const wrapper = shallowMount(ActiveUsers, {store, localVue, sync: false});
+			const wrapper = shallowMount(ActiveUsers, { store, localVue, sync: false });
 			expect(wrapper.vm.activeUsersCount).to.equal(1);
 		});
 	});
@@ -64,7 +64,7 @@ describe('ActiveUsers.vue', () => {
 		});
 
 		it('Renders message', () => {
-			const wrapper = shallowMount(ActiveUsers, {localVue, store, sync: false});
+			const wrapper = shallowMount(ActiveUsers, { localVue, store, sync: false });
 			expect(wrapper.findAll('.avatar').length).to.equal(0);
 			expect(wrapper.vm.activeUsersCount).to.equal(0);
 			expect(wrapper.findAll('.active-users-container').length).to.equal(0);

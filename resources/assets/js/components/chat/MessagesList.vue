@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-chat">
 		<div class="wnl-chat-messages" @scroll="onScroll"
-			 ref="messagesContainer">
+			ref="messagesContainer">
 			<div class="wnl-chat-content">
 				<div class="wnl-chat-content-inside" v-if="loaded">
 					<div class="notification aligncenter" v-if="!hasMore">
@@ -55,13 +55,13 @@
 		position: relative
 </style>
 <script>
-import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection';
+import { SOCKET_EVENT_USER_SENT_MESSAGE } from 'js/plugins/chat-connection';
 import Message from './Message.vue';
-import {nextTick} from 'vue';
+import { nextTick } from 'vue';
 import _ from 'lodash';
 import highlight from 'js/mixins/highlight';
 
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
 	components: {
@@ -104,11 +104,11 @@ export default {
 			return this.messages.map((message, index) => {
 				if (index === 0) return true;
 
-				let previous     = index - 1,
+				let previous = index - 1,
 					halfHourInMs = 1000 * 60 * 30;
 
 				return message.user_id !== this.messages[previous].user_id ||
-						message.time - this.messages[previous].time > halfHourInMs;
+					message.time - this.messages[previous].time > halfHourInMs;
 			});
 		},
 		container() {
@@ -134,12 +134,12 @@ export default {
 				: target.scrollTop;
 			const height = target.scrollHeight;
 			const shouldPull =
-						// make sure we're not pulling from cold storage at the moment,
-						!this.isPulling &&
-						// we're reaching the top of the messages container,
+				// make sure we're not pulling from cold storage at the moment,
+				!this.isPulling &&
+				// we're reaching the top of the messages container,
 
-						(scrollPosition / height) < 0.1 &&
-						this.hasMore;
+				(scrollPosition / height) < 0.1 &&
+				this.hasMore;
 
 			if (shouldPull) this.pull();
 		},
@@ -150,7 +150,7 @@ export default {
 			this.isPulling = true;
 			const heightBefore = this.container.scrollHeight;
 			this.onScrollTop()
-				.then(() =>  {
+				.then(() => {
 					const heightAfter = this.container.scrollHeight;
 					this.container.scrollTop = heightAfter - heightBefore;
 					this.isPulling = false;
@@ -186,7 +186,7 @@ export default {
 		highlightedMessageId() {
 			if (this.highlightedMessageId) this.scrollToMessageById(this.highlightedMessageId);
 		},
-		'loaded' () {
+		'loaded'() {
 			// required by firefox
 			this.scrollToBottom();
 		}

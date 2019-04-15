@@ -29,7 +29,7 @@
 </style>
 
 <script>
-import {mapActions, mapState, mapGetters} from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 
 import WnlNestedSetEditor from 'js/admin/components/nestedSet/NestedSetEditor';
 import WnlTaxonomyTermsList from 'js/admin/components/taxonomies/TaxonomyTermsList';

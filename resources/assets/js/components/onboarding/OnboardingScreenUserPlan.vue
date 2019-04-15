@@ -79,13 +79,13 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 
 import WnlAutomaticPlan from 'js/components/user/plan/AutomaticPlan';
 
-import {getApiUrl} from 'js/utils/env';
-import {getImageUrl} from 'js/utils/env';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { getApiUrl } from 'js/utils/env';
+import { getImageUrl } from 'js/utils/env';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	components: {
@@ -112,7 +112,7 @@ export default {
 	},
 	async mounted() {
 		try {
-			const [{data: {course_start: courseStart}}, {data: {id, included}}] = await Promise.all([
+			const [{ data: { course_start: courseStart } }, { data: { id, included } }] = await Promise.all([
 				axios.get(getApiUrl('products/current/paidCourse')),
 				axios.get(getApiUrl('users/current?include=has_prolonged_course')),
 			]);

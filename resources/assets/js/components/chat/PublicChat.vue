@@ -77,7 +77,7 @@ import MessagesList from './MessagesList';
 import MessageForm from './MessageForm.vue';
 import { mapActions, mapGetters } from 'vuex';
 import _ from 'lodash';
-import {nextTick} from 'vue';
+import { nextTick } from 'vue';
 import {
 	SOCKET_EVENT_USER_SENT_MESSAGE,
 	SOCKET_EVENT_LEAVE_ROOM
@@ -174,16 +174,16 @@ export default {
 			}
 
 			this.loaded = false;
-			const {messageTime, roomId} = this.$route.query;
+			const { messageTime, roomId } = this.$route.query;
 			let pointer;
 
-			this.createPublicRoom({slug: this.currentRoom.channel})
+			this.createPublicRoom({ slug: this.currentRoom.channel })
 				.then(room => {
 					this.currentRoom.id = room.id;
 					pointer = room.log_pointer;
-					return this.fetchRoomMessages({room, limit: 50, context: {messageTime, roomId, beforeLimit: 10}});
+					return this.fetchRoomMessages({ room, limit: 50, context: { messageTime, roomId, beforeLimit: 10 } });
 				})
-				.then(({messages, pagination}) => {
+				.then(({ messages, pagination }) => {
 					this.messages = [...messages];
 					this.pagination = pagination;
 					return this.$socketJoinRoom(this.currentRoom.id, pointer);
@@ -211,7 +211,7 @@ export default {
 				room: roomId
 			});
 		},
-		pushMessage({message, room}) {
+		pushMessage({ message, room }) {
 			if (this.currentRoom.id === room.id) {
 				this.messages = [
 					...this.messages,
@@ -219,20 +219,20 @@ export default {
 				];
 			}
 		},
-		onMessageSent({sent, ...data}) {
+		onMessageSent({ sent, ...data }) {
 			if (sent) {
 				this.$refs.messagesList.scrollToBottom();
 				this.pushMessage(data);
 			}
 		},
 		pullMore() {
-			return this.fetchRoomMessages({room: this.currentRoom, currentCursor: this.cursor, limit: 50, append: true})
-				.then(({messages, pagination}) => {
+			return this.fetchRoomMessages({ room: this.currentRoom, currentCursor: this.cursor, limit: 50, append: true })
+				.then(({ messages, pagination }) => {
 					this.messages = messages.concat(this.messages);
 					this.pagination = pagination;
 				}).catch(error => $wnl.logger.capture(error));
 		},
-		processMentions({mentions, context}) {
+		processMentions({ mentions, context }) {
 			this.saveMentions(this.getMentionsData(mentions, context));
 		},
 		getMentionsData(userIds, message) {

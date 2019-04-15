@@ -18,7 +18,7 @@
 </style>
 
 <script>
-import {msFromSeconds, hmsFromSeconds} from 'js/utils/time';
+import { msFromSeconds, hmsFromSeconds } from 'js/utils/time';
 
 export default {
 	name: 'QuizTimer',

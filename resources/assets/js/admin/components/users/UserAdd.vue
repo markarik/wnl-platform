@@ -6,12 +6,12 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 import UserEditForm from './UserEditForm';
 
 
 export default {
-	components: {UserEditForm},
+	components: { UserEditForm },
 	computed: {
 		resourceUrl() {
 			return 'users';

@@ -10,10 +10,13 @@
 </template>
 
 <script>
-import Qna from 'js/components/qna/Qna';
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
-import {mapActions} from 'vuex';
+import { each } from 'lodash';
+import { mapActions } from 'vuex';
+
+import Qna from 'js/components/qna/Qna';
+
+import { getApiUrl } from 'js/utils/env';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 import injectArguments from 'js/utils/injectArguments';
@@ -58,7 +61,7 @@ export default {
 				wrapperClass = 'ratio-16-9-wrapper';
 
 			if (iframes.length > 0) {
-				_.each(iframes, (iframe) => {
+				each(iframes, (iframe) => {
 					let wrapper = document.createElement('div'),
 						parent = iframe.parentNode;
 

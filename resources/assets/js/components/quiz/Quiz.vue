@@ -12,14 +12,14 @@
 		</div>
 		<div v-else>
 			<p class="title is-5">
-				Sprawdź swoją wiedzę z wczorajszej lekcji! <wnl-emoji name="thinking_face"></wnl-emoji>
+				Sprawdź swoją wiedzę z wczorajszej lekcji! <wnl-emoji name="thinking_face"></wnl-emoji>
 			</p>
 			<p class="big">
 				Po każdym podejściu, na ekranie pozostaną tylko błędnie rozwiązane pytania. Aby zakończyć test, odpowiadasz do skutku! Żeby nie było zbyt łatwo, kolejność odpowiedzi będzie każdorazowo zmieniana. Powodzenia!
 			</p>
 			<p class="has-text-centered" v-if="isAdmin">
 				<a class="button is-primary is-outlined" @click="autoResolve">
-					Rozwiąż wszystkie pytania
+					Rozwiąż wszystkie pytania
 				</a>
 			</p>
 			<wnl-quiz-list v-if="isLoaded"
@@ -52,7 +52,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 import QuizList from 'js/components/quiz/QuizList';
 import QuizSummary from 'js/components/quiz/QuizSummary';
-import {scrollToTop, scrollToElement} from 'js/utils/animations';
+import { scrollToTop, scrollToElement } from 'js/utils/animations';
 import { swalConfig } from 'js/utils/swal';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
@@ -91,7 +91,7 @@ export default {
 		},
 		tryAgainAlert() {
 			return {
-				text: this.$t('quiz.alert.tryAgain.text', {count: this.getUnresolved.length}),
+				text: this.$t('quiz.alert.tryAgain.text', { count: this.getUnresolved.length }),
 				title: this.$t('quiz.alert.tryAgain.title'),
 				type: 'info',
 			};

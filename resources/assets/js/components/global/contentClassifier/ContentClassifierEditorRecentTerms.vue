@@ -113,7 +113,7 @@ export default {
 			}
 		},
 		isTermAttached(term) {
-			return this.items.every(item => item.taxonomyTerms.find(({id}) => id === term.id));
+			return this.items.every(item => item.taxonomyTerms.find(({ id }) => id === term.id));
 		}
 	},
 };

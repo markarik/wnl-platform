@@ -107,7 +107,7 @@
 <script>
 import { get } from 'lodash';
 
-import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
+import { Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea } from 'js/components/global/form';
 import WnlTagDelete from 'js/admin/components/tags/TagDelete';
 import WnlPaginatedSortableTable from 'js/admin/components/lists/PaginatedSortableTable';
 
@@ -203,7 +203,7 @@ export default {
 		WnlPaginatedSortableTable,
 	},
 	methods: {
-		onChange({formData}) {
+		onChange({ formData }) {
 			this.formData = this.normalizeFormData(formData);
 		},
 		onSubmitSuccess(data) {
@@ -224,7 +224,7 @@ export default {
 				is_rename_allowed: get(formData, `included.metas.${formData.id}.is_rename_allowed`, true),
 			};
 		},
-		getTaggableLink({taggable_type, taggable_id}) {
+		getTaggableLink({ taggable_type, taggable_id }) {
 			if (!this.taggableTypeFilters[taggable_type]) return;
 
 			return this.taggableTypeFilters[taggable_type].getLink(taggable_id);

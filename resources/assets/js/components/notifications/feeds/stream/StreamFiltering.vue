@@ -62,7 +62,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 const filteringOptions = [
 	{

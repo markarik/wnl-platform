@@ -1,5 +1,5 @@
-import {describe, it} from 'mocha';
-import {expect} from 'chai';
+import { describe, it } from 'mocha';
+import { expect } from 'chai';
 import navigation from 'js/services/navigation.js';
 
 describe('navigation service', () => {
@@ -9,7 +9,7 @@ describe('navigation service', () => {
 				text: 'foo',
 				itemClass: 'wnl-foo',
 				routeName: 'foo-route',
-				routeParams: {fizz: 'buzz'},
+				routeParams: { fizz: 'buzz' },
 				iconClass: 'wnl-foo-icon',
 				iconTitle: 'wnl-foo-title',
 				meta: 'bar'
@@ -18,7 +18,7 @@ describe('navigation service', () => {
 				itemClass: 'wnl-foo',
 				to: {
 					name: 'foo-route',
-					params: {fizz: 'buzz'}
+					params: { fizz: 'buzz' }
 				},
 				iconClass: 'wnl-foo-icon',
 				iconTitle: 'wnl-foo-title',

@@ -39,7 +39,7 @@ import WnlAutocompleteKeyboardNavigation from 'js/mixins/autocomplete-keyboard-n
 import ConversationSnippet from 'js/components/messages/ConversationSnippet';
 import FindUsers from 'js/components/messages/FindUsers';
 import MessageLink from 'js/components/global/MessageLink';
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'UsersAutocomplete',

@@ -71,10 +71,10 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 import navigation from 'js/services/navigation';
-import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
+import { STATUS_COMPLETE, STATUS_IN_PROGRESS } from 'js/services/progressStore';
 
 export default {
 	name: 'LessonItem',

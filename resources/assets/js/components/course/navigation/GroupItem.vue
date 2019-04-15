@@ -92,7 +92,7 @@ export default {
 		...mapState('course', ['structure']),
 		...mapGetters(['isNavigationGroupExpanded']),
 		groupItem() {
-			return navigation.composeItem({text: this.item.model.name, itemClass: 'heading small'});
+			return navigation.composeItem({ text: this.item.model.name, itemClass: 'heading small' });
 		},
 		canRenderChildren() {
 			return this.hasChildren && this.isOpen;

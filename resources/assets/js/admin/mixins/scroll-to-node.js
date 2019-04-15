@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import {scrollToElement} from 'js/utils/animations';
+import { scrollToElement } from 'js/utils/animations';
 
 export default {
 	methods: {

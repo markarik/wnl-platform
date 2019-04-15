@@ -70,7 +70,7 @@
 </style>
 
 <script>
-import {scrollToY} from 'js/utils/animations';
+import { scrollToY } from 'js/utils/animations';
 
 export default {
 	props: {

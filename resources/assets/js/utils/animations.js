@@ -1,5 +1,5 @@
 import SweetScroll from 'sweet-scroll';
-import {isDebug} from 'js/utils/env';
+import { isDebug } from 'js/utils/env';
 
 export function scrollToTop() {
 	scrollToY(0);

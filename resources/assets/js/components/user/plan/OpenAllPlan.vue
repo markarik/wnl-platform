@@ -81,15 +81,8 @@ export default {
 		requiredLength() {
 			return this.userLessons.filter(lesson => lesson.is_required).length;
 		},
-		inProgressLessonsLength() {
-			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
-				return !this.completedLessons.includes(Number(requiredLesson));
-			}).length;
-		},
 		completedLessonsLength() {
-			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
-				return this.completedLessons.includes(Number(requiredLesson));
-			}).length;
+			return this.completedLessons.length;
 		},
 		completedLessons() {
 			return this.getCompleteLessons(1).map(lesson => lesson.id);

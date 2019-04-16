@@ -71,6 +71,7 @@ module.exports = {
 		'vue/attributes-order': [
 			'error',
 		],
+
 		// TODO enable vue/strongly-recommended rules below
 		'vue/require-prop-types': [
 			'off'
@@ -78,7 +79,8 @@ module.exports = {
 		'vue/require-default-prop': [
 			'off'
 		],
-		// TODO enable vue/recommended rule below
+
+		// We use v-html a lot
 		'vue/no-v-html': [
 			'off'
 		],

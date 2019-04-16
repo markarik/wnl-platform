@@ -73,18 +73,19 @@ module.exports = {
 		'vue/attributes-order': [
 			'error',
 		],
-		// Doesn't seem useful
-		'vue/singleline-html-element-content-newline': [
-			'off'
-		],
 		// TODO enable vue/strongly-recommended rules below
 		'vue/require-prop-types': [
 			'off'
 		],
-		'vue/multiline-html-element-content-newline': [
+		'vue/require-default-prop': [
 			'off'
 		],
-		'vue/require-default-prop': [
+
+		// The two below don't seem useful
+		'vue/singleline-html-element-content-newline': [
+			'off'
+		],
+		'vue/multiline-html-element-content-newline': [
 			'off'
 		],
 	},

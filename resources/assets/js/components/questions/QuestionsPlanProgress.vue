@@ -58,7 +58,7 @@
 			<div v-else>
 				<p class="plan-starts">
 					{{$t('questions.plan.start.heading', {
-						date: this.planStartDate.format('LL')
+						date: planStartDate.format('LL')
 					})}}
 				</p>
 				<p class="plan-progress-average">{{$t('questions.plan.start.tip', {

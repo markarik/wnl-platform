@@ -58,7 +58,7 @@
 						<span class="icon is-small">
 							<i class="fa fa-hourglass-start" />
 						</span>
-						{{$t('questions.solving.test.preset.time', {time: this.time})}}
+						{{$t('questions.solving.test.preset.time', {time: time})}}
 					</p>
 				</section>
 				<a class="button is-small is-primary" @click="buildTest">

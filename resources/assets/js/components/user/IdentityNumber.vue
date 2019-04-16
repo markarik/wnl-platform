@@ -25,7 +25,7 @@
 				<div class="id-number__personal-identity-number-input">
 					<input
 						v-model="identity.personalIdentityNumber"
-						:name="this.identityTypes.personalId"
+						:name="identityTypes.personalId"
 						class="input"
 						type="text"
 						placeholder="Numer identyfikacyjny"
@@ -61,7 +61,7 @@
 								v-model="identity.identityType"
 								class="is-checkradio"
 								type="radio"
-								:name="this.identityTypes.personalId"
+								:name="identityTypes.personalId"
 								value="personal_identity_number"
 								@click="disableErrors"
 							>
@@ -71,7 +71,7 @@
 								v-model="identity.identityType"
 								class="is-checkradio"
 								type="radio"
-								:name="this.identityTypes.passport"
+								:name="identityTypes.passport"
 								value="passport_number"
 								@click="disableErrors"
 							>

@@ -15,7 +15,7 @@
 						</a>
 					</div>
 					<div v-if="hasError" class="notification">
-						{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed" />
+						{{$t('quiz.single.error', {id: id})}} <wnl-emoji name="disappointed" />
 					</div>
 					<wnl-quiz-widget
 						v-else

@@ -16,7 +16,7 @@
 			<span class="next" @click="goToImage(nextImageIndex)"><i class="fa fa-angle-right" /></span>
 			<span class="iv-close" @click="isVisible = false" />
 			<div class="footer-info">
-				<span class="current">{{this.currentImageIndex + 1}}</span>/<span class="total">{{this.images.length}}</span>
+				<span class="current">{{currentImageIndex + 1}}</span>/<span class="total">{{images.length}}</span>
 			</div>
 		</div>
 	</div>

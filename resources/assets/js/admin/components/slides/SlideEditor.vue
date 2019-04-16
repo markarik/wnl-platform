@@ -77,7 +77,7 @@
 						<a
 							class="button is-danger"
 							:class="{'is-loading': detachingSlide}"
-							:disabled="!this.slideId && !this.screenId"
+							:disabled="!slideId && !screenId"
 							@click="confirmDetach=true"
 						>Usuń slajd z prezentacji</a>
 					</div>
@@ -95,7 +95,7 @@
 					<div class="level-item">
 						<a
 							class="button"
-							:disabled="!this.slideId && !this.screenId"
+							:disabled="!slideId && !screenId"
 							@click="preview"
 						>Podgląd</a>
 					</div>

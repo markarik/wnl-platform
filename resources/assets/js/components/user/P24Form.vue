@@ -37,7 +37,7 @@
 		<input
 			type="hidden"
 			name="p24_client"
-			:value="this.currentUserProfile.full_name"
+			:value="currentUserProfile.full_name"
 		>
 		<input
 			type="hidden"

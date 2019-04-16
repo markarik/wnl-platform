@@ -154,9 +154,9 @@
 				</div>
 				<div class="annotation">
 					<div class="level">
-						<div v-if="this.completedLessonsLength > 0" class="level-item">
+						<div v-if="completedLessonsLength > 0" class="level-item">
 							{{$t('lessonsAvailability.annotation.header')}}
-							{{this.completedLessonsLength}}{{$t('lessonsAvailability.annotation.info')}}
+							{{completedLessonsLength}}{{$t('lessonsAvailability.annotation.info')}}
 						</div>
 					</div>
 				</div>

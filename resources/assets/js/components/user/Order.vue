@@ -84,7 +84,7 @@
 								:class="{
 									'button': true,
 									'is-primary': true,
-									'is-loading': this.paymentLoading
+									'is-loading': paymentLoading
 								}"
 								data-button="pay-now"
 								@click="pay"
@@ -92,7 +92,7 @@
 								Opłać zamówienie
 							</button>
 						</p>
-						<p class="metadata aligncenter margin top">Kwota do zapłaty: {{this.order.total}}zł</p>
+						<p class="metadata aligncenter margin top">Kwota do zapłaty: {{order.total}}zł</p>
 						<p v-if="canChangePaymentMethod" class="aligncenter">Aby zapłacić na raty, anuluj to zamówienie i złóż kolejne.</p>
 					</div>
 					<!-- PAY ORDER ENDS -->
@@ -110,7 +110,7 @@
 									:class="{
 										'button': true,
 										'is-primary': true,
-										'is-loading': this.paymentLoading
+										'is-loading': paymentLoading
 									}"
 									@click="pay"
 								>

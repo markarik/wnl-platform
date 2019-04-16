@@ -1,9 +1,7 @@
 module.exports = {
 	extends: [
 		'eslint:recommended',
-		// TODO use recommended rules
-		// 'plugin:vue/recommended'
-		'plugin:vue/strongly-recommended'
+		'plugin:vue/recommended',
 	],
 	plugins: [
 		'import'
@@ -78,6 +76,13 @@ module.exports = {
 			'off'
 		],
 		'vue/require-default-prop': [
+			'off'
+		],
+		// TODO enable vue/recommended rules below
+		'vue/order-in-components': [
+			'off'
+		],
+		'vue/no-v-html': [
 			'off'
 		],
 

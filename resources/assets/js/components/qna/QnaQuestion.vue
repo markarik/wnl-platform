@@ -99,7 +99,7 @@
 			<transition name="fade">
 				<wnl-qna-new-answer-form
 					v-if="showAnswerForm"
-					:question-id="this.id"
+					:question-id="id"
 					@submitSuccess="onSubmitSuccess"
 				/>
 			</transition>

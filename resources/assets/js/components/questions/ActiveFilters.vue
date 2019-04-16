@@ -32,7 +32,7 @@
 				<slot name="heading" />
 			</span>
 		</div>
-		<div v-if="this.activeFilters.length > 0" class="active-filters-list">
+		<div v-if="activeFilters.length > 0" class="active-filters-list">
 			<span
 				v-for="(filter, index) in activeFiltersObjects"
 				:key="index"

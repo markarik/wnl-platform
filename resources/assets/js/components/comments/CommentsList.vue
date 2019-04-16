@@ -4,7 +4,7 @@
 			<div class="comments-controls">
 				<span class="icon is-small comment-icon"><i class="fa fa-comments-o" /></span>
 				Komentarze ({{comments.length}})
-				<span v-if="comments.length > 0 || this.showComments"> ·
+				<span v-if="comments.length > 0 || showComments"> ·
 				<a
 					class="secondary-link"
 					@click="toggleComments"

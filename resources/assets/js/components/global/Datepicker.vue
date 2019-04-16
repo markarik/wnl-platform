@@ -1,5 +1,7 @@
 <template>
-	<input class="input datepicker" :class="{'withBorder': withBorder}"
+	<input
+		class="input datepicker"
+		:class="{'withBorder': withBorder}"
 		:placeholder="placeholder"
 		:value="date"
 	/>

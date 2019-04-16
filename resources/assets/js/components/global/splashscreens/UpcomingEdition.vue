@@ -2,7 +2,11 @@
 	<div>
 		<wnl-text-loader v-if="updateInProgress"></wnl-text-loader>
 		<template v-else>
-			<img class="splash-screen-image" :src="logoImageUrl" alt="Logo kursu">
+			<img
+				class="splash-screen-image"
+				:src="logoImageUrl"
+				alt="Logo kursu"
+			>
 			<div v-if="diff >= 0">
 				<p class="title is-4">Twoja przygoda z kursem zacznie się już za:</p>
 				<div class="splash-screen-counter">
@@ -23,7 +27,7 @@
 					</div>
 				</div>
 				<!-- TODO PLAT-1201 clean up and do it correctly -->
-				<p class="splash-screen__info text-dimmed" v-if="courseSlug === 'ldek'">
+				<p v-if="courseSlug === 'ldek'" class="splash-screen__info text-dimmed">
 					Album map myśli wyślemy do Ciebie w 2. połowie maja.
 				</p>
 				<p class="splash-screen__info text-dimmed">

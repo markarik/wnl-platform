@@ -1,12 +1,16 @@
 <template>
-	<div id="app" v-if="!isCurrentUserLoading" :class="{'modal-active': modalVisible}">
-		<div class="wnl-overlay" v-if="shouldDisplayOverlay">
+	<div
+		v-if="!isCurrentUserLoading"
+		id="app"
+		:class="{'modal-active': modalVisible}"
+	>
+		<div v-if="shouldDisplayOverlay" class="wnl-overlay">
 			<span class="loader"></span>
 			<span class="loader-text">{{currentOverlayText}}</span>
 		</div>
 		<wnl-navbar :show="true"></wnl-navbar>
 		<div class="wnl-main">
-			<wnl-alerts :alerts="alerts"/>
+			<wnl-alerts :alerts="alerts" />
 			<router-view></router-view>
 		</div>
 	</div>

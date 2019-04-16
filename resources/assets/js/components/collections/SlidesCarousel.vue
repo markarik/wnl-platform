@@ -1,16 +1,26 @@
 <template>
 	<div class="wnl-slides-collection">
 		<p class="title is-4">{{$t('collections.slides.savedSlidesTitle')}} <span>({{savedSlidesCount}})</span>
-			<a v-if="!!savedSlidesCount" class="saved-slides-toggle panel-toggle" :class="{'is-active': mode === contentModes.bookmark}" @click="toggleBookmarked()">
-					{{$t('collections.slides.showOnlySaved')}}
-					<span class="icon is-small">
-						<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']"></i>
-					</span>
+			<a
+				v-if="!!savedSlidesCount"
+				class="saved-slides-toggle panel-toggle"
+				:class="{'is-active': mode === contentModes.bookmark}"
+				@click="toggleBookmarked()"
+			>
+				{{$t('collections.slides.showOnlySaved')}}
+				<span class="icon is-small">
+					<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']"></i>
+				</span>
 			</a>
 		</p>
-		<div class="slides-carousel-container" v-if="bookmarkedSlidesIds.length > 0">
+		<div v-if="bookmarkedSlidesIds.length > 0" class="slides-carousel-container">
 			<div class="slides-carousel">
-				<wnl-slide-thumb :key="index" v-for="(slide, index) in sortedSlides" @slideClick="showSlide(index)" :slide="slide">
+				<wnl-slide-thumb
+					v-for="(slide, index) in sortedSlides"
+					:key="index"
+					:slide="slide"
+					@slideClick="showSlide(index)"
+				>
 					{{getSlideDisplayNumberFromIndex(index)}}
 				</wnl-slide-thumb>
 			</div>
@@ -19,8 +29,8 @@
 			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
 		</div>
 		<wnl-slideshow
-			ref="slideshow"
 			v-if="htmlContent"
+			ref="slideshow"
 			:html-content="htmlContent"
 			:preserve-route="true"
 			:screen-data="screenData"

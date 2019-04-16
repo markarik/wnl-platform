@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-app-layout wnl-course-layout" v-if="ready">
+	<div v-if="ready" class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
 			:is-visible="canRenderSidenav"
 			:is-detached="!isSidenavMounted"
@@ -9,7 +9,7 @@
 			</wnl-course-navigation>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
-			<router-view :presence-channel="presenceChannel"/>
+			<router-view :presence-channel="presenceChannel" />
 		</div>
 		<wnl-sidenav-slot
 			class="course-chat"
@@ -18,9 +18,9 @@
 			:has-chat="true"
 		>
 			<div v-if="isLesson" class="lesson-active-users-container">
-				<wnl-active-users message="dashboard.activeUsersLessons" :channel="presenceChannel"/>
+				<wnl-active-users message="dashboard.activeUsersLessons" :channel="presenceChannel" />
 			</div>
-			<wnl-public-chat :rooms="chatRooms"/>
+			<wnl-public-chat :rooms="chatRooms" />
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">

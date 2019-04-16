@@ -3,26 +3,29 @@
 		<div v-if="!loading">
 			<div class="stream-notifications">
 				<div class="stream-line"></div>
-				<component :is="getEventComponent(message)"
-					:message="message"
-					:key="message.id"
-					:notification-component="QuestionsNotification"
+				<component
+					:is="getEventComponent(message)"
 					v-for="message in filtered"
+					:key="message.id"
+					:message="message"
+					:notification-component="QuestionsNotification"
 				/>
 			</div>
 			<div class="show-more">
-				<a v-if="canShowMore" class="button is-small is-outlined"
+				<a
+					v-if="canShowMore"
+					class="button is-small is-outlined"
 					:class="{'is-loading': fetching}"
 					@click="loadMore"
 				>
 					{{$t('notifications.personal.showMore')}}
 				</a>
 				<span v-else class="small text-dimmed has-text-centered">
-					{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1"/>
+					{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1" />
 				</span>
 			</div>
 		</div>
-		<wnl-text-loader class="margin vertical" v-else/>
+		<wnl-text-loader v-else class="margin vertical" />
 	</div>
 </template>
 

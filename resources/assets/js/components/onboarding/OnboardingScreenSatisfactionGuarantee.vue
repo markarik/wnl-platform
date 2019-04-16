@@ -1,7 +1,11 @@
 <template>
 	<div>
 		<figure class="has-text-centered margin bottom">
-			<img :src="imageUrl" alt="" class="onboarding-image">
+			<img
+				:src="imageUrl"
+				alt=""
+				class="onboarding-image"
+			>
 		</figure>
 		<h2 class="title has-text-centered">Gwarancja satysfakcji ⭐️</h2>
 
@@ -33,11 +37,11 @@
 				<h3 class="title is-4">Ukończenie kursu najpóźniej dzień przed egzaminem</h3>
 				<p>Ukończenie kursu wymaga minimum:</p>
 				<div class="content">
-				<ul>
-					<li>300h aktywności na platformie</li>
-					<li>80% ukończonych lekcji</li>
-					<li>2500 rozwiązanych pytań zamkniętych</li>
-				</ul>
+					<ul>
+						<li>300h aktywności na platformie</li>
+						<li>80% ukończonych lekcji</li>
+						<li>2500 rozwiązanych pytań zamkniętych</li>
+					</ul>
 				</div>
 				<p>Wszystkie statystyki możesz śledzić w zakładce KONTO > Statystyki.</p>
 			</div>

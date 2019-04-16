@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<div v-if="hasHits" class="wnl-slides-search" :class="{'is-mobile': isMobile}">
+		<div
+			v-if="hasHits"
+			class="wnl-slides-search"
+			:class="{'is-mobile': isMobile}"
+		>
 			<wnl-slide-thumbnail
 				v-for="(hit, index) in hits"
 				:key="index"
@@ -9,7 +13,7 @@
 			/>
 		</div>
 		<div v-else-if="hasSearched" class="slides-zero-state">
-			{{ $t('search.zeroState', {phrase}) }}
+			{{$t('search.zeroState', {phrase})}}
 		</div>
 	</div>
 </template>

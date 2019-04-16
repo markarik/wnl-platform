@@ -1,7 +1,11 @@
 <template>
 	<div>
 		<figure class="has-text-centered margin bottom">
-			<img :src="imageUrl" alt="" class="onboarding-image">
+			<img
+				:src="imageUrl"
+				alt=""
+				class="onboarding-image"
+			>
 		</figure>
 		<h2 class="title has-text-centered">Cześć {{currentUserName}} 👋</h2>
 		<p class="title is-5 has-text-centered">Zanim rozpoczniesz naukę, poznasz najważniejsze funkcje platformy i kursu ⭐</p>

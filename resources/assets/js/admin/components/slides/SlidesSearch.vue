@@ -1,6 +1,6 @@
 <template>
 	<div class="slides-search">
-		<div class="notification is-danger has-text-centered" v-show="error">
+		<div v-show="error" class="notification is-danger has-text-centered">
 			Nie udało się znaleźć slajdu dla podanych argumentów
 		</div>
 
@@ -11,14 +11,21 @@
 						<div class="control">
 							<label class="label">Numer screena</label>
 							<input
-								type="text" class="input"
+								type="text"
+								class="input"
+								:value="screenId"
 								@keyup.enter="getSlide"
-								:value="screenId" @input="(event) => $emit('screenIdChange', event)"
+								@input="(event) => $emit('screenIdChange', event)"
 							>
 						</div>
 						<div class="control">
 							<label class="label">Numer slajdu</label>
-							<input @keyup.enter="getSlide" type="text" class="input" v-model="slideOrderNo">
+							<input
+								v-model="slideOrderNo"
+								type="text"
+								class="input"
+								@keyup.enter="getSlide"
+							>
 						</div>
 					</div>
 				</div>
@@ -27,16 +34,23 @@
 						<div class="control">
 							<label class="label">lub ID slajdu</label>
 							<input
-								type="text" class="input"
+								type="text"
+								class="input"
+								:value="slideId"
 								@keyup.enter="getSlide"
-								:value="slideId" @input="(event) => $emit('slideIdChange', event)">
+								@input="(event) => $emit('slideIdChange', event)"
+							>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="level-right">
 				<div class="level-item">
-					<a class="button is-outlined" @click="getSlide" :class="{'is-loading': loading}">
+					<a
+						class="button is-outlined"
+						:class="{'is-loading': loading}"
+						@click="getSlide"
+					>
 						Zaciung slajd
 					</a>
 				</div>
@@ -95,7 +109,7 @@ export default {
 						this.error = false;
 					})
 					.catch(exception => {
-						console.error(exception);
+						$wnl.logger.error(exception);
 						this.loading = false;
 						this.error = true;
 					});

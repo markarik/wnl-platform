@@ -14,8 +14,12 @@
 		<wnl-text-loader v-if="isLoading" />
 
 		<template v-else>
-			<div class="margin-top-huge" v-if="isReturningUser">
-				<img :src="imageUrl" alt="" class="onboarding-plan-image">
+			<div v-if="isReturningUser" class="margin-top-huge">
+				<img
+					:src="imageUrl"
+					alt=""
+					class="onboarding-plan-image"
+				>
 				<div>
 					<p class="margin bottom">Na najbliższą edycję szykujemy nową Chirurgię (na 10 czerwca) i Medycynę ratunkową (na 19 sierpnia). Możesz jednak spokojnie zaplanować naukę!</p>
 					<p class="margin bottom">Zakres materiału oraz struktura lekcji pozostaną takie same, jak obecnie. Nawet jeżeli zrealizujesz te lekcje przed ich aktualizacją, możesz bez przeszkód kontynuować kurs i mieć pewność pokrycia całości materiału 🙂</p>
@@ -23,10 +27,14 @@
 				</div>
 			</div>
 
-			<div class="margin-top-huge" v-else>
+			<div v-else class="margin-top-huge">
 				<p class="text-dimmed margin bottom">💡 Plan zakłada optymalną kolejność przerabiania przedmiotów. Jeśli chcesz stworzyć indywidualny plan lub go edytować, będziesz mieć taką możliwość w zakładce KONTO > Plan pracy.</p>
 				<div class="margin-top-huge">
-					<img :src="imageUrl" alt="" class="onboarding-plan-image">
+					<img
+						:src="imageUrl"
+						alt=""
+						class="onboarding-plan-image"
+					>
 					<h3 class="title is-4 onboarding-plan-header">Domyślny plan</h3>
 					<div>
 						<p class="margin bottom">Proponowany przez nas plan pracy trwa od <strong>{{defaultPlanStartDate}}</strong>, zakłada pracę <strong>5&nbsp;dni w tygodniu przez 14 tygodni</strong> 🗓</p>
@@ -36,7 +44,7 @@
 						</p>
 					</div>
 				</div>
-				<div class="onboarding-planner-wrapper" v-if="isEditorVisible">
+				<div v-if="isEditorVisible" class="onboarding-planner-wrapper">
 					<button class="delete onboarding-planner-close clickable" @click="isEditorVisible=false"></button>
 					<wnl-automatic-plan
 						:show-annotation="false"

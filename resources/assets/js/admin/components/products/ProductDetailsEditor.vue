@@ -1,12 +1,12 @@
 <template>
 	<wnl-form
-			name="ProductsEditor"
-			:populate="isEdit"
-			:method="formMethod"
-			:resource-route="formResourceRoute"
-			:suppress-enter="true"
-			@submitSuccess="onSubmitSucess"
-			class="product-form"
+		name="ProductsEditor"
+		:populate="isEdit"
+		:method="formMethod"
+		:resource-route="formResourceRoute"
+		:suppress-enter="true"
+		class="product-form"
+		@submitSuccess="onSubmitSucess"
 	>
 		<div class="columns">
 			<div class="column left">
@@ -14,7 +14,7 @@
 				<wnl-text name="name">Nazwa</wnl-text>
 				<wnl-text name="slug">Slug<br>
 					<small>Unikatowy identyfikator kursu, na jego podstawie produkt wyświetla
-						się na stronie sprzedażowej.</small>
+					się na stronie sprzedażowej.</small>
 				</wnl-text>
 				<div class="field is-grouped">
 					<wnl-text name="price">Cena brutto</wnl-text>
@@ -22,7 +22,7 @@
 				</div>
 				<wnl-text name="vat_note">Opis VAT<br>
 					<small>Notatka dotycząca podstawy zwolnienia z podatku pojawiająca się
-						na fakturze. Zbędna w przypadku stawki 23%.</small>
+					na fakturze. Zbędna w przypadku stawki 23%.</small>
 				</wnl-text>
 				<wnl-textarea name="invoice_name">Opis na fakturze</wnl-textarea>
 
@@ -40,17 +40,17 @@
 				<wnl-datepicker name="signups_start" :config="datepickerConfig">Start zapisów</wnl-datepicker>
 				<wnl-datepicker name="signups_end" :config="datepickerConfig">
 					Koniec zapisów<br>
-					<small>Po tej dacie wciąż można zapisać się na kurs, ale wyświetlane jest
+						<small>Po tej dacie wciąż można zapisać się na kurs, ale wyświetlane jest
 						ostrzeżenie o tym, że kurs już się rozpoczął.</small>
 				</wnl-datepicker>
 				<wnl-datepicker name="signups_close" :config="datepickerConfig">
 					Zamknięcie zapisów<br>
-					<small>Po tej dacie nie można już zapisać się na kurs.</small>
+						<small>Po tej dacie nie można już zapisać się na kurs.</small>
 				</wnl-datepicker>
 
 				<wnl-datepicker name="delivery_date" :config="datepickerConfig">
 					Data dostawy<br>
-					<small>Data realizacji usługi. Zazwyczaj pokrywa się ze startem kursu.</small>
+						<small>Data realizacji usługi. Zazwyczaj pokrywa się ze startem kursu.</small>
 				</wnl-datepicker>
 			</div>
 		</div>

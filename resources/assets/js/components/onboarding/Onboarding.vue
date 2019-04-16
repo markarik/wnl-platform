@@ -9,14 +9,14 @@
 		</wnl-sidenav-slot>
 		<div v-if="currentStep" class="onboarding-wrapper">
 			<wnl-stepper
+				v-if="!currentStep.hideOnStepper"
 				class="onboarding-stepper"
 				:steps="stepsForStepper"
 				:current-step="currentStepIndexForStepper"
-				v-if="!currentStep.hideOnStepper"
 			/>
 			<component
-				class="scrollable-container"
 				:is="currentStep.component"
+				class="scrollable-container"
 			/>
 			<div class="has-text-centered buttons">
 				<button

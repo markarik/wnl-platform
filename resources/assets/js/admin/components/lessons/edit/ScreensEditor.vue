@@ -2,20 +2,30 @@
 	<div class="screens-editor">
 		<div class="screens-list">
 			<p class="title is-5">Ekrany</p>
-			<wnl-screens-list :lesson-id="lessonId" :screens="screens" ref="ScreensList"></wnl-screens-list>
+			<wnl-screens-list
+				ref="ScreensList"
+				:lesson-id="lessonId"
+				:screens="screens"
+			></wnl-screens-list>
 		</div>
-		<div class="screen-editor" v-if="loaded">
+		<div v-if="loaded" class="screen-editor">
 			<form>
 				<!-- Screen meta -->
 				<div class="field is-grouped">
 					<div class="control">
-						<wnl-form-input :form="screenForm" name="name" v-model="screenForm.name"></wnl-form-input>
+						<wnl-form-input
+							v-model="screenForm.name"
+							:form="screenForm"
+							name="name"
+						></wnl-form-input>
 					</div>
 					<div class="control">
-						<a class="button is-success is-small"
+						<a
+							class="button is-success is-small"
 							:class="{'is-loading': loading}"
 							:disabled="!hasChanged"
-							@click="onSubmit">
+							@click="onSubmit"
+						>
 							<span class="margin right">Zapisz</span>
 							<span class="icon is-small">
 								<i class="fa fa-save"></i>
@@ -30,15 +40,15 @@
 						<label class="label">Typ ekranu</label>
 						<span class="select">
 							<wnl-select
+								v-model="screenForm.type"
 								:form="screenForm"
 								:options="typesOptions"
 								name="type"
-								v-model="screenForm.type"
 							>
 							</wnl-select>
 						</span>
 					</div>
-					<div class="control" v-if="currentType && currentType.metaEditorComponent">
+					<div v-if="currentType && currentType.metaEditorComponent" class="control">
 						<component :is="currentType.metaEditorComponent" v-model="screenMeta" />
 					</div>
 				</div>
@@ -46,9 +56,10 @@
 				<!-- Screen content -->
 				<div class="screen-content-editor">
 					<quill
+						v-model="screenForm.content"
 						:form="screenForm"
 						name="content"
-						v-model="screenForm.content">
+					>
 					</quill>
 				</div>
 			</form>

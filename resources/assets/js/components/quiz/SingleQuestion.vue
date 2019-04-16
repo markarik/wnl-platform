@@ -15,9 +15,10 @@
 						</a>
 					</div>
 					<div v-if="hasError" class="notification">
-						{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed"/>
+						{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed" />
 					</div>
-					<wnl-quiz-widget v-else
+					<wnl-quiz-widget
+						v-else
 						:is-single="true"
 						:questions="getQuestionsWithAnswers"
 						:get-reaction="getReaction"
@@ -25,7 +26,7 @@
 						@verify="resolveQuestion"
 					/>
 				</div>
-				<wnl-text-loader v-else/>
+				<wnl-text-loader v-else />
 			</div>
 		</div>
 	</div>

@@ -3,16 +3,16 @@
 		<template slot="header">
 			<h4 class="title is-5 is-marginless"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
 			<span class="terms-editor__search control has-icons-right">
-					<wnl-taxonomy-term-autocomplete
-						@change="onSearch"
-						placeholder="Szukaj pojęcia"
-					/>
-					<span class="icon is-small is-right">
-						<i class="fa fa-search"></i>
-					</span>
+				<wnl-taxonomy-term-autocomplete
+					placeholder="Szukaj pojęcia"
+					@change="onSearch"
+				/>
+				<span class="icon is-small is-right">
+					<i class="fa fa-search"></i>
 				</span>
+			</span>
 		</template>
-		<wnl-taxonomy-terms-list slot="nodes-list" :terms="getRootNodes"/>
+		<wnl-taxonomy-terms-list slot="nodes-list" :terms="getRootNodes" />
 		<wnl-taxonomy-term-editor-right
 			slot="panel-right"
 			:taxonomy-id="taxonomyId"

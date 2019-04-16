@@ -3,13 +3,13 @@
 		<button
 			class="button is-danger margin right"
 			type="button"
-			@click="onClick"
 			:disabled="!isDeleteAllowed"
 			:title="!isDeleteAllowed && 'Nie można usunąć tego tagu ponieważ należy do taksonomii lub jest kategorią'"
+			@click="onClick"
 		>Usuń</button>
 		<wnl-modal
-			@closeModal="onCloseModal"
 			v-if="isTaggablesMoverVisible"
+			@closeModal="onCloseModal"
 		>
 			<p class="field">
 				Dla tego taga istnieje {{taggablesCount}} powiązań.

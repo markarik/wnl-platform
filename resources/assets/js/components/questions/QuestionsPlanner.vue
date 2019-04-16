@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-app-layout" :class="{'is-mobile': isMobile}">
-		<wnl-questions-navigation/>
+		<wnl-questions-navigation />
 		<div class="wnl-middle wnl-app-layout-main" :class="{'is-full-width': isLargeDesktop}">
 			<div class="scrollable-main-container">
 				<div class="questions-header questions-plan-header">
@@ -15,17 +15,18 @@
 					</div>
 				</div>
 				<div v-if="plan === null" class="margin vertical">
-					<wnl-text-loader/>
+					<wnl-text-loader />
 				</div>
 				<div v-else-if="hasPlan && !showPlanner" class="questions-plan-progress">
-					<wnl-questions-plan-progress :plan="plan" @changePlan="showPlanner = true"/>
+					<wnl-questions-plan-progress :plan="plan" @changePlan="showPlanner = true" />
 				</div>
 				<div v-else class="questions-planner">
 					<div class="questions-planner-heading">
 						<span>
 							{{$t(`questions.plan.headings.${plannerHeading}`)}}
 						</span>
-						<a v-if="hasPlan"
+						<a
+							v-if="hasPlan"
 							class="button is-small is-primary is-outlined"
 							@click="showPlanner = false"
 						>
@@ -43,7 +44,12 @@
 									<i class="fa fa-hourglass-1"></i>
 								</span>
 							</label>
-							<wnl-datepicker :with-border="true" v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
+							<wnl-datepicker
+								v-model="startDate"
+								:with-border="true"
+								:config="startDateConfig"
+								@onChange="onStartDateChange"
+							/>
 							<p class="tip">
 								{{$t('questions.plan.tips.startDate')}}
 							</p>
@@ -55,7 +61,12 @@
 									<i class="fa fa-hourglass-3"></i>
 								</span>
 							</label>
-							<wnl-datepicker :with-border="true" v-model="endDate" :config="endDateConfig" @onChange="onEndDateChange"/>
+							<wnl-datepicker
+								v-model="endDate"
+								:with-border="true"
+								:config="endDateConfig"
+								@onChange="onEndDateChange"
+							/>
 							<p class="tip">
 								{{$t('questions.plan.tips.endDate')}}
 							</p>
@@ -67,7 +78,13 @@
 							{{$t('questions.plan.headings.slackDays')}}
 						</div>
 						<div class="slack-days">
-							<input class="slack-days-input" min="0" :max="maxSlack" v-model="slackDays" type="number"/>
+							<input
+								v-model="slackDays"
+								class="slack-days-input"
+								min="0"
+								:max="maxSlack"
+								type="number"
+							/>
 							<p class="tip">{{$t('questions.plan.tips.slackDays')}}</p>
 						</div>
 
@@ -89,8 +106,13 @@
 								</p>
 							</div>
 						</div>
-						<div class="preserveProgress control" v-if="hasPlan">
-							<input id="preserveProgress" type="checkbox" class="checkbox" v-model="preserveProgress">
+						<div v-if="hasPlan" class="preserveProgress control">
+							<input
+								id="preserveProgress"
+								v-model="preserveProgress"
+								type="checkbox"
+								class="checkbox"
+							>
 							<label for="preserveProgress">{{$t('questions.filters.preserveProgress')}}</label>
 						</div>
 						<p class="tip has-text-centered">{{$t('questions.filters.preserveProgressTip')}}</p>
@@ -130,7 +152,11 @@
 						</div>
 
 						<p class="has-text-centered margin top">
-							<a class="button is-primary" :class="{'is-loading': saving}" @click="createPlan">
+							<a
+								class="button is-primary"
+								:class="{'is-loading': saving}"
+								@click="createPlan"
+							>
 								{{$t('questions.plan.submit')}}
 							</a>
 						</p>

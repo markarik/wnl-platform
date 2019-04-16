@@ -20,12 +20,12 @@
 		<div class="content-classifier-filter__active-filters">
 			<h5 class="title is-5">Aktywne filtry</h5>
 
-			<div class="content-classifier-filter__active-filters__list margin bottom" v-if="hasActiveFilters">
+			<div v-if="hasActiveFilters" class="content-classifier-filter__active-filters__list margin bottom">
 				<wnl-taxonomy-term-with-ancestors
 					v-for="term in byTaxonomyTermsFilter"
+					:key="term.id"
 					:term="term"
 					:ancestors="term.ancestors"
-					:key="term.id"
 					class="content-classifier-filter__active-filters__term"
 					is-bordered
 				>
@@ -54,8 +54,17 @@
 			</div>
 
 			<div class="content-classifier-filter__type-filters">
-				<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier-filter__type-filters__item">
-					<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="activeContentTypesMap[contentType]"/>
+				<div
+					v-for="(meta, contentType) in contentTypes"
+					:key="contentType"
+					class="field is-grouped content-classifier-filter__type-filters__item"
+				>
+					<input
+						:id="`type-${contentType}`"
+						v-model="activeContentTypesMap[contentType]"
+						type="checkbox"
+						class="checkbox"
+					/>
 					<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
 				</div>
 			</div>

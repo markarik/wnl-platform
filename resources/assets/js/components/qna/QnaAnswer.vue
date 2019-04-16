@@ -1,26 +1,32 @@
 <template>
-	<div class="qna-answer-container" ref="highlight">
+	<div ref="highlight" class="qna-answer-container">
 		<div class="qna-answer">
-				<wnl-vote
-					type="up"
-					:reactable-id="id"
-					:reactable-resource="reactableResource"
-					:state="upvoteState"
-					module="qna"
-				></wnl-vote>
+			<wnl-vote
+				type="up"
+				:reactable-id="id"
+				:reactable-resource="reactableResource"
+				:state="upvoteState"
+				module="qna"
+			></wnl-vote>
 			<div class="qna-container">
 				<div class="qna-wrapper">
 					<div class="qna-answer-content content" v-html="content"></div>
 				</div>
 				<div class="qna-meta">
-					<div class="modal-activator" :class="{'author-forgotten': author.deleted_at}" @click="showModal">
-						<wnl-avatar class="avatar"
-								:full-name="author.full_name"
-								:url="author.avatar"
-								size="medium">
+					<div
+						class="modal-activator"
+						:class="{'author-forgotten': author.deleted_at}"
+						@click="showModal"
+					>
+						<wnl-avatar
+							class="avatar"
+							:full-name="author.full_name"
+							:url="author.avatar"
+							size="medium"
+						>
 						</wnl-avatar>
 						<span class="qna-meta-info">
-							{{ author.full_name }} ·
+							{{author.full_name}} ·
 						</span>
 					</div>
 					<span class="qna-meta-info">
@@ -48,8 +54,8 @@
 			>
 			</wnl-comments-list>
 		</div>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="author"/>
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
+			<wnl-user-profile-modal :author="author" />
 		</wnl-modal>
 	</div>
 </template>

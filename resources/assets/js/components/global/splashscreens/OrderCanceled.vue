@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<img class="splash-screen-image" :src="logoImageUrl" alt="Logo kursu">
+		<img
+			class="splash-screen-image"
+			:src="logoImageUrl"
+			alt="Logo kursu"
+		>
 		<div class="has-text-centered">
 			<p class="title is-4">Twoje zamówienie zostało anulowane ze względu na brak płatności.</p>
 			<p class="text-dimmed">

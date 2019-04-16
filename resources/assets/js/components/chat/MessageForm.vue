@@ -15,9 +15,9 @@
 					resource-route="qna_questions"
 				>
 					<wnl-quill
+						id="elo-elo"
 						ref="editor"
 						name="text"
-						id="elo-elo"
 						:options="quillOptions"
 						:keyboard="keyboard"
 						:toolbar="toolbar"
@@ -25,9 +25,9 @@
 						@input="onInput"
 					></wnl-quill>
 				</wnl-form>
-				<span class="characters-counter metadata">{{ `${message.length} / 5000` }}</span>
-				<div class="message is-warning" v-if="error.length > 0">
-					<div class="message-body">{{ error }}</div>
+				<span class="characters-counter metadata">{{`${message.length} / 5000`}}</span>
+				<div v-if="error.length > 0" class="message is-warning">
+					<div class="message-body">{{error}}</div>
 				</div>
 			</div>
 			<div class="media-right">
@@ -37,7 +37,8 @@
 					alt="Wyślij wiadomość"
 					:disabled="sendingDisabled || sendingMessage"
 					:loading="sendingMessage"
-					@buttonclicked="sendMessage">
+					@buttonclicked="sendMessage"
+				>
 				</wnl-image-button>
 			</div>
 		</article>

@@ -35,22 +35,22 @@
 									<i class="fa fa-close"></i>
 								</span>
 								<span
-									slot="right"
 									v-if="allItemsCount > 1"
+									slot="right"
 									:class="{
-									'margin': true,
-									'left': true,
-									'tag': true,
-									'strong': hasAllItemsAttached(term),
-									'is-white': !hasAllItemsAttached(term),
-									'clickable': !hasAllItemsAttached(term),
-								}"
+										'margin': true,
+										'left': true,
+										'tag': true,
+										'strong': hasAllItemsAttached(term),
+										'is-white': !hasAllItemsAttached(term),
+										'clickable': !hasAllItemsAttached(term),
+									}"
 									:title="!hasAllItemsAttached(term) && 'Dodaj do wszystkich'"
 									@click="!hasAllItemsAttached(term) && onAttachTaxonomyTerm(term)"
 								>
-								<span class="icon is-small" v-if="!hasAllItemsAttached(term)"><i class="fa fa-plus"></i></span>
-								<span>{{term.itemsCount}}/{{allItemsCount}}</span>
-							</span>
+									<span v-if="!hasAllItemsAttached(term)" class="icon is-small"><i class="fa fa-plus"></i></span>
+									<span>{{term.itemsCount}}/{{allItemsCount}}</span>
+								</span>
 							</wnl-taxonomy-term-with-ancestors>
 
 						</li>

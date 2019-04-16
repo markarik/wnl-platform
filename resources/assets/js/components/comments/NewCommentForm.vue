@@ -9,7 +9,8 @@
 		:attach="attachedData"
 		:name="name"
 		:value="newCommentDraft"
-		@submitSuccess="onSubmitSuccess">
+		@submitSuccess="onSubmitSuccess"
+	>
 		<wnl-quill
 			class="margin bottom"
 			name="text"

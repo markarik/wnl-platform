@@ -85,7 +85,8 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { get } from 'lodash';
+import { mapGetters } from 'vuex';
 
 import WnlDropdown from 'js/components/global/Dropdown';
 import WnlTaskEvents from 'js/components/moderators/ModeratorsTaskEvents';
@@ -164,8 +165,8 @@ export default {
 			return this.task.events[this.eventsCount - 1];
 		},
 		taskContext() {
-			if (_.get(this.lastEvent, 'data.context.dynamic')) {
-				const dynamic = _.get(this.lastEvent, 'data.context.dynamic');
+			if (get(this.lastEvent, 'data.context.dynamic')) {
+				const dynamic = get(this.lastEvent, 'data.context.dynamic');
 				return {
 					name: 'dynamicContextMiddleRoute',
 					params: {
@@ -184,7 +185,7 @@ export default {
 				};
 			}
 
-			return _.get(this.lastEvent, 'data.context', this.lastEvent.data.referer);
+			return get(this.lastEvent, 'data.context', this.lastEvent.data.referer);
 		},
 		formatedCreatedAt() {
 			return timeFromS(this.task.created_at);
@@ -195,7 +196,7 @@ export default {
 	},
 	methods: {
 		assign(user = {}) {
-			this.$emit('assign', {assignee_id: user && user.user_id || null, id: this.task.id});
+			this.$emit('assign', { assignee_id: user && user.user_id || null, id: this.task.id });
 		},
 	},
 };

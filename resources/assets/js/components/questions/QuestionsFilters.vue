@@ -3,37 +3,37 @@
 		<div class="questions-filters-content">
 			<div class="wnl-active-filters-container">
 				<wnl-active-filters
-						:active-filters="activeFilters"
-						:loading="fetchingData"
-						:filters="filters"
-						:items-names-source="itemsNamesSource"
-						:matched-count="matchedQuestionsCount"
-						:total-count="allQuestionsCount"
-						@activeFiltersChanged="onActiveFiltersChanged"
-						@autorefreshChange="onAutorefreshChange"
-						@elementHeight="setActiveFiltersHeight"
-						@fetchMatchingQuestions="$emit('fetchMatchingQuestions')"
-						@refresh="onRefresh"
+					:active-filters="activeFilters"
+					:loading="fetchingData"
+					:filters="filters"
+					:items-names-source="itemsNamesSource"
+					:matched-count="matchedQuestionsCount"
+					:total-count="allQuestionsCount"
+					@activeFiltersChanged="onActiveFiltersChanged"
+					@autorefreshChange="onAutorefreshChange"
+					@elementHeight="setActiveFiltersHeight"
+					@fetchMatchingQuestions="$emit('fetchMatchingQuestions')"
+					@refresh="onRefresh"
 				/>
 			</div>
 			<div class="wnl-questions-filters"
-				 :style="{paddingTop: activeFiltersHeight + 'px'}">
-				 <div class="filters-heading">
-				 	<span class="metadata margin vertical">
-				 		<span class="icon is-tiny"><i class="fa fa-search"></i></span>
+				:style="{paddingTop: activeFiltersHeight + 'px'}">
+				<div class="filters-heading">
+					<span class="metadata margin vertical">
+					<span class="icon is-tiny"><i class="fa fa-search"></i></span>
 						{{$t('questions.filters.searchHeading')}}
-				 	</span>
-				 </div>
-				 <wnl-questions-search class="search-input"
-				 :loading="loading"
-				 @emitValueToFilter="emitValueToList"/>
+					</span>
+				</div>
+				<wnl-questions-search class="search-input"
+					:loading="loading"
+					@emitValueToFilter="emitValueToList"/>
 				<div class="filters-heading">
 					<span class="metadata margin vertical">
 						<span class="icon is-tiny"><i class="fa fa-sliders"></i></span>
 						{{$t('questions.filters.heading')}}
 					</span>
 					<a v-if="!isChatMounted && isChatVisible"
-					   class="hide-filters" @click="toggleChat">
+						class="hide-filters" @click="toggleChat">
 						{{$t('questions.filters.hide')}}
 						<span class="icon is-small"><i class="fa fa-close"></i></span>
 					</a>
@@ -89,17 +89,12 @@
 </style>
 
 <script>
-import {isEmpty, uniq} from 'lodash';
-import {mapActions, mapGetters} from 'vuex';
+import { uniq } from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
 
 import Accordion from 'js/components/global/accordion/Accordion';
 import ActiveFilters from 'js/components/questions/ActiveFilters';
 import QuestionsSearch from 'js/components/questions/QuestionsSearch';
-
-const config = {
-	flattened: ['resolution'],
-	expanded: ['subjects'],
-};
 
 export default {
 	name: 'QuestionsFilters',
@@ -189,7 +184,7 @@ export default {
 		onAutorefreshChange(autorefresh) {
 			this.autorefresh = autorefresh;
 		},
-		onItemToggled({path, selected}) {
+		onItemToggled({ path, selected }) {
 			this.$emit('activeFiltersChanged', {
 				active: selected,
 				filter: path,
@@ -197,7 +192,7 @@ export default {
 			});
 		},
 		onRefresh(payload) {
-			this.$emit('activeFiltersChanged', {refresh: true, ...payload});
+			this.$emit('activeFiltersChanged', { refresh: true, ...payload });
 		},
 		setActiveFiltersHeight(height) {
 			this.activeFiltersHeight = height;

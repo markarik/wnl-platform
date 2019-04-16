@@ -78,7 +78,7 @@
 </style>
 
 <script>
-import {nextTick} from 'vue';
+import { nextTick } from 'vue';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 

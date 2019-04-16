@@ -1,5 +1,5 @@
 import { createPerimeter } from 'vue-kindergarten';
-import {SUBSCRIPTION_STATUS} from 'js/consts/user';
+import { SUBSCRIPTION_STATUS } from 'js/consts/user';
 
 export default createPerimeter({
 	purpose: 'currentEditionParticipant',

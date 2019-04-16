@@ -12,12 +12,12 @@
 		<slot name="above-content"/>
 
 		<div class="notification is-danger has-text-centered"
-			 v-show="submissionFailed">
+			v-show="submissionFailed">
 			Coś poszło nie tak...
 		</div>
 
 		<form class="" action="" method="POST" @submit.prevent="onSubmit"
-				@keydown="form.errors.clear($event.target.name)">
+			@keydown="form.errors.clear($event.target.name)">
 
 			<template v-if="form.quiz_questions && form.quiz_questions.length">
 				<span class="subtitle is-5">Pytania powiązane ze slajdem #{{slideId}}:</span>
@@ -39,9 +39,9 @@
 					<div class="level-item">
 						<p class="control">
 							<wnl-checkbox
-									type="text" name="is_functional"
-									:form="form"
-									v-model="form.is_functional">
+								type="text" name="is_functional"
+								:form="form"
+								v-model="form.is_functional">
 								Slajd funkcjonalny?
 							</wnl-checkbox>
 						</p>
@@ -52,43 +52,43 @@
 						<div>Na pewno?</div>
 						<a class="button" @click="confirmDetach=false">Nie</a>
 						<a class="button is-danger"
-							 @click="detachSlide">
+							@click="detachSlide">
 							Tak
 						</a>
 					</div>
 					<div class="level-item" v-else="">
 						<a class="button is-danger"
-							 :class="{'is-loading': detachingSlide}"
-							 :disabled="!this.slideId && !this.screenId"
-							 @click="confirmDetach=true">Usuń slajd z
+							:class="{'is-loading': detachingSlide}"
+							:disabled="!this.slideId && !this.screenId"
+							@click="confirmDetach=true">Usuń slajd z
 							prezentacji</a>
 					</div>
 				</div>
 				<div class="level-right">
 					<div class="level-item">
 						<a class="button is-primary"
-							 :class="{'is-loading': updatingChart}"
-							 v-if="chartReady" @click="updateChart">
+							:class="{'is-loading': updatingChart}"
+							v-if="chartReady" @click="updateChart">
 							Aktualizuj diagram</a>
 					</div>
 					<slot name="action"/>
 					<div class="level-item">
 						<a class="button"
-							 :disabled="!this.slideId && !this.screenId"
-							 @click="preview">Podgląd</a>
+							:disabled="!this.slideId && !this.screenId"
+							@click="preview">Podgląd</a>
 					</div>
 					<div class="level-item">
 						<a class="button is-primary"
-							 :class="{'is-loading': loading}"
-							 :disabled="form.errors.any() || !form.content"
-							 @click="onSubmit">Zapisz slajd</a>
+							:class="{'is-loading': loading}"
+							:disabled="form.errors.any() || !form.content"
+							@click="onSubmit">Zapisz slajd</a>
 					</div>
 				</div>
 			</div>
 		</form>
 		<wnl-slide-preview :show-modal="showPreviewModal"
-							 :content="previewModalContent"
-							 @closeModal="showPreviewModal=false"/>
+			:content="previewModalContent"
+			@closeModal="showPreviewModal=false"/>
 	</div>
 </template>
 
@@ -109,19 +109,21 @@
 </style>
 
 <script>
-import {mapActions} from 'vuex';
+import axios from 'axios';
+import { get } from 'lodash';
+import { mapActions } from 'vuex';
 
 import WnlCode from 'js/admin/components/forms/Code';
 import WnlCheckbox from 'js/admin/components/forms/Checkbox';
 import WnlSlidePreview from 'js/components/global/SlidePreview';
 
-import {alerts} from 'js/mixins/alerts';
+import { alerts } from 'js/mixins/alerts';
 import Form from 'js/classes/forms/Form';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
-const SECTION_OPEN_TAG_REGEX     = /<section.*>$/;
-const SECTION_CLOSE_TAG_REGEX    = /<\/section>$/;
-const COURSE_TAG_REGEX           = /[#!]+\(.*\)/;
+const SECTION_OPEN_TAG_REGEX = /<section.*>$/;
+const SECTION_CLOSE_TAG_REGEX = /<\/section>$/;
+const COURSE_TAG_REGEX = /[#!]+\(.*\)/;
 const FUNCTIONAL_SLIDE_TAG_REGEX = /[#!]+\(functional\)/;
 
 export default {
@@ -211,12 +213,12 @@ export default {
 			}
 			this.form.submit(this.method, this.resourceUrl, this.requestPayload)
 				.then(data => {
-					this.form.content       = data.content;
+					this.form.content = data.content;
 					this.form.is_functional = data.is_functional;
 					this.successFading('Zapisano', 2000);
 					this.loading = false;
 				})
-				.catch(exception => {
+				.catch((error) => {
 					this.errorFading('Ups... Coś poszło nie tak.', 4000);
 					$wnl.logger.capture(error);
 					this.loading = false;
@@ -229,13 +231,13 @@ export default {
 				.filter(line => line);
 
 			return SECTION_OPEN_TAG_REGEX.test(contentSplited[0])
-						&& SECTION_CLOSE_TAG_REGEX.test(contentSplited[contentSplited.length - 1]);
+				&& SECTION_CLOSE_TAG_REGEX.test(contentSplited[contentSplited.length - 1]);
 		},
 		updateChart() {
 			this.updatingChart = true;
 			axios.get(getApiUrl(`slides/.updateCharts/${this.slideId}`))
 				.then(response => {
-					this.form.content       = response.data.content;
+					this.form.content = response.data.content;
 					this.form.is_functional = response.data.is_functional;
 					this.successFading('Diagram zaktualizowany!', 2000);
 					this.updatingChart = false;
@@ -256,7 +258,7 @@ export default {
 				content: this.form.content,
 				slideId: this.slideId ? this.slideId : null,
 				screenId: this.screenId ? this.screenId : null
-			}).then(({data}) => {
+			}).then(({ data }) => {
 				this.previewModalContent = data;
 			});
 		},
@@ -276,7 +278,7 @@ export default {
 			axios.post(getApiUrl(`slides/${this.slideId}/.detach`), {
 				slideId: this.slideId,
 			}).then(() => {
-				this.form.content       = null;
+				this.form.content = null;
 				this.form.is_functional = false;
 				this.form.quiz_questions = [];
 				this.successFading('Slajd usunięty.', 2000);
@@ -284,7 +286,7 @@ export default {
 				this.$emit('resetSearchInputs');
 			}).catch(error => {
 				if (error.response.status === 400
-						|| error.response.status === 404) {
+					|| error.response.status === 404) {
 					this.errorFading('Nie można znaleźć takiego slajdu.', 4000);
 					this.detachingSlide = false;
 				} else {
@@ -296,17 +298,17 @@ export default {
 		}
 	},
 	watch: {
-		resourceUrl(newValue, oldValue) {
+		resourceUrl(newValue) {
 			newValue !== '' && this.form.populate(`${this.resourceUrl}?include=quiz_questions`, this.excluded)
 				.catch(error => {
-					const statusCode = _.get(error, 'response.status');
+					const statusCode = get(error, 'response.status');
 					statusCode === 404 && this.addAutoDismissableAlert({
 						type: 'error',
 						text: 'Slajd o tym ID nie istnieje'
 					});
 				});
 		},
-		content(newValue, oldValue) {
+		content() {
 			this.removeCourseTags();
 		}
 	}

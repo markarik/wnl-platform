@@ -282,16 +282,16 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
-import {pl} from 'flatpickr/dist/l10n/pl.js';
-import {isEmpty, merge} from 'lodash';
-import {mapActions, mapGetters} from 'vuex';
+import { pl } from 'flatpickr/dist/l10n/pl.js';
+import { isEmpty, merge } from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
 
 import Datepicker from 'js/components/global/Datepicker';
 import QuestionsFilters from 'js/components/questions/QuestionsFilters';
 import QuestionsNavigation from 'js/components/questions/QuestionsNavigation';
 import QuestionsPlanProgress from 'js/components/questions/QuestionsPlanProgress';
 import SidenavSlot from 'js/components/global/SidenavSlot';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import features from 'js/consts/events_map/features.json';
 import context from 'js/consts/events_map/context.json';
 
@@ -355,7 +355,7 @@ export default {
 			const count = this.counts[this.selectedOption];
 			const days = this.datesRangeInDays + 1 - this.slackDays;
 
-			return {average: Math.ceil(count/days), count, days};
+			return { average: Math.ceil(count/days), count, days };
 		},
 		datesRangeInDays() {
 			return moment(this.endDate).diff(moment(this.startDate), 'days');
@@ -412,7 +412,7 @@ export default {
 				slackDays: this.slackDays,
 				preserveProgress: this.preserveProgress
 			})
-				.then(({status, data}) => this.plan = data)
+				.then(({ data }) => this.plan = data)
 				.then(this.fetchDynamicFilters)
 				.then(() => {
 					this.saving = false;
@@ -439,7 +439,7 @@ export default {
 				filters,
 			})
 				.catch(error => $wnl.logger.error(error))
-				.then(({data: {total}}) => {
+				.then(({ data: { total } }) => {
 					this.customCount = total;
 					this.fetchingQuestions = false;
 				});
@@ -447,7 +447,7 @@ export default {
 		getPlan() {
 			return new Promise((resolve, reject) => {
 				return axios.get(getApiUrl(`user_plan/${this.currentUserId}`))
-					.then(({status, data}) => {
+					.then(({ status, data }) => {
 						let plan = data;
 						if (status === 204) {
 							plan = {};
@@ -481,7 +481,7 @@ export default {
 			return this.fetchDynamicFilters();
 		},
 		setFilters(filters) {
-			return new Promise((resolve, reject) => {
+			return new Promise((resolve) => {
 				if (!isEmpty(this.filters)) {
 					this.activeFiltersSet(filters);
 					return resolve();
@@ -494,7 +494,7 @@ export default {
 			});
 		},
 		setUnresolvedAndIncorrectCount() {
-			axios.get(getApiUrl('quiz_questions/stats')).then(({data: {correct, total}}) => {
+			axios.get(getApiUrl('quiz_questions/stats')).then(({ data: { correct, total } }) => {
 				this.unresolvedAndIncorrectCount = total - correct;
 			});
 		},

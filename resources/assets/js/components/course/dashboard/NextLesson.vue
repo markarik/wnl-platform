@@ -58,10 +58,10 @@
 </style>
 
 <script>
-import {truncate} from 'lodash';
-import {mapGetters} from 'vuex';
-import {resource} from 'js/utils/config';
-import {timeFromDate} from 'js/utils/time';
+import { truncate } from 'lodash';
+import { mapGetters } from 'vuex';
+import { resource } from 'js/utils/config';
+import { timeFromDate } from 'js/utils/time';
 import context from 'js/consts/events_map/context.json';
 import emits_events from 'js/mixins/emits-events';
 
@@ -83,9 +83,6 @@ export default {
 			'getFirstLessonIdInProgress',
 			'isLessonComplete',
 		]),
-		buttonClass() {
-			return this.getParam('buttonClass');
-		},
 		callToAction() {
 			return this.$t(`dashboard.progress.${this.status}-CTA`);
 		},
@@ -103,7 +100,7 @@ export default {
 			return this.status !== STATUS_NONE;
 		},
 		lessonName() {
-			return truncate(this.nextLesson.name, {length: 30});
+			return truncate(this.nextLesson.name, { length: 30 });
 		},
 		next() {
 			return this.$t(`dashboard.progress.${this.status}`);
@@ -128,9 +125,6 @@ export default {
 		},
 	},
 	methods: {
-		getParam(name) {
-			return statusParams[this.status][name];
-		},
 		trackNextLessonClick() {
 			this.$trackUserEvent({
 				feature: context.dashboard.features.next_lesson.value,

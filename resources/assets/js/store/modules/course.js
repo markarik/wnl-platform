@@ -1,7 +1,8 @@
+import axios from 'axios';
 import _ from 'lodash';
-import {set} from 'vue';
-import {getApiUrl} from 'js/utils/env';
-import {resources} from 'js/utils/constants';
+import { set } from 'vue';
+import { getApiUrl } from 'js/utils/env';
+import { resources } from 'js/utils/constants';
 import * as types from 'js/store/mutations-types';
 import { modelToResourceMap, getModelByResource } from 'js/utils/config';
 
@@ -128,7 +129,7 @@ const getters = {
 
 		if (!screens.length) return;
 
-		let currentScreenIndex = _.findIndex(screens, {'id': parseInt(currentScreenId)}),
+		let currentScreenIndex = _.findIndex(screens, { 'id': parseInt(currentScreenId) }),
 			adjScreenIndex;
 
 		if (direction === 'next') {
@@ -241,11 +242,11 @@ const mutations = {
 
 // Actions
 const actions = {
-	setup({commit, dispatch, rootGetters}, courseId) {
+	setup({ commit, dispatch }, courseId) {
 		return new Promise((resolve, reject) => {
 			Promise.all([
 				dispatch('setStructure', courseId),
-				dispatch('progress/setupCourse', courseId, {root: true}),
+				dispatch('progress/setupCourse', courseId, { root: true }),
 			])
 				.then(() => {
 					$wnl.logger.debug('Course ready, yay!');
@@ -258,14 +259,14 @@ const actions = {
 				});
 		});
 	},
-	async setupLesson({commit}, lessonId) {
+	async setupLesson({ commit }, lessonId) {
 		commit(types.SET_IS_LESSON_LOADING, true);
 		const { data } = await axios.get(getApiUrl(`lessons/${lessonId}/screens`), {
 			params: {
 				include: 'sections.subsections'
 			}
 		});
-		const {included, ...screensUnordered} = data;
+		const { included, ...screensUnordered } = data;
 		const screens = Object.values(screensUnordered).reduce((screens, screen) => {
 			screens[screen.id] = screen;
 			return screens;
@@ -278,11 +279,11 @@ const actions = {
 		commit(types.SET_SUBSECTIONS, subsections);
 		commit(types.SET_IS_LESSON_LOADING, false);
 	},
-	async setStructure({commit}, courseId = 1) {
+	async setStructure({ commit }, courseId = 1) {
 		const response = await _getCourseStructure(courseId);
-		const {data: {included, ...structureObj}} = response;
+		const { data: { included, ...structureObj } } = response;
 		const structure = Object.values(structureObj);
-		const {courses} = included;
+		const { courses } = included;
 
 		const withIncludes = structure.map(node => {
 			const include = modelToResourceMap[node.structurable_type];

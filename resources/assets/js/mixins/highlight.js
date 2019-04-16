@@ -8,11 +8,11 @@ const highlight = {
 			scrollToElement(this.$refs.highlight, 150, 500, scrollable);
 		},
 		cleanupRoute(paramsToUnset = this.highlightableResources) {
-			const {notification, ...queryParams} = this.$route.query;
+			const { notification, ...queryParams } = this.$route.query;
 			let query = {};
 
 			Object.keys(this.$route.query).forEach((param) => {
-				if (!paramsToUnset.includes(param)) query = {...query, [param]: queryParams[param]};
+				if (!paramsToUnset.includes(param)) query = { ...query, [param]: queryParams[param] };
 			});
 
 			this.$router.replace({
@@ -24,11 +24,11 @@ const highlight = {
 			const animate = (time) => {
 				if (update(time)) requestAnimationFrame(animate);
 			};
-			const element = {el: this.$refs.highlight, value: 0};
+			const element = { el: this.$refs.highlight, value: 0 };
 			this.$refs.highlight.style.transition = 'background 5s';
 
-			const tween = new Tween(element)
-				.to({value: 1}, 2000)
+			new Tween(element)
+				.to({ value: 1 }, 2000)
 				.on('update', function() {
 					this.object.el.style.background = 'rgba(15, 150, 152, 0.2)';
 				})

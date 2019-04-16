@@ -25,13 +25,11 @@
 
 <script>
 import Quill from 'quill';
-import { set } from 'vue';
 import { mapActions } from 'vuex';
 import { cloneDeep } from 'lodash';
 
 import { formInput } from 'js/mixins/form-input';
 import { fontColors } from 'js/utils/colors';
-import { mentionBlot } from 'js/classes/mentionblot';
 import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
 import WnlAutocompleteKeyboardNavigation from 'js/mixins/autocomplete-keyboard-navigation';
@@ -65,7 +63,7 @@ export default {
 					['bold', 'italic', 'underline', 'link'],
 					[{ color: fontColors }],
 					['clean'],
-					[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+					[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
 				];
 			}
 		},
@@ -107,13 +105,13 @@ export default {
 			const keyboardModule = cloneDeep(this.keyboard);
 
 			if (keyboardModule && keyboardModule.bindings && keyboardModule.bindings.handleEnter) {
-				keyboardModule.bindings.handleEnter.handler = (event) => {
+				keyboardModule.bindings.handleEnter.handler = () => {
 					if (this.items.length) {
 						// Prevent enter handler when autocomplete is open
 						return;
 					}
 
-					this.keyboard.bindings.handleEnter.handler(event);
+					this.keyboard.bindings.handleEnter.handler();
 				};
 			}
 
@@ -221,7 +219,7 @@ export default {
 			return false;
 		},
 
-		onEsc(evt) {
+		onEsc() {
 			this.items = [];
 			this.editor.focus();
 		},

@@ -22,7 +22,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 import MainNav from 'js/components/MainNav';
 import Sidenav from 'js/components/global/Sidenav';

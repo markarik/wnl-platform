@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 export const testAction = (action, payload, ctx = {}, expectedMutations, done) => {
 	let count = 0;

@@ -77,7 +77,7 @@ import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import feature_components from 'js/consts/events_map/feature_components.json';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 
 export default {
@@ -139,7 +139,7 @@ export default {
 			return this.otherQuestions.length > 0;
 		},
 		questionsIds() {
-			return this.questions.map(({id}) => id);
+			return this.questions.map(({ id }) => id);
 		}
 	},
 	methods: {
@@ -162,7 +162,7 @@ export default {
 			this.$emit('changeQuestion', fullIndex);
 			scrollToElement(this.$el, 75);
 		},
-		selectAnswer({answer}) {
+		selectAnswer({ answer }) {
 			this.allowDoubleclick = false;
 			this.$emit('selectAnswer', {
 				id: this.currentQuestion.id,
@@ -172,7 +172,7 @@ export default {
 				this.allowDoubleclick = true;
 			}, 500);
 		},
-		onAnswerDoubleClick({answer}) {
+		onAnswerDoubleClick() {
 			this.allowDoubleclick && this.displayResults && this.nextQuestion();
 		},
 		trackQuizQuestionChanged() {
@@ -185,7 +185,7 @@ export default {
 	},
 	created() {
 		this.trackQuizQuestionChanged();
-		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
 	},
 	watch: {
 		'currentQuestion.id'() {

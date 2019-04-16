@@ -101,8 +101,8 @@ export default{
 					tab: false,
 					handleEnter: {
 						key: 13,
-						handler: (event) => {
-							this.sendMessage(event);
+						handler: () => {
+							this.sendMessage();
 							return false;
 						}
 					}
@@ -149,14 +149,14 @@ export default{
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		sendMessage(event) {
+		sendMessage() {
 			if (this.sendingDisabled) {
 				return false;
 			}
 			this.sendingMessage = true;
 			this.error = '';
 			this.isWaitingToSendMentions = true;
-			const {messages, ...room} = this.room;
+			const { messages, ...room } = this.room;
 			this.$socketSendMessage({
 				room,
 				message: {
@@ -192,7 +192,7 @@ export default{
 				const mentions = this.getMentions();
 
 				if (mentions && mentions.length) {
-					this.$emit('foundMentions', {mentions, context: data.message});
+					this.$emit('foundMentions', { mentions, context: data.message });
 				}
 
 				this.mentions = [];
@@ -205,7 +205,7 @@ export default{
 				}
 			}
 		},
-		onInput(input) {
+		onInput() {
 			this.message = this.quillEditor.quill.getText().trim();
 			this.mentions = this.getMentions();
 			this.content = this.quillEditor.editor.innerHTML;

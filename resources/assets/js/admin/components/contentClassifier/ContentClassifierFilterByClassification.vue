@@ -103,7 +103,7 @@
 </style>
 
 <script>
-import { mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 import WnlTagAutocomplete from 'js/admin/components/global/TagAutocomplete';
 import WnlTaxonomyTermSelector from 'js/components/global/taxonomies/TaxonomyTermSelector';
@@ -150,12 +150,12 @@ export default {
 	},
 	methods: {
 		onTagSelect(tag) {
-			if (!this.byTagsFilter.find(({id}) => id === tag.id)) {
+			if (!this.byTagsFilter.find(({ id }) => id === tag.id)) {
 				this.byTagsFilter.push(tag);
 			}
 		},
 		onTermSelect(term, taxonomyId) {
-			if (!this.byTaxonomyTermsFilter.find(({id}) => id === term.id)) {
+			if (!this.byTaxonomyTermsFilter.find(({ id }) => id === term.id)) {
 				this.byTaxonomyTermsFilter.push({
 					...term,
 					taxonomy: this.taxonomyById(taxonomyId),
@@ -164,13 +164,13 @@ export default {
 			}
 		},
 		onTagDelete(tag) {
-			const index = this.byTagsFilter.findIndex(({id}) => id === tag.id);
+			const index = this.byTagsFilter.findIndex(({ id }) => id === tag.id);
 			if (index > -1) {
 				this.byTagsFilter.splice(index, 1);
 			}
 		},
 		onTaxonomyTermDelete(term) {
-			const index = this.byTaxonomyTermsFilter.findIndex(({id}) => id === term.id);
+			const index = this.byTaxonomyTermsFilter.findIndex(({ id }) => id === term.id);
 			if (index > -1) {
 				this.byTaxonomyTermsFilter.splice(index, 1);
 			}

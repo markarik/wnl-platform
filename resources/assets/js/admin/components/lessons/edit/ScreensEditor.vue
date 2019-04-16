@@ -90,8 +90,8 @@
 </style>
 
 <script>
-import _ from 'lodash';
-import { set } from 'vue';
+import axios from 'axios';
+import { isEqual, isObject } from 'lodash';
 import { mapActions } from 'vuex';
 
 import ScreensList from 'js/admin/components/lessons/edit/ScreensList.vue';
@@ -178,7 +178,7 @@ export default {
 			return getApiUrl(`screens/${this.$route.params.screenId}`);
 		},
 		typesOptions() {
-			return Object.keys(types).map((key, index) => types[key]);
+			return Object.keys(types).map((key) => types[key]);
 		},
 		currentType() {
 			const type = this.screenForm.type;
@@ -190,7 +190,7 @@ export default {
 			return null;
 		},
 		hasChanged() {
-			return !_.isEqual(this.screenForm.data(), this.screenForm.originalData);
+			return !isEqual(this.screenForm.data(), this.screenForm.originalData);
 		},
 	},
 	methods: {
@@ -200,7 +200,7 @@ export default {
 				.then(response => {
 					Object.keys(response.data).forEach((field) => {
 						let value = response.data[field];
-						if (_.isObject(value)) {
+						if (isObject(value)) {
 							value = JSON.stringify(value);
 						}
 						this.screenForm[field] = value;

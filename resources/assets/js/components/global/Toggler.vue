@@ -84,7 +84,7 @@ export default {
 	],
 	computed: {
 		classObject () {
-			const {type, size} = this;
+			const { type, size } = this;
 			return {
 				[`is-${type}`]: type,
 				[`is-${size}`]: size,

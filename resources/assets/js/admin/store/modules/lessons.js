@@ -47,15 +47,15 @@ const actions = {
 	setup({ commit, dispatch }) {
 		Promise.all([
 			dispatch('fetchAllLessons'),
-		]).then(resolutions => {
+		]).then(() => {
 			$wnl.logger.debug('Lessons editor ready');
 			commit(types.LESSONS_READY);
 		}, reason => {
 			$wnl.logger.error(reason);
 		});
 	},
-	async create({commit}, name) {
-		const {data: lesson} = await axios.post(getApiUrl('lessons'), {
+	async create({ commit }, name) {
+		const { data: lesson } = await axios.post(getApiUrl('lessons'), {
 			name
 		});
 		commit(types.ADD_LESSON, lesson);

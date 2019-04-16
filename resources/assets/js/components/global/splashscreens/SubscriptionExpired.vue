@@ -25,8 +25,8 @@
 </style>
 
 <script>
-import {getImageUrl, getUrl} from 'js/utils/env';
-import {mapGetters} from 'vuex';
+import { getImageUrl, getUrl } from 'js/utils/env';
+import { mapGetters } from 'vuex';
 
 export default {
 	computed: {

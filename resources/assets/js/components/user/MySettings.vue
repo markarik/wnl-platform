@@ -51,7 +51,7 @@
 import { mapGetters, mapActions, mapState } from 'vuex';
 
 import { Form as WnlForm, Check as WnlFormCheck, Select as WnlFormSelect } from 'js/components/global/form';
-import {USER_SETTING_NAMES} from 'js/consts/settings';
+import { USER_SETTING_NAMES } from 'js/consts/settings';
 
 export default {
 	components: {
@@ -69,7 +69,7 @@ export default {
 		...mapGetters(['isAdmin']),
 		...mapState('taxonomies', ['taxonomies']),
 		taxonomiesSelectOptions() {
-			return this.taxonomies.map(taxonomy => ({value: taxonomy.id, text: taxonomy.name}));
+			return this.taxonomies.map(taxonomy => ({ value: taxonomy.id, text: taxonomy.name }));
 		}
 	},
 	methods: {
@@ -81,7 +81,7 @@ export default {
 			Object.keys(newData).forEach(setting => {
 				let value = newData[setting];
 				if (newData[setting] !== this.getAllSettings[setting]) {
-					this.changeUserSetting({setting, value});
+					this.changeUserSetting({ setting, value });
 				}
 			});
 		},

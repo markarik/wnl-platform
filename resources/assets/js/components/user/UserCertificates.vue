@@ -95,7 +95,7 @@ export default {
 		},
 	},
 	async mounted() {
-		const {data} = await axios.get(getApiUrl('certificates'));
+		const { data } = await axios.get(getApiUrl('certificates'));
 
 		this.participationCertificates = Object.values(data.participation);
 		this.finalCertificates = Object.values(data.final);

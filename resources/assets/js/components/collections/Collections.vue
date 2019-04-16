@@ -159,7 +159,6 @@ import QnaCollection from 'js/components/collections/QnaCollection';
 import QuizCollection from 'js/components/collections/QuizCollection';
 import SlidesCarousel from 'js/components/collections/SlidesCarousel';
 import navigation from 'js/services/navigation';
-import { layouts } from 'js/store/modules/ui';
 
 export default {
 	props: ['categoryName', 'rootCategoryName'],
@@ -230,16 +229,16 @@ export default {
 	},
 	methods: {
 		...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
-		...mapActions('quiz', {'fetchQuiz': 'fetchQuestionsCollectionByTagName', 'resetQuiz': 'resetState'}),
-		...mapActions('qna', {'fetchQna':'fetchQuestionsByTagName', 'resetQna': 'destroyQna'}),
+		...mapActions('quiz', { 'fetchQuiz': 'fetchQuestionsCollectionByTagName', 'resetQuiz': 'resetState' }),
+		...mapActions('qna', { 'fetchQna':'fetchQuestionsByTagName', 'resetQna': 'destroyQna' }),
 		...mapActions(['toggleOverlay']),
 		getNavigation() {
 			let navigation = [];
 
 			this.categories.forEach((rootCategory) => {
-				const groupItem = this.getGroupItem({name: rootCategory.name});
+				const groupItem = this.getGroupItem({ name: rootCategory.name });
 				const childItems = rootCategory.categories
-					.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
+					.map(({ name, id }) => this.getChildCategory({ name, id, parent: rootCategory.name }));
 
 				groupItem.subitems = childItems;
 
@@ -271,19 +270,19 @@ export default {
 			const contentToFetch = [];
 
 			if (this.quizQuestionsIds.length) {
-				contentToFetch.push(this.fetchQuiz({tagName: this.categoryName, ids: this.quizQuestionsIds}));
+				contentToFetch.push(this.fetchQuiz({ tagName: this.categoryName, ids: this.quizQuestionsIds }));
 			} else {
 				this.resetQuiz();
 			}
 
 			if (this.qnaQuestionsIds.length) {
-				contentToFetch.push(this.fetchQna({tagName: this.categoryName, ids: this.qnaQuestionsIds}));
+				contentToFetch.push(this.fetchQna({ tagName: this.categoryName, ids: this.qnaQuestionsIds }));
 			} else {
 				this.resetQna();
 			}
 
 			if (this.slidesIds.length) {
-				contentToFetch.push(this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds}));
+				contentToFetch.push(this.fetchSlidesByTagName({ tagName: this.categoryName, ids: this.slidesIds }));
 			}
 
 			this.categoryId && this.$trackUserEvent({
@@ -326,15 +325,15 @@ export default {
 			return this.activePanels.includes(panel);
 		},
 		onChangeQuizQuestionsPage(page) {
-			this.fetchQuiz({tagName: this.categoryName, ids: this.quizQuestionsIds, page});
+			this.fetchQuiz({ tagName: this.categoryName, ids: this.quizQuestionsIds, page });
 		}
 	},
 	mounted() {
-		this.toggleOverlay({source: 'collections', display: true});
+		this.toggleOverlay({ source: 'collections', display: true });
 		this.fetchCategories()
 			.then(this.fetchReactions)
 			.then(this.setupContentForCategory)
-			.then(() => this.toggleOverlay({source: 'collections', display: false}));
+			.then(() => this.toggleOverlay({ source: 'collections', display: false }));
 	},
 	watch: {
 		categoryName(newCategoryName, oldCategoryName) {

@@ -188,16 +188,15 @@
 </style>
 
 <script>
-import {mapActions, mapGetters, mapMutations} from 'vuex';
-import {nextTick} from 'vue';
-import {get} from 'lodash';
-import {scrollToElement} from 'js/utils/animations';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { get } from 'lodash';
+import { scrollToElement } from 'js/utils/animations';
 import * as mutationsTypes from 'js/store/mutations-types';
 import WnlFlashcardItem from 'js/components/course/screens/flashcards/FlashcardItem';
-import {ANSWERS_MAP} from 'js/consts/flashcard';
+import { ANSWERS_MAP } from 'js/consts/flashcard';
 import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
 
@@ -232,7 +231,7 @@ export default {
 		},
 		flashcardsIds() {
 			return [].concat(...this.sets.map(set => {
-				return set.flashcards.map(({id}) => id);
+				return set.flashcards.map(({ id }) => id);
 			}));
 		},
 		getUnsolvedForSet() {
@@ -275,11 +274,11 @@ export default {
 		}
 	},
 	async mounted() {
-		this.toggleOverlay({source: 'flashcards', display: true});
+		this.toggleOverlay({ source: 'flashcards', display: true });
 		const resources = get(this.screenData, 'meta.resources', []);
 
 		try {
-			await Promise.all(resources.map(({id}) => {
+			await Promise.all(resources.map(({ id }) => {
 				return this.setFlashcardsSet({
 					setId: id,
 					include: 'flashcards.user_flashcard_notes',
@@ -290,13 +289,13 @@ export default {
 		} catch (e) {
 			$wnl.logger.error(e);
 		} finally {
-			this.toggleOverlay({source: 'flashcards', display: false});
+			this.toggleOverlay({ source: 'flashcards', display: false });
 		}
 
-		this.applicableSetsIds = resources.map(({id}) => id);
-		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.FLASHCARD, contentIds: this.flashcardsIds});
+		this.applicableSetsIds = resources.map(({ id }) => id);
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.FLASHCARD, contentIds: this.flashcardsIds });
 
-		resources.forEach(({id}) => {
+		resources.forEach(({ id }) => {
 			this.trackUserEvent({
 				feature_component: features.flashcards.feature_components.set.value,
 				action: features.flashcards.feature_components.set.actions.open.value,

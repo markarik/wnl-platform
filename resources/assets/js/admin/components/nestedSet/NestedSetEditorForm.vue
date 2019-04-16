@@ -30,10 +30,10 @@
 </style>
 
 <script>
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 import scrollToNodeMixin from 'js/admin/mixins/scroll-to-node';
 
-import {ALERT_TYPES} from 'js/consts/alert';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	mixins: [scrollToNodeMixin],

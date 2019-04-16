@@ -30,7 +30,6 @@
 
 <script>
 import { Form, Text } from 'js/components/global/form';
-import IdentityNumber from 'js/components/user/IdentityNumber';
 
 export default {
 	props: {

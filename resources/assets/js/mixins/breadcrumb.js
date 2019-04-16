@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { mapActions } from 'vuex';
 
 export var breadcrumb = {

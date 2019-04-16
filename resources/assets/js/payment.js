@@ -138,7 +138,7 @@ function accountDropdown() {
 		accountDropdown && accountDropdown.classList.toggle('-active');
 	});
 
-	const clickHandler = ({target}) => {
+	const clickHandler = ({ target }) => {
 		if (!accountDropdown) return;
 		if (accountDropdown.classList.contains('-active') && !accountDropdown.contains(target)) {
 			accountDropdown.classList.remove('-active');
@@ -223,7 +223,7 @@ function confirmOrderForm() {
 	});
 
 	$.ajaxSetup({
-		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+		headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
 		url: $('body').data('base') + '/ax',
 		data: {},
 		method: 'POST',

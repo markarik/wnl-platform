@@ -104,12 +104,12 @@
 </style>
 
 <script>
-import {isEqual} from 'lodash';
-import {mapGetters, mapActions, mapState} from 'vuex';
+import { isEqual } from 'lodash';
+import { mapActions, mapState } from 'vuex';
 import draggable from 'vuedraggable';
 
 import Form from 'js/classes/forms/Form';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlFlashcardAutocompleteItem from 'js/admin/components/flashcards/edit/FlashcardAutocompleteItem';
@@ -181,7 +181,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('lessons', {setupLessons: 'setup'}),
+		...mapActions('lessons', { setupLessons: 'setup' }),
 		...mapActions('flashcards', {
 			setupFlashcards: 'setup',
 		}),

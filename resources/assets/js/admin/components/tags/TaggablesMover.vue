@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
-import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit} from 'js/components/global/form';
+import { mapActions } from 'vuex';
+import { Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit } from 'js/components/global/form';
 
 export default {
 	name: 'TaggablesMover',

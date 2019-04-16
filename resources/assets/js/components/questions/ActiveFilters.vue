@@ -115,8 +115,8 @@
 </style>
 
 <script>
-import {nextTick} from 'vue';
-import {cloneDeep, isEqual, get} from 'lodash';
+import { nextTick } from 'vue';
+import { get } from 'lodash';
 
 export default {
 	name: 'ActiveFilters',
@@ -152,7 +152,7 @@ export default {
 	},
 	computed: {
 		activeFiltersObjects() {
-			return this.activeFilters.map(filter => ({path: filter, ...this.getFilter(filter)}));
+			return this.activeFilters.map(filter => ({ path: filter, ...this.getFilter(filter) }));
 		},
 	},
 	methods: {
@@ -177,7 +177,7 @@ export default {
 			this.$emit('elementHeight', this.$el.offsetHeight);
 		},
 		removeFilter(filter) {
-			this.$emit('activeFiltersChanged', {filter, active: false});
+			this.$emit('activeFiltersChanged', { filter, active: false });
 		},
 	},
 	mounted() {

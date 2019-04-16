@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash';
 import axios from 'axios';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
@@ -27,13 +26,13 @@ const mutations = {
 
 // Actions
 const actions = {
-	async fetchAllFlashcards({commit, state}) {
+	async fetchAllFlashcards({ commit, state }) {
 		if (!state.ready) {
-			const {data} = await axios.get(getApiUrl('flashcards/all'));
+			const { data } = await axios.get(getApiUrl('flashcards/all'));
 			commit(types.SETUP_FLASHCARDS, data);
 		}
 	},
-	async setup({commit, dispatch}) {
+	async setup({ commit, dispatch }) {
 		try {
 			await dispatch('fetchAllFlashcards');
 			commit(types.FLASHCARDS_READY, true);
@@ -41,7 +40,7 @@ const actions = {
 			$wnl.logger.error(error);
 		}
 	},
-	invalidateCache({commit}) {
+	invalidateCache({ commit }) {
 		commit(types.FLASHCARDS_READY, false);
 	},
 };

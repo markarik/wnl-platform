@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import * as types from 'js/store/mutations-types';
-import { set, delete as destroy } from 'vue';
+import { set } from 'vue';
 
 // Initial state
 const state = {
@@ -50,7 +50,7 @@ const actions = {
 	removeBreadcrumb({ commit }, text) {
 		commit(types.REMOVE_BREADCRUMB, text);
 	},
-	updateLessonNav({commit}, payload) {
+	updateLessonNav({ commit }, payload) {
 		commit(types.UPDATE_LESSON_NAV, payload);
 	}
 };

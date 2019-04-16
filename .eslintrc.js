@@ -1,7 +1,7 @@
 module.exports = {
 	extends: [
+		'eslint:recommended',
 		// TODO use recommended rules
-		// 'eslint:recommended',
 		// 'plugin:vue/recommended'
 		'plugin:vue/strongly-recommended'
 	],
@@ -35,6 +35,22 @@ module.exports = {
 			'error',
 			'always'
 		],
+		'no-unused-vars': [
+			'error',
+			{
+				'ignoreRestSiblings': true
+			}
+		],
+		'object-curly-spacing': [
+			'error',
+			'always'
+		],
+
+		// TODO enable eslint:recommended rules below
+		'no-console': [
+			'off'
+		],
+
 		'import/no-relative-parent-imports': 'error',
 		'vue/component-name-in-template-casing': [
 			'error',
@@ -77,6 +93,9 @@ module.exports = {
 	},
 	globals: {
 		$: true,
-		$wnl: true
+		$wnl: true,
+		Echo: true,
+		fbq: true,
+		ga: true,
 	}
 };

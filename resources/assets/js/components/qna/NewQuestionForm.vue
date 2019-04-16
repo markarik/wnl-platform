@@ -52,7 +52,6 @@
 import { mapActions } from 'vuex';
 
 import { Form, Quill, Submit } from 'js/components/global/form';
-import { fontColors } from 'js/utils/colors';
 
 export default {
 	name: 'NewQuestionForm',

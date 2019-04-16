@@ -4,7 +4,7 @@
 			<div class="splash-screen__content">
 				<wnl-text-loader v-if="isLoading"></wnl-text-loader>
 				<template v-else>
-				  <wnl-splash-screen-generic-error v-if="currentUserLoadingError"/>
+					<wnl-splash-screen-generic-error v-if="currentUserLoadingError"/>
 					<wnl-splash-screen-account-suspended v-else-if="currentUserAccountSuspended" :orders="orders"/>
 					<wnl-splash-screen-order-canceled v-else-if="allOrdersCanceled"/>
 					<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')"/>
@@ -49,7 +49,7 @@
 
 <script>
 import axios from 'axios';
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 import WnlSplashScreenAccountSuspended from 'js/components/global/splashscreens/AccountSuspended';
 import WnlSplashScreenOrderCanceled from 'js/components/global/splashscreens/OrderCanceled';
@@ -60,9 +60,9 @@ import WnlSplashScreenDefault from 'js/components/global/splashscreens/Default';
 import WnlSplashScreenGenericError from 'js/components/global/splashscreens/GenericError';
 
 import upcomingEditionParticipant from 'js/perimeters/upcomingEditionParticipant';
-import {getApiUrl} from 'js/utils/env';
-import {PRODUCTS_SLUGS} from 'js/consts/products';
-import {SUBSCRIPTION_STATUS} from 'js/consts/user';
+import { getApiUrl } from 'js/utils/env';
+import { PRODUCTS_SLUGS } from 'js/consts/products';
+import { SUBSCRIPTION_STATUS } from 'js/consts/user';
 
 export default {
 	data() {
@@ -100,7 +100,7 @@ export default {
 	},
 	methods: {
 		async fetchOrders() {
-			const {data: orders} = await axios.get(getApiUrl('users/current/orders/all'));
+			const { data: orders } = await axios.get(getApiUrl('users/current/orders/all'));
 			this.orders = orders;
 		},
 	},

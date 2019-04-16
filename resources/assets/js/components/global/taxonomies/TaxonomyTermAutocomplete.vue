@@ -41,9 +41,8 @@
 </style>
 
 <script>
-import {nextTick} from 'vue';
-import {mapState, mapGetters} from 'vuex';
-import {uniqBy} from 'lodash';
+import { mapState, mapGetters } from 'vuex';
+import { uniqBy } from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
@@ -81,7 +80,7 @@ export default {
 		WnlTaxonomyTermWithAncestors
 	},
 	computed: {
-		...mapState('taxonomyTerms', {terms: 'nodes'}),
+		...mapState('taxonomyTerms', { terms: 'nodes' }),
 		...mapGetters('taxonomyTerms', ['getAncestorNodesById']),
 		autocompleteTerms() {
 			if (!this.search) {

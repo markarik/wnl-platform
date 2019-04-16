@@ -93,7 +93,7 @@ export default {
 	},
 	mounted() {
 		if (this.forceGroupOpen && this.isNavigationGroupExpanded(this.groupIndex) !== false) {
-			this.toggleNavigationGroup({groupIndex: this.groupIndex, isOpen: true});
+			this.toggleNavigationGroup({ groupIndex: this.groupIndex, isOpen: true });
 		}
 	},
 };

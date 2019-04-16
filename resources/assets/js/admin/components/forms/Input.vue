@@ -13,13 +13,10 @@
 			:id="name"
 		>
 		<span class="help is-danger" v-if="form.errors.has(name)"
-			  v-text="form.errors.get(name)"
+			v-text="form.errors.get(name)"
 		></span>
 	</div>
 </template>
-
-<style lang="sass">
-</style>
 
 <script>
 export default {

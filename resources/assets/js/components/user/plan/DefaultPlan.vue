@@ -39,6 +39,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import TextOverlay from 'js/components/global/TextOverlay.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { getApiUrl } from 'js/utils/env';

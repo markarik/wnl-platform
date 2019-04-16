@@ -1,7 +1,7 @@
-import {createLocalVue, shallowMount} from '@vue/test-utils';
+import { createLocalVue, shallowMount } from '@vue/test-utils';
 import axios from 'axios';
-import {expect} from 'chai';
-import {describe, it, afterEach} from 'mocha';
+import { expect } from 'chai';
+import { describe, it, afterEach } from 'mocha';
 import sinon from 'sinon';
 import Vuex from 'vuex';
 
@@ -38,7 +38,7 @@ function fakeFetchOrders(data = null) {
 		];
 	}
 
-	const axiosGetFake = sinon.fake.returns({data: data});
+	const axiosGetFake = sinon.fake.returns({ data: data });
 	sinon.replace(axios, 'get', axiosGetFake);
 }
 
@@ -80,7 +80,7 @@ describe('SplashScreen.vue', () => {
 
 		fakeFetchOrders();
 
-		const component = getComponent({store});
+		const component = getComponent({ store });
 		await waitForLoadingState();
 
 		expect(component.html()).to.include('<wnl-splash-screen-generic-error-stub');
@@ -97,7 +97,7 @@ describe('SplashScreen.vue', () => {
 
 		fakeFetchOrders();
 
-		const component = getComponent({store});
+		const component = getComponent({ store });
 		await waitForLoadingState();
 
 		expect(component.html()).to.include('<wnl-splash-screen-account-suspended-stub');
@@ -133,7 +133,7 @@ describe('SplashScreen.vue', () => {
 			}
 		]);
 
-		const component = getComponent({store});
+		const component = getComponent({ store });
 		await waitForLoadingState();
 
 		expect(component.html()).to.include('<wnl-splash-screen-order-canceled-stub');
@@ -195,7 +195,7 @@ describe('SplashScreen.vue', () => {
 			}
 		]);
 
-		const component = getComponent({store});
+		const component = getComponent({ store });
 		await waitForLoadingState();
 
 		expect(component.html()).to.include('<wnl-splash-screen-order-not-paid-stub');
@@ -212,7 +212,7 @@ describe('SplashScreen.vue', () => {
 
 		fakeFetchOrders();
 
-		const component = getComponent({store});
+		const component = getComponent({ store });
 		await waitForLoadingState();
 
 		expect(component.html()).to.include('<wnl-splash-screen-subscription-expired-stub');
@@ -229,7 +229,7 @@ describe('SplashScreen.vue', () => {
 
 		fakeFetchOrders();
 
-		const component = getComponent({store});
+		const component = getComponent({ store });
 		await waitForLoadingState();
 
 		expect(component.html()).to.include('<wnl-splash-screen-default-stub');

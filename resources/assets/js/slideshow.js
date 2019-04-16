@@ -66,7 +66,7 @@ const setupHandshake = () => {
 	return new Postmate.Model({
 		changeBackground: (background) => {
 			let containerClass = container.className,
-				backgroundClassExp = /[a-z]+\-custom\-background/g;
+				backgroundClassExp = /[a-z]+-custom-background/g;
 
 			if (backgroundClassExp.test(containerClass)) {
 				container.className = containerClass.replace(backgroundClassExp, `${background}-custom-background`);
@@ -181,7 +181,7 @@ const setupHandshake = () => {
 	});
 };
 
-const promisedChild = setupHandshake()
+setupHandshake()
 	.then((parentWindow) => {
 		parent = parentWindow;
 		parent.emit('loaded', true);
@@ -197,7 +197,7 @@ let parent = {},
 	fullScreenViewer = {};
 
 $(() => {
-	fullScreenViewer = ImageViewer($('#iv-container'), { snapViewPersist: false });
+	fullScreenViewer = window.ImageViewer($('#iv-container'), { snapViewPersist: false });
 
 	$.each($chartsContainers, (index, container) => {
 		let $container = $(container),
@@ -205,7 +205,7 @@ $(() => {
 			lofi = $element.attr('src'),
 			hifi = $element.attr('data-high-res-src');
 
-		viewers[index] = ImageViewer($element);
+		viewers[index] = window.ImageViewer($element);
 		$container.find('.iv-image-fullscreen').click({ lofi, hifi }, (e) => {
 			fullScreenViewer.show(e.data.lofi, e.data.hifi);
 		});
@@ -310,7 +310,7 @@ function keyDown(e, parent) {
 }
 
 function setBookmarkClickListener(parent) {
-	$('.bookmark').click(function (event) {
+	$('.bookmark').click(function () {
 		toggleBookmark(parent);
 	});
 }

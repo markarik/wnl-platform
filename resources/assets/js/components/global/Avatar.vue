@@ -29,8 +29,8 @@
 </style>
 <script>
 import _ from 'lodash';
-import {mapGetters} from 'vuex';
-import {getInitials} from 'js/utils/strings';
+import { mapGetters } from 'vuex';
+import { getInitials } from 'js/utils/strings';
 
 export default {
 	name: 'Avatar',

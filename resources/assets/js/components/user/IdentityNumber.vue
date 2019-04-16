@@ -118,6 +118,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import { mapGetters, mapActions } from 'vuex';
 import { getApiUrl } from 'js/utils/env';
 import { get, isEmpty } from 'lodash';
@@ -212,7 +213,7 @@ export default {
 					this.setUserIdentity(this.identity);
 				}
 				catch (error) {
-					this.errors = _.get(error, 'response.data.errors.personal_identity_number');
+					this.errors = get(error, 'response.data.errors.personal_identity_number');
 					if (isEmpty(this.errors)) {
 						$wnl.logger.capture(error);
 						this.addAutoDismissableAlert(this.alertError);

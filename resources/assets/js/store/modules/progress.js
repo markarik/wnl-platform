@@ -1,11 +1,11 @@
 import axios from 'axios';
 import _ from 'lodash';
-import {set} from 'vue';
+import { set } from 'vue';
 
 import * as types from 'js/store/mutations-types';
-import progressStore, {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
+import progressStore, { STATUS_COMPLETE, STATUS_IN_PROGRESS } from 'js/services/progressStore';
 import { getApiUrl } from 'js/utils/env';
-import {USER_SETTING_NAMES} from 'js/consts/settings';
+import { USER_SETTING_NAMES } from 'js/consts/settings';
 
 // Namespace
 const namespaced = true;
@@ -33,14 +33,14 @@ const getters = {
 	getSection: (state) => (courseId, lessonId, screenId, sectionId) => {
 		return _.get(state.courses[courseId], `lessons[${lessonId}].screens[${screenId}].sections[${sectionId}]`);
 	},
-	getSavedLesson: (state, getters) => (courseId, lessonId, profileId) => {
+	getSavedLesson: (state) => (courseId, lessonId, profileId) => {
 		const storeValue = _.get(state.courses[courseId], `lessons[${lessonId}]`);
 
 		if (storeValue) {
 			return Promise.resolve(state.courses[courseId].lessons[lessonId]);
 		}
 
-		return progressStore.getLessonProgress({courseId, lessonId, profileId});
+		return progressStore.getLessonProgress({ courseId, lessonId, profileId });
 	},
 	wasLessonStarted: (state, getters) => (courseId, lessonId) => {
 		const lessonProgress = getters.getLesson(courseId, lessonId);
@@ -53,7 +53,7 @@ const getters = {
 	getFirstLessonInProgress: (state, getters, rootState, rootGetters) => (courseId) => {
 		let lessons = rootGetters['course/getRequiredLessons'];
 
-		return lessons.find(({id: lessonId, isAvailable}) => {
+		return lessons.find(({ id: lessonId, isAvailable }) => {
 			const lessonProgress = state.courses[courseId].lessons[lessonId];
 			return lessonProgress && lessonProgress.status === STATUS_IN_PROGRESS && isAvailable === true;
 		});
@@ -114,7 +114,7 @@ const mutations = {
 
 // Actions
 const actions = {
-	async setupCourse({commit, rootGetters, dispatch}, courseId = 1) {
+	async setupCourse({ commit, rootGetters, dispatch }, courseId = 1) {
 		await dispatch('setupCurrentUser', {}, { root: true });
 		try {
 			const data = await progressStore.getCourseProgress({
@@ -129,7 +129,7 @@ const actions = {
 			$wnl.logger.capture(error);
 		}
 	},
-	async startLesson({commit, getters, dispatch, rootGetters}, payload) {
+	async startLesson({ commit, getters, dispatch, rootGetters }, payload) {
 		await dispatch('setupCurrentUser', {}, { root: true });
 		const data = await progressStore.getLessonProgress({
 			...payload,
@@ -144,7 +144,7 @@ const actions = {
 		if (!getters.wasLessonStarted(payload.courseId, payload.lessonId)) {
 			$wnl.logger.debug(`Starting lesson ${payload.lessonId}`, payload);
 
-			await dispatch('setupCurrentUser', {}, {root: true});
+			await dispatch('setupCurrentUser', {}, { root: true });
 
 			const courseState = state.courses[payload.courseId];
 			const updatedLessonState = progressStore.startLesson(courseState, {
@@ -158,11 +158,11 @@ const actions = {
 
 		return false;
 	},
-	async completeLesson({commit, getters, rootGetters, dispatch}, payload) {
+	async completeLesson({ commit, getters, rootGetters, dispatch }, payload) {
 		if (!getters.isLessonComplete(payload.courseId, payload.lessonId)) {
 			$wnl.logger.debug(`Completing lesson ${payload.lessonId}`, payload);
 
-			await dispatch('setupCurrentUser', {}, {root: true});
+			await dispatch('setupCurrentUser', {}, { root: true });
 
 			const courseState = state.courses[payload.courseId];
 			const updatedLessonState = progressStore.completeLesson(courseState, {
@@ -170,11 +170,11 @@ const actions = {
 				profileId: rootGetters.currentUserProfileId,
 			});
 
-			commit(types.PROGRESS_COMPLETE_LESSON, {payload, updatedLessonState});
+			commit(types.PROGRESS_COMPLETE_LESSON, { payload, updatedLessonState });
 		}
 	},
-	async completeScreen({commit, rootGetters, dispatch, getters}, payload) {
-		await dispatch('setupCurrentUser', {}, {root: true});
+	async completeScreen({ commit, rootGetters, dispatch, getters }, payload) {
+		await dispatch('setupCurrentUser', {}, { root: true });
 
 		const lessonState = _.cloneDeep(getters.getLesson(payload.courseId, payload.lessonId));
 		const updatedState = progressStore.completeScreen(lessonState, {
@@ -182,10 +182,10 @@ const actions = {
 			profileId: rootGetters.currentUserProfileId,
 		});
 
-		commit(types.PROGRESS_COMPLETE_SCREEN, {updatedState, payload});
+		commit(types.PROGRESS_COMPLETE_SCREEN, { updatedState, payload });
 	},
-	async completeSection({commit, rootGetters, dispatch, getters}, payload) {
-		await dispatch('setupCurrentUser', {}, {root: true});
+	async completeSection({ commit, rootGetters, dispatch, getters }, payload) {
+		await dispatch('setupCurrentUser', {}, { root: true });
 
 		const lessonState = _.cloneDeep(getters.getLesson(payload.courseId, payload.lessonId));
 
@@ -194,19 +194,19 @@ const actions = {
 			profileId: rootGetters.currentUserProfileId,
 		});
 
-		commit(types.PROGRESS_COMPLETE_SECTION, {updatedState, payload});
+		commit(types.PROGRESS_COMPLETE_SECTION, { updatedState, payload });
 	},
-	async completeSubsection({commit, rootGetters, dispatch, getters}, payload) {
-		await dispatch('setupCurrentUser', {}, {root: true});
+	async completeSubsection({ commit, rootGetters, dispatch, getters }, payload) {
+		await dispatch('setupCurrentUser', {}, { root: true });
 
 		const lessonState = _.cloneDeep(getters.getLesson(payload.courseId, payload.lessonId));
 		const updatedState = progressStore.completeSubsection(lessonState, {
 			...payload,
 			profileId: rootGetters.currentUserProfileId,
 		});
-		commit(types.PROGRESS_COMPLETE_SUBSECTION, {updatedState, payload});
+		commit(types.PROGRESS_COMPLETE_SUBSECTION, { updatedState, payload });
 	},
-	async deleteProgress({dispatch, rootGetters}) {
+	async deleteProgress({ dispatch, rootGetters }) {
 		const userId = rootGetters.currentUserId;
 		await axios.delete(getApiUrl(`users/${userId}/state/course/1`));
 		dispatch('updateCurrentUser', {

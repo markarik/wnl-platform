@@ -108,13 +108,14 @@
 </style>
 
 <script>
-import {isEqual, isEmpty} from 'lodash';
-import {mapState, mapActions} from 'vuex';
+import axios from 'axios';
+import { isEqual, isEmpty } from 'lodash';
+import { mapState, mapActions } from 'vuex';
 import WnlDraggable from 'vuedraggable';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 import Form from 'js/classes/forms/Form';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 import WnlFormInput from 'js/admin/components/forms/Input';
 import WnlQuill from 'js/admin/components/forms/Quill';
@@ -164,7 +165,7 @@ export default {
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('lessons', {setupLessons: 'setup'}),
+		...mapActions('lessons', { setupLessons: 'setup' }),
 		getQuizQuestionContent(questionId) {
 			return Object.values(this.quizQuestionsObjects).find(question => question.id === questionId).text;
 		},
@@ -172,7 +173,7 @@ export default {
 			const fetchedForm = await this.form.populate(this.quizQuestionsSetResourceUrl);
 
 			if (fetchedForm.included && fetchedForm.included.quiz_questions) {
-				this.quizQuestionsObjects = {...fetchedForm.included.quiz_questions};
+				this.quizQuestionsObjects = { ...fetchedForm.included.quiz_questions };
 			} else {
 				this.quizQuestionsObjects = {};
 			}

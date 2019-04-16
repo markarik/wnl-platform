@@ -114,6 +114,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import WnlTextOverlay from 'js/components/global/TextOverlay.vue';
 import { mapGetters, mapActions } from 'vuex';
 import moment from 'moment';
@@ -167,7 +168,7 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('course', ['setStructure']),
-		onStartDateChange({newStartDate, lesson}) {
+		onStartDateChange({ newStartDate, lesson }) {
 			if (!newStartDate[0]) return;
 
 			const lessonWithStartDate = {
@@ -223,7 +224,7 @@ export default {
 					$wnl.logger.capture(error);
 					this.addAutoDismissableAlert(this.alertError);
 				}
-			}).catch(e => {
+			}).catch(() => {
 				// ignore cancellation of swal
 			});
 		},

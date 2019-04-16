@@ -132,12 +132,11 @@
 </style>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import QnaSorting from 'js/components/qna/QnaSorting';
 import QnaQuestion from 'js/components/qna/QnaQuestion';
 import NewQuestionForm from 'js/components/qna/NewQuestionForm';
-import {invisibleTags} from 'js/utils/config';
 
 export default {
 	name: 'Qna',
@@ -166,7 +165,7 @@ export default {
 		},
 		config: {
 			type: Object,
-			default: () => ({highlighted: {}})
+			default: () => ({ highlighted: {} })
 		},
 		discussionId: {
 			type: Number,
@@ -209,7 +208,7 @@ export default {
 		'currentSorting' (newValue) {
 			this.questionsList = this.getSortedQuestions(newValue, this.questions);
 		},
-		'questions' (newValue) {
+		'questions' () {
 			if (this.sortingEnabled && !this.passedQuestions) {
 				this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
 			}

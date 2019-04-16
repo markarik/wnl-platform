@@ -38,7 +38,7 @@
 <script>
 import Sidenav from 'js/admin/components/Sidenav.vue';
 import Alerts from 'js/components/global/GlobalAlerts';
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
 	name: 'Admin',

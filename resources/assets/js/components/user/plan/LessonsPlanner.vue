@@ -30,14 +30,14 @@
 		</div>
 		<div class="views-control">
 			<a v-for="view in views"
-				 class="panel-toggle view"
-				 :class="{'is-active': view.isActive}"
-				 :key="view.title"
-				 @click="toggleView(view)"
+				class="panel-toggle view"
+				:class="{'is-active': view.isActive}"
+				:key="view.title"
+				@click="toggleView(view)"
 			>{{ view.title }}
 				<span class="icon is-small">
 					<i class="fa"
-						 :class="[view.isActive ? 'fa-check-circle' : 'fa-circle-o']"></i>
+						:class="[view.isActive ? 'fa-check-circle' : 'fa-circle-o']"></i>
 				</span>
 			</a>
 		</div>
@@ -46,18 +46,19 @@
 </template>
 
 <style lang="sass" scoped>
-@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/variables'
 
-.plan-details
-	display: flex
-	flex-direction: column
+	.plan-details
+		display: flex
+		flex-direction: column
 
-.views-control
-	display: inline-flex
-	justify-content: flex-start
-	margin-bottom: $margin-base
-	.panel-toggle:last-child
-		margin-right: $margin-small
+	.views-control
+		display: inline-flex
+		justify-content: flex-start
+		margin-bottom: $margin-base
+
+		.panel-toggle:last-child
+			margin-right: $margin-small
 
 </style>
 
@@ -66,7 +67,7 @@ import OpenAllPlan from './OpenAllPlan';
 import AutomaticPlan from './AutomaticPlan';
 import DefaultPlan from './DefaultPlan';
 import ManualPlan from './ManualPlan';
-import { first,last } from 'lodash';
+import { first, last } from 'lodash';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
 import emits_events from 'js/mixins/emits-events';
@@ -131,7 +132,7 @@ export default {
 			return this.activeView.component;
 		},
 		userFriendlySubscriptionDate() {
-			return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL');
+			return moment(this.currentUserSubscriptionDates.max * 1000).locale('pl').format('LL');
 		}
 	},
 	methods: {

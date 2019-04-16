@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
-import {STATUS_COMPLETE} from 'js/services/progressStore';
+import { mapGetters } from 'vuex';
+import { STATUS_COMPLETE } from 'js/services/progressStore';
 import WnlSubsectionItem from 'js/components/course/navigation/SubsectionItem';
 import WnlLessonNavigationItem from 'js/components/course/navigation/LessonNavigationItem';
 

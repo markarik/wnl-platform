@@ -101,7 +101,7 @@
 </style>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import ActiveUsers from 'js/components/course/dashboard/ActiveUsers';
 import DashboardNews from 'js/components/course/dashboard/DashboardNews';
@@ -110,7 +110,7 @@ import Qna from 'js/components/qna/Qna';
 import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed';
 import YourProgress from 'js/components/course/dashboard/YourProgress';
 import moment from 'moment';
-import {getUrl} from 'js/utils/env';
+import { getUrl } from 'js/utils/env';
 import context from 'js/consts/events_map/context.json';
 
 export default {

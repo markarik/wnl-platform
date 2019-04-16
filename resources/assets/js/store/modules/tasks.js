@@ -1,9 +1,10 @@
+import axios from 'axios';
 import * as types from 'js/store/mutations-types';
-import {getApiUrl} from 'js/utils/env';
-import {set} from 'vue';
+import { getApiUrl } from 'js/utils/env';
+import { set } from 'vue';
 import pagination from 'js/store/modules/shared/pagination';
 import profiles from 'js/store/modules/shared/profiles';
-import {isEmpty} from 'lodash';
+import { isEmpty } from 'lodash';
 
 const namespaced = true;
 
@@ -35,37 +36,37 @@ const mutations = {
 };
 
 const actions = {
-	pullTasks({commit, dispatch}, params) {
+	pullTasks({ commit, dispatch }, params) {
 		commit(types.IS_FETCHING, true);
 
-		return new Promise ((resolve, reject) => {
+		return new Promise ((resolve) => {
 			_getTasks(params)
-				.then(({data: response}) => {
-					_handleResponse({commit,dispatch}, response, resolve);
+				.then(({ data: response }) => {
+					_handleResponse({ commit,dispatch }, response, resolve);
 				});
 		});
 	},
-	setupLiveListener({commit}, channel) {
+	setupLiveListener({ commit }, channel) {
 		Echo.channel(channel)
 			.listen('.App.Events.Live.LiveNotificationCreated', (task) => {
 				commit(types.ADD_TASK, task);
 			});
 	},
-	initModeratorsFeedListener({getters, dispatch}) {
+	initModeratorsFeedListener({ dispatch }) {
 		dispatch('setupLiveListener', 'private-group.moderators');
 	},
-	updateTask({commit, dispatch}, payload) {
+	updateTask({ commit, dispatch }, payload) {
 		_updateTask(payload)
-			.then(({data: {included: allIncluded, ...task}}) => {
-				const {assigneeProfiles = {}, ...included} = allIncluded;
+			.then(({ data: { included: allIncluded, ...task } }) => {
+				const { assigneeProfiles = {}, ...included } = allIncluded;
 				const taskProfile = task.assigneeProfiles || [];
-				const assignee = {assignee: assigneeProfiles[taskProfile[0]] || null};
+				const assignee = { assignee: assigneeProfiles[taskProfile[0]] || null };
 
 				Object.assign(task, _parseIncludes(included, task), assignee);
 
 				commit(types.MODIFY_TASK, task);
 			}).catch(error => {
-				dispatch('addAlert', {type: 'error', text: 'Nie udało się zapisać. Odśwież stronę i spróbuj ponownie'}, {root: true});
+				dispatch('addAlert', { type: 'error', text: 'Nie udało się zapisać. Odśwież stronę i spróbuj ponownie' }, { root: true });
 				$wnl.logger.error(error);
 			});
 	}
@@ -84,12 +85,12 @@ function _getTasks(params) {
 	});
 }
 
-function _updateTask({id, ...fields}) {
+function _updateTask({ id, ...fields }) {
 	return axios.patch(getApiUrl(`tasks/${id}?include=events,assigneeProfiles`), fields);
 }
 
 function _parseIncludes(included, object) {
-	const updatedObject = {...object};
+	const updatedObject = { ...object };
 
 	Object.keys(included).forEach((include) => {
 		if (updatedObject[include]) {
@@ -100,8 +101,8 @@ function _parseIncludes(included, object) {
 	return updatedObject;
 }
 
-function _handleResponse({commit, dispatch}, response, resolve) {
-	const {data, ...paginationMeta} = response;
+function _handleResponse({ commit, dispatch }, response, resolve) {
+	const { data, ...paginationMeta } = response;
 	if (isEmpty(data)) {
 		commit(types.SET_TASKS, {});
 		commit(types.IS_FETCHING, false);
@@ -109,8 +110,8 @@ function _handleResponse({commit, dispatch}, response, resolve) {
 		return resolve(response);
 	}
 
-	const {included: allIncluded, ...responseData} = data;
-	const {assigneeProfiles = {}, ...included} = allIncluded;
+	const { included: allIncluded, ...responseData } = data;
+	const { assigneeProfiles = {}, ...included } = allIncluded;
 
 	const dataArray = Object.values(responseData);
 

@@ -28,9 +28,9 @@
 				<div class="qna-question-meta qna-meta">
 					<div class="modal-activator" :class="{'author-forgotten': author.deleted_at}" @click="showModal">
 						<wnl-avatar class="avatar"
-								:full-name="author.full_name"
-								:url="author.avatar"
-								size="medium">
+							:full-name="author.full_name"
+							:url="author.avatar"
+							size="medium">
 						</wnl-avatar>
 						<span class="qna-meta-info">
 							{{ author.full_name }}
@@ -41,17 +41,17 @@
 					</span>
 					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
 						&nbsp;·&nbsp;<wnl-delete
-							:target="deleteTarget"
-							:request-route="resourceRoute"
-							@deleteSuccess="onDeleteSuccess"
-						></wnl-delete>
+						:target="deleteTarget"
+						:request-route="resourceRoute"
+						@deleteSuccess="onDeleteSuccess"
+					></wnl-delete>
 					</span>
 					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question" @unresolveResource="unresolveQuestion(id)"/>
 				</div>
 				<slot name="context"></slot>
 			</div>
 		</div>
-		 <div :class="{'qna-answers': true, 'disabled': question.resolved}">
+		<div :class="{'qna-answers': true, 'disabled': question.resolved}">
 			<div class="level">
 				<div class="level-left qna-answers-heading">
 					<p>Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
@@ -131,6 +131,7 @@
 		cursor: pointer
 		align-items: center
 		color: $color-sky-blue
+
 		&.author-forgotten
 			color: $color-gray
 			pointer-events: none
@@ -213,7 +214,7 @@ import moderatorFeatures from 'js/perimeters/moderator';
 import { timeFromS } from 'js/utils/time';
 
 export default {
-	mixins: [ highlight ],
+	mixins: [highlight],
 	perimeters: [moderatorFeatures],
 	components: {
 		'wnl-delete': Delete,
@@ -363,7 +364,7 @@ export default {
 		}
 	},
 	watch: {
-		'$route' (newRoute, oldRoute) {
+		'$route'() {
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
 				this.dispatchFetchQuestion()
 					.then(() => this.scrollAndHighlight());
@@ -374,7 +375,7 @@ export default {
 				this.showAllAnswers = true;
 			}
 		},
-		'isOverlayVisible' () {
+		'isOverlayVisible'() {
 			if (!this.isOverlayVisible && this.isQuestionInUrl) {
 				this.scrollAndHighlight();
 			}

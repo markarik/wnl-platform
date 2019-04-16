@@ -54,7 +54,7 @@
 </style>
 
 <script>
-import {Form as WnlForm, Text as WnlFormText, Check as WnlFormCheck, Submit as WnlSubmit} from 'js/components/global/form';
+import { Form as WnlForm, Text as WnlFormText, Check as WnlFormCheck, Submit as WnlSubmit } from 'js/components/global/form';
 
 export default {
 	name: 'CourseEditor',

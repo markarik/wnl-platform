@@ -1,7 +1,7 @@
 import axios from 'axios';
-import {set} from 'vue';
-import {getApiUrl} from 'js/utils/env';
-import {resource} from 'js/utils/config';
+import { set } from 'vue';
+import { getApiUrl } from 'js/utils/env';
+import { resource } from 'js/utils/config';
 import * as types from 'js/admin/store/mutations-types';
 
 // Helper functions
@@ -49,7 +49,7 @@ function getSlideData(slideId) {
 	return axios.get(getApiUrl(`slides/${slideId}?include=context`));
 }
 
-function getEmptyAnswers(stateAnswers) {
+function getEmptyAnswers() {
 	return [
 		{
 			text: '',
@@ -107,25 +107,25 @@ const mutations = {
 		set(state, 'answersMap', answersObject);
 	},
 	[types.UPDATE_QUIZ_QUESTION](state, data) {
-		state.question = {...state.question, ...data};
+		state.question = { ...state.question, ...data };
 	},
-	[types.CLEAR_QUIZ_QUESTION](state, data) {
+	[types.CLEAR_QUIZ_QUESTION](state) {
 		set(state, 'answers', getEmptyAnswers());
 	}
 };
 
 // Actions
 const actions = {
-	getQuizQuestion({commit}, id) {
+	getQuizQuestion({ commit }, id) {
 		axios.get(getApiUrl(`quiz_questions/trashed/${id}?include=quiz_answers,slides`))
 			.then((response) => {
 				commit(types.SETUP_QUIZ_QUESTION, response.data);
 			});
 	},
-	setupFreshQuestion({commit}) {
+	setupFreshQuestion({ commit }) {
 		commit(types.CLEAR_QUIZ_QUESTION);
 	},
-	getSlideDataForQuizEditor({commit}, {slideNumber, screenId}) {
+	getSlideDataForQuizEditor(_, { slideNumber, screenId }) {
 		return getSlideshowId(screenId)
 			.then(slideshowId => {
 				return getSlideId(slideshowId, slideNumber);
@@ -140,15 +140,15 @@ const actions = {
 				console.error(exception);
 			});
 	},
-	async deleteQuizQuestion({commit}, id) {
+	async deleteQuizQuestion({ commit }, id) {
 		await axios.delete(getApiUrl(`quiz_questions/${id}`));
 
-		commit(types.UPDATE_QUIZ_QUESTION, {deleted_at: new Date()});
+		commit(types.UPDATE_QUIZ_QUESTION, { deleted_at: new Date() });
 	},
-	async undeleteQuizQuestion({commit}, id) {
-		const {data} = await axios.put(getApiUrl(`quiz_questions/${id}/restore`));
+	async undeleteQuizQuestion({ commit }, id) {
+		await axios.put(getApiUrl(`quiz_questions/${id}/restore`));
 
-		commit(types.UPDATE_QUIZ_QUESTION, {deleted_at: null});
+		commit(types.UPDATE_QUIZ_QUESTION, { deleted_at: null });
 	}
 };
 

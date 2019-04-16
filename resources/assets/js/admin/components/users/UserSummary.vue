@@ -9,7 +9,7 @@ import UserEditForm from './UserEditForm';
 
 
 export default {
-	components: {UserEditForm},
+	components: { UserEditForm },
 	props: {
 		user: {
 			type: Object,

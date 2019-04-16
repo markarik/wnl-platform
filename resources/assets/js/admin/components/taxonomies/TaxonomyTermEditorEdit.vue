@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 import WnlTaxonomyTermEditorCurrentTerm from 'js/admin/components/taxonomies/TaxonomyTermEditorCurrentTerm';
 import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
@@ -75,7 +75,7 @@ export default {
 			termById: 'nodeById',
 			getAncestorNodesById: 'getAncestorNodesById',
 		}),
-		...mapState('taxonomyTerms', {selectedTerms: 'selectedNodes', isSaving: 'isSaving'}),
+		...mapState('taxonomyTerms', { selectedTerms: 'selectedNodes', isSaving: 'isSaving' }),
 		term() {
 			if (this.selectedTerms.length === 0) {
 				return null;

@@ -93,12 +93,13 @@
 </style>
 
 <script>
+import axios from 'axios';
 import moment from 'moment';
-import {nextTick} from 'vue';
-import {mapActions, mapState} from 'vuex';
+import { nextTick } from 'vue';
+import { mapActions, mapState } from 'vuex';
 import momentTimezone from 'moment-timezone';
 
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlDatepicker from 'js/components/global/Datepicker';
 
@@ -127,7 +128,7 @@ export default {
 		visibleUserLessons() {
 			if (!this.filterPhrase) return this.userLessons;
 
-			return this.userLessons.filter(({lesson}) => lesson.toLowerCase().startsWith(this.filterPhrase.toLowerCase()));
+			return this.userLessons.filter(({ lesson }) => lesson.toLowerCase().startsWith(this.filterPhrase.toLowerCase()));
 		},
 		autocompleteLessonsItems() {
 			if (this.lessonInput === '') {
@@ -135,9 +136,9 @@ export default {
 			}
 
 			return this.lessons
-				.filter(lesson => !this.userLessons.find(({lesson_id}) => lesson_id === lesson.id) &&
+				.filter(lesson => !this.userLessons.find(({ lesson_id }) => lesson_id === lesson.id) &&
 						lesson.name.toLowerCase().includes(this.lessonInput.toLowerCase()) &&
-						!this.selectedLessons.find(({id}) => id === lesson.id)
+						!this.selectedLessons.find(({ id }) => id === lesson.id)
 				)
 				.slice(0, 10);
 		}
@@ -146,7 +147,7 @@ export default {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', ['fetchAllLessons']),
 		addLesson(lesson) {
-			if (!this.selectedLessons.find(({id}) => id === lesson.id)) {
+			if (!this.selectedLessons.find(({ id }) => id === lesson.id)) {
 				this.selectedLessons.push({
 					...lesson,
 					startDate: new Date()
@@ -198,7 +199,7 @@ export default {
 			}
 		},
 		getUserLessons(userPlanResponse) {
-			const { data: {...userLessons}} = userPlanResponse;
+			const { data: { ...userLessons } } = userPlanResponse;
 
 			const userLessonsList = Object.values(userLessons);
 

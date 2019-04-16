@@ -34,7 +34,7 @@
 <script>
 import moment from 'moment';
 import Flatpickr from 'flatpickr';
-import {pl} from 'flatpickr/dist/l10n/pl.js';
+import { pl } from 'flatpickr/dist/l10n/pl.js';
 
 export default {
 	name: 'Datepicker',
@@ -81,7 +81,7 @@ export default {
 			this.datepicker.redraw();
 			this.datepicker.jumpToDate();
 		},
-		setDate(newDate, oldDate) {
+		setDate(newDate) {
 			newDate && this.datepicker.setDate(newDate);
 		},
 	},

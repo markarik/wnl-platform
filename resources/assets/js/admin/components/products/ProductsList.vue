@@ -32,8 +32,6 @@
 <script>
 import { mapActions } from 'vuex';
 import moment from 'moment';
-import {getApiUrl} from 'js/utils/env';
-import {ALERT_TYPES} from 'js/consts/alert';
 import WnlPaginatedSortableTable from 'js/admin/components/lists/PaginatedSortableTable';
 
 export default {

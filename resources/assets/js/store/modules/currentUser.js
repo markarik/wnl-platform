@@ -1,10 +1,10 @@
 import axios from 'axios';
-import {set} from 'vue';
+import { set } from 'vue';
 
 import * as types from 'js/store/mutations-types';
-import {getApiUrl} from 'js/utils/env';
-import {USER_SETTING_NAMES} from 'js/consts/settings';
-import {ONBOARDING_STEPS, ROLES, SUBSCRIPTION_STATUS} from 'js/consts/user';
+import { getApiUrl } from 'js/utils/env';
+import { USER_SETTING_NAMES } from 'js/consts/settings';
+import { ONBOARDING_STEPS, ROLES, SUBSCRIPTION_STATUS } from 'js/consts/user';
 
 let getCurrentUserPromise;
 
@@ -127,7 +127,7 @@ const actions = {
 		return getCurrentUserPromise;
 	},
 
-	async fetchCurrentUser({commit}) {
+	async fetchCurrentUser({ commit }) {
 		let response;
 
 		try {
@@ -188,7 +188,7 @@ const actions = {
 		commit(types.USERS_UPDATE_CURRENT, currentUser);
 	},
 
-	async fetchUserSubscription({commit}) {
+	async fetchUserSubscription({ commit }) {
 		try {
 			const response = await axios.get(getApiUrl('user_subscription/current'));
 			commit(types.USERS_SET_SUBSCRIPTION, response.data);
@@ -197,10 +197,10 @@ const actions = {
 		}
 	},
 
-	fetchCurrentUserStats({commit, getters}) {
+	fetchCurrentUserStats({ commit, getters }) {
 		return new Promise((resolve, reject) => {
 			_fetchUserStats(getters.currentUserId)
-				.then(({data}) => {
+				.then(({ data }) => {
 					commit(types.USERS_SET_STATS, data);
 					resolve();
 				})
@@ -226,7 +226,7 @@ const actions = {
 		}
 	},
 
-	updateCurrentUser({commit}, userData) {
+	updateCurrentUser({ commit }, userData) {
 		commit(types.USERS_UPDATE_CURRENT, userData);
 	},
 
@@ -238,7 +238,7 @@ const actions = {
 		commit(types.USERS_SET_IDENTITY, payload);
 	},
 
-	changeUserSettingAndSync({ commit, dispatch }, payload) {
+	changeUserSettingAndSync({ dispatch }, payload) {
 		dispatch('changeUserSetting', payload);
 		dispatch('syncSettings');
 	},
@@ -249,17 +249,17 @@ const actions = {
 		});
 	},
 
-	syncSettings({ commit, getters }) {
+	syncSettings({ getters }) {
 		return axios.put(getApiUrl('users/current/settings'), getters.getAllSettings);
 	},
 
-	deleteAccount({getters}, payload) {
+	deleteAccount({ getters }, payload) {
 		return axios.patch(getApiUrl(`users/${getters.currentUserId}/forget`), {
 			password: payload
 		});
 	},
 
-	updateLatestProductState({commit, getters}, payload) {
+	updateLatestProductState({ commit, getters }, payload) {
 		return axios.put(getApiUrl(`users/${getters.currentUserId}/user_product_state/latest`), payload)
 			.then(() => {
 				commit(types.USERS_UPDATE_CURRENT, {

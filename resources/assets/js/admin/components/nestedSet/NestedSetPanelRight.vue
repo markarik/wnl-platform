@@ -30,7 +30,7 @@
 
 <script>
 
-import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
+import { NESTED_SET_EDITOR_MODES } from 'js/consts/nestedSet';
 
 export default {
 	props: {

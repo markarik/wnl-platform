@@ -89,7 +89,7 @@ export default {
 		locationFilterLoaded(filter) {
 			return this.filterByLocation = filter;
 		},
-		onDataLoaded({profile}) {
+		onDataLoaded({ profile }) {
 			return this.profile = profile;
 		},
 	}

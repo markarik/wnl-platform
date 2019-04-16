@@ -1,12 +1,13 @@
+import axios from 'axios';
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from 'js/store/store';
-import {scrollToTop} from 'js/utils/animations';
-import {resource} from 'js/utils/config';
+import { scrollToTop } from 'js/utils/animations';
+import { resource } from 'js/utils/config';
 import moderatorFeatures from 'js/perimeters/moderator';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
-import {createSandbox} from 'vue-kindergarten';
-import {getApiUrl} from 'js/utils/env';
+import { createSandbox } from 'vue-kindergarten';
+import { getApiUrl } from 'js/utils/env';
 
 import Course from 'js/components/course/Course.vue';
 import Overview from 'js/components/course/dashboard/Overview.vue';
@@ -190,7 +191,7 @@ const routes = [
 		name: 'help',
 		path: '/app/help',
 		component: Help,
-		redirect: {name: 'help-tech'},
+		redirect: { name: 'help-tech' },
 		children: [
 			{
 				name: 'help-learning',
@@ -204,7 +205,7 @@ const routes = [
 						});
 
 						if (!sandbox.isAllowed('access')) {
-							return next({name: 'help-service'});
+							return next({ name: 'help-service' });
 						}
 						return next();
 					});
@@ -222,7 +223,7 @@ const routes = [
 						});
 
 						if (!sandbox.isAllowed('access')) {
-							return next({name: 'help-service'});
+							return next({ name: 'help-service' });
 						}
 						return next();
 					});
@@ -240,7 +241,7 @@ const routes = [
 						});
 
 						if (!sandbox.isAllowed('access')) {
-							return next({name: 'help-service'});
+							return next({ name: 'help-service' });
 						}
 						return next();
 					});
@@ -345,7 +346,7 @@ const routes = [
 	{
 		name: 'dashboard',
 		path: '/app',
-		redirect: {name: 'courses', params: {courseId: 1}},
+		redirect: { name: 'courses', params: { courseId: 1 } },
 	},
 	{
 		name: 'onboarding',
@@ -365,7 +366,7 @@ const routes = [
 		name: 'all-users',
 		component: MainUsers,
 		props: true,
-		redirect: {name: 'user'},
+		redirect: { name: 'user' },
 		children: [
 			{
 				name: 'user',
@@ -380,12 +381,12 @@ const routes = [
 		beforeEnter: (to, from, next) => {
 			axios.post(getApiUrl(`${to.params.resource}/.context`), {
 				context: to.params.context
-			}).then(({data}) => {
+			}).then(({ data }) => {
 				return next({
 					...data,
 					query: to.query
 				});
-			}).catch(err => {
+			}).catch(() => {
 				return next(from);
 			});
 		}
@@ -400,7 +401,7 @@ const routes = [
 const router =  new Router({
 	mode: 'history',
 	linkActiveClass: 'is-active',
-	scrollBehavior: (to, from, savedPosition) => {
+	scrollBehavior: (to, from) => {
 		if (to.query && to.query.noScroll) {
 			return;
 		}
@@ -409,7 +410,7 @@ const router =  new Router({
 			parseInt(from.params.screenId) !== parseInt(to.params.screenId))
 		{
 			scrollToTop();
-			return {x: 0, y: 0};
+			return { x: 0, y: 0 };
 		}
 	},
 	routes

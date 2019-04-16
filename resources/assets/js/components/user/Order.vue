@@ -55,7 +55,7 @@
 						<p class="strong has-text-centered">
 							Dziękujemy za opłacenie zamówienia! Możesz teraz skorzystać z promocji Study Buddy!
 						</p>
-						Znajdź jedną osobę, która po wejściu na <a :href="voucherUrl()">{{voucherUrl()}}</a> zapisze się
+						Znajdź jedną osobę, która po wejściu na <a :href="voucherUrl()">{{voucherUrl()}}</a> zapisze się
 						z Twoim unikalnym kodem. <strong>Gdy opłaci zamówienie</strong> - zniżka zostanie naliczona także Tobie, a my wykonamy w ciągu 14 dni zwrot na konto, z którego opłacony został kurs!&nbsp;😉
 						<p class="metadata aligncenter">Twój unikalny kod:</p>
 						<span class="code">{{order.studyBuddy.code}}</span>
@@ -92,6 +92,7 @@
 							</button>
 						</p>
 						<p class="metadata aligncenter margin top">Kwota do zapłaty: {{this.order.total}}zł</p>
+						<p class="aligncenter" v-if="canChangePaymentMethod">Aby zapłacić na raty, anuluj to zamówienie i złóż kolejne.</p>
 					</div>
 					<!-- PAY ORDER ENDS -->
 
@@ -140,6 +141,8 @@
 									<td>{{ order.total }}zł</td>
 								</tr>
 							</table>
+
+							<p class="aligncenter">Możesz opłacić wszystkie raty przed terminem, nawet dziś, klikając ponownie ZAPŁAĆ KOLEJNĄ RATĘ. 🙂</p>
 
 							<!-- Transfer details -->
 							<div class="transfer-details notification" v-if="transferDetails">
@@ -222,7 +225,7 @@
 							title="Dodaj lub zmień kod rabatowy"
 							@click="toggleCouponInput"
 							v-if="order.status !== 'closed'"
-						  data-button="add-coupon"
+							data-button="add-coupon"
 						>
 							<span class="icon is-small margin right"><i class="fa fa-plus"></i></span>
 							<span>Dodaj lub zmień kod rabatowy</span>
@@ -230,11 +233,11 @@
 					</div>
 					<div class="voucher-code" v-if="couponInputVisible">
 						<wnl-form class="margin vertical"
-									name="CouponCode"
-									method="put"
-									:resource-route="couponUrl"
-									hide-default-submit="true"
-									@submitSuccess="couponSubmitSuccess">
+							name="CouponCode"
+							method="put"
+							:resource-route="couponUrl"
+							hide-default-submit="true"
+							@submitSuccess="couponSubmitSuccess">
 							<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
 							<wnl-submit data-button="coupon-submit">Wykorzystaj kod</wnl-submit>
 						</wnl-form>
@@ -251,13 +254,6 @@
 				</span>
 				{{ paymentStatus }}
 			</div>
-			<div class="card-footer-item payment-status" :class="paymentStatusClass" v-if="canChangePaymentMethod">
-				<a :href="paymentMethodChangeUrl" title="Zmień metodę płatności">
-					<span class="icon is-small status-icon">
-						<i class="fa fa-pencil-square-o"></i>
-					</span> Zmień metodę płatności
-				</a>
-			</div>
 			<div class="card-footer-item cancel-order" v-if="!order.paid && !order.canceled && order.total > 0">
 				<a title="Anuluj zamówienie" @click="cancelOrder">
 					<span class="icon is-small status-icon">
@@ -268,10 +264,10 @@
 		</div>
 
 		<wnl-p24-form
-				:user-data="userData"
-				:payment-data="paymentData"
-				:order="order"
-				ref="p24Form"
+			:user-data="userData"
+			:payment-data="paymentData"
+			:order="order"
+			ref="p24Form"
 		/>
 	</div>
 </template>
@@ -343,11 +339,14 @@
 
 		&__title
 			flex: 1 0 auto
+
 	.payment
 		&--in-progress
 			color: $warning
+
 		&--error
 			color: $danger
+
 		&--success
 			color: $success
 
@@ -360,16 +359,16 @@
 </style>
 
 <script>
-import moment from 'moment';
 import axios from 'axios';
-import {mapActions, mapGetters, mapMutations} from 'vuex';
-import {getUrl, getApiUrl, getImageUrl} from 'js/utils/env';
-import {gaEvent} from 'js/utils/tracking';
-import {Form, Text, Submit} from 'js/components/global/form';
+import { get } from 'lodash';
+import moment from 'moment';
+import { nextTick } from 'vue';
+import { mapActions, mapGetters } from 'vuex';
+import { getUrl, getApiUrl } from 'js/utils/env';
+import { gaEvent } from 'js/utils/tracking';
+import { Form, Text, Submit } from 'js/components/global/form';
 import P24Form from 'js/components/user/P24Form';
 import { swalConfig } from 'js/utils/swal';
-import {nextTick} from 'vue';
-import * as types from 'js/store/mutations-types';
 
 export default {
 	props: {
@@ -428,7 +427,7 @@ export default {
 			return true;
 		},
 		canRetryPayment() {
-			if (!_.get(this.order, 'payments.length', 0)) {
+			if (!get(this.order, 'payments.length', 0)) {
 				return !this.order.paid;
 			}
 			return !this.order.payments.find(payment => payment.status === 'success');
@@ -444,7 +443,7 @@ export default {
 		},
 		isPending() {
 			// show loader only if there is an online payment waiting for confirmation
-			const payments = _.get(this.order, 'payments', []);
+			const payments = get(this.order, 'payments', []);
 
 			if (this.order.canceled) return false;
 			if (payments.find(payment => payment.status === 'success')) return false;
@@ -499,9 +498,6 @@ export default {
 		canChangePaymentMethod() {
 			return !this.order.paid && !this.order.canceled && this.order.total > 0;
 		},
-		paymentMethodChangeUrl() {
-			return getUrl('payment/confirm-order');
-		},
 		orderNumber() {
 			return `Zamówienie numer ${this.order.id}`;
 		},
@@ -541,12 +537,12 @@ export default {
 				link.setAttribute('download', `${invoice.id}.pdf`);
 				link.click();
 
-				setTimeout(function() {
+				setTimeout(function () {
 					// For Firefox it is necessary to delay revoking the ObjectURL
 					window.URL.revokeObjectURL(link.href);
 					document.removeChild(link);
 				}, 100);
-			} catch(err) {
+			} catch (err) {
 				if (err.response.status === 404) {
 					return this.addAutoDismissableAlert({
 						text: 'Nie udało się znaleźć faktury. Spróbuj ponownie, jeśli problem nie ustąpi daj Nam znać :)',
@@ -570,13 +566,13 @@ export default {
 			}
 		},
 		async checkStatus() {
-			try{
+			try {
 				const response = await axios.get(getApiUrl(`users/${this.order.user_id}/orders/${this.order.id}?include=payments`));
 
-				const {included = {}, ...order} = response.data;
-				const {payments = {}} = included;
+				const { included = {}, ...order } = response.data;
+				const { payments = {} } = included;
 				if (order.paid) {
-					this.order.paid        = true;
+					this.order.paid = true;
 					this.order.paid_amount = order.paid_amount;
 					this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
 					this.fetchUserSubscription();
@@ -600,7 +596,7 @@ export default {
 				})
 				.catch(exception => $wnl.logger.capture(exception));
 		},
-		voucherUrl(code){
+		voucherUrl(code) {
 			return code ? getUrl(`payment/voucher?code=${code}`) : getUrl('payment/voucher');
 		},
 		instalmentDate(date) {
@@ -609,13 +605,13 @@ export default {
 		getCouponValue(coupon) {
 			return coupon.type === 'amount' ? `${coupon.value}zł` : `${coupon.value}%`;
 		},
-		toggleCouponInput(){
+		toggleCouponInput() {
 			this.couponInputVisible = !this.couponInputVisible;
 		},
-		cancelOrder(){
+		cancelOrder() {
 			this.$swal(swalConfig({
 				title: this.$t('orders.cancel.title'),
-				text: this.$t('orders.cancel.text', {id: this.order.id}),
+				text: this.$t('orders.cancel.text', { id: this.order.id }),
 				showCancelButton: true,
 				confirmButtonText: this.$t('ui.confirm.confirm'),
 				cancelButtonText: this.$t('ui.confirm.cancel'),
@@ -634,7 +630,7 @@ export default {
 		async pay() {
 			this.paymentLoading = true;
 
-			const [{data: paymentData}, {data: userData}] = await Promise.all([
+			const [{ data: paymentData }, { data: userData }] = await Promise.all([
 				axios.post(getApiUrl('payments'), {
 					order_id: this.order.id,
 					amount: this.amountToBePaidNext

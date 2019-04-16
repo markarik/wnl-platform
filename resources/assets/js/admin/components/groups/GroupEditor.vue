@@ -43,7 +43,7 @@
 </style>
 
 <script>
-import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit} from 'js/components/global/form';
+import { Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit } from 'js/components/global/form';
 
 
 export default {

@@ -76,8 +76,6 @@
 
 <script>
 import { mapActions } from 'vuex';
-import Breadcrumbs from 'js/components/global/Breadcrumbs';
-import SidenavItem from 'js/components/global/SidenavItem';
 
 export default {
 	props: {

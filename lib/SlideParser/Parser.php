@@ -474,7 +474,7 @@ class Parser
 			$imgTag = $match[0];
 			$imageUrl = $match[1];
 
-			if (stripos($imgTag, 'data-') === false || $force) {
+			if (stripos($imgTag, 'data-') === false && !$force) {
 				// Check if img tag contains data attributes - if not we don't need to migrate it
 				continue;
 			}

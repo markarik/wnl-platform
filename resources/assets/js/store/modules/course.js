@@ -3,7 +3,6 @@ import _ from 'lodash';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
 import { resources } from 'js/utils/constants';
-import { COURSE_STRUCTURE_TYPES } from 'js/consts/courseStructure';
 import * as types from 'js/store/mutations-types';
 import { modelToResourceMap, getModelByResource } from 'js/utils/config';
 
@@ -78,10 +77,7 @@ const getters = {
 			.map(node => node.model);
 	},
 	getRequiredLessons: (state, getters) => {
-		return getters.getLessons.filter(lesson => lesson.is_required && lesson.isAccessible);
-	},
-	userLessons: (state, getters) => {
-		return getters.getLessons.filter(lesson => lesson.isAccessible);
+		return getters.getLessons.filter(lesson => lesson.is_required);
 	},
 	getLesson: (state, getters) => lessonId => {
 		return getters.getLessons.find(lesson => lesson.id.toString() === lessonId.toString()) || {};
@@ -280,12 +276,12 @@ const actions = {
 		commit(types.SET_SUBSECTIONS, subsections);
 		commit(types.SET_IS_LESSON_LOADING, false);
 	},
-	async setStructure({ commit, rootGetters }, courseId = 1) {
+	async setStructure({ commit }, courseId = 1) {
 		const response = await _getCourseStructure(courseId);
 		const { data: { included, ...structureObj } } = response;
 		const { courses } = included;
 
-		let structure = Object.values(structureObj).map(node => {
+		const structure = Object.values(structureObj).map(node => {
 			const include = modelToResourceMap[node.structurable_type];
 			const value = included[include][node.structurable_id];
 
@@ -294,12 +290,6 @@ const actions = {
 				model: value
 			};
 		});
-
-		if (!rootGetters.isAdmin) {
-			structure = structure.filter(node => {
-				return node.model.isAccessible || node.structurable_type === COURSE_STRUCTURE_TYPES.GROUP;
-			});
-		}
 
 		commit(types.SET_STRUCTURE, structure);
 		commit(types.SET_COURSE, courses[courseId]);

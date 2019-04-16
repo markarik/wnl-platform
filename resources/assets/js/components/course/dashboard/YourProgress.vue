@@ -54,13 +54,13 @@ const STATE_FULL = 'full',
 export default {
 	computed: {
 		...mapGetters('course', [
-			'userLessons',
+			'getLessons',
 		]),
 		...mapGetters('progress', [
 			'getCompleteLessons'
 		]),
 		progressLessons() {
-			return this.userLessons.filter(lesson => lesson.isAvailable && lesson.is_required);
+			return this.getLessons.filter(lesson => lesson.isAvailable && lesson.is_required);
 		},
 		courseId() {
 			return this.$route.params.courseId;

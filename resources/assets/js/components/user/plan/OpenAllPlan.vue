@@ -70,16 +70,16 @@ export default {
 	},
 	computed: {
 		...mapGetters('course', [
+			'getLessons',
 			'getRequiredLessons',
-			'userLessons',
 		]),
 		...mapGetters('progress', ['getCompleteLessons']),
 		...mapGetters(['currentUserId']),
 		availableLength() {
-			return this.userLessons.filter(lesson => lesson.isAvailable && lesson.is_required).length;
+			return this.getLessons.filter(lesson => lesson.isAvailable && lesson.is_required).length;
 		},
 		requiredLength() {
-			return this.userLessons.filter(lesson => lesson.is_required).length;
+			return this.getRequiredLessons.length;
 		},
 		completedLessonsLength() {
 			return this.completedLessons.length;

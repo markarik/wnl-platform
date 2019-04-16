@@ -72,7 +72,7 @@ class UserOrdersApiController extends ApiController
 		}
 		$order->attachCoupon($coupon);
 
-		if (intval($order->total_with_coupon) === 0) {
+		if (!$order->paid && intval($order->total_with_coupon) === 0) {
 			$order->paid = true;
 			$order->save();
 			$this->dispatch(new OrderPaid($order));

@@ -114,9 +114,7 @@ const actions = {
 		// Make sure that setup happens only once
 		if (!getCurrentUserPromise) {
 			getCurrentUserPromise = Promise
-				.all([
-					dispatch('fetchCurrentUser'),
-				])
+				.resolve(dispatch('fetchCurrentUser'))
 				.catch((error) => {
 					$wnl.logger.error(error);
 					commit(types.USERS_SET_LOADING_ERROR, true);
@@ -143,6 +141,7 @@ const actions = {
 			id,
 			has_finished_entry_exam,
 			has_latest_course_product,
+			suspended,
 			profile,
 			subscription,
 			settings,
@@ -186,6 +185,10 @@ const actions = {
 			throw new Error('current user returned user with ID 0');
 		}
 		commit(types.USERS_UPDATE_CURRENT, currentUser);
+
+		if (suspended) {
+			commit(types.USERS_SET_ACCOUNT_SUSPENDED, true);
+		}
 	},
 
 	async fetchUserSubscription({ commit }) {

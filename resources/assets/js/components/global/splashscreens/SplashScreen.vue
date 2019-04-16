@@ -1,24 +1,34 @@
 <template>
-	<div class="splash-screen">
-		<div class="splash-screen__container scrollable-main-container">
-			<div class="splash-screen__content">
-				<wnl-text-loader v-if="isLoading"></wnl-text-loader>
-				<template v-else>
-					<wnl-splash-screen-generic-error v-if="currentUserLoadingError" />
-					<wnl-splash-screen-account-suspended v-else-if="currentUserAccountSuspended" :orders="orders" />
-					<wnl-splash-screen-order-canceled v-else-if="allOrdersCanceled" />
-					<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')" />
-					<wnl-splash-screen-order-not-paid v-else-if="latestCourseWaitingForPayment" />
-					<wnl-splash-screen-subscription-expired v-else-if="currentUserSubscriptionStatus === EXPIRED" />
-					<wnl-splash-screen-default v-else />
-				</template>
+	<div class="wnl-app-layout">
+		<wnl-sidenav-slot
+			:is-visible="isSidenavVisible"
+			:is-detached="!isSidenavMounted"
+			:is-narrow="true"
+		>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+		</wnl-sidenav-slot>
+
+		<div class="splash-screen">
+			<div class="splash-screen__container scrollable-main-container">
+				<div class="splash-screen__content">
+					<wnl-text-loader v-if="isLoading"></wnl-text-loader>
+					<template v-else>
+						<wnl-splash-screen-generic-error v-if="currentUserLoadingError" />
+						<wnl-splash-screen-account-suspended v-else-if="currentUserAccountSuspended" :orders="orders" />
+						<wnl-splash-screen-order-canceled v-else-if="allOrdersCanceled" />
+						<wnl-splash-screen-upcoming-edition v-else-if="$upcomingEditionParticipant.isAllowed('access')" />
+						<wnl-splash-screen-order-not-paid v-else-if="latestCourseWaitingForPayment" />
+						<wnl-splash-screen-subscription-expired v-else-if="currentUserSubscriptionStatus === EXPIRED" />
+						<wnl-splash-screen-default v-else />
+					</template>
+				</div>
 			</div>
+			<footer class="splash-screen__footer text-dimmed">
+				<p class="splash-screen__footer__text">
+					W razie problemów napisz do nas na Messengerze lub wyślij maila na adres: <a href="mailto:info@wiecejnizlek.pl">info@wiecejnizlek.pl</a>
+				</p>
+			</footer>
 		</div>
-		<footer class="splash-screen__footer text-dimmed">
-			<p class="splash-screen__footer__text">
-				W razie problemów napisz do nas na Messengerze lub wyślij maila na adres: <a href="mailto:info@wiecejnizlek.pl">info@wiecejnizlek.pl</a>
-			</p>
-		</footer>
 	</div>
 </template>
 
@@ -51,6 +61,8 @@
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 
+import WnlMainNav from 'js/components/MainNav';
+import WnlSidenavSlot from 'js/components/global/SidenavSlot';
 import WnlSplashScreenAccountSuspended from 'js/components/global/splashscreens/AccountSuspended';
 import WnlSplashScreenOrderCanceled from 'js/components/global/splashscreens/OrderCanceled';
 import WnlSplashScreenUpcomingEdition from 'js/components/global/splashscreens/UpcomingEdition';
@@ -73,6 +85,8 @@ export default {
 		};
 	},
 	components: {
+		WnlMainNav,
+		WnlSidenavSlot,
 		WnlSplashScreenAccountSuspended,
 		WnlSplashScreenUpcomingEdition,
 		WnlSplashScreenOrderNotPaid,
@@ -87,6 +101,8 @@ export default {
 			'currentUserAccountSuspended',
 			'currentUserSubscriptionStatus',
 			'currentUserLoadingError',
+			'isSidenavVisible',
+			'isSidenavMounted',
 		]),
 		latestCourseOrders() {
 			return this.orders.filter(order => order.product.slug === PRODUCTS_SLUGS.SLUG_ONLINE);

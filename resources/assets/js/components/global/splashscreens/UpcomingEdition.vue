@@ -1,37 +1,40 @@
 <template>
 	<div>
-		<img
-			class="splash-screen-image"
-			:src="logoImageUrl"
-			alt="Logo kursu"
-		>
-		<div v-if="diff >= 0">
-			<p class="title is-4">Twoja przygoda z kursem zacznie się już za:</p>
-			<div class="splash-screen-counter">
-				<div class="splash-screen-counter__item">
-					<span>{{daysLeft}}</span>
-					<span class="text-dimmed">dni</span>
+		<wnl-text-loader v-if="updateInProgress"></wnl-text-loader>
+		<template v-else>
+			<img
+				class="splash-screen-image"
+				:src="logoImageUrl"
+				alt="Logo kursu"
+			>
+			<div v-if="diff >= 0">
+				<p class="title is-4">Twoja przygoda z kursem zacznie się już za:</p>
+				<div class="splash-screen-counter">
+					<div class="splash-screen-counter__item">
+						<span>{{daysLeft}}</span>
+						<span class="text-dimmed">dni</span>
+					</div>
+					<div class="splash-screen-counter__item">
+						<span>{{hoursLeft}}</span>
+						<span class="text-dimmed">godz</span>
+					</div>
+					<div class="splash-screen-counter__item">
+						<span>{{minutesLeft}}</span>
+						<span class="text-dimmed">min</span>
+					</div>
+					<div class="splash-screen-counter__item -small">
+						🚀
+					</div>
 				</div>
-				<div class="splash-screen-counter__item">
-					<span>{{hoursLeft}}</span>
-					<span class="text-dimmed">godz</span>
-				</div>
-				<div class="splash-screen-counter__item">
-					<span>{{minutesLeft}}</span>
-					<span class="text-dimmed">min</span>
-				</div>
-				<div class="splash-screen-counter__item -small">
-					🚀
-				</div>
+				<!-- TODO PLAT-1201 clean up and do it correctly -->
+				<p v-if="courseSlug === 'ldek'" class="splash-screen__info text-dimmed">
+					Album map myśli wyślemy do Ciebie w 2. połowie maja.
+				</p>
+				<p class="splash-screen__info text-dimmed">
+					Twoja subskrypcja będzie aktywna do {{endDate}}.
+				</p>
 			</div>
-			<!-- TODO PLAT-1201 clean up and do it correctly -->
-			<p v-if="courseSlug === 'ldek'" class="splash-screen__info text-dimmed">
-				Album map myśli wyślemy do Ciebie w 2. połowie maja.
-			</p>
-			<p class="splash-screen__info text-dimmed">
-				Twoja subskrypcja będzie aktywna do {{endDate}}.
-			</p>
-		</div>
+		</template>
 	</div>
 </template>
 
@@ -106,7 +109,7 @@ export default {
 			'fetchUserSubscription',
 			'addAutoDismissableAlert'
 		]),
-		...mapActions('course', ['setStructure']),
+		...mapActions('course', { courseSetup: 'setup' }),
 	},
 	created() {
 		const accessStart = new Date(this.currentUserSubscriptionDates.min * 1000);
@@ -114,7 +117,7 @@ export default {
 		this.diff = moment(accessStart).diff(now, 'minutes');
 		this.intervalId = setInterval(() => {
 			this.diff = this.diff - 1;
-		}, 60000);
+		}, 30000);
 	},
 	beforeDestroy() {
 		clearInterval(this.intervalId);
@@ -126,9 +129,10 @@ export default {
 				try {
 					await Promise.all([
 						this.fetchUserSubscription(),
-						this.setStructure(),
-						this.$socketChatSetup()
+						this.courseSetup(),
+						this.$socketChatSetup(),
 					]);
+					this.$router.push('/');
 				} catch (e) {
 					$wnl.logger.error(e);
 					this.addAutoDismissableAlert({

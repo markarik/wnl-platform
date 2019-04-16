@@ -561,6 +561,8 @@ export default {
 				this.setSlideshowHtmlContent(data)
 					.then(() => {
 						const slide = this.getSlideById(this.currentSlideId);
+						// It needs to run after `this.setup()` or the comments will be overriden with an empty array
+						this.setupSlideComments({ id: this.currentSlideId });
 						this.child.call('setBookmarkState', slide.bookmark.hasReacted);
 					});
 			});

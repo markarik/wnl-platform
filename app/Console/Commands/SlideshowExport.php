@@ -26,7 +26,7 @@ class SlideshowExport extends Command
 	 * @var string
 	 */
 	protected $description = '
-		Command that exports slideshow with all theirs connections including sides, 
+		Command that exports slideshow with all theirs connections including slides, 
 		presentables, sections subsections
 		';
 

@@ -7,7 +7,7 @@
 		@click="onClick"
 	>
 		<div class="sidenav-content">
-			<slot></slot>
+			<slot />
 		</div>
 	</div>
 </template>

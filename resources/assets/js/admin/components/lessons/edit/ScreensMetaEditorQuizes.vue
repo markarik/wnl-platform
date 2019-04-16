@@ -6,7 +6,7 @@
 				v-model="selectedQuiz"
 				:options="quiz_sets"
 				name="meta"
-			></wnl-select>
+			/>
 		</span>
 	</div>
 </template>

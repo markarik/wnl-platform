@@ -9,7 +9,7 @@
 				frameborder="0"
 				allow="encrypted-media"
 				allowfullscreen
-			></iframe>
+			/>
 		</div>
 	</div>
 </template>

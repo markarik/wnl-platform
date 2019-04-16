@@ -4,7 +4,7 @@
 			:is-visible="isSidenavVisible"
 			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 			<aside class="sidenav-aside dashboard-sidenav">
 				<wnl-accordion
 					:data-source="subjectTypeFilters"
@@ -55,7 +55,7 @@
 						>
 							{{sort.name}}
 							<span class="icon is-small">
-								<i class="fa" :class="[sort.dir === 'desc' ? 'fa-arrow-down' : 'fa-arrow-up']"></i>
+								<i class="fa" :class="[sort.dir === 'desc' ? 'fa-arrow-down' : 'fa-arrow-up']" />
 							</span>
 						</a>
 					</div>
@@ -88,7 +88,7 @@
 			:is-detached="!isChatMounted"
 			:has-chat="true"
 		>
-			<wnl-public-chat :rooms="chatRooms" title="USZANOWANKO"></wnl-public-chat>
+			<wnl-public-chat :rooms="chatRooms" title="USZANOWANKO" />
 		</wnl-sidenav-slot>
 		<div
 			v-if="isChatToggleVisible"
@@ -96,7 +96,7 @@
 			@click="toggleChat"
 		>
 			<span class="icon is-big">
-				<i class="fa fa-chevron-left"></i>
+				<i class="fa fa-chevron-left" />
 				<span>Pokaż czat</span>
 			</span>
 		</div>

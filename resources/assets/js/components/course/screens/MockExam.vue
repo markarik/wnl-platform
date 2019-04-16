@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-screen-html">
-		<div class="content" v-html="content"></div>
+		<div class="content" v-html="content" />
 		<div class="margin vertical has-text-centered">
 			{{this.$t('annotations.mockExamAnnotation')}}
 		</div>

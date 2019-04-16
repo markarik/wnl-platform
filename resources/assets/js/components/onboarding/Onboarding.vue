@@ -5,7 +5,7 @@
 			:is-detached="!isSidenavMounted"
 			:is-narrow="true"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 		</wnl-sidenav-slot>
 		<div v-if="currentStep" class="onboarding-wrapper">
 			<wnl-stepper

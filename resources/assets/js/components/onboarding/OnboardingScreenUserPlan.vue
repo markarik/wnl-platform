@@ -45,7 +45,7 @@
 					</div>
 				</div>
 				<div v-if="isEditorVisible" class="onboarding-planner-wrapper">
-					<button class="delete onboarding-planner-close clickable" @click="isEditorVisible=false"></button>
+					<button class="delete onboarding-planner-close clickable" @click="isEditorVisible=false" />
 					<wnl-automatic-plan
 						:show-annotation="false"
 						:start="automaticPlanStartDate"

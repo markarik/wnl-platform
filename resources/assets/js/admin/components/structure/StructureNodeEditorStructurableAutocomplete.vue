@@ -2,7 +2,7 @@
 	<div>
 		<div v-if="selected" class="autocomplete-selected">
 			{{selected.name}}
-			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
+			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true" /></span>
 		</div>
 		<wnl-autocomplete
 			v-else
@@ -13,7 +13,7 @@
 		>
 			<div slot-scope="slotProps">
 				<span class="icon is-small">
-					<i :class="['fa', getStructurableIcon(slotProps.item)]" aria-hidden="true"></i>
+					<i :class="['fa', getStructurableIcon(slotProps.item)]" aria-hidden="true" />
 				</span>
 
 				{{slotProps.item.name}}
@@ -25,13 +25,13 @@
 				<div class="autocomplete-footer-button-container">
 					<button class="button" @click="onLessonAdd">
 						<span class="icon is-small">
-							<i class="fa fa-plus" aria-hidden="true"></i>
+							<i class="fa fa-plus" aria-hidden="true" />
 						</span>
 						<span>Nowa lekcja</span>
 					</button>
 					<button class="button" @click="onGroupAdd">
 						<span class="icon is-small">
-							<i class="fa fa-plus" aria-hidden="true"></i>
+							<i class="fa fa-plus" aria-hidden="true" />
 						</span>
 						<span>Nowa grupa</span>
 					</button>

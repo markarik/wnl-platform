@@ -7,10 +7,9 @@
 						:size="isMobile ? 'medium' : 'large'"
 						:full-name="message.actors.full_name"
 						:url="message.actors.avatar"
-					>
-					</wnl-avatar>
+					/>
 				</div>
-				<span class="icon is-small"><i class="fa" :class="icon"></i></span>
+				<span class="icon is-small"><i class="fa" :class="icon" /></span>
 				<span class="meta-time">{{justDate}}</span>
 				<span class="meta-time">{{justTime}}</span>
 			</div>
@@ -27,8 +26,7 @@
 					class="subject wrap"
 					:class="{'unseen': !isSeen}"
 				>{{subjectText}}</div>
-				<div class="time">
-				</div>
+				<div class="time" />
 			</div>
 			<div class="link-symbol" :class="{'is-desktop': !isTouchScreen}">
 				<div @click="dispatchMarkAsSeen" @contextmenu="dispatchMarkAsSeen">
@@ -42,8 +40,8 @@
 							class="icon go-to-link"
 							:class="{'unseen': !isSeen}"
 						>
-							<span v-if="loading" class="loader"></span>
-							<i v-else class="fa fa-angle-right"></i>
+							<span v-if="loading" class="loader" />
+							<i v-else class="fa fa-angle-right" />
 						</span>
 					</router-link>
 					<router-link
@@ -56,8 +54,8 @@
 							class="icon go-to-link"
 							:class="{'unseen': !isSeen}"
 						>
-							<span v-if="loading" class="loader"></span>
-							<i v-else class="fa fa-angle-right"></i>
+							<span v-if="loading" class="loader" />
+							<i v-else class="fa fa-angle-right" />
 						</span>
 					</router-link>
 					<a
@@ -70,8 +68,8 @@
 							class="icon go-to-link"
 							:class="{'unseen': !isSeen}"
 						>
-							<span v-if="loading" class="loader"></span>
-							<i v-else class="fa fa-angle-right"></i>
+							<span v-if="loading" class="loader" />
+							<i v-else class="fa fa-angle-right" />
 						</span>
 					</a>
 				</div>
@@ -80,12 +78,12 @@
 					:title="$t('notifications.stream.hideNotification')"
 					@click="toggleNotification"
 				>
-					<span v-if="loading" class="loader"></span>
+					<span v-if="loading" class="loader" />
 					<i
 						v-else
 						class="fa"
 						:class="isRead ? 'fa-eye' : 'fa-eye-slash'"
-					></i>
+					/>
 				</span>
 			</div>
 		</div>

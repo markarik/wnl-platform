@@ -10,7 +10,7 @@
 						@change="onSearch"
 					/>
 					<span class="icon is-small is-right">
-						<i class="fa fa-search"></i>
+						<i class="fa fa-search" />
 					</span>
 				</span>
 			</template>

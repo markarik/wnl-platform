@@ -11,9 +11,9 @@
 			:alert="alert"
 			:timestamp="timestamp"
 			@delete="onDelete"
-		></wnl-alert>
-		<slot :on-submit="onSubmitForm"></slot>
-		<wnl-submit v-if="!hideDefaultSubmit"></wnl-submit>
+		/>
+		<slot :on-submit="onSubmitForm" />
+		<wnl-submit v-if="!hideDefaultSubmit" />
 	</form>
 </template>
 

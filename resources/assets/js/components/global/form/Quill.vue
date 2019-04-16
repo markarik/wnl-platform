@@ -8,7 +8,7 @@
 			<wnl-user-autocomplete-item slot-scope="slotProps" :item="slotProps.item" />
 		</wnl-autocomplete-list>
 		<div ref="quill">
-			<slot></slot>
+			<slot />
 		</div>
 	</div>
 </template>

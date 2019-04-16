@@ -18,7 +18,7 @@
 					>
 						{{statusTag.text}}&nbsp;
 						<span class="icon is-small">
-							<i class="fa fa-angle-down"></i>
+							<i class="fa fa-angle-down" />
 						</span>
 					</p>
 					<div slot="content">

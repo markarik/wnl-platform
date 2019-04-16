@@ -22,7 +22,7 @@
 				<section>
 					<p class="test-builder-header">
 						<span class="icon is-small">
-							<i class="fa fa-signal"></i>
+							<i class="fa fa-signal" />
 						</span>
 						{{$t('questions.solving.test.headers.count')}}
 					</p>
@@ -34,13 +34,13 @@
 							:class="{'is-selected': size === testQuestionsCount}"
 							@click="testQuestionsCount = size"
 							v-text="size"
-						></li>
+						/>
 					</ul>
 				</section>
 				<section v-if="canChangeTime">
 					<p class="test-builder-header">
 						<span class="icon is-small">
-							<i class="fa fa-hourglass-start"></i>
+							<i class="fa fa-hourglass-start" />
 						</span>
 						{{$t('questions.solving.test.headers.time')}}
 					</p>
@@ -50,13 +50,13 @@
 						max="999"
 						maxlength="3"
 						type="number"
-					/>
+					>
 					<span class="time-unit">{{$t('units.time.minutes')}}</span>
 				</section>
 				<section v-else>
 					<p class="test-preset-time">
 						<span class="icon is-small">
-							<i class="fa fa-hourglass-start"></i>
+							<i class="fa fa-hourglass-start" />
 						</span>
 						{{$t('questions.solving.test.preset.time', {time: this.time})}}
 					</p>

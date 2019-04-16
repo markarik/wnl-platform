@@ -8,7 +8,7 @@
 					:class="{'is-active': isTabActive(option.slug)}"
 				>
 					<a @click="changeFiltering(option.slug)">
-						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{option.text}}
+						<span class="icon is-small"><i class="fa" :class="option.icon" /></span> {{option.text}}
 					</a>
 				</li>
 			</ul>
@@ -22,7 +22,7 @@
 						:value="option.slug"
 						:selected="isTabActive(option.slug)"
 					>
-						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{option.text}}
+						<span class="icon is-small"><i class="fa" :class="option.icon" /></span> {{option.text}}
 					</option>
 				</select>
 			</span>
@@ -30,7 +30,7 @@
 		<a class="button is-small toggle-archived" @click="$emit('toggleShowRead')">
 			<span class="text">{{buttonMessage}}</span>
 			<span class="icon is-small">
-				<i class="fa" :class="showRead ? 'fa-eye' : 'fa-eye-slash'"></i>
+				<i class="fa" :class="showRead ? 'fa-eye' : 'fa-eye-slash'" />
 			</span>
 		</a>
 	</div>

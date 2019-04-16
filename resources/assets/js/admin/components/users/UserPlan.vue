@@ -80,7 +80,7 @@
 									type="button"
 									@click="unselectLesson(lesson)"
 								>
-									<span class="icon"><i class="fa fa-trash"></i></span>
+									<span class="icon"><i class="fa fa-trash" /></span>
 								</button>
 							</td>
 						</tr>

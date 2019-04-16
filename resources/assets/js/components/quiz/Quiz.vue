@@ -2,7 +2,7 @@
 	<div class="wnl-quiz">
 		<div v-if="isLoaded && displayResults">
 			<p class="title is-4 has-text-centered">
-				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
+				Gratulacje! <wnl-emoji name="tada" />
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
 			<wnl-quiz-summary @userEvent="onUserEvent" />
@@ -12,7 +12,7 @@
 		</div>
 		<div v-else>
 			<p class="title is-5">
-				Sprawdź swoją wiedzę z wczorajszej lekcji! <wnl-emoji name="thinking_face"></wnl-emoji>
+				Sprawdź swoją wiedzę z wczorajszej lekcji! <wnl-emoji name="thinking_face" />
 			</p>
 			<p class="big">
 				Po każdym podejściu, na ekranie pozostaną tylko błędnie rozwiązane pytania. Aby zakończyć test, odpowiadasz do skutku! Żeby nie było zbyt łatwo, kolejność odpowiedzi będzie każdorazowo zmieniana. Powodzenia!
@@ -35,7 +35,7 @@
 				@checkQuiz="onCheckQuiz"
 				@userEvent="onUserEvent"
 			/>
-			<wnl-text-loader v-else class="margin vertical"></wnl-text-loader>
+			<wnl-text-loader v-else class="margin vertical" />
 		</div>
 	</div>
 </template>

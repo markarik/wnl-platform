@@ -12,8 +12,7 @@
 				:item="item"
 				:force-group-open="isOption('forceGroupsOpen')"
 				:show-subitems-count="isOption('showSubitemsCount')"
-			>
-			</wnl-sidenav-group>
+			/>
 		</ul>
 	</div>
 </template>

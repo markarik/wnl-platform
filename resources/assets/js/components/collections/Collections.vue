@@ -4,9 +4,9 @@
 			:is-visible="isSidenavVisible"
 			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 			<aside class="sidenav-aside collections-sidenav">
-				<wnl-sidenav :items="getNavigation()" :options="navigationOptions"></wnl-sidenav>
+				<wnl-sidenav :items="getNavigation()" :options="navigationOptions" />
 			</aside>
 		</wnl-sidenav-slot>
 		<div
@@ -18,14 +18,14 @@
 				<div class="collections-header">
 					<div class="collections-breadcrumbs">
 						<div class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-star-o"></i></span>
+							<span class="icon is-small"><i class="fa fa-star-o" /></span>
 						</div>
 						<div v-if="rootCategoryName" class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 							<span>{{rootCategoryName}}</span>
 						</div>
 						<div v-if="categoryName" class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 							<span>{{categoryName}}</span>
 						</div>
 					</div>
@@ -39,7 +39,7 @@
 						>
 							{{name}}
 							<span class="icon is-small">
-								<i class="fa" :class="[isPanelActive(panel) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+								<i class="fa" :class="[isPanelActive(panel) ? 'fa-check-circle' : 'fa-circle-o']" />
 							</span>
 						</a>
 					</div>
@@ -53,11 +53,11 @@
 							:saved-slides-count="slidesIds.length"
 							:slides-ids="slidesIds"
 							@userEvent="onUserEvent"
-						></wnl-slides-carousel>
+						/>
 						<wnl-qna-collection
 							:category-name="categoryName"
 							:root-category-name="rootCategoryName"
-						></wnl-qna-collection>
+						/>
 					</div>
 					<div v-show="isQuizPanelVisible" class="column">
 						<wnl-quiz-collection
@@ -66,14 +66,14 @@
 							:quiz-questions-ids="quizQuestionsIds"
 							@changeQuizQuestionsPage="onChangeQuizQuestionsPage"
 							@userEvent="onUserEvent"
-						></wnl-quiz-collection>
+						/>
 					</div>
 				</div>
 			</div>
 			<div v-else class="collections-placeholder">
-				<span class="icon main"><i class="fa fa-star-o"></i></span>
+				<span class="icon main"><i class="fa fa-star-o" /></span>
 				<span class="welcome">Witaj w Kolekcjach!</span>
-				<span>Wybierz temat z menu <span v-if="isTouchScreen" class="icon is-small"><i class="fa fa-bars"></i></span> i&nbsp;przeglądaj&nbsp;zapisane&nbsp;fragmenty&nbsp;kursu</span>
+				<span>Wybierz temat z menu <span v-if="isTouchScreen" class="icon is-small"><i class="fa fa-bars" /></span> i&nbsp;przeglądaj&nbsp;zapisane&nbsp;fragmenty&nbsp;kursu</span>
 			</div>
 		</div>
 	</div>

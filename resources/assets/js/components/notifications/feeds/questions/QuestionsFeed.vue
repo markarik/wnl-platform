@@ -2,7 +2,7 @@
 	<div class="questions-feed">
 		<div v-if="!loading">
 			<div class="stream-notifications">
-				<div class="stream-line"></div>
+				<div class="stream-line" />
 				<component
 					:is="getEventComponent(message)"
 					v-for="message in filtered"

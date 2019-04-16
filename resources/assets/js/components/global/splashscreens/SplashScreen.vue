@@ -5,13 +5,13 @@
 			:is-detached="!isSidenavMounted"
 			:is-narrow="true"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 		</wnl-sidenav-slot>
 
 		<div class="splash-screen">
 			<div class="splash-screen__container scrollable-main-container">
 				<div class="splash-screen__content">
-					<wnl-text-loader v-if="isLoading"></wnl-text-loader>
+					<wnl-text-loader v-if="isLoading" />
 					<template v-else>
 						<wnl-splash-screen-generic-error v-if="currentUserLoadingError" />
 						<wnl-splash-screen-account-suspended v-else-if="currentUserAccountSuspended" :orders="orders" />

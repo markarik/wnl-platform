@@ -5,7 +5,7 @@
 				<span v-if="ancestors.length">{{ancestors.map(ancestor => ancestor.structurable.name).join(' > ')}} ></span>
 				{{selected.structurable.name}}
 			</span>
-			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
+			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true" /></span>
 		</div>
 		<wnl-autocomplete
 			v-else
@@ -19,7 +19,7 @@
 
 				<div>
 					<span class="icon is-small">
-						<i :class="['fa', getStructurableIcon(slotProps.item.structurable)]" aria-hidden="true"></i>
+						<i :class="['fa', getStructurableIcon(slotProps.item.structurable)]" aria-hidden="true" />
 					</span>
 					{{slotProps.item.structurable.name}}
 				</div>

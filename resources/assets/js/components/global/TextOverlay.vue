@@ -1,6 +1,6 @@
 <template>
 	<div v-if="isLoading" class="wnl-overlay">
-		<span class="loader"></span>
+		<span class="loader" />
 		<span class="loader-text">{{text}}</span>
 	</div>
 </template>

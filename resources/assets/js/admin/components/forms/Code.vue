@@ -1,6 +1,6 @@
 <template>
 	<div class="field">
-		<div id="wnl-code-editor"></div>
+		<div id="wnl-code-editor" />
 	</div>
 </template>
 

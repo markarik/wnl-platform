@@ -1,6 +1,6 @@
 <template>
 	<div class="content">
-		<div class="page content" v-html="content"></div>
+		<div class="page content" v-html="content" />
 		<wnl-qna
 			v-if="hasQna"
 			:context-tags="tags"

@@ -14,7 +14,7 @@
 			</wnl-textarea>
 			<fieldset class="tags-fieldset">
 				<legend>Tagi</legend>
-				<wnl-tags :default-tags="flashcardTags" @tagsChanged="onTagsChanged"></wnl-tags>
+				<wnl-tags :default-tags="flashcardTags" @tagsChanged="onTagsChanged" />
 			</fieldset>
 			<wnl-content-item-classifier-editor
 				v-if="isEdit"
@@ -25,7 +25,7 @@
 			/>
 			<div v-else class="notification is-info">
 				<span class="icon">
-					<i class="fa fa-info-circle"></i>
+					<i class="fa fa-info-circle" />
 				</span>
 				Zapisz pytanie, aby przypisać do niego pojęcia
 			</div>
@@ -38,7 +38,7 @@
 				>
 					<span class="margin right">Zapisz</span>
 					<span class="icon is-small">
-						<i class="fa fa-save"></i>
+						<i class="fa fa-save" />
 					</span>
 				</button>
 			</div>

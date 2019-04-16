@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<wnl-text-loader v-if="updateInProgress"></wnl-text-loader>
+		<wnl-text-loader v-if="updateInProgress" />
 		<template v-else>
 			<img
 				class="splash-screen-image"

@@ -10,7 +10,7 @@
 				>
 					<h5>{{slide.snippet.header}}</h5>
 					<p>{{slide.snippet.subheader}}</p>
-					<i class="fa fa-times close-icon" @click="removeSlide(slide)"></i>
+					<i class="fa fa-times close-icon" @click="removeSlide(slide)" />
 				</div>
 			</div>
 			<div class="inputs-wrapper">

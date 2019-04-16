@@ -4,7 +4,7 @@
 			<span>{{selected.full_name}}</span>
 			<a class="button is-primary is-outlined" @click="onChange(null)">
 				<span class="icon is-small">
-					<i class="fa fa-times"></i>
+					<i class="fa fa-times" />
 				</span>
 			</a></div>
 		<wnl-autocomplete

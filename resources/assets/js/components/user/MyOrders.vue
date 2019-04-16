@@ -13,7 +13,7 @@
 					data-button="order-album"
 				>
 					<span class="icon is-small status-icon">
-						<i class="fa fa-shopping-cart"></i>
+						<i class="fa fa-shopping-cart" />
 					</span> Zamów album map myśli ({{getAlbum.price}}zł)
 				</a>
 			</div>
@@ -39,11 +39,11 @@
 					v-for="(order, index) in orders"
 					:key="index"
 					:order-instance="order"
-				></wnl-order>
+				/>
 			</div>
 			<div v-else>
 				<div class="box has-text-centered">
-					<p class="title is-5">Brak potwierdzonych zamówień <wnl-emoji name="package"></wnl-emoji></p>
+					<p class="title is-5">Brak potwierdzonych zamówień <wnl-emoji name="package" /></p>
 					<p class="has-text-centered">
 						<a :href="paymentUrl" class="button is-primary">Zapisz się na kurs</a>
 					</p>

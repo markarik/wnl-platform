@@ -3,7 +3,7 @@
 		<div class="refresh">
 			<div class="refresh-link">
 				<span class="icon is-tiny">
-					<i class="fa fa-refresh" :class="{'fa-spin': loading}"></i>
+					<i class="fa fa-refresh" :class="{'fa-spin': loading}" />
 				</span>
 				<a @click="$emit('refresh')">{{$t('questions.filters.refresh')}}</a>
 			</div>
@@ -39,7 +39,7 @@
 				class="tag is-success"
 			>
 				{{filterDisplayName(filter)}}
-				<button class="delete is-tiny" @click="removeFilter(filter.path)"></button>
+				<button class="delete is-tiny" @click="removeFilter(filter.path)" />
 			</span>
 		</div>
 		<div v-else class="active-filters-list">

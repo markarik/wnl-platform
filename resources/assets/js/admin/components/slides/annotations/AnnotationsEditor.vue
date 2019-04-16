@@ -49,8 +49,7 @@
 						:form="form"
 						name="content"
 						@input="onFieldChange"
-					>
-					</quill>
+					/>
 				</div>
 			</div>
 			<fieldset class="annotation-tags">
@@ -59,7 +58,7 @@
 					ref="tags"
 					:default-tags="annotation.tags || []"
 					@insertTag="onFieldChange"
-				></wnl-tags>
+				/>
 			</fieldset>
 			<wnl-content-item-classifier-editor
 				v-if="annotation.id"

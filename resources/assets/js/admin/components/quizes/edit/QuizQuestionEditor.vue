@@ -26,7 +26,7 @@
 							type="button"
 							@click="onDelete"
 						>
-							<span class="icon"><i class="fa fa-trash"></i></span>
+							<span class="icon"><i class="fa fa-trash" /></span>
 							<span>Usuń</span>
 						</button>
 						<button
@@ -35,7 +35,7 @@
 							type="button"
 							@click="onUndelete"
 						>
-							<span class="icon"><i class="fa fa-undo"></i></span>
+							<span class="icon"><i class="fa fa-undo" /></span>
 							<span>Przywróć</span>
 						</button>
 						<button class="button is-primary" @click.stop.prevent="onFormSave">Zapisz</button>
@@ -70,7 +70,7 @@
 			</fieldset>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Tagi</legend>
-				<wnl-tags ref="tags" :default-tags="questionTags"></wnl-tags>
+				<wnl-tags ref="tags" :default-tags="questionTags" />
 			</fieldset>
 			<wnl-content-item-classifier-editor
 				v-if="isEdit"
@@ -81,13 +81,13 @@
 			/>
 			<div v-else class="notification is-info">
 				<span class="icon">
-					<i class="fa fa-info-circle"></i>
+					<i class="fa fa-info-circle" />
 				</span>
 				Zapisz pytanie, aby przypisać do niego pojęcia
 			</div>
 			<fieldset class="question-form-fieldset">
 				<legend class="question-form-legend">Powiązane slajdy</legend>
-				<wnl-slide-ids ref="slides" :default-slides="questionSlides"></wnl-slide-ids>
+				<wnl-slide-ids ref="slides" :default-slides="questionSlides" />
 			</fieldset>
 			<fieldset class="question-form-fieldset">
 				<label class="label checkbox-label">

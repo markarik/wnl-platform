@@ -6,7 +6,7 @@
 					v-model="form.name"
 					:form="form"
 					name="name"
-				></wnl-input>
+				/>
 				<wnl-form-checkbox
 					v-model="form.is_required"
 					class="checkbox button"
@@ -22,13 +22,13 @@
 					>
 						<span class="margin right">Zapisz</span>
 						<span class="icon is-small">
-							<i class="fa fa-save"></i>
+							<i class="fa fa-save" />
 						</span>
 					</a>
 				</div>
 			</div>
 		</form>
-		<wnl-screens-editor v-if="isEdit" :lesson-id="lessonId"></wnl-screens-editor>
+		<wnl-screens-editor v-if="isEdit" :lesson-id="lessonId" />
 		<p v-else>Zapisz lekcję, żeby dodać do niej ekran</p>
 	</div>
 </template>

@@ -21,13 +21,13 @@
 		>
 			<div v-if="isSelectable" class="wai-checkbox">
 				<span class="icon is-small">
-					<i class="fa" :class="[isSelected ? 'fa-check-square-o' : 'fa-square-o']"></i>
+					<i class="fa" :class="[isSelected ? 'fa-check-square-o' : 'fa-square-o']" />
 				</span>
 			</div>
 			<div class="wai-content">
 				<span class="text">{{content}}</span>
 				<span v-if="!loading && count !== false" class="count">{{`(${count})`}}</span>
-				<span v-if="loading" class="loader"></span>
+				<span v-if="loading" class="loader" />
 			</div>
 			<div
 				v-if="hasChildren"
@@ -35,7 +35,7 @@
 				@click.stop="toggleExpanded"
 			>
 				<span class="icon is-small">
-					<i class="fa fa-angle-down" :class="[expanded ? 'fa-rotate-180' : '']"></i>
+					<i class="fa fa-angle-down" :class="[expanded ? 'fa-rotate-180' : '']" />
 				</span>
 			</div>
 		</div>

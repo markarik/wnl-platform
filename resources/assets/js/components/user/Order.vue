@@ -21,10 +21,10 @@
 					<div class="tags">
 						<span :class="{'is-success': order.paid, 'tag': true }">{{paymentStatus}}</span>
 						<span class="tag">Metoda płatności: {{paymentMethod}}</span>
-						<slot name="order-tags"></slot>
+						<slot name="order-tags" />
 					</div>
 				</div>
-				<div class="level-right"></div>
+				<div class="level-right" />
 			</div>
 			<div v-if="!order.canceled">
 				<!-- COUPONS BEGINS -->
@@ -139,7 +139,7 @@
 								</tr>
 								<tr>
 									<td>Razem</td>
-									<td></td>
+									<td />
 									<td>{{order.total}}zł</td>
 								</tr>
 							</table>
@@ -174,7 +174,7 @@
 						>
 							<a>
 								<span class="icon is-small">
-									<i :class="`fa fa-${tabContent.icon}`"></i>
+									<i :class="`fa fa-${tabContent.icon}`" />
 								</span>
 								{{tabContent.text}}
 							</a>
@@ -239,7 +239,7 @@
 							data-button="add-coupon"
 							@click="toggleCouponInput"
 						>
-							<span class="icon is-small margin right"><i class="fa fa-plus"></i></span>
+							<span class="icon is-small margin right"><i class="fa fa-plus" /></span>
 							<span>Dodaj lub zmień kod rabatowy</span>
 						</a>
 					</div>
@@ -264,14 +264,14 @@
 		<div class="card-footer">
 			<div class="card-footer-item payment-status" :class="paymentStatusClass">
 				<span class="icon is-small status-icon">
-					<i class="fa" :class="iconClass"></i>
+					<i class="fa" :class="iconClass" />
 				</span>
 				{{paymentStatus}}
 			</div>
 			<div v-if="!order.paid && !order.canceled && order.total > 0" class="card-footer-item cancel-order">
 				<a title="Anuluj zamówienie" @click="cancelOrder">
 					<span class="icon is-small status-icon">
-						<i class="fa fa-times"></i>
+						<i class="fa fa-times" />
 					</span> {{$t('orders.cancel.button')}}
 				</a>
 			</div>

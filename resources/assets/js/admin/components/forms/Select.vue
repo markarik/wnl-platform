@@ -10,8 +10,7 @@
 				:key="key"
 				:value="option.value"
 				v-text="option.text"
-			>
-			</option>
+			/>
 		</select>
 	</div>
 </template>

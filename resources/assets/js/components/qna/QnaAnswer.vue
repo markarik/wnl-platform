@@ -7,10 +7,10 @@
 				:reactable-resource="reactableResource"
 				:state="upvoteState"
 				module="qna"
-			></wnl-vote>
+			/>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-answer-content content" v-html="content"></div>
+					<div class="qna-answer-content content" v-html="content" />
 				</div>
 				<div class="qna-meta">
 					<div
@@ -23,8 +23,7 @@
 							:full-name="author.full_name"
 							:url="author.avatar"
 							size="medium"
-						>
-						</wnl-avatar>
+						/>
 						<span class="qna-meta-info">
 							{{author.full_name}} ·
 						</span>
@@ -37,7 +36,7 @@
 							:target="deleteTarget"
 							:request-route="resourceRoute"
 							@deleteSuccess="onDeleteSuccess"
-						></wnl-delete>
+						/>
 					</span>
 				</div>
 			</div>
@@ -51,8 +50,7 @@
 				:commentable-id="id"
 				:hide-watchlist="true"
 				:is-unique="false"
-			>
-			</wnl-comments-list>
+			/>
 		</div>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
 			<wnl-user-profile-modal :author="author" />

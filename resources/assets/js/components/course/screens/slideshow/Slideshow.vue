@@ -3,7 +3,7 @@
 		<div class="wnl-slideshow-container">
 			<div class="wnl-slideshow-background-control">
 				<div class="controls-left">
-					<wnl-slideshow-navigation @navigateToSlide="navigateToSlide"></wnl-slideshow-navigation>
+					<wnl-slideshow-navigation @navigateToSlide="navigateToSlide" />
 				</div>
 				<small v-if="$moderatorFeatures.isAllowed('access')" class="slide-meta">
 					{{currentSlideId}}
@@ -12,15 +12,14 @@
 				<div class="controls-right">
 					<div class="controls-item">
 						Tło
-						<a class="white" @click="changeBackground('white')"></a>
-						<a class="dark" @click="changeBackground('dark')"></a>
-						<a class="image" @click="changeBackground('image')"></a>
+						<a class="white" @click="changeBackground('white')" />
+						<a class="dark" @click="changeBackground('dark')" />
+						<a class="image" @click="changeBackground('image')" />
 					</div>
 				</div>
 			</div>
 			<div class="wnl-screen wnl-ratio-16-9">
-				<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused, 'is-faux-fullscreen': isFauxFullscreen }">
-				</div>
+				<div class="wnl-slideshow-content" :class="{ 'is-focused': isFocused, 'is-faux-fullscreen': isFauxFullscreen }" />
 			</div>
 			<div class="slideshow-menu">
 				<wnl-annotations
@@ -30,7 +29,7 @@
 					:is-loading-comments="isLoadingComments"
 					@commentsHidden="onCommentsHidden"
 					@annotationsUpdated="onAnnotationsUpdated"
-				></wnl-annotations>
+				/>
 			</div>
 		</div>
 		<wnl-slide-classifier-editor

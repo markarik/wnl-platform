@@ -3,7 +3,7 @@
 		<div class="navigation-group__toggle" @click="toggleNavigationGroup({groupIndex: item.id, isOpen: !isOpen})">
 			<div class="navigation-group__item">
 				<span v-if="hasChildren" class="icon is-small">
-					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
+					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}" />
 				</span>
 				<span class="sidenav-item-content">
 					{{groupItem.text}}
@@ -16,7 +16,7 @@
 				v-for="(subitem) in children"
 				:key="subitem.id"
 				:item="subitem"
-			></wnl-lesson-item>
+			/>
 		</div>
 	</div>
 </template>

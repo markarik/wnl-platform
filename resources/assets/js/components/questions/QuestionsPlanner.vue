@@ -6,10 +6,10 @@
 				<div class="questions-header questions-plan-header">
 					<div class="questions-breadcrumbs">
 						<div class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+							<span class="icon is-small"><i class="fa fa-check-square-o" /></span>
 						</div>
 						<div class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 							<span>{{$t('questions.nav.planner')}}</span>
 						</div>
 					</div>
@@ -41,7 +41,7 @@
 							<label class="date-label" for="startDate">
 								{{$t('questions.plan.headings.startDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-1"></i>
+									<i class="fa fa-hourglass-1" />
 								</span>
 							</label>
 							<wnl-datepicker
@@ -58,7 +58,7 @@
 							<label class="date-label" for="endDate">
 								{{$t('questions.plan.headings.endDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-3"></i>
+									<i class="fa fa-hourglass-3" />
 								</span>
 							</label>
 							<wnl-datepicker
@@ -84,7 +84,7 @@
 								min="0"
 								:max="maxSlack"
 								type="number"
-							/>
+							>
 							<p class="tip">{{$t('questions.plan.tips.slackDays')}}</p>
 						</div>
 
@@ -129,7 +129,7 @@
 							<a class="button is-small is-outlined is-primary" @click="toggleChat">
 								<span>{{$t('questions.filters.show')}}</span>
 								<span class="icon is-tiny">
-									<i class="fa fa-sliders"></i>
+									<i class="fa fa-sliders" />
 								</span>
 							</a>
 						</div>

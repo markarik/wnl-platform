@@ -12,7 +12,7 @@
 			>
 				<div v-if="isOn && !!unseenCount" class="counter">{{unseenCount}}</div>
 				<span class="icon">
-					<i class="fa" :class="iconClass"></i>
+					<i class="fa" :class="iconClass" />
 				</span>
 			</div>
 			<div slot="content">
@@ -61,7 +61,7 @@
 						class="link"
 						@click="allRead"
 					/>
-					<span v-if="allReadLoading" class="loader"></span>
+					<span v-if="allReadLoading" class="loader" />
 				</div>
 			</div>
 		</wnl-dropdown>

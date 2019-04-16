@@ -2,7 +2,7 @@
 	<li :id="`node-${term.id}`" :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<span class="icon-small taxonomy-term-item__action taxonomy-term-item__action--drag">
-				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
+				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']" />
 			</span>
 			<div class="media-content v-central">
 				<span>{{term.tag.name}}</span>
@@ -13,25 +13,25 @@
 					class="icon-small taxonomy-term-item__action"
 					@click="toggle"
 				>
-					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]"></i>
+					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]" />
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
 					@click="onAdd"
 				>
-					<i title="Dodaj" class="fa fa-plus"></i>
+					<i title="Dodaj" class="fa fa-plus" />
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
 					@click="onEdit"
 				>
-					<i title="Edytuj" class="fa fa-pencil"></i>
+					<i title="Edytuj" class="fa fa-pencil" />
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
 					@click="onDelete"
 				>
-					<i title="Usuń" class="fa fa-trash"></i>
+					<i title="Usuń" class="fa fa-trash" />
 				</span>
 			</div>
 		</div>

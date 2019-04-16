@@ -42,7 +42,7 @@
 			>
 				{{panel.name}}
 				<span class="icon is-small">
-					<i class="fa" :class="panel.icon"></i>
+					<i class="fa" :class="panel.icon" />
 				</span>
 			</a>
 		</div>

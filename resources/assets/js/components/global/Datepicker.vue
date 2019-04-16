@@ -4,7 +4,7 @@
 		:class="{'withBorder': withBorder}"
 		:placeholder="placeholder"
 		:value="date"
-	/>
+	>
 </template>
 
 <style lang="sass" rel="stylesheet/sass">

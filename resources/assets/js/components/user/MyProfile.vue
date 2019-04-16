@@ -28,7 +28,7 @@
 				@success="onUploadSuccess"
 				@uploadError="onUploadError"
 			>
-				<wnl-avatar size="extraextralarge" class="clickable-avatar"></wnl-avatar>
+				<wnl-avatar size="extraextralarge" class="clickable-avatar" />
 				<a class="change-avatar-button button is-small is-outlined is-primary margin top" :class="{'is-loading': loading}">
 					Zmień avatar
 				</a>

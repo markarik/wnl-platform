@@ -15,17 +15,17 @@
 			slot-scope="parentAutocomplete"
 			:selected="parent"
 			@change="parentAutocomplete.validateAndChangeParent($event, node)"
-		></wnl-structure-node-editor-node-autocomplete>
+		/>
 
 		<wnl-structure-node-editor-structurable-autocomplete
 			slot="autocomplete"
 			:selected="structurable"
 			@change="onSelectStructurable"
-		></wnl-structure-node-editor-structurable-autocomplete>
+		/>
 	</wnl-nested-set-editor-form>
 	<div v-else class="notification is-info">
 		<span class="icon">
-			<i class="fa fa-info-circle"></i>
+			<i class="fa fa-info-circle" />
 		</span>
 		Najpierw wybierz gałąź struktury
 	</div>

@@ -7,7 +7,7 @@
 				:placeholder="$t('messages.search.placeholder')"
 				@input="onInput"
 				@keydown="onKeyDown"
-			/>
+			>
 		</div>
 		<div v-if="info" class="wnl-find-users-info notification aligncenter">
 			{{info}}

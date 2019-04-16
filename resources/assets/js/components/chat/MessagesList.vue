@@ -24,13 +24,13 @@
 							:avatar="getMessageAuthor(message).avatar"
 							:time="message.time"
 							:content="message.content"
-						></wnl-message>
+						/>
 					</div>
 					<div v-else class="metadata aligncenter margin vertical">
 						Napisz pierwszą wiadomość i zacznij rozmowę!
 						<p class="margin vertical">
 							<span class="icon is-big text-dimmed">
-								<i class="fa fa-comments-o"></i>
+								<i class="fa fa-comments-o" />
 							</span>
 						</p>
 					</div>

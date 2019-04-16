@@ -28,22 +28,20 @@
 					class="icon is-small annotation-item__header__item annotation-item__header__item--edit"
 					@click="(event) => onAnnotationClick({annotation, event})"
 				>
-					<i class="fa fa-pencil"></i>
+					<i class="fa fa-pencil" />
 				</span>
 				<span class="icon is-small  annotation-item__header__item annotation-item__header__item--chevron">
 					<i
 						class="toggle fa fa-angle-down"
 						:class="{'fa-rotate-180': isOpen(annotation)}"
-					>
-					</i>
+					/>
 				</span>
 			</div>
 			<div
 				v-if="isOpen(annotation)"
 				class="annotation-item__description"
 				v-html="annotation.description"
-			>
-			</div>
+			/>
 		</li>
 	</ul>
 </template>

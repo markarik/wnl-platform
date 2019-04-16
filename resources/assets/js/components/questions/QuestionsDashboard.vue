@@ -6,14 +6,14 @@
 				<div class="questions-header">
 					<div class="questions-breadcrumbs">
 						<div class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+							<span class="icon is-small"><i class="fa fa-check-square-o" /></span>
 						</div>
 						<div class="breadcrumb" @click="$router.push({name: 'questions-dashboard'})">
-							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 							<span>{{$t('questions.nav.dashboard')}}</span>
 						</div>
 						<div v-if="id" class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 							<span>#{{id}}</span>
 						</div>
 					</div>
@@ -24,14 +24,14 @@
 					>
 						<span>{{$t('questions.dashboard.notifications.toggle')}}</span>
 						<span class="icon is-small">
-							<i class="fa fa-commenting-o"></i>
+							<i class="fa fa-commenting-o" />
 						</span>
 					</a>
 				</div>
 				<div v-if="!id">
 					<div class="questions-dashboard-plan">
 						<div class="questions-dashboard-heading">
-							<span class="icon is-small"><i class="fa fa-calendar"></i></span>
+							<span class="icon is-small"><i class="fa fa-calendar" /></span>
 							{{$t('questions.dashboard.plan.heading')}}
 						</div>
 						<div v-if="plan === null" class="margin vertical">
@@ -66,11 +66,11 @@
 					<div v-else>
 						<!-- All questions -->
 						<div class="questions-dashboard-heading">
-							<span class="icon is-small"><i class="fa fa-bar-chart"></i></span>
+							<span class="icon is-small"><i class="fa fa-bar-chart" /></span>
 							{{$t('questions.dashboard.stats.heading')}}
 						</div>
 						<div class="questions-dashboard-subheading">
-							<span class="icon is-small"><i class="fa fa-tasks"></i></span>
+							<span class="icon is-small"><i class="fa fa-tasks" /></span>
 							{{$t('questions.dashboard.stats.scores')}}
 						</div>
 						<div class="questions-stats margin bottom">
@@ -96,7 +96,7 @@
 						<!-- Mock exam -->
 						<div v-if="stats.mock_exams.length">
 							<div class="questions-dashboard-subheading margin top">
-								<span class="icon is-small"><i class="fa fa-tachometer"></i></span>
+								<span class="icon is-small"><i class="fa fa-tachometer" /></span>
 								{{$t('questions.dashboard.stats.mockExam')}}
 							</div>
 							<div
@@ -114,7 +114,7 @@
 										<span class="exam-header__date">{{parseDate(mockExam.created_at)}}</span>
 									</span>
 									<span class="exam-header__expand icon is-small">
-										<i :class="['fa', expandedExams.includes(mockExamIndex) ? 'fa-chevron-up' : 'fa-chevron-down']"></i>
+										<i :class="['fa', expandedExams.includes(mockExamIndex) ? 'fa-chevron-up' : 'fa-chevron-down']" />
 									</span>
 								</div>
 								<div v-show="expandedExams.includes(mockExamIndex)">
@@ -153,13 +153,13 @@
 			<div class="questions-feed-container">
 				<div class="questions-feed-heading" :class="{'detached': !isChatMounted}">
 					<div>
-						<span class="icon is-small"><i class="fa fa-commenting-o"></i></span>
+						<span class="icon is-small"><i class="fa fa-commenting-o" /></span>
 						{{$t('questions.dashboard.notifications.heading')}}
 					</div>
 					<div class="clickable" @click="toggleChat">
 						<span class="metadata">{{$t('questions.dashboard.notifications.close')}}</span>
 						<span class="icon is-small">
-							<i class="fa fa-close"></i>
+							<i class="fa fa-close" />
 						</span>
 					</div>
 				</div>
@@ -168,7 +168,7 @@
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
-				<i class="fa fa-commenting-o"></i>
+				<i class="fa fa-commenting-o" />
 				<span>{{$t('questions.dashboard.notifications.toggleBar')}}</span>
 			</span>
 		</div>

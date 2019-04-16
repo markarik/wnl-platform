@@ -9,13 +9,13 @@
 			class="previous-slide"
 		>
 			<span class="icon" @click="$emit('switchSlide', -1)">
-				<i class="fa fa-angle-left"></i>
+				<i class="fa fa-angle-left" />
 			</span>
 		</div>
-		<div class="modal-background" @click="$emit('closeModal')"></div>
+		<div class="modal-background" @click="$emit('closeModal')" />
 		<div class="modal-card">
 			<header class="modal-card-header">
-				<slot name="header"></slot>
+				<slot name="header" />
 			</header>
 			<div class="modal-card-body">
 				<iframe
@@ -26,7 +26,7 @@
 				/>
 			</div>
 			<footer class="modal-card-footer">
-				<slot name="footer"></slot>
+				<slot name="footer" />
 			</footer>
 		</div>
 		<div
@@ -34,14 +34,14 @@
 			class="next-slide"
 		>
 			<span class="icon" @click="$emit('switchSlide', 1)">
-				<i class="fa fa-angle-right"></i>
+				<i class="fa fa-angle-right" />
 			</span>
 		</div>
 		<button
 			class="modal-close is-large"
 			aria-label="close"
 			@click="$emit('closeModal')"
-		></button>
+		/>
 	</div>
 </template>
 

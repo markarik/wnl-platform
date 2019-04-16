@@ -26,7 +26,7 @@
 			/>
 			<div v-else class="title is-6">Nic tu nie ma...</div>
 		</template>
-		<wnl-text-loader v-else></wnl-text-loader>
+		<wnl-text-loader v-else />
 
 		<wnl-pagination
 			v-if="lastPage > 1"

@@ -5,13 +5,13 @@
 		:class="{'modal-active': modalVisible}"
 	>
 		<div v-if="shouldDisplayOverlay" class="wnl-overlay">
-			<span class="loader"></span>
+			<span class="loader" />
 			<span class="loader-text">{{currentOverlayText}}</span>
 		</div>
-		<wnl-navbar :show="true"></wnl-navbar>
+		<wnl-navbar :show="true" />
 		<div class="wnl-main">
 			<wnl-alerts :alerts="alerts" />
-			<router-view></router-view>
+			<router-view />
 		</div>
 	</div>
 </template>

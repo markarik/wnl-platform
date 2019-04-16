@@ -5,8 +5,7 @@
 				size="medium"
 				:full-name="message.actors.full_name"
 				:url="message.actors.avatar"
-			>
-			</wnl-avatar>
+			/>
 		</div>
 		<div
 			class="personal-notification"
@@ -24,7 +23,7 @@
 				<div v-if="subjectText" class="subject wrap">{{subjectText}}</div>
 				<div class="time">
 					<span class="icon is-small">
-						<i class="fa" :class="icon"></i>
+						<i class="fa" :class="icon" />
 					</span>{{formattedTime}}
 				</div>
 			</div>
@@ -34,8 +33,8 @@
 					class="icon"
 					:class="{'unread': !isRead}"
 				>
-					<i v-if="loading" class="loader"></i>
-					<i v-else class="fa fa-angle-right"></i>
+					<i v-if="loading" class="loader" />
+					<i v-else class="fa fa-angle-right" />
 				</span>
 			</div>
 		</div>

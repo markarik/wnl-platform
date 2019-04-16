@@ -2,7 +2,7 @@
 	<div>
 		<div v-if="selected" class="autocomplete-selected">
 			{{selected.name}}
-			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
+			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true" /></span>
 		</div>
 		<wnl-autocomplete
 			v-else
@@ -21,7 +21,7 @@
 				<div class="autocomplete-footer-button-container">
 					<button class="button" @click="onTagAdd">
 						<span class="icon is-small">
-							<i class="fa fa-plus" aria-hidden="true"></i>
+							<i class="fa fa-plus" aria-hidden="true" />
 						</span>
 						<span>Dodaj nowy tag</span>
 					</button>

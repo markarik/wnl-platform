@@ -8,12 +8,12 @@
 						<div class="breadcrumb">
 							<span class="icon is-small"><i
 								class="fa fa-check-square-o"
-							></i></span>
+							/></span>
 						</div>
 						<div class="breadcrumb">
 							<span class="icon is-small"><i
 								class="fa fa-angle-right"
-							></i></span>
+							/></span>
 							<span>{{$t('questions.nav.solving')}}</span>
 						</div>
 					</div>
@@ -25,7 +25,7 @@
 					>
 						<span>{{$t('questions.filters.show')}}</span>
 						<span class="icon is-tiny">
-							<i class="fa fa-sliders"></i>
+							<i class="fa fa-sliders" />
 						</span>
 					</a>
 				</div>
@@ -81,7 +81,7 @@
 			class="wnl-chat-toggle"
 		>
 			<span class="icon is-big" @click="toggleChat">
-				<i class="fa fa-sliders"></i>
+				<i class="fa fa-sliders" />
 				<span>{{$t('questions.filters.show')}}</span>
 			</span>
 		</div>

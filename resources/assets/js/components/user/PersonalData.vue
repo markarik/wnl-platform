@@ -4,10 +4,9 @@
 			<div class="message-header">
 				{{$t('user.personalData.header.explanationHeader')}}
 			</div>
-			<div class="message-body" v-html="personalDataExplanation">
-			</div>
+			<div class="message-body" v-html="personalDataExplanation" />
 		</div>
-		<wnl-identity-number class="margin bottom"></wnl-identity-number>
+		<wnl-identity-number class="margin bottom" />
 		<wnl-user-address />
 	</div>
 </template>

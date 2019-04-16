@@ -8,7 +8,7 @@
 						class="input"
 						placeholder="Szukaj..."
 						@keyup.enter="search"
-					/>
+					>
 				</div>
 				<div class="control">
 					<a class="button is-primary" @click="search">
@@ -45,7 +45,7 @@
 			<span>Aktualne wyszukiwanie:</span>
 			<span class="tag is-success">
 				{{searchPhrase}}
-				<button class="delete is-small" @click="clearSearch"></button>
+				<button class="delete is-small" @click="clearSearch" />
 			</span>
 		</div>
 	</div>

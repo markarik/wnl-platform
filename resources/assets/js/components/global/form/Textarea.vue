@@ -2,7 +2,7 @@
 	<div class="field">
 
 		<label :for="name" class="label">
-			<slot></slot>
+			<slot />
 		</label>
 
 		<textarea
@@ -12,8 +12,7 @@
 			:placeholder="placeholder"
 			@input="onTextInput"
 			@keydown.enter.stop
-		>
-		</textarea>
+		/>
 
 		<template v-if="hasErrors">
 			<span
@@ -21,7 +20,7 @@
 				:key="index"
 				class="help is-danger"
 				v-text="error"
-			></span>
+			/>
 		</template>
 	</div>
 </template>

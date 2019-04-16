@@ -4,14 +4,13 @@
 			:value="inputValue"
 			:name="name"
 			@toggle="onToggle"
-		>
-		</wnl-toggler>
+		/>
 		<label
 			v-if="$slots.default"
 			:for="name"
 			class="label"
 		>
-			<slot></slot>
+			<slot />
 		</label>
 	</div>
 </template>

@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-quiz-summary">
-		<wnl-quiz-stats></wnl-quiz-stats>
+		<wnl-quiz-stats />
 		<wnl-quiz-list
 			:all-questions="getQuestionsWithAnswersAndStats"
 			:get-reaction="getReaction"

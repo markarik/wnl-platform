@@ -14,10 +14,9 @@
 								:size="isMobile ? 'medium' : 'large'"
 								:full-name="message.actors.full_name"
 								:url="message.actors.avatar"
-							>
-							</wnl-avatar>
+							/>
 						</div>
-						<span class="icon is-small"><i class="fa" :class="icon"></i></span>
+						<span class="icon is-small"><i class="fa" :class="icon" /></span>
 						<span class="meta-time">{{justDate}}</span>
 						<span class="meta-time">{{justTime}}</span>
 					</div>
@@ -34,8 +33,7 @@
 							class="subject wrap"
 							:class="{'unseen': !isSeen}"
 						>{{subjectText}}</div>
-						<div class="time">
-						</div>
+						<div class="time" />
 					</div>
 				</router-link>
 			</div>

@@ -20,7 +20,7 @@
 					<div class="message-header">
 						{{$t('user.personalData.identityNumber.header')}}
 					</div>
-					<div class="message-body" v-html="$t('user.personalData.identityNumber.explanation')"></div>
+					<div class="message-body" v-html="$t('user.personalData.identityNumber.explanation')" />
 				</div>
 				<div class="id-number__personal-identity-number-input">
 					<input
@@ -30,7 +30,7 @@
 						type="text"
 						placeholder="Numer identyfikacyjny"
 						@keyup.enter="onSubmit"
-					/>
+					>
 				</div>
 
 				<!-- ERROR MESSAGES -->

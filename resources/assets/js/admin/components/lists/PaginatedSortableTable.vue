@@ -5,7 +5,7 @@
 		:is-search-enabled="isSearchEnabled"
 	>
 		<template slot="header">
-			<slot name="header"></slot>
+			<slot name="header" />
 		</template>
 
 		<wnl-sortable-table
@@ -18,7 +18,7 @@
 			@changeOrder="changeOrder"
 		>
 			<template slot="tbody" slot-scope="tableProps">
-				<slot name="tbody" :list="tableProps.list"></slot>
+				<slot name="tbody" :list="tableProps.list" />
 			</template>
 		</wnl-sortable-table>
 

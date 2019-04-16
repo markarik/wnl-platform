@@ -5,7 +5,7 @@
 				<span v-if="ancestors.length">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
 				{{selected.tag.name}}
 			</span>
-			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
+			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true" /></span>
 		</div>
 		<wnl-autocomplete
 			v-else

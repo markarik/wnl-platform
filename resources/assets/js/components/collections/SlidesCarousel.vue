@@ -9,7 +9,7 @@
 			>
 				{{$t('collections.slides.showOnlySaved')}}
 				<span class="icon is-small">
-					<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']" />
 				</span>
 			</a>
 		</p>
@@ -26,7 +26,7 @@
 			</div>
 		</div>
 		<div v-else class="notification has-text-centered">
-			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
+			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right" /></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o" /></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
 		</div>
 		<wnl-slideshow
 			v-if="htmlContent"
@@ -38,7 +38,7 @@
 			@slideBookmarked="onSlideBookmarked"
 			@refreshSlideshow="onRefreshSlideshow"
 			@userEvent="proxyUserEvent"
-		></wnl-slideshow>
+		/>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>

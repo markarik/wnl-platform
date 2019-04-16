@@ -2,7 +2,7 @@
 	<div>
 		<div class="quill-container">
 			<div ref="quill">
-				<slot></slot>
+				<slot />
 			</div>
 		</div>
 		<wnl-upload

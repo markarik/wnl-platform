@@ -10,7 +10,7 @@
 			/>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-question-content content" v-html="content"></div>
+					<div class="qna-question-content content" v-html="content" />
 					<wnl-bookmark
 						class="qna-bookmark"
 						:reactable-id="questionId"
@@ -18,7 +18,7 @@
 						:state="bookmarkState"
 						:reactions-disabled="reactionsDisabled"
 						module="qna"
-					></wnl-bookmark>
+					/>
 				</div>
 				<div v-if="tags.length > 0" class="tags">
 					<span
@@ -40,8 +40,7 @@
 							:full-name="author.full_name"
 							:url="author.avatar"
 							size="medium"
-						>
-						</wnl-avatar>
+						/>
 						<span class="qna-meta-info">
 							{{author.full_name}}
 						</span>
@@ -54,7 +53,7 @@
 							:target="deleteTarget"
 							:request-route="resourceRoute"
 							@deleteSuccess="onDeleteSuccess"
-						></wnl-delete>
+						/>
 					</span>
 					<wnl-resolve
 						:resource="question"
@@ -62,7 +61,7 @@
 						@unresolveResource="unresolveQuestion(id)"
 					/>
 				</div>
-				<slot name="context"></slot>
+				<slot name="context" />
 			</div>
 		</div>
 		<div :class="{'qna-answers': true, 'disabled': question.resolved}">
@@ -75,8 +74,7 @@
 						:state="watchState"
 						:reactions-disabled="reactionsDisabled"
 						module="qna"
-					>
-					</wnl-watch>
+					/>
 				</div>
 				<div v-if="!readOnly" class="level-right">
 					<a
@@ -86,7 +84,7 @@
 					>
 						<span>Odpowiedz</span>
 						<span class="icon is-small answer-icon">
-							<i class="fa fa-comment-o"></i>
+							<i class="fa fa-comment-o" />
 						</span>
 					</a>
 					<a
@@ -103,8 +101,7 @@
 					v-if="showAnswerForm"
 					:question-id="this.id"
 					@submitSuccess="onSubmitSuccess"
-				>
-				</wnl-qna-new-answer-form>
+				/>
 			</transition>
 			<wnl-qna-answer
 				v-if="hasAnswers && !showAllAnswers"
@@ -112,7 +109,7 @@
 				:question-id="questionId"
 				:read-only="readOnly"
 				:refresh="refreshQuestionAndShowAnswers"
-			></wnl-qna-answer>
+			/>
 			<wnl-qna-answer
 				v-for="answer in allAnswers"
 				v-else-if="showAllAnswers"
@@ -121,13 +118,13 @@
 				:question-id="questionId"
 				:read-only="readOnly"
 				:refresh="refreshQuestionAndShowAnswers"
-			></wnl-qna-answer>
+			/>
 			<a
 				v-if="!showAllAnswers && otherAnswers.length > 0"
 				class="qna-answers-show-all"
 				@click="showAllAnswers = true"
 			>
-				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
+				<span class="icon is-small"><i class="fa fa-angle-down" /></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">

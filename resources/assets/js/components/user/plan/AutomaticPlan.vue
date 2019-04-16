@@ -21,7 +21,7 @@
 						<i
 							class="fa"
 							:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"
-						></i>
+						/>
 					</span>
 				</a>
 			</div>
@@ -44,7 +44,7 @@
 						<i
 							class="fa"
 							:class="[isPresetActive(preset.preset) ? 'fa-check-circle' : 'fa-circle-o']"
-						></i>
+						/>
 					</span>
 				</a>
 			</div>
@@ -66,8 +66,7 @@
 							<i
 								class="fa"
 								:class="[isWorkLoadActive(workLoadItem.workLoad) ? 'fa-check-circle' : 'fa-circle-o']"
-							>
-							</i>
+							/>
 						</span>
 					</a>
 				</div>
@@ -82,7 +81,7 @@
 							<label class="date-label">
 								{{$t('questions.plan.headings.startDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-1"></i>
+									<i class="fa fa-hourglass-1" />
 								</span>
 							</label>
 							<wnl-datepicker
@@ -110,7 +109,7 @@
 							<label class="date-label">
 								{{$t('questions.plan.headings.startDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-1"></i>
+									<i class="fa fa-hourglass-1" />
 								</span>
 							</label>
 							<wnl-datepicker
@@ -129,7 +128,7 @@
 							<label class="date-label">
 								{{$t('questions.plan.headings.endDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-3"></i>
+									<i class="fa fa-hourglass-3" />
 								</span>
 							</label>
 							<wnl-datepicker

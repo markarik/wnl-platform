@@ -14,7 +14,7 @@
 			:context-tags="tags"
 			class="wnl-screen-qna"
 			:discussion-id="screenData.discussion_id"
-		></wnl-qna>
+		/>
 	</div>
 </template>
 

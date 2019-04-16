@@ -9,7 +9,7 @@
 						<span class="question-title">{{title}}</span>
 						<a class="question-back" @click="goBack">
 							<span class="icon is-small">
-								<i class="fa fa-angle-left"></i>
+								<i class="fa fa-angle-left" />
 							</span>
 							{{$t('quiz.single.back')}}
 						</a>

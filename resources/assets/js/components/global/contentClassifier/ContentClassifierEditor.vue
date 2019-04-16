@@ -32,7 +32,7 @@
 									title="Odznacz"
 									@click="onDetachTaxonomyTerm(term)"
 								>
-									<i class="fa fa-close"></i>
+									<i class="fa fa-close" />
 								</span>
 								<span
 									v-if="allItemsCount > 1"
@@ -48,7 +48,7 @@
 									:title="!hasAllItemsAttached(term) && 'Dodaj do wszystkich'"
 									@click="!hasAllItemsAttached(term) && onAttachTaxonomyTerm(term)"
 								>
-									<span v-if="!hasAllItemsAttached(term)" class="icon is-small"><i class="fa fa-plus"></i></span>
+									<span v-if="!hasAllItemsAttached(term)" class="icon is-small"><i class="fa fa-plus" /></span>
 									<span>{{term.itemsCount}}/{{allItemsCount}}</span>
 								</span>
 							</wnl-taxonomy-term-with-ancestors>
@@ -76,7 +76,7 @@
 			</div>
 		</div>
 		<div v-else class="notification is-info">
-			<span class="icon"><i class="fa fa-info-circle"></i></span>
+			<span class="icon"><i class="fa fa-info-circle" /></span>
 			<span>Najpierw wybierz treść do klasyfikacji</span>
 		</div>
 	</div>

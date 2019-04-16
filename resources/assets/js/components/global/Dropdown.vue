@@ -5,13 +5,13 @@
 			:class="{ 'is-active' : isActive }"
 			@click="toggleActive"
 		>
-			<slot name="activator"></slot>
+			<slot name="activator" />
 			<div
 				v-if="isActive"
 				class="box drawer"
 				:class="{'is-mobile': isMobile, 'is-wide': options.isWide}"
 			>
-				<slot name="content"></slot>
+				<slot name="content" />
 			</div>
 		</div>
 	</div>

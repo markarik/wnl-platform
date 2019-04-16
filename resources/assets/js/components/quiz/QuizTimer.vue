@@ -2,7 +2,7 @@
 	<span class="timer" @click="$emit('clicked')">
 		<span v-show="!hideTime">{{hms}}</span>
 		<span v-show="!hideIcon" class="icon is-small">
-			<i class="fa" :class="hourglassClass"></i>
+			<i class="fa" :class="hourglassClass" />
 		</span>
 	</span>
 </template>

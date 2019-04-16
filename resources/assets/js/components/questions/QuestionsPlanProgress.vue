@@ -5,7 +5,7 @@
 				{{$t('questions.plan.progress.day', {day: daysSoFar})}}
 				/ {{plannedDaysCount}}
 			</span>
-			<span v-else></span>
+			<span v-else />
 			<a
 				v-if="allowChange"
 				class="button is-outlined is-small"

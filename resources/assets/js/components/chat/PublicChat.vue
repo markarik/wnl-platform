@@ -20,7 +20,7 @@
 				class="icon wnl-chat-close"
 				@click="toggleChat"
 			>
-				<i class="fa fa-chevron-right"></i>
+				<i class="fa fa-chevron-right" />
 				<span>Ukryj czat</span>
 			</span>
 		</a>
@@ -40,7 +40,7 @@
 			:message-payload="{users: [currentUserProfile]}"
 			@messageSent="onMessageSent"
 			@foundMentions="processMentions"
-		></wnl-message-form>
+		/>
 	</div>
 </template>
 

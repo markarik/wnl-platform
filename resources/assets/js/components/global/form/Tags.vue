@@ -9,7 +9,7 @@
 			>
 				{{tag.name}}
 				<span class="icon is-small">
-					<i class="fa fa-times"></i>
+					<i class="fa fa-times" />
 				</span>
 			</div>
 			<wnl-autocomplete

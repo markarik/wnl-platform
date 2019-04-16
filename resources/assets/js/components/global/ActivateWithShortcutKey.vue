@@ -7,7 +7,7 @@
 			:on-component-created="onComponentCreated"
 			:on-component-destroyed="onComponentDestroyed"
 			:on-blur="onBlur"
-		></slot>
+		/>
 	</div>
 </template>
 

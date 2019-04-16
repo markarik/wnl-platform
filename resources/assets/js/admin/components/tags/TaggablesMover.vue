@@ -11,7 +11,7 @@
 			name="target_tag_id"
 		>ID taga docelowego</wnl-form-text>
 		<wnl-submit css-class="button is-primary">
-			<slot></slot>
+			<slot />
 		</wnl-submit>
 	</wnl-form>
 </template>

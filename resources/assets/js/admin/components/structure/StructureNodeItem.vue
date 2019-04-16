@@ -2,10 +2,10 @@
 	<li :id="`node-${node.id}`" :class="['structure-node-item', isSaving && 'structure-node-item is-disabled']">
 		<div :class="['media', 'structure-node-item__content', {'is-selected': isSelected}]">
 			<span class="icon-small structure-node-item__icon structure-node-item__action__drag">
-				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
+				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']" />
 			</span>
 			<span class="icon-small structure-node-item__icon">
-				<i :class="['fa', getStructurableIcon(node.structurable)]"></i>
+				<i :class="['fa', getStructurableIcon(node.structurable)]" />
 			</span>
 			<div class="media-content v-central">
 				<span>{{node.structurable.name}}</span>
@@ -16,25 +16,25 @@
 					class="icon-small structure-node-item__action"
 					@click="toggle"
 				>
-					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]"></i>
+					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]" />
 				</span>
 				<span
 					class="icon-small structure-node-item__action"
 					@click="onAdd"
 				>
-					<i title="Dodaj" class="fa fa-plus"></i>
+					<i title="Dodaj" class="fa fa-plus" />
 				</span>
 				<span
 					class="icon-small structure-node-item__action"
 					@click="onEdit"
 				>
-					<i title="Edytuj" class="fa fa-pencil"></i>
+					<i title="Edytuj" class="fa fa-pencil" />
 				</span>
 				<span
 					class="icon-small structure-node-item__action"
 					@click="onDelete"
 				>
-					<i title="Usuń" class="fa fa-trash"></i>
+					<i title="Usuń" class="fa fa-trash" />
 				</span>
 			</div>
 		</div>

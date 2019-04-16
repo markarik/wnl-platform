@@ -6,7 +6,7 @@
 			type="checkbox"
 			class="is-checkradio"
 			:value="checkboxValue"
-		/>
+		>
 		<label class="checkbox" :for="checkboxId"><slot /></label>
 	</div>
 </template>

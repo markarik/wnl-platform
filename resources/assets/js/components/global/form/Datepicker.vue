@@ -1,7 +1,7 @@
 <template>
 	<div class="field">
 		<label :for="name" class="label">
-			<slot></slot>
+			<slot />
 		</label>
 
 		<input
@@ -11,7 +11,7 @@
 			:name="name"
 			:placeholder="placeholder"
 			@input="onDateInput"
-		/>
+		>
 
 		<template v-if="hasErrors">
 			<span
@@ -19,7 +19,7 @@
 				:key="index"
 				class="help is-danger"
 				v-text="error"
-			></span>
+			/>
 		</template>
 	</div>
 </template>

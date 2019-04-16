@@ -3,7 +3,7 @@
 		<div v-if="canShowSidenavTrigger" class="wnl-navbar-item wnl-navbar-sidenav-toggle">
 			<a class="wnl-navbar-sidenav-trigger" @click="toggleSidenav">
 				<span class="icon">
-					<i class="fa" :class="sidenavIconClass"></i>
+					<i class="fa" :class="sidenavIconClass" />
 				</span>
 			</a>
 		</div>
@@ -30,7 +30,7 @@
 			>
 				<span>Zapisz się</span>&nbsp;
 				<span class="icon is-small">
-					<i class="fa fa-thumbs-o-up"></i>
+					<i class="fa fa-thumbs-o-up" />
 				</span>
 			</a>
 		</div>
@@ -61,7 +61,7 @@
 					class="fa"
 					:class="chatIconClass"
 					@click="toggleChat"
-				></i>
+				/>
 			</span>
 		</div>
 	</nav>

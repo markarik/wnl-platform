@@ -18,13 +18,13 @@
 				slot-scope="parentAutocomplete"
 				:selected="parent"
 				@change="parentAutocomplete.validateAndChangeParent($event, term)"
-			></wnl-taxonomy-term-autocomplete>
+			/>
 
 			<wnl-tag-autocomplete
 				slot="autocomplete"
 				:selected="tag"
 				@change="onSelectTag"
-			></wnl-tag-autocomplete>
+			/>
 
 			<div slot="extra-fields" class="field">
 				<label class="label is-uppercase"><strong>Notatka</strong></label>
@@ -39,7 +39,7 @@
 	</div>
 	<div v-else class="notification is-info">
 		<span class="icon">
-			<i class="fa fa-info-circle"></i>
+			<i class="fa fa-info-circle" />
 		</span>
 		Najpierw wybierz pojęcie
 	</div>

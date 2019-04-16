@@ -27,7 +27,7 @@
 						:get-reaction="getReaction"
 						@selectAnswer="onSelectAnswer"
 						@userEvent="proxyUserEvent"
-					></wnl-quiz-question>
+					/>
 					<wnl-content-item-classifier-editor
 						class="quiz-question__content-item-classifier-editor"
 						:content-item-id="question.id"

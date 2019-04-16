@@ -16,7 +16,7 @@
 			<wnl-dropdown>
 				<div slot="activator" class="dropdown-trigger is-active">
 					{{activeTab.title}}
-					<span class="icon"><i class="fa fa-angle-down"></i></span>
+					<span class="icon"><i class="fa fa-angle-down" /></span>
 				</div>
 				<div slot="content" class="dropdown-menu">
 					<div class="dropdown-menu__content">

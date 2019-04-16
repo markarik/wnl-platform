@@ -31,22 +31,22 @@
 			<div class="flashcards-set__results">
 				<table class="flashcards-set__results__table">
 					<tr class="text--easy">
-						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span></td>
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]" /></span></td>
 						<td>{{ANSWERS_MAP.easy.text}}</td>
 						<td>{{getEasyForSet(set)}}</td>
 					</tr>
 					<tr class="text--hard">
-						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span></td>
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]" /></span></td>
 						<td>{{ANSWERS_MAP.hard.text}}</td>
 						<td>{{getHardForSet(set)}}</td>
 					</tr>
 					<tr class="text--do-not-know">
-						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span></td>
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]" /></span></td>
 						<td>{{ANSWERS_MAP.do_not_know.text}}</td>
 						<td>{{getDontKnowForSet(set)}}</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td />
 						<td>Bez odpowiedzi</td>
 						<td>{{getUnsolvedForSet(set)}}</td>
 					</tr>
@@ -57,7 +57,7 @@
 					class="flashcards-set__retake button"
 					@click="onRetakeSet(set)"
 				>
-					<span class="icon"><i class="fa fa-undo"></i></span>
+					<span class="icon"><i class="fa fa-undo" /></span>
 					ponów cały zestaw
 				</button>
 			</div>
@@ -88,7 +88,7 @@
 			</ol>
 		</div>
 		<div class="flashcards-scroll" @click="scrollTop">
-			<span class="icon is-small"><i class="fa fa-arrow-up"></i></span>
+			<span class="icon is-small"><i class="fa fa-arrow-up" /></span>
 		</div>
 	</div>
 </template>

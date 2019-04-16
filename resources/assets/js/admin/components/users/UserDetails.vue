@@ -1,6 +1,6 @@
 <template>
 	<div class="user-details">
-		<wnl-text-loader v-if="isLoading"></wnl-text-loader>
+		<wnl-text-loader v-if="isLoading" />
 		<div v-else>
 			<div class="user-details__head">
 				<p>#{{user.id}}</p>
@@ -28,7 +28,7 @@
 				</ul>
 			</div>
 
-			<component :is="activeComponent" :user="user"></component>
+			<component :is="activeComponent" :user="user" />
 
 		</div>
 	</div>

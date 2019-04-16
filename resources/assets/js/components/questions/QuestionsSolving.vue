@@ -10,7 +10,7 @@
 						@click="activeView = view.name"
 					>
 						<a>
-							<span class="icon is-small"><i class="fa" :class="view.icon"></i></span>
+							<span class="icon is-small"><i class="fa" :class="view.icon" /></span>
 							{{$t(`questions.solving.tabs.${view.name}`, {
 								count: questionsListCount,
 								current: questionNumber(currentQuestion.index)
@@ -28,7 +28,7 @@
 							:value="view.name"
 							:selected="view.name === activeView"
 						>
-							<span class="icon is-small"><i class="fa" :class="view.icon"></i></span> {{$t(`questions.solving.tabs.${view.name}`, {
+							<span class="icon is-small"><i class="fa" :class="view.icon" /></span> {{$t(`questions.solving.tabs.${view.name}`, {
 								count: questionsListCount,
 								current: questionNumber(currentQuestion.index)
 							})}}

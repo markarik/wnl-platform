@@ -14,7 +14,7 @@
 				>
 					<span class="margin right">Zapisz</span>
 					<span class="icon is-small">
-						<i class="fa fa-save"></i>
+						<i class="fa fa-save" />
 					</span>
 				</button>
 			</div>

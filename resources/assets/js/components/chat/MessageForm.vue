@@ -2,7 +2,7 @@
 	<div class="wnl-chat-form">
 		<article class="media">
 			<figure class="media-left">
-				<wnl-avatar :full-name="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
+				<wnl-avatar :full-name="currentUserFullName" :url="currentUserAvatar" />
 			</figure>
 			<div class="media-content wnl-chat-form-wrapper">
 				<wnl-form
@@ -23,7 +23,7 @@
 						:toolbar="toolbar"
 						:allow-mentions="true"
 						@input="onInput"
-					></wnl-quill>
+					/>
 				</wnl-form>
 				<span class="characters-counter metadata">{{`${message.length} / 5000`}}</span>
 				<div v-if="error.length > 0" class="message is-warning">
@@ -38,8 +38,7 @@
 					:disabled="sendingDisabled || sendingMessage"
 					:loading="sendingMessage"
 					@buttonclicked="sendMessage"
-				>
-				</wnl-image-button>
+				/>
 			</div>
 		</article>
 	</div>

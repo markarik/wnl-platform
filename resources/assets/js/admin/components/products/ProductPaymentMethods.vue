@@ -24,7 +24,7 @@
 						type="checkbox"
 						:checked="methodEnabled(method.id)"
 						@change="toggleMethod($event, method.id)"
-					/>
+					>
 				</td>
 				<td>
 					<label :for="method.id">{{methodNames[method.slug]}}</label>

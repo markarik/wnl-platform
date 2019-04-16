@@ -22,7 +22,7 @@
 				:key="index"
 				class="help is-danger"
 				v-text="error"
-			></span>
+			/>
 		</template>
 	</div>
 </template>

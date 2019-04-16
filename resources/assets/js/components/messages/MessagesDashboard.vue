@@ -5,7 +5,7 @@
 			:is-detached="!isSidenavMounted"
 			:is-max-width="true"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 			<aside class="sidenav-aside rooms-sidenav">
 				<wnl-conversations-list />
 			</aside>
@@ -16,7 +16,7 @@
 				:room="currentRoom"
 				:users="currentRoomUsers"
 				:messages-loaded="messagesLoaded"
-			></wnl-private-chat>
+			/>
 		</div>
 	</div>
 </template>

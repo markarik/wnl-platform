@@ -9,7 +9,7 @@
 			>
 				<span class="margin right">Zapisz kolejność</span>
 				<span class="icon is-small">
-					<i class="fa fa-save"></i>
+					<i class="fa fa-save" />
 				</span>
 			</a>
 		</div>
@@ -22,8 +22,7 @@
 			:is-last="index === screens.length - 1"
 			@moveScreen="moveScreen"
 			@deleteScreen="deleteScreen"
-		>
-		</wnl-screens-list-item>
+		/>
 		<div class="screens-list-add">
 			<a
 				class="button is-small"
@@ -32,7 +31,7 @@
 			>
 				<span class="margin right">Dodaj ekran</span>
 				<span class="icon is-small">
-					<i class="fa fa-plus"></i>
+					<i class="fa fa-plus" />
 				</span>
 			</a>
 		</div>
@@ -43,8 +42,7 @@
 				:alert="alert"
 				:timestamp="timestamp"
 				@delete="onDelete"
-			>
-			</wnl-alert>
+			/>
 		</div>
 	</div>
 </template>

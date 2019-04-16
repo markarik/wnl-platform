@@ -81,9 +81,6 @@ module.exports = {
 		'vue/require-prop-types': [
 			'off'
 		],
-		'vue/html-self-closing': [
-			'off'
-		],
 		'vue/multiline-html-element-content-newline': [
 			'off'
 		],

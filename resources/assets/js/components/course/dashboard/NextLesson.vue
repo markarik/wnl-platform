@@ -1,23 +1,25 @@
 <template>
-	<div class="next-lesson" v-if="nextLessonAvailable || nextLessonDate">
-		<div class="next">{{ next }}</div>
+	<div v-if="nextLessonAvailable || nextLessonDate" class="next-lesson">
+		<div class="next">{{next}}</div>
 		<div>
-			<span class="group"
+			<span
 				v-for="(groupName, index) in groupNames"
 				:key="index"
-			>{{ groupName }} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> </span>
-			<span class="lesson">{{ lessonName }}</span>
+				class="group"
+			>{{groupName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> </span>
+			<span class="lesson">{{lessonName}}</span>
 		</div>
 		<div class="cta">
-			<router-link v-if="nextLessonAvailable"
-				@click.native="trackNextLessonClick"
+			<router-link
+				v-if="nextLessonAvailable"
 				class="button is-primary"
 				:class="{'is-outlined': status === 'in-progress'}"
 				:to="to"
+				@click.native="trackNextLessonClick"
 			>
-				{{ callToAction }}
+				{{callToAction}}
 			</router-link>
-			<span class="text" v-else>{{ $t('dashboard.progress.none-CTA', {date: nextLessonDate}) }}</span>
+			<span v-else class="text">{{$t('dashboard.progress.none-CTA', {date: nextLessonDate})}}</span>
 		</div>
 	</div>
 </template>

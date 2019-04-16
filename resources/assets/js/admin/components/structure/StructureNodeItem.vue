@@ -1,5 +1,5 @@
 <template>
-	<li :class="['structure-node-item', isSaving && 'structure-node-item is-disabled']" :id="`node-${node.id}`">
+	<li :id="`node-${node.id}`" :class="['structure-node-item', isSaving && 'structure-node-item is-disabled']">
 		<div :class="['media', 'structure-node-item__content', {'is-selected': isSelected}]">
 			<span class="icon-small structure-node-item__icon structure-node-item__action__drag">
 				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
@@ -12,9 +12,9 @@
 			</div>
 			<div class="media-right central">
 				<span
+					v-if="childNodes.length"
 					class="icon-small structure-node-item__action"
 					@click="toggle"
-					v-if="childNodes.length"
 				>
 					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]"></i>
 				</span>

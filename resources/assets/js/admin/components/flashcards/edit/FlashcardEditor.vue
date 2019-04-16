@@ -6,9 +6,9 @@
 		</h3>
 		<form @submit.prevent="flashcardFormSubmit">
 			<wnl-textarea
+				v-model="form.content"
 				name="content"
 				:form="form"
-				v-model="form.content"
 			>
 				Treść pytania
 			</wnl-textarea>

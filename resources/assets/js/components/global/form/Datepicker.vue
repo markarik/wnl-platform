@@ -4,20 +4,21 @@
 			<slot></slot>
 		</label>
 
-		<input class="input datepicker"
-			:name="name"
+		<input
 			ref="input"
-			:placeholder="placeholder"
 			v-model="inputValue"
+			class="input datepicker"
+			:name="name"
+			:placeholder="placeholder"
 			@input="onDateInput"
 		/>
 
 		<template v-if="hasErrors">
 			<span
-				class="help is-danger"
 				v-for="(error, index) in getErrors"
-				v-text="error"
 				:key="index"
+				class="help is-danger"
+				v-text="error"
 			></span>
 		</template>
 	</div>

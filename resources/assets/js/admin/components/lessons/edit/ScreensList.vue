@@ -1,26 +1,35 @@
 <template>
 	<div>
 		<div class="screens-list-save">
-			<a class="button is-small" :class="{'is-loading': loading}"
+			<a
+				class="button is-small"
+				:class="{'is-loading': loading}"
 				:disabled="!changed"
-				@click="saveOrder">
+				@click="saveOrder"
+			>
 				<span class="margin right">Zapisz kolejność</span>
 				<span class="icon is-small">
 					<i class="fa fa-save"></i>
 				</span>
 			</a>
 		</div>
-		<wnl-screens-list-item v-for="(screen, index) in screens"
+		<wnl-screens-list-item
+			v-for="(screen, index) in screens"
 			:key="screen.id"
 			:index="index"
 			:screen="screen"
 			:is-first="index === 0"
 			:is-last="index === screens.length - 1"
 			@moveScreen="moveScreen"
-			@deleteScreen="deleteScreen">
+			@deleteScreen="deleteScreen"
+		>
 		</wnl-screens-list-item>
 		<div class="screens-list-add">
-			<a class="button is-small" :class="{'is-loading': loading}" @click="addScreen">
+			<a
+				class="button is-small"
+				:class="{'is-loading': loading}"
+				@click="addScreen"
+			>
 				<span class="margin right">Dodaj ekran</span>
 				<span class="icon is-small">
 					<i class="fa fa-plus"></i>
@@ -28,11 +37,13 @@
 			</a>
 		</div>
 		<div class="margin top">
-			<wnl-alert v-for="(alert, timestamp) in alerts"
+			<wnl-alert
+				v-for="(alert, timestamp) in alerts"
+				:key="timestamp"
 				:alert="alert"
 				:timestamp="timestamp"
-				:key="timestamp"
-				@delete="onDelete">
+				@delete="onDelete"
+			>
 			</wnl-alert>
 		</div>
 	</div>

@@ -6,8 +6,10 @@
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside help-sidenav">
-				<wnl-sidenav :items="sidenavItems"
-					items-heading="Pomoc"></wnl-sidenav>
+				<wnl-sidenav
+					:items="sidenavItems"
+					items-heading="Pomoc"
+				></wnl-sidenav>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
@@ -24,9 +26,17 @@
 			:is-detached="!isChatMounted"
 			:has-chat="hasChat"
 		>
-			<wnl-public-chat v-if="hasChat" :rooms="chatRooms" title="W czym możemy Ci pomóc?"></wnl-public-chat>
+			<wnl-public-chat
+				v-if="hasChat"
+				:rooms="chatRooms"
+				title="W czym możemy Ci pomóc?"
+			></wnl-public-chat>
 		</wnl-sidenav-slot>
-		<div v-if="hasChat && isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
+		<div
+			v-if="hasChat && isChatToggleVisible"
+			class="wnl-chat-toggle"
+			@click="toggleChat"
+		>
 			<span class="icon is-big">
 				<i class="fa fa-chevron-left"></i>
 				<span>Pokaż czat</span>

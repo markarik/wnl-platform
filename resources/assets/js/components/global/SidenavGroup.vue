@@ -9,14 +9,14 @@
 					:is-open="isOpen"
 				>
 					{{item.text}}
-					<span class="subitems-count" v-if="showSubitemsCount && hasSubitems">({{item.subitems.length}})</span>
+					<span v-if="showSubitemsCount && hasSubitems" class="subitems-count">({{item.subitems.length}})</span>
 				</wnl-sidenav-item>
 			</div>
-			<ul class="wnl-sidenav-subitems" v-if="canRenderSubitems">
+			<ul v-if="canRenderSubitems" class="wnl-sidenav-subitems">
 				<wnl-sidenav-item
 					v-for="(subitem, index) in item.subitems"
-					:item="subitem"
 					:key="index"
+					:item="subitem"
 				>
 					{{subitem.text}}
 				</wnl-sidenav-item>

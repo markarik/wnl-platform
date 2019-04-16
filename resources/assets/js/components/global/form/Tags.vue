@@ -1,7 +1,12 @@
 <template>
 	<div class="field">
 		<div class="control tags-control">
-			<div class="tag" v-for="tag in tags" :key="tag.id" @click="removeTag(tag)">
+			<div
+				v-for="tag in tags"
+				:key="tag.id"
+				class="tag"
+				@click="removeTag(tag)"
+			>
 				{{tag.name}}
 				<span class="icon is-small">
 					<i class="fa fa-times"></i>
@@ -10,8 +15,8 @@
 			<wnl-autocomplete
 				v-model="tagInput"
 				:items="autocompleteItems"
-				@change="insertTag"
 				placeholder="Dodaj tag"
+				@change="insertTag"
 			>
 				<template slot-scope="slotProps">
 					<wnl-tag-autocomplete-item :item="slotProps.item" />

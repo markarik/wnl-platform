@@ -1,20 +1,24 @@
 <template>
 	<div class="wnl-chat">
-		<div class="wnl-chat-messages" @scroll="onScroll"
-			ref="messagesContainer">
+		<div
+			ref="messagesContainer"
+			class="wnl-chat-messages"
+			@scroll="onScroll"
+		>
 			<div class="wnl-chat-content">
-				<div class="wnl-chat-content-inside" v-if="loaded">
-					<div class="notification aligncenter" v-if="!hasMore">
+				<div v-if="loaded" class="wnl-chat-content-inside">
+					<div v-if="!hasMore" class="notification aligncenter">
 						To początek dyskusji na tym kanale!
 					</div>
 					<wnl-text-loader v-if="isPulling" class="notification aligncenter">
 						Ładuję wiadomości...
 					</wnl-text-loader>
 					<div v-if="messages.length > 0">
-						<wnl-message v-for="(message, index) in messages"
+						<wnl-message
+							v-for="(message, index) in messages"
+							:id="getMessageClientId(message)"
 							:key="index"
 							:show-author="isAuthorUnique[index]"
-							:id="getMessageClientId(message)"
 							:author="getMessageAuthor(message)"
 							:full-name="getMessageAuthor(message).full_name"
 							:avatar="getMessageAuthor(message).avatar"
@@ -22,7 +26,7 @@
 							:content="message.content"
 						></wnl-message>
 					</div>
-					<div class="metadata aligncenter margin vertical" v-else>
+					<div v-else class="metadata aligncenter margin vertical">
 						Napisz pierwszą wiadomość i zacznij rozmowę!
 						<p class="margin vertical">
 							<span class="icon is-big text-dimmed">

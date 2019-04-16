@@ -1,14 +1,15 @@
 <template>
 	<div class="o-stepper">
-		<div class="o-stepper__step"
+		<div
 			v-for="(step, index) in steps"
 			:key="index"
+			class="o-stepper__step"
 			:class="{
 				'-active': index === currentStep,
 				'-done': index < currentStep,
 			}"
 		>
-			<router-link :to="step.linkTo" v-if="index < currentStep">{{index + 1}}. {{step.text}}</router-link>
+			<router-link v-if="index < currentStep" :to="step.linkTo">{{index + 1}}. {{step.text}}</router-link>
 			<a v-else>{{index + 1}}. {{step.text}}</a>
 		</div>
 	</div>

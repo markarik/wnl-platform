@@ -1,6 +1,6 @@
 <template>
 	<div class="subscription">
-		<table class="table is-bordered is-narrow" v-if="user.subscription">
+		<table v-if="user.subscription" class="table is-bordered is-narrow">
 			<thead>
 				<tr>
 					<th>Dostęp Od</th>

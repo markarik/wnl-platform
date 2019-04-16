@@ -2,7 +2,12 @@
 	<div class="field">
 		<div class="control screens-control">
 			<div class="screens-wrapper">
-				<div class="slide-snippet" v-for="slide in slides" :context="slide.context" :key="slide.id">
+				<div
+					v-for="slide in slides"
+					:key="slide.id"
+					class="slide-snippet"
+					:context="slide.context"
+				>
 					<h5>{{slide.snippet.header}}</h5>
 					<p>{{slide.snippet.subheader}}</p>
 					<i class="fa fa-times close-icon" @click="removeSlide(slide)"></i>
@@ -10,22 +15,22 @@
 			</div>
 			<div class="inputs-wrapper">
 				<input
+					ref="slideIdInput"
 					v-model="screenIdInput"
 					class="input"
 					type="text"
 					placeholder="Id screena"
-					ref="slideIdInput"
 				>
 				<input
+					ref="orderNumberInput"
 					v-model="slideNumberInput"
 					class="input"
 					type="number"
 					placeholder="Numer slajdu"
-					ref="orderNumberInput"
 				>
 				<a
-					@click="onButtonClicked"
 					class="button"
+					@click="onButtonClicked"
 				>
 					Dodaj
 				</a>

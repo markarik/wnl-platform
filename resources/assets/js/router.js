@@ -39,16 +39,17 @@ import ModeratorsDashboard from 'js/components/moderators/ModeratorsDashboard';
 import MainUsers from 'js/components/users/MainUsers';
 import UserProfile from 'js/components/users/UserProfile';
 import Onboarding from 'js/components/onboarding/Onboarding';
+import SplashScreen from 'js/components/global/splashscreens/SplashScreen';
 
 Vue.use(Router);
 
 const routes = [
 	{
-		name: 'course',
 		path: '/app/courses/:courseId',
 		component: Course,
 		props: true,
 		meta: {
+			requiresCurrentEditionAccess: true,
 			requiresOnboardingPassed: true,
 		},
 		children: [
@@ -71,18 +72,6 @@ const routes = [
 						props: true,
 					}
 				],
-				beforeEnter: (to, from, next) => {
-					store.dispatch('setupCurrentUser').then(() => {
-						const sandbox = createSandbox(store.getters.currentUser, {
-							perimeters: [currentEditionParticipant],
-						});
-
-						if (!sandbox.isAllowed('access')) {
-							return next('/');
-						}
-						return next();
-					});
-				},
 			}
 		],
 	},
@@ -164,6 +153,7 @@ const routes = [
 		component: Collections,
 		props: true,
 		meta: {
+			requiresCurrentEditionAccess: true,
 			requiresOnboardingPassed: true,
 		},
 		children: [
@@ -174,18 +164,6 @@ const routes = [
 				component: Collections
 			},
 		],
-		beforeEnter: (to, from, next) => {
-			store.dispatch('setupCurrentUser').then(() => {
-				const sandbox = createSandbox(store.getters.currentUser, {
-					perimeters: [currentEditionParticipant],
-				});
-
-				if (!sandbox.isAllowed('access')) {
-					return next('/');
-				}
-				return next();
-			});
-		},
 	},
 	{
 		name: 'help',
@@ -273,6 +251,7 @@ const routes = [
 		path: '/app/questions',
 		component: Questions,
 		meta: {
+			requiresCurrentEditionAccess: true,
 			requiresOnboardingPassed: true,
 		},
 		children: [
@@ -313,18 +292,6 @@ const routes = [
 			},
 
 		],
-		beforeEnter: (to, from, next) => {
-			store.dispatch('setupCurrentUser').then(() => {
-				const sandbox = createSandbox(store.getters.currentUser, {
-					perimeters: [currentEditionParticipant],
-				});
-
-				if (!sandbox.isAllowed('access')) {
-					return next('/');
-				}
-				return next();
-			});
-		},
 	},
 	{
 		name: 'moderatorFeed',
@@ -353,6 +320,9 @@ const routes = [
 		path: '/app/onboarding/:step?',
 		component: Onboarding,
 		props: true,
+		meta: {
+			requiresCurrentEditionAccess: true,
+		},
 	},
 	{
 		name: 'logout',
@@ -374,6 +344,22 @@ const routes = [
 				component: UserProfile,
 			},
 		]
+	},
+	{
+		path: '/app/splash-screen',
+		name: 'splash-screen',
+		component: SplashScreen,
+		beforeEnter: (to, from, next) => {
+			const sandbox = createSandbox(store.getters.currentUser, {
+				perimeters: [currentEditionParticipant],
+			});
+
+			if (sandbox.isAllowed('access')) {
+				return next('/');
+			}
+
+			return next();
+		},
 	},
 	{
 		name: 'dynamicContextMiddleRoute',
@@ -418,6 +404,19 @@ const router =  new Router({
 
 router.beforeEach(async (to, from, next) => {
 	await store.dispatch('setupCurrentUser');
+
+	const sandbox = createSandbox(store.getters.currentUser, {
+		perimeters: [currentEditionParticipant],
+	});
+
+	if (
+		to.matched.some(record => record.meta.requiresCurrentEditionAccess) &&
+		!sandbox.isAllowed('access')
+	) {
+		return next({
+			name: 'splash-screen'
+		});
+	}
 
 	if (
 		to.matched.some(record => record.meta.requiresOnboardingPassed) &&

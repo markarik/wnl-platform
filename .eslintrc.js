@@ -45,40 +45,43 @@ module.exports = {
 			'error',
 			'always'
 		],
-
-		// TODO enable eslint:recommended rules below
-		'no-console': [
-			'off'
-		],
-
 		'import/no-relative-parent-imports': 'error',
 		'vue/component-name-in-template-casing': [
 			'error',
 			'kebab-case'
 		],
-		// TODO enable strongly-recommended rules below
 		'vue/html-indent': [
-			'off'
+			'error',
+			'tab',
+			{
+				'ignores': [
+					'VElement[name=thead].children',
+					'VElement[name=tbody].children',
+				]
+			}
 		],
-		'vue/require-prop-types': [
-			'off'
+		'vue/mustache-interpolation-spacing': [
+			'error',
+			'never',
 		],
+		'vue/max-attributes-per-line': [
+			'error',
+			{
+				'singleline': 2,
+			}
+		],
+		'vue/attributes-order': [
+			'error',
+		],
+		// Doesn't seem useful
 		'vue/singleline-html-element-content-newline': [
 			'off'
 		],
-		'vue/mustache-interpolation-spacing': [
-			'off'
-		],
-		'vue/max-attributes-per-line': [
+		// TODO enable vue/strongly-recommended rules below
+		'vue/require-prop-types': [
 			'off'
 		],
 		'vue/html-self-closing': [
-			'off'
-		],
-		'vue/html-closing-bracket-newline': [
-			'off'
-		],
-		'vue/html-closing-bracket-spacing': [
 			'off'
 		],
 		'vue/multiline-html-element-content-newline': [

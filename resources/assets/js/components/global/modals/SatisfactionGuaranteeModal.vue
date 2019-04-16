@@ -1,5 +1,5 @@
 <template>
-	<wnl-modal @closeModal="$emit('closeModal')" v-if="visible">
+	<wnl-modal v-if="visible" @closeModal="$emit('closeModal')">
 		<div class="satisfaction-guarantee-modal normal">
 			<h4 class="margin bottom">
 				<slot name="title"></slot>
@@ -9,7 +9,7 @@
 				<slot name="body">{{$t('ui.satisfactionGuarantee.body')}}</slot>
 			</p>
 			<p class="margin bottom text-dimmed satisfaction-guarantee-modal__extra-info">
-				<i class="fa fa-info-circle"/>
+				<i class="fa fa-info-circle" />
 				<slot name="footer">
 					<span v-html="$t('ui.satisfactionGuarantee.note', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
 				</slot>

@@ -6,7 +6,11 @@
 				/ {{plannedDaysCount}}
 			</span>
 			<span v-else></span>
-			<a v-if="allowChange" class="button is-outlined is-small" @click="$emit('changePlan')">
+			<a
+				v-if="allowChange"
+				class="button is-outlined is-small"
+				@click="$emit('changePlan')"
+			>
 				{{$t('questions.plan.change')}}
 			</a>
 		</div>
@@ -19,7 +23,11 @@
 					{{$t('questions.plan.progress.explain')}}
 				</p>
 				<div class="plan-progress-bar">
-					<progress class="progress is-success" :value="plan.stats.done" :max="plan.stats.total">
+					<progress
+						class="progress is-success"
+						:value="plan.stats.done"
+						:max="plan.stats.total"
+					>
 						{{donePercent}}%
 					</progress>
 					<div class="plan-progress-score">
@@ -49,9 +57,9 @@
 			</div>
 			<div v-else>
 				<p class="plan-starts">
-					{{ $t('questions.plan.start.heading', {
+					{{$t('questions.plan.start.heading', {
 						date: this.planStartDate.format('LL')
-					}) }}
+					})}}
 				</p>
 				<p class="plan-progress-average">{{$t('questions.plan.start.tip', {
 					average: averagePlanned,

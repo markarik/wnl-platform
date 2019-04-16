@@ -11,8 +11,8 @@
 		<wnl-subsection-item
 			v-for="subsection in sectionSubsections"
 			:key="subsection.id"
-			:item="subsection"
 			slot="children"
+			:item="subsection"
 		></wnl-subsection-item>
 	</wnl-lesson-navigation-item>
 </template>

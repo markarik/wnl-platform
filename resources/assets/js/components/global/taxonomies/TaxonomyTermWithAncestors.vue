@@ -1,9 +1,9 @@
 <template>
 	<div
-		@click="$emit('click', $event)"
 		class="taxonomy-term"
 		:class="{'is-bordered': isBordered}"
 		:style="style"
+		@click="$emit('click', $event)"
 	>
 		<slot name="left"></slot>
 		<div class="taxonomy-term__content" :class="{'has-parent': ancestors.length}">

@@ -5,9 +5,9 @@
 			:resource-route="resourceRoute"
 			:populate="isEdit"
 			:hide-default-submit="true"
+			name="TaxonomyEditor"
 			@formIsLoaded="onFormIsLoaded"
 			@submitSuccess="onSubmitSuccess"
-			name="TaxonomyEditor"
 		>
 			<div class="header">
 				<h2 class="title is-2">
@@ -19,11 +19,16 @@
 				</h2>
 				<div class="field is-grouped">
 					<!-- TODO PLAT-924 unblock deleting "reserved" taxonomies -->
-					<button v-if="isEdit && id > 3" class="button is-danger margin right" type="button" @click="onDelete">
+					<button
+						v-if="isEdit && id > 3"
+						class="button is-danger margin right"
+						type="button"
+						@click="onDelete"
+					>
 						<span class="icon is-small"><i class="fa fa-trash"></i></span>
 						<span>Usuń</span>
 					</button>
-					<wnl-submit v-if="!isEdit || isEditFormVisible" class="submit"/>
+					<wnl-submit v-if="!isEdit || isEditFormVisible" class="submit" />
 					<button
 						v-if="isEdit && !isEditFormVisible"
 						class="button"
@@ -49,7 +54,7 @@
 				>Opis</wnl-textarea>
 			</div>
 		</wnl-form>
-		<wnl-taxonomy-terms-editor :taxonomy-id="id" v-if="isEdit" />
+		<wnl-taxonomy-terms-editor v-if="isEdit" :taxonomy-id="id" />
 	</div>
 </template>
 

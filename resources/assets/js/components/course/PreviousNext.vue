@@ -1,7 +1,11 @@
 <template>
 	<div class="wnl-previous-next">
 		<div class="previous">
-			<router-link class="nxt-prvs-link" :to="previousScreenRoute" v-if="previousScreenId">
+			<router-link
+				v-if="previousScreenId"
+				class="nxt-prvs-link"
+				:to="previousScreenRoute"
+			>
 				<span class="icon is-small">
 					<i class="fa fa-arrow-circle-left"></i>
 				</span>
@@ -9,7 +13,11 @@
 			</router-link>
 		</div>
 		<div class="next">
-			<router-link class="nxt-prvs-link" :to="nextScreenRoute" v-if="nextScreenId">
+			<router-link
+				v-if="nextScreenId"
+				class="nxt-prvs-link"
+				:to="nextScreenRoute"
+			>
 				<span>{{nextScreenName}}</span>
 				<span class="icon is-small">
 					<i class="fa fa-arrow-circle-right"></i>

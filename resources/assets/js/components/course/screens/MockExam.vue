@@ -5,7 +5,7 @@
 			{{this.$t('annotations.mockExamAnnotation')}}
 		</div>
 		<p class="margin vertical has-text-centered">
-			<button @click="redirectToExam" class="button is-primary">
+			<button class="button is-primary" @click="redirectToExam">
 				{{this.$t('questions.nav.mockExam')}}!
 			</button>
 		</p>

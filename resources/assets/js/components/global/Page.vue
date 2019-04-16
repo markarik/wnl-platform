@@ -2,10 +2,11 @@
 	<div class="content">
 		<div class="page content" v-html="content"></div>
 		<wnl-qna
+			v-if="hasQna"
 			:context-tags="tags"
 			:reactions-disabled="true"
 			:discussion-id="discussion_id"
-			v-if="hasQna"/>
+		/>
 	</div>
 </template>
 

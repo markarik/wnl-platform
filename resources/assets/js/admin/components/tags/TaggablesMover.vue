@@ -2,10 +2,10 @@
 	<wnl-form
 		:before-submit="beforeSubmit"
 		:resource-route="resourceRoute"
-		@submitSuccess="onSubmitSuccess"
 		hide-default-submit="true"
 		name="TaggableMover"
 		method="post"
+		@submitSuccess="onSubmitSuccess"
 	>
 		<wnl-form-text
 			name="target_tag_id"

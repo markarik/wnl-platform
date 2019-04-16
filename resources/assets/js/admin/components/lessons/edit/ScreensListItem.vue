@@ -1,22 +1,30 @@
 <template>
 	<div class="media">
 		<div class="media-left">
-			<span class="icon is-small" @click="moveScreen('up')" v-if="!isFirst">
+			<span
+				v-if="!isFirst"
+				class="icon is-small"
+				@click="moveScreen('up')"
+			>
 				<i class="fa fa-arrow-up"></i>
 			</span>
-			<span class="icon is-small is-disabled" v-else>
+			<span v-else class="icon is-small is-disabled">
 				<i class="fa fa-arrow-up"></i>
 			</span>
 
-			<span class="icon is-small" @click="moveScreen('down')" v-if="!isLast">
+			<span
+				v-if="!isLast"
+				class="icon is-small"
+				@click="moveScreen('down')"
+			>
 				<i class="fa fa-arrow-down"></i>
 			</span>
-			<span class="icon is-small is-disabled" v-else>
+			<span v-else class="icon is-small is-disabled">
 				<i class="fa fa-arrow-down"></i>
 			</span>
 		</div>
 		<div class="media-content">
-			<router-link :to="to" v-if="isLink">{{screen.name}}</router-link>
+			<router-link v-if="isLink" :to="to">{{screen.name}}</router-link>
 			<span v-else>{{screen.name}}</span>
 		</div>
 		<div class="media-right">

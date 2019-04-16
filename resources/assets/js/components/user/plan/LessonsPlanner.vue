@@ -1,13 +1,13 @@
 <template>
 	<div>
-		<div class="level" v-if="currentUserSubscriptionActive">
+		<div v-if="currentUserSubscriptionActive" class="level">
 			<div class="level-left">
 				<div class="level-item">
 					<div>
 						Twój dostęp do kursu jest aktywny do:&nbsp;
 					</div>
 					<div class="big strong">
-						{{ userFriendlySubscriptionDate }}
+						{{userFriendlySubscriptionDate}}
 					</div>
 				</div>
 			</div>
@@ -24,24 +24,27 @@
 		<div class="wnl-screen-title">
 			<div class="level-left">
 				<div class="big strong">
-					{{ $t('lessonsAvailability.viewsExplanation') }}
+					{{$t('lessonsAvailability.viewsExplanation')}}
 				</div>
 			</div>
 		</div>
 		<div class="views-control">
-			<a v-for="view in views"
+			<a
+				v-for="view in views"
+				:key="view.title"
 				class="panel-toggle view"
 				:class="{'is-active': view.isActive}"
-				:key="view.title"
 				@click="toggleView(view)"
-			>{{ view.title }}
+			>{{view.title}}
 				<span class="icon is-small">
-					<i class="fa"
-						:class="[view.isActive ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					<i
+						class="fa"
+						:class="[view.isActive ? 'fa-check-circle' : 'fa-circle-o']"
+					></i>
 				</span>
 			</a>
 		</div>
-		<component :is="activeViewComponent" @userEvent="proxyUserEvent"/>
+		<component :is="activeViewComponent" @userEvent="proxyUserEvent" />
 	</div>
 </template>
 

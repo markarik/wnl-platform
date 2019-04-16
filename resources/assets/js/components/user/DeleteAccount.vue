@@ -3,20 +3,21 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.deleteAccount.header') }}
+					{{$t('user.deleteAccount.header')}}
 				</div>
 			</div>
 		</div>
 		<div class="message is-danger reset-container">
 			<div class="message-header">
-					<strong v-t="'user.deleteAccount.warningHeader'"/>
-				</div>
-			<div class="message-body" v-html="htmlWarning"/>
+				<strong v-t="'user.deleteAccount.warningHeader'" />
+			</div>
+			<div class="message-body" v-html="htmlWarning" />
 			<div class="reset-button">
 				<button
-					@click="confirmAndDelete"
+					v-t="'user.deleteAccount.header'"
 					class="button is-danger to-right"
-					v-t="'user.deleteAccount.header'"/>
+					@click="confirmAndDelete"
+				/>
 			</div>
 		</div>
 	</div>

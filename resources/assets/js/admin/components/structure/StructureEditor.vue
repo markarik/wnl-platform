@@ -6,16 +6,16 @@
 			<template slot="header">
 				<span class="control has-icons-right structure-editor__search margin bottom">
 					<wnl-node-autocomplete
-						@change="onSearch"
 						placeholder="Szukaj"
+						@change="onSearch"
 					/>
 					<span class="icon is-small is-right">
 						<i class="fa fa-search"></i>
 					</span>
 				</span>
 			</template>
-			<wnl-structure-nodes-list slot="nodes-list" :nodes="getRootNodes"/>
-			<wnl-structure-node-editor-right slot="panel-right" :course-id="courseId"/>
+			<wnl-structure-nodes-list slot="nodes-list" :nodes="getRootNodes" />
+			<wnl-structure-node-editor-right slot="panel-right" :course-id="courseId" />
 		</wnl-nested-set-editor>
 	</div>
 </template>

@@ -1,6 +1,7 @@
 <template>
 	<div class="wnl-quiz-question-container">
-		<div class="wnl-quiz-question card"
+		<div
+			class="wnl-quiz-question card"
 			:class="{
 				'is-correct': displayResults && !isUnanswered && isCorrect,
 				'is-incorrect': displayResults && !isUnanswered && !isCorrect,
@@ -8,10 +9,15 @@
 				'is-unanswered': isUnanswered,
 				'is-large-desktop': isLargeDesktop,
 				'is-mobile': isMobile,
-			}">
+			}"
+		>
 			<header class="quiz-header card-header">
 				<div class="quiz-header-top">
-					<div class="card-header-title" :class="{'clickable': headerOnly, 'is-short-form': headerOnly}" @click="$emit('headerClicked')">
+					<div
+						class="card-header-title"
+						:class="{'clickable': headerOnly, 'is-short-form': headerOnly}"
+						@click="$emit('headerClicked')"
+					>
 						<div v-html="question.text"></div>
 					</div>
 					<div class="card-header-icons">
@@ -25,14 +31,15 @@
 					</div>
 				</div>
 			</header>
-			<div class="quiz-answers card-content" v-if="!headerOnly">
+			<div v-if="!headerOnly" class="quiz-answers card-content">
 				<ul>
-					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
+					<wnl-quiz-answer
+						v-for="(answer, answerIndex) in answers"
+						:key="answerIndex"
 						:answer="answer"
 						:index="answerIndex"
 						:question-id="question.id"
 						:total-hits="question.total_hits"
-						:key="answerIndex"
 						:read-only="readOnly"
 						:is-selected="question.selectedAnswer === answerIndex"
 						:answers-stats="displayResults && question.answersStats"
@@ -44,9 +51,10 @@
 					<div class="quiz-question-tags">
 						<template v-if="displayResults && question.tags">
 							<span>{{$t('questions.question.tags')}}:</span>
-							<span v-for="(tag, index) in question.tags"
-								class="quiz-question-tag"
+							<span
+								v-for="(tag, index) in question.tags"
 								:key="index"
+								class="quiz-question-tag"
 							>{{trim(tag.name)}}</span>
 						</template>
 					</div>
@@ -54,7 +62,7 @@
 						#{{question.id}}
 					</div>
 				</div>
-				<div class="question-edit-link" v-if="isAdmin">
+				<div v-if="isAdmin" class="question-edit-link">
 					<a
 						class="small"
 						target="_blank"
@@ -67,11 +75,11 @@
 					</a>
 				</div>
 			</div>
-			<div class="card-footer quiz-question-card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
+			<div v-if="!hideComments && ((!headerOnly && displayResults) || showComments)" class="card-footer quiz-question-card-footer">
 				<div v-if="question.explanation" class="card-item relative">
 					<header>
 						<span class="icon is-small comment-icon"><i class="fa fa-info"></i></span>
-						<span v-t="'quiz.annotations.explanation.header'"/>&nbsp;·&nbsp;<a class="secondary-link" @click="toggleExplanation">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
+						<span v-t="'quiz.annotations.explanation.header'" />&nbsp;·&nbsp;<a class="secondary-link" @click="toggleExplanation">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
 					<div :class="{'collapsed': !showExplanation}" v-html="explanation"></div>
 				</div>
@@ -83,25 +91,32 @@
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
 					<template v-if="slidesExpanded">
-						<a class="slide-list-item" v-for="(slide, index) in slides" :key="index" @click="currentSlideIndex = index">
+						<a
+							v-for="(slide, index) in slides"
+							:key="index"
+							class="slide-list-item"
+							@click="currentSlideIndex = index"
+						>
 							{{slideLink(slide)}}
 						</a>
 					</template>
 					<wnl-slide-preview
-							:show-modal="show"
-							:content="slideContent"
-							:slides-count="hasSlides"
-							@closeModal="hideSlidePreview"
-							@switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id"
-							@userEvent="onRelatedSlideUserEvent"
+						v-if="slideContent && currentModalSlide.id"
+						:show-modal="show"
+						:content="slideContent"
+						:slides-count="hasSlides"
+						@closeModal="hideSlidePreview"
+						@switchSlide="changeSlide"
+						@userEvent="onRelatedSlideUserEvent"
 					>
 						<span slot="header">{{slideLink(currentModalSlide)}}</span>
 						<wnl-slide-link
-							class="button is-primary is-outlined is-small"
 							slot="footer"
+							class="button is-primary is-outlined is-small"
 							:context="currentModalSlide.context"
-							:blank-page="blankPage">
-								{{$t('quiz.slideModal.goToPrezentation')}}
+							:blank-page="blankPage"
+						>
+							{{$t('quiz.slideModal.goToPrezentation')}}
 						</wnl-slide-link>
 					</wnl-slide-preview>
 				</div>
@@ -111,7 +126,8 @@
 						url-param="quiz_question"
 						:module="module"
 						:commentable-id="question.id"
-						:is-unique="showComments">
+						:is-unique="showComments"
+					>
 					</wnl-comments-list>
 				</div>
 			</div>

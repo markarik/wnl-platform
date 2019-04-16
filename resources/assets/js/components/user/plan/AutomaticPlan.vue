@@ -1,70 +1,79 @@
 <template>
 	<div>
-		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')"/>
+		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')" />
 		<div class="presets-view">
 			<div class="wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item big strong">
-						{{ $t('lessonsAvailability.sections.workDays') }}
+						{{$t('lessonsAvailability.sections.workDays')}}
 					</div>
 				</div>
 			</div>
 			<div class="days">
-				<a v-for="day in days"
+				<a
+					v-for="day in days"
+					:key="day.dayNumber"
 					class="panel-toggle day"
 					:class="{'is-active': isDayActive(day.dayNumber)}"
-					:key="day.dayNumber"
 					@click="toggleDay(day.dayNumber)"
-				>{{ $t(day.dayName) }}
+				>{{$t(day.dayName)}}
 					<span class="icon is-small">
-							<i class="fa"
-								:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"></i>
-						</span>
+						<i
+							class="fa"
+							:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"
+						></i>
+					</span>
 				</a>
 			</div>
 			<div class="wnl-screen-title">
 				<div class="level-left">
 					<div class="level-item big strong">
-						{{ $t('lessonsAvailability.sections.availablePresets') }}
+						{{$t('lessonsAvailability.sections.availablePresets')}}
 					</div>
 				</div>
 			</div>
 			<div class="presets-control">
-				<a v-for="preset in presets"
+				<a
+					v-for="preset in presets"
+					:key="preset.preset"
 					class="panel-toggle preset preset"
 					:class="{'is-active': isPresetActive(preset.preset)}"
-					:key="preset.preset"
 					@click="togglePreset(preset.preset)"
-				>{{ $t(preset.title) }}
+				>{{$t(preset.title)}}
 					<span class="icon is-small">
-						<i class="fa"
-							:class="[isPresetActive(preset.preset) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+						<i
+							class="fa"
+							:class="[isPresetActive(preset.preset) ? 'fa-check-circle' : 'fa-circle-o']"
+						></i>
 					</span>
 				</a>
 			</div>
-			<div class="work-load-toggle" v-if="isPresetActive('daysPerLesson')">
+			<div v-if="isPresetActive('daysPerLesson')" class="work-load-toggle">
 				<div class="level wnl-screen-title">
 					<div class="level-item">
-						{{ $t('lessonsAvailability.secondSection.daysPerLesson') }}
+						{{$t('lessonsAvailability.secondSection.daysPerLesson')}}
 					</div>
 				</div>
 				<div class="work-load-control">
-					<a v-for="workLoad in availableWorkLoads"
+					<a
+						v-for="workLoad in availableWorkLoads"
 						:key="workLoad.workLoad"
-						@click="chooseWorkload(workLoad.workLoad)"
 						class="panel-toggle work-load-button"
 						:class="{'is-active': isWorkLoadActive(workLoad.workLoad)}"
-					>{{ $t(workLoad.translation) }}
+						@click="chooseWorkload(workLoad.workLoad)"
+					>{{$t(workLoad.translation)}}
 						<span class="icon is-small">
-							<i class="fa"
-								:class="[isWorkLoadActive(workLoad.workLoad) ? 'fa-check-circle' : 'fa-circle-o']">
+							<i
+								class="fa"
+								:class="[isWorkLoadActive(workLoad.workLoad) ? 'fa-check-circle' : 'fa-circle-o']"
+							>
 							</i>
 						</span>
 					</a>
 				</div>
 				<div class="wnl-screen-title">
 					<div class="level-item">
-						{{ $t('lessonsAvailability.secondSection.startDate') }}
+						{{$t('lessonsAvailability.secondSection.startDate')}}
 					</div>
 				</div>
 				<div class="dates">
@@ -77,10 +86,11 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:with-border="true"
 								v-model="startDate"
+								:with-border="true"
 								:config="startDateConfigWithMin"
-								@onChange="onPresetStartDateChange"/>
+								@onChange="onPresetStartDateChange"
+							/>
 							<p class="tip">
 								{{$t('questions.plan.tips.startDate')}}
 							</p>
@@ -88,10 +98,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="" v-if="isPresetActive('dateToDate')">
+			<div v-if="isPresetActive('dateToDate')" class="">
 				<div class="level">
 					<div class="level-item">
-						{{ $t('lessonsAvailability.secondSection.dateToDate') }}
+						{{$t('lessonsAvailability.secondSection.dateToDate')}}
 					</div>
 				</div>
 				<div class="dates">
@@ -104,10 +114,11 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:with-border="true"
 								v-model="startDate"
+								:with-border="true"
 								:config="startDateConfigWithMin"
-								@onChange="onPresetStartDateChange"/>
+								@onChange="onPresetStartDateChange"
+							/>
 							<p class="tip">
 								{{$t('questions.plan.tips.startDate')}}
 							</p>
@@ -122,10 +133,11 @@
 								</span>
 							</label>
 							<wnl-datepicker
-								:with-border="true"
 								v-model="endDate"
+								:with-border="true"
 								:config="endDateConfig"
-								@onChange="onEndDateChange"/>
+								@onChange="onEndDateChange"
+							/>
 							<p class="tip">
 								{{$t('questions.plan.tips.endDate')}}
 							</p>
@@ -137,15 +149,15 @@
 				<div class="level wnl-screen-title">
 					<div class="level-left">
 						<div class="level-item big strong">
-							{{ $t('lessonsAvailability.sections.acceptPlan') }}
+							{{$t('lessonsAvailability.sections.acceptPlan')}}
 						</div>
 					</div>
 				</div>
 				<div class="annotation">
 					<div class="level">
-						<div class="level-item" v-if="this.completedLessonsLength > 0">
-							{{ $t('lessonsAvailability.annotation.header') }}
-							{{ this.completedLessonsLength}}{{ $t('lessonsAvailability.annotation.info') }}
+						<div v-if="this.completedLessonsLength > 0" class="level-item">
+							{{$t('lessonsAvailability.annotation.header')}}
+							{{this.completedLessonsLength}}{{$t('lessonsAvailability.annotation.info')}}
 						</div>
 					</div>
 				</div>
@@ -154,9 +166,9 @@
 		<div class="accept-plan">
 			<a
 				:disabled="isSubmitDisabled"
-				@click="!isSubmitDisabled && acceptPlan()"
 				class="button is-primary is-outlined is-big"
-			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+				@click="!isSubmitDisabled && acceptPlan()"
+			>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 			</a>
 		</div>
 	</div>

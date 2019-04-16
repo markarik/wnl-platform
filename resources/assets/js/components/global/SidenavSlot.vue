@@ -1,9 +1,9 @@
 <template>
 	<div
-		class="wnl-sidenav-slot"
 		v-if="isVisible"
-		:class="{ 'wnl-sidenav-detached': isDetached, 'has-chat': hasChat, 'is-max-width': isMaxWidth, 'is-narrow': isNarrow }"
 		ref="slot"
+		class="wnl-sidenav-slot"
+		:class="{ 'wnl-sidenav-detached': isDetached, 'has-chat': hasChat, 'is-max-width': isMaxWidth, 'is-narrow': isNarrow }"
 		@click="onClick"
 	>
 		<div class="sidenav-content">

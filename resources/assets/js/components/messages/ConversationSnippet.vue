@@ -4,25 +4,26 @@
 			<wnl-avatar
 				:full-name="profile.full_name"
 				:url="profile.avatar"
-				size="medium">
+				size="medium"
+			>
 			</wnl-avatar>
 		</figure>
 		<div class="media-content">
 			<div class="content">
 				<div class="conversation-meta">
 					<div class="conversation-names">
-						<span class="full-name">{{ profile.full_name }}</span>
+						<span class="full-name">{{profile.full_name}}</span>
 					</div>
 
-					<div class="conversation-time" v-if="room && room.last_message_time">
-						<small>{{ time(room.last_message_time) }}</small>
+					<div v-if="room && room.last_message_time" class="conversation-time">
+						<small>{{time(room.last_message_time)}}</small>
 					</div>
 				</div>
 				<div v-if="bothNames">
-					<span class="full-name">{{ profile.full_name }}</span>
+					<span class="full-name">{{profile.full_name}}</span>
 				</div>
 
-				<div class="conversation-message" v-html="lastMessageContent"/>
+				<div class="conversation-message" v-html="lastMessageContent" />
 			</div>
 		</div>
 	</div>

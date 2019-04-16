@@ -1,9 +1,14 @@
 <template>
 	<div>
-		<img class="splash-screen-image" :src="countdownImageUrl" alt="">
+		<img
+			class="splash-screen-image"
+			:src="countdownImageUrl"
+			alt=""
+		>
 		<div class="has-text-centered">
 			<p class="title is-4">W tym momencie nie posiadasz dostępu do kursu</p>
-			<p>Widzisz ten ekran ponieważ nie opłaciłeś zamówienia w terminie lub jesteś uczestnikiem poprzedniej edycji, która dobiegła już końca. 🙂<br>
+			<p>
+				Widzisz ten ekran ponieważ nie opłaciłeś zamówienia w terminie lub jesteś uczestnikiem poprzedniej edycji, która dobiegła już końca. 🙂<br>
 				W razie, gdyby okazało się to nieporozumieniem, napisz do nas na info@wiecejnizlek.pl albo na
 				<a href="https://facebook.com/wiecejnizlek">facebooku</a>.
 			</p>

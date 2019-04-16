@@ -19,8 +19,8 @@
 			</span>
 
 			<wnl-manual-plan-nodes-list
-				class="nodes-list"
 				v-if="isOpen"
+				class="nodes-list"
 				:manual-start-dates="manualStartDates"
 				:nodes="childrenNodes"
 				@change="$emit('change', $event)"

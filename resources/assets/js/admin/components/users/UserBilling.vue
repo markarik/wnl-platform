@@ -1,5 +1,5 @@
 <template>
-	<wnl-user-billing-data :resource-route="resourceRoute"/>
+	<wnl-user-billing-data :resource-route="resourceRoute" />
 </template>
 
 <script>

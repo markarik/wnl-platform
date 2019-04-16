@@ -1,36 +1,57 @@
 <template>
 	<div>
 		<div class="questions-test-header-container" :class="{'is-mobile': isMobile, 'is-complete': isComplete}">
-			<div class="questions-test-header" :class="{'is-sticky': hasStickyHeader}" ref="header">
+			<div
+				ref="header"
+				class="questions-test-header"
+				:class="{'is-sticky': hasStickyHeader}"
+			>
 				<div v-if="!isComplete">
 					<div class="in-progress">
 						<span>
-							<span class="answered" v-if="!isMobile || unansweredCount === 0">
+							<span v-if="!isMobile || unansweredCount === 0" class="answered">
 								{{$t('questions.solving.test.headers.answered', {
 									answered: answeredCount,
 									total: totalCount,
 								})}}
 							</span>
-							<a v-show="unansweredCount > 0" class="toggle-unanswered"
-								@click="filterUnanswered = !filterUnanswered">
+							<a
+								v-show="unansweredCount > 0"
+								class="toggle-unanswered"
+								@click="filterUnanswered = !filterUnanswered"
+							>
 								{{unansweredToggleMessage}}
 								({{unansweredToggleCount}})
 							</a>
 						</span>
-						<wnl-quiz-timer ref="timer"
+						<wnl-quiz-timer
+							ref="timer"
 							:hide-time="hideTime"
 							:time="time"
 							@clicked="hideTime = !hideTime"
-							@timesUp="onTimesUp"/>
+							@timesUp="onTimesUp"
+						/>
 					</div>
-					<progress class="progress is-success" :max="totalCount" :value="answeredCount">
+					<progress
+						class="progress is-success"
+						:max="totalCount"
+						:value="answeredCount"
+					>
 						{{answeredCount}}
 					</progress>
 					<div class="test-controls">
-						<a class="is-small is-primary is-outlined" :class="{'button': !isMobile}" @click="checkQuiz">
+						<a
+							class="is-small is-primary is-outlined"
+							:class="{'button': !isMobile}"
+							@click="checkQuiz"
+						>
 							{{$t('questions.solving.resolve')}}
 						</a>
-						<a class="is-small" :class="{'button': !isMobile}" @click="$emit('endQuiz')">
+						<a
+							class="is-small"
+							:class="{'button': !isMobile}"
+							@click="$emit('endQuiz')"
+						>
 							{{$t('questions.solving.abort')}}
 						</a>
 					</div>
@@ -54,8 +75,8 @@
 						</span>
 						<span
 							v-for="(questions, status) in testResultsWithQuestions"
-							:class="[{'is-active': filterResults === status}, `results-${status}`]"
 							:key="status"
+							:class="[{'is-active': filterResults === status}, `results-${status}`]"
 							@click="toggleFilter(status)"
 						>
 							{{$t(`questions.solving.results.${status}`)}} ({{questions.length}})
@@ -75,8 +96,8 @@
 		</div>
 
 		<wnl-quiz-list
-			module="questions"
 			ref="quizlist"
+			module="questions"
 			:all-questions="questionsCurrentPage"
 			:get-reaction="getReaction"
 			:is-complete="isComplete"
@@ -99,7 +120,11 @@
 		</div>
 
 		<p v-if="!isComplete" class="questions-test-resolve">
-			<a class="button is-outlined is-small is-primary" :class="{'is-loading': testProcessing}" @click="checkQuiz">
+			<a
+				class="button is-outlined is-small is-primary"
+				:class="{'is-loading': testProcessing}"
+				@click="checkQuiz"
+			>
 				{{$t('questions.solving.resolve')}}
 			</a>
 		</p>

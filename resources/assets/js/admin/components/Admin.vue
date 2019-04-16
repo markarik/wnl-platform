@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<wnl-alerts :alerts="alerts"/>
+		<wnl-alerts :alerts="alerts" />
 		<div class="admin-main">
 			<div class="admin-left">
 				<wnl-sidenav></wnl-sidenav>

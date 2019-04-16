@@ -228,6 +228,7 @@ function confirmOrderForm() {
 		data: {},
 		method: 'POST',
 		error: function (error) {
+			// eslint-disable-next-line no-console
 			console.log(error);
 		}
 	});

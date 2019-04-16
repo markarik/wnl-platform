@@ -6,6 +6,7 @@ namespace Tests;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverPoint;
+use PHPUnit\Framework\Assert;
 use \Laravel\Dusk\Browser;
 use Laravel\Dusk\ElementResolver;
 
@@ -116,6 +117,15 @@ class BethinkBrowser extends Browser
 		foreach ($items as $item) {
 			$this->assertSee($item);
 		}
+
+		return $this;
+	}
+
+	public function assertElementNotEmpty(string $selector): BethinkBrowser
+	{
+		$element = $this->driver->findElement(WebDriverBy::cssSelector($selector));
+
+		Assert::assertTrue(strlen($element->getText()) > 0, 'Element is empty');
 
 		return $this;
 	}

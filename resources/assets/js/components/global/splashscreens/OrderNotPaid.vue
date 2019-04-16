@@ -1,20 +1,24 @@
 <template>
 	<div>
-		<img class="splash-screen-image" :src="logoImageUrl" alt="Logo kursu">
+		<img
+			class="splash-screen-image"
+			:src="logoImageUrl"
+			alt="Logo kursu"
+		>
 		<div class="has-text-centered">
 			<p class="title is-4">Twoje zamówienie oczekuje na płatność</p>
 			<p class="margin vertical">
 				Na płatność masz <strong>7 dni</strong> od złożenia zamówienia.
 			</p>
-			<p class="margin vertical text-dimmed" v-if="currentProductAccessStartDateIsPast">Dostęp do kursu otrzymasz od razu po dokonaniu płatności.</p>
-			<p class="margin vertical text-dimmed" v-else-if="currentProductAccessStartDate">Dostęp do kursu otrzymasz od {{currentProductAccessStartDate}}.</p>
+			<p v-if="currentProductAccessStartDateIsPast" class="margin vertical text-dimmed">Dostęp do kursu otrzymasz od razu po dokonaniu płatności.</p>
+			<p v-else-if="currentProductAccessStartDate" class="margin vertical text-dimmed">Dostęp do kursu otrzymasz od {{currentProductAccessStartDate}}.</p>
 			<p class="margin vertical">
 				<router-link :to="{name: 'my-orders'}" class="button is-primary">
 					Opłać zamówienie
 				</router-link>
 			</p>
 			<!-- TODO PLAT-1201 clean up and do it correctly -->
-			<p class="splash-screen__info text-dimmed" v-if="courseSlug === 'ldek'">
+			<p v-if="courseSlug === 'ldek'" class="splash-screen__info text-dimmed">
 				Album map myśli wyślemy do Ciebie w 2. połowie maja.
 			</p>
 		</div>

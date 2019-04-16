@@ -3,8 +3,11 @@
 namespace App\Jobs;
 
 use App\Mail\StudyBuddyUsage;
+use Carbon\Carbon;
 use Mail;
+use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\Product;
 use App\Mail\StudyBuddy;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -16,6 +19,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class OrderStudyBuddy implements ShouldQueue
 {
 	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+	/** @var Order $order */
 	public $order;
 
 	/**
@@ -36,14 +41,10 @@ class OrderStudyBuddy implements ShouldQueue
 	public function handle()
 	{
 		$order = $this->order;
-		// Activate SB code & send email containing code link
-		$studyBuddy = $order->studyBuddy;
-		if (empty($order->coupon) && $studyBuddy && $studyBuddy->status === 'new') {
-			\Log::notice('Activating Study Buddy coupon.');
-			$studyBuddy->coupon->times_usable++;
-			$studyBuddy->coupon->save();
-			$studyBuddy->status = 'active';
-			$studyBuddy->save();
+
+		// Generate SB and send email containing code link
+		if (empty($order->coupon) && $order->product->slug !== Product::SLUG_WNL_ALBUM) {
+			$this->generateStudyBuddy($order);
 			Mail::to($order->user)->send(new StudyBuddyUsage($order));
 		}
 
@@ -68,5 +69,31 @@ class OrderStudyBuddy implements ShouldQueue
 			$order->coupon->save();
 			$order->coupon->studyBuddy->save();
 		}
+	}
+
+	protected function generateStudyBuddy(Order $order)
+	{
+		\Log::notice("Generating Study Buddy for order #$order->id.");
+
+		$expires = Carbon::now()->addYears(1);
+		$coupon = new Coupon([
+			'name' => 'Study Buddy',
+			'type' => 'amount',
+			'value' => 100,
+			'expires_at' => $expires,
+			'code' => strtoupper(str_random(7)),
+			'times_usable' => 1,
+			'kind' => Coupon::KIND_STUDY_BUDDY,
+		]);
+
+		$order->studyBuddy()->create([
+			'code' => $coupon->code,
+			'status' => 'active'
+		]);
+
+		$coupon->save();
+		$coupon->products()->attach(
+			Product::whereIn('slug', [Product::SLUG_WNL_ONLINE])->get()
+		);
 	}
 }

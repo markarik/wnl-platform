@@ -52,8 +52,8 @@
 						<template v-if="displayResults && question.tags">
 							<span>{{$t('questions.question.tags')}}:</span>
 							<span
-								v-for="(tag, index) in question.tags"
-								:key="index"
+								v-for="(tag, tagIndex) in question.tags"
+								:key="tagIndex"
 								class="quiz-question-tag"
 							>{{trim(tag.name)}}</span>
 						</template>
@@ -92,10 +92,10 @@
 					</header>
 					<template v-if="slidesExpanded">
 						<a
-							v-for="(slide, index) in slides"
-							:key="index"
+							v-for="(slide, slideIndex) in slides"
+							:key="slideIndex"
 							class="slide-list-item"
-							@click="currentSlideIndex = index"
+							@click="currentSlideIndex = slideIndex"
 						>
 							{{slideLink(slide)}}
 						</a>

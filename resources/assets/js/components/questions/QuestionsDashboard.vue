@@ -75,20 +75,20 @@
 						</div>
 						<div class="questions-stats margin bottom">
 							<div
-								v-for="(stats, index) in parseStats(stats)"
+								v-for="(statsItem, index) in parseStats(stats)"
 								:key="index"
 								class="stats-item stats-resolved"
 								:class="{'is-first': index === 0}"
 							>
-								<span class="stats-title">{{stats.title}}</span>
+								<span class="stats-title">{{statsItem.title}}</span>
 								<div class="progress-bar">
 									<progress
 										class="progress"
-										:value="stats.progress"
-										:max="stats.total"
+										:value="statsItem.progress"
+										:max="statsItem.total"
 									/>
-									<span class="progress-number">{{stats.progressNumber}}</span>
-									<div class="score" :class="scoreClass(stats.score)">{{stats.score}}%</div>
+									<span class="progress-number">{{statsItem.progressNumber}}</span>
+									<div class="score" :class="scoreClass(statsItem.score)">{{statsItem.score}}%</div>
 								</div>
 							</div>
 						</div>
@@ -100,11 +100,11 @@
 								{{$t('questions.dashboard.stats.mockExam')}}
 							</div>
 							<div
-								v-for="(mockExam, index) in stats.mock_exams"
-								:key="index"
+								v-for="(mockExam, mockExamIndex) in stats.mock_exams"
+								:key="mockExamIndex"
 								class="questions-stats stats-exam"
 							>
-								<div :class="{'exam-header': true, 'is-expanded': expandedExams.includes(index)}" @click="toggleExamExpand(index)">
+								<div :class="{'exam-header': true, 'is-expanded': expandedExams.includes(mockExamIndex)}" @click="toggleExamExpand(mockExamIndex)">
 									<span class="exam-header__name">
 										{{mockExam.exam_name}}
 									</span>
@@ -114,19 +114,19 @@
 										<span class="exam-header__date">{{parseDate(mockExam.created_at)}}</span>
 									</span>
 									<span class="exam-header__expand icon is-small">
-										<i :class="['fa', expandedExams.includes(index) ? 'fa-chevron-up' : 'fa-chevron-down']"></i>
+										<i :class="['fa', expandedExams.includes(mockExamIndex) ? 'fa-chevron-up' : 'fa-chevron-down']"></i>
 									</span>
 								</div>
-								<div v-show="expandedExams.includes(index)">
+								<div v-show="expandedExams.includes(mockExamIndex)">
 									<div
-										v-for="(stats, index) in parseStats(mockExam)"
-										:key="index"
+										v-for="(statsItem, statsIndex) in parseStats(mockExam)"
+										:key="statsIndex"
 										class="stats-item stats-exam"
-										:class="{'is-first': index === 0}"
+										:class="{'is-first': statsIndex === 0}"
 									>
-										<span class="stats-title">{{stats.title}}</span>
-										<span class="progress-number" :class="scoreClass(stats.scoreTotal)">{{stats.scoreNumber}}</span>
-										<div class="score" :class="scoreClass(stats.scoreTotal)">{{stats.scoreTotal}}%</div>
+										<span class="stats-title">{{statsItem.title}}</span>
+										<span class="progress-number" :class="scoreClass(statsItem.scoreTotal)">{{statsItem.scoreNumber}}</span>
+										<div class="score" :class="scoreClass(statsItem.scoreTotal)">{{statsItem.scoreTotal}}%</div>
 									</div>
 								</div>
 							</div>

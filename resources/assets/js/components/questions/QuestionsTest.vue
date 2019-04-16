@@ -74,12 +74,12 @@
 							{{$t('questions.solving.results.displayOnly')}}
 						</span>
 						<span
-							v-for="(questions, status) in testResultsWithQuestions"
+							v-for="(questionsForStatus, status) in testResultsWithQuestions"
 							:key="status"
 							:class="[{'is-active': filterResults === status}, `results-${status}`]"
 							@click="toggleFilter(status)"
 						>
-							{{$t(`questions.solving.results.${status}`)}} ({{questions.length}})
+							{{$t(`questions.solving.results.${status}`)}} ({{questionsForStatus.length}})
 						</span>
 					</div>
 				</div>

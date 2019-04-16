@@ -90,9 +90,6 @@ module.exports = {
 		'vue/require-default-prop': [
 			'off'
 		],
-		'vue/no-template-shadow': [
-			'off'
-		],
 	},
 	globals: {
 		$: true,

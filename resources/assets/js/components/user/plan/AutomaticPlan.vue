@@ -56,16 +56,16 @@
 				</div>
 				<div class="work-load-control">
 					<a
-						v-for="workLoad in availableWorkLoads"
-						:key="workLoad.workLoad"
+						v-for="workLoadItem in availableWorkLoads"
+						:key="workLoadItem.workLoad"
 						class="panel-toggle work-load-button"
-						:class="{'is-active': isWorkLoadActive(workLoad.workLoad)}"
-						@click="chooseWorkload(workLoad.workLoad)"
-					>{{$t(workLoad.translation)}}
+						:class="{'is-active': isWorkLoadActive(workLoadItem.workLoad)}"
+						@click="chooseWorkload(workLoadItem.workLoad)"
+					>{{$t(workLoadItem.translation)}}
 						<span class="icon is-small">
 							<i
 								class="fa"
-								:class="[isWorkLoadActive(workLoad.workLoad) ? 'fa-check-circle' : 'fa-circle-o']"
+								:class="[isWorkLoadActive(workLoadItem.workLoad) ? 'fa-check-circle' : 'fa-circle-o']"
 							>
 							</i>
 						</span>

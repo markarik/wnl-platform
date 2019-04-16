@@ -145,7 +145,6 @@ let types = {
 
 export default {
 	name: 'ScreensEditor',
-	props: ['lessonId'],
 	components: {
 		WnlScreensMetaEditorFlashcards,
 		WnlScreensMetaEditorQuizes,
@@ -154,6 +153,7 @@ export default {
 		'wnl-screens-list': ScreensList,
 		'wnl-select': Select,
 	},
+	props: ['lessonId'],
 	data() {
 		return {
 			ready: false,
@@ -201,6 +201,14 @@ export default {
 		hasChanged() {
 			return !isEqual(this.screenForm.data(), this.screenForm.originalData);
 		},
+	},
+	watch: {
+		'$route': 'populateScreenForm'
+	},
+	mounted() {
+		if (this.screenId) {
+			this.populateScreenForm();
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -250,13 +258,5 @@ export default {
 				});
 		}
 	},
-	mounted() {
-		if (this.screenId) {
-			this.populateScreenForm();
-		}
-	},
-	watch: {
-		'$route': 'populateScreenForm'
-	}
 };
 </script>

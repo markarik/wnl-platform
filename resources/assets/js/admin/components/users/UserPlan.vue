@@ -148,6 +148,28 @@ export default {
 				.slice(0, 10);
 		}
 	},
+	async mounted() {
+		this.loading = true;
+		try {
+			const [userPlanResponse] = await Promise.all([
+				axios.get(getApiUrl(`user_lesson/${this.user.id}`)),
+				this.fetchAllLessons()
+			]);
+
+			this.userLessons = this.getUserLessons(userPlanResponse);
+			nextTick(() => {
+				this.$refs.filterInput && this.$refs.filterInput.focus();
+			});
+		} catch (e) {
+			this.addAutoDismissableAlert({
+				text: 'Nie udało się pobrać planu dla tego użytkownika',
+				type: 'error'
+			});
+			$wnl.logger.capture(e);
+		} finally {
+			this.loading = false;
+		}
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', ['fetchAllLessons']),
@@ -223,27 +245,5 @@ export default {
 			});
 		}
 	},
-	async mounted() {
-		this.loading = true;
-		try {
-			const [userPlanResponse] = await Promise.all([
-				axios.get(getApiUrl(`user_lesson/${this.user.id}`)),
-				this.fetchAllLessons()
-			]);
-
-			this.userLessons = this.getUserLessons(userPlanResponse);
-			nextTick(() => {
-				this.$refs.filterInput && this.$refs.filterInput.focus();
-			});
-		} catch (e) {
-			this.addAutoDismissableAlert({
-				text: 'Nie udało się pobrać planu dla tego użytkownika',
-				type: 'error'
-			});
-			$wnl.logger.capture(e);
-		} finally {
-			this.loading = false;
-		}
-	}
 };
 </script>

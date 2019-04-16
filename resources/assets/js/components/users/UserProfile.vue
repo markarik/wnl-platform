@@ -391,6 +391,16 @@ export default {
 				.slice(0, 2);
 		},
 	},
+	watch: {
+		'$route'() {
+			if (this.id !== this.$route.params.userId) {
+				this.loadData();
+			}
+		}
+	},
+	mounted() {
+		this.loadData();
+	},
 	methods: {
 		...mapActions('qna', ['setUserQnaQuestions', 'setConfig']),
 		togglePanel(panel) {
@@ -489,15 +499,5 @@ export default {
 			return config;
 		},
 	},
-	mounted() {
-		this.loadData();
-	},
-	watch: {
-		'$route'() {
-			if (this.id !== this.$route.params.userId) {
-				this.loadData();
-			}
-		}
-	}
 };
 </script>

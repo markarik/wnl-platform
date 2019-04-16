@@ -78,6 +78,29 @@ export default {
 			return '';
 		}
 	},
+	watch: {
+		defaultTags() {
+			this.tags = this.defaultTags.slice();
+		},
+		tagInput() {
+			const name = this.tagInput;
+			const data = { name, tags: this.tags };
+
+			if (!name) {
+				this.autocompleteItems = [];
+				return;
+			}
+
+			this.requestTagsAutocomplete(data).then(
+				data => {
+					this.autocompleteItems = data.data;
+				}
+			);
+		}
+	},
+	created() {
+		this.tags = this.defaultTags.slice();
+	},
 	methods: {
 		...mapActions(['requestTagsAutocomplete']),
 
@@ -106,28 +129,5 @@ export default {
 			return !!this.tags.some(tag => !_.find(this.defaultTags, defTag => defTag.id === tag.id));
 		}
 	},
-	created() {
-		this.tags = this.defaultTags.slice();
-	},
-	watch: {
-		defaultTags() {
-			this.tags = this.defaultTags.slice();
-		},
-		tagInput() {
-			const name = this.tagInput;
-			const data = { name, tags: this.tags };
-
-			if (!name) {
-				this.autocompleteItems = [];
-				return;
-			}
-
-			this.requestTagsAutocomplete(data).then(
-				data => {
-					this.autocompleteItems = data.data;
-				}
-			);
-		}
-	}
 };
 </script>

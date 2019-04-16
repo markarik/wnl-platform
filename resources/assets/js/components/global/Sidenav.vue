@@ -127,10 +127,10 @@ import SidenavGroup from 'js/components/global/SidenavGroup';
 import { mapGetters } from 'vuex';
 
 export default {
-	props: ['items', 'itemsHeading', 'options'],
 	components: {
 		'wnl-sidenav-group': SidenavGroup,
 	},
+	props: ['items', 'itemsHeading', 'options'],
 	computed: {
 		...mapGetters(['isMobileNavigation'])
 	},

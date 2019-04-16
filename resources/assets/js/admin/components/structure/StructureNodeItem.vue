@@ -121,6 +121,10 @@ export default {
 			return this.expandedNodes.includes(this.node.id)  && this.childNodes.length;
 		},
 	},
+	beforeCreate: function () {
+		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
+		this.$options.components.WnlStructureNodesList = require('./StructureNodesList.vue').default;
+	},
 	methods: {
 		...mapActions('courseStructure', ['setEditorMode']),
 		...mapActions('courseStructure', {
@@ -148,9 +152,5 @@ export default {
 			}
 		},
 	},
-	beforeCreate: function () {
-		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
-		this.$options.components.WnlStructureNodesList = require('./StructureNodesList.vue').default;
-	}
 };
 </script>

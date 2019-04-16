@@ -141,12 +141,12 @@ import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time';
 
 export default {
 	name: 'QuestionsNotification',
-	mixins: [notification],
 	components: {
 		'wnl-avatar': Avatar,
 		'wnl-modal': Modal,
 		'wnl-user-profile-modal': UserProfileModal
 	},
+	mixins: [notification],
 	props: {
 		icon: {
 			required: true,

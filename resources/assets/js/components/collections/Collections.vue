@@ -171,7 +171,6 @@ import SlidesCarousel from 'js/components/collections/SlidesCarousel';
 import navigation from 'js/services/navigation';
 
 export default {
-	props: ['categoryName', 'rootCategoryName'],
 	components: {
 		'wnl-sidenav': Sidenav,
 		'wnl-sidenav-slot': SidenavSlot,
@@ -180,6 +179,7 @@ export default {
 		'wnl-quiz-collection': QuizCollection,
 		'wnl-slides-carousel': SlidesCarousel
 	},
+	props: ['categoryName', 'rootCategoryName'],
 	data() {
 		return {
 			activePanels: ['slides', 'quiz'],
@@ -236,6 +236,25 @@ export default {
 		slidesIds() {
 			return this.getSlidesIdsForCategory(this.categoryName);
 		}
+	},
+	watch: {
+		categoryName(newCategoryName, oldCategoryName) {
+			if (oldCategoryName !== newCategoryName) {
+				this.setupContentForCategory();
+			}
+		},
+		rootCategoryName(newRootCategoryName, oldRootCategoryName) {
+			if (oldRootCategoryName !== newRootCategoryName) {
+				this.setupContentForCategory();
+			}
+		},
+	},
+	mounted() {
+		this.toggleOverlay({ source: 'collections', display: true });
+		this.fetchCategories()
+			.then(this.fetchReactions)
+			.then(this.setupContentForCategory)
+			.then(() => this.toggleOverlay({ source: 'collections', display: false }));
 	},
 	methods: {
 		...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
@@ -337,25 +356,6 @@ export default {
 		onChangeQuizQuestionsPage(page) {
 			this.fetchQuiz({ tagName: this.categoryName, ids: this.quizQuestionsIds, page });
 		}
-	},
-	mounted() {
-		this.toggleOverlay({ source: 'collections', display: true });
-		this.fetchCategories()
-			.then(this.fetchReactions)
-			.then(this.setupContentForCategory)
-			.then(() => this.toggleOverlay({ source: 'collections', display: false }));
-	},
-	watch: {
-		categoryName(newCategoryName, oldCategoryName) {
-			if (oldCategoryName !== newCategoryName) {
-				this.setupContentForCategory();
-			}
-		},
-		rootCategoryName(newRootCategoryName, oldRootCategoryName) {
-			if (oldRootCategoryName !== newRootCategoryName) {
-				this.setupContentForCategory();
-			}
-		},
 	},
 };
 </script>

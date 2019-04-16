@@ -119,6 +119,10 @@ export default {
 			return this.expandedTerms.includes(this.term.id)  && this.childTerms.length;
 		},
 	},
+	beforeCreate: function () {
+		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
+		this.$options.components.WnlTaxonomyTermsList = require('./TaxonomyTermsList.vue').default;
+	},
 	methods: {
 		...mapActions('taxonomyTerms', ['setEditorMode']),
 		...mapActions('taxonomyTerms', {
@@ -146,9 +150,5 @@ export default {
 			}
 		},
 	},
-	beforeCreate: function () {
-		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
-		this.$options.components.WnlTaxonomyTermsList = require('./TaxonomyTermsList.vue').default;
-	}
 };
 </script>

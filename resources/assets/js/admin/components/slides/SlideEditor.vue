@@ -159,6 +159,7 @@ export default {
 		WnlCheckbox,
 		WnlSlidePreview,
 	},
+	mixins: [alerts],
 	props: {
 		title: {
 			type: String,
@@ -194,7 +195,6 @@ export default {
 			default: false
 		}
 	},
-	mixins: [alerts],
 	data() {
 		return {
 			form: new Form({
@@ -220,6 +220,21 @@ export default {
 		},
 		content() {
 			return this.form.content;
+		}
+	},
+	watch: {
+		resourceUrl(newValue) {
+			newValue !== '' && this.form.populate(`${this.resourceUrl}?include=quiz_questions`, this.excluded)
+				.catch(error => {
+					const statusCode = get(error, 'response.status');
+					statusCode === 404 && this.addAutoDismissableAlert({
+						type: 'error',
+						text: 'Slajd o tym ID nie istnieje'
+					});
+				});
+		},
+		content() {
+			this.removeCourseTags();
 		}
 	},
 	methods: {
@@ -323,20 +338,5 @@ export default {
 			});
 		}
 	},
-	watch: {
-		resourceUrl(newValue) {
-			newValue !== '' && this.form.populate(`${this.resourceUrl}?include=quiz_questions`, this.excluded)
-				.catch(error => {
-					const statusCode = get(error, 'response.status');
-					statusCode === 404 && this.addAutoDismissableAlert({
-						type: 'error',
-						text: 'Slajd o tym ID nie istnieje'
-					});
-				});
-		},
-		content() {
-			this.removeCourseTags();
-		}
-	}
 };
 </script>

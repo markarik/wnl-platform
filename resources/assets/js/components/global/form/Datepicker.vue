@@ -67,18 +67,12 @@ export default {
 			return this.$t('ui.placeholders.date');
 		},
 	},
-	methods: {
-		redraw(newConfig) {
-			this.datepicker.config = Object.assign(this.datepicker.config, newConfig);
-			this.datepicker.redraw();
-			this.datepicker.jumpToDate();
+	watch: {
+		config(newConfig) {
+			this.redraw(newConfig);
 		},
-		setDate(newDate) {
-			newDate && this.datepicker.setDate(newDate);
-		},
-		onDateInput(event) {
-			this.onInput(event);
-			this.$emit('input', event.target.value);
+		inputValue(val) {
+			this.setDate(val * 1000);
 		}
 	},
 	mounted() {
@@ -93,18 +87,24 @@ export default {
 			this.setDate(this.inputValue);
 		}
 	},
-	watch: {
-		config(newConfig) {
-			this.redraw(newConfig);
-		},
-		inputValue(val) {
-			this.setDate(val * 1000);
-		}
-	},
 	beforeDestroy () {
 		if (this.datepicker) {
 			this.datepicker.destroy();
 			this.datepicker = null;
+		}
+	},
+	methods: {
+		redraw(newConfig) {
+			this.datepicker.config = Object.assign(this.datepicker.config, newConfig);
+			this.datepicker.redraw();
+			this.datepicker.jumpToDate();
+		},
+		setDate(newDate) {
+			newDate && this.datepicker.setDate(newDate);
+		},
+		onDateInput(event) {
+			this.onInput(event);
+			this.$emit('input', event.target.value);
 		}
 	},
 };

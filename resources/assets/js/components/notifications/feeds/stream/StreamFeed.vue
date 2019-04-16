@@ -109,13 +109,13 @@ import { getImageUrl } from 'js/utils/env';
 
 export default {
 	name: 'StreamFeed',
-	mixins: [feed],
 	components: {
 		'wnl-event-comment-posted': CommentPosted,
 		'wnl-event-qna-answer-posted': QnaAnswerPosted,
 		'wnl-event-qna-question-posted': QnaQuestionPosted,
 		'wnl-stream-filtering': StreamFiltering,
 	},
+	mixins: [feed],
 	data() {
 		return {
 			limit: 100,

@@ -65,6 +65,7 @@ export default {
 		'wnl-quiz-summary': QuizSummary,
 	},
 	mixins: [emits_events],
+	props: ['screenData', 'readOnly'],
 	data() {
 		return {
 			emptyQuizSet: false,
@@ -72,7 +73,6 @@ export default {
 			quizSetId: 0
 		};
 	},
-	props: ['screenData', 'readOnly'],
 	computed: {
 		...mapGetters('quiz', [
 			'getAttempts',
@@ -104,6 +104,22 @@ export default {
 				type: 'success',
 			};
 		},
+	},
+	watch: {
+		'screenData' (newValue, oldValue) {
+			if (oldValue.type === 'quiz' && newValue.type === 'quiz') {
+				this.destroyQuiz()
+					.then(() => {
+						this.setup();
+					});
+			}
+		},
+	},
+	mounted() {
+		this.setup();
+	},
+	beforeDestroy() {
+		this.destroyQuiz();
 	},
 	methods: {
 		...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve', 'commitSelectAnswer', 'resetState', 'checkQuiz']),
@@ -170,21 +186,5 @@ export default {
 			return swalConfig(_.merge(defaults, options));
 		},
 	},
-	mounted() {
-		this.setup();
-	},
-	beforeDestroy() {
-		this.destroyQuiz();
-	},
-	watch: {
-		'screenData' (newValue, oldValue) {
-			if (oldValue.type === 'quiz' && newValue.type === 'quiz') {
-				this.destroyQuiz()
-					.then(() => {
-						this.setup();
-					});
-			}
-		},
-	}
 };
 </script>

@@ -76,6 +76,7 @@ export default {
 		'wnl-sidenav-slot': SidenavSlot,
 		'wnl-main-nav': MainNav,
 	},
+	mixins: [withChat, breadcrumb],
 	props: ['courseId', 'lessonId', 'screenId', 'slide'],
 	computed: {
 		...mapState('course', ['isPlanBuilderEnabled']),
@@ -120,14 +121,13 @@ export default {
 			return `lesson.${this.lessonId}`;
 		},
 	},
-	mixins: [withChat, breadcrumb],
-	methods: {
-		...mapActions(['toggleChat']),
-	},
 	watch: {
 		'$route.query.chatChannel' (newVal) {
 			newVal && !this.isChatVisible && this.toggleChat();
 		}
-	}
+	},
+	methods: {
+		...mapActions(['toggleChat']),
+	},
 };
 </script>

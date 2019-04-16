@@ -239,6 +239,10 @@ export default {
 			return this.selected;
 		},
 	},
+	mounted() {
+		this.expanded = this.isExpanded(this.path);
+		this.flattened = this.isFlattened(this.path);
+	},
 	methods: {
 		isExpanded(path) {
 			return this.config.expanded.indexOf(path) > -1;
@@ -268,10 +272,6 @@ export default {
 				selected: this.selected,
 			});
 		},
-	},
-	mounted() {
-		this.expanded = this.isExpanded(this.path);
-		this.flattened = this.isFlattened(this.path);
 	},
 };
 </script>

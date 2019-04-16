@@ -139,21 +139,6 @@ export default {
 	},
 	perimeters: [moderatorFeatures],
 	mixins: [emits_events],
-	data() {
-		return {
-			bookmarkLoading: false,
-			child: {},
-			currentSlideId: 0,
-			// slides order number is index from 0
-			currentSlideNumber: this.slideOrderNumber + 1 || Math.max(this.$route.params.slide, 1) || 1,
-			isFauxFullscreen: false,
-			isFocused: false,
-			loaded: false,
-			slideChanged: false,
-			slideshowElement: {},
-			modifiedSlides: {},
-		};
-	},
 	props: {
 		screenData: {
 			type: Object,
@@ -171,6 +156,21 @@ export default {
 		preserveRoute: Boolean,
 		slideOrderNumber: Number,
 		htmlContent: String
+	},
+	data() {
+		return {
+			bookmarkLoading: false,
+			child: {},
+			currentSlideId: 0,
+			// slides order number is index from 0
+			currentSlideNumber: this.slideOrderNumber + 1 || Math.max(this.$route.params.slide, 1) || 1,
+			isFauxFullscreen: false,
+			isFocused: false,
+			loaded: false,
+			slideChanged: false,
+			slideshowElement: {},
+			modifiedSlides: {},
+		};
 	},
 	computed: {
 		...mapGetters(['getSetting', 'currentUserId']),
@@ -207,6 +207,130 @@ export default {
 		iframe() {
 			return this.loaded ? this.$el.getElementsByTagName('iframe')[0] : null;
 		},
+	},
+	watch: {
+		'$route'(to, from) {
+			if (to.params.screenId != from.params.screenId) {
+				return this.destroySlideshow();
+			}
+
+			if (to.params.categoryName != from.params.categoryName) {
+				return this.destroySlideshow();
+			}
+
+			if (to.query.slide && to.query.slide !== this.currentSlideId) {
+				const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide));
+				if (newSlideIndex > -1) {
+					this.goToSlide(newSlideIndex);
+					this.$router.push(this.buildRouteFromSlideParam(newSlideIndex));
+				}
+			}
+
+			if (to.query.slide === this.currentSlideId) {
+				const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide));
+				if (newSlideIndex > -1) {
+					this.$router.push(this.buildRouteFromSlideParam(newSlideIndex));
+				}
+			}
+
+			let fromSlide = from.params.slide || 0,
+				toSlide = to.params.slide;
+
+			if (this.loaded && !_.isUndefined(toSlide)) {
+				if (this.getSetting(USER_SETTING_NAMES.SKIP_FUNCTIONAL_SLIDES) && !!this.isFunctional(toSlide)) {
+					let direction = toSlide > fromSlide ? 'next' : 'previous',
+						skipTo = this.findRegularSlide(toSlide, direction);
+					this.goToSlide(skipTo - 1);
+				} else if (toSlide !== this.currentSlideNumber) {
+					this.goToSlide(toSlide - 1);
+				}
+			}
+		},
+		'htmlContent'(newContent) {
+			if (typeof this.child.destroy === 'function') {
+				this.child.destroy();
+			}
+
+			this.removeEventListeners();
+			this.setSlideshowHtmlContent(newContent);
+			this.modifiedSlides = {};
+		},
+		'screenData'(newValue, oldValue) {
+			if (newValue.type === 'slideshow' && newValue.id !== oldValue.id) {
+				this.toggleOverlay({ source: 'slideshow', display: true });
+
+				this.setup({ id: this.presentableId })
+					.then(() => {
+						this.initSlideshow()
+							.then(() => {
+								this.goToSlide(Math.max(this.$route.params.slide - 1, 0));
+							})
+							.catch(error => {
+								this.toggleOverlay({ source: 'slideshow', display: false });
+								$wnl.logger.capture(error);
+							});
+					})
+					.catch(error => {
+						this.toggleOverlay({ source: 'slideshow', display: false });
+						$wnl.logger.capture(error);
+					});
+			}
+		},
+		'slideOrderNumber'(slideOrderNumber) {
+			typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber);
+		},
+		isLoadingComments(isLoadingComments) {
+			if (!isLoadingComments) {
+				this.onAnnotationsUpdated(this.comments({
+					resource: 'slides',
+					id: this.getSlideIdFromIndex(this.currentSlideIndex),
+				}));
+			}
+		},
+		currentSlideId(...args) {
+			this.loadingComments(true);
+			this.debouncedChangeSlideWatcher(...args);
+		},
+	},
+	mounted() {
+		Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)
+			.listen('.App.Events.Live.LiveContentUpdated', ({ data: { event, subject, context } }) => {
+				switch (event) {
+				case 'slide-added':
+					// TODO consider passing order_number in given presentable from event
+					this.modifiedSlides[subject.id] = { order_number: context.params.slide - 1, action: 'add' };
+					this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides));
+					break;
+				case 'slide-updated':
+					this.modifiedSlides[subject.id] = { ...this.getSlideById(subject.id), action: 'edit' };
+					this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides));
+					break;
+				case 'slide-detached':
+					this.modifiedSlides[subject.id] = { ...this.getSlideById(subject.id), action: 'delete' };
+					this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides));
+					break;
+				}
+			});
+
+		Postmate.debug = isDebug();
+		this.toggleOverlay({ source: 'slideshow', display: true });
+		if (this.htmlContent) {
+			// logic related with category / collection
+			this.setupCollection();
+		} else {
+			// logic related with lesson
+			this.setup({ id: this.presentableId })
+				.then(() => {
+					return this.initSlideshow();
+				})
+				.catch(error => {
+					this.toggleOverlay({ source: 'slideshow', display: false });
+					$wnl.logger.capture(error);
+				});
+		}
+	},
+	beforeDestroy() {
+		this.destroySlideshow();
 	},
 	methods: {
 		...mapActions('slideshow', ['setup', 'resetModule', 'setSortedSlidesIds', 'setupSlideComments']),
@@ -584,129 +708,5 @@ export default {
 			this.changeSlideWatcher(...args);
 		}, 300, { leading: false, trailing: true }),
 	},
-	mounted() {
-		Echo.channel(`presentable-${this.presentableType}-${this.presentableId}`)
-			.listen('.App.Events.Live.LiveContentUpdated', ({ data: { event, subject, context } }) => {
-				switch (event) {
-				case 'slide-added':
-					// TODO consider passing order_number in given presentable from event
-					this.modifiedSlides[subject.id] = { order_number: context.params.slide - 1, action: 'add' };
-					this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides));
-					break;
-				case 'slide-updated':
-					this.modifiedSlides[subject.id] = { ...this.getSlideById(subject.id), action: 'edit' };
-					this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides));
-					break;
-				case 'slide-detached':
-					this.modifiedSlides[subject.id] = { ...this.getSlideById(subject.id), action: 'delete' };
-					this.child.call('updateModifiedSlides', Object.values(this.modifiedSlides));
-					break;
-				}
-			});
-
-		Postmate.debug = isDebug();
-		this.toggleOverlay({ source: 'slideshow', display: true });
-		if (this.htmlContent) {
-			// logic related with category / collection
-			this.setupCollection();
-		} else {
-			// logic related with lesson
-			this.setup({ id: this.presentableId })
-				.then(() => {
-					return this.initSlideshow();
-				})
-				.catch(error => {
-					this.toggleOverlay({ source: 'slideshow', display: false });
-					$wnl.logger.capture(error);
-				});
-		}
-	},
-	beforeDestroy() {
-		this.destroySlideshow();
-	},
-	watch: {
-		'$route'(to, from) {
-			if (to.params.screenId != from.params.screenId) {
-				return this.destroySlideshow();
-			}
-
-			if (to.params.categoryName != from.params.categoryName) {
-				return this.destroySlideshow();
-			}
-
-			if (to.query.slide && to.query.slide !== this.currentSlideId) {
-				const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide));
-				if (newSlideIndex > -1) {
-					this.goToSlide(newSlideIndex);
-					this.$router.push(this.buildRouteFromSlideParam(newSlideIndex));
-				}
-			}
-
-			if (to.query.slide === this.currentSlideId) {
-				const newSlideIndex = this.presentableSortedSlidesIds.indexOf(Number(this.$route.query.slide));
-				if (newSlideIndex > -1) {
-					this.$router.push(this.buildRouteFromSlideParam(newSlideIndex));
-				}
-			}
-
-			let fromSlide = from.params.slide || 0,
-				toSlide = to.params.slide;
-
-			if (this.loaded && !_.isUndefined(toSlide)) {
-				if (this.getSetting(USER_SETTING_NAMES.SKIP_FUNCTIONAL_SLIDES) && !!this.isFunctional(toSlide)) {
-					let direction = toSlide > fromSlide ? 'next' : 'previous',
-						skipTo = this.findRegularSlide(toSlide, direction);
-					this.goToSlide(skipTo - 1);
-				} else if (toSlide !== this.currentSlideNumber) {
-					this.goToSlide(toSlide - 1);
-				}
-			}
-		},
-		'htmlContent'(newContent) {
-			if (typeof this.child.destroy === 'function') {
-				this.child.destroy();
-			}
-
-			this.removeEventListeners();
-			this.setSlideshowHtmlContent(newContent);
-			this.modifiedSlides = {};
-		},
-		'screenData'(newValue, oldValue) {
-			if (newValue.type === 'slideshow' && newValue.id !== oldValue.id) {
-				this.toggleOverlay({ source: 'slideshow', display: true });
-
-				this.setup({ id: this.presentableId })
-					.then(() => {
-						this.initSlideshow()
-							.then(() => {
-								this.goToSlide(Math.max(this.$route.params.slide - 1, 0));
-							})
-							.catch(error => {
-								this.toggleOverlay({ source: 'slideshow', display: false });
-								$wnl.logger.capture(error);
-							});
-					})
-					.catch(error => {
-						this.toggleOverlay({ source: 'slideshow', display: false });
-						$wnl.logger.capture(error);
-					});
-			}
-		},
-		'slideOrderNumber'(slideOrderNumber) {
-			typeof this.child.call === 'function' && this.goToSlide(slideOrderNumber);
-		},
-		isLoadingComments(isLoadingComments) {
-			if (!isLoadingComments) {
-				this.onAnnotationsUpdated(this.comments({
-					resource: 'slides',
-					id: this.getSlideIdFromIndex(this.currentSlideIndex),
-				}));
-			}
-		},
-		currentSlideId(...args) {
-			this.loadingComments(true);
-			this.debouncedChangeSlideWatcher(...args);
-		},
-	}
 };
 </script>

@@ -49,12 +49,12 @@ export default {
 	computed: {
 		...mapGetters(['currentUserId', 'alerts'])
 	},
+	mounted() {
+		this.setupCurrentUser();
+	},
 	methods: {
 		...mapActions(['setupCurrentUser']),
 		...mapActions('notifications', ['initNotifications']),
-	},
-	mounted() {
-		this.setupCurrentUser();
 	},
 };
 </script>

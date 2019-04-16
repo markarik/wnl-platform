@@ -48,6 +48,10 @@ import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 
 export default {
+	components: {
+		WnlAutocomplete,
+		WnlTaxonomyTermWithAncestors
+	},
 	props: {
 		disabled: {
 			type: Boolean,
@@ -74,10 +78,6 @@ export default {
 		return {
 			search: '',
 		};
-	},
-	components: {
-		WnlAutocomplete,
-		WnlTaxonomyTermWithAncestors
 	},
 	computed: {
 		...mapState('taxonomyTerms', { terms: 'nodes' }),

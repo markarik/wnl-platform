@@ -70,6 +70,9 @@ import { ALERT_TYPES } from 'js/consts/alert';
 import { COURSE_STRUCTURE_TYPES } from 'js/consts/courseStructure';
 
 export default {
+	components: {
+		WnlAutocomplete
+	},
 	props: {
 		selected: {
 			type: Object,
@@ -107,8 +110,17 @@ export default {
 			return uniqBy(filteredItems, (item => [item.id, item.type].join())).slice(0, 25);
 		},
 	},
-	components: {
-		WnlAutocomplete
+	async mounted() {
+		try {
+			await Promise.all([this.setupLessons(), this.fetchAllGroups()]);
+		} catch (error) {
+			$wnl.logger.capture(error);
+
+			this.addAutoDismissableAlert({
+				text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+				type: ALERT_TYPES.ERROR,
+			});
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -153,18 +165,5 @@ export default {
 			}
 		},
 	},
-	async mounted() {
-		try {
-			await Promise.all([this.setupLessons(), this.fetchAllGroups()]);
-		} catch (error) {
-			$wnl.logger.capture(error);
-
-			this.addAutoDismissableAlert({
-				text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
-				type: ALERT_TYPES.ERROR,
-			});
-		}
-
-	}
 };
 </script>

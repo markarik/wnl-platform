@@ -217,6 +217,11 @@ import WnlContentItemClassifierEditor from 'js/components/global/contentClassifi
 import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
 
 export default {
+	components: {
+		WnlFlashcardItem,
+		WnlContentItemClassifierEditor,
+		WnlActivateWithShortcutKey,
+	},
 	mixins: [emits_events],
 	props: {
 		screenData: {
@@ -227,11 +232,6 @@ export default {
 			type: String,
 			required: true
 		}
-	},
-	components: {
-		WnlFlashcardItem,
-		WnlContentItemClassifierEditor,
-		WnlActivateWithShortcutKey,
 	},
 	data() {
 		return {
@@ -263,32 +263,6 @@ export default {
 			return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'do_not_know').length;
 		}
 	},
-	methods: {
-		...mapActions(['toggleOverlay']),
-		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
-		...mapActions('flashcards', ['setFlashcardsSet']),
-		...mapMutations('flashcards', {
-			'updateFlashcard': mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD
-		}),
-		scrollToSet(setId) {
-			scrollToElement(document.getElementById(`set-${setId}`));
-		},
-		scrollTop() {
-			scrollToElement(document.getElementById('flashacardsSetHeader'));
-		},
-		onRetakeSet(set) {
-			set.flashcards.forEach(flashcard => this.updateFlashcard({
-				...flashcard,
-				answer: 'unsolved'
-			}));
-		},
-		trackUserEvent(payload) {
-			this.emitUserEvent({
-				feature: features.flashcards.value,
-				...payload
-			});
-		}
-	},
 	async mounted() {
 		this.toggleOverlay({ source: 'flashcards', display: true });
 		const resources = get(this.screenData, 'meta.resources', []);
@@ -318,6 +292,32 @@ export default {
 				target: id
 			});
 		});
-	}
+	},
+	methods: {
+		...mapActions(['toggleOverlay']),
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
+		...mapActions('flashcards', ['setFlashcardsSet']),
+		...mapMutations('flashcards', {
+			'updateFlashcard': mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD
+		}),
+		scrollToSet(setId) {
+			scrollToElement(document.getElementById(`set-${setId}`));
+		},
+		scrollTop() {
+			scrollToElement(document.getElementById('flashacardsSetHeader'));
+		},
+		onRetakeSet(set) {
+			set.flashcards.forEach(flashcard => this.updateFlashcard({
+				...flashcard,
+				answer: 'unsolved'
+			}));
+		},
+		trackUserEvent(payload) {
+			this.emitUserEvent({
+				feature: features.flashcards.value,
+				...payload
+			});
+		}
+	},
 };
 </script>

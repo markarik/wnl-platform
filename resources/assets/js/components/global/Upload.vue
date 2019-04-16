@@ -36,6 +36,9 @@ export default {
 			input: {}
 		};
 	},
+	mounted() {
+		this.input = document.getElementById(this.inputId);
+	},
 	methods: {
 		click() {
 			this.input.click();
@@ -55,9 +58,6 @@ export default {
 					this.$emit('uploadError', error);
 				});
 		}
-	},
-	mounted() {
-		this.input = document.getElementById(this.inputId);
 	}
 };
 </script>

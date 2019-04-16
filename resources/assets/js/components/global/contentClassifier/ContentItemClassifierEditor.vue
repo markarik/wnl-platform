@@ -90,11 +90,6 @@ export default {
 	components: {
 		WnlContentClassifierEditor,
 	},
-	data() {
-		return {
-			CONTENT_TYPE_NAMES,
-		};
-	},
 	props: {
 		contentItemId: {
 			type: [Number, String],
@@ -117,6 +112,11 @@ export default {
 			default: false
 		},
 	},
+	data() {
+		return {
+			CONTENT_TYPE_NAMES,
+		};
+	},
 	computed: {
 		...mapGetters('contentClassifier', ['getContentItem', 'canAccess', 'getContentItemState']),
 		contentItem() {
@@ -131,6 +131,12 @@ export default {
 		isError() {
 			return this.getContentItemState({ contentItemType: this.contentItemType, contentItemId: this.contentItemId }) === REQUEST_STATES.ERROR;
 		},
+	},
+	mounted() {
+		if (this.canAccess) this.$emit('editorCreated');
+	},
+	beforeDestroy() {
+		this.$emit('editorDestroyed');
 	},
 	methods: {
 		...mapMutations('contentClassifier', {
@@ -152,12 +158,6 @@ export default {
 		updateIsActive(isActive) {
 			this.$emit('updateIsActive', isActive);
 		},
-	},
-	mounted() {
-		if (this.canAccess) this.$emit('editorCreated');
-	},
-	beforeDestroy() {
-		this.$emit('editorDestroyed');
 	},
 };
 </script>

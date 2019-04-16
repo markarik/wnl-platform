@@ -71,6 +71,20 @@ export default {
 			return !this.structurable || this.isSaving;
 		},
 	},
+	watch: {
+		node() {
+			if (!this.node) return;
+
+			this.structurable = this.node.structurable;
+			this.parent = this.getAncestorNodesById(this.node.id).slice(-1)[0];
+		}
+	},
+	created() {
+		if (!this.node) return;
+
+		this.parent = this.getAncestorNodesById(this.node.id).slice(-1)[0];
+		this.structurable = this.node.structurable;
+	},
 	methods: {
 		...mapActions('courseStructure', {
 			'updateNode': 'update',
@@ -89,19 +103,5 @@ export default {
 			this.structurable = structurable;
 		},
 	},
-	created() {
-		if (!this.node) return;
-
-		this.parent = this.getAncestorNodesById(this.node.id).slice(-1)[0];
-		this.structurable = this.node.structurable;
-	},
-	watch: {
-		node() {
-			if (!this.node) return;
-
-			this.structurable = this.node.structurable;
-			this.parent = this.getAncestorNodesById(this.node.id).slice(-1)[0];
-		}
-	}
 };
 </script>

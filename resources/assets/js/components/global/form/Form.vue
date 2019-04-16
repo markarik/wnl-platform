@@ -89,6 +89,57 @@ export default {
 			return this.getter('getData');
 		}
 	},
+	watch: {
+		formData(newVal) {
+			this.$emit('change', { formData: newVal });
+		},
+		resourceRoute() {
+			this.mutation(
+				types.FORM_UPDATE_URL,
+				getApiUrl(this.resourceRoute)
+			);
+		}
+	},
+	created() {
+		this.mutation(types.FORM_INITIAL_SETUP);
+	},
+	async mounted() {
+		let dataModel = {}, defaults = {};
+
+		_.each(this.$children, (child) => {
+			let options = child.$options;
+
+			if (!_.isUndefined(_.get(options, 'computed.fillable'))) {
+				let name = options.propsData.name,
+					defaultValue = options.computed.default() || '';
+
+				dataModel[name] = defaultValue;
+				defaults[name] = defaultValue;
+			}
+		});
+
+		this.mutation(types.FORM_SETUP, {
+			data: dataModel,
+			defaults,
+			resourceUrl: getApiUrl(this.resourceRoute),
+		});
+
+		if (this.populate) {
+			await this.action('populateFormFromApi');
+		} else if (this.value) {
+			this.action('populateFormFromValue', this.value);
+		}
+
+		this.mutation(types.FORM_IS_LOADED);
+		this.$emit('formIsLoaded', dataModel);
+
+		this.cacheAttach();
+
+		this.$on('submitForm', this.onSubmitForm);
+	},
+	beforeDestroy() {
+		this.mutation(types.FORM_RESET);
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		action(action, payload = {}) {
@@ -189,56 +240,5 @@ export default {
 			return !this.anyErrors && (hasFieldChanges || hasAttachChanges);
 		},
 	},
-	created() {
-		this.mutation(types.FORM_INITIAL_SETUP);
-	},
-	async mounted() {
-		let dataModel = {}, defaults = {};
-
-		_.each(this.$children, (child) => {
-			let options = child.$options;
-
-			if (!_.isUndefined(_.get(options, 'computed.fillable'))) {
-				let name = options.propsData.name,
-					defaultValue = options.computed.default() || '';
-
-				dataModel[name] = defaultValue;
-				defaults[name] = defaultValue;
-			}
-		});
-
-		this.mutation(types.FORM_SETUP, {
-			data: dataModel,
-			defaults,
-			resourceUrl: getApiUrl(this.resourceRoute),
-		});
-
-		if (this.populate) {
-			await this.action('populateFormFromApi');
-		} else if (this.value) {
-			this.action('populateFormFromValue', this.value);
-		}
-
-		this.mutation(types.FORM_IS_LOADED);
-		this.$emit('formIsLoaded', dataModel);
-
-		this.cacheAttach();
-
-		this.$on('submitForm', this.onSubmitForm);
-	},
-	watch: {
-		formData(newVal) {
-			this.$emit('change', { formData: newVal });
-		},
-		resourceRoute() {
-			this.mutation(
-				types.FORM_UPDATE_URL,
-				getApiUrl(this.resourceRoute)
-			);
-		}
-	},
-	beforeDestroy() {
-		this.mutation(types.FORM_RESET);
-	}
 };
 </script>

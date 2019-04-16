@@ -108,6 +108,11 @@ export default {
 			return '';
 		}
 	},
+	watch: {
+		defaultSlides() {
+			this.slides = this.defaultSlides.slice();
+		}
+	},
 	methods: {
 		...mapActions(['getSlideDataForQuizEditor']),
 		onButtonClicked() {
@@ -134,10 +139,5 @@ export default {
 			return !!this.slides.some(slide => !_.find(this.defaultSlides, defSlide => defSlide.id === slide.id));
 		}
 	},
-	watch: {
-		defaultSlides() {
-			this.slides = this.defaultSlides.slice();
-		}
-	}
 };
 </script>

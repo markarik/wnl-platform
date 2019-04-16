@@ -161,6 +161,17 @@ export default {
 			return this.activeFilters.map(filter => ({ path: filter, ...this.getFilter(filter) }));
 		},
 	},
+	watch: {
+		activeFilters() {
+			nextTick(this.emitHeight);
+		},
+		autorefresh(to) {
+			this.$emit('autorefreshChange', to);
+		},
+	},
+	mounted() {
+		this.emitHeight();
+	},
 	methods: {
 		filterDisplayName(filter) {
 			if (filter.type === 'search') {
@@ -184,17 +195,6 @@ export default {
 		},
 		removeFilter(filter) {
 			this.$emit('activeFiltersChanged', { filter, active: false });
-		},
-	},
-	mounted() {
-		this.emitHeight();
-	},
-	watch: {
-		activeFilters() {
-			nextTick(this.emitHeight);
-		},
-		autorefresh(to) {
-			this.$emit('autorefreshChange', to);
 		},
 	}
 };

@@ -349,6 +349,36 @@ export default {
 			return this.questionsCurrentPage.map(question => question.id);
 		}
 	},
+	watch: {
+		activeFilters() {
+			this.showListResults = false;
+		},
+		activeView() {
+			if (!this.$refs.view) return false;
+
+			scrollToElement(this.$refs.view, 200);
+
+			this.$emit('activeViewChange', this.activeView);
+		},
+		presetOptions() {
+			if (this.presetOptions.hasOwnProperty('activeView')) {
+				this.activeView = this.presetOptions.activeView;
+			}
+			this.$emit('activeViewChange', this.activeView);
+		},
+		questionsIds(newValue, oldValue) {
+			if (isEqual(newValue, oldValue)) return;
+
+			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
+		}
+	},
+	mounted() {
+		if (this.presetOptions.hasOwnProperty('activeView')) {
+			this.activeView = this.presetOptions.activeView;
+		}
+		this.$emit('activeViewChange', this.activeView);
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
+	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		buildTest(payload) {
@@ -382,35 +412,5 @@ export default {
 			this.$emit('verify', payload);
 		},
 	},
-	mounted() {
-		if (this.presetOptions.hasOwnProperty('activeView')) {
-			this.activeView = this.presetOptions.activeView;
-		}
-		this.$emit('activeViewChange', this.activeView);
-		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
-	},
-	watch: {
-		activeFilters() {
-			this.showListResults = false;
-		},
-		activeView() {
-			if (!this.$refs.view) return false;
-
-			scrollToElement(this.$refs.view, 200);
-
-			this.$emit('activeViewChange', this.activeView);
-		},
-		presetOptions() {
-			if (this.presetOptions.hasOwnProperty('activeView')) {
-				this.activeView = this.presetOptions.activeView;
-			}
-			this.$emit('activeViewChange', this.activeView);
-		},
-		questionsIds(newValue, oldValue) {
-			if (isEqual(newValue, oldValue)) return;
-
-			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
-		}
-	}
 };
 </script>

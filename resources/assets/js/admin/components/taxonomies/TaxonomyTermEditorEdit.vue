@@ -61,18 +61,18 @@ export default {
 		WnlTagAutocomplete,
 		WnlNestedSetEditorForm
 	},
+	props: {
+		taxonomyId: {
+			type: [String, Number],
+			required: true,
+		}
+	},
 	data() {
 		return {
 			description: '',
 			tag: null,
 			parent: null
 		};
-	},
-	props: {
-		taxonomyId: {
-			type: [String, Number],
-			required: true,
-		}
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', {
@@ -92,6 +92,22 @@ export default {
 			return !this.tag || this.isSaving;
 		},
 	},
+	watch: {
+		term() {
+			if (!this.term) return;
+
+			this.description = this.term.description;
+			this.tag = this.term.tag;
+			this.parent = this.getAncestorNodesById(this.term.id).slice(-1)[0];
+		}
+	},
+	created() {
+		if (!this.term) return;
+
+		this.description = this.term.description;
+		this.tag = this.term.tag;
+		this.parent = this.getAncestorNodesById(this.term.id).slice(-1)[0];
+	},
 	methods: {
 		...mapActions('taxonomyTerms', {
 			'updateTerm': 'update',
@@ -110,21 +126,5 @@ export default {
 			this.tag = tag;
 		},
 	},
-	created() {
-		if (!this.term) return;
-
-		this.description = this.term.description;
-		this.tag = this.term.tag;
-		this.parent = this.getAncestorNodesById(this.term.id).slice(-1)[0];
-	},
-	watch: {
-		term() {
-			if (!this.term) return;
-
-			this.description = this.term.description;
-			this.tag = this.term.tag;
-			this.parent = this.getAncestorNodesById(this.term.id).slice(-1)[0];
-		}
-	}
 };
 </script>

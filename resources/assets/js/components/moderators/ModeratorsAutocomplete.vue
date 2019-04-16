@@ -35,10 +35,9 @@ import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
 
 export default {
-	data() {
-		return {
-			textInputValue: '',
-		};
+	components: {
+		WnlAutocomplete,
+		WnlUserAutocompleteItem,
 	},
 	props: {
 		usersList: {
@@ -50,9 +49,10 @@ export default {
 			default: () => ({}),
 		}
 	},
-	components: {
-		WnlAutocomplete,
-		WnlUserAutocompleteItem,
+	data() {
+		return {
+			textInputValue: '',
+		};
 	},
 	computed: {
 		usersListFiltered() {

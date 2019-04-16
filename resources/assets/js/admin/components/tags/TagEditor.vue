@@ -122,6 +122,14 @@ import WnlTagDelete from 'js/admin/components/tags/TagDelete';
 import WnlPaginatedSortableTable from 'js/admin/components/lists/PaginatedSortableTable';
 
 export default {
+	components: {
+		WnlFormText,
+		WnlForm,
+		WnlSubmit,
+		WnlTagDelete,
+		WnlTextarea,
+		WnlPaginatedSortableTable,
+	},
 	props: {
 		id: {
 			type: [String, Number],
@@ -203,14 +211,6 @@ export default {
 				],
 			};
 		},
-	},
-	components: {
-		WnlFormText,
-		WnlForm,
-		WnlSubmit,
-		WnlTagDelete,
-		WnlTextarea,
-		WnlPaginatedSortableTable,
 	},
 	methods: {
 		onChange({ formData }) {

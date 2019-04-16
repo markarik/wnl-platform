@@ -67,6 +67,11 @@ export default {
 			return size(this.hits) > 0;
 		},
 	},
+	watch: {
+		'phrase'() {
+			this.search();
+		}
+	},
 	methods: {
 		search() {
 			if (!this.phrase) return;
@@ -82,11 +87,6 @@ export default {
 		},
 		emitResultClicked() {
 			this.$emit('resultClicked');
-		}
-	},
-	watch: {
-		'phrase'() {
-			this.search();
 		}
 	}
 };

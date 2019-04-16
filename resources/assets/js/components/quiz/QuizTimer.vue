@@ -53,6 +53,9 @@ export default {
 			return `fa-hourglass-${Math.ceil((this.time - this.remainingTime) * 3 / this.time)}`;
 		},
 	},
+	beforeDestroy() {
+		clearInterval(this.timerId);
+	},
 	methods: {
 		startTimer() {
 			// passed time is in minutes
@@ -66,9 +69,6 @@ export default {
 				this.$emit('timesUp');
 			}
 		}
-	},
-	beforeDestroy() {
-		clearInterval(this.timerId);
 	}
 };
 </script>

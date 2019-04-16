@@ -162,6 +162,20 @@ export default {
 			return this.question.isResolved;
 		},
 	},
+	watch: {
+		async isContentItemClassifierEditorActive() {
+			if (this.isContentItemClassifierEditorActive) {
+				await nextTick();
+				scrollToElement(this.$el);
+			}
+		},
+	},
+	mounted() {
+		window.addEventListener('keydown', this.keyDown);
+	},
+	beforeDestroy() {
+		window.removeEventListener('keydown', this.keyDown);
+	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),
@@ -241,19 +255,5 @@ export default {
 			this.deregister(this.activateWithShortcutKeyId);
 		},
 	},
-	mounted() {
-		window.addEventListener('keydown', this.keyDown);
-	},
-	beforeDestroy() {
-		window.removeEventListener('keydown', this.keyDown);
-	},
-	watch: {
-		async isContentItemClassifierEditorActive() {
-			if (this.isContentItemClassifierEditorActive) {
-				await nextTick();
-				scrollToElement(this.$el);
-			}
-		},
-	}
 };
 </script>

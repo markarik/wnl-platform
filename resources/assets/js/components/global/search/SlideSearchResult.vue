@@ -143,14 +143,14 @@ const mediaMap = {
 
 export default {
 	name: 'SlideSearchResult',
+	components: {
+		'wnl-slide-link': SlideLink,
+	},
 	props: {
 		hit: {
 			required: true,
 			type: Object,
 		},
-	},
-	components: {
-		'wnl-slide-link': SlideLink,
 	},
 	computed: {
 		...mapGetters('course', ['getLesson', 'getGroupsByLessonId']),

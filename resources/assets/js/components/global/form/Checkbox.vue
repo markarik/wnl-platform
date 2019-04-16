@@ -16,6 +16,7 @@ import { formInput } from 'js/mixins/form-input';
 
 export default {
 	name: 'CheckboxInput',
+	mixins: [formInput],
 	props: {
 		name: {
 			type: String,
@@ -27,7 +28,6 @@ export default {
 			required: true
 		}
 	},
-	mixins: [formInput],
 	computed: {
 		default() {
 			return '';

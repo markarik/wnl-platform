@@ -118,6 +118,9 @@ export default {
 			return tabNames.includes(hash) ? hash : tabNames[0];
 		}
 	},
+	async mounted() {
+		await this.setup();
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		async setup() {
@@ -159,8 +162,5 @@ export default {
 			this.user.subscription = this.user.subscription && included.subscriptions[this.user.subscription[0]];
 		},
 	},
-	async mounted() {
-		await this.setup();
-	}
 };
 </script>

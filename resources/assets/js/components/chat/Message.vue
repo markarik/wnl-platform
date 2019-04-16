@@ -88,12 +88,12 @@ import UserProfileModal from 'js/components/users/UserProfileModal';
 import Avatar from 'js/components/global/Avatar';
 
 export default{
-	props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
 	components: {
 		'wnl-avatar': Avatar,
 		'wnl-user-profile-modal': UserProfileModal,
 		'wnl-modal': Modal
 	},
+	props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
 	data() {
 		return {
 			isVisible: false

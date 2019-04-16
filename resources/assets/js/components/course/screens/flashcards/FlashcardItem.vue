@@ -225,6 +225,12 @@ import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
 
 export default {
+	components: {
+		WnlQuill,
+		WnlForm,
+		WnlTextButton,
+		WnlSubmit,
+	},
 	mixins: [emits_events],
 	props: {
 		context: {
@@ -239,12 +245,6 @@ export default {
 			type: Number,
 			required: true,
 		},
-	},
-	components: {
-		WnlQuill,
-		WnlForm,
-		WnlTextButton,
-		WnlSubmit,
 	},
 	data() {
 		return {

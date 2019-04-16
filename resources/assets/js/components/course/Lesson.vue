@@ -239,6 +239,23 @@ export default {
 			return this.isLessonAvailable(this.lessonId);
 		},
 	},
+	watch: {
+		lessonId() {
+			this.setup();
+		},
+		'$route'() {
+			if (!this.shouldDisplaySatisfactionGuaranteeModal) {
+				this.updateLessonProgress();
+			}
+		},
+	},
+	mounted () {
+		this.setup();
+	},
+	beforeDestroy () {
+		window.Echo.leave(this.presenceChannel);
+		window.removeEventListener('resize', this.updateElementHeight);
+	},
 	methods: {
 		...mapActions('progress', [
 			'startLesson',
@@ -423,23 +440,6 @@ export default {
 			this.toggleOverlay({ source: 'lesson', display: false });
 			window.addEventListener('resize', this.updateElementHeight);
 		}
-	},
-	mounted () {
-		this.setup();
-	},
-	beforeDestroy () {
-		window.Echo.leave(this.presenceChannel);
-		window.removeEventListener('resize', this.updateElementHeight);
-	},
-	watch: {
-		lessonId() {
-			this.setup();
-		},
-		'$route'() {
-			if (!this.shouldDisplaySatisfactionGuaranteeModal) {
-				this.updateLessonProgress();
-			}
-		},
 	},
 };
 </script>

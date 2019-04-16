@@ -47,12 +47,12 @@ export default {
 	components: {
 		draggable,
 	},
+	mixins: [formInput],
 	props: {
 		name: {
 			type: String,
 		},
 	},
-	mixins: [formInput],
 	computed: {
 		default() {
 			return [];

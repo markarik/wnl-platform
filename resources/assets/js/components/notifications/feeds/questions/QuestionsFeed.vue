@@ -88,10 +88,10 @@ import { feed } from 'js/components/notifications/feed';
 
 export default {
 	name: 'QuestionsFeed',
-	mixins: [feed],
 	components: {
 		'wnl-event-comment-posted': CommentPosted,
 	},
+	mixins: [feed],
 	data() {
 		return {
 			limit: 100,

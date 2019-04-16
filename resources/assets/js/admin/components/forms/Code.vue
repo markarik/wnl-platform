@@ -29,6 +29,24 @@ export default {
 			theme: 'chrome',
 		};
 	},
+	watch: {
+		value (newValue) {
+			if (!newValue) editor.setValue('', -1);
+
+			if (newValue && newValue !== editor.getValue()) {
+				editor.setValue(newValue, -1);
+			}
+		}
+	},
+	mounted () {
+		editor = brace.edit('wnl-code-editor');
+		this.setMode();
+		this.setTheme();
+		editor.$blockScrolling = Infinity;
+		editor.setShowPrintMargin(false);
+		editor.getSession().on('change', this.emitCode);
+		editor.getSession().setUseWrapMode(true);
+	},
 	methods: {
 		setMode () {
 			let modeObj = modelist.modesByName[this.mode];
@@ -48,24 +66,6 @@ export default {
 		},
 		emitCode () {
 			this.$emit('input', editor.getValue());
-		}
-	},
-	mounted () {
-		editor = brace.edit('wnl-code-editor');
-		this.setMode();
-		this.setTheme();
-		editor.$blockScrolling = Infinity;
-		editor.setShowPrintMargin(false);
-		editor.getSession().on('change', this.emitCode);
-		editor.getSession().setUseWrapMode(true);
-	},
-	watch: {
-		value (newValue) {
-			if (!newValue) editor.setValue('', -1);
-
-			if (newValue && newValue !== editor.getValue()) {
-				editor.setValue(newValue, -1);
-			}
 		}
 	}
 };

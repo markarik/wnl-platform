@@ -78,10 +78,10 @@ import WnlLessonItem from 'js/components/course/navigation/LessonItem';
 import navigation from 'js/services/navigation';
 
 export default {
+	name: 'GroupItem',
 	components: {
 		WnlLessonItem
 	},
-	name: 'GroupItem',
 	props: {
 		item: {
 			type: Object,

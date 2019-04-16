@@ -212,16 +212,6 @@ export default {
 			return this.title || this.$t('qna.title.titleToDisplay');
 		},
 	},
-	methods: {
-		...mapActions('qna', ['destroyQna']),
-	},
-	mounted() {
-		if (!this.sortingEnabled && this.passedQuestions) {
-			this.questionsList = this.passedQuestions;
-		} else {
-			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
-		}
-	},
 	watch: {
 		'currentSorting' (newValue) {
 			this.questionsList = this.getSortedQuestions(newValue, this.questions);
@@ -232,8 +222,18 @@ export default {
 			}
 		}
 	},
+	mounted() {
+		if (!this.sortingEnabled && this.passedQuestions) {
+			this.questionsList = this.passedQuestions;
+		} else {
+			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+		}
+	},
 	beforeDestroy() {
 		this.destroyQna();
-	}
+	},
+	methods: {
+		...mapActions('qna', ['destroyQna']),
+	},
 };
 </script>

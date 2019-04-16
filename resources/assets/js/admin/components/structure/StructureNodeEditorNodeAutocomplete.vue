@@ -52,6 +52,9 @@ import { uniqBy } from 'lodash';
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 
 export default {
+	components: {
+		WnlAutocomplete
+	},
 	props: {
 		selected: {
 			type: Object,
@@ -66,9 +69,6 @@ export default {
 		return {
 			search: '',
 		};
-	},
-	components: {
-		WnlAutocomplete
 	},
 	computed: {
 		...mapState('courseStructure', ['nodes']),

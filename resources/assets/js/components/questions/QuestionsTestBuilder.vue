@@ -215,18 +215,12 @@ export default {
 			return sufficientSizes;
 		},
 	},
-	methods: {
-		buildTest() {
-			this.$emit('buildTest', { count: this.testQuestionsCount, time: this.time });
+	watch: {
+		testQuestionsCount() {
+			if (this.canChangeTime || !this.time) {
+				this.time = timeBaseOnQuestions(this.testQuestionsCount);
+			}
 		},
-		selectAnswer(payload) {
-			this.$emit('selectAnswer', payload);
-		},
-		onTestStart() {
-			this.emitUserEvent({
-				action: context.questions_bank.subcontext.test_yourself.actions.new_test.value
-			});
-		}
 	},
 	mounted() {
 		if (this.presetOptions.hasOwnProperty('testQuestionsCount')) {
@@ -240,12 +234,18 @@ export default {
 			this.time = this.presetOptions.time;
 		}
 	},
-	watch: {
-		testQuestionsCount() {
-			if (this.canChangeTime || !this.time) {
-				this.time = timeBaseOnQuestions(this.testQuestionsCount);
-			}
+	methods: {
+		buildTest() {
+			this.$emit('buildTest', { count: this.testQuestionsCount, time: this.time });
 		},
+		selectAnswer(payload) {
+			this.$emit('selectAnswer', payload);
+		},
+		onTestStart() {
+			this.emitUserEvent({
+				action: context.questions_bank.subcontext.test_yourself.actions.new_test.value
+			});
+		}
 	}
 };
 </script>

@@ -33,8 +33,8 @@ import { formInput } from 'js/mixins/form-input';
 
 export default {
 	name: 'Textarea',
-	props: ['name', 'placeholder'],
 	mixins: [formInput],
+	props: ['name', 'placeholder'],
 	computed: {
 		default() {
 			return '';

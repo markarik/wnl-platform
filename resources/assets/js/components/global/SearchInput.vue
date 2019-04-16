@@ -104,6 +104,15 @@ export default {
 			return fields || [];
 		}
 	},
+	mounted() {
+		const query = this.$route.query.q || '';
+
+		if (query !== this.searchPhrase || !isEqual(this.searchFields, this.routerSearchFields)) {
+			this.searchPhrase = this.$route.query.q;
+			this.searchFields = this.routerSearchFields;
+			this.emitSearch();
+		}
+	},
 	methods: {
 		onSelectAll() {
 			this.searchFields = [];
@@ -125,15 +134,6 @@ export default {
 		},
 		clearSearch() {
 			this.searchPhrase = '';
-			this.emitSearch();
-		}
-	},
-	mounted() {
-		const query = this.$route.query.q || '';
-
-		if (query !== this.searchPhrase || !isEqual(this.searchFields, this.routerSearchFields)) {
-			this.searchPhrase = this.$route.query.q;
-			this.searchFields = this.routerSearchFields;
 			this.emitSearch();
 		}
 	}

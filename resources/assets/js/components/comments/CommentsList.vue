@@ -127,6 +127,40 @@ export default {
 			);
 		},
 	},
+	watch: {
+		'comments' (newValue, oldValue) {
+			if (newValue !== oldValue) {
+				this.$emit('commentsUpdated', newValue);
+			}
+		},
+		'isOverlayVisible' () {
+			if (!this.isOverlayVisible && this.isCommentableInUrl) {
+				this.scrollAndHighlight();
+				this.showComments = true;
+			}
+		},
+		'showComments' (newValue) {
+			let eventName = newValue ? 'commentsShown' : 'commentsHidden';
+			this.$emit(eventName);
+		},
+		'$route' () {
+			if (!this.isOverlayVisible && this.isCommentableInUrl) {
+				this.refresh()
+					.then(() => {
+						this.scrollAndHighlight();
+						this.showComments = true;
+					});
+			}
+		},
+	},
+	mounted() {
+		this.formElement = this.$el.getElementsByClassName('form-container')[0];
+
+		if (!this.isOverlayVisible && this.isCommentableInUrl) {
+			this.scrollAndHighlight();
+			this.showComments = true;
+		}
+	},
 	methods: {
 		action(action, payload = {}) {
 			return this.$store.dispatch(`${this.module}/${action}`, payload);
@@ -205,40 +239,6 @@ export default {
 				ids: [this.commentableId]
 			});
 		}
-	},
-	mounted() {
-		this.formElement = this.$el.getElementsByClassName('form-container')[0];
-
-		if (!this.isOverlayVisible && this.isCommentableInUrl) {
-			this.scrollAndHighlight();
-			this.showComments = true;
-		}
-	},
-	watch: {
-		'comments' (newValue, oldValue) {
-			if (newValue !== oldValue) {
-				this.$emit('commentsUpdated', newValue);
-			}
-		},
-		'isOverlayVisible' () {
-			if (!this.isOverlayVisible && this.isCommentableInUrl) {
-				this.scrollAndHighlight();
-				this.showComments = true;
-			}
-		},
-		'showComments' (newValue) {
-			let eventName = newValue ? 'commentsShown' : 'commentsHidden';
-			this.$emit(eventName);
-		},
-		'$route' () {
-			if (!this.isOverlayVisible && this.isCommentableInUrl) {
-				this.refresh()
-					.then(() => {
-						this.scrollAndHighlight();
-						this.showComments = true;
-					});
-			}
-		},
 	},
 };
 </script>

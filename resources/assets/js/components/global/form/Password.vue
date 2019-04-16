@@ -39,6 +39,7 @@ import { formInput } from 'js/mixins/form-input';
 
 export default {
 	name: 'Password',
+	mixins: [formInput],
 	props: {
 		name: {
 			type: String,
@@ -47,7 +48,6 @@ export default {
 			type: String
 		}
 	},
-	mixins: [formInput],
 	computed: {
 		default() {
 			return '';

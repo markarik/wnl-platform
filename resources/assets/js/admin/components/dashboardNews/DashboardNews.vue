@@ -61,17 +61,6 @@ export default {
 			return activeItem && activeItem.id;
 		}
 	},
-	methods: {
-		...mapActions(['addAutoDismissableAlert']),
-		formatDate(date) {
-			if (date) {
-				return moment(date * 1000).format('L LT');
-			}
-		},
-		goToEdit(id) {
-			this.$router.push({ name: 'dashboard-news-edit', params: { id } });
-		},
-	},
 	async mounted() {
 		try {
 			const { data } = await axios.get(getApiUrl('site_wide_messages/dashboard_news'));
@@ -83,6 +72,17 @@ export default {
 				type: ALERT_TYPES.ERROR,
 			});
 		}
-	}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		formatDate(date) {
+			if (date) {
+				return moment(date * 1000).format('L LT');
+			}
+		},
+		goToEdit(id) {
+			this.$router.push({ name: 'dashboard-news-edit', params: { id } });
+		},
+	},
 };
 </script>

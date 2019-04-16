@@ -96,7 +96,6 @@ import { USER_SETTING_NAMES } from 'js/consts/settings';
 
 export default {
 	name: 'PersonalFeed',
-	mixins: [feed],
 	components: {
 		'wnl-dropdown': Dropdown,
 		'wnl-event-comment-posted': CommentPosted,
@@ -111,6 +110,7 @@ export default {
 		'wnl-event-assigned-to-task': AssignedToTask,
 		'wnl-notifications-toggle': NotificationsToggle,
 	},
+	mixins: [feed],
 	data() {
 		return {
 			allReadLoading: false,

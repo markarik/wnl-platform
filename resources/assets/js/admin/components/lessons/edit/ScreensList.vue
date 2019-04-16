@@ -70,17 +70,20 @@ import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vu
 
 export default {
 	name: 'ScreensList',
-	props: ['lessonId'],
 	components: {
 		'wnl-screens-list-item': ScreensListItem
 	},
 	mixins: [ alerts ],
+	props: ['lessonId'],
 	data() {
 		return {
 			changed: false,
 			loading: false,
 			screens: [],
 		};
+	},
+	mounted() {
+		this.fetchScreens();
 	},
 	methods: {
 		fetchScreens() {
@@ -163,9 +166,6 @@ export default {
 					this.errorFading('Nie wyszło, sorry. :()', 2000);
 				});
 		},
-	},
-	mounted() {
-		this.fetchScreens();
 	}
 };
 </script>

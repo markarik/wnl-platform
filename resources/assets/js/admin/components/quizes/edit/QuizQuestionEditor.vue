@@ -203,6 +203,12 @@ export default {
 		WnlSlideIds,
 		WnlTags,
 	},
+	props: {
+		quizQuestionId: {
+			type: [Number, String],
+			default: null,
+		}
+	},
 	data: function () {
 		return {
 			questionQuillContent: '',
@@ -210,12 +216,6 @@ export default {
 			attach: {},
 			CONTENT_TYPES,
 		};
-	},
-	props: {
-		quizQuestionId: {
-			type: [Number, String],
-			default: null,
-		}
 	},
 	computed: {
 		...mapGetters([
@@ -240,6 +240,31 @@ export default {
 		},
 		isEdit() {
 			return !!this.quizQuestionId;
+		}
+	},
+	watch: {
+		questionText(val) {
+			if (val) this.$refs.questionEditor.editor.innerHTML = val;
+		},
+		questionExplanation(val) {
+			if (val) this.$refs.explanationEditor.editor.innerHTML = val;
+		},
+		quizQuestionId(quizQuestionId) {
+			this.getQuizQuestion(quizQuestionId);
+			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [quizQuestionId] });
+		}
+	},
+	created() {
+		if (this.isEdit) {
+			this.getQuizQuestion(this.quizQuestionId);
+		} else {
+			this.setupFreshQuestion();
+		}
+	},
+	async mounted() {
+		if (this.isEdit) {
+			await this.setupCurrentUser();
+			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [this.quizQuestionId] });
 		}
 	},
 	methods: {
@@ -337,31 +362,6 @@ export default {
 					type: 'error',
 				});
 			}
-		}
-	},
-	watch: {
-		questionText(val) {
-			if (val) this.$refs.questionEditor.editor.innerHTML = val;
-		},
-		questionExplanation(val) {
-			if (val) this.$refs.explanationEditor.editor.innerHTML = val;
-		},
-		quizQuestionId(quizQuestionId) {
-			this.getQuizQuestion(quizQuestionId);
-			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [quizQuestionId] });
-		}
-	},
-	created() {
-		if (this.isEdit) {
-			this.getQuizQuestion(this.quizQuestionId);
-		} else {
-			this.setupFreshQuestion();
-		}
-	},
-	async mounted() {
-		if (this.isEdit) {
-			await this.setupCurrentUser();
-			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: [this.quizQuestionId] });
 		}
 	},
 };

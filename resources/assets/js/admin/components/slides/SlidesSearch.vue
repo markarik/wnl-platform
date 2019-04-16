@@ -66,14 +66,6 @@ import { getApiUrl } from 'js/utils/env';
 
 export default {
 	name: 'SlidesSearch',
-	data() {
-		return {
-			slideOrderNo: null,
-			loading: false,
-			resourceUrl: '',
-			error: false
-		};
-	},
 	props: {
 		slideId: {
 			type: Number,
@@ -81,6 +73,14 @@ export default {
 		screenId: {
 			tyoe: Number,
 		}
+	},
+	data() {
+		return {
+			slideOrderNo: null,
+			loading: false,
+			resourceUrl: '',
+			error: false
+		};
 	},
 	computed: {
 		slideNumber() {

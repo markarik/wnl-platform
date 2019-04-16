@@ -142,22 +142,22 @@ import { notification } from 'js/components/notifications/notification';
 
 export default {
 	name: 'PersonalNotification',
-	mixins: [notification],
 	components: {
 		'wnl-avatar': Avatar,
 		'wnl-modal': Modal,
 		'wnl-user-profile-modal': UserProfileModal
 	},
-	data() {
-		return {
-			isVisible: false
-		};
-	},
+	mixins: [notification],
 	props: {
 		icon: {
 			required: true,
 			type: String
 		},
+	},
+	data() {
+		return {
+			isVisible: false
+		};
 	},
 	computed: {
 		...mapGetters(['currentUserId']),

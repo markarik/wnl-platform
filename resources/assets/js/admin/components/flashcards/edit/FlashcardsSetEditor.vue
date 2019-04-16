@@ -186,6 +186,13 @@ export default {
 				.slice(0, 10);
 		}
 	},
+	mounted() {
+		if (this.isEdit) {
+			this.form.populate(this.flashcardsSetResourceUrl);
+		}
+		this.setupLessons();
+		this.setupFlashcards();
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', { setupLessons: 'setup' }),
@@ -239,13 +246,6 @@ export default {
 			this.form.flashcards.push(flashcard.id);
 			this.flashcardInput = '';
 		}
-	},
-	mounted() {
-		if (this.isEdit) {
-			this.form.populate(this.flashcardsSetResourceUrl);
-		}
-		this.setupLessons();
-		this.setupFlashcards();
 	},
 };
 </script>

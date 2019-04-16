@@ -52,6 +52,9 @@ const STATE_FULL = 'full',
 	};
 
 export default {
+	components: {
+		'wnl-progress': Progress,
+	},
 	computed: {
 		...mapGetters('course', [
 			'userLessons',
@@ -92,9 +95,6 @@ export default {
 		progressMessage() {
 			return stateData[this.progressState].message;
 		},
-	},
-	components: {
-		'wnl-progress': Progress,
 	},
 };
 </script>

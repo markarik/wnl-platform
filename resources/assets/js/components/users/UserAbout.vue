@@ -65,10 +65,10 @@ import UserInfo from 'js/components/users/UserInfo';
 
 export default {
 	name: 'UserAbout',
-	props: ['profile'],
 	components: {
 		'wnl-user-info': UserInfo,
 	},
+	props: ['profile'],
 	computed: {
 		...mapGetters(['canShowCloseIconInChat']),
 	},

@@ -151,6 +151,16 @@ export default {
 			return this.currentImageIndex === this.images.length -1 ? 0 : this.currentImageIndex + 1;
 		},
 	},
+	watch: {
+		screenData() {
+			nextTick(() => this.wrapEmbedded());
+		}
+	},
+	mounted() {
+		this.wrapEmbedded();
+		this.addFullscreen();
+		document.body.addEventListener('keydown', this.onKeydown);
+	},
 	methods: {
 		goToImage(index) {
 			if (index < 0 || !this.images.length) return;
@@ -222,16 +232,6 @@ export default {
 				this.isVisible = false;
 				break;
 			}
-		}
-	},
-	mounted() {
-		this.wrapEmbedded();
-		this.addFullscreen();
-		document.body.addEventListener('keydown', this.onKeydown);
-	},
-	watch: {
-		screenData() {
-			nextTick(() => this.wrapEmbedded());
 		}
 	}
 

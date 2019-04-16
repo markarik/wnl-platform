@@ -134,6 +134,26 @@ export default {
 			return !!this.pagination.has_more;
 		}
 	},
+	watch: {
+		'rooms' (newValue, oldValue) {
+			if (newValue.length === oldValue.length) return;
+			this.changeRoom(newValue[0]);
+		},
+		'$route.query.chatChannel'() {
+			this.$route.query.chatChannel && this.joinRoom();
+		},
+		'$route.query.messageId'() {
+			if (!this.$route.query.messageId) this.highlightedMessageId = 0;
+		}
+	},
+	mounted() {
+		this.joinRoom();
+		this.setListeners();
+	},
+	beforeDestroy() {
+		this.leaveRoom(this.currentRoom.id);
+		this.removeListeners();
+	},
 	methods: {
 		...mapActions(['toggleChat', 'saveMentions']),
 		...mapActions('chatMessages', ['createPublicRoom', 'fetchRoomMessages', 'updateFromEventLog']),
@@ -266,25 +286,5 @@ export default {
 			};
 		}
 	},
-	mounted() {
-		this.joinRoom();
-		this.setListeners();
-	},
-	beforeDestroy() {
-		this.leaveRoom(this.currentRoom.id);
-		this.removeListeners();
-	},
-	watch: {
-		'rooms' (newValue, oldValue) {
-			if (newValue.length === oldValue.length) return;
-			this.changeRoom(newValue[0]);
-		},
-		'$route.query.chatChannel'() {
-			this.$route.query.chatChannel && this.joinRoom();
-		},
-		'$route.query.messageId'() {
-			if (!this.$route.query.messageId) this.highlightedMessageId = 0;
-		}
-	}
 };
 </script>

@@ -32,6 +32,14 @@ export default {
 			return this.isFocusedByUid(this.activateWithShortcutKeyId);
 		},
 	},
+	watch: {
+		async isActive() {
+			if (this.isActive) {
+				await nextTick();
+				scrollToElement(this.$el);
+			}
+		}
+	},
 	methods: {
 		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister', 'resetFocus']),
 		onUpdateIsActive(isActive) {
@@ -51,13 +59,5 @@ export default {
 			this.resetFocus();
 		},
 	},
-	watch: {
-		async isActive() {
-			if (this.isActive) {
-				await nextTick();
-				scrollToElement(this.$el);
-			}
-		}
-	}
 };
 </script>

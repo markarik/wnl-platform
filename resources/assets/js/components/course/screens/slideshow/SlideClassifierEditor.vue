@@ -45,6 +45,16 @@ export default {
 			return this.isFocusedByUid(this.activateWithShortcutKeyId);
 		},
 	},
+	watch: {
+		currentSlideId(currentSlideId) {
+			this.loadTerms(currentSlideId);
+		},
+	},
+	mounted() {
+		if (this.currentSlideId) {
+			this.loadTerms(this.currentSlideId);
+		}
+	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister', 'resetFocus']),
@@ -67,16 +77,6 @@ export default {
 		onEditorDestroyed() {
 			this.deregister(this.activateWithShortcutKeyId);
 		},
-	},
-	watch: {
-		currentSlideId(currentSlideId) {
-			this.loadTerms(currentSlideId);
-		},
-	},
-	mounted() {
-		if (this.currentSlideId) {
-			this.loadTerms(this.currentSlideId);
-		}
 	},
 };
 </script>

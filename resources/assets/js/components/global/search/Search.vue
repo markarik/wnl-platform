@@ -169,6 +169,12 @@ export default {
 	computed: {
 		...mapGetters(['isTouchScreen']),
 	},
+	mounted() {
+		window.addEventListener('keydown', this.keyDown);
+	},
+	beforeDestroy() {
+		window.removeEventListener('keydown', this.keyDown);
+	},
 	methods: {
 		debounceInput: debounce(function({ target: { value } }) {
 			this.phrase = value;
@@ -196,11 +202,5 @@ export default {
 			this.$nextTick(() => this.$refs.input.select());
 		},
 	},
-	mounted() {
-		window.addEventListener('keydown', this.keyDown);
-	},
-	beforeDestroy() {
-		window.removeEventListener('keydown', this.keyDown);
-	}
 };
 </script>

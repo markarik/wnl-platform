@@ -419,6 +419,24 @@ export default {
 			});
 		},
 	},
+	watch: {
+		selectedOption(to) {
+			to === 'custom' && !this.counts.custom && this.fetchMatchingQuestions();
+		},
+		showPlanner(to) {
+			to && isEmpty(this.counts.all) && this.setupPlanner();
+		}
+	},
+	mounted() {
+		this.$trackUserEvent({
+			feature: features.quiz_planner.value,
+			context: context.questions_bank.value,
+			action: features.quiz_planner.actions.open.value
+		});
+		this.getPlan().then(plan => {
+			isEmpty(plan) ? this.setupPlanner() : this.fetchDynamicFilters();
+		});
+	},
 	methods: {
 		...mapActions(['toggleChat']),
 		...mapActions('questions', [
@@ -533,24 +551,6 @@ export default {
 				this.setUnresolvedAndIncorrectCount();
 				this.fetchQuestionsCount();
 			});
-		}
-	},
-	mounted() {
-		this.$trackUserEvent({
-			feature: features.quiz_planner.value,
-			context: context.questions_bank.value,
-			action: features.quiz_planner.actions.open.value
-		});
-		this.getPlan().then(plan => {
-			isEmpty(plan) ? this.setupPlanner() : this.fetchDynamicFilters();
-		});
-	},
-	watch: {
-		selectedOption(to) {
-			to === 'custom' && !this.counts.custom && this.fetchMatchingQuestions();
-		},
-		showPlanner(to) {
-			to && isEmpty(this.counts.all) && this.setupPlanner();
 		}
 	},
 };

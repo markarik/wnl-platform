@@ -168,6 +168,35 @@ export default {
 			return this.selectedMethods.some(item => item.slug === 'instalments');
 		},
 	},
+	async mounted() {
+		this.loadingMethods = true;
+		try {
+			const methods = await this.getPaymentMethods();
+			const { productMethods, instalments } = await this.getProduct();
+
+			this.instalments = this.instalments.map(item => {
+				const instalment = instalments.find(instalment => instalment.order_number === item.order_number);
+				if (instalment) {
+					item.due_date = instalment.due_date;
+				}
+				return item;
+			});
+			this.methods = methods;
+			this.selectedMethods = productMethods.map(method => ({
+				...method,
+				start_date: method.start_date || null,
+				end_date: method.end_date || null,
+			}));
+		} catch (e) {
+			this.addAutoDismissableAlert({
+				text: 'Nie udało się pobrać dostępnych metod płatności',
+				type: 'error'
+			});
+			$wnl.logger.capture(e);
+		} finally {
+			this.loadingMethods = false;
+		}
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 
@@ -248,34 +277,5 @@ export default {
 		}
 
 	},
-	async mounted() {
-		this.loadingMethods = true;
-		try {
-			const methods = await this.getPaymentMethods();
-			const { productMethods, instalments } = await this.getProduct();
-
-			this.instalments = this.instalments.map(item => {
-				const instalment = instalments.find(instalment => instalment.order_number === item.order_number);
-				if (instalment) {
-					item.due_date = instalment.due_date;
-				}
-				return item;
-			});
-			this.methods = methods;
-			this.selectedMethods = productMethods.map(method => ({
-				...method,
-				start_date: method.start_date || null,
-				end_date: method.end_date || null,
-			}));
-		} catch (e) {
-			this.addAutoDismissableAlert({
-				text: 'Nie udało się pobrać dostępnych metod płatności',
-				type: 'error'
-			});
-			$wnl.logger.capture(e);
-		} finally {
-			this.loadingMethods = false;
-		}
-	}
 };
 </script>

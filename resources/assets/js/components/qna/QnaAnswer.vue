@@ -182,6 +182,26 @@ export default {
 			return this.isAnswerInUrl || this.isReactionInUrl;
 		}
 	},
+	watch: {
+		'$route' () {
+			if (this.shouldHighlight) {
+				this.refreshAnswer()
+					.then(() => {
+						!this.isOverlayVisible && this.scrollAndHighlight();
+					});
+			}
+		},
+		'isOverlayVisible' () {
+			if (!this.isOverlayVisible && this.shouldHighlight) {
+				this.scrollAndHighlight();
+			}
+		}
+	},
+	mounted() {
+		if (this.shouldHighlight) {
+			!this.isOverlayVisible && this.scrollAndHighlight();
+		}
+	},
 	methods: {
 		...mapActions('qna', ['removeAnswer']),
 		showModal() {
@@ -200,25 +220,5 @@ export default {
 			return this.refresh();
 		}
 	},
-	mounted() {
-		if (this.shouldHighlight) {
-			!this.isOverlayVisible && this.scrollAndHighlight();
-		}
-	},
-	watch: {
-		'$route' () {
-			if (this.shouldHighlight) {
-				this.refreshAnswer()
-					.then(() => {
-						!this.isOverlayVisible && this.scrollAndHighlight();
-					});
-			}
-		},
-		'isOverlayVisible' () {
-			if (!this.isOverlayVisible && this.shouldHighlight) {
-				this.scrollAndHighlight();
-			}
-		}
-	}
 };
 </script>

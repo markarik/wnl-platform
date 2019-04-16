@@ -94,11 +94,8 @@ import { getColourForStr } from 'js/utils/colors.js';
 import WnlTag from 'js/admin/components/global/Tag';
 
 export default {
-	data() {
-		return {
-			openAnnotations: [],
-			getColourForStr,
-		};
+	components: {
+		WnlTag
 	},
 	props: {
 		modifiedAnnotationId: {
@@ -110,8 +107,11 @@ export default {
 			required: true
 		}
 	},
-	components: {
-		WnlTag
+	data() {
+		return {
+			openAnnotations: [],
+			getColourForStr,
+		};
 	},
 	methods: {
 		isEven(index) {

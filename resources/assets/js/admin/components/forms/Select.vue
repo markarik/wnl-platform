@@ -33,17 +33,17 @@ export default {
 			selected: this.value,
 		};
 	},
-	methods: {
-		onEscape() {
-			this.$refs.select.blur();
-		},
-	},
 	watch: {
 		selected(newValue) {
 			this.$emit('input', newValue);
 		},
 		value(newValue) {
 			this.selected = newValue;
+		},
+	},
+	methods: {
+		onEscape() {
+			this.$refs.select.blur();
 		},
 	},
 };

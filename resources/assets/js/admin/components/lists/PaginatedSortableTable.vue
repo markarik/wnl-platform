@@ -34,12 +34,6 @@ export default {
 		WnlPaginatedList,
 		WnlSortableTable,
 	},
-	data() {
-		return {
-			activeSortColumnName: this.columns[0].name,
-			sortDirection: 'asc',
-		};
-	},
 	props: {
 		columns: {
 			type: Array,
@@ -61,6 +55,12 @@ export default {
 			type: Boolean,
 			default: true,
 		}
+	},
+	data() {
+		return {
+			activeSortColumnName: this.columns[0].name,
+			sortDirection: 'asc',
+		};
 	},
 	computed: {
 		requestParams() {

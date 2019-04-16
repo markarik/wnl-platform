@@ -238,8 +238,6 @@ import moderatorFeatures from 'js/perimeters/moderator';
 import { timeFromS } from 'js/utils/time';
 
 export default {
-	mixins: [highlight],
-	perimeters: [moderatorFeatures],
 	components: {
 		'wnl-delete': Delete,
 		'wnl-resolve': Resolve,
@@ -251,6 +249,8 @@ export default {
 		'wnl-modal': Modal,
 		'wnl-user-profile-modal': UserProfileModal,
 	},
+	mixins: [highlight],
+	perimeters: [moderatorFeatures],
 	props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
 	data() {
 		return {
@@ -345,6 +345,33 @@ export default {
 			return questionId == this.questionId && this.answerInUrl;
 		},
 	},
+	watch: {
+		'$route'() {
+			if (!this.isOverlayVisible && this.isQuestionInUrl) {
+				this.dispatchFetchQuestion()
+					.then(() => this.scrollAndHighlight());
+			}
+
+			if (this.isQuestionAnswerInUrl) {
+				if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion();
+				this.showAllAnswers = true;
+			}
+		},
+		'isOverlayVisible'() {
+			if (!this.isOverlayVisible && this.isQuestionInUrl) {
+				this.scrollAndHighlight();
+			}
+		},
+	},
+	mounted() {
+		if (this.isQuestionAnswerInUrl) {
+			this.showAllAnswers = true;
+		}
+
+		if (!this.isOverlayVisible && this.isQuestionInUrl) {
+			this.scrollAndHighlight();
+		}
+	},
 	methods: {
 		...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
 		showModal() {
@@ -377,33 +404,6 @@ export default {
 				this.showAllAnswers = true;
 			});
 		}
-	},
-	mounted() {
-		if (this.isQuestionAnswerInUrl) {
-			this.showAllAnswers = true;
-		}
-
-		if (!this.isOverlayVisible && this.isQuestionInUrl) {
-			this.scrollAndHighlight();
-		}
-	},
-	watch: {
-		'$route'() {
-			if (!this.isOverlayVisible && this.isQuestionInUrl) {
-				this.dispatchFetchQuestion()
-					.then(() => this.scrollAndHighlight());
-			}
-
-			if (this.isQuestionAnswerInUrl) {
-				if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion();
-				this.showAllAnswers = true;
-			}
-		},
-		'isOverlayVisible'() {
-			if (!this.isOverlayVisible && this.isQuestionInUrl) {
-				this.scrollAndHighlight();
-			}
-		},
 	},
 };
 </script>

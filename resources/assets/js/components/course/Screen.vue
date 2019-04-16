@@ -119,6 +119,16 @@ export default {
 			return TYPES_MAP[this.type].feature_component;
 		}
 	},
+	watch: {
+		screenId() {
+			this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
+			this.trackScreenOpen();
+		}
+	},
+	mounted() {
+		this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
+		this.trackScreenOpen();
+	},
 	methods: {
 		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 		trackScreenOpen() {
@@ -130,15 +140,5 @@ export default {
 			});
 		}
 	},
-	mounted() {
-		this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
-		this.trackScreenOpen();
-	},
-	watch: {
-		screenId() {
-			this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
-			this.trackScreenOpen();
-		}
-	}
 };
 </script>

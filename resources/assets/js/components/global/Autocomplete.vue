@@ -32,6 +32,10 @@ import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 import WnlAutocompleteKeyboardNavigation from 'js/mixins/autocomplete-keyboard-navigation';
 
 export default {
+	components: {
+		WnlAutocompleteList,
+	},
+	mixins: [WnlAutocompleteKeyboardNavigation],
 	props: {
 		value: {
 			type: String,
@@ -62,10 +66,6 @@ export default {
 			default: false,
 		},
 	},
-	components: {
-		WnlAutocompleteList,
-	},
-	mixins: [WnlAutocompleteKeyboardNavigation],
 	watch: {
 		async isFocused(isFocused) {
 			if (isFocused) {

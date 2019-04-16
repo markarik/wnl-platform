@@ -35,6 +35,7 @@ import { formInput } from 'js/mixins/form-input';
 
 export default {
 	name: 'TextInput',
+	mixins: [formInput],
 	props: {
 		name: {
 			type: String,
@@ -47,7 +48,6 @@ export default {
 			default: false
 		}
 	},
-	mixins: [formInput],
 	computed: {
 		default() {
 			return '';

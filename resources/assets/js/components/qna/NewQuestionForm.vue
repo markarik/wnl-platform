@@ -83,6 +83,11 @@ export default {
 			};
 		},
 	},
+	watch: {
+		discussionId() {
+			this.fetchQuestionsForDiscussion(this.discussionId);
+		}
+	},
 	methods: {
 		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 		onSubmitSuccess() {
@@ -90,10 +95,5 @@ export default {
 			this.fetchQuestionsForDiscussion(this.discussionId);
 		},
 	},
-	watch: {
-		discussionId() {
-			this.fetchQuestionsForDiscussion(this.discussionId);
-		}
-	}
 };
 </script>

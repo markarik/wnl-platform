@@ -49,6 +49,9 @@ export default {
 		WnlNodeAutocomplete,
 		WnlNestedSetEditor
 	},
+	mixins: [
+		scrollToNodeMixin,
+	],
 	props: {
 		courseId: {
 			type: [String, Number],
@@ -59,17 +62,6 @@ export default {
 		...mapState('courseStructure', ['isLoading', 'nodes']),
 		...mapGetters('courseStructure', ['getChildrenNodesByParentId', 'getRootNodes']),
 	},
-	methods: {
-		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('courseStructure', ['setUpNestedSet', 'expandAll', 'focus']),
-		async onSearch(node) {
-			this.focus(node);
-			this.scrollToNode(node);
-		},
-	},
-	mixins: [
-		scrollToNodeMixin,
-	],
 	async mounted() {
 		try {
 			await this.setUpNestedSet(this.courseId);
@@ -81,6 +73,14 @@ export default {
 			});
 		}
 		this.expandAll();
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('courseStructure', ['setUpNestedSet', 'expandAll', 'focus']),
+		async onSearch(node) {
+			this.focus(node);
+			this.scrollToNode(node);
+		},
 	},
 };
 </script>

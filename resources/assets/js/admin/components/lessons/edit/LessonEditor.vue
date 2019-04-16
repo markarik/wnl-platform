@@ -57,12 +57,12 @@ import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	name: 'LessonEditor',
-	props: ['lessonId'],
 	components: {
 		'wnl-screens-editor': ScreensEditor,
 		'wnl-input': Input,
 		'wnl-form-checkbox': Checkbox,
 	},
+	props: ['lessonId'],
 	data() {
 		return {
 			form: new Form({
@@ -84,6 +84,11 @@ export default {
 		},
 		hasChanged() {
 			return !_.isEqual(this.form.originalData, this.form.data());
+		}
+	},
+	mounted() {
+		if (this.isEdit) {
+			this.form.populate(this.resourceUrl);
 		}
 	},
 	methods: {
@@ -119,10 +124,5 @@ export default {
 				});
 		}
 	},
-	mounted() {
-		if (this.isEdit) {
-			this.form.populate(this.resourceUrl);
-		}
-	}
 };
 </script>

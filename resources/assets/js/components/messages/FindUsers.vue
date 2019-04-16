@@ -66,6 +66,9 @@ export default {
 			info: '',
 		};
 	},
+	mounted(){
+		this.$refs.input.focus();
+	},
 	methods: {
 		onInput: _.debounce(function ({ target: { value } }) {
 			if (value.length === 0) return;
@@ -127,8 +130,5 @@ export default {
 			this.$emit('close');
 		},
 	},
-	mounted(){
-		this.$refs.input.focus();
-	}
 };
 </script>

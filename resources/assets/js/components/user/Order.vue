@@ -385,6 +385,12 @@ import P24Form from 'js/components/user/P24Form';
 import { swalConfig } from 'js/utils/swal';
 
 export default {
+	components: {
+		'wnl-form': Form,
+		'wnl-form-text': Text,
+		'wnl-submit': Submit,
+		'wnl-p24-form': P24Form
+	},
 	props: {
 		orderInstance: {
 			type: Object,
@@ -394,12 +400,6 @@ export default {
 			type: Boolean,
 			default: true,
 		}
-	},
-	components: {
-		'wnl-form': Form,
-		'wnl-form-text': Text,
-		'wnl-submit': Submit,
-		'wnl-p24-form': P24Form
 	},
 	data() {
 		return {
@@ -579,6 +579,12 @@ export default {
 				$wnl.logger.capture(err);
 			}
 		},
+		mounted() {
+			if (this.isPending && this.shouldCheckPaymentStatus) this.checkStatus();
+			if (this.$route.query.hasOwnProperty('payment')) {
+				gaEvent('Payment', this.order.method);
+			}
+		},
 		async checkStatus() {
 			try {
 				const response = await axios.get(getApiUrl(`users/${this.order.user_id}/orders/${this.order.id}?include=payments`));
@@ -662,11 +668,5 @@ export default {
 			return moment(time * 1000).format('L LT');
 		},
 	},
-	mounted() {
-		if (this.isPending && this.shouldCheckPaymentStatus) this.checkStatus();
-		if (this.$route.query.hasOwnProperty('payment')) {
-			gaEvent('Payment', this.order.method);
-		}
-	}
 };
 </script>

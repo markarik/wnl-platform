@@ -412,6 +412,26 @@ export default {
 			return !isEmpty(this.stats);
 		},
 	},
+	watch: {
+		'$route' () {
+			!this.isChatMounted && this.isChatVisible && this.toggleChat();
+		},
+		'$route.query.chatChannel' (newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
+		}
+	},
+	mounted() {
+		this.getPlan();
+		this.getStats();
+		isEmpty(this.filters)
+			? this.fetchDynamicFilters().then(this.setPlanRoute)
+			: this.setPlanRoute();
+		this.$trackUserEvent({
+			context: this.context.value,
+			feature: this.feature.value,
+			action: this.feature.actions.open.value
+		});
+	},
 	methods: {
 		...mapActions(['toggleChat', 'toggleOverlay']),
 		...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
@@ -520,25 +540,5 @@ export default {
 			}).catch(() => false);
 		}
 	},
-	mounted() {
-		this.getPlan();
-		this.getStats();
-		isEmpty(this.filters)
-			? this.fetchDynamicFilters().then(this.setPlanRoute)
-			: this.setPlanRoute();
-		this.$trackUserEvent({
-			context: this.context.value,
-			feature: this.feature.value,
-			action: this.feature.actions.open.value
-		});
-	},
-	watch: {
-		'$route' () {
-			!this.isChatMounted && this.isChatVisible && this.toggleChat();
-		},
-		'$route.query.chatChannel' (newVal) {
-			newVal && !this.isChatVisible && this.toggleChat();
-		}
-	}
 };
 </script>

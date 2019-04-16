@@ -66,6 +66,9 @@ import { envValue } from 'js/utils/env';
 
 export default {
 	name: 'MyOrders',
+	components: {
+		'wnl-order': Order,
+	},
 	data () {
 		return {
 			loaded: false,
@@ -104,6 +107,19 @@ export default {
 			return getUrl('payment/personal-data/wnl-album');
 		},
 	},
+	mounted() {
+		this.getOrders();
+	},
+	created() {
+		if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {
+			const { payment, amount, ...query } = this.$route.query;
+			typeof fbq === 'function' && fbq('track', 'Purchase', { value: amount / 100, currency: 'PLN', platform: envValue('appInstanceName') });
+			this.$router.push({
+				...this.$route,
+				query
+			});
+		}
+	},
 	methods: {
 		getOrders() {
 			axios.get(getApiUrl('users/current/orders/all?include=invoices,payments,study_buddy'))
@@ -134,21 +150,5 @@ export default {
 			return !_.isEmpty(order.method);
 		},
 	},
-	mounted() {
-		this.getOrders();
-	},
-	created() {
-		if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {
-			const { payment, amount, ...query } = this.$route.query;
-			typeof fbq === 'function' && fbq('track', 'Purchase', { value: amount / 100, currency: 'PLN', platform: envValue('appInstanceName') });
-			this.$router.push({
-				...this.$route,
-				query
-			});
-		}
-	},
-	components: {
-		'wnl-order': Order,
-	}
 };
 </script>

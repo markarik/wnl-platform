@@ -125,6 +125,16 @@ export default {
 		WnlTaxonomyTermWithAncestors,
 		WnlContentClassifierEditorRecentTerms,
 	},
+	props: {
+		items: {
+			type: Array,
+			required: true,
+		},
+		isFocused: {
+			type: Boolean,
+			default: false
+		},
+	},
 	data() {
 		return {
 			isLoading: false,
@@ -135,16 +145,6 @@ export default {
 			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM),
 			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS, []),
 		};
-	},
-	props: {
-		items: {
-			type: Array,
-			required: true,
-		},
-		isFocused: {
-			type: Boolean,
-			default: false
-		},
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById', 'getAncestorNodesById']),
@@ -177,6 +177,16 @@ export default {
 				.forEach(taxonomyId => groupedTerms[taxonomyId].terms.sort((a, b) => b.itemsCount - a.itemsCount));
 
 			return groupedTerms;
+		},
+	},
+	watch: {
+		async isFocused() {
+			if (this.isFocused) {
+				scrollToElement(this.$el);
+				this.$el.focus();
+			} else {
+				this.$el.blur();
+			}
 		},
 	},
 	methods: {
@@ -264,16 +274,6 @@ export default {
 					}
 					break;
 				}
-			}
-		},
-	},
-	watch: {
-		async isFocused() {
-			if (this.isFocused) {
-				scrollToElement(this.$el);
-				this.$el.focus();
-			} else {
-				this.$el.blur();
 			}
 		},
 	},

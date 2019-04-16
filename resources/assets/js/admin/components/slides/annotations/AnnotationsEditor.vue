@@ -244,6 +244,12 @@ export default {
 		'wnl-preview-modal': PreviewModal,
 		WnlContentItemClassifierEditor
 	},
+	props: {
+		annotation: {
+			type: Object,
+			default: () => ({})
+		}
+	},
 	data() {
 		const ANNOTATIONS_TYPES = {
 			NEUTRAL: '1',
@@ -259,12 +265,6 @@ export default {
 			CONTENT_TYPES,
 			isVisible: false
 		};
-	},
-	props: {
-		annotation: {
-			type: Object,
-			default: () => ({})
-		}
 	},
 	computed: {
 		title() {
@@ -295,6 +295,16 @@ export default {
 				return `<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}">${keyword}</span>`;
 			});
 		}
+	},
+	watch: {
+		async 'annotation.id'() {
+			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id] });
+		}
+	},
+	async mounted() {
+		if (!this.annotation.id) return;
+
+		await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id] });
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -351,15 +361,5 @@ export default {
 			}
 		},
 	},
-	async mounted() {
-		if (!this.annotation.id) return;
-
-		await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id] });
-	},
-	watch: {
-		async 'annotation.id'() {
-			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id] });
-		}
-	}
 };
 </script>

@@ -151,6 +151,15 @@ export default {
 			return this.questions.map(({ id }) => id);
 		}
 	},
+	watch: {
+		'currentQuestion.id'() {
+			this.trackQuizQuestionChanged();
+		}
+	},
+	created() {
+		this.trackQuizQuestionChanged();
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
+	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		verify() {
@@ -192,14 +201,5 @@ export default {
 			});
 		}
 	},
-	created() {
-		this.trackQuizQuestionChanged();
-		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
-	},
-	watch: {
-		'currentQuestion.id'() {
-			this.trackQuizQuestionChanged();
-		}
-	}
 };
 </script>

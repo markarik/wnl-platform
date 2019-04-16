@@ -98,6 +98,23 @@ export default {
 			return this.hasError ? this.$t('quiz.single.errorTitle') : this.$t('quiz.single.title', { id: this.quizQuestionId });
 		},
 	},
+	watch: {
+		quizQuestionId(to) {
+			!!to && this.setupQuestion();
+		}
+	},
+	created() {
+		this.destroyQuiz();
+	},
+	beforeRouteEnter(to, from, next) {
+		return next();
+	},
+	mounted() {
+		this.setupQuestion();
+	},
+	beforeDestroy() {
+		this.destroyQuiz();
+	},
 	methods: {
 		...mapActions('quiz', ['destroyQuiz', 'fetchSingleQuestion', 'commitSelectAnswer', 'resolveQuestion']),
 		goBack() {
@@ -117,22 +134,5 @@ export default {
 				});
 		},
 	},
-	created() {
-		this.destroyQuiz();
-	},
-	beforeRouteEnter(to, from, next) {
-		return next();
-	},
-	mounted() {
-		this.setupQuestion();
-	},
-	beforeDestroy() {
-		this.destroyQuiz();
-	},
-	watch: {
-		quizQuestionId(to) {
-			!!to && this.setupQuestion();
-		}
-	}
 };
 </script>

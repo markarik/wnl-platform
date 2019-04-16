@@ -78,10 +78,7 @@ module.exports = {
 		'vue/require-default-prop': [
 			'off'
 		],
-		// TODO enable vue/recommended rules below
-		'vue/order-in-components': [
-			'off'
-		],
+		// TODO enable vue/recommended rule below
 		'vue/no-v-html': [
 			'off'
 		],

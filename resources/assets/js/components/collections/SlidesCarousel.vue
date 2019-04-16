@@ -93,8 +93,12 @@ import WnlSlideThumb from 'js/components/course/SlideThumb';
 
 export default {
 	name: 'SlidesCarousel',
-	props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount'],
+	components: {
+		'wnl-slideshow': Slideshow,
+		WnlSlideThumb,
+	},
 	mixins: [emits_events],
+	props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount'],
 	data() {
 		return {
 			presentableType: 'App\\Models\\Category',
@@ -116,10 +120,6 @@ export default {
 				}
 			}
 		};
-	},
-	components: {
-		'wnl-slideshow': Slideshow,
-		WnlSlideThumb,
 	},
 	computed: {
 		...mapGetters('collections', ['slidesContent', 'getSlidesIdsForCategory']),
@@ -150,6 +150,19 @@ export default {
 		bookmarkedSlidesIds() {
 			return this.getSlidesIdsForCategory(this.categoryName);
 		}
+	},
+	watch: {
+		'categoryId'() {
+			this.htmlContent = '';
+			this.loadedHtmlContents = {};
+			this.selectedSlideIndex = 0;
+			this.mode = '';
+
+			this.loadSlideshow();
+		}
+	},
+	mounted() {
+		this.loadSlideshow();
 	},
 	methods: {
 		...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection', 'fetchReactions', 'fetchSlidesByTagName']),
@@ -268,18 +281,5 @@ export default {
 			return axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`));
 		}
 	},
-	watch: {
-		'categoryId'() {
-			this.htmlContent = '';
-			this.loadedHtmlContents = {};
-			this.selectedSlideIndex = 0;
-			this.mode = '';
-
-			this.loadSlideshow();
-		}
-	},
-	mounted() {
-		this.loadSlideshow();
-	}
 };
 </script>

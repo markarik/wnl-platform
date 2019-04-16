@@ -236,12 +236,12 @@ import context from 'js/consts/events_map/context.json';
 
 export default {
 	name: 'StreamNotification',
-	mixins: [notification],
 	components: {
 		'wnl-avatar': Avatar,
 		'wnl-modal': Modal,
 		'wnl-user-profile-modal': UserProfileModal
 	},
+	mixins: [notification],
 	props: {
 		icon: {
 			required: true,

@@ -73,6 +73,10 @@ import { nextTick } from 'vue';
 import _ from 'lodash';
 
 export default{
+	components: {
+		'wnl-form': Form,
+		'wnl-quill': Quill
+	},
 	props: {
 		room: {
 			type: Object,
@@ -113,10 +117,6 @@ export default{
 			sendingMessage: false
 		};
 	},
-	components: {
-		'wnl-form': Form,
-		'wnl-quill': Quill
-	},
 	computed: {
 		...mapGetters([
 			'currentUserFullName',
@@ -145,6 +145,13 @@ export default{
 		},
 		formId() {
 			return `chat-message-form-${this._uid}`;
+		}
+	},
+	watch: {
+		'room.id'() {
+			if (this.autofocusOnRoomChange && this.room.id) {
+				nextTick(() => this.quillEditor.quill.focus());
+			}
 		}
 	},
 	methods: {
@@ -216,13 +223,6 @@ export default{
 			}
 		}
 	},
-	watch: {
-		'room.id'() {
-			if (this.autofocusOnRoomChange && this.room.id) {
-				nextTick(() => this.quillEditor.quill.focus());
-			}
-		}
-	}
 };
 
 </script>

@@ -57,6 +57,12 @@ export default {
 			};
 		},
 	},
+	mounted() {
+		this.wrapEmbedded();
+	},
+	updated() {
+		this.wrapEmbedded();
+	},
 	methods: {
 		redirectToExam() {
 			this.$router.push(this.routeParams);
@@ -76,12 +82,6 @@ export default {
 				});
 			}
 		}
-	},
-	mounted() {
-		this.wrapEmbedded();
-	},
-	updated() {
-		this.wrapEmbedded();
 	},
 };
 </script>

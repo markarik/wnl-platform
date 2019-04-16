@@ -364,6 +364,20 @@ export default {
 			return this.slides[this.currentSlideIndex];
 		},
 	},
+	watch: {
+		'currentModalSlide.id'(slideId) {
+			if (!slideId) return;
+			axios.get(getApiUrl(`slideshow_builder/slide/${slideId}`))
+				.then(({ data }) => {
+					this.slideContent = data;
+					this.show = true;
+				})
+				.catch(error => {
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert(this.alertError);
+				});
+		}
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		hideSlidePreview() {
@@ -423,19 +437,5 @@ export default {
 			});
 		},
 	},
-	watch: {
-		'currentModalSlide.id'(slideId) {
-			if (!slideId) return;
-			axios.get(getApiUrl(`slideshow_builder/slide/${slideId}`))
-				.then(({ data }) => {
-					this.slideContent = data;
-				}).then(() => {
-					this.show = true;
-				}).catch(error => {
-					$wnl.logger.capture(error);
-					this.addAutoDismissableAlert(this.alertError);
-				});
-		}
-	}
 };
 </script>

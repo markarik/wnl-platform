@@ -77,13 +77,6 @@ import { PRODUCTS_SLUGS } from 'js/consts/products';
 import { SUBSCRIPTION_STATUS } from 'js/consts/user';
 
 export default {
-	data() {
-		return {
-			isLoading: true,
-			EXPIRED: SUBSCRIPTION_STATUS.EXPIRED,
-			orders: []
-		};
-	},
 	components: {
 		WnlMainNav,
 		WnlSidenavSlot,
@@ -94,6 +87,13 @@ export default {
 		WnlSplashScreenDefault,
 		WnlSplashScreenGenericError,
 		WnlSplashScreenOrderCanceled
+	},
+	data() {
+		return {
+			isLoading: true,
+			EXPIRED: SUBSCRIPTION_STATUS.EXPIRED,
+			orders: []
+		};
 	},
 	perimeters: [upcomingEditionParticipant],
 	computed: {
@@ -114,12 +114,6 @@ export default {
 			return this.latestCourseOrders.every(order => order.canceled);
 		},
 	},
-	methods: {
-		async fetchOrders() {
-			const { data: orders } = await axios.get(getApiUrl('users/current/orders/all'));
-			this.orders = orders;
-		},
-	},
 	async mounted() {
 		try {
 			await this.fetchOrders();
@@ -128,6 +122,12 @@ export default {
 		} finally {
 			this.isLoading = false;
 		}
+	},
+	methods: {
+		async fetchOrders() {
+			const { data: orders } = await axios.get(getApiUrl('users/current/orders/all'));
+			this.orders = orders;
+		},
 	}
 };
 </script>

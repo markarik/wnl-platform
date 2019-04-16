@@ -40,6 +40,7 @@ import { formInput } from 'js/mixins/form-input';
 
 export default {
 	name: 'ColorInput',
+	mixins: [formInput],
 	props: {
 		name: {
 			type: String,
@@ -49,6 +50,5 @@ export default {
 			default: false
 		}
 	},
-	mixins: [formInput],
 };
 </script>

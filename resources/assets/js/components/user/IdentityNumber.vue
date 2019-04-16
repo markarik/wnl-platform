@@ -203,6 +203,10 @@ export default {
 			});
 		}
 	},
+	async mounted() {
+		await this.fetchUserPersonalData();
+		this.isLoaded = true;
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert', 'setUserIdentity', 'fetchUserPersonalData']),
 		async onSubmit(event) {
@@ -323,9 +327,5 @@ export default {
 			return letterValues.indexOf(letter);
 		},
 	},
-	async mounted() {
-		await this.fetchUserPersonalData();
-		this.isLoaded = true;
-	}
 };
 </script>

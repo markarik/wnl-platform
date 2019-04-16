@@ -215,6 +215,11 @@ export default {
 			return this.$currentEditionParticipant.isAllowed('access');
 		}
 	},
+	watch: {
+		'$route.query.chatChannel'(newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
+		}
+	},
 	methods: {
 		...mapActions(['toggleChat']),
 		onUserEvent(payload) {
@@ -224,10 +229,5 @@ export default {
 			});
 		}
 	},
-	watch: {
-		'$route.query.chatChannel'(newVal) {
-			newVal && !this.isChatVisible && this.toggleChat();
-		}
-	}
 };
 </script>

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import axios from 'axios';
+import axios, { isCancel } from 'axios';
 import * as types from 'js/store/mutations-types';
 import { getApiUrl } from 'js/utils/env';
 import { set, delete as destroy } from 'vue';
@@ -31,11 +31,12 @@ function _getQuestionsByTagName(tagName, ids) {
 	});
 }
 
-function _getQuestionsForDiscussion(discussionId) {
+function _getQuestionsForDiscussion({ discussionId, cancelToken }) {
 	return axios.get(getApiUrl(`discussions/${discussionId}`), {
 		params: {
 			include: discussionsInclude
-		}
+		},
+		cancelToken
 	});
 }
 
@@ -55,7 +56,9 @@ function _handleGetQuestionsSuccess({ commit, dispatch }, { data }) {
 }
 
 function _handleGetQuestionsError(commit, error) {
-	$wnl.logger.error(error);
+	if (!isCancel(error)) {
+		$wnl.logger.error(error);
+	}
 	commit(types.IS_LOADING, false);
 }
 
@@ -293,11 +296,11 @@ const actions = {
 		});
 	},
 
-	async fetchQuestionsForDiscussion({ commit, dispatch }, discussionId) {
+	async fetchQuestionsForDiscussion({ commit, dispatch }, { discussionId, cancelToken }) {
 		commit(types.IS_LOADING, true);
 
 		try {
-			const { data } = await _getQuestionsForDiscussion(discussionId);
+			const { data } = await _getQuestionsForDiscussion({ discussionId, cancelToken });
 			commit(types.QNA_DESTROY);
 
 

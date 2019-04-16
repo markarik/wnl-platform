@@ -88,12 +88,12 @@ export default {
 		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 		onSubmitSuccess() {
 			this.$emit('submitSuccess');
-			this.fetchQuestionsForDiscussion(this.discussionId);
+			this.fetchQuestionsForDiscussion({ discussionId: this.discussionId });
 		},
 	},
 	watch: {
 		discussionId() {
-			this.fetchQuestionsForDiscussion(this.discussionId);
+			this.fetchQuestionsForDiscussion({ discussionId: this.discussionId });
 		}
 	}
 };

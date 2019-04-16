@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios, { CancelToken } from 'axios';
 import { each } from 'lodash';
 import { mapActions } from 'vuex';
 
@@ -47,7 +47,8 @@ export default {
 			updated_at: null,
 			tags: null,
 			discussion_id: 0,
-			is_discussable: false
+			is_discussable: false,
+			cancelSource: null
 		};
 	},
 	computed: {
@@ -98,7 +99,12 @@ export default {
 			this.content = injectArguments(newValue, this.arguments);
 		},
 		discussion_id() {
-			this.hasQna && this.fetchQuestionsForDiscussion(this.discussion_id);
+			this.cancelSource && this.cancelSource.cancel();
+
+			if (this.hasQna) {
+				this.cancelSource = CancelToken.source();
+				this.fetchQuestionsForDiscussion({ discussionId: this.discussion_id, cancelToken: this.cancelSource.token });
+			}
 		},
 		slug: function () {
 			this.fetch();

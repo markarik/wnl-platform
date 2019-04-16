@@ -53,11 +53,9 @@ class SlideshowImport extends Command
 	 */
 	public function handle()
 	{
-		/*
-		 * Below collections are going to serve as indices that hold
-		 * original IDs and newly created models. This will allow us
-		 * to recreate original relations.
-		 */
+		// Below collections are going to serve as indices that hold
+		// original IDs and newly created models. This will allow us
+		// to recreate original relations.
 		$this->slides = collect();
 		$this->sections = collect();
 		$this->subsections = collect();

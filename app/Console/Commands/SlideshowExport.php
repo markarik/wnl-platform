@@ -18,7 +18,7 @@ class SlideshowExport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'slideshow:export {screenId}';
+	protected $signature = 'slideshow:export {screenId} {filename}';
 
 	/**
 	 * The console command description.
@@ -63,8 +63,10 @@ class SlideshowExport extends Command
 			'presentables' => $presentables->toArray(),
 		];
 
-		// TODO: Generate sensible filename or take if from argument.
-		Storage::put('exports/slideshow_export.json', json_encode($data));
+		$filename = $this->argument('filename');
+		$path = "exports/{$filename}.json";
+		Storage::put($path, json_encode($data));
+		$this->info("OK, slideshow saved under {$path}");
 
 		return 0;
 	}

@@ -21,7 +21,7 @@ class SlideshowImport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'slideshow:import {lessonId} {file} {--dry-run}';
+	protected $signature = 'slideshow:import {lessonId} {filename} {--dry-run}';
 
 	/**
 	 * The console command description.
@@ -68,8 +68,8 @@ class SlideshowImport extends Command
 			return 1;
 		}
 
-		// TODO: Generate sensible filename or take if from argument.
-		$fileContents = Storage::drive()->get('exports/slideshow_export.json');
+		$filename = $this->argument('filename');
+		$fileContents = Storage::drive()->get($filename);
 		$data = json_decode($fileContents, true);
 
 		DB::beginTransaction();
@@ -103,6 +103,7 @@ class SlideshowImport extends Command
 	{
 		$screenData['meta']['resources'][0]['id'] = $slideshow->id;
 		$screenData['lesson_id'] = $lesson->id;
+		unset($screenData['id']);
 
 		return Screen::create($screenData);
 	}

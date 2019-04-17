@@ -23,6 +23,13 @@ class OrderObserver
 	public function updated(Order $order)
 	{
 		\Log::notice("OrderObserver: Order #{$order->id} updated");
+
+		// This has to be called very early to make sure
+		// all the methods called below are using correct state of instalments
+		if ($order->isDirty(['paid_amount'])){
+			$order->generateAndSavePaymentSchedule();
+		}
+
 		$settlement = $order->paid_amount - $order->getOriginal('paid_amount');
 		if (!$order->isDirty(['paid']) && $order->isDirty(['paid_amount']) && $settlement > 0) {
 			\Log::notice(">>> OrderObserver: #{$order->id} paid amount is dirty");
@@ -57,10 +64,6 @@ class OrderObserver
 			$order->getOriginal('coupon_id') !== $order->coupon_id
 		) {
 			$this->handleCouponChange($order);
-		}
-
-		if($order->isDirty(['paid_amount'])){
-			$order->generateAndSavePaymentSchedule();
 		}
 	}
 

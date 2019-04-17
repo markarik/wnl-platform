@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Http\Controllers\Api\Serializer;
+namespace Tests\Unit\Models;
 
 use App\Models\Coupon;
 use App\Models\Order;
@@ -27,7 +27,7 @@ class OrderTest extends TestCase
 			'kind' => Coupon::KIND_VOUCHER,
 		]);
 		$order = $this->createOrder(1500, 1500);
-		$order->coupon_id = $coupon->id;
+		$order->coupon()->associate($coupon);
 		$order->save();
 
 		$expectedInstalments = [
@@ -73,9 +73,14 @@ class OrderTest extends TestCase
 	public function testGetInstalmentsAttributeNotPaid($price, $paidAmount, $orderInstalments, $expectedTotalLeft, $expectedInstalments, $expectedNextPayment) {
 		$order = $this->createOrder($price, $paidAmount);
 
-		foreach ($orderInstalments as $orderInstalment) {
-			factory(OrderInstalment::create(array_merge($orderInstalment, ['order_id' => $order->id])));
+		if (count($orderInstalments)) {
+			foreach ($orderInstalments as $orderInstalment) {
+				factory(OrderInstalment::create(array_merge($orderInstalment, ['order_id' => $order->id])));
+			}
+		} else {
+			$order->generateAndSavePaymentSchedule();
 		}
+
 
 		/** @var Collection $instalments */
 		$instalments = $order->instalments['instalments'];

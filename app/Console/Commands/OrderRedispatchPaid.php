@@ -40,7 +40,7 @@ class OrderRedispatchPaid extends Command
 	{
 		foreach (explode(',', $this->argument('orders')) as $order) {
 			$this->info('Redispatching OrderPaid for ' . $order);
-			dispatch(new OrderPaid(Order::find($order), true));
+			dispatch(new OrderPaid(Order::find($order)));
 		}
 
 		return;

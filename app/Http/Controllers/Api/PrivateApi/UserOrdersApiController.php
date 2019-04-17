@@ -74,11 +74,9 @@ class UserOrdersApiController extends ApiController
 		$order->attachCoupon($coupon);
 
 		if (intval($order->total_with_coupon) === 0) {
-			$generateInvoice = !$order->paid;
-
 			$order->paid = true;
 			$order->save();
-			$this->dispatch(new OrderPaid($order, $generateInvoice));
+			$this->dispatch(new OrderPaid($order));
 			$this->dispatchNow(new CreateSubscription($order));
 		}
 

@@ -35,8 +35,6 @@ class OrderObserver
 		if (!$order->isDirty(['paid']) && $order->isDirty(['paid_amount']) && $settlement > 0) {
 			Log::notice(">>> OrderObserver: #{$order->id} paid amount is dirty");
 
-			$generateInvoice = !$order->paid;
-
 			if ($order->paidAmountSufficient() && !$order->paid) {
 				Log::notice("___ OrderObserver: #{$order->id} marking order as paid");
 				$order->paid = true;
@@ -45,7 +43,7 @@ class OrderObserver
 			}
 
 			Log::notice("OrderObserver: Dispatching OrderPaid for order #$order->id");
-			$this->dispatch(new OrderPaid($order, $generateInvoice));
+			$this->dispatch(new OrderPaid($order));
 			$this->dispatchNow(new CreateSubscription($order));
 
 			Log::notice("OrderPaid: handleStudyBuddy called for order #{$order->id}");
@@ -95,7 +93,7 @@ class OrderObserver
 			Log::notice('Order total is 0, marking as paid and dispatching OrderPaid job.');
 			$order->paid = true;
 			$order->save();
-			$this->dispatch(new OrderPaid($order, true));
+			$this->dispatch(new OrderPaid($order));
 			$this->dispatchNow(new CreateSubscription($order));
 		}
 

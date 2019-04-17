@@ -19,8 +19,8 @@
 		</div>
 		<wnl-quiz-question
 			v-if="question"
-			:class="`quiz-question-${question.id}`"
 			:id="question.id"
+			:class="`quiz-question-${question.id}`"
 			:question="question"
 			:show-comments="displayResults"
 			:get-reaction="getReaction"
@@ -40,10 +40,19 @@
 			@editorDestroyed="onContentItemClassifierEditorDestroyed"
 		/>
 		<p class="active-question-button has-text-centered">
-			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
+			<a
+				v-if="!question.isResolved"
+				class="button is-primary"
+				:disabled="!hasAnswer"
+				@click="verify"
+			>
 				Sprawdź odpowiedź
 			</a>
-			<a v-else class="button is-primary is-outlined" @click="nextQuestion()">
+			<a
+				v-else
+				class="button is-primary is-outlined"
+				@click="nextQuestion()"
+			>
 				Następne
 			</a>
 		</p>

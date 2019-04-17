@@ -19,14 +19,15 @@
 			<tbody>
 			<tr v-for="method in methods" :key="method.id">
 				<td>
-					<input type="checkbox"
-						:checked="methodEnabled(method.id)"
+					<input
 						:id="method.id"
+						type="checkbox"
+						:checked="methodEnabled(method.id)"
 						@change="toggleMethod($event, method.id)"
 					/>
 				</td>
 				<td>
-					<label :for="method.id">{{ methodNames[method.slug] }}</label>
+					<label :for="method.id">{{methodNames[method.slug]}}</label>
 				</td>
 				<td>
 					<wnl-datepicker
@@ -68,10 +69,10 @@
 				</thead>
 				<tbody>
 				<tr v-for="(instalment, index) in instalments" :key="index">
-					<td>{{ instalment.order_number }}</td>
-					<td>{{ instalmentTypes[instalment.value_type] }}</td>
-					<td>{{ instalment.value }}{{ instalmentValueUnit(instalment.value_type) }}</td>
-					<td>{{ instalment.due_days || '-'}}</td>
+					<td>{{instalment.order_number}}</td>
+					<td>{{instalmentTypes[instalment.value_type]}}</td>
+					<td>{{instalment.value}}{{instalmentValueUnit(instalment.value_type)}}</td>
+					<td>{{instalment.due_days || '-'}}</td>
 					<td>
 						<wnl-datepicker
 							v-if="!instalment.due_days"
@@ -87,7 +88,11 @@
 			</table>
 		</div>
 
-		<a class="button is-primary is-wide" v-if="!loadingMethods" @click="save">Zapisz</a>
+		<a
+			v-if="!loadingMethods"
+			class="button is-primary is-wide"
+			@click="save"
+		>Zapisz</a>
 	</div>
 </template>
 

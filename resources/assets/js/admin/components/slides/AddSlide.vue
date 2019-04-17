@@ -6,24 +6,32 @@
 		:request-payload="requestPayload"
 		:screen-id="Number(screenId)"
 	>
-		<div class="level margin vertical" slot="above-content">
+		<div slot="above-content" class="level margin vertical">
 			<div class="level-left">
 				<div class="level-item">
 					<div class="field is-grouped">
 						<div class="control">
 							<label class="label">Numer screena</label>
-							<input type="text" class="input" v-model="screenId">
+							<input
+								v-model="screenId"
+								type="text"
+								class="input"
+							>
 						</div>
 						<div class="control">
 							<label class="label">Numer slajdu</label>
-							<input type="text" class="input" v-model="slideOrderNo">
+							<input
+								v-model="slideOrderNo"
+								type="text"
+								class="input"
+							>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="notification is-info" slot="below-content">
+		<div slot="below-content" class="notification is-info">
 			<span class="icon">
 				<i class="fa fa-info-circle"></i>
 			</span>

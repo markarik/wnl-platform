@@ -1,5 +1,10 @@
 <template>
-	<div v-if="!reactionsDisabled" class="watch" :class="{'has-reacted': hasReacted}" @click="toggleReaction">
+	<div
+		v-if="!reactionsDisabled"
+		class="watch"
+		:class="{'has-reacted': hasReacted}"
+		@click="toggleReaction"
+	>
 		<span v-if="!isMobile" v-t="reactionMessage"></span>
 		<span v-if="!isLoading" class="icon is-small watch-icon">
 			<i class="fa" :class="hasReactedClass"></i>

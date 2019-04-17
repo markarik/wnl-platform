@@ -2,7 +2,11 @@
 	<div class="stream-filtering">
 		<div v-if="!isMobile" class="tabs">
 			<ul>
-				<li v-for="(option, index) in filteringOptions" :key="index" :class="{'is-active': isTabActive(option.slug)}">
+				<li
+					v-for="(option, index) in filteringOptions"
+					:key="index"
+					:class="{'is-active': isTabActive(option.slug)}"
+				>
 					<a @click="changeFiltering(option.slug)">
 						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{option.text}}
 					</a>
@@ -12,7 +16,8 @@
 		<div v-else class="control">
 			<span class="select">
 				<select @input="changeFilteringWithSelect">
-					<option v-for="(option, index) in filteringOptions"
+					<option
+						v-for="(option, index) in filteringOptions"
 						:key="index"
 						:value="option.slug"
 						:selected="isTabActive(option.slug)"

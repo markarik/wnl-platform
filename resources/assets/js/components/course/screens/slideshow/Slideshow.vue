@@ -5,9 +5,9 @@
 				<div class="controls-left">
 					<wnl-slideshow-navigation @navigateToSlide="navigateToSlide"></wnl-slideshow-navigation>
 				</div>
-				<small class="slide-meta" v-if="$moderatorFeatures.isAllowed('access')">
+				<small v-if="$moderatorFeatures.isAllowed('access')" class="slide-meta">
 					{{currentSlideId}}
-					<wnl-linked-questions :slide-id="currentSlideId"/>
+					<wnl-linked-questions :slide-id="currentSlideId" />
 				</small>
 				<div class="controls-right">
 					<div class="controls-item">
@@ -25,11 +25,11 @@
 			<div class="slideshow-menu">
 				<wnl-annotations
 					:slideshow-id="presentableId"
-					@commentsHidden="onCommentsHidden"
-					@annotationsUpdated="onAnnotationsUpdated"
 					:screen-id="Number(screenId)"
 					:current-slide-id="currentSlideId"
 					:is-loading-comments="isLoadingComments"
+					@commentsHidden="onCommentsHidden"
+					@annotationsUpdated="onAnnotationsUpdated"
 				></wnl-annotations>
 			</div>
 		</div>
@@ -561,6 +561,8 @@ export default {
 				this.setSlideshowHtmlContent(data)
 					.then(() => {
 						const slide = this.getSlideById(this.currentSlideId);
+						// It needs to run after `this.setup()` or the comments will be overriden with an empty array
+						this.setupSlideComments({ id: this.currentSlideId });
 						this.child.call('setBookmarkState', slide.bookmark.hasReacted);
 					});
 			});

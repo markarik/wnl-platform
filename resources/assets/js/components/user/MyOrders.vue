@@ -7,31 +7,39 @@
 				</div>
 			</div>
 			<div v-if="displayAlbumLink">
-				<a :href="orderAlbumUrl" title="Zamów album map myśli" data-button="order-album">
+				<a
+					:href="orderAlbumUrl"
+					title="Zamów album map myśli"
+					data-button="order-album"
+				>
 					<span class="icon is-small status-icon">
 						<i class="fa fa-shopping-cart"></i>
 					</span> Zamów album map myśli ({{getAlbum.price}}zł)
 				</a>
 			</div>
 		</div>
-		<div class="level" v-if="currentUserSubscriptionActive">
+		<div v-if="currentUserSubscriptionActive" class="level">
 			<div class="level-left">
 				<div class="level-item">
 					<div>
 						Twój dostęp do kursu jest aktywny do:&nbsp;
 					</div>
 					<div class="big strong">
-						{{ userFriendlySubscriptionDate }}
+						{{userFriendlySubscriptionDate}}
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="notification is-success strong has-text-centered" v-if="orderSuccess">
+		<div v-if="orderSuccess" class="notification is-success strong has-text-centered">
 			Dziękujemy za złożenie zamówienia!<br>Potwierdzenie znajdziesz na podanym przez siebie adresie e-mail.
 		</div>
 		<div v-if="loaded">
 			<div v-if="hasOrders">
-				<wnl-order :order-instance="order" v-for="(order, index) in orders" :key="index"></wnl-order>
+				<wnl-order
+					v-for="(order, index) in orders"
+					:key="index"
+					:order-instance="order"
+				></wnl-order>
 			</div>
 			<div v-else>
 				<div class="box has-text-centered">

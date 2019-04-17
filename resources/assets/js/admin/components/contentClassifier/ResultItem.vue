@@ -1,5 +1,9 @@
 <template>
-	<li class="result-item" :class="{'is-active': isActive}" @click="$emit('click', $event)">
+	<li
+		class="result-item"
+		:class="{'is-active': isActive}"
+		@click="$emit('click', $event)"
+	>
 		<div class="result-item__top-left"><slot name="top-left"></slot></div>
 		<div class="result-item__content"><slot></slot></div>
 		<span class="icon result-item__icon">

@@ -1,7 +1,13 @@
 <template>
 	<div class="field">
-		<input type="checkbox" :id="checkboxId" class="is-checkradio" v-model="value" :value="checkboxValue"/>
-		<label class="checkbox" :for="checkboxId"><slot/></label>
+		<input
+			:id="checkboxId"
+			v-model="value"
+			type="checkbox"
+			class="is-checkradio"
+			:value="checkboxValue"
+		/>
+		<label class="checkbox" :for="checkboxId"><slot /></label>
 	</div>
 </template>
 

@@ -3,17 +3,17 @@
 		<div v-if="selected" class="selected-container">
 			<span>{{selected.full_name}}</span>
 			<a class="button is-primary is-outlined" @click="onChange(null)">
-			<span class="icon is-small">
-			<i class="fa fa-times"></i>
-			</span>
-		</a></div>
+				<span class="icon is-small">
+					<i class="fa fa-times"></i>
+				</span>
+			</a></div>
 		<wnl-autocomplete
 			v-else
 			v-model="textInputValue"
 			:items="usersListFiltered"
 			@change="onChange"
 		>
-			<wnl-user-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
+			<wnl-user-autocomplete-item slot-scope="slotProps" :item="slotProps.item" />
 		</wnl-autocomplete>
 
 	</div>

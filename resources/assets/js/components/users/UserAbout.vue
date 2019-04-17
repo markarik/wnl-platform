@@ -1,35 +1,35 @@
 <template>
-    <div class="wnl-user-about">
-        <div class="about-title">
-            <p>{{ $t('user.userProfile.about') }}</p>
-        </div>
-        <div class="user-infos">
-            <wnl-user-info
-                :label="$t('user.userAboutLabels.specialization')"
-                :info="profile.specialization"
-            ></wnl-user-info>
-            <wnl-user-info
-                :label="$t('user.userAboutLabels.university')"
-                :info="profile.university"
-            ></wnl-user-info>
-            <wnl-user-info
-                :label="$t('user.userAboutLabels.city')"
-                :info="profile.city"
-            ></wnl-user-info>
-            <wnl-user-info
-                :label="$t('user.userAboutLabels.learning_location')"
-                :info="profile.learning_location"
-            ></wnl-user-info>
-            <wnl-user-info
-                :label="$t('user.userAboutLabels.interests')"
-                :info="profile.interests"
-            ></wnl-user-info>
-            <wnl-user-info
-                :label="$t('user.userAboutLabels.about')"
-                :info="profile.about"
-            ></wnl-user-info>
-        </div>
-    </div>
+	<div class="wnl-user-about">
+		<div class="about-title">
+			<p>{{$t('user.userProfile.about')}}</p>
+		</div>
+		<div class="user-infos">
+			<wnl-user-info
+				:label="$t('user.userAboutLabels.specialization')"
+				:info="profile.specialization"
+			></wnl-user-info>
+			<wnl-user-info
+				:label="$t('user.userAboutLabels.university')"
+				:info="profile.university"
+			></wnl-user-info>
+			<wnl-user-info
+				:label="$t('user.userAboutLabels.city')"
+				:info="profile.city"
+			></wnl-user-info>
+			<wnl-user-info
+				:label="$t('user.userAboutLabels.learning_location')"
+				:info="profile.learning_location"
+			></wnl-user-info>
+			<wnl-user-info
+				:label="$t('user.userAboutLabels.interests')"
+				:info="profile.interests"
+			></wnl-user-info>
+			<wnl-user-info
+				:label="$t('user.userAboutLabels.about')"
+				:info="profile.about"
+			></wnl-user-info>
+		</div>
+	</div>
 
 </template>
 

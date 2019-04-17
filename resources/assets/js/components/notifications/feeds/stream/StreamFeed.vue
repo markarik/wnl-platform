@@ -2,36 +2,47 @@
 	<div class="stream-feed">
 		<div v-if="!loading">
 			<div>
-				<wnl-stream-filtering :show-read="showRead" @changeFiltering="changeFiltering" @toggleShowRead="toggleShowRead"/>
+				<wnl-stream-filtering
+					:show-read="showRead"
+					@changeFiltering="changeFiltering"
+					@toggleShowRead="toggleShowRead"
+				/>
 				<div class="stream-notifications">
 					<div class="stream-line"></div>
-					<component :is="getEventComponent(message)"
-						:message="message"
-						:key="message.id"
-						:notification-component="StreamNotification"
+					<component
+						:is="getEventComponent(message)"
 						v-for="message in filtered"
+						:key="message.id"
+						:message="message"
+						:notification-component="StreamNotification"
 					/>
 				</div>
-				<div class="all-seen" v-if="!showRead && unreadCount > 0">
-					<a v-if="!marking" class="link" @click="allRead">
+				<div v-if="!showRead && unreadCount > 0" class="all-seen">
+					<a
+						v-if="!marking"
+						class="link"
+						@click="allRead"
+					>
 						{{$t('notifications.hideAll')}}
 					</a>
 					<span v-else class="loader"></span>
 				</div>
 				<div class="show-more">
-					<a v-if="canShowMore" class="button is-small is-outlined"
+					<a
+						v-if="canShowMore"
+						class="button is-small is-outlined"
 						:class="{'is-loading': fetching}"
 						@click="loadMore"
 					>
 						{{$t('notifications.personal.showMore')}}
 					</a>
 					<span v-else class="small text-dimmed has-text-centered">
-						{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1"/>
+						{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1" />
 					</span>
 				</div>
 			</div>
 		</div>
-		<wnl-text-loader v-else/>
+		<wnl-text-loader v-else />
 	</div>
 </template>
 

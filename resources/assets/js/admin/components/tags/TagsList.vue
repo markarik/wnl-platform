@@ -10,8 +10,13 @@
 				<router-link class="button is-success" :to="{name: 'tag-edit', params: { id: 'new' } }">+ Dodaj tag</router-link>
 			</h3>
 
-			<tbody slot-scope="slotProps" slot="tbody">
-			<tr v-for="tag in parseIncludes(slotProps.list)" :key="tag.id" class="row" @click="goToTag(tag)">
+			<tbody slot="tbody" slot-scope="slotProps">
+			<tr
+				v-for="tag in parseIncludes(slotProps.list)"
+				:key="tag.id"
+				class="row"
+				@click="goToTag(tag)"
+			>
 				<td>{{tag.id}}</td>
 				<td>{{tag.name}}</td>
 				<td>{{tag.taggables_count}}</td>

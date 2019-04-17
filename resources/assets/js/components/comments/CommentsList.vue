@@ -1,25 +1,29 @@
 <template>
-	<div class="wnl-comments" ref="highlight">
+	<div ref="highlight" class="wnl-comments">
 		<div class="separate-controls">
 			<div class="comments-controls">
 				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
 				Komentarze ({{comments.length}})
 				<span v-if="comments.length > 0 || this.showComments"> ·
-					<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
+				<a
+					class="secondary-link"
+					@click="toggleComments"
+					v-text="toggleCommentsText"
+				></a>
 				</span> ·
 				<span v-if="!readOnly">
 					<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
 				</span>
 				<wnl-watch
-				v-if="!hideWatchlist"
-				:reactable-id="commentableId"
-				:reactable-resource="commentableResource"
-				:state="watchState"
-				:reactions-disabled="false"
-				:module="module"
+					v-if="!hideWatchlist"
+					:reactable-id="commentableId"
+					:reactable-resource="commentableResource"
+					:state="watchState"
+					:reactions-disabled="false"
+					:module="module"
 				/>
 			</div>
-			<slot/>
+			<slot />
 		</div>
 		<template v-if="showComments">
 			<wnl-comment
@@ -33,11 +37,13 @@
 			/>
 			<div class="form-container">
 				<transition name="fade">
-					<wnl-new-comment-form v-if="!readOnly"
+					<wnl-new-comment-form
+						v-if="!readOnly"
 						:commentable-resource="commentableResource"
 						:commentable-id="commentableId"
 						:is-unique="isUnique"
-						@submitSuccess="onSubmitSuccess">
+						@submitSuccess="onSubmitSuccess"
+					>
 					</wnl-new-comment-form>
 				</transition>
 			</div>

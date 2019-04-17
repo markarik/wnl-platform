@@ -13,8 +13,9 @@
 			</div>
 		</div>
 		<wnl-quiz-question
-			:class="`quiz-question-${currentQuestion.id}`"
+			v-if="currentQuestion"
 			:id="currentQuestion.id"
+			:class="`quiz-question-${currentQuestion.id}`"
 			:question="currentQuestion"
 			:show-comments="true"
 			:get-reaction="getReaction"
@@ -22,17 +23,25 @@
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleClick"
 			@userEvent="proxyUserEvent"
-			v-if="currentQuestion"
 		></wnl-quiz-question>
 		<p class="has-text-centered">
-			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
+			<a
+				v-if="!currentQuestion.isResolved"
+				class="button is-primary"
+				:disabled="isSubmitDisabled"
+				@click="verify"
+			>
 				Sprawdź odpowiedź
 			</a>
-			<a v-else-if="hasOtherQuestions" class="button is-primary is-outlined" @click="nextQuestion()">
+			<a
+				v-else-if="hasOtherQuestions"
+				class="button is-primary is-outlined"
+				@click="nextQuestion()"
+			>
 				Następne
 			</a>
 		</p>
-		<div class="other-questions" v-if="hasOtherQuestions">
+		<div v-if="hasOtherQuestions" class="other-questions">
 			<p class="notification small">
 				Możesz wybrać dowolne pytanie z listy klikając na jego tytuł
 			</p>

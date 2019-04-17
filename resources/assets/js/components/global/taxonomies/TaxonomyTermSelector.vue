@@ -1,9 +1,9 @@
 <template>
 	<div class="term-select">
 		<wnl-select
+			v-model="taxonomyId"
 			:options="taxonomiesOptions"
 			class="is-marginless"
-			v-model="taxonomyId"
 			@input="onTaxonomyChange"
 		/>
 		<wnl-taxonomy-term-autocomplete

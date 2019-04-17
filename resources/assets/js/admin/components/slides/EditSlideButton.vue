@@ -5,7 +5,7 @@
 			target="_blank"
 			:href="`/admin/app/slides/edit?screenId=${screenId}&slideId=${currentSlideId}`"
 		>
-			{{ $t('admin.editSlide') }}
+			{{$t('admin.editSlide')}}
 			<span class="icon is-small">
 				<i class="fa fa-pencil"></i>
 			</span>

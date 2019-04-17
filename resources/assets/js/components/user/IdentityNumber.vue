@@ -3,41 +3,41 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.personalData.identityNumber.header') }}
+					{{$t('user.personalData.identityNumber.header')}}
 				</div>
 			</div>
 		</div>
-		<div class="id-number" v-if="isLoaded">
+		<div v-if="isLoaded" class="id-number">
 			<!-- HEADER -->
-			<div class="id-number--has-personal-id" v-if="idNumberAvailable">
-				{{ $t('user.personalData.identityNumber.yourNumber', {number: idNumber}) }}
-				{{ $t('user.personalData.identityNumber.yourNumberChange') }}
+			<div v-if="idNumberAvailable" class="id-number--has-personal-id">
+				{{$t('user.personalData.identityNumber.yourNumber', {number: idNumber})}}
+				{{$t('user.personalData.identityNumber.yourNumberChange')}}
 			</div>
 
 			<!-- INPUT -->
-			<div class="id-number--no-personal-id" v-else>
+			<div v-else class="id-number--no-personal-id">
 				<div class="message is-primary">
 					<div class="message-header">
-						{{ $t('user.personalData.identityNumber.header') }}
+						{{$t('user.personalData.identityNumber.header')}}
 					</div>
 					<div class="message-body" v-html="$t('user.personalData.identityNumber.explanation')"></div>
 				</div>
 				<div class="id-number__personal-identity-number-input">
 					<input
+						v-model="identity.personalIdentityNumber"
 						:name="this.identityTypes.personalId"
 						class="input"
 						type="text"
 						placeholder="Numer identyfikacyjny"
-						v-model="identity.personalIdentityNumber"
 						@keyup.enter="onSubmit"
 					/>
 				</div>
 
 				<!-- ERROR MESSAGES -->
-				<div class="id-number__errors" v-if="errors.length">
+				<div v-if="errors.length" class="id-number__errors">
 					<ul v-for="(error, index) in activeErrors" :key="index">
 						<li>
-							{{ $t(`user.personalData.errors.${error.errorCode}`) }}
+							{{$t(`user.personalData.errors.${error.errorCode}`)}}
 						</li>
 					</ul>
 				</div>
@@ -45,33 +45,37 @@
 				<!-- CHANGE IDENTITY NUMBER TYPE -->
 				<div class="id-number-other-container">
 					<div
+						v-if="!otherIdentity"
 						class="id-number__personal-identity-number-input__change"
 						@click="otherIdentity=true"
-						v-if="!otherIdentity">
-						{{ $t('user.personalData.identityNumber.changeNumberType') }}
+					>
+						{{$t('user.personalData.identityNumber.changeNumberType')}}
 					</div>
 					<div
+						v-if="otherIdentity"
 						class="id-number--other-identitification"
-						v-if="otherIdentity">
+					>
 						<div class="id_number__radio field">
-								<input
-									@click="disableErrors"
-									class="is-checkradio"
-									type="radio"
-									id="personal_identity_number"
-									:name="this.identityTypes.personalId"
-									value="personal_identity_number"
-									v-model="identity.identityType">
-								<label for="personal_identity_number">{{ $t('user.personalData.identityNumber.types.personal') }}</label>
-								<input
-									@click="disableErrors"
-									class="is-checkradio"
-									type="radio"
-									id="passport"
-									:name="this.identityTypes.passport"
-									value="passport_number"
-									v-model="identity.identityType">
-								<label for="passport">{{ $t('user.personalData.identityNumber.types.passport') }}</label>
+							<input
+								id="personal_identity_number"
+								v-model="identity.identityType"
+								class="is-checkradio"
+								type="radio"
+								:name="this.identityTypes.personalId"
+								value="personal_identity_number"
+								@click="disableErrors"
+							>
+							<label for="personal_identity_number">{{$t('user.personalData.identityNumber.types.personal')}}</label>
+							<input
+								id="passport"
+								v-model="identity.identityType"
+								class="is-checkradio"
+								type="radio"
+								:name="this.identityTypes.passport"
+								value="passport_number"
+								@click="disableErrors"
+							>
+							<label for="passport">{{$t('user.personalData.identityNumber.types.passport')}}</label>
 						</div>
 					</div>
 				</div>
@@ -80,8 +84,8 @@
 				<div class="level-item">
 					<a
 						class="button is-primary is-wide"
-						@click="onSubmit"
 						:disabled="hasNoChanges"
+						@click="onSubmit"
 					>Zapisz</a>
 				</div>
 			</div>

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import _ from 'lodash';
 import Vue from 'vue';
 import Raven from 'raven-js';

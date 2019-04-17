@@ -8,13 +8,15 @@
 			</div>
 		</div>
 
-		<wnl-form class="margin vertical"
+		<wnl-form
+			class="margin vertical"
 			name="Settings"
 			method="put"
 			resource-route="users/current/settings"
 			populate="true"
 			hide-default-submit="true"
-			@submitSuccess="onSubmitSuccess">
+			@submitSuccess="onSubmitSuccess"
+		>
 			<template slot-scope="slotParams">
 				<!-- <wnl-form-check name="newsletter">Otrzymuj newsletter</wnl-form-check> -->
 				<wnl-form-check

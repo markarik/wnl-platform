@@ -8,7 +8,11 @@
 				<router-link class="button is-success" :to="{name: 'taxonomy-edit', params: { id: 'new' } }">+ Dodaj taksonomię</router-link>
 			</h3>
 
-			<table class="table" slot-scope="slotProps" slot="list">
+			<table
+				slot="list"
+				slot-scope="slotProps"
+				class="table"
+			>
 				<thead>
 				<tr>
 					<th>Id</th>
@@ -16,7 +20,12 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr v-for="taxonomy in slotProps.list" :key="taxonomy.id" class="row" @click="goToTaxonomy(taxonomy)">
+				<tr
+					v-for="taxonomy in slotProps.list"
+					:key="taxonomy.id"
+					class="row"
+					@click="goToTaxonomy(taxonomy)"
+				>
 					<td>{{taxonomy.id}}</td>
 					<td>{{taxonomy.name}}</td>
 				</tr>

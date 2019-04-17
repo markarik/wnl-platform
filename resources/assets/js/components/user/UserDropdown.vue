@@ -1,24 +1,30 @@
 <template>
 	<div class="dropdown-container">
 		<wnl-dropdown @toggled="toggle">
-			<div slot="activator" class="user-toggle" :class="{ 'is-active' : isActive, 'is-desktop': !isTouchScreen }">
-				<wnl-avatar/>
+			<div
+				slot="activator"
+				class="user-toggle"
+				:class="{ 'is-active' : isActive, 'is-desktop': !isTouchScreen }"
+			>
+				<wnl-avatar />
 				<span v-show="!isTouchScreen" class="icon">
 					<i class="fa fa-angle-down"></i>
 				</span>
 			</div>
 			<div slot="content">
 				<div class="user-dropdown-content">
-					<wnl-avatar/>
+					<wnl-avatar />
 					<div class="user-links">
 						<p class="metadata">
-							{{ currentUserFullName }}
+							{{currentUserFullName}}
 							<span v-if="currentUserEmail" class="user-email">{{currentUserEmail}}</span>
 						</p>
 						<ul>
-							<li v-for="(item, index) in items"
+							<li
+								v-for="(item, index) in items"
+								:key="index"
 								class="user-link"
-								:key="index">
+							>
 								<span class="icon is-small">
 									<i class="fa" :class="item.icon"></i>
 								</span>

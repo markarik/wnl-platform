@@ -1,22 +1,22 @@
 <template>
 	<div>
-		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')"/>
+		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')" />
 		<div class="open-all">
 			<div class="level">
-				{{ $t('lessonsAvailability.openAllLessons.annotation') }}
+				{{$t('lessonsAvailability.openAllLessons.annotation')}}
 			</div>
 			<div class="level">
-				{{ $t('lessonsAvailability.openAllLessons.paragraphAnnotation')}}
-				{{ this.completedLessonsLength }}/{{ this.availableLength }}.
-				wyświetli się: {{ this.completedLessonsLength }}/{{this.requiredLength}}.
+				{{$t('lessonsAvailability.openAllLessons.paragraphAnnotation')}}
+				{{this.completedLessonsLength}}/{{this.availableLength}}.
+				wyświetli się: {{this.completedLessonsLength}}/{{this.requiredLength}}.
 			</div>
-			<span>{{ $t('lessonsAvailability.openAllLessons.paragraphExplanation')}}</span>
+			<span>{{$t('lessonsAvailability.openAllLessons.paragraphExplanation')}}</span>
 		</div>
 		<div class="accept-plan">
 			<a
-				@click="acceptPlan"
 				class="button button is-primary is-outlined is-big"
-			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+				@click="acceptPlan"
+			>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 			</a>
 		</div>
 	</div>

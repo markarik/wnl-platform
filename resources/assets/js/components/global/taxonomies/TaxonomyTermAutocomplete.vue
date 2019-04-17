@@ -19,9 +19,9 @@
 			@change="onSelect"
 		>
 			<wnl-taxonomy-term-with-ancestors
+				slot-scope="slotProps"
 				:term="slotProps.item"
 				:ancestors="getAncestorNodesById(slotProps.item.id)"
-				slot-scope="slotProps"
 			/>
 		</wnl-autocomplete>
 	</div>

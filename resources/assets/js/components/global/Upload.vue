@@ -1,8 +1,13 @@
 <template>
-	<div @click="click" class="wnl-upload">
+	<div class="wnl-upload" @click="click">
 		<slot></slot>
 		<form @submit.prevent>
-			<input :id="inputId" @change="inputChanged" type="file" class="form-control"/>
+			<input
+				:id="inputId"
+				type="file"
+				class="form-control"
+				@change="inputChanged"
+			/>
 		</form>
 	</div>
 

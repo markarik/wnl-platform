@@ -3,8 +3,11 @@
 		<div class="header">
 			<div class="tabs">
 				<ul>
-					<li :class="{[tab.class]: tab.class, 'is-active': tab.view === activeView}"
-						@click="changeTab(name, tab)" v-for="(tab, name) in tabs" :key="name"
+					<li
+						v-for="(tab, name) in tabs"
+						:key="name"
+						:class="{[tab.class]: tab.class, 'is-active': tab.view === activeView}"
+						@click="changeTab(name, tab)"
 					>
 						<a>{{tab.text}}</a>
 					</li>

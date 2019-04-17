@@ -11,14 +11,14 @@
 			<label class="label">Nazwa lekcji</label>
 			<wnl-autocomplete
 				v-if="!newLesson.lessonId"
-				class="margin bottom big"
 				v-model="lessonInput"
+				class="margin bottom big"
 				placeholder="wpisz nazwę aby wyszukać..."
 				:items="autocompleteLessonsItems"
 				:is-down="false"
 				@change="onNewLessonSelect"
 			>
-				<span class="lesson-autocomplete-item" slot-scope="row">{{row.item.id}}. {{row.item.name}}</span>
+				<span slot-scope="row" class="lesson-autocomplete-item">{{row.item.id}}. {{row.item.name}}</span>
 			</wnl-autocomplete>
 			<div v-else>
 				{{newLesson.name}}
@@ -37,7 +37,11 @@
 				@onChange="value => newLesson.startDate = value[0]"
 			/>
 		</div>
-		<button class="button is-primary is-outlined is-big margin top" @click="addLesson" :disabled="!newLesson.lessonId">Dodaj lekcję</button>
+		<button
+			class="button is-primary is-outlined is-big margin top"
+			:disabled="!newLesson.lessonId"
+			@click="addLesson"
+		>Dodaj lekcję</button>
 	</div>
 </template>
 

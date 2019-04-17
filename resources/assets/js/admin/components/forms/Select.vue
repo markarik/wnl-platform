@@ -1,15 +1,16 @@
 <template>
 	<div class="field select">
 		<select
-			v-model="selected"
 			ref="select"
+			v-model="selected"
 			@keyup.esc="onEscape"
 		>
 			<option
 				v-for="(option, key) in options"
 				:key="key"
 				:value="option.value"
-				v-text="option.text">
+				v-text="option.text"
+			>
 			</option>
 		</select>
 	</div>

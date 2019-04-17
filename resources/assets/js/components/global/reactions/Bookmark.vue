@@ -1,5 +1,9 @@
 <template>
-	<div v-if="!reactionsDisabled" class="bookmark" @click="toggleReaction">
+	<div
+		v-if="!reactionsDisabled"
+		class="bookmark"
+		@click="toggleReaction"
+	>
 		<span v-if="!isLoading" class="icon is-small">
 			<i class="fa" :class="hasReactedClass"></i>
 		</span>

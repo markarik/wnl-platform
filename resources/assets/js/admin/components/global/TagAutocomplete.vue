@@ -8,13 +8,13 @@
 			v-else
 			v-model="search"
 			:items="autocompleteTags"
-			@change="onSelect"
 			:placeholder="placeholder"
+			@change="onSelect"
 		>
 			<div slot-scope="slotProps">
 				{{slotProps.item.name}}
 			</div>
-			<div slot="footer" v-if="autocompleteTags.length === 0 && search !== ''">
+			<div v-if="autocompleteTags.length === 0 && search !== ''" slot="footer">
 				<div class="margin">
 					Nie mamy taga <strong>{{search}}</strong>
 				</div>

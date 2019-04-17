@@ -1,11 +1,11 @@
 <template>
 	<wnl-dashboard-news-content
-			v-if="showNews"
-			:message="dashboardNews.message"
-			:message-arguments="messageArguments"
-			:slug="dashboardNews.slug"
-			@onClose="closed"
-			@onContentClick="contentClicked"
+		v-if="showNews"
+		:message="dashboardNews.message"
+		:message-arguments="messageArguments"
+		:slug="dashboardNews.slug"
+		@onClose="closed"
+		@onContentClick="contentClicked"
 	/>
 </template>
 

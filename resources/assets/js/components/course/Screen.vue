@@ -3,14 +3,14 @@
 		<h4>{{name}}</h4>
 		<component
 			:is="component"
+			:key="screenData.id"
 			:screen-data="screenData"
 			:context="model"
-			:key="screenData.id"
 			@userEvent="proxyUserEvent"
 		/>
 		<wnl-qna
-			:sorting-enabled="true"
 			v-if="showQna"
+			:sorting-enabled="true"
 			:context-tags="tags"
 			class="wnl-screen-qna"
 			:discussion-id="screenData.discussion_id"

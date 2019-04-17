@@ -7,9 +7,9 @@
 		</div>
 		<wnl-upload
 			v-if="uploadEnabled"
-			@success="onUploadSuccess"
 			endpoint="upload"
 			class="upload"
+			@success="onUploadSuccess"
 		>
 			<a class="button is-small is-outlined is-primary margin top">
 				Wstaff obraz

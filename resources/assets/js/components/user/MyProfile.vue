@@ -3,12 +3,16 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.myProfile.publicProfile') }}
+					{{$t('user.myProfile.publicProfile')}}
 				</div>
 			</div>
 			<div class="level-right preview-button" :class="{mobile: isMobileProfile}">
 				<span>
-					<router-link class="link" :to="{ name: 'user', params: { userId: currentUserId }}" :event="handleLink">
+					<router-link
+						class="link"
+						:to="{ name: 'user', params: { userId: currentUserId }}"
+						:event="handleLink"
+					>
 						<a class="my-profile-preview-button button is-primary is-outlined is-small" :disabled="hasChanges">{{buttonNameToDisplay}}</a>
 					</router-link>
 				</span>
@@ -19,10 +23,10 @@
 				<label class="label">Avatar</label>
 			</div>
 			<wnl-upload
-					@uploadStarted="onUploadStarted"
-					@success="onUploadSuccess"
-					@uploadError="onUploadError"
-					endpoint="users/current/avatar"
+				endpoint="users/current/avatar"
+				@uploadStarted="onUploadStarted"
+				@success="onUploadSuccess"
+				@uploadError="onUploadError"
 			>
 				<wnl-avatar size="extraextralarge" class="clickable-avatar"></wnl-avatar>
 				<a class="change-avatar-button button is-small is-outlined is-primary margin top" :class="{'is-loading': loading}">
@@ -31,20 +35,28 @@
 			</wnl-upload>
 		</div>
 
-		<wnl-form class="margin vertical" name="MyProfile" method="put" resource-route="users/current/profile" populate="true" ref="form" @formIsLoaded="onFormLoaded">
+		<wnl-form
+			ref="form"
+			class="margin vertical"
+			name="MyProfile"
+			method="put"
+			resource-route="users/current/profile"
+			populate="true"
+			@formIsLoaded="onFormLoaded"
+		>
 			<div class="form-input-group">
-				<wnl-form-text name="help" :placeholder="$t('user.myProfile.helpPlaceholder')">{{ $t('user.myProfile.help') }}</wnl-form-text>
-				<wnl-form-text name="specialization">{{ $t('user.myProfile.specialization') }}</wnl-form-text>
+				<wnl-form-text name="help" :placeholder="$t('user.myProfile.helpPlaceholder')">{{$t('user.myProfile.help')}}</wnl-form-text>
+				<wnl-form-text name="specialization">{{$t('user.myProfile.specialization')}}</wnl-form-text>
 			</div>
 			<div class="form-input-group">
-				<wnl-form-text name="university">{{ $t('user.myProfile.university') }}</wnl-form-text>
-				<wnl-form-text name="city">{{ $t('user.myProfile.city') }}</wnl-form-text>
-				<wnl-form-text name="learning_location">{{ $t('user.myProfile.learning_location') }}</wnl-form-text>
+				<wnl-form-text name="university">{{$t('user.myProfile.university')}}</wnl-form-text>
+				<wnl-form-text name="city">{{$t('user.myProfile.city')}}</wnl-form-text>
+				<wnl-form-text name="learning_location">{{$t('user.myProfile.learning_location')}}</wnl-form-text>
 			</div>
 			<div class="form-input-group">
-				<wnl-form-text name="interests">{{ $t('user.myProfile.interests') }}</wnl-form-text>
-				<wnl-form-text name="about" :placeholder="$t('user.myProfile.aboutPlaceholder')">{{ $t('user.myProfile.about') }}</wnl-form-text>
-				<wnl-form-text name="public_email">{{ $t('user.myProfile.public_email') }}</wnl-form-text>
+				<wnl-form-text name="interests">{{$t('user.myProfile.interests')}}</wnl-form-text>
+				<wnl-form-text name="about" :placeholder="$t('user.myProfile.aboutPlaceholder')">{{$t('user.myProfile.about')}}</wnl-form-text>
+				<wnl-form-text name="public_email">{{$t('user.myProfile.public_email')}}</wnl-form-text>
 			</div>
 		</wnl-form>
 	</div>

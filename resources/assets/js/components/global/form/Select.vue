@@ -1,32 +1,37 @@
 <template>
 	<div class="field">
-		<label :for="name" class="label" v-if="$slots.default">
+		<label
+			v-if="$slots.default"
+			:for="name"
+			class="label"
+		>
 			<slot></slot>
 		</label>
 		<div class="control" :class="{'is-loading': isLoading}">
 			<select
+				v-model="inputValue"
 				class="select"
 				:class="{'is-danger': hasErrors}"
 				:name="name"
 				:disabled="disabled"
 				@input="onInput"
-				v-model="inputValue"
 			>
 				<option
 					v-for="(option, key) in options"
 					:key="key"
 					:value="option.value"
-					v-text="option.text">
+					v-text="option.text"
+				>
 				</option>
 			</select>
 		</div>
 
 		<template v-if="hasErrors">
 			<span
-				class="help is-danger"
 				v-for="(error, index) in getErrors"
-				v-text="error"
 				:key="index"
+				class="help is-danger"
+				v-text="error"
 			></span>
 		</template>
 	</div>

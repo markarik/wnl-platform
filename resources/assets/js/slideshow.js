@@ -188,6 +188,7 @@ setupHandshake()
 		setMenuListeners(parent);
 		setBookmarkClickListener(parent);
 	}).catch(exception => {
+	// eslint-disable-next-line no-console
 		console.error(exception);
 		parent.emit('error');
 	});

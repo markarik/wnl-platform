@@ -1,9 +1,10 @@
 <template>
 	<div class="wnl-course-navigation" :class="{ mobile: isMobileNavigation }">
 		<div class="items">
-			<wnl-group-item v-for="item in rootItems"
-				:item="item"
+			<wnl-group-item
+				v-for="item in rootItems"
 				:key="item.id"
+				:item="item"
 			/>
 		</div>
 	</div>

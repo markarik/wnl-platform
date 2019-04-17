@@ -7,15 +7,15 @@
 		>
 			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
 			<aside class="sidenav-aside rooms-sidenav">
-				<wnl-conversations-list/>
+				<wnl-conversations-list />
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="scrollable-main-container chat-container">
 			<wnl-private-chat
+				v-if="currentRoom.id"
 				:room="currentRoom"
 				:users="currentRoomUsers"
 				:messages-loaded="messagesLoaded"
-				v-if="currentRoom.id"
 			></wnl-private-chat>
 		</div>
 	</div>

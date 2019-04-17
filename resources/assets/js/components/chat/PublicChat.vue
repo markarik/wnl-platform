@@ -5,25 +5,33 @@
 		</div>
 		<div class="tabs">
 			<ul>
-				<li v-for="(room, key) in rooms" :key="key" :class="{'is-active': isActive(room)}">
-					<a @click="changeRoom(room)">{{ room.name }}</a>
+				<li
+					v-for="(room, key) in rooms"
+					:key="key"
+					:class="{'is-active': isActive(room)}"
+				>
+					<a @click="changeRoom(room)">{{room.name}}</a>
 				</li>
 			</ul>
 		</div>
 		<a class="wnl-chat-close">
-			<span v-if="canShowCloseIconInChat" class="icon wnl-chat-close" @click="toggleChat">
+			<span
+				v-if="canShowCloseIconInChat"
+				class="icon wnl-chat-close"
+				@click="toggleChat"
+			>
 				<i class="fa fa-chevron-right"></i>
 				<span>Ukryj czat</span>
 			</span>
 		</a>
 		<wnl-chat
+			ref="messagesList"
 			:room="currentRoom"
 			:messages="messages"
 			:highlighted-message-id="highlightedMessageId"
 			:has-more="hasMore"
 			:on-scroll-top="pullMore"
 			:loaded="loaded"
-			ref="messagesList"
 		/>
 		<wnl-message-form
 			:room-id="currentRoom.id"

@@ -2,7 +2,7 @@
 	<div class="scrollable-main-container">
 		<div class="message is-primary">
 			<div class="message-header">
-				{{ $t('user.personalData.header.explanationHeader') }}
+				{{$t('user.personalData.header.explanationHeader')}}
 			</div>
 			<div class="message-body" v-html="personalDataExplanation">
 			</div>

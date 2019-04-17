@@ -173,7 +173,10 @@ class Order extends Model
 
 				/** @var OrderInstalment $orderInstalment */
 				$orderInstalment = $this->orderInstalments()->firstOrNew(['order_number' => $orderNumber]);
-				$orderInstalment->due_date = $instalment->getDueDate($this);
+				if (empty($orderInstalment->due_date)) {
+					// Don't update due date when recalculating instalments
+					$orderInstalment->due_date = $instalment->getDueDate($this);
+				}
 				$orderInstalment->amount = $amount;
 				$orderInstalment->paid_amount = $paidAmount;
 				$orderInstalment->order_number = $orderNumber;

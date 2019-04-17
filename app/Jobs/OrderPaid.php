@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\Invoice as InvoiceModel;
 use App\Models\Order;
-use App\Models\UserSubscription;
 use Illuminate\Bus\Queueable;
 use Lib\Invoice\Invoice;
 use App\Mail\PaymentConfirmation;
@@ -12,20 +12,28 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Log;
 
 class OrderPaid implements ShouldQueue
 {
 	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+	/** @var Order $order */
 	protected $order;
+
+	/** @var bool $generateInvoice */
+	private $generateInvoice;
 
 	/**
 	 * Create a new job instance.
 	 *
 	 * @param Order $order
+	 * @param bool $generateInvoice
 	 */
-	public function __construct(Order $order)
+	public function __construct(Order $order, bool $generateInvoice)
 	{
 		$this->order = $order;
+		$this->generateInvoice = $generateInvoice;
 	}
 
 	/**
@@ -43,7 +51,7 @@ class OrderPaid implements ShouldQueue
 
 	protected function handleCoupon()
 	{
-		\Log::notice("OrderPaid: handleCoupon called for order #{$this->order->id}");
+		Log::notice("OrderPaid: handleCoupon called for order #{$this->order->id}");
 		$order = $this->order;
 
 		if ($order->coupon && $order->coupon->times_usable > 0) {
@@ -54,17 +62,23 @@ class OrderPaid implements ShouldQueue
 
 	protected function sendConfirmation()
 	{
-		\Log::notice("OrderPaid: sendConfirmation called for order #{$this->order->id}");
 		$order = $this->order;
 
-		\Log::debug('Issuing invoice and sending order confirmation.');
+		Log::notice("OrderPaid: sendConfirmation called for order #{$order->id}");
+
+		if (!$this->generateInvoice) {
+			Log::debug('Skipping invoice and order confirmation.');
+			return;
+		}
+
+		Log::debug('Issuing invoice and sending order confirmation.');
 
 		$invoice = $this->getInvoice($order);
 
 		Mail::to($order->user)->send(new PaymentConfirmation($order, $invoice));
 	}
 
-	protected function getInvoice($order)
+	protected function getInvoice($order): InvoiceModel
 	{
 		if ($order->product->delivery_date->isPast()) {
 			return (new Invoice)->vatInvoice($order);
@@ -75,7 +89,7 @@ class OrderPaid implements ShouldQueue
 
 	protected function handleInstalments()
 	{
-		\Log::notice("OrderPaid: handleInstalments called for order #{$this->order->id}");
+		Log::notice("OrderPaid: handleInstalments called for order #{$this->order->id}");
 		if ($this->order->method !== 'instalments') return;
 
 		if ($this->order->user->suspended && !$this->order->is_overdue) {

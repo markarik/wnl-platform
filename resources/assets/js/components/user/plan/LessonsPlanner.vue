@@ -102,7 +102,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters('course', ['userLessons', 'getRequiredLessons']),
+		...mapGetters('course', ['getRequiredLessons']),
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
 		sortedRequiredUserLessons() {
 			return this.requiredLessons

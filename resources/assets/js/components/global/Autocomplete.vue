@@ -10,7 +10,7 @@
 			@input="$emit('input', $event.target.value)"
 			@keydown="onKeyDown"
 			@blur="$emit('blur', $event)"
-		/>
+		>
 		<wnl-autocomplete-list
 			:items="items"
 			:active-index="activeIndex"
@@ -18,10 +18,10 @@
 			@change="$emit('change', $event)"
 		>
 			<template slot-scope="slotProps">
-				<slot :item="slotProps.item"></slot>
+				<slot :item="slotProps.item" />
 			</template>
 			<template slot="footer">
-				<slot name="footer"></slot>
+				<slot name="footer" />
 			</template>
 		</wnl-autocomplete-list>
 	</div>
@@ -32,6 +32,10 @@ import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 import WnlAutocompleteKeyboardNavigation from 'js/mixins/autocomplete-keyboard-navigation';
 
 export default {
+	components: {
+		WnlAutocompleteList,
+	},
+	mixins: [WnlAutocompleteKeyboardNavigation],
 	props: {
 		value: {
 			type: String,
@@ -62,10 +66,6 @@ export default {
 			default: false,
 		},
 	},
-	components: {
-		WnlAutocompleteList,
-	},
-	mixins: [WnlAutocompleteKeyboardNavigation],
 	watch: {
 		async isFocused(isFocused) {
 			if (isFocused) {

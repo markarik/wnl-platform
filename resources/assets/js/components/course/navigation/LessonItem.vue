@@ -11,17 +11,17 @@
 						v-if="isInProgress"
 						title="W trakcie..."
 						class="fa fa-ellipsis-h"
-					></i>
+					/>
 					<i
 						v-else-if="isComplete"
 						title="Zrobione!"
 						class="fa fa-check-square-o"
-					></i>
+					/>
 					<i
 						v-else
 						title="Jeszcze przed Tobą"
 						class="fa fa-square-o"
-					></i>
+					/>
 				</span>
 			</div>
 			<span class="sidenav-item-content">

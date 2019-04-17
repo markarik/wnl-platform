@@ -5,7 +5,7 @@
 			:for="name"
 			class="label"
 		>
-			<slot></slot>
+			<slot />
 		</label>
 		<div class="control" :class="{'is-loading': isLoading}">
 			<select
@@ -21,8 +21,7 @@
 					:key="key"
 					:value="option.value"
 					v-text="option.text"
-				>
-				</option>
+				/>
 			</select>
 		</div>
 
@@ -32,7 +31,7 @@
 				:key="index"
 				class="help is-danger"
 				v-text="error"
-			></span>
+			/>
 		</template>
 	</div>
 </template>
@@ -41,6 +40,7 @@
 import { formInput } from 'js/mixins/form-input';
 
 export default {
+	mixins: [formInput],
 	props: {
 		name: {
 			type: String,
@@ -55,6 +55,5 @@ export default {
 			required: true,
 		}
 	},
-	mixins: [formInput],
 };
 </script>

@@ -3,7 +3,7 @@
 		<div class="refresh">
 			<div class="refresh-link">
 				<span class="icon is-tiny">
-					<i class="fa fa-refresh" :class="{'fa-spin': loading}"></i>
+					<i class="fa fa-refresh" :class="{'fa-spin': loading}" />
 				</span>
 				<a @click="$emit('refresh')">{{$t('questions.filters.refresh')}}</a>
 			</div>
@@ -32,14 +32,14 @@
 				<slot name="heading" />
 			</span>
 		</div>
-		<div v-if="this.activeFilters.length > 0" class="active-filters-list">
+		<div v-if="activeFilters.length > 0" class="active-filters-list">
 			<span
 				v-for="(filter, index) in activeFiltersObjects"
 				:key="index"
 				class="tag is-success"
 			>
 				{{filterDisplayName(filter)}}
-				<button class="delete is-tiny" @click="removeFilter(filter.path)"></button>
+				<button class="delete is-tiny" @click="removeFilter(filter.path)" />
 			</span>
 		</div>
 		<div v-else class="active-filters-list">
@@ -161,6 +161,17 @@ export default {
 			return this.activeFilters.map(filter => ({ path: filter, ...this.getFilter(filter) }));
 		},
 	},
+	watch: {
+		activeFilters() {
+			nextTick(this.emitHeight);
+		},
+		autorefresh(to) {
+			this.$emit('autorefreshChange', to);
+		},
+	},
+	mounted() {
+		this.emitHeight();
+	},
 	methods: {
 		filterDisplayName(filter) {
 			if (filter.type === 'search') {
@@ -184,17 +195,6 @@ export default {
 		},
 		removeFilter(filter) {
 			this.$emit('activeFiltersChanged', { filter, active: false });
-		},
-	},
-	mounted() {
-		this.emitHeight();
-	},
-	watch: {
-		activeFilters() {
-			nextTick(this.emitHeight);
-		},
-		autorefresh(to) {
-			this.$emit('autorefreshChange', to);
 		},
 	}
 };

@@ -39,7 +39,7 @@
 								type="button"
 								@click="confirmLessonRemoval(productLesson)"
 							>
-								<span class="icon"><i class="fa fa-trash"></i></span>
+								<span class="icon"><i class="fa fa-trash" /></span>
 							</button>
 						</td>
 					</tr>
@@ -130,6 +130,30 @@ export default {
 			return orderBy(filteredLessons, key, [sort]);
 		},
 	},
+	async mounted() {
+		this.loading = true;
+		try {
+			const [productLessonResponse] = await Promise.all([
+				axios.post(getApiUrl('lesson_product/query'), {
+					product_id: this.id
+				}),
+				this.fetchAllLessons()
+			]);
+			this.productLessons = this.getProductLessons(productLessonResponse);
+
+			nextTick(() => {
+				this.$refs.filterInput && this.$refs.filterInput.focus();
+			});
+		} catch (e) {
+			this.addAutoDismissableAlert({
+				text: 'Nie udało się pobrać planu dla tego produktu',
+				type: 'error'
+			});
+			$wnl.logger.capture(e);
+		} finally {
+			this.loading = false;
+		}
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', ['fetchAllLessons']),
@@ -215,29 +239,5 @@ export default {
 			this.activeSort = sort;
 		}
 	},
-	async mounted() {
-		this.loading = true;
-		try {
-			const [productLessonResponse] = await Promise.all([
-				axios.post(getApiUrl('lesson_product/query'), {
-					product_id: this.id
-				}),
-				this.fetchAllLessons()
-			]);
-			this.productLessons = this.getProductLessons(productLessonResponse);
-
-			nextTick(() => {
-				this.$refs.filterInput && this.$refs.filterInput.focus();
-			});
-		} catch (e) {
-			this.addAutoDismissableAlert({
-				text: 'Nie udało się pobrać planu dla tego produktu',
-				type: 'error'
-			});
-			$wnl.logger.capture(e);
-		} finally {
-			this.loading = false;
-		}
-	}
 };
 </script>

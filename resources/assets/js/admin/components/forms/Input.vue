@@ -5,7 +5,7 @@
 			:for="name"
 			class="label"
 		>
-			<slot></slot>
+			<slot />
 		</label>
 
 		<input
@@ -21,7 +21,7 @@
 			v-if="form.errors.has(name)"
 			class="help is-danger"
 			v-text="form.errors.get(name)"
-		></span>
+		/>
 	</div>
 </template>
 

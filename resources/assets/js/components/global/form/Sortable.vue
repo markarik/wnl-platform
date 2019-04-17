@@ -22,7 +22,7 @@
 				:key="index"
 				class="help is-danger"
 				v-text="error"
-			></span>
+			/>
 		</template>
 	</div>
 </template>
@@ -47,12 +47,12 @@ export default {
 	components: {
 		draggable,
 	},
+	mixins: [formInput],
 	props: {
 		name: {
 			type: String,
 		},
 	},
-	mixins: [formInput],
 	computed: {
 		default() {
 			return [];

@@ -109,6 +109,9 @@ export default {
 			return Object.values(this.currentUserStats.social).reduce((a,b) => a + b, 0);
 		}
 	},
+	mounted() {
+		this.fetchCurrentUserStats();
+	},
 	methods: {
 		...mapActions(['fetchCurrentUserStats', 'toggleOverlay']),
 		...mapActions('progress', ['deleteProgress', 'setupCourse']),
@@ -130,8 +133,5 @@ export default {
 			}
 		}
 	},
-	mounted() {
-		this.fetchCurrentUserStats();
-	}
 };
 </script>

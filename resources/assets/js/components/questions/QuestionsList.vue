@@ -8,12 +8,12 @@
 						<div class="breadcrumb">
 							<span class="icon is-small"><i
 								class="fa fa-check-square-o"
-							></i></span>
+							/></span>
 						</div>
 						<div class="breadcrumb">
 							<span class="icon is-small"><i
 								class="fa fa-angle-right"
-							></i></span>
+							/></span>
 							<span>{{$t('questions.nav.solving')}}</span>
 						</div>
 					</div>
@@ -25,7 +25,7 @@
 					>
 						<span>{{$t('questions.filters.show')}}</span>
 						<span class="icon is-tiny">
-							<i class="fa fa-sliders"></i>
+							<i class="fa fa-sliders" />
 						</span>
 					</a>
 				</div>
@@ -81,7 +81,7 @@
 			class="wnl-chat-toggle"
 		>
 			<span class="icon is-big" @click="toggleChat">
-				<i class="fa fa-sliders"></i>
+				<i class="fa fa-sliders" />
 				<span>{{$t('questions.filters.show')}}</span>
 			</span>
 		</div>
@@ -145,6 +145,13 @@ import examStateStore from 'js/services/examStateStore';
 
 export default {
 	name: 'QuestionsList',
+	components: {
+		'wnl-questions-navigation': QuestionsNavigation,
+		'wnl-questions-filters': QuestionsFilters,
+		'wnl-sidenav-slot': SidenavSlot,
+		'wnl-questions-solving': QuestionsSolving,
+	},
+	mixins: [emits_events],
 	props: {
 		presetFilters: {
 			default: () => [],
@@ -154,13 +161,6 @@ export default {
 			default: () => {},
 			type: Object,
 		}
-	},
-	mixins: [emits_events],
-	components: {
-		'wnl-questions-navigation': QuestionsNavigation,
-		'wnl-questions-filters': QuestionsFilters,
-		'wnl-sidenav-slot': SidenavSlot,
-		'wnl-questions-solving': QuestionsSolving,
 	},
 	data() {
 		const currentContext = context.questions_bank;
@@ -260,6 +260,36 @@ export default {
 		},
 		examStateStoreKey() {
 			return `wnl-exam-state-${this.currentUserId}`;
+		}
+	},
+	watch: {
+		testQuestionsCount() {
+			this.estimatedTime = timeBaseOnQuestions(this.testQuestionsCount);
+		},
+		'$route.query.chatChannel'(newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
+		}
+	},
+	async mounted() {
+		try {
+			await this.setupQuestions();
+			await this.restoreExamState();
+		} catch (e) {
+			$wnl.logger.error(e);
+			this.fetchingFilters = false;
+			this.switchOverlay(false);
+		}
+	},
+	beforeRouteLeave(to, from, next) {
+		if (this.testMode) {
+			this.confirmQuizEnd()
+				.then(() => next(false))
+				.catch(() => {
+					this.endQuiz();
+					next();
+				});
+		} else {
+			next();
 		}
 	},
 	methods: {
@@ -685,35 +715,5 @@ export default {
 			}
 		}
 	},
-	async mounted() {
-		try {
-			await this.setupQuestions();
-			await this.restoreExamState();
-		} catch (e) {
-			$wnl.logger.error(e);
-			this.fetchingFilters = false;
-			this.switchOverlay(false);
-		}
-	},
-	beforeRouteLeave(to, from, next) {
-		if (this.testMode) {
-			this.confirmQuizEnd()
-				.then(() => next(false))
-				.catch(() => {
-					this.endQuiz();
-					next();
-				});
-		} else {
-			next();
-		}
-	},
-	watch: {
-		testQuestionsCount() {
-			this.estimatedTime = timeBaseOnQuestions(this.testQuestionsCount);
-		},
-		'$route.query.chatChannel'(newVal) {
-			newVal && !this.isChatVisible && this.toggleChat();
-		}
-	}
 };
 </script>

@@ -8,7 +8,7 @@
 			<wnl-user-autocomplete-item slot-scope="slotProps" :item="slotProps.item" />
 		</wnl-autocomplete-list>
 		<div ref="quill">
-			<slot></slot>
+			<slot />
 		</div>
 	</div>
 </template>
@@ -46,11 +46,11 @@ const autocompleteChar = '@';
 
 export default {
 	name: 'Quill',
-	mixins: [formInput, WnlAutocompleteKeyboardNavigation],
 	components: {
 		WnlAutocompleteList,
 		WnlUserAutocompleteItem
 	},
+	mixins: [formInput, WnlAutocompleteKeyboardNavigation],
 	props: {
 		options: {
 			type: Object,
@@ -127,6 +127,29 @@ export default {
 				}
 			};
 		},
+	},
+	watch: {
+		focused (val) {
+			this.editor[val ? 'focus' : 'blur']();
+		},
+		inputValue (newValue) {
+			if (newValue !== this.editor.innerHTML) {
+				this.editor.innerHTML = newValue;
+			}
+		}
+	},
+	mounted () {
+		this.quill = new Quill(this.$refs.quill, this.quillOptions);
+		this.QuillEmbed = Quill.import('blots/embed');
+		this.editor = this.$refs.quill.firstElementChild;
+		this.$nextTick(() => {
+			this.editor.innerHTML = this.value;
+			this.quill.on('text-change', this.onTextChange);
+			document.addEventListener('click', this.clickHandler);
+		});
+	},
+	beforeDestroy() {
+		document.removeEventListener('click', this.clickHandler);
 	},
 	methods: {
 		...mapActions(['requestUsersAutocomplete']),
@@ -235,28 +258,5 @@ export default {
 			this.quill.deleteText(0, this.editor.innerHTML.length);
 		}
 	},
-	mounted () {
-		this.quill = new Quill(this.$refs.quill, this.quillOptions);
-		this.QuillEmbed = Quill.import('blots/embed');
-		this.editor = this.$refs.quill.firstElementChild;
-		this.$nextTick(() => {
-			this.editor.innerHTML = this.value;
-			this.quill.on('text-change', this.onTextChange);
-			document.addEventListener('click', this.clickHandler);
-		});
-	},
-	beforeDestroy() {
-		document.removeEventListener('click', this.clickHandler);
-	},
-	watch: {
-		focused (val) {
-			this.editor[val ? 'focus' : 'blur']();
-		},
-		inputValue (newValue) {
-			if (newValue !== this.editor.innerHTML) {
-				this.editor.innerHTML = newValue;
-			}
-		}
-	}
 };
 </script>

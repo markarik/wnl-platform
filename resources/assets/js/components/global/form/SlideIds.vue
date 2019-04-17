@@ -10,7 +10,7 @@
 				>
 					<h5>{{slide.snippet.header}}</h5>
 					<p>{{slide.snippet.subheader}}</p>
-					<i class="fa fa-times close-icon" @click="removeSlide(slide)"></i>
+					<i class="fa fa-times close-icon" @click="removeSlide(slide)" />
 				</div>
 			</div>
 			<div class="inputs-wrapper">
@@ -108,6 +108,11 @@ export default {
 			return '';
 		}
 	},
+	watch: {
+		defaultSlides() {
+			this.slides = this.defaultSlides.slice();
+		}
+	},
 	methods: {
 		...mapActions(['getSlideDataForQuizEditor']),
 		onButtonClicked() {
@@ -134,10 +139,5 @@ export default {
 			return !!this.slides.some(slide => !_.find(this.defaultSlides, defSlide => defSlide.id === slide.id));
 		}
 	},
-	watch: {
-		defaultSlides() {
-			this.slides = this.defaultSlides.slice();
-		}
-	}
 };
 </script>

@@ -1,9 +1,7 @@
 module.exports = {
 	extends: [
 		'eslint:recommended',
-		// TODO use recommended rules
-		// 'plugin:vue/recommended'
-		'plugin:vue/strongly-recommended'
+		'plugin:vue/recommended',
 	],
 	plugins: [
 		'import'
@@ -73,24 +71,25 @@ module.exports = {
 		'vue/attributes-order': [
 			'error',
 		],
-		// Doesn't seem useful
-		'vue/singleline-html-element-content-newline': [
-			'off'
-		],
+
 		// TODO enable vue/strongly-recommended rules below
 		'vue/require-prop-types': [
-			'off'
-		],
-		'vue/html-self-closing': [
-			'off'
-		],
-		'vue/multiline-html-element-content-newline': [
 			'off'
 		],
 		'vue/require-default-prop': [
 			'off'
 		],
-		'vue/no-template-shadow': [
+
+		// We use v-html a lot
+		'vue/no-v-html': [
+			'off'
+		],
+
+		// The two below don't seem useful
+		'vue/singleline-html-element-content-newline': [
+			'off'
+		],
+		'vue/multiline-html-element-content-newline': [
 			'off'
 		],
 	},

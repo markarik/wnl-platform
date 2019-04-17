@@ -11,13 +11,13 @@
 			:disabled="isSaving"
 			@click="onDelete"
 		>
-			<span class="icon is-small"><i class="fa fa-trash" aria-hidden="true"></i></span>
+			<span class="icon is-small"><i class="fa fa-trash" aria-hidden="true" /></span>
 			<span>Usuń</span>
 		</button>
 	</div>
 	<div v-else class="notification is-info">
 		<span class="icon">
-			<i class="fa fa-info-circle"></i>
+			<i class="fa fa-info-circle" />
 		</span>
 		Najpierw wybierz gałąź struktury
 	</div>

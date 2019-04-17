@@ -6,8 +6,7 @@
 			:max="progressMax"
 			:has-numbers="progressHasNumbers"
 			:modifying-class="progressModifyingClass"
-		>
-		</wnl-progress>
+		/>
 		<p class="progress-message">{{progressMessage}}</p>
 	</div>
 </template>
@@ -53,6 +52,9 @@ const STATE_FULL = 'full',
 	};
 
 export default {
+	components: {
+		'wnl-progress': Progress,
+	},
 	computed: {
 		...mapGetters('course', [
 			'getRequiredLessons',
@@ -93,9 +95,6 @@ export default {
 		progressMessage() {
 			return stateData[this.progressState].message;
 		},
-	},
-	components: {
-		'wnl-progress': Progress,
 	},
 };
 </script>

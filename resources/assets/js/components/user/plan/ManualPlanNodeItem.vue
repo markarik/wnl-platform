@@ -10,7 +10,7 @@
 		<template v-if="isGroup">
 			<span class="item-toggle" @click="isOpen = !isOpen">
 				<span class="icon is-small">
-					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
+					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}" />
 				</span>
 				<span>{{node.model.name}}</span>
 				<span class="subitems-count">
@@ -108,14 +108,8 @@ import { resources } from 'js/utils/constants';
 import WnlDatepicker from 'js/components/global/Datepicker';
 
 export default {
-	data() {
-		return {
-			isOpen: false,
-			datepickerConfig: {
-				altInput: true,
-				disableMobile: true,
-			},
-		};
+	components: {
+		WnlDatepicker,
 	},
 	props: {
 		manualStartDates: {
@@ -131,8 +125,14 @@ export default {
 			default: true,
 		}
 	},
-	components: {
-		WnlDatepicker,
+	data() {
+		return {
+			isOpen: false,
+			datepickerConfig: {
+				altInput: true,
+				disableMobile: true,
+			},
+		};
 	},
 	computed: {
 		...mapGetters('course', [
@@ -154,12 +154,12 @@ export default {
 			return this.node.model.startDate ? new Date (this.node.model.startDate*1000) : new Date();
 		},
 	},
-	methods: {
-
-	},
 	beforeCreate: function () {
 		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
 		this.$options.components.WnlManualPlanNodesList = require('./ManualPlanNodesList.vue').default;
+	},
+	methods: {
+
 	}
 };
 </script>

@@ -5,12 +5,12 @@
 		:style="style"
 		@click="$emit('click', $event)"
 	>
-		<slot name="left"></slot>
+		<slot name="left" />
 		<div class="taxonomy-term__content" :class="{'has-parent': ancestors.length}">
 			<div class="taxonomy-term__content__parent">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}}</div>
 			<strong>{{term.tag.name}}</strong>
 		</div>
-		<slot name="right"></slot>
+		<slot name="right" />
 	</div>
 </template>
 

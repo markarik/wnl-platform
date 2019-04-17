@@ -10,7 +10,7 @@
 				v-model="filters[contentType]"
 				class="input"
 				placeholder="Wpisz id po przecinku: 36,45,..."
-			/>
+			>
 		</div>
 		<button
 			class="button submit is-primary"

@@ -25,16 +25,16 @@ import WnlPaginatedList from 'js/admin/components/lists/PaginatedList';
 
 export default {
 	name: 'Groups',
+	components: {
+		WnlGroupsListItem,
+		WnlPaginatedList
+	},
 	data() {
 		return {
 			groups: [],
 			lastPage: 1,
 			page: 1,
 		};
-	},
-	components: {
-		WnlGroupsListItem,
-		WnlPaginatedList
 	},
 };
 </script>

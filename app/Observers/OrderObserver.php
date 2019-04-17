@@ -24,7 +24,9 @@ class OrderObserver
 	{
 		\Log::notice("OrderObserver: Order #{$order->id} updated");
 
-		if($order->isDirty(['paid_amount'])){
+		// This has to be called very early to make sure
+		// all the methods called below are using correct state of instalments
+		if ($order->isDirty(['paid_amount'])){
 			$order->generateAndSavePaymentSchedule();
 		}
 

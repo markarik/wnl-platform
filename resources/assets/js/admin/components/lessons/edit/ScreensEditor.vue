@@ -6,7 +6,7 @@
 				ref="ScreensList"
 				:lesson-id="lessonId"
 				:screens="screens"
-			></wnl-screens-list>
+			/>
 		</div>
 		<div v-if="loaded" class="screen-editor">
 			<form>
@@ -17,7 +17,7 @@
 							v-model="screenForm.name"
 							:form="screenForm"
 							name="name"
-						></wnl-form-input>
+						/>
 					</div>
 					<div class="control">
 						<a
@@ -28,7 +28,7 @@
 						>
 							<span class="margin right">Zapisz</span>
 							<span class="icon is-small">
-								<i class="fa fa-save"></i>
+								<i class="fa fa-save" />
 							</span>
 						</a>
 					</div>
@@ -44,8 +44,7 @@
 								:form="screenForm"
 								:options="typesOptions"
 								name="type"
-							>
-							</wnl-select>
+							/>
 						</span>
 					</div>
 					<div v-if="currentType && currentType.metaEditorComponent" class="control">
@@ -59,8 +58,7 @@
 						v-model="screenForm.content"
 						:form="screenForm"
 						name="content"
-					>
-					</quill>
+					/>
 				</div>
 			</form>
 		</div>
@@ -147,7 +145,6 @@ let types = {
 
 export default {
 	name: 'ScreensEditor',
-	props: ['lessonId'],
 	components: {
 		WnlScreensMetaEditorFlashcards,
 		WnlScreensMetaEditorQuizes,
@@ -156,6 +153,7 @@ export default {
 		'wnl-screens-list': ScreensList,
 		'wnl-select': Select,
 	},
+	props: ['lessonId'],
 	data() {
 		return {
 			ready: false,
@@ -203,6 +201,14 @@ export default {
 		hasChanged() {
 			return !isEqual(this.screenForm.data(), this.screenForm.originalData);
 		},
+	},
+	watch: {
+		'$route': 'populateScreenForm'
+	},
+	mounted() {
+		if (this.screenId) {
+			this.populateScreenForm();
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -252,13 +258,5 @@ export default {
 				});
 		}
 	},
-	mounted() {
-		if (this.screenId) {
-			this.populateScreenForm();
-		}
-	},
-	watch: {
-		'$route': 'populateScreenForm'
-	}
 };
 </script>

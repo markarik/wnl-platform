@@ -86,6 +86,23 @@ import { getApiUrl } from 'js/utils/env';
 import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
+	components: {
+		WnlForm,
+		WnlText,
+		WnlTextarea,
+		WnlDatepicker,
+		WnlSelect,
+	},
+	props: {
+		id: {
+			required: true,
+			type: [Number, String],
+		},
+		isEdit: {
+			type: Boolean,
+			default: true
+		}
+	},
 	data() {
 		return {
 			datepickerConfig: {
@@ -99,37 +116,12 @@ export default {
 			vatRates: [],
 		};
 	},
-	props: {
-		id: {
-			required: true,
-			type: [Number, String],
-		},
-		isEdit: {
-			type: Boolean,
-			default: true
-		}
-	},
-	components: {
-		WnlForm,
-		WnlText,
-		WnlTextarea,
-		WnlDatepicker,
-		WnlSelect,
-	},
 	computed: {
 		formResourceRoute() {
 			return this.isEdit ? `products/${this.id}` : 'products';
 		},
 		formMethod() {
 			return this.isEdit ? 'put' : 'post';
-		},
-	},
-	methods: {
-		...mapActions(['addAutoDismissableAlert']),
-		onSubmitSucess(data) {
-			if (!this.isEdit) {
-				this.$router.push({ name: 'product-edit', params: { id: data.id } });
-			}
 		},
 	},
 	async mounted() {
@@ -143,6 +135,14 @@ export default {
 				type: ALERT_TYPES.ERROR,
 			});
 		}
-	}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		onSubmitSucess(data) {
+			if (!this.isEdit) {
+				this.$router.push({ name: 'product-edit', params: { id: data.id } });
+			}
+		},
+	},
 };
 </script>

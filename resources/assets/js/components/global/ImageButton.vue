@@ -8,7 +8,7 @@
 			:title="title"
 			@click="emitClick"
 		>
-			<wnl-icon :name="icon"></wnl-icon>
+			<wnl-icon :name="icon" />
 		</button>
 		<label
 			v-if="label"

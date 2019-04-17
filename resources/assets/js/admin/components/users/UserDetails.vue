@@ -1,6 +1,6 @@
 <template>
 	<div class="user-details">
-		<wnl-text-loader v-if="isLoading"></wnl-text-loader>
+		<wnl-text-loader v-if="isLoading" />
 		<div v-else>
 			<div class="user-details__head">
 				<p>#{{user.id}}</p>
@@ -28,7 +28,7 @@
 				</ul>
 			</div>
 
-			<component :is="activeComponent" :user="user"></component>
+			<component :is="activeComponent" :user="user" />
 
 		</div>
 	</div>
@@ -118,6 +118,9 @@ export default {
 			return tabNames.includes(hash) ? hash : tabNames[0];
 		}
 	},
+	async mounted() {
+		await this.setup();
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		async setup() {
@@ -159,8 +162,5 @@ export default {
 			this.user.subscription = this.user.subscription && included.subscriptions[this.user.subscription[0]];
 		},
 	},
-	async mounted() {
-		await this.setup();
-	}
 };
 </script>

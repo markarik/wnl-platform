@@ -11,7 +11,7 @@
 			name="target_tag_id"
 		>ID taga docelowego</wnl-form-text>
 		<wnl-submit css-class="button is-primary">
-			<slot></slot>
+			<slot />
 		</wnl-submit>
 	</wnl-form>
 </template>
@@ -22,6 +22,11 @@ import { Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit } from 'js/co
 
 export default {
 	name: 'TaggablesMover',
+	components: {
+		WnlFormText,
+		WnlForm,
+		WnlSubmit,
+	},
 	props: {
 		beforeSubmit: {
 			type: Function,
@@ -31,11 +36,6 @@ export default {
 			type: [String, Number],
 			required: true,
 		},
-	},
-	components: {
-		WnlFormText,
-		WnlForm,
-		WnlSubmit,
 	},
 	computed: {
 		resourceRoute() {

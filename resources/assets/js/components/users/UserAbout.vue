@@ -7,27 +7,27 @@
 			<wnl-user-info
 				:label="$t('user.userAboutLabels.specialization')"
 				:info="profile.specialization"
-			></wnl-user-info>
+			/>
 			<wnl-user-info
 				:label="$t('user.userAboutLabels.university')"
 				:info="profile.university"
-			></wnl-user-info>
+			/>
 			<wnl-user-info
 				:label="$t('user.userAboutLabels.city')"
 				:info="profile.city"
-			></wnl-user-info>
+			/>
 			<wnl-user-info
 				:label="$t('user.userAboutLabels.learning_location')"
 				:info="profile.learning_location"
-			></wnl-user-info>
+			/>
 			<wnl-user-info
 				:label="$t('user.userAboutLabels.interests')"
 				:info="profile.interests"
-			></wnl-user-info>
+			/>
 			<wnl-user-info
 				:label="$t('user.userAboutLabels.about')"
 				:info="profile.about"
-			></wnl-user-info>
+			/>
 		</div>
 	</div>
 
@@ -65,10 +65,10 @@ import UserInfo from 'js/components/users/UserInfo';
 
 export default {
 	name: 'UserAbout',
-	props: ['profile'],
 	components: {
 		'wnl-user-info': UserInfo,
 	},
+	props: ['profile'],
 	computed: {
 		...mapGetters(['canShowCloseIconInChat']),
 	},

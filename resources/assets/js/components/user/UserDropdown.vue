@@ -8,7 +8,7 @@
 			>
 				<wnl-avatar />
 				<span v-show="!isTouchScreen" class="icon">
-					<i class="fa fa-angle-down"></i>
+					<i class="fa fa-angle-down" />
 				</span>
 			</div>
 			<div slot="content">
@@ -26,7 +26,7 @@
 								class="user-link"
 							>
 								<span class="icon is-small">
-									<i class="fa" :class="item.icon"></i>
+									<i class="fa" :class="item.icon" />
 								</span>
 								<router-link class="link" :to="{ name: item.route }">
 									{{item.text}}

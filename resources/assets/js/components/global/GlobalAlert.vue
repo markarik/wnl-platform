@@ -6,7 +6,7 @@
 				v-if="dismissable"
 				class="delete"
 				@click="$emit('onDismiss', {id: id})"
-			></button>
+			/>
 		</div>
 	</div>
 </template>

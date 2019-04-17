@@ -18,7 +18,7 @@
 						:class="{'clickable': headerOnly, 'is-short-form': headerOnly}"
 						@click="$emit('headerClicked')"
 					>
-						<div v-html="question.text"></div>
+						<div v-html="question.text" />
 					</div>
 					<div class="card-header-icons">
 						<wnl-bookmark
@@ -27,7 +27,7 @@
 							:reactable-resource="reactableResource"
 							:state="reactionState"
 							:module="module"
-						></wnl-bookmark>
+						/>
 					</div>
 				</div>
 			</header>
@@ -45,15 +45,15 @@
 						:answers-stats="displayResults && question.answersStats"
 						@answerSelected="selectAnswer(answerIndex)"
 						@dblclick.native="$emit('answerDoubleclick', {answer: answerIndex})"
-					></wnl-quiz-answer>
+					/>
 				</ul>
 				<div class="quiz-question-meta">
 					<div class="quiz-question-tags">
 						<template v-if="displayResults && question.tags">
 							<span>{{$t('questions.question.tags')}}:</span>
 							<span
-								v-for="(tag, index) in question.tags"
-								:key="index"
+								v-for="(tag, tagIndex) in question.tags"
+								:key="tagIndex"
 								class="quiz-question-tag"
 							>{{trim(tag.name)}}</span>
 						</template>
@@ -70,7 +70,7 @@
 					>
 						{{$t('questions.question.edit')}}
 						<span class="icon is-small">
-							<i class="fa fa-pencil"></i>
+							<i class="fa fa-pencil" />
 						</span>
 					</a>
 				</div>
@@ -78,24 +78,24 @@
 			<div v-if="!hideComments && ((!headerOnly && displayResults) || showComments)" class="card-footer quiz-question-card-footer">
 				<div v-if="question.explanation" class="card-item relative">
 					<header>
-						<span class="icon is-small comment-icon"><i class="fa fa-info"></i></span>
+						<span class="icon is-small comment-icon"><i class="fa fa-info" /></span>
 						<span v-t="'quiz.annotations.explanation.header'" />&nbsp;·&nbsp;<a class="secondary-link" @click="toggleExplanation">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<div :class="{'collapsed': !showExplanation}" v-html="explanation"></div>
+					<div :class="{'collapsed': !showExplanation}" v-html="explanation" />
 				</div>
 				<div v-if="hasSlides" class="card-item">
 					<header @click="toggleSlidesList">
-						<span class="icon is-small comment-icon"><i class="fa fa-caret-square-o-right"></i></span>
+						<span class="icon is-small comment-icon"><i class="fa fa-caret-square-o-right" /></span>
 						{{$t('quiz.annotations.slides.header')}} ({{slides.length}})
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
 					<template v-if="slidesExpanded">
 						<a
-							v-for="(slide, index) in slides"
-							:key="index"
+							v-for="(slide, slideIndex) in slides"
+							:key="slideIndex"
 							class="slide-list-item"
-							@click="currentSlideIndex = index"
+							@click="currentSlideIndex = slideIndex"
 						>
 							{{slideLink(slide)}}
 						</a>
@@ -127,8 +127,7 @@
 						:module="module"
 						:commentable-id="question.id"
 						:is-unique="showComments"
-					>
-					</wnl-comments-list>
+					/>
 				</div>
 			</div>
 		</div>
@@ -365,6 +364,20 @@ export default {
 			return this.slides[this.currentSlideIndex];
 		},
 	},
+	watch: {
+		'currentModalSlide.id'(slideId) {
+			if (!slideId) return;
+			axios.get(getApiUrl(`slideshow_builder/slide/${slideId}`))
+				.then(({ data }) => {
+					this.slideContent = data;
+					this.show = true;
+				})
+				.catch(error => {
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert(this.alertError);
+				});
+		}
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		hideSlidePreview() {
@@ -424,19 +437,5 @@ export default {
 			});
 		},
 	},
-	watch: {
-		'currentModalSlide.id'(slideId) {
-			if (!slideId) return;
-			axios.get(getApiUrl(`slideshow_builder/slide/${slideId}`))
-				.then(({ data }) => {
-					this.slideContent = data;
-				}).then(() => {
-					this.show = true;
-				}).catch(error => {
-					$wnl.logger.capture(error);
-					this.addAutoDismissableAlert(this.alertError);
-				});
-		}
-	}
 };
 </script>

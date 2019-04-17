@@ -5,7 +5,7 @@
 				<span v-if="ancestors.length">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
 				{{selected.tag.name}}
 			</span>
-			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
+			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true" /></span>
 		</div>
 		<wnl-autocomplete
 			v-else
@@ -48,6 +48,10 @@ import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 
 export default {
+	components: {
+		WnlAutocomplete,
+		WnlTaxonomyTermWithAncestors
+	},
 	props: {
 		disabled: {
 			type: Boolean,
@@ -74,10 +78,6 @@ export default {
 		return {
 			search: '',
 		};
-	},
-	components: {
-		WnlAutocomplete,
-		WnlTaxonomyTermWithAncestors
 	},
 	computed: {
 		...mapState('taxonomyTerms', { terms: 'nodes' }),

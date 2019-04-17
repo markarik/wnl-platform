@@ -26,7 +26,7 @@
 			/>
 			<div v-else class="title is-6">Nic tu nie ma...</div>
 		</template>
-		<wnl-text-loader v-else></wnl-text-loader>
+		<wnl-text-loader v-else />
 
 		<wnl-pagination
 			v-if="lastPage > 1"
@@ -62,16 +62,6 @@ export default {
 		WnlPagination,
 		WnlSearchInput,
 	},
-	data() {
-		return {
-			list: [],
-			searchPhrase: '',
-			lastPage: 1,
-			page: 1,
-			isLoading: true,
-			searchFields: [],
-		};
-	},
 	props: {
 		searchAvailableFields: {
 			type: Array,
@@ -93,6 +83,31 @@ export default {
 			type: Boolean,
 			default: true,
 		}
+	},
+	data() {
+		return {
+			list: [],
+			searchPhrase: '',
+			lastPage: 1,
+			page: 1,
+			isLoading: true,
+			searchFields: [],
+		};
+	},
+	watch: {
+		customRequestParams() {
+			this.fetch();
+		},
+		async dirty() {
+			if (this.dirty) {
+				await this.fetch();
+			}
+
+			this.$emit('updated');
+		}
+	},
+	mounted() {
+		this.fetch();
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -155,20 +170,5 @@ export default {
 			}
 		},
 	},
-	mounted() {
-		this.fetch();
-	},
-	watch: {
-		customRequestParams() {
-			this.fetch();
-		},
-		async dirty() {
-			if (this.dirty) {
-				await this.fetch();
-			}
-
-			this.$emit('updated');
-		}
-	}
 };
 </script>

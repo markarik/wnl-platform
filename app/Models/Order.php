@@ -84,8 +84,12 @@ class Order extends Model
 
 	public function attachCoupon($coupon)
 	{
-		$this->coupon_id = $coupon->id;
+		$this->coupon()->associate($coupon);
 		$this->save();
+
+		if ($this->method === self::PAYMENT_METHOD_INSTALMENTS) {
+			$this->generateAndSavePaymentSchedule();
+		}
 	}
 
 	public function getTotalWithCouponAttribute()
@@ -117,7 +121,7 @@ class Order extends Model
 			$allPaid = true;
 		}
 
-		$orderInstalments = $this->generateAndSavePaymentSchedule();
+		$orderInstalments = $this->orderInstalments;
 
 		$nextPayment = $orderInstalments
 			->sort(function (OrderInstalment $a, OrderInstalment $b) {
@@ -169,7 +173,10 @@ class Order extends Model
 
 				/** @var OrderInstalment $orderInstalment */
 				$orderInstalment = $this->orderInstalments()->firstOrNew(['order_number' => $orderNumber]);
-				$orderInstalment->due_date = $instalment->getDueDate($this);
+				if (empty($orderInstalment->due_date)) {
+					// Don't update due date when recalculating instalments
+					$orderInstalment->due_date = $instalment->getDueDate($this);
+				}
 				$orderInstalment->amount = $amount;
 				$orderInstalment->paid_amount = $paidAmount;
 				$orderInstalment->order_number = $orderNumber;

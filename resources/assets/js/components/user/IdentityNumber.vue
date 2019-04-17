@@ -20,17 +20,17 @@
 					<div class="message-header">
 						{{$t('user.personalData.identityNumber.header')}}
 					</div>
-					<div class="message-body" v-html="$t('user.personalData.identityNumber.explanation')"></div>
+					<div class="message-body" v-html="$t('user.personalData.identityNumber.explanation')" />
 				</div>
 				<div class="id-number__personal-identity-number-input">
 					<input
 						v-model="identity.personalIdentityNumber"
-						:name="this.identityTypes.personalId"
+						:name="identityTypes.personalId"
 						class="input"
 						type="text"
 						placeholder="Numer identyfikacyjny"
 						@keyup.enter="onSubmit"
-					/>
+					>
 				</div>
 
 				<!-- ERROR MESSAGES -->
@@ -61,7 +61,7 @@
 								v-model="identity.identityType"
 								class="is-checkradio"
 								type="radio"
-								:name="this.identityTypes.personalId"
+								:name="identityTypes.personalId"
 								value="personal_identity_number"
 								@click="disableErrors"
 							>
@@ -71,7 +71,7 @@
 								v-model="identity.identityType"
 								class="is-checkradio"
 								type="radio"
-								:name="this.identityTypes.passport"
+								:name="identityTypes.passport"
 								value="passport_number"
 								@click="disableErrors"
 							>
@@ -203,6 +203,10 @@ export default {
 			});
 		}
 	},
+	async mounted() {
+		await this.fetchUserPersonalData();
+		this.isLoaded = true;
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert', 'setUserIdentity', 'fetchUserPersonalData']),
 		async onSubmit(event) {
@@ -323,9 +327,5 @@ export default {
 			return letterValues.indexOf(letter);
 		},
 	},
-	async mounted() {
-		await this.fetchUserPersonalData();
-		this.isLoaded = true;
-	}
 };
 </script>

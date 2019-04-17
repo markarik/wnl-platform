@@ -94,6 +94,12 @@ export default {
 			return this.room.pagination.next;
 		}
 	},
+	mounted() {
+		this.addEventListeners();
+	},
+	beforeDestroy() {
+		this.removeEventListeners();
+	},
 	methods: {
 		...mapActions('chatMessages', ['markRoomAsRead', 'onNewMessage', 'fetchRoomMessages']),
 		getMessageAuthor(message) {
@@ -121,12 +127,6 @@ export default {
 			this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.markAsRead);
 		}
 	},
-	mounted() {
-		this.addEventListeners();
-	},
-	beforeDestroy() {
-		this.removeEventListeners();
-	}
 };
 
 </script>

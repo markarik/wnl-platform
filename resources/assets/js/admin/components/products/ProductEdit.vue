@@ -15,7 +15,7 @@
 				</ul>
 			</div>
 
-			<component :is="activeComponent" :id="id"></component>
+			<component :is="activeComponent" :id="id" />
 		</template>
 		<wnl-product-details-editor
 			v-else

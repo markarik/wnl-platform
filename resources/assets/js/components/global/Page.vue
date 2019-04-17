@@ -1,6 +1,6 @@
 <template>
 	<div class="content">
-		<div class="page content" v-html="content"></div>
+		<div class="page content" v-html="content" />
 		<wnl-qna
 			v-if="hasQna"
 			:context-tags="tags"
@@ -55,6 +55,20 @@ export default {
 			return this.is_discussable && this.discussion_id;
 		}
 	},
+	watch:{
+		content(newValue) {
+			this.content = injectArguments(newValue, this.arguments);
+		},
+		discussion_id() {
+			this.hasQna && this.fetchQuestionsForDiscussion(this.discussion_id);
+		},
+		slug: function () {
+			this.fetch();
+		}
+	},
+	mounted() {
+		this.fetch();
+	},
 	methods: {
 		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 		wrapEmbedded() {
@@ -90,19 +104,5 @@ export default {
 			});
 		},
 	},
-	mounted() {
-		this.fetch();
-	},
-	watch:{
-		content(newValue) {
-			this.content = injectArguments(newValue, this.arguments);
-		},
-		discussion_id() {
-			this.hasQna && this.fetchQuestionsForDiscussion(this.discussion_id);
-		},
-		slug: function () {
-			this.fetch();
-		}
-	}
 };
 </script>

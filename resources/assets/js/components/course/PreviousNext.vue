@@ -7,7 +7,7 @@
 				:to="previousScreenRoute"
 			>
 				<span class="icon is-small">
-					<i class="fa fa-arrow-circle-left"></i>
+					<i class="fa fa-arrow-circle-left" />
 				</span>
 				<span>{{previousScreenName}}</span>
 			</router-link>
@@ -20,7 +20,7 @@
 			>
 				<span>{{nextScreenName}}</span>
 				<span class="icon is-small">
-					<i class="fa fa-arrow-circle-right"></i>
+					<i class="fa fa-arrow-circle-right" />
 				</span>
 			</router-link>
 		</div>

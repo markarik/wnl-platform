@@ -7,8 +7,8 @@
 			</div>
 			<div class="level">
 				{{$t('lessonsAvailability.openAllLessons.paragraphAnnotation')}}
-				{{this.completedLessonsLength}}/{{this.availableLength}}.
-				wyświetli się: {{this.completedLessonsLength}}/{{this.requiredLength}}.
+				{{completedLessonsLength}}/{{availableLength}}.
+				wyświetli się: {{completedLessonsLength}}/{{requiredLength}}.
 			</div>
 			<span>{{$t('lessonsAvailability.openAllLessons.paragraphExplanation')}}</span>
 		</div>

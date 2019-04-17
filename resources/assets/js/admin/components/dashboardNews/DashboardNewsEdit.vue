@@ -63,7 +63,15 @@ import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-argu
 
 export default {
 	name: 'DashboardNewsEdit',
+	components: {
+		WnlForm,
+		WnlText,
+		WnlTextarea,
+		WnlDatepicker,
+		WnlDashboardNewsContent
+	},
 	mixins: [dashboardNewsMessageArguments],
+	props: ['id'],
 	data() {
 		return {
 			datepickerConfig: {
@@ -75,14 +83,6 @@ export default {
 			},
 			formData: {}
 		};
-	},
-	props: ['id'],
-	components: {
-		WnlForm,
-		WnlText,
-		WnlTextarea,
-		WnlDatepicker,
-		WnlDashboardNewsContent
 	},
 	computed: {
 		formResourceRoute() {

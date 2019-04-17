@@ -3,6 +3,7 @@ import { getContextRoute, baseProps, mapMessageToRoute } from './event';
 
 export default {
 	functional: true,
+	props: baseProps,
 	render: (createElement, { props: { message, notificationComponent }, data: { on } }) => {
 		const contextRoute = () => mapMessageToRoute(message, {
 			'chatChannel': message.subject.channel,
@@ -20,7 +21,6 @@ export default {
 			},
 			on,
 		});
-	},
-	props: baseProps
+	}
 };
 </script>

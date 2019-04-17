@@ -16,10 +16,10 @@
 				:class="{ active: index === activeIndex }"
 				@click="$emit('change', item)"
 			>
-				<slot :item="item"></slot>
+				<slot :item="item" />
 			</li>
 		</ul>
-		<slot name="footer"></slot>
+		<slot name="footer" />
 	</div>
 </template>
 

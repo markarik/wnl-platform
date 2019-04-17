@@ -48,6 +48,11 @@ import { Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit } from 'js/co
 
 export default {
 	name: 'GroupEditor',
+	components: {
+		WnlFormText,
+		WnlForm,
+		WnlSubmit,
+	},
 	props: ['id'],
 	computed: {
 		isEdit() {
@@ -59,11 +64,6 @@ export default {
 		resourceRoute() {
 			return this.isEdit ? `groups/${this.id}` : 'groups';
 		},
-	},
-	components: {
-		WnlFormText,
-		WnlForm,
-		WnlSubmit,
 	},
 	methods: {
 		onSubmitSuccess(data) {

@@ -7,7 +7,7 @@
 			@click="$emit('remove')"
 		>
 			<span class="icon is-small">
-				<i class="fa fa-trash"></i>
+				<i class="fa fa-trash" />
 			</span>
 		</button>
 	</div>

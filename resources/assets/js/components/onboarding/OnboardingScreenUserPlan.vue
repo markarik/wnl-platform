@@ -45,7 +45,7 @@
 					</div>
 				</div>
 				<div v-if="isEditorVisible" class="onboarding-planner-wrapper">
-					<button class="delete onboarding-planner-close clickable" @click="isEditorVisible=false"></button>
+					<button class="delete onboarding-planner-close clickable" @click="isEditorVisible=false" />
 					<wnl-automatic-plan
 						:show-annotation="false"
 						:start="automaticPlanStartDate"
@@ -110,14 +110,6 @@ export default {
 			imageUrl: getImageUrl('onboarding-screen-plan.png'),
 		};
 	},
-	methods: {
-		...mapActions([
-			'addAutoDismissableAlert',
-		]),
-		openEditor() {
-			this.isEditorVisible = true;
-		}
-	},
 	async mounted() {
 		try {
 			const [{ data: { course_start: courseStart } }, { data: { id, included } }] = await Promise.all([
@@ -136,6 +128,14 @@ export default {
 			});
 		} finally {
 			this.isLoading = false;
+		}
+	},
+	methods: {
+		...mapActions([
+			'addAutoDismissableAlert',
+		]),
+		openEditor() {
+			this.isEditorVisible = true;
 		}
 	},
 };

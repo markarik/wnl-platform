@@ -5,7 +5,7 @@
 		:is-search-enabled="isSearchEnabled"
 	>
 		<template slot="header">
-			<slot name="header"></slot>
+			<slot name="header" />
 		</template>
 
 		<wnl-sortable-table
@@ -18,7 +18,7 @@
 			@changeOrder="changeOrder"
 		>
 			<template slot="tbody" slot-scope="tableProps">
-				<slot name="tbody" :list="tableProps.list"></slot>
+				<slot name="tbody" :list="tableProps.list" />
 			</template>
 		</wnl-sortable-table>
 
@@ -33,12 +33,6 @@ export default {
 	components: {
 		WnlPaginatedList,
 		WnlSortableTable,
-	},
-	data() {
-		return {
-			activeSortColumnName: this.columns[0].name,
-			sortDirection: 'asc',
-		};
 	},
 	props: {
 		columns: {
@@ -61,6 +55,12 @@ export default {
 			type: Boolean,
 			default: true,
 		}
+	},
+	data() {
+		return {
+			activeSortColumnName: this.columns[0].name,
+			sortDirection: 'asc',
+		};
 	},
 	computed: {
 		requestParams() {

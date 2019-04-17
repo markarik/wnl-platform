@@ -23,13 +23,13 @@
 				slot-scope="parentAutocomplete"
 				:selected="parent"
 				@change="parentAutocomplete.validateAndChangeParent"
-			></wnl-taxonomy-term-autocomplete>
+			/>
 
 			<wnl-tag-autocomplete
 				slot="autocomplete"
 				:selected="tag"
 				@change="onSelectTag"
-			></wnl-tag-autocomplete>
+			/>
 
 			<div slot="extra-fields" class="field">
 				<label class="label is-uppercase"><strong>Notatka</strong></label>

@@ -6,7 +6,7 @@
 				v-for="(groupName, index) in groupNames"
 				:key="index"
 				class="group"
-			>{{groupName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> </span>
+			>{{groupName}} <span class="icon is-small"><i class="fa fa-angle-right" /></span> </span>
 			<span class="lesson">{{lessonName}}</span>
 		</div>
 		<div class="cta">

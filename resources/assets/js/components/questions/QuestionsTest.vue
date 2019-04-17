@@ -74,12 +74,12 @@
 							{{$t('questions.solving.results.displayOnly')}}
 						</span>
 						<span
-							v-for="(questions, status) in testResultsWithQuestions"
+							v-for="(questionsForStatus, status) in testResultsWithQuestions"
 							:key="status"
 							:class="[{'is-active': filterResults === status}, `results-${status}`]"
 							@click="toggleFilter(status)"
 						>
-							{{$t(`questions.solving.results.${status}`)}} ({{questions.length}})
+							{{$t(`questions.solving.results.${status}`)}} ({{questionsForStatus.length}})
 						</span>
 					</div>
 				</div>
@@ -360,6 +360,26 @@ export default {
 				: this.$t('questions.solving.unanswered.filter');
 		},
 	},
+	watch: {
+		hasStickyHeader(to) {
+			this.hideTime = to;
+		},
+		lastPage(to) {
+			if (to < this.currentPage) this.currentPage = to;
+		},
+	},
+	mounted() {
+		!this.isComplete && this.$refs.timer.startTimer();
+		this.headerOffset = this.$refs.header.offsetTop;
+
+		// TODO: Pass class name as props
+		this.scrollableContainer = document.getElementsByClassName('scrollable-main-container')[0];
+		this.scrollableContainer.addEventListener('scroll', this.onScroll);
+		this.$emit('testStart');
+	},
+	beforeDestroy() {
+		this.scrollableContainer.removeEventListener('scroll', this.onScroll);
+	},
 	methods: {
 		changePage(n) {
 			this.currentPage = n;
@@ -399,25 +419,5 @@ export default {
 			this.$emit('updateTime', this.$refs.timer.remainingTime);
 		}
 	},
-	mounted() {
-		!this.isComplete && this.$refs.timer.startTimer();
-		this.headerOffset = this.$refs.header.offsetTop;
-
-		// TODO: Pass class name as props
-		this.scrollableContainer = document.getElementsByClassName('scrollable-main-container')[0];
-		this.scrollableContainer.addEventListener('scroll', this.onScroll);
-		this.$emit('testStart');
-	},
-	beforeDestroy() {
-		this.scrollableContainer.removeEventListener('scroll', this.onScroll);
-	},
-	watch: {
-		hasStickyHeader(to) {
-			this.hideTime = to;
-		},
-		lastPage(to) {
-			if (to < this.currentPage) this.currentPage = to;
-		},
-	}
 };
 </script>

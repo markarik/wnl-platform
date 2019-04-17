@@ -10,9 +10,9 @@
 
 		<div class="message is-danger reset-container">
 			<div class="message-header">
-				<strong v-t="'user.progressReset.progressHeader'"></strong>
+				<strong v-t="'user.progressReset.progressHeader'" />
 			</div>
-			<div v-t="'progress.reset.info'" class="message-body"></div>
+			<div v-t="'progress.reset.info'" class="message-body" />
 			<button
 				v-t="'user.progressReset.progressButton'"
 				class="button is-danger to-right"
@@ -34,7 +34,7 @@
 
 		<div class="message is-danger reset-container">
 			<div class="message-header">
-				<strong v-t="'user.progressReset.collectionsHeader'"></strong>
+				<strong v-t="'user.progressReset.collectionsHeader'" />
 			</div>
 			<div v-t="'user.progressReset.collectionsWarning'" class="message-body" />
 			<button

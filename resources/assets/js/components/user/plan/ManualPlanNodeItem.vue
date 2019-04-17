@@ -10,7 +10,7 @@
 		<template v-if="isGroup">
 			<span class="item-toggle" @click="isOpen = !isOpen">
 				<span class="icon is-small">
-					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
+					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}" />
 				</span>
 				<span>{{node.model.name}}</span>
 				<span class="subitems-count">
@@ -29,10 +29,7 @@
 
 		<template v-else>
 			<div class="lesson-left-side">
-				<div v-if="!node.model.isAccessible" class="not-accesible">
-					{{$t('lessonsAvailability.lessonNotAvailable')}}
-				</div>
-				<div v-else :class="{'is-default-start-date': isDefaultStartDate}">
+				<div :class="{'is-default-start-date': isDefaultStartDate}">
 					<wnl-datepicker
 						:class="{'hasColorBackground': isEven}"
 						:value="startDate"
@@ -42,10 +39,7 @@
 					<div v-if="isDefaultStartDate" class="lesson-default-start-date">(domyślna)</div>
 				</div>
 			</div>
-			<span
-				class="lesson-name label"
-				:class="{'is-grayed-out': !node.model.isAccessible}"
-			>{{node.model.name}}</span>
+			<span class="lesson-name label">{{node.model.name}}</span>
 		</template>
 	</li>
 </template>
@@ -86,22 +80,12 @@
 		color: $color-darkest-gray
 		width: 65%
 
-		&.is-grayed-out
-			color: $color-gray
-
 	.lesson-left-side
 		text-align: center
 		display: flex
 		flex-direction: column
 		margin-right: $margin-small
 		min-width: 220px
-
-	.not-accesible
-		color: $color-gray
-		cursor: not-allowed
-		font-size: $font-size-plus-1
-		margin: $margin-medium 0
-		text-align: center
 
 	.lesson-default-start-date
 		color: $color-gray
@@ -124,14 +108,8 @@ import { resources } from 'js/utils/constants';
 import WnlDatepicker from 'js/components/global/Datepicker';
 
 export default {
-	data() {
-		return {
-			isOpen: false,
-			datepickerConfig: {
-				altInput: true,
-				disableMobile: true,
-			},
-		};
+	components: {
+		WnlDatepicker,
 	},
 	props: {
 		manualStartDates: {
@@ -147,8 +125,14 @@ export default {
 			default: true,
 		}
 	},
-	components: {
-		WnlDatepicker,
+	data() {
+		return {
+			isOpen: false,
+			datepickerConfig: {
+				altInput: true,
+				disableMobile: true,
+			},
+		};
 	},
 	computed: {
 		...mapGetters('course', [
@@ -170,12 +154,12 @@ export default {
 			return this.node.model.startDate ? new Date (this.node.model.startDate*1000) : new Date();
 		},
 	},
-	methods: {
-
-	},
 	beforeCreate: function () {
 		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
 		this.$options.components.WnlManualPlanNodesList = require('./ManualPlanNodesList.vue').default;
+	},
+	methods: {
+
 	}
 };
 </script>

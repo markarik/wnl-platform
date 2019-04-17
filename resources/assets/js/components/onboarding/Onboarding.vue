@@ -5,7 +5,7 @@
 			:is-detached="!isSidenavMounted"
 			:is-narrow="true"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 		</wnl-sidenav-slot>
 		<div v-if="currentStep" class="onboarding-wrapper">
 			<wnl-stepper
@@ -243,6 +243,14 @@ export default {
 			return this.steps.filter(step => !step.hideOnStepper);
 		},
 	},
+	watch: {
+		step() {
+			this.validateCurrentStep();
+		}
+	},
+	mounted() {
+		this.validateCurrentStep();
+	},
 	methods: {
 		...mapActions([
 			'setupCurrentUser',
@@ -308,13 +316,5 @@ export default {
 			}
 		}
 	},
-	watch: {
-		step() {
-			this.validateCurrentStep();
-		}
-	},
-	mounted() {
-		this.validateCurrentStep();
-	}
 };
 </script>

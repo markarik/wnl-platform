@@ -5,8 +5,7 @@
 				:full-name="profile.full_name"
 				:url="profile.avatar"
 				size="medium"
-			>
-			</wnl-avatar>
+			/>
 		</figure>
 		<div class="media-content">
 			<div class="content">

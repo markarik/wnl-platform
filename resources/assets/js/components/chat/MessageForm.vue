@@ -2,7 +2,7 @@
 	<div class="wnl-chat-form">
 		<article class="media">
 			<figure class="media-left">
-				<wnl-avatar :full-name="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
+				<wnl-avatar :full-name="currentUserFullName" :url="currentUserAvatar" />
 			</figure>
 			<div class="media-content wnl-chat-form-wrapper">
 				<wnl-form
@@ -23,7 +23,7 @@
 						:toolbar="toolbar"
 						:allow-mentions="true"
 						@input="onInput"
-					></wnl-quill>
+					/>
 				</wnl-form>
 				<span class="characters-counter metadata">{{`${message.length} / 5000`}}</span>
 				<div v-if="error.length > 0" class="message is-warning">
@@ -38,8 +38,7 @@
 					:disabled="sendingDisabled || sendingMessage"
 					:loading="sendingMessage"
 					@buttonclicked="sendMessage"
-				>
-				</wnl-image-button>
+				/>
 			</div>
 		</article>
 	</div>
@@ -74,6 +73,10 @@ import { nextTick } from 'vue';
 import _ from 'lodash';
 
 export default{
+	components: {
+		'wnl-form': Form,
+		'wnl-quill': Quill
+	},
 	props: {
 		room: {
 			type: Object,
@@ -114,10 +117,6 @@ export default{
 			sendingMessage: false
 		};
 	},
-	components: {
-		'wnl-form': Form,
-		'wnl-quill': Quill
-	},
 	computed: {
 		...mapGetters([
 			'currentUserFullName',
@@ -146,6 +145,13 @@ export default{
 		},
 		formId() {
 			return `chat-message-form-${this._uid}`;
+		}
+	},
+	watch: {
+		'room.id'() {
+			if (this.autofocusOnRoomChange && this.room.id) {
+				nextTick(() => this.quillEditor.quill.focus());
+			}
 		}
 	},
 	methods: {
@@ -217,13 +223,6 @@ export default{
 			}
 		}
 	},
-	watch: {
-		'room.id'() {
-			if (this.autofocusOnRoomChange && this.room.id) {
-				nextTick(() => this.quillEditor.quill.focus());
-			}
-		}
-	}
 };
 
 </script>

@@ -1,7 +1,7 @@
 <template>
 	<wnl-result-item :is-active="isActive" @click="$emit('click', $event)">
 		<span slot="top-left">{{item.id}}</span>
-		<span v-html="item.text"></span>
+		<span v-html="item.text" />
 	</wnl-result-item>
 </template>
 

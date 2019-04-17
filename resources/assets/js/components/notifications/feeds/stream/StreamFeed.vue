@@ -8,7 +8,7 @@
 					@toggleShowRead="toggleShowRead"
 				/>
 				<div class="stream-notifications">
-					<div class="stream-line"></div>
+					<div class="stream-line" />
 					<component
 						:is="getEventComponent(message)"
 						v-for="message in filtered"
@@ -25,7 +25,7 @@
 					>
 						{{$t('notifications.hideAll')}}
 					</a>
-					<span v-else class="loader"></span>
+					<span v-else class="loader" />
 				</div>
 				<div class="show-more">
 					<a
@@ -109,13 +109,13 @@ import { getImageUrl } from 'js/utils/env';
 
 export default {
 	name: 'StreamFeed',
-	mixins: [feed],
 	components: {
 		'wnl-event-comment-posted': CommentPosted,
 		'wnl-event-qna-answer-posted': QnaAnswerPosted,
 		'wnl-event-qna-question-posted': QnaQuestionPosted,
 		'wnl-stream-filtering': StreamFiltering,
 	},
+	mixins: [feed],
 	data() {
 		return {
 			limit: 100,

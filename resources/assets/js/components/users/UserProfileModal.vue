@@ -18,7 +18,7 @@
 					</div>
 					<div v-if="author.city" class="user-info-city">
 						<span class="icon is-small">
-							<i class="fa fa-map-marker"></i>
+							<i class="fa fa-map-marker" />
 						</span>
 						<span class="city-title">{{author.city}}</span>
 					</div>

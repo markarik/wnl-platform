@@ -4,9 +4,8 @@
 			:is-visible="canRenderSidenav"
 			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
-			<wnl-course-navigation :is-lesson="isLesson">
-			</wnl-course-navigation>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
+			<wnl-course-navigation :is-lesson="isLesson" />
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<router-view :presence-channel="presenceChannel" />
@@ -24,7 +23,7 @@
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
-				<i class="fa fa-chevron-left"></i>
+				<i class="fa fa-chevron-left" />
 				<span>Pokaż czat</span>
 			</span>
 		</div>
@@ -77,6 +76,7 @@ export default {
 		'wnl-sidenav-slot': SidenavSlot,
 		'wnl-main-nav': MainNav,
 	},
+	mixins: [withChat, breadcrumb],
 	props: ['courseId', 'lessonId', 'screenId', 'slide'],
 	computed: {
 		...mapState('course', ['isPlanBuilderEnabled']),
@@ -121,14 +121,13 @@ export default {
 			return `lesson.${this.lessonId}`;
 		},
 	},
-	mixins: [withChat, breadcrumb],
-	methods: {
-		...mapActions(['toggleChat']),
-	},
 	watch: {
 		'$route.query.chatChannel' (newVal) {
 			newVal && !this.isChatVisible && this.toggleChat();
 		}
-	}
+	},
+	methods: {
+		...mapActions(['toggleChat']),
+	},
 };
 </script>

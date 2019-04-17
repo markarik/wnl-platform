@@ -16,21 +16,21 @@
 						:title="ANSWERS_MAP.easy.text"
 						@click="submitAnswer(flashcard, 'easy')"
 					>
-						<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span>
+						<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]" /></span>
 					</a>
 					<a
 						class="flashcards-list__item__buttons__button text--hard"
 						:title="ANSWERS_MAP.hard.text"
 						@click="submitAnswer(flashcard, 'hard')"
 					>
-						<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span>
+						<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]" /></span>
 					</a>
 					<a
 						class="flashcards-list__item__buttons__button text--do-not-know"
 						:title="ANSWERS_MAP.do_not_know.text"
 						@click="submitAnswer(flashcard, 'do_not_know')"
 					>
-						<span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span>
+						<span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]" /></span>
 					</a>
 				</div>
 				<div
@@ -42,14 +42,14 @@
 						title="Ponów"
 						@click="onRetakeFlashcard(flashcard)"
 					>
-						<span class="icon"><i class="fa fa-undo"></i></span>
+						<span class="icon"><i class="fa fa-undo" /></span>
 					</span>
 					<span
 						:class="['flashcards-list__item__buttons__button is-disabled', ANSWERS_MAP[flashcard.answer].buttonClass]"
 						:title="ANSWERS_MAP[flashcard.answer].text"
 					>
 						<span class="icon">
-							<i :class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i>
+							<i :class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]" />
 						</span>
 					</span>
 				</div>
@@ -225,6 +225,12 @@ import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
 
 export default {
+	components: {
+		WnlQuill,
+		WnlForm,
+		WnlTextButton,
+		WnlSubmit,
+	},
 	mixins: [emits_events],
 	props: {
 		context: {
@@ -239,12 +245,6 @@ export default {
 			type: Number,
 			required: true,
 		},
-	},
-	components: {
-		WnlQuill,
-		WnlForm,
-		WnlTextButton,
-		WnlSubmit,
 	},
 	data() {
 		return {

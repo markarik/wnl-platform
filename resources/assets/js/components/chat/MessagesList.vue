@@ -24,13 +24,13 @@
 							:avatar="getMessageAuthor(message).avatar"
 							:time="message.time"
 							:content="message.content"
-						></wnl-message>
+						/>
 					</div>
 					<div v-else class="metadata aligncenter margin vertical">
 						Napisz pierwszą wiadomość i zacznij rozmowę!
 						<p class="margin vertical">
 							<span class="icon is-big text-dimmed">
-								<i class="fa fa-comments-o"></i>
+								<i class="fa fa-comments-o" />
 							</span>
 						</p>
 					</div>
@@ -71,6 +71,7 @@ export default {
 	components: {
 		'wnl-message': Message,
 	},
+	mixins: [highlight],
 	props: {
 		room: {
 			required: true,
@@ -100,7 +101,6 @@ export default {
 			isPulling: false,
 		};
 	},
-	mixins: [highlight],
 	computed: {
 		...mapGetters(['isOverlayVisible']),
 		...mapGetters('chatMessages', ['getRoomById', 'getProfileByUserId']),
@@ -121,6 +121,22 @@ export default {
 		content() {
 			return this.$el.getElementsByClassName('wnl-chat-content')[0];
 		},
+	},
+	watch: {
+		highlightedMessageId() {
+			if (this.highlightedMessageId) this.scrollToMessageById(this.highlightedMessageId);
+		},
+		'loaded'() {
+			// required by firefox
+			this.scrollToBottom();
+		}
+	},
+	mounted() {
+		this.pullDebouncer = _.debounce(this.pullDebouncer, 300);
+		this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.scrollToBottom);
+	},
+	beforeDestroy() {
+		this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.scrollToBottom);
 	},
 	methods: {
 		scrollToBottom() {
@@ -177,22 +193,6 @@ export default {
 		},
 		getMessageAuthor(message) {
 			return this.getProfileByUserId(message.user_id);
-		}
-	},
-	mounted() {
-		this.pullDebouncer = _.debounce(this.pullDebouncer, 300);
-		this.$socketRegisterListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.scrollToBottom);
-	},
-	beforeDestroy() {
-		this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.scrollToBottom);
-	},
-	watch: {
-		highlightedMessageId() {
-			if (this.highlightedMessageId) this.scrollToMessageById(this.highlightedMessageId);
-		},
-		'loaded'() {
-			// required by firefox
-			this.scrollToBottom();
 		}
 	}
 };

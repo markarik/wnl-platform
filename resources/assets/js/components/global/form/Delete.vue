@@ -12,8 +12,8 @@
 			:alert="alert"
 			:timestamp="timestamp"
 			@delete="onDelete"
-		></wnl-alert>
-		<i class="fa fa-trash"></i>
+		/>
+		<i class="fa fa-trash" />
 	</span>
 </template>
 

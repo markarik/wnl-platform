@@ -5,13 +5,13 @@
 		:class="{'modal-active': modalVisible}"
 	>
 		<div v-if="shouldDisplayOverlay" class="wnl-overlay">
-			<span class="loader"></span>
+			<span class="loader" />
 			<span class="loader-text">{{currentOverlayText}}</span>
 		</div>
-		<wnl-navbar :show="true"></wnl-navbar>
+		<wnl-navbar :show="true" />
 		<div class="wnl-main">
 			<wnl-alerts :alerts="alerts" />
-			<router-view></router-view>
+			<router-view />
 		</div>
 	</div>
 </template>
@@ -75,30 +75,19 @@ export default {
 			return !isEmpty(this.overlayTexts) ? this.overlayTexts[0] : this.$t('ui.loading.default');
 		}
 	},
-	methods: {
-		...mapActions([
-			'resetLayout',
-			'setLayout',
-			'setupCurrentUser',
-			'toggleOverlay',
-			'addAlert'
-		]),
-		...mapActions('siteWideMessages', ['fetchUserSiteWideMessages', 'updateSiteWideMessage']),
-		...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
-		...mapActions('notifications', ['initNotifications']),
-		...mapActions('tasks', ['initModeratorsFeedListener']),
-		...mapActions('course', { courseSetup: 'setup' }),
-		...mapActions('products', ['fetchCurrentProducts']),
-		handleSiteWideMessages() {
-			this.siteWideAlerts.forEach(alert => {
-				this.addAlert({
-					text: this.$t(alert.message),
-					type: 'info',
-					dismissCallback: () => {
-						this.updateSiteWideMessage(alert.id);
-					}
-				});
+	watch: {
+		'$route' () {
+			window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
+			this.$trackUrlChange({
+				value: window.location.href
 			});
+		},
+		'thickScrollbar' (newVal) {
+			if (newVal) {
+				document.documentElement.classList.add('thick-scrollbar');
+			} else {
+				document.documentElement.classList.remove('thick-scrollbar');
+			}
 		}
 	},
 	mounted() {
@@ -160,19 +149,30 @@ export default {
 				this.toggleOverlay({ source: 'course', display: false });
 			});
 	},
-	watch: {
-		'$route' () {
-			window.axios.defaults.headers.common['X-BETHINK-LOCATION'] = window.location.href;
-			this.$trackUrlChange({
-				value: window.location.href
+	methods: {
+		...mapActions([
+			'resetLayout',
+			'setLayout',
+			'setupCurrentUser',
+			'toggleOverlay',
+			'addAlert'
+		]),
+		...mapActions('siteWideMessages', ['fetchUserSiteWideMessages', 'updateSiteWideMessage']),
+		...mapActions('users', ['userJoined', 'userLeft', 'setActiveUsers']),
+		...mapActions('notifications', ['initNotifications']),
+		...mapActions('tasks', ['initModeratorsFeedListener']),
+		...mapActions('course', { courseSetup: 'setup' }),
+		...mapActions('products', ['fetchCurrentProducts']),
+		handleSiteWideMessages() {
+			this.siteWideAlerts.forEach(alert => {
+				this.addAlert({
+					text: this.$t(alert.message),
+					type: 'info',
+					dismissCallback: () => {
+						this.updateSiteWideMessage(alert.id);
+					}
+				});
 			});
-		},
-		'thickScrollbar' (newVal) {
-			if (newVal) {
-				document.documentElement.classList.add('thick-scrollbar');
-			} else {
-				document.documentElement.classList.remove('thick-scrollbar');
-			}
 		}
 	},
 };

@@ -52,7 +52,7 @@ services:
       dockerfile: Dockerfile.dev.php
     volumes:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
-    command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:work --queue=default --tries=3 --daemon
+    command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:listen --queue=default --tries=3 --daemon
     depends_on:
       - redis
 
@@ -63,7 +63,7 @@ services:
       dockerfile: Dockerfile.dev.php
     volumes:
       - ${LOCAL_CODE_PATH}:${CONTAINER_CODE_PATH}
-    command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:work --queue=notifications --tries=3 --daemon
+    command: ${CONTAINER_CODE_PATH}/wnl-platform/artisan queue:listen --queue=notifications --tries=3 --daemon
     depends_on:
       - redis
 

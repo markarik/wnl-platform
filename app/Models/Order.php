@@ -84,8 +84,12 @@ class Order extends Model
 
 	public function attachCoupon($coupon)
 	{
-		$this->coupon_id = $coupon->id;
+		$this->coupon()->associate($coupon);
 		$this->save();
+
+		if ($this->method === self::PAYMENT_METHOD_INSTALMENTS) {
+			$this->generateAndSavePaymentSchedule();
+		}
 	}
 
 	public function getTotalWithCouponAttribute()
@@ -117,7 +121,7 @@ class Order extends Model
 			$allPaid = true;
 		}
 
-		$orderInstalments = $this->generateAndSavePaymentSchedule();
+		$orderInstalments = $this->orderInstalments;
 
 		$nextPayment = $orderInstalments
 			->sort(function (OrderInstalment $a, OrderInstalment $b) {

@@ -11,15 +11,28 @@
 |
 */
 
+use Barryvdh\Cors\HandleCors;
+
 Route::group(['namespace' => 'Api\PublicApi'], function () {
 	$r = config('api.resources');
 
-	// Products
-	Route::get('products/current', 'ProductsApiController@getCurrent');
+	Route::group([
+		'middleware' => [
+			'throttle:200,1',
+		]
+	], function () use ($r) {
+		// Products
+		Route::get("{$r['products']}/current", 'ProductsApiController@getCurrent');
+	});
 
-	// Coupons
-	Route::post("{$r['coupons']}", 'CouponsApiController@post');
-	Route::put("{$r['coupons']}", 'CouponsApiController@put');
-	Route::delete("{$r['coupons']}", 'CouponsApiController@deleteCoupon');
-
+	Route::group([
+		'middleware' => [
+			HandleCors::class,
+		]
+	], function () use ($r) {
+		// Coupons
+		Route::post("{$r['coupons']}", 'CouponsApiController@post');
+		Route::put("{$r['coupons']}", 'CouponsApiController@put');
+		Route::delete("{$r['coupons']}", 'CouponsApiController@deleteCoupon');
+	});
 });

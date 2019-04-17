@@ -19,20 +19,15 @@ Route::group(['namespace' => 'Api\PublicApi'], function () {
 	Route::group([
 		'middleware' => [
 			'throttle:200,1',
+			HandleCors::class,
 		]
 	], function () use ($r) {
 		// Products
 		Route::get("{$r['products']}/current", 'ProductsApiController@getCurrent');
 	});
 
-	Route::group([
-		'middleware' => [
-			HandleCors::class,
-		]
-	], function () use ($r) {
-		// Coupons
-		Route::post("{$r['coupons']}", 'CouponsApiController@post');
-		Route::put("{$r['coupons']}", 'CouponsApiController@put');
-		Route::delete("{$r['coupons']}", 'CouponsApiController@deleteCoupon');
-	});
+	// Coupons
+	Route::post("{$r['coupons']}", 'CouponsApiController@post');
+	Route::put("{$r['coupons']}", 'CouponsApiController@put');
+	Route::delete("{$r['coupons']}", 'CouponsApiController@deleteCoupon');
 });

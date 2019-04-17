@@ -2,8 +2,29 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AccountStatus;
+use App\Http\Middleware\Admin;
+use App\Http\Middleware\ApiAuth;
 use App\Http\Middleware\CheckIfAppUnavailableMode;
+use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\PaymentAuth;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\RedirectIfPaid;
+use App\Http\Middleware\SignupsOpen;
+use App\Http\Middleware\Subscription;
+use App\Http\Middleware\TermsOfUse;
+use App\Http\Middleware\VerifyCsrfToken;
+use Barryvdh\Cors\HandleCors;
+use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
+use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class Kernel extends HttpKernel
 {
@@ -15,7 +36,7 @@ class Kernel extends HttpKernel
 	 * @var array
 	 */
 	protected $middleware = [
-		\Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+		CheckForMaintenanceMode::class,
 	];
 
 	/**
@@ -25,28 +46,29 @@ class Kernel extends HttpKernel
 	 */
 	protected $middlewareGroups = [
 		'web' => [
-			\App\Http\Middleware\EncryptCookies::class,
-			\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-			\Illuminate\Session\Middleware\StartSession::class,
-			\Illuminate\View\Middleware\ShareErrorsFromSession::class,
-			\App\Http\Middleware\VerifyCsrfToken::class,
-			\Illuminate\Routing\Middleware\SubstituteBindings::class,
+			EncryptCookies::class,
+			AddQueuedCookiesToResponse::class,
+			StartSession::class,
+			ShareErrorsFromSession::class,
+			VerifyCsrfToken::class,
+			SubstituteBindings::class,
 		],
 
 		'api' => [
 			'throttle:60,1',
 			'bindings',
+			HandleCors::class,
 		],
 
 		'hooks' => [],
 
 		'papi' => [
-			\App\Http\Middleware\EncryptCookies::class,
-			\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-			\Illuminate\Session\Middleware\StartSession::class,
-			\Illuminate\View\Middleware\ShareErrorsFromSession::class,
-			\App\Http\Middleware\VerifyCsrfToken::class,
-			\Illuminate\Routing\Middleware\SubstituteBindings::class,
+			EncryptCookies::class,
+			AddQueuedCookiesToResponse::class,
+			StartSession::class,
+			ShareErrorsFromSession::class,
+			VerifyCsrfToken::class,
+			SubstituteBindings::class,
 		],
 	];
 
@@ -58,29 +80,28 @@ class Kernel extends HttpKernel
 	 * @var array
 	 */
 	protected $routeMiddleware = [
-		'auth'         => \Illuminate\Auth\Middleware\Authenticate::class,
-		'admin'        => \App\Http\Middleware\Admin::class,
-		'payment-auth' => \App\Http\Middleware\PaymentAuth::class,
-		'auth.basic'   => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-		'bindings'     => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-		'can'          => \Illuminate\Auth\Middleware\Authorize::class,
-		'guest'        => \App\Http\Middleware\RedirectIfAuthenticated::class,
-		'throttle'     => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-		'payment'      => \App\Http\Middleware\RedirectIfPaid::class,
-		'signups-open' => \App\Http\Middleware\SignupsOpen::class,
-		'api-auth'     => \App\Http\Middleware\ApiAuth::class,
-		'subscription' => \App\Http\Middleware\Subscription::class,
-		'terms'        => \App\Http\Middleware\TermsOfUse::class,
-		'account-status' => \App\Http\Middleware\AccountStatus::class,
+		'auth' => Authenticate::class,
+		'admin' => Admin::class,
+		'payment-auth' => PaymentAuth::class,
+		'auth.basic' => AuthenticateWithBasicAuth::class,
+		'bindings' => SubstituteBindings::class,
+		'can' => Authorize::class,
+		'guest' => RedirectIfAuthenticated::class,
+		'throttle' => ThrottleRequests::class,
+		'payment' => RedirectIfPaid::class,
+		'signups-open' => SignupsOpen::class,
+		'api-auth' => ApiAuth::class,
+		'subscription' => Subscription::class,
+		'terms' => TermsOfUse::class,
+		'account-status' => AccountStatus::class,
 	];
 
-	public function bootstrap() {
-
+	public function bootstrap()
+	{
 		parent::bootstrap();
 
 		if ($this->app->environment() == 'demo') {
 			$this->pushMiddleware(CheckIfAppUnavailableMode::class);
 		}
-
 	}
 }

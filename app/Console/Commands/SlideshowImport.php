@@ -160,6 +160,7 @@ class SlideshowImport extends Command
 		foreach ($subsections as $subsection) {
 			$originalSubsectionId = $subsection['id'];
 			unset($subsection['id']);
+			// Get ID of newly created section using its old ID.
 			$subsection['section_id'] = $this->sections->get($subsection['section_id'])->id;
 			$subsection = Subsection::create($subsection);
 			$this->subsections->put($originalSubsectionId, $subsection);
@@ -174,14 +175,17 @@ class SlideshowImport extends Command
 	{
 		foreach ($presentables as $presentable) {
 			unset($presentable['id']);
+			// Get ID of newly created slide using its old ID.
 			$presentable['slide_id'] = $this->slides->get($presentable['slide_id'])->id;
 			if ($presentable['presentable_type'] === Slideshow::class) {
 				$presentable['presentable_id'] = $slideshow->id;
 			}
 			if ($presentable['presentable_type'] === Section::class) {
+				// Get ID of newly created section using its old ID.
 				$presentable['presentable_id'] = $this->sections->get($presentable['presentable_id'])->id;
 			}
 			if ($presentable['presentable_type'] === Subsection::class) {
+				// Get ID of newly created subsection using its old ID.
 				$presentable['presentable_id'] = $this->subsections->get($presentable['presentable_id'])->id;
 			}
 

@@ -21,7 +21,7 @@ class Invoice
 	const VAT_NORMAL = 0.23;
 	const DAYS_FOR_PAYMENT = 7;
 
-	public function vatInvoice(Order $order, $invoice = null)
+	public function vatInvoice(Order $order, $invoice = null): InvoiceModel
 	{
 		$builder = $order->invoices()->where('series', config('invoice.vat_series'));
 		if ($invoice) $builder->where('id', '<', $invoice->id);
@@ -30,6 +30,7 @@ class Invoice
 		$vatValue = $this->getVatValue($order);
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
+			/** @var InvoiceModel $invoice */
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(config('invoice.vat_series')),
 				'series' => config('invoice.vat_series'),
@@ -109,11 +110,12 @@ class Invoice
 		return $invoice;
 	}
 
-	public function proforma(Order $order, $invoice = null)
+	public function proforma(Order $order, $invoice = null): InvoiceModel
 	{
 		$vatValue = $this->getVatValue($order);
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
+			/** @var InvoiceModel $invoice */
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(config('invoice.proforma_series')),
 				'series' => config('invoice.proforma_series'),
@@ -178,7 +180,7 @@ class Invoice
 		return $invoice;
 	}
 
-	public function advance(Order $order, $invoice = null)
+	public function advance(Order $order, $invoice = null): InvoiceModel
 	{
 		$builder = $order->invoices()->where('series', config('invoice.advance_series'));
 		if ($invoice) $builder->where('id', '<', $invoice->id);
@@ -188,6 +190,7 @@ class Invoice
 		$vatString = $this->getVatString($vatValue);
 		$totalPaid = $recentSettlement + $previousAdvances->sum('corrected_amount');
 		if (!$invoice) {
+			/** @var InvoiceModel $invoice */
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(config('invoice.advance_series')),
 				'series' => config('invoice.advance_series'),
@@ -265,7 +268,7 @@ class Invoice
 		return $invoice;
 	}
 
-	public function finalInvoice(Order $order, $invoice = null)
+	public function finalInvoice(Order $order, $invoice = null): InvoiceModel
 	{
 		$previousAdvances = $order->invoices()->whereIn('series', [
 			config('invoice.advance_series'),
@@ -275,6 +278,7 @@ class Invoice
 		$vatValue = $this->getVatValue($order);
 		$vatString = $this->getVatString($vatValue);
 		if (!$invoice) {
+			/** @var InvoiceModel $invoice */
 			$invoice = $order->invoices()->create([
 				'number' => $this->nextNumberInSeries(config('invoice.final_series')),
 				'series' => config('invoice.final_series'),
@@ -378,12 +382,13 @@ class Invoice
 		return $invoice;
 	}
 
-	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference, bool $refund = true)
+	public function corrective(Order $order, InvoiceModel $corrected, $reason, $difference, bool $refund = true): InvoiceModel
 	{
 		$previousAdvances = $order->invoices()->where('series', config('invoice.advance_series'))->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
 		$vatValue = $corrected->vat === '23' ? 0.23 : 0;
 		$vatString = $this->getVatString($vatValue);
+		/** @var InvoiceModel $invoice */
 		$invoice = $order->invoices()->create([
 			'number' => $this->nextNumberInSeries(config('invoice.corrective_series')),
 			'series' => config('invoice.corrective_series'),
@@ -567,15 +572,6 @@ class Invoice
 	protected function getVatValue(Order $order)
 	{
 		return $order->product->vat_rate / 100;
-	}
-
-	private function advanceInvoiceSum()
-	{
-		$orders = Order::whereHas('invoices', function ($query) {
-			$query->where('series', config('invoice.advance_series'));
-		})->get();
-
-		return $orders->sum('paid_amount');
 	}
 
 	private function price($number)

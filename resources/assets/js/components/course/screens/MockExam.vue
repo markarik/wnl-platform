@@ -1,11 +1,11 @@
 <template>
 	<div class="wnl-screen-html">
-		<div class="content" v-html="content"></div>
+		<div class="content" v-html="content" />
 		<div class="margin vertical has-text-centered">
 			{{this.$t('annotations.mockExamAnnotation')}}
 		</div>
 		<p class="margin vertical has-text-centered">
-			<button @click="redirectToExam" class="button is-primary">
+			<button class="button is-primary" @click="redirectToExam">
 				{{this.$t('questions.nav.mockExam')}}!
 			</button>
 		</p>
@@ -57,6 +57,12 @@ export default {
 			};
 		},
 	},
+	mounted() {
+		this.wrapEmbedded();
+	},
+	updated() {
+		this.wrapEmbedded();
+	},
 	methods: {
 		redirectToExam() {
 			this.$router.push(this.routeParams);
@@ -76,12 +82,6 @@ export default {
 				});
 			}
 		}
-	},
-	mounted() {
-		this.wrapEmbedded();
-	},
-	updated() {
-		this.wrapEmbedded();
 	},
 };
 </script>

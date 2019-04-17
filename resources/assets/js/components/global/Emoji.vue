@@ -1,5 +1,9 @@
 <template>
-	<span class="wnl-emoji" :class="emojiClass" v-html="emoji"></span>
+	<span
+		class="wnl-emoji"
+		:class="emojiClass"
+		v-html="emoji"
+	/>
 </template>
 
 <style lang="sass" rel="stylesheet/sass">

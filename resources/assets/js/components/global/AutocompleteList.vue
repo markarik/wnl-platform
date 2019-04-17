@@ -1,25 +1,25 @@
 <template>
 	<div
+		v-show="items.length || $slots.footer"
 		class="autocomplete-box"
 		:class="{'is-down': isDown}"
-		v-show="items.length || $slots.footer"
 	>
 		<ul
+			ref="autocompleteList"
 			class="autocomplete-box__list"
 			tabindex="-1"
-			ref="autocompleteList"
 		>
 			<li
-				class="autocomplete-box__item"
 				v-for="(item, index) in items"
-				@click="$emit('change', item)"
-				:class="{ active: index === activeIndex }"
 				:key="index"
+				class="autocomplete-box__item"
+				:class="{ active: index === activeIndex }"
+				@click="$emit('change', item)"
 			>
-				<slot :item="item"></slot>
+				<slot :item="item" />
 			</li>
 		</ul>
-		<slot name="footer"></slot>
+		<slot name="footer" />
 	</div>
 </template>
 

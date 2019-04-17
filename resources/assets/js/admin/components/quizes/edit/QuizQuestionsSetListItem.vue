@@ -1,9 +1,13 @@
 <template>
 	<div class="quiz-question">
 		<div class="quiz-question-content">{{id}}. {{content}}</div>
-		<button class="quiz-question-remove" type="button" @click="$emit('remove')">
+		<button
+			class="quiz-question-remove"
+			type="button"
+			@click="$emit('remove')"
+		>
 			<span class="icon is-small">
-				<i class="fa fa-trash"></i>
+				<i class="fa fa-trash" />
 			</span>
 		</button>
 	</div>

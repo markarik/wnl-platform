@@ -16,26 +16,33 @@
 					@refresh="onRefresh"
 				/>
 			</div>
-			<div class="wnl-questions-filters"
-				:style="{paddingTop: activeFiltersHeight + 'px'}">
+			<div
+				class="wnl-questions-filters"
+				:style="{paddingTop: activeFiltersHeight + 'px'}"
+			>
 				<div class="filters-heading">
 					<span class="metadata margin vertical">
-					<span class="icon is-tiny"><i class="fa fa-search"></i></span>
+						<span class="icon is-tiny"><i class="fa fa-search" /></span>
 						{{$t('questions.filters.searchHeading')}}
 					</span>
 				</div>
-				<wnl-questions-search class="search-input"
+				<wnl-questions-search
+					class="search-input"
 					:loading="loading"
-					@emitValueToFilter="emitValueToList"/>
+					@emitValueToFilter="emitValueToList"
+				/>
 				<div class="filters-heading">
 					<span class="metadata margin vertical">
-						<span class="icon is-tiny"><i class="fa fa-sliders"></i></span>
+						<span class="icon is-tiny"><i class="fa fa-sliders" /></span>
 						{{$t('questions.filters.heading')}}
 					</span>
-					<a v-if="!isChatMounted && isChatVisible"
-						class="hide-filters" @click="toggleChat">
+					<a
+						v-if="!isChatMounted && isChatVisible"
+						class="hide-filters"
+						@click="toggleChat"
+					>
 						{{$t('questions.filters.hide')}}
-						<span class="icon is-small"><i class="fa fa-close"></i></span>
+						<span class="icon is-small"><i class="fa fa-close" /></span>
 					</a>
 				</div>
 				<wnl-accordion

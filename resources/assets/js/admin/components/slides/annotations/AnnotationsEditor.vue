@@ -1,7 +1,10 @@
 <template>
 	<div class="annotations-editor">
 		<span class="title is-5 annotations-editor__title">{{title}}</span>
-		<form action="" method="POST" @submit.prevent="onSubmit"
+		<form
+			action=""
+			method="POST"
+			@submit.prevent="onSubmit"
 			@keydown="form.errors.clear($event.target.name)"
 		>
 			<div class="field annotation-input-text is-horizontal">
@@ -11,7 +14,12 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<input class="input" type="text" v-model="annotation.title" @input="onFieldChange">
+							<input
+								v-model="annotation.title"
+								class="input"
+								type="text"
+								@input="onFieldChange"
+							>
 						</div>
 					</div>
 				</div>
@@ -23,7 +31,12 @@
 				<div class="field-body">
 					<div class="field">
 						<div class="control">
-							<input class="input" type="text" v-model="annotation.keywords" @input="onFieldChange">
+							<input
+								v-model="annotation.keywords"
+								class="input"
+								type="text"
+								@input="onFieldChange"
+							>
 						</div>
 						<p class="help">Lista słów kluczowych oddzielonych przecinkami</p>
 					</div>
@@ -32,17 +45,20 @@
 			<div class="annotation-input-description">
 				<div>
 					<quill
+						v-model="annotation.description"
 						:form="form"
 						name="content"
-						v-model="annotation.description"
 						@input="onFieldChange"
-					>
-					</quill>
+					/>
 				</div>
 			</div>
 			<fieldset class="annotation-tags">
 				<legend class="annotation-tags__legend">Tagi</legend>
-				<wnl-tags :default-tags="annotation.tags || []" ref="tags" @insertTag="onFieldChange"></wnl-tags>
+				<wnl-tags
+					ref="tags"
+					:default-tags="annotation.tags || []"
+					@insertTag="onFieldChange"
+				/>
 			</fieldset>
 			<wnl-content-item-classifier-editor
 				v-if="annotation.id"
@@ -57,39 +73,39 @@
 				<div class="control annotation-type__form">
 					<div class="field">
 						<input
+							id="typeNeutral"
+							v-model="keywordType"
 							class="is-checkradio"
 							type="radio"
 							name="keywordType"
 							:value="ANNOTATIONS_TYPES.NEUTRAL"
-							v-model="keywordType"
-							id="typeNeutral"
 						>
 						<label for="typeNeutral">Neutralny</label>
 						<input
+							id="typeBasic"
+							v-model="keywordType"
 							class="is-checkradio"
 							type="radio"
 							name="keywordType"
 							:value="ANNOTATIONS_TYPES.BASIC"
-							v-model="keywordType"
-							id="typeBasic"
 						>
 						<label for="typeBasic">Wiedza podstawowa</label>
 						<input
+							id="typeExpert"
+							v-model="keywordType"
 							class="is-checkradio"
 							type="radio"
 							name="keywordType"
 							:value="ANNOTATIONS_TYPES.EXPERT"
-							v-model="keywordType"
-							id="typeExpert"
 						>
 						<label for="typeExpert">Wiedza specjalistyczna</label>
 						<input
+							id="typeImage"
+							v-model="keywordType"
 							class="is-checkradio"
 							type="radio"
 							name="keywordType"
 							:value="ANNOTATIONS_TYPES.IMAGE"
-							v-model="keywordType"
-							id="typeImage"
 						>
 						<label for="typeImage">Zdjęcie</label>
 					</div>
@@ -100,9 +116,13 @@
 						<label class="label">Tagi do slides.com</label>
 					</div>
 					<div class="field-body">
-						<div class="field field--keyword" v-for="tag in parserTags" :key="tag">
+						<div
+							v-for="tag in parserTags"
+							:key="tag"
+							class="field field--keyword"
+						>
 							<div class="control">
-								<wnl-keyword-field :content="tag" :show="annotation.id"/>
+								<wnl-keyword-field :content="tag" :show="annotation.id" />
 							</div>
 						</div>
 					</div>
@@ -113,28 +133,36 @@
 						<label class="label">Tagi do edytora</label>
 					</div>
 					<div class="field-body">
-						<div class="field field--keyword" v-for="tag in htmlTags" :key="tag">
+						<div
+							v-for="tag in htmlTags"
+							:key="tag"
+							class="field field--keyword"
+						>
 							<div class="control">
-								<wnl-keyword-field :content="tag" :show="annotation.id"/>
+								<wnl-keyword-field :content="tag" :show="annotation.id" />
 							</div>
 						</div>
 					</div>
 				</div>
 			</template>
 			<div class="level-item">
-				<a class="button is-danger"
+				<a
+					class="button is-danger"
 					:disabled="!annotation.id"
-					@click="onDelete">Usuń
+					@click="onDelete"
+				>Usuń
 				</a>
 				<a class="button" @click="isVisible = true">Podgląd</a>
-				<a class="button is-primary"
+				<a
+					class="button is-primary"
 					:disabled="form.errors.any() || !annotation.description"
-					@click="onSubmit">Zapisz
+					@click="onSubmit"
+				>Zapisz
 				</a>
 			</div>
 		</form>
-		<wnl-modal @closeModal="isVisible = false" v-if="isVisible">
-			<wnl-preview-modal :content="annotation.description"/>
+		<wnl-modal v-if="isVisible" @closeModal="isVisible = false">
+			<wnl-preview-modal :content="annotation.description" />
 		</wnl-modal>
 	</div>
 </template>
@@ -216,6 +244,12 @@ export default {
 		'wnl-preview-modal': PreviewModal,
 		WnlContentItemClassifierEditor
 	},
+	props: {
+		annotation: {
+			type: Object,
+			default: () => ({})
+		}
+	},
 	data() {
 		const ANNOTATIONS_TYPES = {
 			NEUTRAL: '1',
@@ -231,12 +265,6 @@ export default {
 			CONTENT_TYPES,
 			isVisible: false
 		};
-	},
-	props: {
-		annotation: {
-			type: Object,
-			default: () => ({})
-		}
 	},
 	computed: {
 		title() {
@@ -267,6 +295,16 @@ export default {
 				return `<span data-annotation-id="${this.annotation.id}" class="annotation annotation-type-${this.keywordType}">${keyword}</span>`;
 			});
 		}
+	},
+	watch: {
+		async 'annotation.id'() {
+			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id] });
+		}
+	},
+	async mounted() {
+		if (!this.annotation.id) return;
+
+		await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id] });
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -323,15 +361,5 @@ export default {
 			}
 		},
 	},
-	async mounted() {
-		if (!this.annotation.id) return;
-
-		await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id] });
-	},
-	watch: {
-		async 'annotation.id'() {
-			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.ANNOTATION, contentIds: [this.annotation.id] });
-		}
-	}
 };
 </script>

@@ -1,11 +1,11 @@
 <template>
 	<wnl-dashboard-news-content
-			v-if="showNews"
-			:message="dashboardNews.message"
-			:message-arguments="messageArguments"
-			:slug="dashboardNews.slug"
-			@onClose="closed"
-			@onContentClick="contentClicked"
+		v-if="showNews"
+		:message="dashboardNews.message"
+		:message-arguments="messageArguments"
+		:slug="dashboardNews.slug"
+		@onClose="closed"
+		@onContentClick="contentClicked"
 	/>
 </template>
 
@@ -18,15 +18,15 @@ import context from 'js/consts/events_map/context.json';
 
 export default {
 	name: 'DashboardNews',
+	components: {
+		WnlDashboardNewsContent
+	},
 	mixins: [dashboardNewsMessageArguments],
 	data() {
 		return {
 			featureContext: context.dashboard.features.news_message,
 			showNews: false
 		};
-	},
-	components: {
-		WnlDashboardNewsContent
 	},
 	computed: {
 		...mapGetters('siteWideMessages', ['dashboardNews']),
@@ -36,6 +36,13 @@ export default {
 		newsStoreKey() {
 			return `seen-dashboard-news-${this.dashboardNews.id}`;
 		},
+	},
+	mounted() {
+		this.showNews = this.dashboardNews && !this.hasSeenNews;
+
+		if (this.showNews) {
+			this.track(this.featureContext.actions.open.value);
+		}
 	},
 	methods: {
 		closed() {
@@ -87,13 +94,6 @@ export default {
 				context: context.dashboard.value,
 			});
 		},
-	},
-	mounted() {
-		this.showNews = this.dashboardNews && !this.hasSeenNews;
-
-		if (this.showNews) {
-			this.track(this.featureContext.actions.open.value);
-		}
 	},
 };
 </script>

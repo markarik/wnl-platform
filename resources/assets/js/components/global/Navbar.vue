@@ -1,23 +1,36 @@
 <template>
 	<nav class="wnl-navbar has-shadow" :class="{'is-desktop': !isTouchScreen}">
-		<div class="wnl-navbar-item wnl-navbar-sidenav-toggle" v-if="canShowSidenavTrigger">
+		<div v-if="canShowSidenavTrigger" class="wnl-navbar-item wnl-navbar-sidenav-toggle">
 			<a class="wnl-navbar-sidenav-trigger" @click="toggleSidenav">
 				<span class="icon">
-					<i class="fa" :class="sidenavIconClass"></i>
+					<i class="fa" :class="sidenavIconClass" />
 				</span>
 			</a>
 		</div>
 		<div class="wnl-navbar-branding">
 			<router-link :to="{ name: 'dashboard' }" class="wnl-logo-link">
-				<img class="logo-image" :src="logoSrc" :alt="$t('nav.navbar.logoAlt')">
-				<img v-if="!isMobile" class="logo-text" :src="logoTextSrc" :alt="$t('nav.navbar.logoAlt')">
+				<img
+					class="logo-image"
+					:src="logoSrc"
+					:alt="$t('nav.navbar.logoAlt')"
+				>
+				<img
+					v-if="!isMobile"
+					class="logo-text"
+					:src="logoTextSrc"
+					:alt="$t('nav.navbar.logoAlt')"
+				>
 			</router-link>
 		</div>
-		<div class="wnl-navbar-signup" v-if="!currentUserHasLatestProduct && getCurrentCourseProductSignupsOpen">
-			<a target="_blank" :href="signUpLink" class="button is-success is-small is-outlined">
+		<div v-if="!currentUserHasLatestProduct && getCurrentCourseProductSignupsOpen" class="wnl-navbar-signup">
+			<a
+				target="_blank"
+				:href="signUpLink"
+				class="button is-success is-small is-outlined"
+			>
 				<span>Zapisz się</span>&nbsp;
 				<span class="icon is-small">
-					<i class="fa fa-thumbs-o-up"></i>
+					<i class="fa fa-thumbs-o-up" />
 				</span>
 			</a>
 		</div>
@@ -25,24 +38,31 @@
 			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
 			class="wnl-navbar-item wnl-navbar-search"
 		>
-			<wnl-search/>
+			<wnl-search />
 		</div>
 		<div
 			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
-			class="wnl-navbar-item wnl-navbar-feed">
-			<wnl-personal-feed/>
-		</div>
-		<div
-			class="wnl-navbar-item wnl-navbar-messages"
-			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
+			class="wnl-navbar-item wnl-navbar-feed"
 		>
-			<wnl-chat-feed/>
+			<wnl-personal-feed />
+		</div>
+		<div
+			v-if="$currentEditionParticipant.isAllowed('access') && isOnboardingFinished"
+			class="wnl-navbar-item wnl-navbar-messages"
+		>
+			<wnl-chat-feed />
 		</div>
 		<div class="wnl-navbar-item wnl-navbar-profile">
-			<wnl-user-dropdown/>
+			<wnl-user-dropdown />
 		</div>
-		<div class="wnl-navbar-item wnl-navbar-chat-toggle" v-if="canShowChatToggleInNavbar">
-			<span class="icon is-big"><i class="fa" :class="chatIconClass" @click="toggleChat"></i></span>
+		<div v-if="canShowChatToggleInNavbar" class="wnl-navbar-item wnl-navbar-chat-toggle">
+			<span class="icon is-big">
+				<i
+					class="fa"
+					:class="chatIconClass"
+					@click="toggleChat"
+				/>
+			</span>
 		</div>
 	</nav>
 </template>

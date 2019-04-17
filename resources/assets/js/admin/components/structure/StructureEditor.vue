@@ -6,16 +6,16 @@
 			<template slot="header">
 				<span class="control has-icons-right structure-editor__search margin bottom">
 					<wnl-node-autocomplete
-						@change="onSearch"
 						placeholder="Szukaj"
+						@change="onSearch"
 					/>
 					<span class="icon is-small is-right">
-						<i class="fa fa-search"></i>
+						<i class="fa fa-search" />
 					</span>
 				</span>
 			</template>
-			<wnl-structure-nodes-list slot="nodes-list" :nodes="getRootNodes"/>
-			<wnl-structure-node-editor-right slot="panel-right" :course-id="courseId"/>
+			<wnl-structure-nodes-list slot="nodes-list" :nodes="getRootNodes" />
+			<wnl-structure-node-editor-right slot="panel-right" :course-id="courseId" />
 		</wnl-nested-set-editor>
 	</div>
 </template>
@@ -49,6 +49,9 @@ export default {
 		WnlNodeAutocomplete,
 		WnlNestedSetEditor
 	},
+	mixins: [
+		scrollToNodeMixin,
+	],
 	props: {
 		courseId: {
 			type: [String, Number],
@@ -59,17 +62,6 @@ export default {
 		...mapState('courseStructure', ['isLoading', 'nodes']),
 		...mapGetters('courseStructure', ['getChildrenNodesByParentId', 'getRootNodes']),
 	},
-	methods: {
-		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('courseStructure', ['setUpNestedSet', 'expandAll', 'focus']),
-		async onSearch(node) {
-			this.focus(node);
-			this.scrollToNode(node);
-		},
-	},
-	mixins: [
-		scrollToNodeMixin,
-	],
 	async mounted() {
 		try {
 			await this.setUpNestedSet(this.courseId);
@@ -81,6 +73,14 @@ export default {
 			});
 		}
 		this.expandAll();
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('courseStructure', ['setUpNestedSet', 'expandAll', 'focus']),
+		async onSearch(node) {
+			this.focus(node);
+			this.scrollToNode(node);
+		},
 	},
 };
 </script>

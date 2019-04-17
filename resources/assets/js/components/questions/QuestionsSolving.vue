@@ -1,7 +1,7 @@
 <template>
 	<div class="questions-solving-container" :class="{'is-mobile': isMobile}">
-		<div class="questions-solving-view" v-if="!testMode">
-			<div class="tabs" v-if="!isMobile">
+		<div v-if="!testMode" class="questions-solving-view">
+			<div v-if="!isMobile" class="tabs">
 				<ul>
 					<li
 						v-for="(view, index) in views"
@@ -10,7 +10,7 @@
 						@click="activeView = view.name"
 					>
 						<a>
-							<span class="icon is-small"><i class="fa" :class="view.icon"></i></span>
+							<span class="icon is-small"><i class="fa" :class="view.icon" /></span>
 							{{$t(`questions.solving.tabs.${view.name}`, {
 								count: questionsListCount,
 								current: questionNumber(currentQuestion.index)
@@ -22,12 +22,13 @@
 			<div v-else class="questions-solving-select control">
 				<span class="select">
 					<select @input="changeViewWithSelect">
-						<option v-for="(view, index) in views"
+						<option
+							v-for="(view, index) in views"
 							:key="index"
 							:value="view.name"
 							:selected="view.name === activeView"
 						>
-							<span class="icon is-small"><i class="fa" :class="view.icon"></i></span> {{$t(`questions.solving.tabs.${view.name}`, {
+							<span class="icon is-small"><i class="fa" :class="view.icon" /></span> {{$t(`questions.solving.tabs.${view.name}`, {
 								count: questionsListCount,
 								current: questionNumber(currentQuestion.index)
 							})}}
@@ -36,11 +37,12 @@
 				</span>
 			</div>
 		</div>
-		<div class="questions-list-info" v-if="!testMode">
+		<div v-if="!testMode" class="questions-list-info">
 			<div class="active-filters">
 				{{activeFiltersForDisplay}}
 			</div>
-			<a v-if="activeView === VIEWS.LIST"
+			<a
+				v-if="activeView === VIEWS.LIST"
 				class="button is-small is-outlined is-primary"
 				@click="showListResults = !showListResults"
 			>
@@ -67,7 +69,8 @@
 			<!-- List -->
 			<div v-if="activeView === VIEWS.LIST" class="questions-list">
 				<div class="pagination-container">
-					<wnl-pagination v-if="meta.lastPage && meta.lastPage > 1"
+					<wnl-pagination
+						v-if="meta.lastPage && meta.lastPage > 1"
 						:current-page="meta.currentPage"
 						:last-page="meta.lastPage"
 						@changePage="changePage"
@@ -76,34 +79,35 @@
 
 				<div
 					v-for="(question, index) in questionsCurrentPage"
-					class="questions-list-item"
 					:key="index"
+					class="questions-list-item"
 				>
 					<div class="questions-list-numbering">
 						<span class="matched-count">
-							{{ $t('questions.solving.withNumber', {number: questionNumber(index)}) }}/{{questionsListCount}}
+							{{$t('questions.solving.withNumber', {number: questionNumber(index)})}}/{{questionsListCount}}
 							<a @click="setQuestion(index)">
-								{{ $t('questions.solving.setAsCurrent') }}
+								{{$t('questions.solving.setAsCurrent')}}
 							</a>
 						</span>
 						<span class="question-id">#{{question.id}}</span>
 					</div>
 					<wnl-quiz-question
+						:id="question.id"
+						:key="`question-${question.id}`"
 						:class="`quiz-question-${question.id}`"
 						:get-reaction="getReaction"
-						:id="question.id"
 						:module="module"
 						:question="question"
 						:read-only="showListResults"
 						:hide-comments="true"
-						:key="`question-${question.id}`"
 						@selectAnswer="selectAnswer(...arguments, {position: {index, page: meta.currentPage}})"
 						@userEvent="proxyUserEvent"
 					/>
 				</div>
 
 				<div v-if="questionsCurrentPage.length > 5" class="pagination-container">
-					<wnl-pagination v-if="meta.lastPage && meta.lastPage > 1"
+					<wnl-pagination
+						v-if="meta.lastPage && meta.lastPage > 1"
 						:current-page="meta.currentPage"
 						:last-page="meta.lastPage"
 						@changePage="changePage"
@@ -345,6 +349,36 @@ export default {
 			return this.questionsCurrentPage.map(question => question.id);
 		}
 	},
+	watch: {
+		activeFilters() {
+			this.showListResults = false;
+		},
+		activeView() {
+			if (!this.$refs.view) return false;
+
+			scrollToElement(this.$refs.view, 200);
+
+			this.$emit('activeViewChange', this.activeView);
+		},
+		presetOptions() {
+			if (this.presetOptions.hasOwnProperty('activeView')) {
+				this.activeView = this.presetOptions.activeView;
+			}
+			this.$emit('activeViewChange', this.activeView);
+		},
+		questionsIds(newValue, oldValue) {
+			if (isEqual(newValue, oldValue)) return;
+
+			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
+		}
+	},
+	mounted() {
+		if (this.presetOptions.hasOwnProperty('activeView')) {
+			this.activeView = this.presetOptions.activeView;
+		}
+		this.$emit('activeViewChange', this.activeView);
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
+	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		buildTest(payload) {
@@ -378,35 +412,5 @@ export default {
 			this.$emit('verify', payload);
 		},
 	},
-	mounted() {
-		if (this.presetOptions.hasOwnProperty('activeView')) {
-			this.activeView = this.presetOptions.activeView;
-		}
-		this.$emit('activeViewChange', this.activeView);
-		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
-	},
-	watch: {
-		activeFilters() {
-			this.showListResults = false;
-		},
-		activeView() {
-			if (!this.$refs.view) return false;
-
-			scrollToElement(this.$refs.view, 200);
-
-			this.$emit('activeViewChange', this.activeView);
-		},
-		presetOptions() {
-			if (this.presetOptions.hasOwnProperty('activeView')) {
-				this.activeView = this.presetOptions.activeView;
-			}
-			this.$emit('activeViewChange', this.activeView);
-		},
-		questionsIds(newValue, oldValue) {
-			if (isEqual(newValue, oldValue)) return;
-
-			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
-		}
-	}
 };
 </script>

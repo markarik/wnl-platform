@@ -8,13 +8,15 @@
 			</div>
 		</div>
 
-		<wnl-form class="margin vertical"
+		<wnl-form
+			class="margin vertical"
 			name="Settings"
 			method="put"
 			resource-route="users/current/settings"
 			populate="true"
 			hide-default-submit="true"
-			@submitSuccess="onSubmitSuccess">
+			@submitSuccess="onSubmitSuccess"
+		>
 			<template slot-scope="slotParams">
 				<!-- <wnl-form-check name="newsletter">Otrzymuj newsletter</wnl-form-check> -->
 				<wnl-form-check
@@ -72,6 +74,11 @@ export default {
 			return this.taxonomies.map(taxonomy => ({ value: taxonomy.id, text: taxonomy.name }));
 		}
 	},
+	mounted() {
+		if (this.isAdmin) {
+			this.fetchTaxonomies();
+		}
+	},
 	methods: {
 		...mapActions(['changeUserSetting']),
 		...mapActions('taxonomies', {
@@ -85,11 +92,6 @@ export default {
 				}
 			});
 		},
-	},
-	mounted() {
-		if (this.isAdmin) {
-			this.fetchTaxonomies();
-		}
 	},
 };
 </script>

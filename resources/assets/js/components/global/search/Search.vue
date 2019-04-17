@@ -1,28 +1,29 @@
 <template>
 	<div class="wnl-search" @click="showOverlay">
 		<span class="icon">
-			<i class="fa fa-search"></i>
+			<i class="fa fa-search" />
 		</span>
 
 		<transition name="fade">
-			<div v-show="active"
-				class="search-overlay"
+			<div
+				v-show="active"
 				ref="overlay"
+				class="search-overlay"
 				:class="{'is-touch-screen': isTouchScreen}"
 				@click.stop="$refs.input.focus()"
 			>
 				<div class="search-input">
 					<div class="control" :class="{'is-loading': loading}">
 						<input
+							ref="input"
 							class="input"
 							placeholder="Szukaj..."
-							ref="input"
 							type="text"
 							@input="debounceInput"
 						>
 					</div>
 					<span class="close-icon icon is-large" @click="hideOverlay">
-						<i class="fa fa-close"></i>
+						<i class="fa fa-close" />
 					</span>
 				</div>
 				<div class="results">
@@ -168,6 +169,12 @@ export default {
 	computed: {
 		...mapGetters(['isTouchScreen']),
 	},
+	mounted() {
+		window.addEventListener('keydown', this.keyDown);
+	},
+	beforeDestroy() {
+		window.removeEventListener('keydown', this.keyDown);
+	},
 	methods: {
 		debounceInput: debounce(function({ target: { value } }) {
 			this.phrase = value;
@@ -195,11 +202,5 @@ export default {
 			this.$nextTick(() => this.$refs.input.select());
 		},
 	},
-	mounted() {
-		window.addEventListener('keydown', this.keyDown);
-	},
-	beforeDestroy() {
-		window.removeEventListener('keydown', this.keyDown);
-	}
 };
 </script>

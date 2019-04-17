@@ -2,15 +2,15 @@
 	<div class="wnl-find-users">
 		<div class="wnl-find-users-input control" :class="{'is-loading': loading}">
 			<input
-				:placeholder="$t('messages.search.placeholder')"
+				ref="input"
 				v-model="textInputValue"
+				:placeholder="$t('messages.search.placeholder')"
 				@input="onInput"
 				@keydown="onKeyDown"
-				ref="input"
-			/>
+			>
 		</div>
-		<div class="wnl-find-users-info notification aligncenter" v-if="info">
-			{{ info }}
+		<div v-if="info" class="wnl-find-users-info notification aligncenter">
+			{{info}}
 		</div>
 	</div>
 </template>
@@ -65,6 +65,9 @@ export default {
 			timeout: 0,
 			info: '',
 		};
+	},
+	mounted(){
+		this.$refs.input.focus();
 	},
 	methods: {
 		onInput: _.debounce(function ({ target: { value } }) {
@@ -127,8 +130,5 @@ export default {
 			this.$emit('close');
 		},
 	},
-	mounted(){
-		this.$refs.input.focus();
-	}
 };
 </script>

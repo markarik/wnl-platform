@@ -1,63 +1,81 @@
 <template>
 	<div>
-		<div class="qna-loader" v-if="loading">
-			<wnl-text-loader></wnl-text-loader>
+		<div v-if="loading" class="qna-loader">
+			<wnl-text-loader />
 		</div>
-		<div class="wnl-qna" v-if="!loading">
+		<div v-if="!loading" class="wnl-qna">
 			<div class="wnl-qna-header level">
 				<div class="level-left">
 					<div>
 						<div class="wnl-qna-header" :class="isUserProfileClass">
 							<span v-if="icon" class="icon is-big user-profile-icon">
-								<i :class="icon"></i>
+								<i :class="icon" />
 							</span>
-							<p v-if="!hideTitle" class="wnl-qna-header-title" >
+							<p v-if="!hideTitle" class="wnl-qna-header-title">
 								{{displayedTitle}}&nbsp;
 							</p>
-							<p class="wnl-qna-header-title" v-if="!numbersDisabled">
+							<p v-if="!numbersDisabled" class="wnl-qna-header-title">
 								({{howManyQuestions}})
 							</p>
 						</div>
-						<div class="tags" v-if="contextTags">
-							<span v-for="tag in contextTags" :key="tag.id" class="tag is-light" v-text="tag.name"></span>
+						<div v-if="contextTags" class="tags">
+							<span
+								v-for="tag in contextTags"
+								:key="tag.id"
+								class="tag is-light"
+								v-text="tag.name"
+							/>
 						</div>
 					</div>
 				</div>
-				<div class="level-right" v-if="!readOnly">
-					<a class="button is-small" @click="showForm = false" v-if="showForm">
+				<div v-if="!readOnly" class="level-right">
+					<a
+						v-if="showForm"
+						class="button is-small"
+						@click="showForm = false"
+					>
 						<span>Ukryj</span>
 					</a>
-					<a class="button is-small is-primary" @click="showForm = true" v-if="!showForm">
+					<a
+						v-if="!showForm"
+						class="button is-small is-primary"
+						@click="showForm = true"
+					>
 						<span>Zadaj pytanie</span>
 						<span id="question-icon" class="icon is-small">
-							<i class="fa fa-question-circle-o"></i>
+							<i class="fa fa-question-circle-o" />
 						</span>
 					</a>
 				</div>
 			</div>
 			<transition name="fade">
-				<div class="qna-new-question" v-if="showForm && discussionId">
+				<div v-if="showForm && discussionId" class="qna-new-question">
 					<wnl-new-question
 						:context-tags="contextTags"
-						@submitSuccess="showForm = false"
 						:discussion-id="discussionId"
+						@submitSuccess="showForm = false"
 					/>
 				</div>
 			</transition>
-			<wnl-qna-sorting v-if="sortingEnabled"/>
+			<wnl-qna-sorting v-if="sortingEnabled" />
 			<div>
 				<div v-if="howManyQuestions > 0">
-					<wnl-qna-question v-for="question in questionsList"
+					<wnl-qna-question
+						v-for="question in questionsList"
 						:key="question.id"
 						:question-id="question.id"
 						:read-only="readOnly"
 						:reactions-disabled="reactionsDisabled"
 						:config="config"
 					>
-						<router-link v-if="showContext && question.meta && question.meta.context" slot="context" :to="{ name: question.meta.context.name, params: question.meta.context.params }">{{ $t('user.userProfile.showContext')}}</router-link>
+						<router-link
+							v-if="showContext && question.meta && question.meta.context"
+							slot="context"
+							:to="{ name: question.meta.context.name, params: question.meta.context.params }"
+						>{{$t('user.userProfile.showContext')}}</router-link>
 					</wnl-qna-question>
 				</div>
-				<div class="qna-no-questions" v-else>
+				<div v-else class="qna-no-questions">
 					Ten filtr nie zawiera żadnych pytań.
 				</div>
 			</div>
@@ -194,16 +212,6 @@ export default {
 			return this.title || this.$t('qna.title.titleToDisplay');
 		},
 	},
-	methods: {
-		...mapActions('qna', ['destroyQna']),
-	},
-	mounted() {
-		if (!this.sortingEnabled && this.passedQuestions) {
-			this.questionsList = this.passedQuestions;
-		} else {
-			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
-		}
-	},
 	watch: {
 		'currentSorting' (newValue) {
 			this.questionsList = this.getSortedQuestions(newValue, this.questions);
@@ -214,8 +222,18 @@ export default {
 			}
 		}
 	},
+	mounted() {
+		if (!this.sortingEnabled && this.passedQuestions) {
+			this.questionsList = this.passedQuestions;
+		} else {
+			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+		}
+	},
 	beforeDestroy() {
 		this.destroyQna();
-	}
+	},
+	methods: {
+		...mapActions('qna', ['destroyQna']),
+	},
 };
 </script>

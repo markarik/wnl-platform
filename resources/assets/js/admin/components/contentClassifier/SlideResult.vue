@@ -13,6 +13,10 @@ import WnlSlideThumb from 'js/components/course/SlideThumb';
 import WnlResultItem from 'js/admin/components/contentClassifier/ResultItem';
 
 export default {
+	components: {
+		WnlSlideThumb,
+		WnlResultItem,
+	},
 	props: {
 		isActive: {
 			type: Boolean,
@@ -22,10 +26,6 @@ export default {
 			required: true,
 			type: Object,
 		},
-	},
-	components: {
-		WnlSlideThumb,
-		WnlResultItem,
 	}
 };
 </script>

@@ -1,29 +1,34 @@
 <template>
 	<div class="user-details">
-		<wnl-text-loader v-if="isLoading"></wnl-text-loader>
+		<wnl-text-loader v-if="isLoading" />
 		<div v-else>
 			<div class="user-details__head">
-				<p>#{{ user.id }}</p>
-				<p class="user-details__head__name">{{ user.full_name }}</p>
+				<p>#{{user.id}}</p>
+				<p class="user-details__head__name">{{user.full_name}}</p>
 				<span
-					class="tag"
 					v-for="role in user.roles"
 					:key="role.name"
-					:style="{backgroundColor: getColourForStr(role.name)}">
-					{{ role.name }}
+					class="tag"
+					:style="{backgroundColor: getColourForStr(role.name)}"
+				>
+					{{role.name}}
 				</span>
-				<p>Dołączył/-a: {{ dateCreated }}</p>
+				<p>Dołączył/-a: {{dateCreated}}</p>
 			</div>
 
 			<div class="tabs">
 				<ul>
-					<li :class="{ 'is-active': name === activeTabName }" v-for="(tab, name) in tabs" :key="name">
-						<router-link :to="{ hash: `#${name}` }">{{ tab.text }}</router-link>
+					<li
+						v-for="(tab, name) in tabs"
+						:key="name"
+						:class="{ 'is-active': name === activeTabName }"
+					>
+						<router-link :to="{ hash: `#${name}` }">{{tab.text}}</router-link>
 					</li>
 				</ul>
 			</div>
 
-			<component :is="activeComponent" :user="user"></component>
+			<component :is="activeComponent" :user="user" />
 
 		</div>
 	</div>
@@ -113,6 +118,9 @@ export default {
 			return tabNames.includes(hash) ? hash : tabNames[0];
 		}
 	},
+	async mounted() {
+		await this.setup();
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		async setup() {
@@ -154,8 +162,5 @@ export default {
 			this.user.subscription = this.user.subscription && included.subscriptions[this.user.subscription[0]];
 		},
 	},
-	async mounted() {
-		await this.setup();
-	}
 };
 </script>

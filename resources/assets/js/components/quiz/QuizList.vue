@@ -4,8 +4,12 @@
 			<a class="button is-primary is-outlined" @click="$emit('resetState')">Rozwiąż pytania ponownie</a>
 		</p>
 
-		<p class="title is-5" v-if="!plainList && !displayResults">Pozostało pytań: {{howManyLeft}}</p>
-		<div class="question" v-for="(question, index) in questions" :key="index">
+		<p v-if="!plainList && !displayResults" class="title is-5">Pozostało pytań: {{howManyLeft}}</p>
+		<div
+			v-for="(question, index) in questions"
+			:key="index"
+			class="question"
+		>
 			<span v-if="!hideCount" class="question-number">
 				<slot name="question-number" :index="index">
 					{{index+1}}/{{questions.length}}
@@ -23,7 +27,7 @@
 						:get-reaction="getReaction"
 						@selectAnswer="onSelectAnswer"
 						@userEvent="proxyUserEvent"
-					></wnl-quiz-question>
+					/>
 					<wnl-content-item-classifier-editor
 						class="quiz-question__content-item-classifier-editor"
 						:content-item-id="question.id"
@@ -39,7 +43,11 @@
 			</wnl-activate-with-shortcut-key>
 		</div>
 		<p v-if="!plainList && !displayResults" class="has-text-centered">
-			<a class="button is-primary" :class="{'is-loading': isProcessing}" @click="verify">
+			<a
+				class="button is-primary"
+				:class="{'is-loading': isProcessing}"
+				@click="verify"
+			>
 				Sprawdź wyniki
 			</a>
 		</p>
@@ -124,6 +132,16 @@ export default {
 			return `${_.size(this.questionsUnresolved)}/${_.size(this.allQuestions)}`;
 		},
 	},
+	watch: {
+		questionsIds(newValue, oldValue) {
+			if (_.isEqual(newValue, oldValue)) return;
+
+			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
+		}
+	},
+	mounted() {
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
+	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		confirmQuizEnd(unanswered) {
@@ -173,16 +191,6 @@ export default {
 			const id = _.head(this.questionsUnaswered).id;
 			scrollToElement(document.querySelector(`.quiz-question-${id}`));
 		},
-	},
-	mounted() {
-		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
-	},
-	watch: {
-		questionsIds(newValue, oldValue) {
-			if (_.isEqual(newValue, oldValue)) return;
-
-			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
-		}
 	},
 };
 </script>

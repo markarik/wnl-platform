@@ -9,18 +9,18 @@
 		:attach="attachedData"
 		:name="name"
 		:value="newCommentDraft"
-		@submitSuccess="onSubmitSuccess">
+		@submitSuccess="onSubmitSuccess"
+	>
 		<wnl-quill
 			class="margin bottom"
 			name="text"
 			:options="{ placeholder: 'Zacznij swój komentarz...', theme: 'snow' }"
 			:value="newCommentDraft"
 			@input="setNewCommentDraft"
-		>
-		</wnl-quill>
+		/>
 
 		<div class="level">
-			<div class="level-left"></div>
+			<div class="level-left" />
 			<div class="level-right">
 				<div class="level-item">
 					<wnl-submit css-class="button is-small is-primary">

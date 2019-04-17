@@ -6,15 +6,15 @@
 		</h3>
 		<form @submit.prevent="flashcardFormSubmit">
 			<wnl-textarea
+				v-model="form.content"
 				name="content"
 				:form="form"
-				v-model="form.content"
 			>
 				Treść pytania
 			</wnl-textarea>
 			<fieldset class="tags-fieldset">
 				<legend>Tagi</legend>
-				<wnl-tags :default-tags="flashcardTags" @tagsChanged="onTagsChanged"></wnl-tags>
+				<wnl-tags :default-tags="flashcardTags" @tagsChanged="onTagsChanged" />
 			</fieldset>
 			<wnl-content-item-classifier-editor
 				v-if="isEdit"
@@ -25,7 +25,7 @@
 			/>
 			<div v-else class="notification is-info">
 				<span class="icon">
-					<i class="fa fa-info-circle"></i>
+					<i class="fa fa-info-circle" />
 				</span>
 				Zapisz pytanie, aby przypisać do niego pojęcia
 			</div>
@@ -38,7 +38,7 @@
 				>
 					<span class="margin right">Zapisz</span>
 					<span class="icon is-small">
-						<i class="fa fa-save"></i>
+						<i class="fa fa-save" />
 					</span>
 				</button>
 			</div>
@@ -100,6 +100,24 @@ export default {
 			return !isEqual(this.form.originalData, this.form.data());
 		},
 	},
+	watch: {
+		async flashcardId() {
+			// This is called only after user saves new flashcard and we put ID in the URL
+			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.FLASHCARD, contentIds: [this.flashcardId] });
+		}
+	},
+	async mounted() {
+		if (this.isEdit) {
+			await this.setupCurrentUser();
+			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.FLASHCARD, contentIds: [this.flashcardId] });
+
+			const response = await this.form.populate(this.flashcardResourceUrl, ['include']);
+			const tags = response.tags;
+			if (!tags) return;
+
+			this.flashcardTags = tags.map(tagId => response.included.tags[tagId]);
+		}
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert', 'setupCurrentUser']),
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
@@ -143,23 +161,5 @@ export default {
 			this.form.tags = tags.map(({ id }) => id);
 		}
 	},
-	async mounted() {
-		if (this.isEdit) {
-			await this.setupCurrentUser();
-			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.FLASHCARD, contentIds: [this.flashcardId] });
-
-			const response = await this.form.populate(this.flashcardResourceUrl, ['include']);
-			const tags = response.tags;
-			if (!tags) return;
-
-			this.flashcardTags = tags.map(tagId => response.included.tags[tagId]);
-		}
-	},
-	watch: {
-		async flashcardId() {
-			// This is called only after user saves new flashcard and we put ID in the URL
-			await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.FLASHCARD, contentIds: [this.flashcardId] });
-		}
-	}
 };
 </script>

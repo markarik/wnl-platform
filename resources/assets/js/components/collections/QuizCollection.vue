@@ -2,10 +2,11 @@
 	<div class="collections-quiz">
 		<p class="title is-4">Zapisane pytania kontrolne ({{howManyQuestions}})</p>
 		<div v-show="isLoaded">
-			<wnl-pagination v-if="lastPage && lastPage > 1"
-							:current-page="currentPage"
-							:last-page="lastPage"
-							@changePage="changePage"
+			<wnl-pagination
+				v-if="lastPage && lastPage > 1"
+				:current-page="currentPage"
+				:last-page="lastPage"
+				@changePage="changePage"
 			/>
 			<wnl-quiz-widget
 				v-if="isLoaded && howManyQuestions > 0"
@@ -15,12 +16,12 @@
 				@verify="trackAndResolve"
 				@selectAnswer="onSelectAnswer"
 				@userEvent="onUserEvent"
-			></wnl-quiz-widget>
+			/>
 			<div v-else class="notification has-text-centered">
-				W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań kontrolnych. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> przy wybranym pytaniu!
+				W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right" /></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań kontrolnych. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o" /></span> <span class="metadata">ZAPISZ</span> przy wybranym pytaniu!
 			</div>
 		</div>
-		<wnl-text-loader v-if="!isLoaded"></wnl-text-loader>
+		<wnl-text-loader v-if="!isLoaded" />
 	</div>
 </template>
 

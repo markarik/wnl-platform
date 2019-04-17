@@ -3,10 +3,10 @@
 		<label class="label">Wybierz zestaw pytań</label>
 		<span class="select">
 			<wnl-select
-					:options="quiz_sets"
-					name="meta"
-					v-model="selectedQuiz"
-			></wnl-select>
+				v-model="selectedQuiz"
+				:options="quiz_sets"
+				name="meta"
+			/>
 		</span>
 	</div>
 </template>
@@ -23,10 +23,10 @@ import { getApiUrl } from 'js/utils/env';
 
 export default {
 	name: 'ScreensMetaEditorQuizes',
-	props: ['value'],
 	components: {
 		WnlSelect
 	},
+	props: ['value'],
 	data: function() {
 		return {
 			quiz_sets: [],
@@ -41,6 +41,9 @@ export default {
 				this.$emit('input', value);
 			}
 		},
+	},
+	mounted() {
+		this.fetchQuizSets();
 	},
 	methods: {
 		formScreenMeta(resource, id) {
@@ -64,9 +67,6 @@ export default {
 					});
 				});
 		},
-	},
-	mounted() {
-		this.fetchQuizSets();
 	},
 };
 </script>

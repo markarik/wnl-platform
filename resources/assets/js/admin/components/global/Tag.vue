@@ -4,7 +4,7 @@
 		:style="{backgroundColor: getColourForStr(tag.name)}"
 		@click="$emit('click', $event)"
 	>
-		<slot></slot>
+		<slot />
 		{{tag.name}}
 	</span>
 </template>
@@ -20,16 +20,16 @@
 import { getColourForStr } from 'js/utils/colors.js';
 
 export default {
-	data() {
-		return {
-			getColourForStr,
-		};
-	},
 	props: {
 		tag: {
 			type: Object,
 			required: true
 		}
+	},
+	data() {
+		return {
+			getColourForStr,
+		};
 	},
 };
 </script>

@@ -2,17 +2,17 @@
 	<div class="recent-terms">
 		<div
 			v-if="lastUsedTerm"
-			@click="attachLastUsedTerm"
 			:class="{
 				clickable: canAttachLastUsedTerm,
 				'recent-terms__option': true,
 				disabled: !canAttachLastUsedTerm,
 				'fit-content': true
 			}"
+			@click="attachLastUsedTerm"
 		>
 			<div class="recent-terms__group-title">
 				<span class="icon is-small">
-					<i class="fa fa-tag"></i>
+					<i class="fa fa-tag" />
 				</span>
 				Dodaj ostatnio użyte pojęcie:
 			</div>
@@ -20,7 +20,6 @@
 		</div>
 		<div
 			v-if="lastUsedTermsSet"
-			@click="attachLastUsedTermsSet"
 			:class="{
 				clickable: canAttachLastUsedTermsSet,
 				'recent-terms__option': true,
@@ -28,10 +27,11 @@
 				disabled: !canAttachLastUsedTermsSet,
 			}"
 			:title="lastUsedTermsDisplay"
+			@click="attachLastUsedTermsSet"
 		>
 			<div class="recent-terms__group-title">
 				<span class="icon is-small">
-					<i class="fa fa-tags"></i>
+					<i class="fa fa-tags" />
 				</span>
 				Dodaj wszystkie pojęcia ostatnio edytowanego elementu:
 			</div>

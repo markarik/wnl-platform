@@ -6,67 +6,74 @@
 					Edycja zestawu pytań
 					<span v-if="isEdit">(Id: {{flashcardsSetId}})</span>
 				</h3>
-				<button class="button is-small is-success"
-						:class="{'is-loading': loading}"
-						:disabled="!hasChanged"
-						type="submit"
+				<button
+					class="button is-small is-success"
+					:class="{'is-loading': loading}"
+					:disabled="!hasChanged"
+					type="submit"
 				>
 					<span class="margin right">Zapisz</span>
 					<span class="icon is-small">
-					<i class="fa fa-save"></i>
-				</span>
+						<i class="fa fa-save" />
+					</span>
 				</button>
 			</div>
 			<wnl-form-input
-					name="name"
-					:form="form"
-					v-model="form.name"
+				v-model="form.name"
+				name="name"
+				:form="form"
 			>
 				Nazwa
 			</wnl-form-input>
 			<wnl-form-input
-					name="mind_maps_text"
-					:form="form"
-					v-model="form.mind_maps_text"
+				v-model="form.mind_maps_text"
+				name="mind_maps_text"
+				:form="form"
 			>
 				Mind mapy
 			</wnl-form-input>
 			<label class="label">Lekcja, której dotyczy zestaw</label>
 			<span class="select flashcards-set-editor-select">
-				<wnl-select :form="form"
-							:options="lessonsOptions"
-							name="lesson_id"
-							v-model="form.lesson_id"
+				<wnl-select
+					v-model="form.lesson_id"
+					:form="form"
+					:options="lessonsOptions"
+					name="lesson_id"
 				/>
 			</span>
 			<label class="label">Opis</label>
 			<wnl-quill
-					ref="descriptionEditor"
-					name="description"
-					:options="{ theme: 'snow', placeholder: 'Opis' }"
-					:value="form.description"
-					@input="onDescriptionInput"
+				ref="descriptionEditor"
+				name="description"
+				:options="{ theme: 'snow', placeholder: 'Opis' }"
+				:value="form.description"
+				@input="onDescriptionInput"
 			/>
 			<h4 class="title margin top">Lista pytań</h4>
 			<div class="flashcards-admin">
-				<draggable v-model="form.flashcards" @start="drag=true" @end="drag=false" v-if="areFlashcardsReady">
+				<draggable
+					v-if="areFlashcardsReady"
+					v-model="form.flashcards"
+					@start="drag=true"
+					@end="drag=false"
+				>
 					<wnl-flashcards-set-list-item
-							v-for="flashcardId in form.flashcards"
-							:key="flashcardId"
-							:id="flashcardId"
-							:content="allFlashcards.find(flashcard => flashcard.id === flashcardId).content"
-							@remove="removeFlashcard(flashcardId)"
+						v-for="flashcardId in form.flashcards"
+						:id="flashcardId"
+						:key="flashcardId"
+						:content="allFlashcards.find(flashcard => flashcard.id === flashcardId).content"
+						@remove="removeFlashcard(flashcardId)"
 					/>
 				</draggable>
 
 				<wnl-autocomplete
 					v-model="flashcardInput"
 					:items="flashcardAutocompleteItems"
-					@change="addFlashcard"
 					placeholder="Id lub treść aby wyszukać"
 					label="Wybierz pytanie"
+					@change="addFlashcard"
 				>
-					<wnl-flashcard-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
+					<wnl-flashcard-autocomplete-item slot-scope="slotProps" :item="slotProps.item" />
 				</wnl-autocomplete>
 			</div>
 		</form>
@@ -179,6 +186,13 @@ export default {
 				.slice(0, 10);
 		}
 	},
+	mounted() {
+		if (this.isEdit) {
+			this.form.populate(this.flashcardsSetResourceUrl);
+		}
+		this.setupLessons();
+		this.setupFlashcards();
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', { setupLessons: 'setup' }),
@@ -232,13 +246,6 @@ export default {
 			this.form.flashcards.push(flashcard.id);
 			this.flashcardInput = '';
 		}
-	},
-	mounted() {
-		if (this.isEdit) {
-			this.form.populate(this.flashcardsSetResourceUrl);
-		}
-		this.setupLessons();
-		this.setupFlashcards();
 	},
 };
 </script>

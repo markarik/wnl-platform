@@ -1,17 +1,22 @@
 <template>
 	<div class="field">
 		<div class="control tags-control">
-			<div class="tag" v-for="tag in tags" :key="tag.id" @click="removeTag(tag)">
+			<div
+				v-for="tag in tags"
+				:key="tag.id"
+				class="tag"
+				@click="removeTag(tag)"
+			>
 				{{tag.name}}
 				<span class="icon is-small">
-					<i class="fa fa-times"></i>
+					<i class="fa fa-times" />
 				</span>
 			</div>
 			<wnl-autocomplete
 				v-model="tagInput"
 				:items="autocompleteItems"
-				@change="insertTag"
 				placeholder="Dodaj tag"
+				@change="insertTag"
 			>
 				<template slot-scope="slotProps">
 					<wnl-tag-autocomplete-item :item="slotProps.item" />
@@ -73,6 +78,29 @@ export default {
 			return '';
 		}
 	},
+	watch: {
+		defaultTags() {
+			this.tags = this.defaultTags.slice();
+		},
+		tagInput() {
+			const name = this.tagInput;
+			const data = { name, tags: this.tags };
+
+			if (!name) {
+				this.autocompleteItems = [];
+				return;
+			}
+
+			this.requestTagsAutocomplete(data).then(
+				data => {
+					this.autocompleteItems = data.data;
+				}
+			);
+		}
+	},
+	created() {
+		this.tags = this.defaultTags.slice();
+	},
 	methods: {
 		...mapActions(['requestTagsAutocomplete']),
 
@@ -101,28 +129,5 @@ export default {
 			return !!this.tags.some(tag => !_.find(this.defaultTags, defTag => defTag.id === tag.id));
 		}
 	},
-	created() {
-		this.tags = this.defaultTags.slice();
-	},
-	watch: {
-		defaultTags() {
-			this.tags = this.defaultTags.slice();
-		},
-		tagInput() {
-			const name = this.tagInput;
-			const data = { name, tags: this.tags };
-
-			if (!name) {
-				this.autocompleteItems = [];
-				return;
-			}
-
-			this.requestTagsAutocomplete(data).then(
-				data => {
-					this.autocompleteItems = data.data;
-				}
-			);
-		}
-	}
 };
 </script>

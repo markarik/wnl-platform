@@ -1,39 +1,48 @@
 <template>
 	<div>
 		<div class="screens-list-save">
-			<a class="button is-small" :class="{'is-loading': loading}"
+			<a
+				class="button is-small"
+				:class="{'is-loading': loading}"
 				:disabled="!changed"
-				@click="saveOrder">
+				@click="saveOrder"
+			>
 				<span class="margin right">Zapisz kolejność</span>
 				<span class="icon is-small">
-					<i class="fa fa-save"></i>
+					<i class="fa fa-save" />
 				</span>
 			</a>
 		</div>
-		<wnl-screens-list-item v-for="(screen, index) in screens"
+		<wnl-screens-list-item
+			v-for="(screen, index) in screens"
 			:key="screen.id"
 			:index="index"
 			:screen="screen"
 			:is-first="index === 0"
 			:is-last="index === screens.length - 1"
 			@moveScreen="moveScreen"
-			@deleteScreen="deleteScreen">
-		</wnl-screens-list-item>
+			@deleteScreen="deleteScreen"
+		/>
 		<div class="screens-list-add">
-			<a class="button is-small" :class="{'is-loading': loading}" @click="addScreen">
+			<a
+				class="button is-small"
+				:class="{'is-loading': loading}"
+				@click="addScreen"
+			>
 				<span class="margin right">Dodaj ekran</span>
 				<span class="icon is-small">
-					<i class="fa fa-plus"></i>
+					<i class="fa fa-plus" />
 				</span>
 			</a>
 		</div>
 		<div class="margin top">
-			<wnl-alert v-for="(alert, timestamp) in alerts"
+			<wnl-alert
+				v-for="(alert, timestamp) in alerts"
+				:key="timestamp"
 				:alert="alert"
 				:timestamp="timestamp"
-				:key="timestamp"
-				@delete="onDelete">
-			</wnl-alert>
+				@delete="onDelete"
+			/>
 		</div>
 	</div>
 </template>
@@ -61,17 +70,20 @@ import ScreensListItem from 'js/admin/components/lessons/edit/ScreensListItem.vu
 
 export default {
 	name: 'ScreensList',
-	props: ['lessonId'],
 	components: {
 		'wnl-screens-list-item': ScreensListItem
 	},
 	mixins: [ alerts ],
+	props: ['lessonId'],
 	data() {
 		return {
 			changed: false,
 			loading: false,
 			screens: [],
 		};
+	},
+	mounted() {
+		this.fetchScreens();
 	},
 	methods: {
 		fetchScreens() {
@@ -154,9 +166,6 @@ export default {
 					this.errorFading('Nie wyszło, sorry. :()', 2000);
 				});
 		},
-	},
-	mounted() {
-		this.fetchScreens();
 	}
 };
 </script>

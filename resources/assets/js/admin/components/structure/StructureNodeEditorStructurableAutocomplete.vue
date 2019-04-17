@@ -2,36 +2,36 @@
 	<div>
 		<div v-if="selected" class="autocomplete-selected">
 			{{selected.name}}
-			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
+			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true" /></span>
 		</div>
 		<wnl-autocomplete
 			v-else
+			v-model="search"
 			placeholder="Wpisz nazwę lekcji/grupy, którą chcesz dołączyć lub utworzyć"
 			:items="autocompleteItems"
 			@change="onSelect"
-			v-model="search"
 		>
 			<div slot-scope="slotProps">
 				<span class="icon is-small">
-					<i :class="['fa', getStructurableIcon(slotProps.item)]" aria-hidden="true"></i>
+					<i :class="['fa', getStructurableIcon(slotProps.item)]" aria-hidden="true" />
 				</span>
 
 				{{slotProps.item.name}}
 			</div>
-			<div slot="footer" v-if="search !== ''">
+			<div v-if="search !== ''" slot="footer">
 				<div class="margin">
 					Nie mamy lekcji ani grupy o nazwie <strong>{{search}}</strong>
 				</div>
 				<div class="autocomplete-footer-button-container">
 					<button class="button" @click="onLessonAdd">
 						<span class="icon is-small">
-							<i class="fa fa-plus" aria-hidden="true"></i>
+							<i class="fa fa-plus" aria-hidden="true" />
 						</span>
 						<span>Nowa lekcja</span>
 					</button>
 					<button class="button" @click="onGroupAdd">
 						<span class="icon is-small">
-							<i class="fa fa-plus" aria-hidden="true"></i>
+							<i class="fa fa-plus" aria-hidden="true" />
 						</span>
 						<span>Nowa grupa</span>
 					</button>
@@ -70,6 +70,9 @@ import { ALERT_TYPES } from 'js/consts/alert';
 import { COURSE_STRUCTURE_TYPES } from 'js/consts/courseStructure';
 
 export default {
+	components: {
+		WnlAutocomplete
+	},
 	props: {
 		selected: {
 			type: Object,
@@ -107,8 +110,17 @@ export default {
 			return uniqBy(filteredItems, (item => [item.id, item.type].join())).slice(0, 25);
 		},
 	},
-	components: {
-		WnlAutocomplete
+	async mounted() {
+		try {
+			await Promise.all([this.setupLessons(), this.fetchAllGroups()]);
+		} catch (error) {
+			$wnl.logger.capture(error);
+
+			this.addAutoDismissableAlert({
+				text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
+				type: ALERT_TYPES.ERROR,
+			});
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -153,18 +165,5 @@ export default {
 			}
 		},
 	},
-	async mounted() {
-		try {
-			await Promise.all([this.setupLessons(), this.fetchAllGroups()]);
-		} catch (error) {
-			$wnl.logger.capture(error);
-
-			this.addAutoDismissableAlert({
-				text: 'Ups, coś poszło nie tak, spróbuj ponownie.',
-				type: ALERT_TYPES.ERROR,
-			});
-		}
-
-	}
 };
 </script>

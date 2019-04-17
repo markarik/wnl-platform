@@ -4,10 +4,12 @@
 			:is-visible="isSidenavVisible"
 			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 			<aside class="sidenav-aside help-sidenav">
-				<wnl-sidenav :items="sidenavItems"
-					items-heading="Pomoc"></wnl-sidenav>
+				<wnl-sidenav
+					:items="sidenavItems"
+					items-heading="Pomoc"
+				/>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
@@ -16,7 +18,7 @@
 					:arguments="templateArguments"
 					:slug="$route.name"
 					@userEvent="onUserEvent"
-				></router-view>
+				/>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -24,11 +26,19 @@
 			:is-detached="!isChatMounted"
 			:has-chat="hasChat"
 		>
-			<wnl-public-chat v-if="hasChat" :rooms="chatRooms" title="W czym możemy Ci pomóc?"></wnl-public-chat>
+			<wnl-public-chat
+				v-if="hasChat"
+				:rooms="chatRooms"
+				title="W czym możemy Ci pomóc?"
+			/>
 		</wnl-sidenav-slot>
-		<div v-if="hasChat && isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
+		<div
+			v-if="hasChat && isChatToggleVisible"
+			class="wnl-chat-toggle"
+			@click="toggleChat"
+		>
 			<span class="icon is-big">
-				<i class="fa fa-chevron-left"></i>
+				<i class="fa fa-chevron-left" />
 				<span>Pokaż czat</span>
 			</span>
 		</div>
@@ -205,6 +215,11 @@ export default {
 			return this.$currentEditionParticipant.isAllowed('access');
 		}
 	},
+	watch: {
+		'$route.query.chatChannel'(newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
+		}
+	},
 	methods: {
 		...mapActions(['toggleChat']),
 		onUserEvent(payload) {
@@ -214,10 +229,5 @@ export default {
 			});
 		}
 	},
-	watch: {
-		'$route.query.chatChannel'(newVal) {
-			newVal && !this.isChatVisible && this.toggleChat();
-		}
-	}
 };
 </script>

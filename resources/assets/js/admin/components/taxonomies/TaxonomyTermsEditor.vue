@@ -3,16 +3,16 @@
 		<template slot="header">
 			<h4 class="title is-5 is-marginless"><strong>Hierarchia pojęć</strong> ({{terms.length}})</h4>
 			<span class="terms-editor__search control has-icons-right">
-					<wnl-taxonomy-term-autocomplete
-						@change="onSearch"
-						placeholder="Szukaj pojęcia"
-					/>
-					<span class="icon is-small is-right">
-						<i class="fa fa-search"></i>
-					</span>
+				<wnl-taxonomy-term-autocomplete
+					placeholder="Szukaj pojęcia"
+					@change="onSearch"
+				/>
+				<span class="icon is-small is-right">
+					<i class="fa fa-search" />
 				</span>
+			</span>
 		</template>
-		<wnl-taxonomy-terms-list slot="nodes-list" :terms="getRootNodes"/>
+		<wnl-taxonomy-terms-list slot="nodes-list" :terms="getRootNodes" />
 		<wnl-taxonomy-term-editor-right
 			slot="panel-right"
 			:taxonomy-id="taxonomyId"
@@ -44,6 +44,9 @@ export default {
 		WnlTaxonomyTermAutocomplete,
 		WnlNestedSetEditor
 	},
+	mixins: [
+		scrollToNodeMixin,
+	],
 	props: {
 		taxonomyId: {
 			type: [String, Number],
@@ -57,17 +60,6 @@ export default {
 		}),
 		...mapGetters('taxonomyTerms', ['getChildrenNodesByParentId', 'getRootNodes']),
 	},
-	methods: {
-		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['setUpNestedSet', 'focus']),
-		async onSearch(term) {
-			this.focus(term);
-			this.scrollToNode(term);
-		},
-	},
-	mixins: [
-		scrollToNodeMixin,
-	],
 	async mounted() {
 		try {
 			this.setUpNestedSet(this.taxonomyId);
@@ -77,6 +69,14 @@ export default {
 				type: 'error'
 			});
 		}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('taxonomyTerms', ['setUpNestedSet', 'focus']),
+		async onSearch(term) {
+			this.focus(term);
+			this.scrollToNode(term);
+		},
 	},
 };
 </script>

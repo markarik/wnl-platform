@@ -8,16 +8,17 @@
 		resource-route="qna_answers"
 		:attach="attachedData"
 		:name="name"
-		@submitSuccess="onSubmitSuccess">
+		@submitSuccess="onSubmitSuccess"
+	>
 		<wnl-quill
 			class="margin bottom"
 			name="text"
 			:options="{ theme: 'snow', placeholder: 'Zacznij swoją odpowiedź...' }"
-			:toolbar="toolbar">
-		</wnl-quill>
+			:toolbar="toolbar"
+		/>
 
 		<div class="level">
-			<div class="level-left"></div>
+			<div class="level-left" />
 			<div class="level-right">
 				<div class="level-item">
 					<wnl-submit css-class="button is-small is-primary">

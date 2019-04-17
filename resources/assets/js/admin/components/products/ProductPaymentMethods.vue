@@ -19,14 +19,15 @@
 			<tbody>
 			<tr v-for="method in methods" :key="method.id">
 				<td>
-					<input type="checkbox"
-						:checked="methodEnabled(method.id)"
+					<input
 						:id="method.id"
+						type="checkbox"
+						:checked="methodEnabled(method.id)"
 						@change="toggleMethod($event, method.id)"
-					/>
+					>
 				</td>
 				<td>
-					<label :for="method.id">{{ methodNames[method.slug] }}</label>
+					<label :for="method.id">{{methodNames[method.slug]}}</label>
 				</td>
 				<td>
 					<wnl-datepicker
@@ -68,10 +69,10 @@
 				</thead>
 				<tbody>
 				<tr v-for="(instalment, index) in instalments" :key="index">
-					<td>{{ instalment.order_number }}</td>
-					<td>{{ instalmentTypes[instalment.value_type] }}</td>
-					<td>{{ instalment.value }}{{ instalmentValueUnit(instalment.value_type) }}</td>
-					<td>{{ instalment.due_days || '-'}}</td>
+					<td>{{instalment.order_number}}</td>
+					<td>{{instalmentTypes[instalment.value_type]}}</td>
+					<td>{{instalment.value}}{{instalmentValueUnit(instalment.value_type)}}</td>
+					<td>{{instalment.due_days || '-'}}</td>
 					<td>
 						<wnl-datepicker
 							v-if="!instalment.due_days"
@@ -87,7 +88,11 @@
 			</table>
 		</div>
 
-		<a class="button is-primary is-wide" v-if="!loadingMethods" @click="save">Zapisz</a>
+		<a
+			v-if="!loadingMethods"
+			class="button is-primary is-wide"
+			@click="save"
+		>Zapisz</a>
 	</div>
 </template>
 
@@ -162,6 +167,35 @@ export default {
 		showInstalmentsSchedule() {
 			return this.selectedMethods.some(item => item.slug === 'instalments');
 		},
+	},
+	async mounted() {
+		this.loadingMethods = true;
+		try {
+			const methods = await this.getPaymentMethods();
+			const { productMethods, instalments } = await this.getProduct();
+
+			this.instalments = this.instalments.map(item => {
+				const instalment = instalments.find(instalment => instalment.order_number === item.order_number);
+				if (instalment) {
+					item.due_date = instalment.due_date;
+				}
+				return item;
+			});
+			this.methods = methods;
+			this.selectedMethods = productMethods.map(method => ({
+				...method,
+				start_date: method.start_date || null,
+				end_date: method.end_date || null,
+			}));
+		} catch (e) {
+			this.addAutoDismissableAlert({
+				text: 'Nie udało się pobrać dostępnych metod płatności',
+				type: 'error'
+			});
+			$wnl.logger.capture(e);
+		} finally {
+			this.loadingMethods = false;
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -243,34 +277,5 @@ export default {
 		}
 
 	},
-	async mounted() {
-		this.loadingMethods = true;
-		try {
-			const methods = await this.getPaymentMethods();
-			const { productMethods, instalments } = await this.getProduct();
-
-			this.instalments = this.instalments.map(item => {
-				const instalment = instalments.find(instalment => instalment.order_number === item.order_number);
-				if (instalment) {
-					item.due_date = instalment.due_date;
-				}
-				return item;
-			});
-			this.methods = methods;
-			this.selectedMethods = productMethods.map(method => ({
-				...method,
-				start_date: method.start_date || null,
-				end_date: method.end_date || null,
-			}));
-		} catch (e) {
-			this.addAutoDismissableAlert({
-				text: 'Nie udało się pobrać dostępnych metod płatności',
-				type: 'error'
-			});
-			$wnl.logger.capture(e);
-		} finally {
-			this.loadingMethods = false;
-		}
-	}
 };
 </script>

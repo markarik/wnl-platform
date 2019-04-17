@@ -1,6 +1,6 @@
 <template>
 	<div class="subscription">
-		<table class="table is-bordered is-narrow" v-if="user.coupons.length">
+		<table v-if="user.coupons.length" class="table is-bordered is-narrow">
 			<thead>
 			<tr>
 				<th>Nazwa</th>

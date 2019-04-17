@@ -8,10 +8,10 @@
 					</figure>
 				</div>
 				<div class="media-content">
-					<p class="title is-4">{{ order.product.name }}</p>
-					<p class="subtitle is-6">{{ orderNumber }}
+					<p class="title is-4">{{order.product.name}}</p>
+					<p class="subtitle is-6">{{orderNumber}}
 						<br>
-						<small>Cena produktu: {{ order.product.price }}zł, zamówienie złożono {{ order.created_at }}
+						<small>Cena produktu: {{order.product.price}}zł, zamówienie złożono {{order.created_at}}
 						</small>
 					</p>
 				</div>
@@ -19,22 +19,22 @@
 			<div class="level">
 				<div class="level-left">
 					<div class="tags">
-						<span :class="{'is-success': order.paid, 'tag': true }">{{ paymentStatus }}</span>
-						<span class="tag">Metoda płatności: {{ paymentMethod }}</span>
-						<slot name="order-tags"></slot>
+						<span :class="{'is-success': order.paid, 'tag': true }">{{paymentStatus}}</span>
+						<span class="tag">Metoda płatności: {{paymentMethod}}</span>
+						<slot name="order-tags" />
 					</div>
 				</div>
-				<div class="level-right"></div>
+				<div class="level-right" />
 			</div>
 			<div v-if="!order.canceled">
 				<!-- COUPONS BEGINS -->
 				<p v-if="coupon">
-					<strong>Naliczona zniżka: "{{ coupon.name }}" o wartości {{ getCouponValue(coupon) }}</strong><br>
-					Cena ze zniżką: {{ order.total }}zł
+					<strong>Naliczona zniżka: "{{coupon.name}}" o wartości {{getCouponValue(coupon)}}</strong><br>
+					Cena ze zniżką: {{order.total}}zł
 				</p>
 
 				<!-- STUDY BUDDY BEGINS -->
-				<div class="box margin bottom" v-else-if="studyBuddy && order.paid">
+				<div v-else-if="studyBuddy && order.paid" class="box margin bottom">
 					<div v-if="order.studyBuddy.status === 'awaiting-refund'">
 						<p class="strong has-text-centered">
 							Twój Study Buddy dołączył już do kursu!
@@ -42,13 +42,13 @@
 						<p>
 							Jeśli wysłałeś już do nas w odpowiedzi na maila dane do przelewu, w ciągu najbliższych dni
 							otrzymasz zwrot.
-							<wnl-emoji name="+1"/>
+							<wnl-emoji name="+1" />
 						</p>
 						<p>
 							Jeżeli nie, prosimy sprawdź swoją skrzynkę mailową. Znajdziesz tam wiadomość od nas o tytule
 							"Twój Study Buddy dołączył właśnie do kursu! (Zamówienie {{order.id}})". W odpowiedzi wyślij
 							nam dane do przelewu, których możemy użyć do zwrotu.
-							<wnl-emoji name="wink"/>
+							<wnl-emoji name="wink" />
 						</p>
 					</div>
 					<div v-else>
@@ -78,28 +78,29 @@
 				<div class="current-payment">
 
 					<!-- PAY ORDER BEGINS -->
-					<div class="margin top aligncenter" v-if="!isPending && !order.paid && order.method === 'online' && order.total > 0">
+					<div v-if="!isPending && !order.paid && order.method === 'online' && order.total > 0" class="margin top aligncenter">
 						<p>
 							<button
 								:class="{
 									'button': true,
 									'is-primary': true,
-									'is-loading': this.paymentLoading
+									'is-loading': paymentLoading
 								}"
 								data-button="pay-now"
-								@click="pay">
+								@click="pay"
+							>
 								Opłać zamówienie
 							</button>
 						</p>
-						<p class="metadata aligncenter margin top">Kwota do zapłaty: {{this.order.total}}zł</p>
-						<p class="aligncenter" v-if="canChangePaymentMethod">Aby zapłacić na raty, anuluj to zamówienie i złóż kolejne.</p>
+						<p class="metadata aligncenter margin top">Kwota do zapłaty: {{order.total}}zł</p>
+						<p v-if="canChangePaymentMethod" class="aligncenter">Aby zapłacić na raty, anuluj to zamówienie i złóż kolejne.</p>
 					</div>
 					<!-- PAY ORDER ENDS -->
 
 					<!-- Instalments -->
-					<div class="payment-details" v-if="!isFullyPaid">
-						<p class="big strong" v-if="order.method === 'transfer'">
-							Kwota: {{ order.total }}zł
+					<div v-if="!isFullyPaid" class="payment-details">
+						<p v-if="order.method === 'transfer'" class="big strong">
+							Kwota: {{order.total}}zł
 						</p>
 						<div v-if="order.method === 'instalments'">
 
@@ -107,17 +108,18 @@
 								<button
 									data-button="pay-next-instalment"
 									:class="{
-									'button': true,
-									'is-primary': true,
-									'is-loading': this.paymentLoading
+										'button': true,
+										'is-primary': true,
+										'is-loading': paymentLoading
 									}"
-									@click="pay">
+									@click="pay"
+								>
 									Zapłać kolejną ratę
 								</button>
 							</p>
 							<p class="metadata aligncenter margin vertical">
-								Kolejna rata: <strong>{{ order.instalments.nextPayment.left_amount }}zł do
-								{{ instalmentDate(order.instalments.nextPayment.due_date) }}</strong>
+								Kolejna rata: <strong>{{order.instalments.nextPayment.left_amount}}zł do
+								{{instalmentDate(order.instalments.nextPayment.due_date)}}</strong>
 							</p>
 
 							<table class="table is-striped">
@@ -129,7 +131,7 @@
 								<tr v-for="(instalment, index) in order.instalments.instalments" :key="instalment.id">
 									<td>{{index + 1}}</td>
 									<td>
-										{{ instalmentDate(instalment.due_date) }}
+										{{instalmentDate(instalment.due_date)}}
 									</td>
 									<td class="instalment-amount" :data-instalment="index + 1">
 										{{instalment.amount - instalment.left_amount}}zł / {{instalment.amount}}zł
@@ -137,19 +139,19 @@
 								</tr>
 								<tr>
 									<td>Razem</td>
-									<td></td>
-									<td>{{ order.total }}zł</td>
+									<td />
+									<td>{{order.total}}zł</td>
 								</tr>
 							</table>
 
 							<p class="aligncenter">Możesz opłacić wszystkie raty przed terminem, nawet dziś, klikając ponownie ZAPŁAĆ KOLEJNĄ RATĘ. 🙂</p>
 
 							<!-- Transfer details -->
-							<div class="transfer-details notification" v-if="transferDetails">
+							<div v-if="transferDetails" class="transfer-details notification">
 								<p>Dane do przelewu</p>
 								<small>
 									<p class="big">Tytuł przelewu:</p>
-									<strong>Zamówienie numer {{ order.id }}</strong><br>
+									<strong>Zamówienie numer {{order.id}}</strong><br>
 									bethink sp. z o.o.<br>
 									ul. Henryka Sienkiewicza 8/1<br>
 									60-817, Poznań<br>
@@ -164,23 +166,24 @@
 				<!-- TABS BEGIN -->
 				<div class="tabs">
 					<ul>
-						<li :class="{'is-active': activeTab === tab}"
+						<li
 							v-for="(tabContent, tab) in orderTabs"
 							:key="tab"
+							:class="{'is-active': activeTab === tab}"
 							@click="activeTab = tab"
 						>
 							<a>
 								<span class="icon is-small">
-									<i :class="`fa fa-${tabContent.icon}`"></i>
+									<i :class="`fa fa-${tabContent.icon}`" />
 								</span>
-								{{ tabContent.text }}
+								{{tabContent.text}}
 							</a>
 						</li>
 					</ul>
 				</div>
 
 				<!-- PAYMENTS BEGIN -->
-				<div class="content" v-if="activeTab === 'payments'">
+				<div v-if="activeTab === 'payments'" class="content">
 					<div v-if="!order.payments.length" class="margin vertical">
 						Brak płatności
 					</div>
@@ -190,7 +193,11 @@
 							<a class="payments__retry-link" @click="pay">Powtórz płatność</a>
 						</template>
 						<ul class="payments__list">
-							<li v-for="payment in order.payments" :key="payment.id" class="payments__link">
+							<li
+								v-for="payment in order.payments"
+								:key="payment.id"
+								class="payments__link"
+							>
 								<span>{{formatTime(payment.created_at)}}</span> - <span :class="`payment--${payment.status}`">{{$t(`orders.status['${payment.status}']`)}}</span>
 							</li>
 						</ul>
@@ -200,14 +207,18 @@
 				<!-- PAYMENTS END -->
 
 				<!-- INVOICES BEGIN -->
-				<div class="content" v-if="activeTab === 'invoices'">
+				<div v-if="activeTab === 'invoices'" class="content">
 					<div v-if="!order.invoices.length" class="margin vertical">
 						Brak faktur
 					</div>
 					<div v-else class="invoices">
 						<p class="metadata">Kliknij, aby pobrać faktury:</p>
 						<ul>
-							<li v-for="invoice in order.invoices" :key="invoice.id" class="invoices__link">
+							<li
+								v-for="invoice in order.invoices"
+								:key="invoice.id"
+								class="invoices__link"
+							>
 								<a @click="downloadInvoice(invoice)">{{invoice.number}}</a>
 							</li>
 						</ul>
@@ -216,28 +227,31 @@
 				<!-- INVOICES END -->
 
 				<!-- COUPONS BEGIN -->
-				<div class="content" v-if="activeTab === 'coupons'">
+				<div v-if="activeTab === 'coupons'" class="content">
 					<template v-if="couponsDisabled">
 						<p>{{$t('orders.messages.product-coupons-disabled')}}</p>
 					</template>
-					<div class="add-coupon" v-else>
-						<a class=""
-							title="Dodaj lub zmień kod rabatowy"
-							@click="toggleCouponInput"
+					<div v-else class="add-coupon">
+						<a
 							v-if="order.status !== 'closed'"
+							class=""
+							title="Dodaj lub zmień kod rabatowy"
 							data-button="add-coupon"
+							@click="toggleCouponInput"
 						>
-							<span class="icon is-small margin right"><i class="fa fa-plus"></i></span>
+							<span class="icon is-small margin right"><i class="fa fa-plus" /></span>
 							<span>Dodaj lub zmień kod rabatowy</span>
 						</a>
 					</div>
-					<div class="voucher-code" v-if="couponInputVisible">
-						<wnl-form class="margin vertical"
+					<div v-if="couponInputVisible" class="voucher-code">
+						<wnl-form
+							class="margin vertical"
 							name="CouponCode"
 							method="put"
 							:resource-route="couponUrl"
 							hide-default-submit="true"
-							@submitSuccess="couponSubmitSuccess">
+							@submitSuccess="couponSubmitSuccess"
+						>
 							<wnl-form-text name="code" placeholder="XXXXXXXX">Wpisz kod:</wnl-form-text>
 							<wnl-submit data-button="coupon-submit">Wykorzystaj kod</wnl-submit>
 						</wnl-form>
@@ -250,24 +264,24 @@
 		<div class="card-footer">
 			<div class="card-footer-item payment-status" :class="paymentStatusClass">
 				<span class="icon is-small status-icon">
-					<i class="fa" :class="iconClass"></i>
+					<i class="fa" :class="iconClass" />
 				</span>
-				{{ paymentStatus }}
+				{{paymentStatus}}
 			</div>
-			<div class="card-footer-item cancel-order" v-if="!order.paid && !order.canceled && order.total > 0">
+			<div v-if="!order.paid && !order.canceled && order.total > 0" class="card-footer-item cancel-order">
 				<a title="Anuluj zamówienie" @click="cancelOrder">
 					<span class="icon is-small status-icon">
-						<i class="fa fa-times"></i>
-					</span> {{ $t('orders.cancel.button') }}
+						<i class="fa fa-times" />
+					</span> {{$t('orders.cancel.button')}}
 				</a>
 			</div>
 		</div>
 
 		<wnl-p24-form
+			ref="p24Form"
 			:user-data="userData"
 			:payment-data="paymentData"
 			:order="order"
-			ref="p24Form"
 		/>
 	</div>
 </template>
@@ -371,6 +385,12 @@ import P24Form from 'js/components/user/P24Form';
 import { swalConfig } from 'js/utils/swal';
 
 export default {
+	components: {
+		'wnl-form': Form,
+		'wnl-form-text': Text,
+		'wnl-submit': Submit,
+		'wnl-p24-form': P24Form
+	},
 	props: {
 		orderInstance: {
 			type: Object,
@@ -380,12 +400,6 @@ export default {
 			type: Boolean,
 			default: true,
 		}
-	},
-	components: {
-		'wnl-form': Form,
-		'wnl-form-text': Text,
-		'wnl-submit': Submit,
-		'wnl-p24-form': P24Form
 	},
 	data() {
 		return {
@@ -520,7 +534,7 @@ export default {
 			'addAutoDismissableAlert',
 			'fetchUserSubscription',
 		]),
-		...mapActions('course', ['setStructure']),
+		...mapActions('course', { courseSetup: 'setup' }),
 		async downloadInvoice(invoice) {
 			try {
 				const response = await axios.request({
@@ -565,6 +579,12 @@ export default {
 				$wnl.logger.capture(err);
 			}
 		},
+		mounted() {
+			if (this.isPending && this.shouldCheckPaymentStatus) this.checkStatus();
+			if (this.$route.query.hasOwnProperty('payment')) {
+				gaEvent('Payment', this.order.method);
+			}
+		},
 		async checkStatus() {
 			try {
 				const response = await axios.get(getApiUrl(`users/${this.order.user_id}/orders/${this.order.id}?include=payments`));
@@ -576,7 +596,7 @@ export default {
 					this.order.paid_amount = order.paid_amount;
 					this.order.payments = (order.payments || []).map(paymentId => payments[paymentId]);
 					this.fetchUserSubscription();
-					this.setStructure();
+					this.courseSetup();
 					this.$socketChatSetup();
 				} else {
 					setTimeout(this.checkStatus, 10000);
@@ -648,11 +668,5 @@ export default {
 			return moment(time * 1000).format('L LT');
 		},
 	},
-	mounted() {
-		if (this.isPending && this.shouldCheckPaymentStatus) this.checkStatus();
-		if (this.$route.query.hasOwnProperty('payment')) {
-			gaEvent('Payment', this.order.method);
-		}
-	}
 };
 </script>

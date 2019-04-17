@@ -1,24 +1,27 @@
 <template>
-	<div class="active-users" v-if="activeUsersCount">
-		<div class="metadata" v-t="{ path: message, args: { count: activeUsersCount } }">
-		</div>
+	<div v-if="activeUsersCount" class="active-users">
+		<div v-t="{ path: message, args: { count: activeUsersCount } }" class="metadata" />
 		<div class="active-users-container">
 			<div class="absolute-container">
-				<ul class="avatars-list" ref="avatarsList">
-					<li v-for="(user, index) in usersToCount" class="avatar" :key="index">
+				<ul ref="avatarsList" class="avatars-list">
+					<li
+						v-for="(user, index) in usersToCount"
+						:key="index"
+						class="avatar"
+					>
 						<div class="activator" @click="toggleModal(true, user.profile)">
 							<wnl-avatar
 								:full-name="user.profile.full_name"
 								:url="user.profile.avatar"
-								size="medium">
-							</wnl-avatar>
+								size="medium"
+							/>
 						</div>
 					</li>
 				</ul>
 			</div>
 		</div>
-		<wnl-modal @closeModal="toggleModal(false)" v-if="modalVisible">
-			<wnl-user-profile-modal :author="modalUser"/>
+		<wnl-modal v-if="modalVisible" @closeModal="toggleModal(false)">
+			<wnl-user-profile-modal :author="modalUser" />
 		</wnl-modal>
 	</div>
 </template>

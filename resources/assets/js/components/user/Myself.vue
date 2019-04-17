@@ -4,14 +4,14 @@
 			:is-visible="isSidenavVisible"
 			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 			<aside class="sidenav-aside myself-sidenav">
-				<wnl-sidenav :items="items"></wnl-sidenav>
+				<wnl-sidenav :items="items" />
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
-			<router-view v-if="!isMainRoute" @userEvent="onUserEvent"></router-view>
-			<wnl-my-profile v-else></wnl-my-profile>
+			<router-view v-if="!isMainRoute" @userEvent="onUserEvent" />
+			<wnl-my-profile v-else />
 		</div>
 	</div>
 </template>

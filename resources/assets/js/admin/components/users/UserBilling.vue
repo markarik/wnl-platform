@@ -1,11 +1,14 @@
 <template>
-	<wnl-user-billing-data :resource-route="resourceRoute"/>
+	<wnl-user-billing-data :resource-route="resourceRoute" />
 </template>
 
 <script>
 import WnlUserBillingData from 'js/components/user/MyBillingData';
 
 export default {
+	components: {
+		WnlUserBillingData
+	},
 	props: {
 		address: {
 			type: Object,
@@ -14,9 +17,6 @@ export default {
 			type: Object,
 			required: true
 		}
-	},
-	components: {
-		WnlUserBillingData
 	},
 	computed: {
 		resourceRoute() {

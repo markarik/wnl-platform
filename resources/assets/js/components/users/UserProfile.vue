@@ -1,14 +1,14 @@
 <template>
 	<div class="wnl-user-profile" :class="{mobile: isMobileProfile}">
-		<div class="text-loader" v-if="isLoading">
+		<div v-if="isLoading" class="text-loader">
 			<wnl-text-loader>
-				{{ $t('user.userProfile.textLoader') }}
+				{{$t('user.userProfile.textLoader')}}
 			</wnl-text-loader>
 		</div>
 
-			<div class="profile-deleted notification" v-if="profile.deleted_at">
+		<div v-if="profile.deleted_at" class="profile-deleted notification">
 			<div class="profile-deleted__annotation">
-				{{ $t('ui.accountDeleted') }}
+				{{$t('ui.accountDeleted')}}
 			</div>
 		</div>
 
@@ -18,79 +18,89 @@
 		</div>
 
 		<div v-else>
-			<div class="user-profile" :class="isMobile" v-if="!isLoading && responseCondition">
+			<div
+				v-if="!isLoading && responseCondition"
+				class="user-profile"
+				:class="isMobile"
+			>
 				<div class="user-content" :class="avatarClass">
-					<wnl-avatar class="user-avatar image" size="extraextralarge"
+					<wnl-avatar
+						class="user-avatar image"
+						size="extraextralarge"
 						:full-name="fullName"
 						:url="profile.avatar"
-					></wnl-avatar>
+					/>
 					<div class="user-info-header">
 						<div class="user-info-header-edit">
-								<span v-if="currentUserProfile">
-									<router-link :to="{ name: 'my-profile' }">
-										<a class="edit-profile button is-primary is-outlined is-small">{{ $t('user.userProfile.editProfileButton') }}</a>
-									</router-link>
-								</span>
+							<span v-if="currentUserProfile">
+								<router-link :to="{ name: 'my-profile' }">
+									<a class="edit-profile button is-primary is-outlined is-small">{{$t('user.userProfile.editProfileButton')}}</a>
+								</router-link>
+							</span>
 							<wnl-message-link :user-id="profile.user_id">
 								<a class="button is-primary is-outlined is-small">Wyślij wiadomość</a>
 							</wnl-message-link>
 							<span class="user-info-header-names">
-									<p class="fullname-title">{{ profile.full_name }}</p>
-								</span>
+								<p class="fullname-title">{{profile.full_name}}</p>
+							</span>
 						</div>
 						<span v-if="cityToDisplay" class="user-info-city">
-								<span class="icon is-small">
-									<i class="fa fa-map-marker"></i>
-								</span>
-								<span class="city-title">{{ cityToDisplay }}</span>
+							<span class="icon is-small">
+								<i class="fa fa-map-marker" />
 							</span>
+							<span class="city-title">{{cityToDisplay}}</span>
+						</span>
 						<span v-if="helpToDisplay" class="user-info-help">
-								<span class="help-title">{{ $t('user.userProfile.helpTitle') }}</span>
-								<div class="notification">
-									<span class="user-help">{{ helpToDisplay }}</span>
-								</div>
-							</span>
+							<span class="help-title">{{$t('user.userProfile.helpTitle')}}</span>
+							<div class="notification">
+								<span class="user-help">{{helpToDisplay}}</span>
+							</div>
+						</span>
 					</div>
 				</div>
 
 				<div class="user-activity-content">
-					<div class="wnl-activity-meter" v-for="(activity, index) in activityMeterArray" :key="index">
+					<div
+						v-for="(activity, index) in activityMeterArray"
+						:key="index"
+						class="wnl-activity-meter"
+					>
 						<div class="activity-stat">
-								<span class="icon is-large">
-									<i :class="activity.iconClassToUse"></i>
-								</span>
-							<span class="activity-meter-number">{{ activity.statistic }}</span>
+							<span class="icon is-large">
+								<i :class="activity.iconClassToUse" />
+							</span>
+							<span class="activity-meter-number">{{activity.statistic}}</span>
 						</div>
-						<p class="activity-title">{{ activity.name }}</p>
+						<p class="activity-title">{{activity.name}}</p>
 					</div>
 				</div>
 
-				<div class="top-activities" v-if="ifAnyQuestions || ifAnyAnswers">
+				<div v-if="ifAnyQuestions || ifAnyAnswers" class="top-activities">
 					<wnl-qna
+						v-if="!isLoading && ifAnyQuestions"
 						:is-user-profile-class="isUserProfileClass"
 						:numbers-disabled="true"
 						:title="$t('user.userProfile.bestQuestions')"
 						:icon="iconForQuestions"
-						v-if="!isLoading && ifAnyQuestions"
 						:sorting-enabled="false"
 						:read-only="true"
 						:reactions-disabled="true"
 						:passed-questions="bestQuestions"
 						:show-context="true"
-					></wnl-qna>
+					/>
 					<wnl-qna
+						v-if="!isLoading && ifAnyAnswers"
 						:is-user-profile-class="isUserProfileClass"
 						:numbers-disabled="true"
 						:icon="iconForAnswers"
 						:title="$t('user.userProfile.bestAnswers')"
-						v-if="!isLoading && ifAnyAnswers"
 						:sorting-enabled="false"
 						:read-only="true"
 						:reactions-disabled="true"
 						:passed-questions="sortedQuestionsForBestAnswers"
 						:show-context="true"
 						:config="qnaConfig"
-					></wnl-qna>
+					/>
 				</div>
 			</div>
 		</div>
@@ -381,6 +391,16 @@ export default {
 				.slice(0, 2);
 		},
 	},
+	watch: {
+		'$route'() {
+			if (this.id !== this.$route.params.userId) {
+				this.loadData();
+			}
+		}
+	},
+	mounted() {
+		this.loadData();
+	},
 	methods: {
 		...mapActions('qna', ['setUserQnaQuestions', 'setConfig']),
 		togglePanel(panel) {
@@ -479,15 +499,5 @@ export default {
 			return config;
 		},
 	},
-	mounted() {
-		this.loadData();
-	},
-	watch: {
-		'$route'() {
-			if (this.id !== this.$route.params.userId) {
-				this.loadData();
-			}
-		}
-	}
 };
 </script>

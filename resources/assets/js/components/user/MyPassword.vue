@@ -3,7 +3,7 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.passwordResetHeader') }}
+					{{$t('user.passwordResetHeader')}}
 				</div>
 			</div>
 		</div>
@@ -13,8 +13,9 @@
 			name="MyPassword"
 			method="put"
 			resource-route="users/current/password"
+			:submit-error="true"
 			@submitError="submitError"
-			:submit-error="true">
+		>
 			<wnl-form-password name="old_password">Stare hasło</wnl-form-password>
 			<wnl-form-password name="new_password">Nowe hasło</wnl-form-password>
 			<wnl-form-password name="new_password_confirmation">Powtórz nowe hasło</wnl-form-password>

@@ -2,27 +2,28 @@
 	<div class="wnl-quiz">
 		<div v-if="isLoaded && displayResults">
 			<p class="title is-4 has-text-centered">
-				Gratulacje! <wnl-emoji name="tada"></wnl-emoji>
+				Gratulacje! <wnl-emoji name="tada" />
 			</p>
 			<p class="big">Wszystkie pytania rozwiązane poprawnie! Możesz teraz sprawdzić poprawne odpowiedzi, oraz procentowy rozkład wyborów innych uczestników.</p>
-			<wnl-quiz-summary @userEvent="onUserEvent"/>
+			<wnl-quiz-summary @userEvent="onUserEvent" />
 		</div>
 		<div v-else-if="emptyQuizSet" class="has-text-centered">
 			Oho, wygląda że nie ma pytań kontrolnych dla tej lekcji.
 		</div>
 		<div v-else>
 			<p class="title is-5">
-				Sprawdź swoją wiedzę z wczorajszej lekcji! <wnl-emoji name="thinking_face"></wnl-emoji>
+				Sprawdź swoją wiedzę z wczorajszej lekcji! <wnl-emoji name="thinking_face" />
 			</p>
 			<p class="big">
 				Po każdym podejściu, na ekranie pozostaną tylko błędnie rozwiązane pytania. Aby zakończyć test, odpowiadasz do skutku! Żeby nie było zbyt łatwo, kolejność odpowiedzi będzie każdorazowo zmieniana. Powodzenia!
 			</p>
-			<p class="has-text-centered" v-if="isAdmin">
+			<p v-if="isAdmin" class="has-text-centered">
 				<a class="button is-primary is-outlined" @click="autoResolve">
 					Rozwiąż wszystkie pytania
 				</a>
 			</p>
-			<wnl-quiz-list v-if="isLoaded"
+			<wnl-quiz-list
+				v-if="isLoaded"
 				module="quiz"
 				:all-questions="getQuestionsWithAnswers"
 				:can-end-quiz="canEndQuiz"
@@ -34,7 +35,7 @@
 				@checkQuiz="onCheckQuiz"
 				@userEvent="onUserEvent"
 			/>
-			<wnl-text-loader class="margin vertical" v-else></wnl-text-loader>
+			<wnl-text-loader v-else class="margin vertical" />
 		</div>
 	</div>
 </template>
@@ -64,6 +65,7 @@ export default {
 		'wnl-quiz-summary': QuizSummary,
 	},
 	mixins: [emits_events],
+	props: ['screenData', 'readOnly'],
 	data() {
 		return {
 			emptyQuizSet: false,
@@ -71,7 +73,6 @@ export default {
 			quizSetId: 0
 		};
 	},
-	props: ['screenData', 'readOnly'],
 	computed: {
 		...mapGetters('quiz', [
 			'getAttempts',
@@ -103,6 +104,22 @@ export default {
 				type: 'success',
 			};
 		},
+	},
+	watch: {
+		'screenData' (newValue, oldValue) {
+			if (oldValue.type === 'quiz' && newValue.type === 'quiz') {
+				this.destroyQuiz()
+					.then(() => {
+						this.setup();
+					});
+			}
+		},
+	},
+	mounted() {
+		this.setup();
+	},
+	beforeDestroy() {
+		this.destroyQuiz();
 	},
 	methods: {
 		...mapActions('quiz', ['setupQuestions', 'destroyQuiz', 'autoResolve', 'commitSelectAnswer', 'resetState', 'checkQuiz']),
@@ -169,21 +186,5 @@ export default {
 			return swalConfig(_.merge(defaults, options));
 		},
 	},
-	mounted() {
-		this.setup();
-	},
-	beforeDestroy() {
-		this.destroyQuiz();
-	},
-	watch: {
-		'screenData' (newValue, oldValue) {
-			if (oldValue.type === 'quiz' && newValue.type === 'quiz') {
-				this.destroyQuiz()
-					.then(() => {
-						this.setup();
-					});
-			}
-		},
-	}
 };
 </script>

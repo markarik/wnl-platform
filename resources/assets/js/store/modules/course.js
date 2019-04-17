@@ -77,10 +77,7 @@ const getters = {
 			.map(node => node.model);
 	},
 	getRequiredLessons: (state, getters) => {
-		return getters.getLessons.filter(lesson => lesson.is_required && lesson.isAccessible);
-	},
-	userLessons: (state, getters) => {
-		return getters.getLessons.filter(lesson => lesson.isAccessible);
+		return getters.getLessons.filter(lesson => lesson.is_required);
 	},
 	getLesson: (state, getters) => lessonId => {
 		return getters.getLessons.find(lesson => lesson.id.toString() === lessonId.toString()) || {};
@@ -198,7 +195,7 @@ const getters = {
 
 // Mutations
 const mutations = {
-	[types.COURSE_READY] (state) {
+	[types.COURSE_READY](state) {
 		set(state, 'ready', true);
 	},
 	[types.SET_STRUCTURE](state, payload) {
@@ -242,7 +239,7 @@ const mutations = {
 
 // Actions
 const actions = {
-	setup({ commit, dispatch }, courseId) {
+	setup({ commit, dispatch }, courseId = 1) {
 		return new Promise((resolve, reject) => {
 			Promise.all([
 				dispatch('setStructure', courseId),
@@ -282,10 +279,9 @@ const actions = {
 	async setStructure({ commit }, courseId = 1) {
 		const response = await _getCourseStructure(courseId);
 		const { data: { included, ...structureObj } } = response;
-		const structure = Object.values(structureObj);
 		const { courses } = included;
 
-		const withIncludes = structure.map(node => {
+		const structure = Object.values(structureObj).map(node => {
 			const include = modelToResourceMap[node.structurable_type];
 			const value = included[include][node.structurable_id];
 
@@ -295,7 +291,7 @@ const actions = {
 			};
 		});
 
-		commit(types.SET_STRUCTURE, withIncludes);
+		commit(types.SET_STRUCTURE, structure);
 		commit(types.SET_COURSE, courses[courseId]);
 	},
 };

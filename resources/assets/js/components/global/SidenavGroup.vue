@@ -9,14 +9,14 @@
 					:is-open="isOpen"
 				>
 					{{item.text}}
-					<span class="subitems-count" v-if="showSubitemsCount && hasSubitems">({{item.subitems.length}})</span>
+					<span v-if="showSubitemsCount && hasSubitems" class="subitems-count">({{item.subitems.length}})</span>
 				</wnl-sidenav-item>
 			</div>
-			<ul class="wnl-sidenav-subitems" v-if="canRenderSubitems">
+			<ul v-if="canRenderSubitems" class="wnl-sidenav-subitems">
 				<wnl-sidenav-item
 					v-for="(subitem, index) in item.subitems"
-					:item="subitem"
 					:key="index"
+					:item="subitem"
 				>
 					{{subitem.text}}
 				</wnl-sidenav-item>
@@ -65,10 +65,10 @@ import SidenavItem from 'js/components/global/SidenavItem';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
+	name: 'SidenavGroup',
 	components: {
 		'wnl-sidenav-item': SidenavItem
 	},
-	name: 'SidenavGroup',
 	props: ['item', 'forceGroupOpen', 'showSubitemsCount'],
 	computed: {
 		...mapGetters(['isNavigationGroupExpanded']),
@@ -88,13 +88,13 @@ export default {
 			return `${this.$route.name}/${this.item.text}`;
 		}
 	},
-	methods: {
-		...mapActions(['toggleNavigationGroup'])
-	},
 	mounted() {
 		if (this.forceGroupOpen && this.isNavigationGroupExpanded(this.groupIndex) !== false) {
 			this.toggleNavigationGroup({ groupIndex: this.groupIndex, isOpen: true });
 		}
+	},
+	methods: {
+		...mapActions(['toggleNavigationGroup'])
 	},
 };
 </script>

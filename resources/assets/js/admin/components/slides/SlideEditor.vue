@@ -1,23 +1,31 @@
 <template>
 	<div class="slides-editor">
-		<wnl-alert v-for="(alert, timestamp) in alerts"
+		<wnl-alert
+			v-for="(alert, timestamp) in alerts"
+			:key="timestamp"
 			:alert="alert"
 			css-class="fixed"
-			:key="timestamp"
 			:timestamp="timestamp"
 			@delete="onDelete"
 		/>
 		<p class="title is-3">{{title}}</p>
 
-		<slot name="above-content"/>
+		<slot name="above-content" />
 
-		<div class="notification is-danger has-text-centered"
-			v-show="submissionFailed">
+		<div
+			v-show="submissionFailed"
+			class="notification is-danger has-text-centered"
+		>
 			Coś poszło nie tak...
 		</div>
 
-		<form class="" action="" method="POST" @submit.prevent="onSubmit"
-			@keydown="form.errors.clear($event.target.name)">
+		<form
+			class=""
+			action=""
+			method="POST"
+			@submit.prevent="onSubmit"
+			@keydown="form.errors.clear($event.target.name)"
+		>
 
 			<template v-if="form.quiz_questions && form.quiz_questions.length">
 				<span class="subtitle is-5">Pytania powiązane ze slajdem #{{slideId}}:</span>
@@ -29,66 +37,84 @@
 			</template>
 
 			<div class="slide-content-editor">
-				<wnl-code type="text" name="content" :form="form" v-model="form.content"/>
+				<wnl-code
+					v-model="form.content"
+					type="text"
+					name="content"
+					:form="form"
+				/>
 			</div>
 
-			<slot name="below-content"/>
+			<slot name="below-content" />
 
 			<div class="level">
 				<div class="level-left">
 					<div class="level-item">
 						<p class="control">
 							<wnl-checkbox
-								type="text" name="is_functional"
+								v-model="form.is_functional"
+								type="text"
+								name="is_functional"
 								:form="form"
-								v-model="form.is_functional">
+							>
 								Slajd funkcjonalny?
 							</wnl-checkbox>
 						</p>
 					</div>
 				</div>
-				<div class="level-center" v-if="remove">
-					<div class="level-item confirm-detach" v-if="confirmDetach">
+				<div v-if="remove" class="level-center">
+					<div v-if="confirmDetach" class="level-item confirm-detach">
 						<div>Na pewno?</div>
 						<a class="button" @click="confirmDetach=false">Nie</a>
-						<a class="button is-danger"
-							@click="detachSlide">
+						<a
+							class="button is-danger"
+							@click="detachSlide"
+						>
 							Tak
 						</a>
 					</div>
-					<div class="level-item" v-else="">
-						<a class="button is-danger"
+					<div v-else="" class="level-item">
+						<a
+							class="button is-danger"
 							:class="{'is-loading': detachingSlide}"
-							:disabled="!this.slideId && !this.screenId"
-							@click="confirmDetach=true">Usuń slajd z
-							prezentacji</a>
+							:disabled="!slideId && !screenId"
+							@click="confirmDetach=true"
+						>Usuń slajd z prezentacji</a>
 					</div>
 				</div>
 				<div class="level-right">
 					<div class="level-item">
-						<a class="button is-primary"
+						<a
+							v-if="chartReady"
+							class="button is-primary"
 							:class="{'is-loading': updatingChart}"
-							v-if="chartReady" @click="updateChart">
-							Aktualizuj diagram</a>
+							@click="updateChart"
+						>Aktualizuj diagram</a>
 					</div>
-					<slot name="action"/>
+					<slot name="action" />
 					<div class="level-item">
-						<a class="button"
-							:disabled="!this.slideId && !this.screenId"
-							@click="preview">Podgląd</a>
+						<a
+							class="button"
+							:disabled="!slideId && !screenId"
+							@click="preview"
+						>Podgląd</a>
 					</div>
 					<div class="level-item">
-						<a class="button is-primary"
+						<a
+							class="button is-primary"
 							:class="{'is-loading': loading}"
 							:disabled="form.errors.any() || !form.content"
-							@click="onSubmit">Zapisz slajd</a>
+							@click="onSubmit"
+						>Zapisz slajd</a>
 					</div>
 				</div>
 			</div>
 		</form>
-		<wnl-slide-preview :show-modal="showPreviewModal"
+		<wnl-slide-preview
+			:show-modal="showPreviewModal"
 			:content="previewModalContent"
-			@closeModal="showPreviewModal=false"/>
+			@closeModal="showPreviewModal=false"
+		/>
 	</div>
 </template>
 
@@ -133,6 +159,7 @@ export default {
 		WnlCheckbox,
 		WnlSlidePreview,
 	},
+	mixins: [alerts],
 	props: {
 		title: {
 			type: String,
@@ -168,7 +195,6 @@ export default {
 			default: false
 		}
 	},
-	mixins: [alerts],
 	data() {
 		return {
 			form: new Form({
@@ -194,6 +220,21 @@ export default {
 		},
 		content() {
 			return this.form.content;
+		}
+	},
+	watch: {
+		resourceUrl(newValue) {
+			newValue !== '' && this.form.populate(`${this.resourceUrl}?include=quiz_questions`, this.excluded)
+				.catch(error => {
+					const statusCode = get(error, 'response.status');
+					statusCode === 404 && this.addAutoDismissableAlert({
+						type: 'error',
+						text: 'Slajd o tym ID nie istnieje'
+					});
+				});
+		},
+		content() {
+			this.removeCourseTags();
 		}
 	},
 	methods: {
@@ -297,20 +338,5 @@ export default {
 			});
 		}
 	},
-	watch: {
-		resourceUrl(newValue) {
-			newValue !== '' && this.form.populate(`${this.resourceUrl}?include=quiz_questions`, this.excluded)
-				.catch(error => {
-					const statusCode = get(error, 'response.status');
-					statusCode === 404 && this.addAutoDismissableAlert({
-						type: 'error',
-						text: 'Slajd o tym ID nie istnieje'
-					});
-				});
-		},
-		content() {
-			this.removeCourseTags();
-		}
-	}
 };
 </script>

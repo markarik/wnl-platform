@@ -1,38 +1,55 @@
 <template>
 	<div class="notification-wrapper">
 		<div class="avatar" @click.stop="showModal">
-			<wnl-avatar size="medium"
+			<wnl-avatar
+				size="medium"
 				:full-name="message.actors.full_name"
-				:url="message.actors.avatar">
-			</wnl-avatar>
+				:url="message.actors.avatar"
+			/>
 		</div>
-		<div class="personal-notification" @click="markAsReadAndGo" :class="{'deleted': deleted || resolved}">
+		<div
+			class="personal-notification"
+			:class="{'deleted': deleted || resolved}"
+			@click="markAsReadAndGo"
+		>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ message.actors.full_name }}</span>
-					<span class="action">{{ action }}</span>
-					<span class="object" v-if="object">{{ object }}</span>
-					<span class="context" v-if="contextInfo">{{ contextInfo }}</span>
-					<span class="object-text wrap" v-if="objectText">{{ objectText }}</span>
+					<span class="actor">{{message.actors.full_name}}</span>
+					<span class="action">{{action}}</span>
+					<span v-if="object" class="object">{{object}}</span>
+					<span v-if="contextInfo" class="context">{{contextInfo}}</span>
+					<span v-if="objectText" class="object-text wrap">{{objectText}}</span>
 				</div>
-				<div class="subject wrap" v-if="subjectText">{{ subjectText }}</div>
+				<div v-if="subjectText" class="subject wrap">{{subjectText}}</div>
 				<div class="time">
 					<span class="icon is-small">
-						<i class="fa" :class="icon"></i>
-					</span>{{ formattedTime }}
+						<i class="fa" :class="icon" />
+					</span>{{formattedTime}}
 				</div>
 			</div>
 			<div class="link-symbol">
-				<span v-if="hasContext" class="icon" :class="{'unread': !isRead}">
-					<i v-if="loading" class="loader"></i>
-					<i v-else class="fa fa-angle-right"></i>
+				<span
+					v-if="hasContext"
+					class="icon"
+					:class="{'unread': !isRead}"
+				>
+					<i v-if="loading" class="loader" />
+					<i v-else class="fa fa-angle-right" />
 				</span>
 			</div>
 		</div>
-		<div class="delete-message" v-if="deleted" v-t="'notifications.messages.deleted'"/>
-		<div class="delete-message" v-if="resolved" v-t="'notifications.messages.resolved'"/>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="userForModal"/>
+		<div
+			v-if="deleted"
+			v-t="'notifications.messages.deleted'"
+			class="delete-message"
+		/>
+		<div
+			v-if="resolved"
+			v-t="'notifications.messages.resolved'"
+			class="delete-message"
+		/>
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
+			<wnl-user-profile-modal :author="userForModal" />
 		</wnl-modal>
 	</div>
 </template>
@@ -125,22 +142,22 @@ import { notification } from 'js/components/notifications/notification';
 
 export default {
 	name: 'PersonalNotification',
-	mixins: [notification],
 	components: {
 		'wnl-avatar': Avatar,
 		'wnl-modal': Modal,
 		'wnl-user-profile-modal': UserProfileModal
 	},
-	data() {
-		return {
-			isVisible: false
-		};
-	},
+	mixins: [notification],
 	props: {
 		icon: {
 			required: true,
 			type: String
 		},
+	},
+	data() {
+		return {
+			isVisible: false
+		};
 	},
 	computed: {
 		...mapGetters(['currentUserId']),

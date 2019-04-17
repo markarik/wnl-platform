@@ -2,28 +2,30 @@
 	<div>
 		<div class="media-container">
 			<div class="left">
-				<wnl-avatar class="avatar"
+				<wnl-avatar
+					class="avatar"
 					:full-name="author.full_name"
 					:url="author.avatar"
-					size="extralarge"/>
+					size="extralarge"
+				/>
 			</div>
 			<div class="right">
 				<div class="content">
 					<div class="user-info-name-content">
 						<div class="user-info-full-name">
-							<span>{{ author.full_name }}</span>
+							<span>{{author.full_name}}</span>
 						</div>
 					</div>
 					<div v-if="author.city" class="user-info-city">
 						<span class="icon is-small">
-							<i class="fa fa-map-marker"></i>
+							<i class="fa fa-map-marker" />
 						</span>
-						<span class="city-title">{{ author.city }}</span>
+						<span class="city-title">{{author.city}}</span>
 					</div>
 					<div v-if="author.help" class="user-info-help">
-						<span class="help-title">{{ $t('user.userProfile.helpTitle') }}</span>
+						<span class="help-title">{{$t('user.userProfile.helpTitle')}}</span>
 						<div class="notification">
-							<span class="user-help">{{ author.help }}</span>
+							<span class="user-help">{{author.help}}</span>
 						</div>
 					</div>
 				</div>
@@ -31,14 +33,14 @@
 					<div class="level-left">
 						<div class="send-message">
 							<wnl-message-link :user-id="userId">
-								<span class="button is-primary is-outlined is-small">{{ $t('user.userProfileModal.sendMessage')}}</span>
+								<span class="button is-primary is-outlined is-small">{{$t('user.userProfileModal.sendMessage')}}</span>
 							</wnl-message-link>
 						</div>
 					</div>
 					<div class="level-right">
 						<div class="redirect">
 							<router-link :to="{ name: 'user', params: {userId: userId} }">
-								<a class="button is-primary is-outlined is-small">{{ $t('user.userProfileModal.redirectToProfile') }}</a>
+								<a class="button is-primary is-outlined is-small">{{$t('user.userProfileModal.redirectToProfile')}}</a>
 							</router-link>
 						</div>
 					</div>

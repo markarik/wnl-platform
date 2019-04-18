@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Commands;
+namespace Tests\Console;
 
 use App\Mail\AccountSuspendedUnpaidInstalment;
 use App\Mail\InstalmentReminder;

@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Unit\Commands;
+namespace Tests\Console;
 
 use App\Models\Presentable;
 use App\Models\Screen;

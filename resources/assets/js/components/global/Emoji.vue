@@ -3,7 +3,7 @@
 		class="wnl-emoji"
 		:class="emojiClass"
 		v-html="emoji"
-	></span>
+	/>
 </template>
 
 <style lang="sass" rel="stylesheet/sass">

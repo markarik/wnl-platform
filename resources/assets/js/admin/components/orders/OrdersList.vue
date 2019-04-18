@@ -33,7 +33,7 @@
 					<td>{{order.product.name}}</td>
 					<td>{{translateShippingStatus(order)}}</td>
 					<td>
-						<span v-if="order.paid" class="icon has-text-success"><i class="fa fa-check"></i></span>
+						<span v-if="order.paid" class="icon has-text-success"><i class="fa fa-check" /></span>
 						{{order.paid_amount}} / {{order.total}}PLN
 					</td>
 					<td>
@@ -41,7 +41,7 @@
 							v-if="order.coupon"
 							class="icon has-text-success"
 							:title="order.coupon.name"
-						><i class="fa fa-check"></i></span>
+						><i class="fa fa-check" /></span>
 					</td>
 				</tr>
 				</tbody>

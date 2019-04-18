@@ -9,13 +9,13 @@
 						<span class="question-title">{{title}}</span>
 						<a class="question-back" @click="goBack">
 							<span class="icon is-small">
-								<i class="fa fa-angle-left"></i>
+								<i class="fa fa-angle-left" />
 							</span>
 							{{$t('quiz.single.back')}}
 						</a>
 					</div>
 					<div v-if="hasError" class="notification">
-						{{$t('quiz.single.error', {id: this.id})}} <wnl-emoji name="disappointed" />
+						{{$t('quiz.single.error', {id: id})}} <wnl-emoji name="disappointed" />
 					</div>
 					<wnl-quiz-widget
 						v-else
@@ -98,6 +98,23 @@ export default {
 			return this.hasError ? this.$t('quiz.single.errorTitle') : this.$t('quiz.single.title', { id: this.quizQuestionId });
 		},
 	},
+	watch: {
+		quizQuestionId(to) {
+			!!to && this.setupQuestion();
+		}
+	},
+	created() {
+		this.destroyQuiz();
+	},
+	beforeRouteEnter(to, from, next) {
+		return next();
+	},
+	mounted() {
+		this.setupQuestion();
+	},
+	beforeDestroy() {
+		this.destroyQuiz();
+	},
 	methods: {
 		...mapActions('quiz', ['destroyQuiz', 'fetchSingleQuestion', 'commitSelectAnswer', 'resolveQuestion']),
 		goBack() {
@@ -117,22 +134,5 @@ export default {
 				});
 		},
 	},
-	created() {
-		this.destroyQuiz();
-	},
-	beforeRouteEnter(to, from, next) {
-		return next();
-	},
-	mounted() {
-		this.setupQuestion();
-	},
-	beforeDestroy() {
-		this.destroyQuiz();
-	},
-	watch: {
-		quizQuestionId(to) {
-			!!to && this.setupQuestion();
-		}
-	}
 };
 </script>

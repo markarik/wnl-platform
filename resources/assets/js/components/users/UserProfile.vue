@@ -29,7 +29,7 @@
 						size="extraextralarge"
 						:full-name="fullName"
 						:url="profile.avatar"
-					></wnl-avatar>
+					/>
 					<div class="user-info-header">
 						<div class="user-info-header-edit">
 							<span v-if="currentUserProfile">
@@ -46,7 +46,7 @@
 						</div>
 						<span v-if="cityToDisplay" class="user-info-city">
 							<span class="icon is-small">
-								<i class="fa fa-map-marker"></i>
+								<i class="fa fa-map-marker" />
 							</span>
 							<span class="city-title">{{cityToDisplay}}</span>
 						</span>
@@ -67,7 +67,7 @@
 					>
 						<div class="activity-stat">
 							<span class="icon is-large">
-								<i :class="activity.iconClassToUse"></i>
+								<i :class="activity.iconClassToUse" />
 							</span>
 							<span class="activity-meter-number">{{activity.statistic}}</span>
 						</div>
@@ -87,7 +87,7 @@
 						:reactions-disabled="true"
 						:passed-questions="bestQuestions"
 						:show-context="true"
-					></wnl-qna>
+					/>
 					<wnl-qna
 						v-if="!isLoading && ifAnyAnswers"
 						:is-user-profile-class="isUserProfileClass"
@@ -100,7 +100,7 @@
 						:passed-questions="sortedQuestionsForBestAnswers"
 						:show-context="true"
 						:config="qnaConfig"
-					></wnl-qna>
+					/>
 				</div>
 			</div>
 		</div>
@@ -391,6 +391,16 @@ export default {
 				.slice(0, 2);
 		},
 	},
+	watch: {
+		'$route'() {
+			if (this.id !== this.$route.params.userId) {
+				this.loadData();
+			}
+		}
+	},
+	mounted() {
+		this.loadData();
+	},
 	methods: {
 		...mapActions('qna', ['setUserQnaQuestions', 'setConfig']),
 		togglePanel(panel) {
@@ -489,15 +499,5 @@ export default {
 			return config;
 		},
 	},
-	mounted() {
-		this.loadData();
-	},
-	watch: {
-		'$route'() {
-			if (this.id !== this.$route.params.userId) {
-				this.loadData();
-			}
-		}
-	}
 };
 </script>

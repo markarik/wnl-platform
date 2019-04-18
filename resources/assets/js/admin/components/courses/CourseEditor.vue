@@ -58,6 +58,12 @@ import { Form as WnlForm, Text as WnlFormText, Check as WnlFormCheck, Submit as 
 
 export default {
 	name: 'CourseEditor',
+	components: {
+		WnlFormText,
+		WnlFormCheck,
+		WnlForm,
+		WnlSubmit,
+	},
 	props: ['id'],
 	computed: {
 		isEdit() {
@@ -69,12 +75,6 @@ export default {
 		resourceRoute() {
 			return this.isEdit ? `courses/${this.id}` : 'courses';
 		},
-	},
-	components: {
-		WnlFormText,
-		WnlFormCheck,
-		WnlForm,
-		WnlSubmit,
 	},
 	methods: {
 		onSubmitSuccess(data) {

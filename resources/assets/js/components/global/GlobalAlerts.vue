@@ -8,7 +8,7 @@
 			:type="alert.type"
 			@onDismiss="onDismiss(alert)"
 		>
-			<div v-html="alert.text"></div>
+			<div v-html="alert.text" />
 		</wnl-alert>
 	</div>
 </template>

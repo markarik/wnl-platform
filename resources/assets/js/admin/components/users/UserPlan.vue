@@ -80,7 +80,7 @@
 									type="button"
 									@click="unselectLesson(lesson)"
 								>
-									<span class="icon"><i class="fa fa-trash"></i></span>
+									<span class="icon"><i class="fa fa-trash" /></span>
 								</button>
 							</td>
 						</tr>
@@ -146,6 +146,28 @@ export default {
 						!this.selectedLessons.find(({ id }) => id === lesson.id)
 				)
 				.slice(0, 10);
+		}
+	},
+	async mounted() {
+		this.loading = true;
+		try {
+			const [userPlanResponse] = await Promise.all([
+				axios.get(getApiUrl(`user_lesson/${this.user.id}`)),
+				this.fetchAllLessons()
+			]);
+
+			this.userLessons = this.getUserLessons(userPlanResponse);
+			nextTick(() => {
+				this.$refs.filterInput && this.$refs.filterInput.focus();
+			});
+		} catch (e) {
+			this.addAutoDismissableAlert({
+				text: 'Nie udało się pobrać planu dla tego użytkownika',
+				type: 'error'
+			});
+			$wnl.logger.capture(e);
+		} finally {
+			this.loading = false;
 		}
 	},
 	methods: {
@@ -223,27 +245,5 @@ export default {
 			});
 		}
 	},
-	async mounted() {
-		this.loading = true;
-		try {
-			const [userPlanResponse] = await Promise.all([
-				axios.get(getApiUrl(`user_lesson/${this.user.id}`)),
-				this.fetchAllLessons()
-			]);
-
-			this.userLessons = this.getUserLessons(userPlanResponse);
-			nextTick(() => {
-				this.$refs.filterInput && this.$refs.filterInput.focus();
-			});
-		} catch (e) {
-			this.addAutoDismissableAlert({
-				text: 'Nie udało się pobrać planu dla tego użytkownika',
-				type: 'error'
-			});
-			$wnl.logger.capture(e);
-		} finally {
-			this.loading = false;
-		}
-	}
 };
 </script>

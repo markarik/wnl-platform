@@ -25,7 +25,7 @@
 				<span
 					class="icon clickable is-small margin left"
 					@click="newLesson.lessonId = null"
-				><i class="fa fa-close"></i>
+				><i class="fa fa-close" />
 				</span>
 			</div>
 			<label class="label margin top">Data otwarcia</label>

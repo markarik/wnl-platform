@@ -8,7 +8,7 @@
 			:key="screen.id"
 			:item="screen"
 			:lesson-id="lessonId"
-		></wnl-screen-item>
+		/>
 	</div>
 </template>
 

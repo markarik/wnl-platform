@@ -11,9 +11,9 @@
 				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }"
 			>
 				<div v-if="isOn && !!unseenCount" class="counter">{{unseenCount}}</div>
-				<span v-if="!connecting" class="loader"><i class="fas fa-circle-notch fa-pulse"></i></span>
+				<span v-if="!connecting" class="loader"><i class="fas fa-circle-notch fa-pulse" /></span>
 				<span class="icon">
-					<i class="fa" :class="iconClass"></i>
+					<i class="fa" :class="iconClass" />
 				</span>
 			</div>
 			<div slot="content">

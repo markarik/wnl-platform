@@ -18,7 +18,7 @@
 					>
 						{{statusTag.text}}&nbsp;
 						<span class="icon is-small">
-							<i class="fa fa-angle-down"></i>
+							<i class="fa fa-angle-down" />
 						</span>
 					</p>
 					<div slot="content">
@@ -108,6 +108,11 @@ import WnlModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutoco
 import { timeFromS } from 'js/utils/time';
 
 export default {
+	components: {
+		WnlDropdown,
+		WnlModeratorsAutocomplete,
+		WnlTaskEvents,
+	},
 	props: {
 		task: {
 			type: Object,
@@ -121,11 +126,6 @@ export default {
 			type: Boolean,
 			default: false
 		}
-	},
-	components: {
-		WnlDropdown,
-		WnlModeratorsAutocomplete,
-		WnlTaskEvents,
 	},
 	data() {
 		return {

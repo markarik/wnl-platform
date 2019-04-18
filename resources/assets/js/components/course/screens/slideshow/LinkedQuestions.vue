@@ -32,6 +32,14 @@ export default {
 			return 'slides/' + this.slideId + '?include=quiz_questions';
 		},
 	},
+	watch: {
+		'slideId' () {
+			this.debouncedGetLinkedQuestions();
+		}
+	},
+	mounted() {
+		this.setLinkedQuestions();
+	},
 	methods: {
 		debouncedGetLinkedQuestions: debounce(function () {
 			this.setLinkedQuestions();
@@ -63,13 +71,5 @@ export default {
 				});
 		},
 	},
-	mounted() {
-		this.setLinkedQuestions();
-	},
-	watch: {
-		'slideId' () {
-			this.debouncedGetLinkedQuestions();
-		}
-	}
 };
 </script>

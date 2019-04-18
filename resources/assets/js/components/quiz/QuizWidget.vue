@@ -3,12 +3,12 @@
 		<div v-if="!isSingle" class="quiz-widget-controls">
 			<div class="widget-control">
 				<a class="small unselectable" @click="previousQuestion()">
-					<span class="icon is-small"><i class="fa fa-angle-left"></i></span> Poprzednie
+					<span class="icon is-small"><i class="fa fa-angle-left" /></span> Poprzednie
 				</a>
 			</div>
 			<div class="widget-control">
 				<a class="small unselectable" @click="nextQuestion()">
-					Następne <span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+					Następne <span class="icon is-small"><i class="fa fa-angle-right" /></span>
 				</a>
 			</div>
 		</div>
@@ -23,7 +23,7 @@
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleClick"
 			@userEvent="proxyUserEvent"
-		></wnl-quiz-question>
+		/>
 		<p class="has-text-centered">
 			<a
 				v-if="!currentQuestion.isResolved"
@@ -58,7 +58,7 @@
 					@headerClicked="selectQuestionFromList(index)"
 					@selectAnswer="selectAnswer"
 					@answerDoubleclick="onAnswerDoubleClick"
-				></wnl-quiz-question>
+				/>
 			</template>
 		</div>
 	</div>
@@ -151,6 +151,15 @@ export default {
 			return this.questions.map(({ id }) => id);
 		}
 	},
+	watch: {
+		'currentQuestion.id'() {
+			this.trackQuizQuestionChanged();
+		}
+	},
+	created() {
+		this.trackQuizQuestionChanged();
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
+	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		verify() {
@@ -192,14 +201,5 @@ export default {
 			});
 		}
 	},
-	created() {
-		this.trackQuizQuestionChanged();
-		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
-	},
-	watch: {
-		'currentQuestion.id'() {
-			this.trackQuizQuestionChanged();
-		}
-	}
 };
 </script>

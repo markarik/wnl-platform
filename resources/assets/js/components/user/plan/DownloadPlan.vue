@@ -11,7 +11,7 @@
 					<ol>
 						<li>Kliknij na "POBIERZ PLAN PRACY", aby wyeksportowanć plik z nazwami lekcji i przypisanymi do nich datami. Plik powinien nazywać się "plan_pracy.csv".</li>
 						<li>Otwórz <a href="https://calendar.google.com" target="_blank">Kalendarz Google</a> na komputerze. Uwaga: import możesz wykonać tylko na komputerze, nie jest to możliwe na telefonie ani na tablecie.</li>
-						<li>W prawym górnym rogu kliknij <span class="icon is-small"><i class="fa fa-cog"></i></span> a następnie Ustawienia.</li>
+						<li>W prawym górnym rogu kliknij <span class="icon is-small"><i class="fa fa-cog" /></span> a następnie Ustawienia.</li>
 						<li>Kliknij <strong>Importuj/eksportuj</strong>.</li>
 						<li>Kliknij <strong>Wybierz plik z komputera</strong> i wybierz wcześniej pobrany wcześniej plik.</li>
 						<li>Wybierz kalendarz, do którego chcesz dodać zaimportowane wydarzenia. Domyślnie wydarzenia są importowane do kalendarza głównego.</li>

@@ -63,16 +63,16 @@ import { getColourForStr } from 'js/utils/colors.js';
 
 export default {
 	name: 'UsersList',
-	data() {
-		return {
-			getColourForStr
-		};
-	},
 	props: {
 		usersResponse: {
 			type: [Object, Array],
 			required: true
 		},
+	},
+	data() {
+		return {
+			getColourForStr
+		};
 	},
 	computed: {
 		users() {

@@ -1,7 +1,6 @@
 <template>
 	<div v-if="activeUsersCount" class="active-users">
-		<div v-t="{ path: message, args: { count: activeUsersCount } }" class="metadata">
-		</div>
+		<div v-t="{ path: message, args: { count: activeUsersCount } }" class="metadata" />
 		<div class="active-users-container">
 			<div class="absolute-container">
 				<ul ref="avatarsList" class="avatars-list">
@@ -15,8 +14,7 @@
 								:full-name="user.profile.full_name"
 								:url="user.profile.avatar"
 								size="medium"
-							>
-							</wnl-avatar>
+							/>
 						</div>
 					</li>
 				</ul>

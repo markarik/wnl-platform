@@ -13,8 +13,7 @@
 					:id="lesson.id"
 					:key="lesson.id"
 					:name="lesson.name"
-				>
-				</wnl-lesson-list-item>
+				/>
 			</template>
 		</wnl-paginated-list>
 	</div>

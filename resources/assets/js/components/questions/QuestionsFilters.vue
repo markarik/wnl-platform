@@ -22,7 +22,7 @@
 			>
 				<div class="filters-heading">
 					<span class="metadata margin vertical">
-						<span class="icon is-tiny"><i class="fa fa-search"></i></span>
+						<span class="icon is-tiny"><i class="fa fa-search" /></span>
 						{{$t('questions.filters.searchHeading')}}
 					</span>
 				</div>
@@ -33,7 +33,7 @@
 				/>
 				<div class="filters-heading">
 					<span class="metadata margin vertical">
-						<span class="icon is-tiny"><i class="fa fa-sliders"></i></span>
+						<span class="icon is-tiny"><i class="fa fa-sliders" /></span>
 						{{$t('questions.filters.heading')}}
 					</span>
 					<a
@@ -42,7 +42,7 @@
 						@click="toggleChat"
 					>
 						{{$t('questions.filters.hide')}}
-						<span class="icon is-small"><i class="fa fa-close"></i></span>
+						<span class="icon is-small"><i class="fa fa-close" /></span>
 					</a>
 				</div>
 				<wnl-accordion

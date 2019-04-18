@@ -16,12 +16,12 @@
 				@verify="trackAndResolve"
 				@selectAnswer="onSelectAnswer"
 				@userEvent="onUserEvent"
-			></wnl-quiz-widget>
+			/>
 			<div v-else class="notification has-text-centered">
-				W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań kontrolnych. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> przy wybranym pytaniu!
+				W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right" /></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań kontrolnych. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o" /></span> <span class="metadata">ZAPISZ</span> przy wybranym pytaniu!
 			</div>
 		</div>
-		<wnl-text-loader v-if="!isLoaded"></wnl-text-loader>
+		<wnl-text-loader v-if="!isLoaded" />
 	</div>
 </template>
 

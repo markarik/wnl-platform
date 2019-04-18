@@ -13,7 +13,7 @@
 					:title="groupName"
 				>
 					{{truncate(groupName, 15)}}
-					<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+					<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 				</span>
 
 				<span class="lesson-name" :title="lessonName">{{truncate(lessonName, 30)}}</span>
@@ -25,13 +25,13 @@
 		<div class="slide-thumb" @click="onThumbnailClick">
 			<div class="thumb-meta">
 				<span class="slide-number">{{slideNumber}}</span>
-				<span v-if="media" class="icon is-tiny"><i class="fa" :class="media.icon"></i></span>
+				<span v-if="media" class="icon is-tiny"><i class="fa" :class="media.icon" /></span>
 			</div>
-			<p class="thumb-heading metadata" v-html="header"></p>
-			<div class="slide-snippet" v-html="snippet"></div>
+			<p class="thumb-heading metadata" v-html="header" />
+			<div class="slide-snippet" v-html="snippet" />
 			<div v-if="media" class="slide-snippet has-media">
 				<span class="icon is-tiny">
-					<i class="fa" :class="media.icon"></i>
+					<i class="fa" :class="media.icon" />
 				</span>
 				{{media.text}}
 			</div>
@@ -143,14 +143,14 @@ const mediaMap = {
 
 export default {
 	name: 'SlideSearchResult',
+	components: {
+		'wnl-slide-link': SlideLink,
+	},
 	props: {
 		hit: {
 			required: true,
 			type: Object,
 		},
-	},
-	components: {
-		'wnl-slide-link': SlideLink,
 	},
 	computed: {
 		...mapGetters('course', ['getLesson', 'getGroupsByLessonId']),

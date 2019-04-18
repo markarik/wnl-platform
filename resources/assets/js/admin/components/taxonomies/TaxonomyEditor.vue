@@ -25,7 +25,7 @@
 						type="button"
 						@click="onDelete"
 					>
-						<span class="icon is-small"><i class="fa fa-trash"></i></span>
+						<span class="icon is-small"><i class="fa fa-trash" /></span>
 						<span>Usuń</span>
 					</button>
 					<wnl-submit v-if="!isEdit || isEditFormVisible" class="submit" />
@@ -34,7 +34,7 @@
 						class="button"
 						@click="isEditFormVisible = true"
 					>
-						<span class="icon is-small"><i class="fa fa-pencil"></i></span>
+						<span class="icon is-small"><i class="fa fa-pencil" /></span>
 						<span>Edytuj</span>
 					</button>
 				</div>

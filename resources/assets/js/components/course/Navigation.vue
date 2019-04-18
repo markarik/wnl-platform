@@ -1,7 +1,7 @@
 <template>
 	<aside class="sidenav-aside course-sidenav">
-		<wnl-lesson-navigation v-if="isLesson"></wnl-lesson-navigation>
-		<wnl-course-navigation v-else></wnl-course-navigation>
+		<wnl-lesson-navigation v-if="isLesson" />
+		<wnl-course-navigation v-else />
 	</aside>
 </template>
 

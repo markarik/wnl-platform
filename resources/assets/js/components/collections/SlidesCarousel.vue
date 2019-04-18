@@ -9,7 +9,7 @@
 			>
 				{{$t('collections.slides.showOnlySaved')}}
 				<span class="icon is-small">
-					<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']" />
 				</span>
 			</a>
 		</p>
@@ -26,7 +26,7 @@
 			</div>
 		</div>
 		<div v-else class="notification has-text-centered">
-			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
+			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right" /></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o" /></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
 		</div>
 		<wnl-slideshow
 			v-if="htmlContent"
@@ -38,7 +38,7 @@
 			@slideBookmarked="onSlideBookmarked"
 			@refreshSlideshow="onRefreshSlideshow"
 			@userEvent="proxyUserEvent"
-		></wnl-slideshow>
+		/>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -93,8 +93,12 @@ import WnlSlideThumb from 'js/components/course/SlideThumb';
 
 export default {
 	name: 'SlidesCarousel',
-	props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount'],
+	components: {
+		'wnl-slideshow': Slideshow,
+		WnlSlideThumb,
+	},
 	mixins: [emits_events],
+	props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount'],
 	data() {
 		return {
 			presentableType: 'App\\Models\\Category',
@@ -116,10 +120,6 @@ export default {
 				}
 			}
 		};
-	},
-	components: {
-		'wnl-slideshow': Slideshow,
-		WnlSlideThumb,
 	},
 	computed: {
 		...mapGetters('collections', ['slidesContent', 'getSlidesIdsForCategory']),
@@ -150,6 +150,19 @@ export default {
 		bookmarkedSlidesIds() {
 			return this.getSlidesIdsForCategory(this.categoryName);
 		}
+	},
+	watch: {
+		'categoryId'() {
+			this.htmlContent = '';
+			this.loadedHtmlContents = {};
+			this.selectedSlideIndex = 0;
+			this.mode = '';
+
+			this.loadSlideshow();
+		}
+	},
+	mounted() {
+		this.loadSlideshow();
 	},
 	methods: {
 		...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection', 'fetchReactions', 'fetchSlidesByTagName']),
@@ -268,18 +281,5 @@ export default {
 			return axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`));
 		}
 	},
-	watch: {
-		'categoryId'() {
-			this.htmlContent = '';
-			this.loadedHtmlContents = {};
-			this.selectedSlideIndex = 0;
-			this.mode = '';
-
-			this.loadSlideshow();
-		}
-	},
-	mounted() {
-		this.loadSlideshow();
-	}
 };
 </script>

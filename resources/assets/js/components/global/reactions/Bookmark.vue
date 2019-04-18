@@ -5,9 +5,9 @@
 		@click="toggleReaction"
 	>
 		<span v-if="!isLoading" class="icon is-small">
-			<i class="fa" :class="hasReactedClass"></i>
+			<i class="fa" :class="hasReactedClass" />
 		</span>
-		<span v-else class="loader"></span>
+		<span v-else class="loader" />
 		<span v-if="!isMobile">Zapisz</span>
 	</div>
 </template>

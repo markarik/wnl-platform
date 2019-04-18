@@ -9,13 +9,13 @@
 			class="previous-slide"
 		>
 			<span class="icon" @click="$emit('switchSlide', -1)">
-				<i class="fa fa-angle-left"></i>
+				<i class="fa fa-angle-left" />
 			</span>
 		</div>
-		<div class="modal-background" @click="$emit('closeModal')"></div>
+		<div class="modal-background" @click="$emit('closeModal')" />
 		<div class="modal-card">
 			<header class="modal-card-header">
-				<slot name="header"></slot>
+				<slot name="header" />
 			</header>
 			<div class="modal-card-body">
 				<iframe
@@ -26,7 +26,7 @@
 				/>
 			</div>
 			<footer class="modal-card-footer">
-				<slot name="footer"></slot>
+				<slot name="footer" />
 			</footer>
 		</div>
 		<div
@@ -34,14 +34,14 @@
 			class="next-slide"
 		>
 			<span class="icon" @click="$emit('switchSlide', 1)">
-				<i class="fa fa-angle-right"></i>
+				<i class="fa fa-angle-right" />
 			</span>
 		</div>
 		<button
 			class="modal-close is-large"
 			aria-label="close"
 			@click="$emit('closeModal')"
-		></button>
+		/>
 	</div>
 </template>
 
@@ -88,11 +88,6 @@ import features from 'js/consts/events_map/features.json';
 
 export default {
 	name: 'SlidePreview',
-	data() {
-		return {
-			isLoading: true
-		};
-	},
 	mixins: [emits_events],
 	props: {
 		content: {
@@ -107,10 +102,26 @@ export default {
 			type: [Number, String],
 		}
 	},
+	data() {
+		return {
+			isLoading: true
+		};
+	},
 	computed: {
 		hasManySlides() {
 			return this.slidesCount > 1;
 		}
+	},
+	watch: {
+		'showModal' (newValue) {
+			this.isLoading = newValue;
+		}
+	},
+	mounted() {
+		document.body.addEventListener('keydown', this.onKeydown);
+	},
+	beforeDestroy() {
+		document.body.removeEventListener('keydown', this.onKeydown);
 	},
 	methods: {
 		onLoad() {
@@ -135,17 +146,6 @@ export default {
 				break;
 			}
 		}
-	},
-	watch: {
-		'showModal' (newValue) {
-			this.isLoading = newValue;
-		}
-	},
-	mounted() {
-		document.body.addEventListener('keydown', this.onKeydown);
-	},
-	beforeDestroy() {
-		document.body.removeEventListener('keydown', this.onKeydown);
 	}
 };
 </script>

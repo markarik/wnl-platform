@@ -5,13 +5,13 @@
 			:class="{ 'is-active' : isActive }"
 			@click="toggleActive"
 		>
-			<slot name="activator"></slot>
+			<slot name="activator" />
 			<div
 				v-if="isActive"
 				class="box drawer"
 				:class="{'is-mobile': isMobile, 'is-wide': options.isWide}"
 			>
-				<slot name="content"></slot>
+				<slot name="content" />
 			</div>
 		</div>
 	</div>
@@ -208,6 +208,12 @@ export default {
 	computed: {
 		...mapGetters(['isMobile'])
 	},
+	beforeDestroy() {
+		document.removeEventListener('click', this.clickHandler);
+	},
+	mounted() {
+		document.addEventListener('click', this.clickHandler);
+	},
 	methods: {
 		clickHandler({ target }) {
 			if (this.isActive && !this.$el.contains(target)) {
@@ -219,12 +225,6 @@ export default {
 			this.isActive = !this.isActive;
 			this.$emit('toggled', this.isActive);
 		},
-	},
-	beforeDestroy() {
-		document.removeEventListener('click', this.clickHandler);
-	},
-	mounted() {
-		document.addEventListener('click', this.clickHandler);
 	},
 };
 </script>

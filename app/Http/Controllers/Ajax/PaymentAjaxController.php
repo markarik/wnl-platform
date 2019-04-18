@@ -33,6 +33,8 @@ class PaymentAjaxController extends Controller
 
 		if ($method !== Order::PAYMENT_METHOD_INSTALMENTS) {
 			$order->orderInstalments()->delete();
+		} else {
+			$order->generateAndSavePaymentSchedule();
 		}
 
 		// TODO this payment probably should have some amount - from where should I fetch it?

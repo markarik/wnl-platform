@@ -300,9 +300,8 @@ const actions = {
 		commit(types.IS_LOADING, true);
 
 		try {
-			const { data } = await _getQuestionsForDiscussion({ discussionId, cancelToken });
 			commit(types.QNA_DESTROY);
-
+			const { data } = await _getQuestionsForDiscussion({ discussionId, cancelToken });
 
 			if (!_.isUndefined(data.included)) {
 				const { qna_questions, ...included } = data.included;

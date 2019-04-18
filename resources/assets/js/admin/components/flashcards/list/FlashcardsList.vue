@@ -16,9 +16,9 @@
 			>
 				<wnl-flashcards-list-item
 					v-for="flashcard in slotParams.list"
+					:id="flashcard.id"
 					:key="flashcard.id"
 					:content="flashcard.content"
-					:id="flashcard.id"
 				/>
 			</template>
 

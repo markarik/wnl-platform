@@ -8,7 +8,12 @@
 			</div>
 		</div>
 		<template v-if="userLessons.length">
-			<input v-model="filterPhrase" class="input margin bottom" placeholder="filtruj..." ref="filterInput">
+			<input
+				ref="filterInput"
+				v-model="filterPhrase"
+				class="input margin bottom"
+				placeholder="filtruj..."
+			>
 			<table class="table is-bordered">
 				<thead>
 					<tr>
@@ -39,15 +44,15 @@
 				</div>
 			</div>
 			<wnl-autocomplete
-				class="margin bottom big"
 				v-model="lessonInput"
+				class="margin bottom big"
 				placeholder="wpisz nazwę aby wyszukać..."
 				label="Wyszukaj Lekcję"
 				:items="autocompleteLessonsItems"
-				@change="addLesson"
 				:is-down="false"
+				@change="addLesson"
 			>
-				<span class="lesson-autocomplete-item" slot-scope="row">{{row.item.id}}. {{row.item.name}}</span>
+				<span slot-scope="row" class="lesson-autocomplete-item">{{row.item.id}}. {{row.item.name}}</span>
 			</wnl-autocomplete>
 			<div v-if="selectedLessons.length">
 				<table class="table user-plan__add-lesson">
@@ -71,11 +76,11 @@
 							</td>
 							<td>
 								<button
-										class="button is-danger"
-										type="button"
-										@click="unselectLesson(lesson)"
+									class="button is-danger"
+									type="button"
+									@click="unselectLesson(lesson)"
 								>
-									<span class="icon"><i class="fa fa-trash"></i></span>
+									<span class="icon"><i class="fa fa-trash" /></span>
 								</button>
 							</td>
 						</tr>
@@ -93,12 +98,13 @@
 </style>
 
 <script>
+import axios from 'axios';
 import moment from 'moment';
-import {nextTick} from 'vue';
-import {mapActions, mapState} from 'vuex';
+import { nextTick } from 'vue';
+import { mapActions, mapState } from 'vuex';
 import momentTimezone from 'moment-timezone';
 
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlDatepicker from 'js/components/global/Datepicker';
 
@@ -127,7 +133,7 @@ export default {
 		visibleUserLessons() {
 			if (!this.filterPhrase) return this.userLessons;
 
-			return this.userLessons.filter(({lesson}) => lesson.toLowerCase().startsWith(this.filterPhrase.toLowerCase()));
+			return this.userLessons.filter(({ lesson }) => lesson.toLowerCase().startsWith(this.filterPhrase.toLowerCase()));
 		},
 		autocompleteLessonsItems() {
 			if (this.lessonInput === '') {
@@ -135,18 +141,40 @@ export default {
 			}
 
 			return this.lessons
-				.filter(lesson => !this.userLessons.find(({lesson_id}) => lesson_id === lesson.id) &&
+				.filter(lesson => !this.userLessons.find(({ lesson_id }) => lesson_id === lesson.id) &&
 						lesson.name.toLowerCase().includes(this.lessonInput.toLowerCase()) &&
-						!this.selectedLessons.find(({id}) => id === lesson.id)
+						!this.selectedLessons.find(({ id }) => id === lesson.id)
 				)
 				.slice(0, 10);
+		}
+	},
+	async mounted() {
+		this.loading = true;
+		try {
+			const [userPlanResponse] = await Promise.all([
+				axios.get(getApiUrl(`user_lesson/${this.user.id}`)),
+				this.fetchAllLessons()
+			]);
+
+			this.userLessons = this.getUserLessons(userPlanResponse);
+			nextTick(() => {
+				this.$refs.filterInput && this.$refs.filterInput.focus();
+			});
+		} catch (e) {
+			this.addAutoDismissableAlert({
+				text: 'Nie udało się pobrać planu dla tego użytkownika',
+				type: 'error'
+			});
+			$wnl.logger.capture(e);
+		} finally {
+			this.loading = false;
 		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', ['fetchAllLessons']),
 		addLesson(lesson) {
-			if (!this.selectedLessons.find(({id}) => id === lesson.id)) {
+			if (!this.selectedLessons.find(({ id }) => id === lesson.id)) {
 				this.selectedLessons.push({
 					...lesson,
 					startDate: new Date()
@@ -198,7 +226,7 @@ export default {
 			}
 		},
 		getUserLessons(userPlanResponse) {
-			const { data: {...userLessons}} = userPlanResponse;
+			const { data: { ...userLessons } } = userPlanResponse;
 
 			const userLessonsList = Object.values(userLessons);
 
@@ -217,27 +245,5 @@ export default {
 			});
 		}
 	},
-	async mounted() {
-		this.loading = true;
-		try {
-			const [userPlanResponse] = await Promise.all([
-				axios.get(getApiUrl(`user_lesson/${this.user.id}`)),
-				this.fetchAllLessons()
-			]);
-
-			this.userLessons = this.getUserLessons(userPlanResponse);
-			nextTick(() => {
-				this.$refs.filterInput && this.$refs.filterInput.focus();
-			});
-		} catch (e) {
-			this.addAutoDismissableAlert({
-				text: 'Nie udało się pobrać planu dla tego użytkownika',
-				type: 'error'
-			});
-			$wnl.logger.capture(e);
-		} finally {
-			this.loading = false;
-		}
-	}
 };
 </script>

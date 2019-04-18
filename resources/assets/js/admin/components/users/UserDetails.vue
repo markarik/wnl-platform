@@ -1,29 +1,34 @@
 <template>
 	<div class="user-details">
-		<wnl-text-loader v-if="isLoading"></wnl-text-loader>
+		<wnl-text-loader v-if="isLoading" />
 		<div v-else>
 			<div class="user-details__head">
-				<p>#{{ user.id }}</p>
-				<p class="user-details__head__name">{{ user.full_name }}</p>
+				<p>#{{user.id}}</p>
+				<p class="user-details__head__name">{{user.full_name}}</p>
 				<span
-					class="tag"
 					v-for="role in user.roles"
 					:key="role.name"
-					:style="{backgroundColor: getColourForStr(role.name)}">
-					{{ role.name }}
+					class="tag"
+					:style="{backgroundColor: getColourForStr(role.name)}"
+				>
+					{{role.name}}
 				</span>
-				<p>Dołączył/-a: {{ dateCreated }}</p>
+				<p>Dołączył/-a: {{dateCreated}}</p>
 			</div>
 
 			<div class="tabs">
 				<ul>
-					<li :class="{ 'is-active': name === activeTabName }" v-for="(tab, name) in tabs" :key="name">
-						<router-link :to="{ hash: `#${name}` }">{{ tab.text }}</router-link>
+					<li
+						v-for="(tab, name) in tabs"
+						:key="name"
+						:class="{ 'is-active': name === activeTabName }"
+					>
+						<router-link :to="{ hash: `#${name}` }">{{tab.text}}</router-link>
 					</li>
 				</ul>
 			</div>
 
-			<component :is="activeComponent" :user="user"></component>
+			<component :is="activeComponent" :user="user" />
 
 		</div>
 	</div>
@@ -48,7 +53,7 @@
 <script>
 import _ from 'lodash';
 import axios from 'axios';
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 import { getApiUrl } from 'js/utils/env';
 import { getColourForStr } from 'js/utils/colors.js';
 import moment from 'moment';
@@ -113,6 +118,9 @@ export default {
 			return tabNames.includes(hash) ? hash : tabNames[0];
 		}
 	},
+	async mounted() {
+		await this.setup();
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		async setup() {
@@ -122,7 +130,7 @@ export default {
 					'roles', 'profile', 'subscription', 'orders.invoices', 'billing', 'settings', 'coupons','user_address', 'orders.payments', 'orders.study_buddy'
 				].join(',');
 				const response = await axios.get(getApiUrl(`users/${userId}?include=${include}`));
-				const {included, ...user} = response.data;
+				const { included, ...user } = response.data;
 				this.user = user;
 				this.parseIncluded(included);
 			} catch (error) {
@@ -141,7 +149,7 @@ export default {
 					return {
 						...order,
 						invoices: (order.invoices || []).map(invoiceId => included.invoices[invoiceId]),
-						...(order.study_buddy && {studyBuddy: included.study_buddies[order.study_buddy[0]]}),
+						...(order.study_buddy && { studyBuddy: included.study_buddies[order.study_buddy[0]] }),
 						payments: (order.payments || []).map(paymentId => included.payments[paymentId])
 					};
 				});
@@ -154,8 +162,5 @@ export default {
 			this.user.subscription = this.user.subscription && included.subscriptions[this.user.subscription[0]];
 		},
 	},
-	async mounted() {
-		await this.setup();
-	}
 };
 </script>

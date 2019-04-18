@@ -17,19 +17,19 @@
 				slot-scope="parentAutocomplete"
 				:selected="parent"
 				@change="parentAutocomplete.validateAndChangeParent"
-			></wnl-structure-node-editor-node-autocomplete>
+			/>
 
 			<wnl-structure-node-editor-structurable-autocomplete
 				slot="autocomplete"
 				:selected="structurable"
 				@change="onSelectStructurable"
-			></wnl-structure-node-editor-structurable-autocomplete>
+			/>
 		</wnl-nested-set-editor-form>
 	</div>
 </template>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 import WnlStructureNodeEditorNodeAutocomplete from 'js/admin/components/structure/StructureNodeEditorNodeAutocomplete';
 import WnlStructureNodeEditorStructurableAutocomplete from 'js/admin/components/structure/StructureNodeEditorStructurableAutocomplete';

@@ -21,26 +21,27 @@
 						:tag="tag"
 					/>
 				</div>
-				<span class="annotation-item__header__item  annotation-item__header__item--small" v-if="modifiedAnnotationId === annotation.id">
+				<span v-if="modifiedAnnotationId === annotation.id" class="annotation-item__header__item  annotation-item__header__item--small">
 					...niezapisany
 				</span>
 				<span
 					class="icon is-small annotation-item__header__item annotation-item__header__item--edit"
 					@click="(event) => onAnnotationClick({annotation, event})"
 				>
-					<i class="fa fa-pencil"></i>
+					<i class="fa fa-pencil" />
 				</span>
 				<span class="icon is-small  annotation-item__header__item annotation-item__header__item--chevron">
-					<i class="toggle fa fa-angle-down"
-						 :class="{'fa-rotate-180': isOpen(annotation)}">
-					</i>
+					<i
+						class="toggle fa fa-angle-down"
+						:class="{'fa-rotate-180': isOpen(annotation)}"
+					/>
 				</span>
 			</div>
 			<div
-				class="annotation-item__description"
 				v-if="isOpen(annotation)"
-				v-html="annotation.description">
-			</div>
+				class="annotation-item__description"
+				v-html="annotation.description"
+			/>
 		</li>
 	</ul>
 </template>
@@ -93,11 +94,8 @@ import { getColourForStr } from 'js/utils/colors.js';
 import WnlTag from 'js/admin/components/global/Tag';
 
 export default {
-	data() {
-		return {
-			openAnnotations: [],
-			getColourForStr,
-		};
+	components: {
+		WnlTag
 	},
 	props: {
 		modifiedAnnotationId: {
@@ -109,8 +107,11 @@ export default {
 			required: true
 		}
 	},
-	components: {
-		WnlTag
+	data() {
+		return {
+			openAnnotations: [],
+			getColourForStr,
+		};
 	},
 	methods: {
 		isEven(index) {
@@ -129,13 +130,13 @@ export default {
 		isOpen(annotation) {
 			return this.openAnnotations.indexOf(annotation.id) > -1;
 		},
-		onAnnotationClick({annotation, event}) {
+		onAnnotationClick({ annotation, event }) {
 			this.$emit('annotationSelect', annotation);
 			event.stopImmediatePropagation();
 		},
 		serializeResponse(response) {
-			const {included, ...annotations} = response;
-			const {tags, keywords} = included;
+			const { included, ...annotations } = response;
+			const { tags, keywords } = included;
 
 			return Object.values(annotations).map(annotation => {
 				return {

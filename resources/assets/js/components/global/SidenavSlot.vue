@@ -1,13 +1,13 @@
 <template>
 	<div
-		class="wnl-sidenav-slot"
 		v-if="isVisible"
-		:class="{ 'wnl-sidenav-detached': isDetached, 'has-chat': hasChat, 'is-max-width': isMaxWidth, 'is-narrow': isNarrow }"
 		ref="slot"
+		class="wnl-sidenav-slot"
+		:class="{ 'wnl-sidenav-detached': isDetached, 'has-chat': hasChat, 'is-max-width': isMaxWidth, 'is-narrow': isNarrow }"
 		@click="onClick"
 	>
 		<div class="sidenav-content">
-			<slot></slot>
+			<slot />
 		</div>
 	</div>
 </template>
@@ -76,8 +76,6 @@
 
 <script>
 import { mapActions } from 'vuex';
-import Breadcrumbs from 'js/components/global/Breadcrumbs';
-import SidenavItem from 'js/components/global/SidenavItem';
 
 export default {
 	props: {

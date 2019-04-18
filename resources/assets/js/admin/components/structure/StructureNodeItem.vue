@@ -1,40 +1,40 @@
 <template>
-	<li :class="['structure-node-item', isSaving && 'structure-node-item is-disabled']" :id="`node-${node.id}`">
+	<li :id="`node-${node.id}`" :class="['structure-node-item', isSaving && 'structure-node-item is-disabled']">
 		<div :class="['media', 'structure-node-item__content', {'is-selected': isSelected}]">
 			<span class="icon-small structure-node-item__icon structure-node-item__action__drag">
-				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
+				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']" />
 			</span>
 			<span class="icon-small structure-node-item__icon">
-				<i :class="['fa', getStructurableIcon(node.structurable)]"></i>
+				<i :class="['fa', getStructurableIcon(node.structurable)]" />
 			</span>
 			<div class="media-content v-central">
 				<span>{{node.structurable.name}}</span>
 			</div>
 			<div class="media-right central">
 				<span
+					v-if="childNodes.length"
 					class="icon-small structure-node-item__action"
 					@click="toggle"
-					v-if="childNodes.length"
 				>
-					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]"></i>
+					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]" />
 				</span>
 				<span
 					class="icon-small structure-node-item__action"
 					@click="onAdd"
 				>
-					<i title="Dodaj" class="fa fa-plus"></i>
+					<i title="Dodaj" class="fa fa-plus" />
 				</span>
 				<span
 					class="icon-small structure-node-item__action"
 					@click="onEdit"
 				>
-					<i title="Edytuj" class="fa fa-pencil"></i>
+					<i title="Edytuj" class="fa fa-pencil" />
 				</span>
 				<span
 					class="icon-small structure-node-item__action"
 					@click="onDelete"
 				>
-					<i title="Usuń" class="fa fa-trash"></i>
+					<i title="Usuń" class="fa fa-trash" />
 				</span>
 			</div>
 		</div>
@@ -95,8 +95,8 @@
 
 
 <script>
-import {mapActions, mapState, mapGetters} from 'vuex';
-import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
+import { mapActions, mapState, mapGetters } from 'vuex';
+import { NESTED_SET_EDITOR_MODES } from 'js/consts/nestedSet';
 
 export default {
 	props: {
@@ -120,6 +120,10 @@ export default {
 		isExpanded() {
 			return this.expandedNodes.includes(this.node.id)  && this.childNodes.length;
 		},
+	},
+	beforeCreate: function () {
+		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
+		this.$options.components.WnlStructureNodesList = require('./StructureNodesList.vue').default;
 	},
 	methods: {
 		...mapActions('courseStructure', ['setEditorMode']),
@@ -148,9 +152,5 @@ export default {
 			}
 		},
 	},
-	beforeCreate: function () {
-		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
-		this.$options.components.WnlStructureNodesList = require('./StructureNodesList.vue').default;
-	}
 };
 </script>

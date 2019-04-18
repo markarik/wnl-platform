@@ -1,23 +1,28 @@
 <template>
-	<div >
+	<div>
 		<h3 class="title is-3">
 			Produkty
 			<router-link
-					class="button is-primary"
-					:to="{ name: 'product-edit', params: { id: 'new' } }"
+				class="button is-primary"
+				:to="{ name: 'product-edit', params: { id: 'new' } }"
 			>
 				+ Dodaj nowy produkt
 			</router-link>
 		</h3>
 
 		<wnl-paginated-sortable-table
-				:is-search-enabled="false"
-				:resource-name="'products/.filter'"
-				:columns="columns"
-				class="products"
+			:is-search-enabled="false"
+			:resource-name="'products/.filter'"
+			:columns="columns"
+			class="products"
 		>
-			<tbody slot-scope="slotProps" slot="tbody">
-			<tr v-for="product in slotProps.list" :key="product.id" @click="goToEdit(product.id)" class="clickable">
+			<tbody slot="tbody" slot-scope="slotProps">
+			<tr
+				v-for="product in slotProps.list"
+				:key="product.id"
+				class="clickable"
+				@click="goToEdit(product.id)"
+			>
 				<td>{{product.id}}</td>
 				<td>{{product.name}}</td>
 				<td>{{product.quantity}}/{{product.initial}}</td>
@@ -32,11 +37,12 @@
 <script>
 import { mapActions } from 'vuex';
 import moment from 'moment';
-import {getApiUrl} from 'js/utils/env';
-import {ALERT_TYPES} from 'js/consts/alert';
 import WnlPaginatedSortableTable from 'js/admin/components/lists/PaginatedSortableTable';
 
 export default {
+	components: {
+		WnlPaginatedSortableTable,
+	},
 	data() {
 		return {
 			products: [],
@@ -64,9 +70,6 @@ export default {
 				},
 			],
 		};
-	},
-	components: {
-		WnlPaginatedSortableTable,
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

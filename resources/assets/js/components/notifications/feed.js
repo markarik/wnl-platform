@@ -4,7 +4,7 @@
  */
 
 import _ from 'lodash';
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export const feed = {
 	computed: {

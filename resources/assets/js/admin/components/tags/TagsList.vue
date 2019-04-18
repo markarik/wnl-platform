@@ -10,8 +10,13 @@
 				<router-link class="button is-success" :to="{name: 'tag-edit', params: { id: 'new' } }">+ Dodaj tag</router-link>
 			</h3>
 
-			<tbody slot-scope="slotProps" slot="tbody">
-			<tr v-for="tag in parseIncludes(slotProps.list)" :key="tag.id" class="row" @click="goToTag(tag)">
+			<tbody slot="tbody" slot-scope="slotProps">
+			<tr
+				v-for="tag in parseIncludes(slotProps.list)"
+				:key="tag.id"
+				class="row"
+				@click="goToTag(tag)"
+			>
 				<td>{{tag.id}}</td>
 				<td>{{tag.name}}</td>
 				<td>{{tag.taggables_count}}</td>
@@ -58,7 +63,7 @@ export default {
 			this.$router.push({ name: 'tag-edit', params: { id: tag.id } });
 		},
 		parseIncludes(data) {
-			const {included = {}, ...list} = data;
+			const { included = {}, ...list } = data;
 
 			return Object.values(list).map(item => {
 				item.taggables_count = get(included, `taggables_counts.${item.id}.taggables_count`);

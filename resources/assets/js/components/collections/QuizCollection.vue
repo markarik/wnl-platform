@@ -2,10 +2,11 @@
 	<div class="collections-quiz">
 		<p class="title is-4">Zapisane pytania kontrolne ({{howManyQuestions}})</p>
 		<div v-show="isLoaded">
-			<wnl-pagination v-if="lastPage && lastPage > 1"
-							:current-page="currentPage"
-							:last-page="lastPage"
-							@changePage="changePage"
+			<wnl-pagination
+				v-if="lastPage && lastPage > 1"
+				:current-page="currentPage"
+				:last-page="lastPage"
+				@changePage="changePage"
 			/>
 			<wnl-quiz-widget
 				v-if="isLoaded && howManyQuestions > 0"
@@ -15,12 +16,12 @@
 				@verify="trackAndResolve"
 				@selectAnswer="onSelectAnswer"
 				@userEvent="onUserEvent"
-			></wnl-quiz-widget>
+			/>
 			<div v-else class="notification has-text-centered">
-				W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań kontrolnych. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> przy wybranym pytaniu!
+				W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right" /></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań kontrolnych. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o" /></span> <span class="metadata">ZAPISZ</span> przy wybranym pytaniu!
 			</div>
 		</div>
-		<wnl-text-loader v-if="!isLoaded"></wnl-text-loader>
+		<wnl-text-loader v-if="!isLoaded" />
 	</div>
 </template>
 
@@ -38,7 +39,7 @@
 </style>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 import QuizWidget from 'js/components/quiz/QuizWidget';
 import Pagination from 'js/components/global/Pagination';
@@ -81,13 +82,13 @@ export default {
 			this.resolveQuestion(id);
 		},
 		performChangeQuestion(index) {
-			this.shuffleAnswers({id: this.getQuestionsWithAnswers[index].id});
+			this.shuffleAnswers({ id: this.getQuestionsWithAnswers[index].id });
 			this.changeQuestion(index);
 		},
-		onSelectAnswer({id, answer}) {
+		onSelectAnswer({ id, answer }) {
 			answer === this.getQuestion(id).selectedAnswer
 				? this.trackAndResolve(id)
-				: !this.isComplete && this.commitSelectAnswer({id, answer});
+				: !this.isComplete && this.commitSelectAnswer({ id, answer });
 		},
 		changePage(page) {
 			this.$emit('changeQuizQuestionsPage', page);

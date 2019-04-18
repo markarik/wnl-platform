@@ -4,22 +4,22 @@
 			:is-visible="isSidenavVisible"
 			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 			<aside class="sidenav-aside dashboard-sidenav">
 				<wnl-accordion
-						:data-source="subjectTypeFilters"
-						:config="accordionConfig"
-						:loading="false"
-						@itemToggled="onItemToggled"
-					/>
+					:data-source="subjectTypeFilters"
+					:config="accordionConfig"
+					:loading="false"
+					@itemToggled="onItemToggled"
+				/>
 				<div class="filter-title">
 					<span class="text">Filtrowanie Po Ogarniaczu</span>
 				</div>
 				<wnl-moderators-autocomplete
 					class="margin"
 					:users-list="moderators"
-					@change="search"
 					:selected="autocompleteUser"
+					@change="search"
 				/>
 				<wnl-accordion
 					:data-source="labelFilters"
@@ -34,33 +34,44 @@
 				<a target="_blank" href="https://calendar.google.com/calendar/embed?src=l6tmct14qhf222s5r6mf9uprgg%40group.calendar.google.com&ctz=Europe%2FWarsaw">Grafik</a>
 				<div class="quick-actions-container">
 					<div class="quick-action">
-						<span v-t="'tasks.quickFilters.title'"/>
-						<a v-for="(quickFilter, index) in quickFilters"
-							class="panel-toggle" :class="{'is-active': quickFilter.isActive}"
-							@click="onQuickFilterChange(quickFilter)"
+						<span v-t="'tasks.quickFilters.title'" />
+						<a
+							v-for="(quickFilter, index) in quickFilters"
 							:key="index"
 							v-t="quickFilter.name"
+							class="panel-toggle"
+							:class="{'is-active': quickFilter.isActive}"
+							@click="onQuickFilterChange(quickFilter)"
 						/>
 					</div>
 					<div class="quick-action">
-						<span v-t="'tasks.sorting.title'"/>
-						<a v-for="(sort, index) in sorting"
+						<span v-t="'tasks.sorting.title'" />
+						<a
+							v-for="(sort, index) in sorting"
+							:key="index"
 							class="panel-toggle"
 							:class="{'is-active': sort.isActive}"
 							@click="onSortClick(sort)"
-							:key="index"
 						>
 							{{sort.name}}
 							<span class="icon is-small">
-								<i class="fa" :class="[sort.dir === 'desc' ? 'fa-arrow-down' : 'fa-arrow-up']"></i>
+								<i class="fa" :class="[sort.dir === 'desc' ? 'fa-arrow-down' : 'fa-arrow-up']" />
 							</span>
 						</a>
 					</div>
 				</div>
-				<wnl-alert v-if="updatedTasks.length > 0" type="info" @onDismiss="updatedTasks.length = 0">
+				<wnl-alert
+					v-if="updatedTasks.length > 0"
+					type="info"
+					@onDismiss="updatedTasks.length = 0"
+				>
 					<div class="notification-container">
 						<span class="notification-text">Pojawiły się nowe notyfikacje.</span>
-						<button @click="onRefresh" class="button" v-t="'ui.action.refresh'"/>
+						<button
+							v-t="'ui.action.refresh'"
+							class="button"
+							@click="onRefresh"
+						/>
 					</div>
 				</wnl-alert>
 
@@ -73,15 +84,19 @@
 			</div>
 		</div>
 		<wnl-sidenav-slot
-				:is-visible="isChatVisible"
-				:is-detached="!isChatMounted"
-				:has-chat="true"
+			:is-visible="isChatVisible"
+			:is-detached="!isChatMounted"
+			:has-chat="true"
 		>
-			<wnl-public-chat :rooms="chatRooms" title="USZANOWANKO"></wnl-public-chat>
+			<wnl-public-chat :rooms="chatRooms" title="USZANOWANKO" />
 		</wnl-sidenav-slot>
-		<div v-if="isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
+		<div
+			v-if="isChatToggleVisible"
+			class="wnl-chat-toggle"
+			@click="toggleChat"
+		>
 			<span class="icon is-big">
-				<i class="fa fa-chevron-left"></i>
+				<i class="fa fa-chevron-left" />
 				<span>Pokaż czat</span>
 			</span>
 		</div>
@@ -143,12 +158,13 @@
 </style>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
-import {nextTick} from 	'vue';
+import axios from 'axios';
+import { mapActions, mapGetters } from 'vuex';
+import { nextTick } from 	'vue';
 
 import { getApiUrl } from 'js/utils/env';
-import {scrollToTop} from 'js/utils/animations';
-import {FILTER_TYPES, buildFiltersByPath, parseFilters} from 'js/services/apiFiltering';
+import { scrollToTop } from 'js/utils/animations';
+import { FILTER_TYPES, buildFiltersByPath, parseFilters } from 'js/services/apiFiltering';
 
 import MainNav from 'js/components/MainNav';
 import ModeratorsFeed from 'js/components/moderators/ModeratorsFeed';
@@ -162,6 +178,16 @@ import Alert from 'js/components/global/GlobalAlert';
 
 export default {
 	name: 'ModeratorsDashboard',
+	components: {
+		'wnl-main-nav': MainNav,
+		'wnl-moderators-feed': ModeratorsFeed,
+		'wnl-moderators-autocomplete': ModeratorsAutocomplete,
+		'wnl-public-chat': PublicChat,
+		'wnl-sidenav-slot': SidenavSlot,
+		'wnl-accordion': Accordion,
+		'wnl-alert': Alert
+	},
+	mixins: [withChat],
 	data() {
 		return {
 			quickFilters: this.initialQuickFilters(),
@@ -175,16 +201,6 @@ export default {
 			bodyClicked: false
 		};
 	},
-	components: {
-		'wnl-main-nav': MainNav,
-		'wnl-moderators-feed': ModeratorsFeed,
-		'wnl-moderators-autocomplete': ModeratorsAutocomplete,
-		'wnl-public-chat': PublicChat,
-		'wnl-sidenav-slot': SidenavSlot,
-		'wnl-accordion': Accordion,
-		'wnl-alert': Alert
-	},
-	mixins: [withChat],
 	computed: {
 		...mapGetters([
 			'isSidenavVisible',
@@ -197,7 +213,7 @@ export default {
 		...mapGetters(['currentUserId']),
 		chatRooms() {
 			return [
-				{name: '#moderatorzy', channel: 'moderatorzy'},
+				{ name: '#moderatorzy', channel: 'moderatorzy' },
 			];
 		},
 		accordionConfig() {
@@ -222,14 +238,53 @@ export default {
 			return Object.keys(this.selectedByLabelFilters).filter(key => this.selectedByLabelFilters[key]);
 		}
 	},
+	watch: {
+		'$route.query.chatChannel' (newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
+		}
+	},
+	mounted() {
+		document.addEventListener('click', this.clickHandler);
+
+		this.toggleOverlay({ source: 'moderatorsFeed', display: true });
+
+		const promisedTasks = this.pullTasks(this.buildRequestParams());
+		const promisedFilters = axios.post(getApiUrl('tasks/.filterList'), {
+			filters: []
+		});
+
+		Promise.all([promisedTasks, promisedFilters])
+			.then(([, filtersList]) => {
+				this.moderators = filtersList.data['task-assignee'];
+
+				this.labelFilters = this.parseSubjectFilters(filtersList.data['task-labels']);
+				this.selectedByLabelFilters = this.buildByLessonFiltering();
+
+				this.subjectTypeFilters = this.parseSubjectTypeFilters(filtersList.data['task-subject_type']);
+				this.selectedByTypeFilters = this.buildByTypeFiltering();
+
+				this.toggleOverlay({ source: 'moderatorsFeed', display: false });
+			})
+			.catch(error => {
+				this.toggleOverlay({ source: 'moderatorsFeed', display: false });
+				this.$store.dispatch('addAlert', {
+					text: this.$t('ui.error.somethingWentWrongUnofficial'),
+					type: 'error'
+				});
+				$wnl.logger.error(error);
+			});
+	},
+	beforeDestroy() {
+		document.removeEventListener('click', this.clickHandler);
+	},
 	methods: {
 		...mapActions(['toggleChat', 'toggleOverlay']),
 		...mapActions('tasks', ['pullTasks']),
-		onItemToggled({path, selected}) {
+		onItemToggled({ path, selected }) {
 			this.selectedByTypeFilters[path] = selected;
 			this.fetchTasks();
 		},
-		onTagSelect({path, selected}) {
+		onTagSelect({ path, selected }) {
 			this.selectedByLabelFilters[path] = selected;
 			this.fetchTasks();
 		},
@@ -246,7 +301,7 @@ export default {
 
 			if (this.autocompleteUser) {
 				parsedFilters.push({
-					'task-assignee': {user_id: this.autocompleteUser.user_id}
+					'task-assignee': { user_id: this.autocompleteUser.user_id }
 				});
 			}
 
@@ -260,12 +315,12 @@ export default {
 				order
 			};
 		},
-		fetchTasks({...params}) {
-			this.toggleOverlay({source: 'moderatorsFeed', display: true});
-			this.pullTasks({...this.buildRequestParams(), ...params})
+		fetchTasks({ ...params }) {
+			this.toggleOverlay({ source: 'moderatorsFeed', display: true });
+			this.pullTasks({ ...this.buildRequestParams(), ...params })
 				.then(() => {
 					scrollToTop();
-					this.toggleOverlay({source: 'moderatorsFeed', display: false});
+					this.toggleOverlay({ source: 'moderatorsFeed', display: false });
 				});
 		},
 		onRefresh() {
@@ -282,7 +337,7 @@ export default {
 					dir: 'desc',
 					isActive: true,
 					order: (dir = 'desc') => {
-						return {'created_at': dir};
+						return { 'created_at': dir };
 					}
 				},
 				{
@@ -290,7 +345,7 @@ export default {
 					dir: 'desc',
 					isActive: false,
 					order: (dir = 'desc') => {
-						return {'updated_at': dir};
+						return { 'updated_at': dir };
 					}
 				}
 			];
@@ -299,7 +354,7 @@ export default {
 			return [
 				{
 					group: 'task-assignee',
-					value: () => ({user_id: this.currentUserId}),
+					value: () => ({ user_id: this.currentUserId }),
 					isActive: true,
 					name: this.$t('tasks.quickFilters.filters.my')
 				},
@@ -314,7 +369,7 @@ export default {
 				},
 				{
 					group: 'task-assignee',
-					value: () => ({user_id: null}),
+					value: () => ({ user_id: null }),
 					isActive: false,
 					name: this.$t('tasks.quickFilters.filters.unassigned')
 				}
@@ -341,7 +396,6 @@ export default {
 			this.pullTasks(this.buildRequestParams());
 		},
 		search(user = {}) {
-			const {filters, ...rest} = this.buildRequestParams();
 			this.autocompleteUser = user;
 
 			this.pullTasks(this.buildRequestParams())
@@ -388,44 +442,6 @@ export default {
 					})
 				}
 			};
-		}
-	},
-	mounted() {
-		document.addEventListener('click', this.clickHandler);
-
-		this.toggleOverlay({source: 'moderatorsFeed', display: true});
-
-		const promisedTasks = this.pullTasks(this.buildRequestParams());
-		const promisedFilters = axios.post(getApiUrl('tasks/.filterList'), {
-			filters: []
-		});
-
-		Promise.all([promisedTasks, promisedFilters])
-			.then(([tasks, filtersList]) => {
-				this.moderators = filtersList.data['task-assignee'];
-
-				this.labelFilters = this.parseSubjectFilters(filtersList.data['task-labels']);
-				this.selectedByLabelFilters = this.buildByLessonFiltering();
-
-				this.subjectTypeFilters = this.parseSubjectTypeFilters(filtersList.data['task-subject_type']);
-				this.selectedByTypeFilters = this.buildByTypeFiltering();
-
-				this.toggleOverlay({source: 'moderatorsFeed', display: false});
-			}).catch(error => {
-				this.toggleOverlay({source: 'moderatorsFeed', display: false});
-				this.$store.dispatch('addAlert', {
-					text: this.$t('ui.error.somethingWentWrongUnofficial'),
-					type: 'error'
-				});
-				$wnl.logger.error(error);
-			});
-	},
-	beforeDestroy() {
-		document.removeEventListener('click', this.clickHandler);
-	},
-	watch: {
-		'$route.query.chatChannel' (newVal) {
-			newVal && !this.isChatVisible && this.toggleChat();
 		}
 	},
 };

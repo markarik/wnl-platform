@@ -8,20 +8,20 @@
 		<wnl-text-loader v-if="loadingConversation">
 			Rozpoczynam rozmowę...
 		</wnl-text-loader>
-		<div class="metadata aligncenter margin vertical" v-else-if="loadingConversationFailure">
+		<div v-else-if="loadingConversationFailure" class="metadata aligncenter margin vertical">
 			Nie udało się rozpocząć rozmowy.
 			Spróbuj jeszcze raz.
 		</div>
 		<div v-else>
 			<wnl-message-link
-					v-for="(room, index) in roomsToShow"
-					:key="index"
-					:user-id="getInterlocutor(room).user_id"
-					:room-id="room.id"
-					@navigate="onNavigate"
-					@beforeNavigate="onNavigateStart"
-					ref="messageLink"
-				>
+				v-for="(room, index) in roomsToShow"
+				:key="index"
+				ref="messageLink"
+				:user-id="getInterlocutor(room).user_id"
+				:room-id="room.id"
+				@navigate="onNavigate"
+				@beforeNavigate="onNavigateStart"
+			>
 				<wnl-conversation-snippet
 					:key="index"
 					:room="room"
@@ -39,7 +39,7 @@ import WnlAutocompleteKeyboardNavigation from 'js/mixins/autocomplete-keyboard-n
 import ConversationSnippet from 'js/components/messages/ConversationSnippet';
 import FindUsers from 'js/components/messages/FindUsers';
 import MessageLink from 'js/components/global/MessageLink';
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'UsersAutocomplete',

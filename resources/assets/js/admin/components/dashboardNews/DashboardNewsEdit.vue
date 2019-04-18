@@ -1,13 +1,13 @@
 <template>
 	<div>
 		<wnl-form
-				name="DashboardNewsEditor"
-				:populate="isEdit"
-				:method="formMethod"
-				:resource-route="formResourceRoute"
-				:suppress-enter="true"
-				@submitSuccess="onSubmitSucess"
-				@change="onChange"
+			name="DashboardNewsEditor"
+			:populate="isEdit"
+			:method="formMethod"
+			:resource-route="formResourceRoute"
+			:suppress-enter="true"
+			@submitSuccess="onSubmitSucess"
+			@change="onChange"
 		>
 			<wnl-text name="slug">Tytuł</wnl-text>
 			<wnl-textarea name="message">Treść</wnl-textarea>
@@ -20,8 +20,9 @@
 			<p>Możesz użyć następujących parametrów:</p>
 			<ul class="message-arguments">
 				<li
-						class="message-argument"
-						v-for="(value, key) in messageArguments" :key="key"
+					v-for="(value, key) in messageArguments"
+					:key="key"
+					class="message-argument"
 				>
 					<code>{{escapeArgumentKey(key)}}</code> - {{value.description}}
 				</li>
@@ -32,9 +33,9 @@
 
 		<h3 class="title is-3">Podgląd</h3>
 		<wnl-dashboard-news-content
-				:message="formData.message"
-				:message-arguments="messageArguments"
-				:slug="formData.slug"
+			:message="formData.message"
+			:message-arguments="messageArguments"
+			:slug="formData.slug"
 		/>
 	</div>
 
@@ -56,13 +57,21 @@
 </style>
 
 <script>
-import {Form as WnlForm, Text as WnlText, Textarea as WnlTextarea, Datepicker as WnlDatepicker} from 'js/components/global/form';
+import { Form as WnlForm, Text as WnlText, Textarea as WnlTextarea, Datepicker as WnlDatepicker } from 'js/components/global/form';
 import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
 import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
 
 export default {
 	name: 'DashboardNewsEdit',
+	components: {
+		WnlForm,
+		WnlText,
+		WnlTextarea,
+		WnlDatepicker,
+		WnlDashboardNewsContent
+	},
 	mixins: [dashboardNewsMessageArguments],
+	props: ['id'],
 	data() {
 		return {
 			datepickerConfig: {
@@ -74,14 +83,6 @@ export default {
 			},
 			formData: {}
 		};
-	},
-	props: ['id'],
-	components: {
-		WnlForm,
-		WnlText,
-		WnlTextarea,
-		WnlDatepicker,
-		WnlDashboardNewsContent
 	},
 	computed: {
 		formResourceRoute() {
@@ -100,7 +101,7 @@ export default {
 				this.$router.push({ name: 'dashboard-news-edit', params: { id: data.id } });
 			}
 		},
-		onChange({formData}) {
+		onChange({ formData }) {
 			this.formData = formData;
 		},
 		escapeArgumentKey(key) {

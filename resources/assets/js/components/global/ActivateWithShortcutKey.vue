@@ -7,15 +7,15 @@
 			:on-component-created="onComponentCreated"
 			:on-component-destroyed="onComponentDestroyed"
 			:on-blur="onBlur"
-		></slot>
+		/>
 	</div>
 </template>
 
 <script>
-import {nextTick} from 'vue';
-import {mapGetters, mapActions} from 'vuex';
+import { nextTick } from 'vue';
+import { mapGetters, mapActions } from 'vuex';
 
-import {scrollToElement} from 'js/utils/animations';
+import { scrollToElement } from 'js/utils/animations';
 
 export default {
 	data() {
@@ -31,6 +31,14 @@ export default {
 		isFocused() {
 			return this.isFocusedByUid(this.activateWithShortcutKeyId);
 		},
+	},
+	watch: {
+		async isActive() {
+			if (this.isActive) {
+				await nextTick();
+				scrollToElement(this.$el);
+			}
+		}
 	},
 	methods: {
 		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister', 'resetFocus']),
@@ -51,13 +59,5 @@ export default {
 			this.resetFocus();
 		},
 	},
-	watch: {
-		async isActive() {
-			if (this.isActive) {
-				await nextTick();
-				scrollToElement(this.$el);
-			}
-		}
-	}
 };
 </script>

@@ -1,54 +1,56 @@
 <template>
-	<div class="scrollable-main-container" ref="overviewContainer">
+	<div ref="overviewContainer" class="scrollable-main-container">
 		<!-- Dashboard news -->
-		<wnl-dashboard-news/>
+		<wnl-dashboard-news />
 
 		<div class="welcome-container">
 			<div class="welcome">
-				{{ $t('dashboard.welcome', {currentUserName}) }} <wnl-emoji name="wave"/>
+				{{$t('dashboard.welcome', {currentUserName})}} <wnl-emoji name="wave" />
 			</div>
-			<div class="access-display" v-if="currentUserSubscriptionActive">
+			<div v-if="currentUserSubscriptionActive" class="access-display">
 				<div>
 					Twój dostęp do kursu jest aktywny do:&nbsp;
 				</div>
 				<div class="access-display__date">
-					{{ userFriendlySubscriptionDate }}
+					{{userFriendlySubscriptionDate}}
 				</div>
 			</div>
 		</div>
 		<!-- Next lesson -->
 		<div class="overview-progress box">
-			<wnl-next-lesson @userEvent="trackUserEvent"/>
-			<wnl-your-progress/>
+			<wnl-next-lesson @userEvent="trackUserEvent" />
+			<wnl-your-progress />
 		</div>
 
 		<div class="active-users">
-			<wnl-active-users/>
+			<wnl-active-users />
 		</div>
 
 		<div class="news-heading metadata">
-			{{ $t('dashboard.news.heading') }}
+			{{$t('dashboard.news.heading')}}
 			<span class="news-heading-description">
-				{{ $t('dashboard.news.description') }}
+				{{$t('dashboard.news.description')}}
 			</span>
 		</div>
 		<div class="current-view-controls">
-			<a v-for="(panel, index) in panels" class="panel-toggle"
-				:class="{'is-active': overviewView === panel.slug}"
+			<a
+				v-for="(panel, index) in panels"
 				:key="index"
+				class="panel-toggle"
+				:class="{'is-active': overviewView === panel.slug}"
 				@click="changeOverviewView(panel.slug)"
 			>
 				{{panel.name}}
 				<span class="icon is-small">
-					<i class="fa" :class="panel.icon"></i>
+					<i class="fa" :class="panel.icon" />
 				</span>
 			</a>
 		</div>
-		<wnl-stream-feed v-show="overviewView === 'stream'"/>
+		<wnl-stream-feed v-show="overviewView === 'stream'" />
 		<wnl-qna
+			v-show="overviewView === 'qna'"
 			:sorting-enabled="true"
 			:numbers-disabled="true"
-			v-show="overviewView === 'qna'"
 			:hide-title="true"
 			class="wnl-overview-qna"
 		/>
@@ -101,7 +103,7 @@
 </style>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import ActiveUsers from 'js/components/course/dashboard/ActiveUsers';
 import DashboardNews from 'js/components/course/dashboard/DashboardNews';
@@ -110,7 +112,7 @@ import Qna from 'js/components/qna/Qna';
 import StreamFeed from 'js/components/notifications/feeds/stream/StreamFeed';
 import YourProgress from 'js/components/course/dashboard/YourProgress';
 import moment from 'moment';
-import {getUrl} from 'js/utils/env';
+import { getUrl } from 'js/utils/env';
 import context from 'js/consts/events_map/context.json';
 
 export default {
@@ -158,6 +160,9 @@ export default {
 			return getUrl('payment/account');
 		},
 	},
+	mounted() {
+		this.fetchLatestQuestions();
+	},
 	methods: {
 		...mapActions(['changeOverviewView']),
 		...mapActions('qna', ['fetchLatestQuestions']),
@@ -168,8 +173,5 @@ export default {
 			});
 		}
 	},
-	mounted() {
-		this.fetchLatestQuestions();
-	}
 };
 </script>

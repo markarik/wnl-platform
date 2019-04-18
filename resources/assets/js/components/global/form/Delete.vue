@@ -1,13 +1,19 @@
 <template>
-	<span class="icon text-dimmed" :class="[sizeClass]" :title="computedTitle" @click="checkSanity">
-		<wnl-alert v-for="(alert, timestamp) in alerts"
+	<span
+		class="icon text-dimmed"
+		:class="[sizeClass]"
+		:title="computedTitle"
+		@click="checkSanity"
+	>
+		<wnl-alert
+			v-for="(alert, timestamp) in alerts"
+			:key="timestamp"
 			css-class="fixed"
 			:alert="alert"
-			:key="timestamp"
 			:timestamp="timestamp"
 			@delete="onDelete"
-		></wnl-alert>
-		<i class="fa fa-trash"></i>
+		/>
+		<i class="fa fa-trash" />
 	</span>
 </template>
 
@@ -45,7 +51,7 @@ export default {
 			return this.title || 'Usuń';
 		},
 		targetText() {
-			return `Chcesz usunąć ${this.target}?`;
+			return `Chcesz usunąć ${this.target}?`;
 		},
 	},
 	methods: {

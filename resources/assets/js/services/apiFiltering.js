@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { get } from 'lodash';
 
 export const buildFiltersByPath = (filters = {}) => {
 	const filtersByPath = {};
@@ -21,8 +22,6 @@ const buildPathForItems = (filters, prefix, result) => {
 		result[`${prefix}.items[${index}]`] = false;
 		buildPathForItems(item, newPrefix, result);
 	});
-
-	return;
 };
 
 export const parseFilters = (activeFilters, filters, userId) => {
@@ -30,9 +29,8 @@ export const parseFilters = (activeFilters, filters, userId) => {
 	const groupedFilters = {};
 
 	activeFilters.forEach((path) => {
-		const [filterGroup, ...tail] = path.split('.');
-		const filterValue = _.get(filters, path, {}).value;
-		const filterType = _.get(filters, filterGroup, {}).type;
+		const [filterGroup, ] = path.split('.');
+		const filterValue = get(filters, path, {}).value;
 
 		groupedFilters[filterGroup] = groupedFilters[filterGroup] || [];
 		groupedFilters[filterGroup].push(filterValue);

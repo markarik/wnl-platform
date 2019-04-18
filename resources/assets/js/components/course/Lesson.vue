@@ -1,7 +1,7 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
 		<template v-if="!shouldDisplaySatisfactionGuaranteeModal">
-			<div class="wnl-lesson" v-if="shouldShowLesson">
+			<div v-if="shouldShowLesson" class="wnl-lesson">
 				<div class="wnl-lesson-view">
 					<div class="level wnl-screen-title">
 						<div class="level-left">
@@ -15,15 +15,15 @@
 							</div>
 						</div>
 					</div>
-					<router-view v-if="!isLessonLoading" @userEvent="onUserEvent"/>
+					<router-view v-if="!isLessonLoading" @userEvent="onUserEvent" />
 				</div>
 				<div class="wnl-lesson-previous-next-nav">
-					<wnl-previous-next></wnl-previous-next>
+					<wnl-previous-next />
 				</div>
 			</div>
 			<div v-else-if="isPlanBuilderEnabled">
 				<p class="has-text-centered margin vertical">
-					<img src="https://media.giphy.com/media/BCfw7hyQeq9TNsC7st/giphy.gif"/>
+					<img src="https://media.giphy.com/media/BCfw7hyQeq9TNsC7st/giphy.gif">
 				</p>
 				<h5 class="title is-5 has-text-centered">Zgodnie z Twoim planem, ta lekcja otworzy się <strong>{{lessonStartDate}}</strong></h5>
 				<p class="has-text-centered margin vertical">Jeżeli chcesz zrealizować tę lekcję dziś, <router-link :to="{name: 'lessons-availabilites'}">zmień swój plan pracy</router-link>.</p>
@@ -31,7 +31,7 @@
 			<div v-else>
 				<h2 class="title is-2 has-text-centered margin vertical">{{lesson.name}}️</h2>
 				<p class="has-text-centered margin vertical">
-					<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
+					<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif">
 				</p>
 				<h3 class="title is-3 has-text-centered"><strong>Lekcja nieaktywna</strong>🛡️</h3>
 				<h5 class="title is-5 has-text-centered">Lekcja będzie dostępna od <strong>{{lessonStartDate}}</strong></h5>
@@ -54,7 +54,7 @@
 			<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem Wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
 			<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu. Warunkiem jest usunięcie postępu, ułożenie nowego planu pracy i rozwiązanie Wstępnego LEK-u przed rozpoczęciem pierwszej obowiązkowej lekcji.</template>
 			<template slot="footer">
-				<span v-html="$t('ui.satisfactionGuarantee.noteInLesson', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
+				<span v-html="$t('ui.satisfactionGuarantee.noteInLesson', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})" />
 			</template>
 			<template slot="close">Wróć na dashboard</template>
 			<template slot="submit">Rozumiem, akceptuję</template>
@@ -86,19 +86,19 @@
 </style>
 
 <script>
-import {get, isEmpty, head, noop} from 'lodash';
+import { get, isEmpty, head, noop } from 'lodash';
 import moment from 'moment';
-import {mapGetters, mapActions, mapState} from 'vuex';
+import { mapGetters, mapActions, mapState } from 'vuex';
 
 import WnlPreviousNext from 'js/components/course/PreviousNext';
 import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
-import {resource} from 'js/utils/config';
-import {breadcrumb} from 'js/mixins/breadcrumb';
+import { resource } from 'js/utils/config';
+import { breadcrumb } from 'js/mixins/breadcrumb';
 import context from 'js/consts/events_map/context.json';
-import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from 'js/services/progressStore';
-import {USER_SETTING_NAMES} from 'js/consts/settings';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { STATUS_COMPLETE, STATUS_IN_PROGRESS } from 'js/services/progressStore';
+import { USER_SETTING_NAMES } from 'js/consts/settings';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	name: 'Lesson',
@@ -168,7 +168,7 @@ export default {
 			return this.lesson && this.lesson.name;
 		},
 		lessonNumber() {
-			return this.getLessons.findIndex(({id}) => id === this.lesson.id) + 1;
+			return this.getLessons.findIndex(({ id }) => id === this.lesson.id) + 1;
 		},
 		lessonStartDate() {
 			return moment.unix(this.lesson.startDate).format('LL');
@@ -239,6 +239,23 @@ export default {
 			return this.isLessonAvailable(this.lessonId);
 		},
 	},
+	watch: {
+		lessonId() {
+			this.setup();
+		},
+		'$route'() {
+			if (!this.shouldDisplaySatisfactionGuaranteeModal) {
+				this.updateLessonProgress();
+			}
+		},
+	},
+	mounted () {
+		this.setup();
+	},
+	beforeDestroy () {
+		window.Echo.leave(this.presenceChannel);
+		window.removeEventListener('resize', this.updateElementHeight);
+	},
 	methods: {
 		...mapActions('progress', [
 			'startLesson',
@@ -269,9 +286,9 @@ export default {
 			});
 
 			window.Echo.join(this.presenceChannel)
-				.here(users => this.setActiveUsers({users, channel: this.presenceChannel}))
-				.joining(user => this.userJoined({user, channel: this.presenceChannel}))
-				.leaving(user => this.userLeft({user, channel: this.presenceChannel}));
+				.here(users => this.setActiveUsers({ users, channel: this.presenceChannel }))
+				.joining(user => this.userJoined({ user, channel: this.presenceChannel }))
+				.leaving(user => this.userLeft({ user, channel: this.presenceChannel }));
 		},
 		goToDefaultScreenIfNone() {
 			const query = this.$route.query || {};
@@ -279,7 +296,7 @@ export default {
 			if (!this.screenId) {
 				this.setupCurrentUser().then(() => {
 					this.getSavedLesson(this.courseId, this.lessonId, this.currentUserProfileId)
-						.then(({route, status}) => {
+						.then(({ route, status }) => {
 							if (this.firstScreenId && (!route || status === STATUS_COMPLETE || route && route.name !== resource('screens'))) {
 								const params = {
 									courseId: this.courseId,
@@ -289,9 +306,9 @@ export default {
 								if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !get(route, 'params.slide')) {
 									params.slide = 1;
 								}
-								this.$router.replace({name: resource('screens'), params, query});
+								this.$router.replace({ name: resource('screens'), params, query });
 							} else if (route && route.hasOwnProperty('name')) {
-								this.$router.replace({...route, query});
+								this.$router.replace({ ...route, query });
 							}
 						});
 				});
@@ -305,7 +322,7 @@ export default {
 				if (this.currentScreen.type === 'slideshow') {
 					params.slide = 1;
 				}
-				this.$router.replace({name: resource('screens'), params, query});
+				this.$router.replace({ name: resource('screens'), params, query });
 			}
 
 			this.updateLessonNav({
@@ -346,7 +363,7 @@ export default {
 				return false;
 			}
 
-			return !this.screens.find(({id}) => {
+			return !this.screens.find(({ id }) => {
 				return !startedScreens[id] || startedScreens[id].status === STATUS_IN_PROGRESS;
 			});
 		},
@@ -354,7 +371,7 @@ export default {
 			if (typeof this.screenId !== 'undefined') {
 				if (this.currentSection) {
 					if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
-						await this.completeSection({...this.lessonProgressContext, sectionId: this.currentSection.id});
+						await this.completeSection({ ...this.lessonProgressContext, sectionId: this.currentSection.id });
 					}
 				}
 
@@ -404,7 +421,7 @@ export default {
 				return;
 			}
 
-			this.toggleOverlay({source: 'lesson', display: true});
+			this.toggleOverlay({ source: 'lesson', display: true });
 
 			try {
 				await this.setupLesson(this.lessonId);
@@ -420,26 +437,9 @@ export default {
 				});
 			}
 
-			this.toggleOverlay({source: 'lesson', display: false});
+			this.toggleOverlay({ source: 'lesson', display: false });
 			window.addEventListener('resize', this.updateElementHeight);
 		}
-	},
-	mounted () {
-		this.setup();
-	},
-	beforeDestroy () {
-		window.Echo.leave(this.presenceChannel);
-		window.removeEventListener('resize', this.updateElementHeight);
-	},
-	watch: {
-		lessonId() {
-			this.setup();
-		},
-		'$route'() {
-			if (!this.shouldDisplaySatisfactionGuaranteeModal) {
-				this.updateLessonProgress();
-			}
-		},
 	},
 };
 </script>

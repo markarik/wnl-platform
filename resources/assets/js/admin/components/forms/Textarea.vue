@@ -2,19 +2,23 @@
 	<div class="field">
 
 		<label :for="name" class="label">
-			<slot></slot>
+			<slot />
 		</label>
 
-		<textarea class="textarea is-medium"
-				  :name="name"
-				  :value="form[name]"
-				  @input="$emit('input', $event.target.value)"
-				  :placeholder="name"
-				  :id="name">
-		</textarea>
+		<textarea
+			:id="name"
+			class="textarea is-medium"
+			:name="name"
+			:value="form[name]"
+			:placeholder="name"
+			@input="$emit('input', $event.target.value)"
+		/>
 
-		<span class="help is-danger" v-if="form.errors.has(name)"
-			  v-text="form.errors.get(name)"></span>
+		<span
+			v-if="form.errors.has(name)"
+			class="help is-danger"
+			v-text="form.errors.get(name)"
+		/>
 	</div>
 </template>
 

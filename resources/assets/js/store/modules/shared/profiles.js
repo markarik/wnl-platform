@@ -1,5 +1,4 @@
 import * as types from 'js/store/mutations-types';
-import {set} from 'vue';
 
 const profiles = {
 	state () {
@@ -11,7 +10,7 @@ const profiles = {
 	},
 
 	actions: {
-		setProfiles({commit}, profiles) {
+		setProfiles({ commit }, profiles) {
 			commit(types.PROFILES_SET, profiles);
 		}
 

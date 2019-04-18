@@ -1,12 +1,13 @@
 <template>
 	<div>
-		<wnl-alert v-for="(alert, timestamp) in alerts"
-				   :alert="alert"
-				   css-class="fixed"
-				   :key="timestamp"
-				   :timestamp="timestamp"
-				   @delete="onDelete"
-		></wnl-alert>
+		<wnl-alert
+			v-for="(alert, timestamp) in alerts"
+			:key="timestamp"
+			:alert="alert"
+			css-class="fixed"
+			:timestamp="timestamp"
+			@delete="onDelete"
+		/>
 
 		<a class="button is-primary" @click="updateCharts">Aktualizuj wszystkie diagramy</a>
 	</div>
@@ -16,15 +17,16 @@
 </style>
 
 <script>
+import axios from 'axios';
 import { alerts } from 'js/mixins/alerts';
-import {getUrl} from 'js/utils/env';
+import { getUrl } from 'js/utils/env';
 
 export default {
 	mixins: [ alerts ],
 	methods: {
 		updateCharts() {
 			axios.get(getUrl('admin/update-charts'))
-				.then(response => {
+				.then(() => {
 					this.successFading('OK, to może trochę potrwać. Kiedy skończę, dam znać na slacku.', 4000);
 				})
 				.catch(error => {

@@ -4,38 +4,48 @@
 			:is-visible="isSidenavVisible"
 			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 			<aside class="sidenav-aside collections-sidenav">
-				<wnl-sidenav :items="getNavigation()" :options="navigationOptions"></wnl-sidenav>
+				<wnl-sidenav :items="getNavigation()" :options="navigationOptions" />
 			</aside>
 		</wnl-sidenav-slot>
-		<div class="wnl-middle wnl-app-layout-main" :class="{'full-width': isTouchScreen}" v-if="!isLoading">
-			<div class="scrollable-main-container" v-if="rootCategoryName && categoryName">
+		<div
+			v-if="!isLoading"
+			class="wnl-middle wnl-app-layout-main"
+			:class="{'full-width': isTouchScreen}"
+		>
+			<div v-if="rootCategoryName && categoryName" class="scrollable-main-container">
 				<div class="collections-header">
 					<div class="collections-breadcrumbs">
 						<div class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-star-o"></i></span>
+							<span class="icon is-small"><i class="fa fa-star-o" /></span>
 						</div>
-						<div class="breadcrumb" v-if="rootCategoryName">
-							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+						<div v-if="rootCategoryName" class="breadcrumb">
+							<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 							<span>{{rootCategoryName}}</span>
 						</div>
-						<div class="breadcrumb" v-if="categoryName">
-							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+						<div v-if="categoryName" class="breadcrumb">
+							<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 							<span>{{categoryName}}</span>
 						</div>
 					</div>
 					<div class="collections-controls">
-						<a v-for="(name, panel) in panels" class="panel-toggle" :class="{'is-active': isPanelActive(panel), 'is-single': isSinglePanelView}" :key="panel" @click="togglePanel(panel)">
+						<a
+							v-for="(name, panel) in panels"
+							:key="panel"
+							class="panel-toggle"
+							:class="{'is-active': isPanelActive(panel), 'is-single': isSinglePanelView}"
+							@click="togglePanel(panel)"
+						>
 							{{name}}
 							<span class="icon is-small">
-								<i class="fa" :class="[isPanelActive(panel) ? 'fa-check-circle' : 'fa-circle-o']"></i>
+								<i class="fa" :class="[isPanelActive(panel) ? 'fa-check-circle' : 'fa-circle-o']" />
 							</span>
 						</a>
 					</div>
 				</div>
 				<div class="columns">
-					<div class="column" v-show="isSlidesPanelVisible">
+					<div v-show="isSlidesPanelVisible" class="column">
 						<wnl-slides-carousel
 							:category-id="categoryId"
 							:category-name="categoryName"
@@ -43,27 +53,27 @@
 							:saved-slides-count="slidesIds.length"
 							:slides-ids="slidesIds"
 							@userEvent="onUserEvent"
-						></wnl-slides-carousel>
+						/>
 						<wnl-qna-collection
 							:category-name="categoryName"
 							:root-category-name="rootCategoryName"
-						></wnl-qna-collection>
+						/>
 					</div>
-					<div class="column" v-show="isQuizPanelVisible">
+					<div v-show="isQuizPanelVisible" class="column">
 						<wnl-quiz-collection
 							:category-name="categoryName"
 							:root-category-name="rootCategoryName"
 							:quiz-questions-ids="quizQuestionsIds"
 							@changeQuizQuestionsPage="onChangeQuizQuestionsPage"
 							@userEvent="onUserEvent"
-						></wnl-quiz-collection>
+						/>
 					</div>
 				</div>
 			</div>
 			<div v-else class="collections-placeholder">
-				<span class="icon main"><i class="fa fa-star-o"></i></span>
+				<span class="icon main"><i class="fa fa-star-o" /></span>
 				<span class="welcome">Witaj w Kolekcjach!</span>
-				<span>Wybierz temat z menu <span class="icon is-small" v-if="isTouchScreen"><i class="fa fa-bars"></i></span> i&nbsp;przeglądaj&nbsp;zapisane&nbsp;fragmenty&nbsp;kursu</span>
+				<span>Wybierz temat z menu <span v-if="isTouchScreen" class="icon is-small"><i class="fa fa-bars" /></span> i&nbsp;przeglądaj&nbsp;zapisane&nbsp;fragmenty&nbsp;kursu</span>
 			</div>
 		</div>
 	</div>
@@ -159,10 +169,8 @@ import QnaCollection from 'js/components/collections/QnaCollection';
 import QuizCollection from 'js/components/collections/QuizCollection';
 import SlidesCarousel from 'js/components/collections/SlidesCarousel';
 import navigation from 'js/services/navigation';
-import { layouts } from 'js/store/modules/ui';
 
 export default {
-	props: ['categoryName', 'rootCategoryName'],
 	components: {
 		'wnl-sidenav': Sidenav,
 		'wnl-sidenav-slot': SidenavSlot,
@@ -171,6 +179,7 @@ export default {
 		'wnl-quiz-collection': QuizCollection,
 		'wnl-slides-carousel': SlidesCarousel
 	},
+	props: ['categoryName', 'rootCategoryName'],
 	data() {
 		return {
 			activePanels: ['slides', 'quiz'],
@@ -228,18 +237,37 @@ export default {
 			return this.getSlidesIdsForCategory(this.categoryName);
 		}
 	},
+	watch: {
+		categoryName(newCategoryName, oldCategoryName) {
+			if (oldCategoryName !== newCategoryName) {
+				this.setupContentForCategory();
+			}
+		},
+		rootCategoryName(newRootCategoryName, oldRootCategoryName) {
+			if (oldRootCategoryName !== newRootCategoryName) {
+				this.setupContentForCategory();
+			}
+		},
+	},
+	mounted() {
+		this.toggleOverlay({ source: 'collections', display: true });
+		this.fetchCategories()
+			.then(this.fetchReactions)
+			.then(this.setupContentForCategory)
+			.then(() => this.toggleOverlay({ source: 'collections', display: false }));
+	},
 	methods: {
 		...mapActions('collections', ['fetchReactions', 'fetchCategories', 'fetchSlidesByTagName']),
-		...mapActions('quiz', {'fetchQuiz': 'fetchQuestionsCollectionByTagName', 'resetQuiz': 'resetState'}),
-		...mapActions('qna', {'fetchQna':'fetchQuestionsByTagName', 'resetQna': 'destroyQna'}),
+		...mapActions('quiz', { 'fetchQuiz': 'fetchQuestionsCollectionByTagName', 'resetQuiz': 'resetState' }),
+		...mapActions('qna', { 'fetchQna':'fetchQuestionsByTagName', 'resetQna': 'destroyQna' }),
 		...mapActions(['toggleOverlay']),
 		getNavigation() {
 			let navigation = [];
 
 			this.categories.forEach((rootCategory) => {
-				const groupItem = this.getGroupItem({name: rootCategory.name});
+				const groupItem = this.getGroupItem({ name: rootCategory.name });
 				const childItems = rootCategory.categories
-					.map(({name, id}) => this.getChildCategory({name, id, parent: rootCategory.name}));
+					.map(({ name, id }) => this.getChildCategory({ name, id, parent: rootCategory.name }));
 
 				groupItem.subitems = childItems;
 
@@ -271,19 +299,19 @@ export default {
 			const contentToFetch = [];
 
 			if (this.quizQuestionsIds.length) {
-				contentToFetch.push(this.fetchQuiz({tagName: this.categoryName, ids: this.quizQuestionsIds}));
+				contentToFetch.push(this.fetchQuiz({ tagName: this.categoryName, ids: this.quizQuestionsIds }));
 			} else {
 				this.resetQuiz();
 			}
 
 			if (this.qnaQuestionsIds.length) {
-				contentToFetch.push(this.fetchQna({tagName: this.categoryName, ids: this.qnaQuestionsIds}));
+				contentToFetch.push(this.fetchQna({ tagName: this.categoryName, ids: this.qnaQuestionsIds }));
 			} else {
 				this.resetQna();
 			}
 
 			if (this.slidesIds.length) {
-				contentToFetch.push(this.fetchSlidesByTagName({tagName: this.categoryName, ids: this.slidesIds}));
+				contentToFetch.push(this.fetchSlidesByTagName({ tagName: this.categoryName, ids: this.slidesIds }));
 			}
 
 			this.categoryId && this.$trackUserEvent({
@@ -326,27 +354,8 @@ export default {
 			return this.activePanels.includes(panel);
 		},
 		onChangeQuizQuestionsPage(page) {
-			this.fetchQuiz({tagName: this.categoryName, ids: this.quizQuestionsIds, page});
+			this.fetchQuiz({ tagName: this.categoryName, ids: this.quizQuestionsIds, page });
 		}
-	},
-	mounted() {
-		this.toggleOverlay({source: 'collections', display: true});
-		this.fetchCategories()
-			.then(this.fetchReactions)
-			.then(this.setupContentForCategory)
-			.then(() => this.toggleOverlay({source: 'collections', display: false}));
-	},
-	watch: {
-		categoryName(newCategoryName, oldCategoryName) {
-			if (oldCategoryName !== newCategoryName) {
-				this.setupContentForCategory();
-			}
-		},
-		rootCategoryName(newRootCategoryName, oldRootCategoryName) {
-			if (oldRootCategoryName !== newRootCategoryName) {
-				this.setupContentForCategory();
-			}
-		},
 	},
 };
 </script>

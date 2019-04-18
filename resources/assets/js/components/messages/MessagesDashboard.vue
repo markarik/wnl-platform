@@ -5,18 +5,18 @@
 			:is-detached="!isSidenavMounted"
 			:is-max-width="true"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 			<aside class="sidenav-aside rooms-sidenav">
-				<wnl-conversations-list/>
+				<wnl-conversations-list />
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="scrollable-main-container chat-container">
 			<wnl-private-chat
+				v-if="currentRoom.id"
 				:room="currentRoom"
 				:users="currentRoomUsers"
 				:messages-loaded="messagesLoaded"
-				v-if="currentRoom.id"
-			></wnl-private-chat>
+			/>
 		</div>
 	</div>
 </template>
@@ -46,27 +46,28 @@
 </style>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import MainNav from 'js/components/MainNav';
 import PrivateChat from 'js/components/chat/PrivateChat';
 import SidenavSlot from 'js/components/global/SidenavSlot';
 import ConversationsList from 'js/components/messages/ConversationsList';
+import { first } from 'lodash';
 
 export default {
 	name: 'MessagesDashboard',
+	components: {
+		'wnl-main-nav': MainNav,
+		'wnl-sidenav-slot': SidenavSlot,
+		'wnl-private-chat': PrivateChat,
+		'wnl-conversations-list': ConversationsList,
+	},
 	data() {
 		return {
 			currentRoom: {},
 			currentRoomUsers: [],
 			messagesLoaded: true,
 		};
-	},
-	components: {
-		'wnl-main-nav': MainNav,
-		'wnl-sidenav-slot': SidenavSlot,
-		'wnl-private-chat': PrivateChat,
-		'wnl-conversations-list': ConversationsList,
 	},
 	computed: {
 		...mapGetters([
@@ -85,13 +86,26 @@ export default {
 			return this.sortedRooms[0];
 		}
 	},
+	watch: {
+		'$route.query.roomId'(roomId) {
+			roomId && this.openRoomById(roomId);
+		},
+		ready(newValue, oldValue) {
+			!oldValue && newValue && this.openInitialRoom();
+			newValue && this.toggleOverlay({ source: 'messagesDashboard', display: false });
+		}
+	},
+	mounted() {
+		!this.ready && this.toggleOverlay({ source: 'messagesDashboard', display: true });
+		this.ready && this.openInitialRoom();
+	},
 	methods: {
 		...mapActions(['toggleOverlay']),
 		...mapActions('chatMessages', ['markRoomAsRead', 'fetchRoomMessages']),
-		switchRoom({room, users}){
+		switchRoom({ room, users }){
 			this.currentRoom = room;
 			this.currentRoomUsers = users;
-			const {messages, ...roomNoMessages} = room;
+			const { messages, ...roomNoMessages } = room;
 			room.id && this.$socketMarkRoomAsRead(roomNoMessages)
 				.then(() => this.markRoomAsRead(room.id))
 				.catch(err => $wnl.logger.capture(err));
@@ -105,7 +119,7 @@ export default {
 				context.afterLimit = 0;
 				context.beforeLimit = PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT;
 			} else if (room.messages && room.messages.length) {
-				context.messageTime = _.first(room.messages).time;
+				context.messageTime = first(room.messages).time;
 				context.afterLimit = 0;
 				context.beforeLimit = PrivateChat.PRIVATE_CHAT_MESSAGES_LIMIT;
 			}
@@ -121,10 +135,10 @@ export default {
 		openRoomById(roomId) {
 			const room = this.getRoomById(roomId);
 			if (room.id) {
-				this.switchRoom({room, users: this.getRoomProfiles(roomId)});
+				this.switchRoom({ room, users: this.getRoomProfiles(roomId) });
 				return true;
 			} else {
-				const {roomId, ...query} = this.$route.query;
+				const { roomId, ...query } = this.$route.query;
 				this.$router.replace({
 					...this.$route,
 					query
@@ -147,18 +161,5 @@ export default {
 			}
 		},
 	},
-	watch: {
-		'$route.query.roomId'(roomId) {
-			roomId && this.openRoomById(roomId);
-		},
-		ready(newValue, oldValue) {
-			!oldValue && newValue && this.openInitialRoom();
-			newValue && this.toggleOverlay({source: 'messagesDashboard', display: false});
-		}
-	},
-	mounted() {
-		!this.ready && this.toggleOverlay({source: 'messagesDashboard', display: true});
-		this.ready && this.openInitialRoom();
-	}
 };
 </script>

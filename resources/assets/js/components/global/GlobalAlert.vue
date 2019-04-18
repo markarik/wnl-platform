@@ -1,13 +1,17 @@
 <template>
 	<div>
 		<div class="notification" :class="typeToClass(type)">
-			<slot/>
-			<button v-if="dismissable" @click="$emit('onDismiss', {id: id})" class="delete"></button>
+			<slot />
+			<button
+				v-if="dismissable"
+				class="delete"
+				@click="$emit('onDismiss', {id: id})"
+			/>
 		</div>
 	</div>
 </template>
 <script>
-import {ALERT_TYPES} from 'js/consts/alert';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	props: {

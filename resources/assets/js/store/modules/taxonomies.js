@@ -31,7 +31,7 @@ const mutations = {
 
 // Actions
 const actions = {
-	async fetchAll({commit, state}) {
+	async fetchAll({ commit, state }) {
 		if (state.taxonomies.length > 0){
 			return;
 		}
@@ -39,7 +39,7 @@ const actions = {
 		commit(types.SETUP_TAXONOMIES, []);
 		commit(types.SET_TAXONOMIES_LOADING, true);
 		try {
-			const {data: taxonomies} = await axios.get(getApiUrl('taxonomies/all'));
+			const { data: taxonomies } = await axios.get(getApiUrl('taxonomies/all'));
 			commit(types.SETUP_TAXONOMIES, taxonomies);
 		} catch (error) {
 			throw error;
@@ -47,7 +47,7 @@ const actions = {
 			commit(types.SET_TAXONOMIES_LOADING, false);
 		}
 	},
-	resetTaxonomies({commit}) {
+	resetTaxonomies({ commit }) {
 		commit(types.SETUP_TAXONOMIES, []);
 	}
 };

@@ -48,12 +48,8 @@ class OrdersHandleUnpaid extends CommandWithMonitoring
 			Carbon::setTestNow(Carbon::now()->addDays((int) $timeShift));
 		}
 
-		$expired = Carbon::today()->subDays(30);
-
 		$this->handleUnpaidOrders();
 		$this->handleUnpaidInstalment();
-
-		PaymentReminder::where('created_at', '<', $expired)->delete();
 
 		return;
 	}
@@ -73,6 +69,11 @@ class OrdersHandleUnpaid extends CommandWithMonitoring
 		if ($orders->count() === 0) return;
 
 		foreach ($orders as $order) {
+			if ($this->isProductAlreadyBought($order)) {
+				$order->cancel();
+				continue;
+			}
+
 			SiteWideMessage::firstOrCreate([
 				'user_id' => $order->user_id,
 				'slug' => "order-payment-reminder-{$order->id}",
@@ -89,7 +90,6 @@ class OrdersHandleUnpaid extends CommandWithMonitoring
 				$reminder = $order->paymentReminders->last();
 
 				if ($now->diffInWeekdays($reminder->created_at) >= 4) {
-					if ($this->mailDebug) $this->mail($order, 'canceled');
 					$order->cancel();
 				}
 			}
@@ -103,7 +103,9 @@ class OrdersHandleUnpaid extends CommandWithMonitoring
 			function ($query) use ($beforeDue) {
 				$query
 					->whereRaw('order_instalments.paid_amount < order_instalments.amount')
-					->whereDate('due_date', "<=", $beforeDue);
+					->whereDate('due_date', "<=", $beforeDue)
+					// Account is suspended after 4 days from the last sent reminder. For safety use longer period and double-check
+					->whereDate('due_date', ">=", Carbon::today()->subDays(7));
 			})
 			->where('method', 'instalments')
 			->where('canceled', '!=', 1)
@@ -182,5 +184,11 @@ class OrdersHandleUnpaid extends CommandWithMonitoring
 			->where('left_amount', '>', 0)
 			->sortBy('order_number')
 			->first();
+	}
+
+	protected function isProductAlreadyBought(Order $order): bool {
+		return !empty($order->user->getProducts()->first(function($product) use ($order) {
+			return $product->id === $order->product->id;
+		}));
 	}
 }

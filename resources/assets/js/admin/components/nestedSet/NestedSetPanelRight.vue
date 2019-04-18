@@ -8,14 +8,14 @@
 					:class="{'is-active': mode.key === activeMode}"
 				>
 					<a @click="$emit('setEditorMode', mode.key)">
-						<span class="icon is-small"><i :class="['fa', mode.icon]" aria-hidden="true"></i></span>
+						<span class="icon is-small"><i :class="['fa', mode.icon]" aria-hidden="true" /></span>
 						<span>{{mode.label}}</span>
 					</a>
 				</li>
 			</ul>
 		</nav>
 
-		<slot name="activeView"/>
+		<slot name="activeView" />
 	</div>
 </template>
 
@@ -30,7 +30,7 @@
 
 <script>
 
-import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
+import { NESTED_SET_EDITOR_MODES } from 'js/consts/nestedSet';
 
 export default {
 	props: {

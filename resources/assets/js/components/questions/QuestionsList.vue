@@ -1,79 +1,87 @@
 <template>
 	<div class="wnl-app-layout">
-		<wnl-questions-navigation/>
+		<wnl-questions-navigation />
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
 				<div class="questions-header">
 					<div class="questions-breadcrumbs">
 						<div class="breadcrumb">
 							<span class="icon is-small"><i
-									class="fa fa-check-square-o"></i></span>
+								class="fa fa-check-square-o"
+							/></span>
 						</div>
 						<div class="breadcrumb">
 							<span class="icon is-small"><i
-									class="fa fa-angle-right"></i></span>
+								class="fa fa-angle-right"
+							/></span>
 							<span>{{$t('questions.nav.solving')}}</span>
 						</div>
 					</div>
-					<a v-if="isMobile" slot="heading"
-					   class="mobile-show-active-filters" @click="toggleChat">
+					<a
+						v-if="isMobile"
+						slot="heading"
+						class="mobile-show-active-filters"
+						@click="toggleChat"
+					>
 						<span>{{$t('questions.filters.show')}}</span>
 						<span class="icon is-tiny">
-							<i class="fa fa-sliders"></i>
+							<i class="fa fa-sliders" />
 						</span>
 					</a>
 				</div>
 				<wnl-questions-solving
-						v-if="computedQuestionsList.length > 0 || !fetchingQuestions"
-						:active-filters="activeFiltersNames"
-						:current-question="currentQuestion"
-						:loading="fetchingQuestions || fetchingFilters"
-						:get-reaction="computedGetReaction"
-						:is-mobile="isMobile"
-						:meta="meta"
-						:questions-list-count="matchedQuestionsCount"
-						:questions-current-page="questionsCurrentPage"
-						:preset-options="presetOptionsToPass"
-						:test-mode="testMode"
-						:test-questions="testQuestions"
-						:test-processing="testProcessing"
-						:test-results="testResults"
-						@buildTest="buildTest"
-						@changeQuestion="onChangeQuestion"
-						@changePage="onChangePage"
-						@checkQuiz="verifyCheckQuestions"
-						@endQuiz="verifyEndQuiz"
-						@selectAnswer="onSelectAnswer"
-						@setQuestion="setQuestion"
-						@verify="onVerify"
-						@userEvent="onUserEvent"
-						@activeViewChange="onActiveViewChange"
-						@updateTime="onUpdateTime"
+					v-if="computedQuestionsList.length > 0 || !fetchingQuestions"
+					:active-filters="activeFiltersNames"
+					:current-question="currentQuestion"
+					:loading="fetchingQuestions || fetchingFilters"
+					:get-reaction="computedGetReaction"
+					:is-mobile="isMobile"
+					:meta="meta"
+					:questions-list-count="matchedQuestionsCount"
+					:questions-current-page="questionsCurrentPage"
+					:preset-options="presetOptionsToPass"
+					:test-mode="testMode"
+					:test-questions="testQuestions"
+					:test-processing="testProcessing"
+					:test-results="testResults"
+					@buildTest="buildTest"
+					@changeQuestion="onChangeQuestion"
+					@changePage="onChangePage"
+					@checkQuiz="verifyCheckQuestions"
+					@endQuiz="verifyEndQuiz"
+					@selectAnswer="onSelectAnswer"
+					@setQuestion="setQuestion"
+					@verify="onVerify"
+					@userEvent="onUserEvent"
+					@activeViewChange="onActiveViewChange"
+					@updateTime="onUpdateTime"
 				/>
 				<div v-else class="text-loader">
-					<wnl-text-loader/>
+					<wnl-text-loader />
 				</div>
 			</div>
 		</div>
 		<wnl-sidenav-slot
-				:is-detached="!isChatMounted"
-				:is-visible="isLargeDesktop || isChatVisible"
-				:has-chat="true"
+			:is-detached="!isChatMounted"
+			:is-visible="isLargeDesktop || isChatVisible"
+			:has-chat="true"
 		>
 			<wnl-questions-filters
-					v-show="!testMode"
-					:loading="fetchingQuestions || fetchingFilters"
-					:active-filters="activeFilters"
-					:fetching-data="fetchingQuestions || fetchingFilters"
-					:filters="filters"
-					@activeFiltersChanged="onActiveFiltersChanged"
-					@search="onSearch"
+				v-show="!testMode"
+				:loading="fetchingQuestions || fetchingFilters"
+				:active-filters="activeFilters"
+				:fetching-data="fetchingQuestions || fetchingFilters"
+				:filters="filters"
+				@activeFiltersChanged="onActiveFiltersChanged"
+				@search="onSearch"
 			/>
 		</wnl-sidenav-slot>
-		<div v-if="!testMode && !isLargeDesktop && isChatToggleVisible"
-			 class="wnl-chat-toggle">
+		<div
+			v-if="!testMode && !isLargeDesktop && isChatToggleVisible"
+			class="wnl-chat-toggle"
+		>
 			<span class="icon is-big" @click="toggleChat">
-				<i class="fa fa-sliders"></i>
+				<i class="fa fa-sliders" />
 				<span>{{$t('questions.filters.show')}}</span>
 			</span>
 		</div>
@@ -116,27 +124,34 @@
 </style>
 
 <script>
-import {isEmpty, get} from 'lodash';
-import {mapGetters, mapActions, mapMutations, mapState} from 'vuex';
-import {QUESTIONS_SET_TOKEN as setToken} from 'js/store/mutations-types';
-import {VIEWS} from 'js/consts/questionsSolving';
+import { isEmpty, get } from 'lodash';
+import { mapGetters, mapActions, mapMutations, mapState } from 'vuex';
+import { QUESTIONS_SET_TOKEN as setToken } from 'js/store/mutations-types';
+import { VIEWS } from 'js/consts/questionsSolving';
 
 import QuestionsFilters from 'js/components/questions/QuestionsFilters';
 import QuestionsNavigation from 'js/components/questions/QuestionsNavigation';
 import QuestionsSolving from 'js/components/questions/QuestionsSolving';
 import SidenavSlot from 'js/components/global/SidenavSlot';
 
-import {scrollToTop} from 'js/utils/animations';
-import {swalConfig} from 'js/utils/swal';
+import { scrollToTop } from 'js/utils/animations';
+import { swalConfig } from 'js/utils/swal';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 import context from 'js/consts/events_map/context.json';
 import feature_components from 'js/consts/events_map/feature_components.json';
-import {timeBaseOnQuestions} from 'js/services/testBuilder';
+import { timeBaseOnQuestions } from 'js/services/testBuilder';
 import examStateStore from 'js/services/examStateStore';
 
 export default {
 	name: 'QuestionsList',
+	components: {
+		'wnl-questions-navigation': QuestionsNavigation,
+		'wnl-questions-filters': QuestionsFilters,
+		'wnl-sidenav-slot': SidenavSlot,
+		'wnl-questions-solving': QuestionsSolving,
+	},
+	mixins: [emits_events],
 	props: {
 		presetFilters: {
 			default: () => [],
@@ -146,13 +161,6 @@ export default {
 			default: () => {},
 			type: Object,
 		}
-	},
-	mixins: [emits_events],
-	components: {
-		'wnl-questions-navigation': QuestionsNavigation,
-		'wnl-questions-filters': QuestionsFilters,
-		'wnl-sidenav-slot': SidenavSlot,
-		'wnl-questions-solving': QuestionsSolving,
 	},
 	data() {
 		const currentContext = context.questions_bank;
@@ -254,6 +262,36 @@ export default {
 			return `wnl-exam-state-${this.currentUserId}`;
 		}
 	},
+	watch: {
+		testQuestionsCount() {
+			this.estimatedTime = timeBaseOnQuestions(this.testQuestionsCount);
+		},
+		'$route.query.chatChannel'(newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
+		}
+	},
+	async mounted() {
+		try {
+			await this.setupQuestions();
+			await this.restoreExamState();
+		} catch (e) {
+			$wnl.logger.error(e);
+			this.fetchingFilters = false;
+			this.switchOverlay(false);
+		}
+	},
+	beforeRouteLeave(to, from, next) {
+		if (this.testMode) {
+			this.confirmQuizEnd()
+				.then(() => next(false))
+				.catch(() => {
+					this.endQuiz();
+					next();
+				});
+		} else {
+			next();
+		}
+	},
 	methods: {
 		...mapActions(['toggleChat', 'toggleOverlay']),
 		...mapActions('questions', [
@@ -280,8 +318,8 @@ export default {
 			'setPage',
 			'fetchActiveFilters',
 		]),
-		...mapMutations('questions', {setToken}),
-		buildTest({count}) {
+		...mapMutations('questions', { setToken }),
+		buildTest({ count }) {
 			const text = this.presetOptionsToPass.hasOwnProperty('loadingText')
 				? this.presetOptionsToPass.loadingText
 				: 'testBuilding';
@@ -296,7 +334,7 @@ export default {
 			}).then(() => this.switchOverlay(false, 'testBuilding'));
 		},
 		changePage(page) {
-			return new Promise((resolve, reject) => {
+			return new Promise((resolve) => {
 				if (this.getPage(page)) {
 					this.setPage(page);
 					resolve();
@@ -342,7 +380,7 @@ export default {
 			this.resetTest();
 		},
 		fetchMatchingQuestions() {
-			return this.fetchQuestions({filters: this.activeFilters})
+			return this.fetchQuestions({ filters: this.activeFilters })
 				.catch(error => $wnl.logger.error(error));
 		},
 		onActiveFiltersChanged(payload) {
@@ -367,25 +405,24 @@ export default {
 		},
 		onChangeQuestion(step) {
 			const currentIndex = this.currentQuestion.index;
-			const currentPage  = this.currentQuestion.page;
-			const perPage      = this.meta.perPage;
-			const pageStep     = Math.sign(step) * Math.ceil(Math.abs(step / perPage));
+			const currentPage = this.currentQuestion.page;
+			const perPage = this.meta.perPage;
+			const pageStep = Math.sign(step) * Math.ceil(Math.abs(step / perPage));
 
 			let newIndex, newPage;
 
 			if (step > 0 && currentIndex + step >= this.questionsCurrentPage.length) {
 				newIndex = 0;
-				newPage  = currentPage === this.meta.lastPage ? 1 : currentPage + pageStep;
-			}
-			else if (step < 0 && currentIndex === 0) {
+				newPage = currentPage === this.meta.lastPage ? 1 : currentPage + pageStep;
+			} else if (step < 0 && currentIndex === 0) {
 				newIndex = currentPage === 1 ? -1 : perPage - 1;
-				newPage  = currentPage === 1 ? this.meta.lastPage : currentPage + pageStep;
+				newPage = currentPage === 1 ? this.meta.lastPage : currentPage + pageStep;
 			} else {
-				newPage  = currentPage;
+				newPage = currentPage;
 				newIndex = currentIndex + step;
 			}
 
-			this.setQuestion({page: newPage, index: newIndex});
+			this.setQuestion({ page: newPage, index: newIndex });
 		},
 		onChangePage(page) {
 			scrollToTop();
@@ -393,7 +430,7 @@ export default {
 		},
 		onSelectAnswer(payload, useLocalStorage = true) {
 			if (payload.answer === this.getQuestion(payload.id).selectedAnswer && !this.testMode) {
-				this.onVerify(payload.id) || (payload.position && this.savePosition({position: payload.position}));
+				this.onVerify(payload.id) || (payload.position && this.savePosition({ position: payload.position }));
 			} else {
 				this.selectAnswer(payload);
 				useLocalStorage && this.persistStateInExamStateStorage();
@@ -432,7 +469,7 @@ export default {
 				value: Number(answer.is_correct)
 			});
 			this.resolveQuestion(questionId);
-			this.saveQuestionsResults({questions: [questionId]});
+			this.saveQuestionsResults({ questions: [questionId] });
 		},
 		onActiveViewChange(activeView) {
 			this.activeView = activeView;
@@ -446,10 +483,10 @@ export default {
 		performCheckQuestions() {
 			scrollToTop();
 			this.testProcessing = true;
-			this.checkQuestions({examMode: this.examMode, examTagId: this.examTagId}).then(results => {
-				this.testResults         = results;
-				this.testProcessing      = false;
-				this.testMode            = false;
+			this.checkQuestions({ examMode: this.examMode, examTagId: this.examTagId }).then(results => {
+				this.testResults = results;
+				this.testProcessing = false;
+				this.testMode = false;
 				this.presetOptionsToPass = {};
 			});
 
@@ -462,11 +499,11 @@ export default {
 				action: this.context.subcontext.test_yourself.actions.finish_test.value,
 			});
 		},
-		setQuestion({page, index}) {
+		setQuestion({ page, index }) {
 			this.switchOverlay(true, 'currentQuestion');
 			this.changePage(page)
-				// last page may change after fetching the page
-				// when "nierozwiązane pytania" filter is active
+			// last page may change after fetching the page
+			// when "nierozwiązane pytania" filter is active
 				.then(() => this.changeCurrentQuestion({
 					page: this.getSafePage(page),
 					index
@@ -491,7 +528,7 @@ export default {
 					});
 				});
 		},
-		setupFilters(activeFilters = []) {
+		setupFilters() {
 			if (!isEmpty(this.filters)) return Promise.resolve(this.filters);
 
 			return this.fetchDynamicFilters();
@@ -507,7 +544,7 @@ export default {
 		toggleBuilder() {
 			this.showBuilder = !this.showBuilder;
 		},
-		verifyCheckQuestions({unansweredCount}) {
+		verifyCheckQuestions({ unansweredCount }) {
 			if (unansweredCount) {
 				let description = this.$t('questions.solving.confirm.unanswered', {
 					count: unansweredCount
@@ -554,10 +591,12 @@ export default {
 							this.fetchDynamicFilters(),
 							this.fetchMatchingQuestions()
 						]);
-					}).then(() => Promise.all([
+					})
+					.then(() => Promise.all([
 						this.fetchQuestionsReactions(this.getPage(this.meta.currentPage)),
 						this.fetchQuestionData(this.currentQuestion.id)
-					])).then(() => {
+					]))
+					.then(() => {
 						this.fetchingFilters = false;
 					});
 			}
@@ -601,8 +640,8 @@ export default {
 					})
 					.then(this.fetchDynamicFilters)
 					.then(this.getPosition)
-					.then(({data = {}}) => {
-						return new Promise((resolve, reject) => {
+					.then(({ data = {} }) => {
+						return new Promise((resolve) => {
 							this.fetchQuestions({
 								saveFilters: false,
 								useSavedFilters: false,
@@ -611,7 +650,7 @@ export default {
 							}).then(() => resolve(data));
 						});
 					})
-					.then(({position}) => {
+					.then(({ position }) => {
 						!isEmpty(position) && this.changeCurrentQuestion(position);
 						this.switchOverlay(false);
 						this.$trackUserEvent({
@@ -667,7 +706,7 @@ export default {
 						const question = this.getQuestion(response.question_id);
 						const answerIndex = question.answers.findIndex(answer => answer.id === response.answer_id);
 						if (answerIndex === -1) return;
-						this.onSelectAnswer({id: response.question_id, answer: answerIndex}, false);
+						this.onSelectAnswer({ id: response.question_id, answer: answerIndex }, false);
 					});
 			} catch (e) {
 				examStateStore.remove(this.examStateStoreKey);
@@ -676,35 +715,5 @@ export default {
 			}
 		}
 	},
-	async mounted() {
-		try {
-			await this.setupQuestions();
-			await this.restoreExamState();
-		} catch (e) {
-			$wnl.logger.error(e);
-			this.fetchingFilters = false;
-			this.switchOverlay(false);
-		}
-	},
-	beforeRouteLeave(to, from, next) {
-		if (this.testMode) {
-			this.confirmQuizEnd()
-				.then(() => next(false))
-				.catch(() => {
-					this.endQuiz();
-					next();
-				});
-		} else {
-			next();
-		}
-	},
-	watch: {
-		testQuestionsCount() {
-			this.estimatedTime = timeBaseOnQuestions(this.testQuestionsCount);
-		},
-		'$route.query.chatChannel'(newVal) {
-			newVal && !this.isChatVisible && this.toggleChat();
-		}
-	}
 };
 </script>

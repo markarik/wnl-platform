@@ -1,51 +1,67 @@
 <template>
 	<div class="dropdown-container">
-		<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
-			<div slot="activator" class="notifications-toggle"
-				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }">
-				<div v-if="isOn && !!unseenCount" class="counter">{{ unseenCount }}</div>
+		<wnl-dropdown
+			ref="dropdown"
+			:options="{isWide: true}"
+			@toggled="toggle"
+		>
+			<div
+				slot="activator"
+				class="notifications-toggle"
+				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }"
+			>
+				<div v-if="isOn && !!unseenCount" class="counter">{{unseenCount}}</div>
 				<span class="icon">
-					<i class="fa" :class="iconClass"></i>
+					<i class="fa" :class="iconClass" />
 				</span>
 			</div>
 			<div slot="content">
 				<div class="feed-header">
-					<span class="feed-heading" v-t="'notifications.personal.heading'"/>
-					<wnl-notifications-toggle :setting="setting" :icons="icons"/>
+					<span v-t="'notifications.personal.heading'" class="feed-heading" />
+					<wnl-notifications-toggle :setting="setting" :icons="icons" />
 				</div>
 
 				<div class="feed-body">
-					<div class="zero-state" v-if="isEmpty">
-						<img class="zero-state-image"
+					<div v-if="isEmpty" class="zero-state">
+						<img
+							class="zero-state-image"
 							:alt="$t('notifications.personal.zeroStateImage')"
 							:src="zeroStateImage"
-							:title="$t('notifications.personal.zeroStateImage')">
-						<p class="zero-state-text" v-t="'notifications.personal.zeroState'"/>
+							:title="$t('notifications.personal.zeroStateImage')"
+						>
+						<p v-t="'notifications.personal.zeroState'" class="zero-state-text" />
 					</div>
 					<div v-else class="feed-content">
-						<component :is="getEventComponent(message)"
-							:message="message"
+						<component
+							:is="getEventComponent(message)"
+							v-for="message in notificationsWithComponentForEvent"
 							:key="message.id"
+							:message="message"
 							:notification-component="PersonalNotification"
 							@goingToContext="onGoingToContext"
-							v-for="message in notificationsWithComponentForEvent"
 						/>
 						<div class="show-more has-text-centered">
-							<a v-if="canShowMore" class="button is-small is-outlined margin vertical"
+							<a
+								v-if="canShowMore"
+								v-t="'notifications.personal.showMore'"
+								class="button is-small is-outlined margin vertical"
 								:class="{'is-loading': fetching}"
 								@click="loadMore"
-								v-t="'notifications.personal.showMore'"
 							/>
 							<span v-else-if="showEndInfo" class="small text-dimmed has-text-centered">
-								{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1"/>
+								{{$t('notifications.personal.thatsAll')}} <wnl-emoji name="+1" />
 							</span>
 						</div>
 					</div>
 				</div>
 
-				<div class="feed-footer" v-if="unreadCount > 0">
-					<a class="link" @click="allRead" v-t="notifications.markAllAsRead"/>
-					<span v-if="allReadLoading" class="loader"></span>
+				<div v-if="unreadCount > 0" class="feed-footer">
+					<a
+						v-t="notifications.markAllAsRead"
+						class="link"
+						@click="allRead"
+					/>
+					<span v-if="allReadLoading" class="loader" />
 				</div>
 			</div>
 		</wnl-dropdown>
@@ -76,11 +92,10 @@ import { CommentPosted, QnaAnswerPosted, ReactionAdded, Mentioned,
 	from 'js/components/notifications/events';
 import { feed } from 'js/components/notifications/feed';
 import { getImageUrl } from 'js/utils/env';
-import {USER_SETTING_NAMES} from 'js/consts/settings';
+import { USER_SETTING_NAMES } from 'js/consts/settings';
 
 export default {
 	name: 'PersonalFeed',
-	mixins: [feed],
 	components: {
 		'wnl-dropdown': Dropdown,
 		'wnl-event-comment-posted': CommentPosted,
@@ -95,6 +110,7 @@ export default {
 		'wnl-event-assigned-to-task': AssignedToTask,
 		'wnl-notifications-toggle': NotificationsToggle,
 	},
+	mixins: [feed],
 	data() {
 		return {
 			allReadLoading: false,

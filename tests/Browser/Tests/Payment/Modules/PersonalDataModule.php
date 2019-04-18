@@ -6,6 +6,7 @@ namespace Tests\Browser\Tests\Payment\Modules;
 
 use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
 use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Payment\PersonalDataPage;
@@ -58,8 +59,6 @@ class PersonalDataModule
 		}
 
 		$browser->on(new PersonalDataPage());
-
-		$this->assertCart($browser);
 	}
 
 	protected function submit(BethinkBrowser $browser, $invoice = false, $address = true)
@@ -75,8 +74,9 @@ class PersonalDataModule
 		Assert::assertTrue($browser->order instanceof Order);
 	}
 
-	protected function assertCart(BethinkBrowser $browser)
+	public function assertCartContainsCourse(BethinkBrowser $browser)
 	{
+		$this->navigate($browser);
 		$browser->assertVisible('@cart');
 		if (!empty($browser->coupon) && $browser->coupon->kind === Coupon::KIND_PARTICIPANT) {
 			$browser->assertSeeIn('@cart', 'Album');
@@ -86,6 +86,16 @@ class PersonalDataModule
 			$browser->assertSeeIn('@cart', 'Na terenie Polski za darmo');
 		}
 		$browser->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do');
+		$browser->assertSeeIn('@cart', 'Kwota całkowita');
+	}
+
+	public function assertCartContainsAlbum(BethinkBrowser $browser)
+	{
+		$this->navigate($browser);
+		$browser->assertVisible('@cart');
+		$browser->assertSeeIn('@cart', Product::where(['slug' => Product::SLUG_WNL_ALBUM])->first()->name);
+		$browser->assertSeeIn('@cart', 'Wysyłka');
+		$browser->assertSeeIn('@cart', 'Na terenie Polski za darmo');
 		$browser->assertSeeIn('@cart', 'Kwota całkowita');
 	}
 

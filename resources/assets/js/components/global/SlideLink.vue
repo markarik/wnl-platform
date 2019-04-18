@@ -1,12 +1,11 @@
 <template>
 	<router-link :to="to" :target="blankPage">
-        <slot></slot>
+		<slot />
 	</router-link>
 </template>
 
 <script>
-import {truncate} from 'lodash';
-import {mapGetters} from 'vuex';
+import { get } from 'lodash';
 
 export default {
 	name: 'SlideLink',
@@ -15,10 +14,10 @@ export default {
 			required: true,
 			type: Object,
 			validator: value => {
-				return _.get(value, 'course.id')
-                        && _.get(value, 'lesson.id')
-                        && _.get(value, 'screen.id')
-                        && _.get(value, 'orderNumber');
+				return get(value, 'course.id')
+                        && get(value, 'lesson.id')
+                        && get(value, 'screen.id')
+                        && get(value, 'orderNumber');
 			}
 		},
 		blankPage: {

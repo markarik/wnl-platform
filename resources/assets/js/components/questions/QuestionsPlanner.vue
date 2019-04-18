@@ -1,31 +1,32 @@
 <template>
 	<div class="wnl-app-layout" :class="{'is-mobile': isMobile}">
-		<wnl-questions-navigation/>
+		<wnl-questions-navigation />
 		<div class="wnl-middle wnl-app-layout-main" :class="{'is-full-width': isLargeDesktop}">
 			<div class="scrollable-main-container">
 				<div class="questions-header questions-plan-header">
 					<div class="questions-breadcrumbs">
 						<div class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+							<span class="icon is-small"><i class="fa fa-check-square-o" /></span>
 						</div>
 						<div class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 							<span>{{$t('questions.nav.planner')}}</span>
 						</div>
 					</div>
 				</div>
 				<div v-if="plan === null" class="margin vertical">
-					<wnl-text-loader/>
+					<wnl-text-loader />
 				</div>
 				<div v-else-if="hasPlan && !showPlanner" class="questions-plan-progress">
-					<wnl-questions-plan-progress :plan="plan" @changePlan="showPlanner = true"/>
+					<wnl-questions-plan-progress :plan="plan" @changePlan="showPlanner = true" />
 				</div>
 				<div v-else class="questions-planner">
 					<div class="questions-planner-heading">
 						<span>
 							{{$t(`questions.plan.headings.${plannerHeading}`)}}
 						</span>
-						<a v-if="hasPlan"
+						<a
+							v-if="hasPlan"
 							class="button is-small is-primary is-outlined"
 							@click="showPlanner = false"
 						>
@@ -40,10 +41,15 @@
 							<label class="date-label" for="startDate">
 								{{$t('questions.plan.headings.startDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-1"></i>
+									<i class="fa fa-hourglass-1" />
 								</span>
 							</label>
-							<wnl-datepicker :with-border="true" v-model="startDate" :config="startDateConfig" @onChange="onStartDateChange"/>
+							<wnl-datepicker
+								v-model="startDate"
+								:with-border="true"
+								:config="startDateConfig"
+								@onChange="onStartDateChange"
+							/>
 							<p class="tip">
 								{{$t('questions.plan.tips.startDate')}}
 							</p>
@@ -52,10 +58,15 @@
 							<label class="date-label" for="endDate">
 								{{$t('questions.plan.headings.endDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-3"></i>
+									<i class="fa fa-hourglass-3" />
 								</span>
 							</label>
-							<wnl-datepicker :with-border="true" v-model="endDate" :config="endDateConfig" @onChange="onEndDateChange"/>
+							<wnl-datepicker
+								v-model="endDate"
+								:with-border="true"
+								:config="endDateConfig"
+								@onChange="onEndDateChange"
+							/>
 							<p class="tip">
 								{{$t('questions.plan.tips.endDate')}}
 							</p>
@@ -67,7 +78,13 @@
 							{{$t('questions.plan.headings.slackDays')}}
 						</div>
 						<div class="slack-days">
-							<input class="slack-days-input" min="0" :max="maxSlack" v-model="slackDays" type="number"/>
+							<input
+								v-model="slackDays"
+								class="slack-days-input"
+								min="0"
+								:max="maxSlack"
+								type="number"
+							>
 							<p class="tip">{{$t('questions.plan.tips.slackDays')}}</p>
 						</div>
 
@@ -89,8 +106,13 @@
 								</p>
 							</div>
 						</div>
-						<div class="preserveProgress control" v-if="hasPlan">
-							<input id="preserveProgress" type="checkbox" class="checkbox" v-model="preserveProgress">
+						<div v-if="hasPlan" class="preserveProgress control">
+							<input
+								id="preserveProgress"
+								v-model="preserveProgress"
+								type="checkbox"
+								class="checkbox"
+							>
 							<label for="preserveProgress">{{$t('questions.filters.preserveProgress')}}</label>
 						</div>
 						<p class="tip has-text-centered">{{$t('questions.filters.preserveProgressTip')}}</p>
@@ -107,7 +129,7 @@
 							<a class="button is-small is-outlined is-primary" @click="toggleChat">
 								<span>{{$t('questions.filters.show')}}</span>
 								<span class="icon is-tiny">
-									<i class="fa fa-sliders"></i>
+									<i class="fa fa-sliders" />
 								</span>
 							</a>
 						</div>
@@ -130,7 +152,11 @@
 						</div>
 
 						<p class="has-text-centered margin top">
-							<a class="button is-primary" :class="{'is-loading': saving}" @click="createPlan">
+							<a
+								class="button is-primary"
+								:class="{'is-loading': saving}"
+								@click="createPlan"
+							>
 								{{$t('questions.plan.submit')}}
 							</a>
 						</p>
@@ -282,16 +308,16 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
-import {pl} from 'flatpickr/dist/l10n/pl.js';
-import {isEmpty, merge} from 'lodash';
-import {mapActions, mapGetters} from 'vuex';
+import { pl } from 'flatpickr/dist/l10n/pl.js';
+import { isEmpty, merge } from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
 
 import Datepicker from 'js/components/global/Datepicker';
 import QuestionsFilters from 'js/components/questions/QuestionsFilters';
 import QuestionsNavigation from 'js/components/questions/QuestionsNavigation';
 import QuestionsPlanProgress from 'js/components/questions/QuestionsPlanProgress';
 import SidenavSlot from 'js/components/global/SidenavSlot';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import features from 'js/consts/events_map/features.json';
 import context from 'js/consts/events_map/context.json';
 
@@ -355,7 +381,7 @@ export default {
 			const count = this.counts[this.selectedOption];
 			const days = this.datesRangeInDays + 1 - this.slackDays;
 
-			return {average: Math.ceil(count/days), count, days};
+			return { average: Math.ceil(count/days), count, days };
 		},
 		datesRangeInDays() {
 			return moment(this.endDate).diff(moment(this.startDate), 'days');
@@ -393,6 +419,24 @@ export default {
 			});
 		},
 	},
+	watch: {
+		selectedOption(to) {
+			to === 'custom' && !this.counts.custom && this.fetchMatchingQuestions();
+		},
+		showPlanner(to) {
+			to && isEmpty(this.counts.all) && this.setupPlanner();
+		}
+	},
+	mounted() {
+		this.$trackUserEvent({
+			feature: features.quiz_planner.value,
+			context: context.questions_bank.value,
+			action: features.quiz_planner.actions.open.value
+		});
+		this.getPlan().then(plan => {
+			isEmpty(plan) ? this.setupPlanner() : this.fetchDynamicFilters();
+		});
+	},
 	methods: {
 		...mapActions(['toggleChat']),
 		...mapActions('questions', [
@@ -412,7 +456,7 @@ export default {
 				slackDays: this.slackDays,
 				preserveProgress: this.preserveProgress
 			})
-				.then(({status, data}) => this.plan = data)
+				.then(({ data }) => this.plan = data)
 				.then(this.fetchDynamicFilters)
 				.then(() => {
 					this.saving = false;
@@ -439,7 +483,7 @@ export default {
 				filters,
 			})
 				.catch(error => $wnl.logger.error(error))
-				.then(({data: {total}}) => {
+				.then(({ data: { total } }) => {
 					this.customCount = total;
 					this.fetchingQuestions = false;
 				});
@@ -447,7 +491,7 @@ export default {
 		getPlan() {
 			return new Promise((resolve, reject) => {
 				return axios.get(getApiUrl(`user_plan/${this.currentUserId}`))
-					.then(({status, data}) => {
+					.then(({ status, data }) => {
 						let plan = data;
 						if (status === 204) {
 							plan = {};
@@ -481,7 +525,7 @@ export default {
 			return this.fetchDynamicFilters();
 		},
 		setFilters(filters) {
-			return new Promise((resolve, reject) => {
+			return new Promise((resolve) => {
 				if (!isEmpty(this.filters)) {
 					this.activeFiltersSet(filters);
 					return resolve();
@@ -494,7 +538,7 @@ export default {
 			});
 		},
 		setUnresolvedAndIncorrectCount() {
-			axios.get(getApiUrl('quiz_questions/stats')).then(({data: {correct, total}}) => {
+			axios.get(getApiUrl('quiz_questions/stats')).then(({ data: { correct, total } }) => {
 				this.unresolvedAndIncorrectCount = total - correct;
 			});
 		},
@@ -507,24 +551,6 @@ export default {
 				this.setUnresolvedAndIncorrectCount();
 				this.fetchQuestionsCount();
 			});
-		}
-	},
-	mounted() {
-		this.$trackUserEvent({
-			feature: features.quiz_planner.value,
-			context: context.questions_bank.value,
-			action: features.quiz_planner.actions.open.value
-		});
-		this.getPlan().then(plan => {
-			isEmpty(plan) ? this.setupPlanner() : this.fetchDynamicFilters();
-		});
-	},
-	watch: {
-		selectedOption(to) {
-			to === 'custom' && !this.counts.custom && this.fetchMatchingQuestions();
-		},
-		showPlanner(to) {
-			to && isEmpty(this.counts.all) && this.setupPlanner();
 		}
 	},
 };

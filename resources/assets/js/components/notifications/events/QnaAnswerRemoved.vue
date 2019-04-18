@@ -1,13 +1,14 @@
 <script>
-import {getContextRoute, baseProps, mapMessageToRoute} from './event';
+import { getContextRoute, baseProps, mapMessageToRoute } from './event';
 
 export default {
 	functional: true,
-	render: (createElement, {props: {message, notificationComponent}, data: {on}}) => {
+	props: baseProps,
+	render: (createElement, { props: { message, notificationComponent }, data: { on } }) => {
 		const contextRoute = () => mapMessageToRoute(message, {
 			'qna_question': message.objects.id
 		});
-		const {objects, ...messageWithoutObject} = message;
+		const { objects, ...messageWithoutObject } = message;
 
 		return createElement(notificationComponent, {
 			props: {
@@ -18,7 +19,6 @@ export default {
 			},
 			on,
 		});
-	},
-	props: baseProps
+	}
 };
 </script>

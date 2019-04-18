@@ -3,7 +3,12 @@
 		<span class="item-wrapper heading">
 			{{lesson.name}}
 		</span>
-		<wnl-screen-item v-for="screen in screens" :key="screen.id" :item="screen" :lesson-id="lessonId"></wnl-screen-item>
+		<wnl-screen-item
+			v-for="screen in screens"
+			:key="screen.id"
+			:item="screen"
+			:lesson-id="lessonId"
+		/>
 	</div>
 </template>
 
@@ -21,7 +26,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 import WnlScreenItem from 'js/components/course/navigation/ScreenItem';
 
 export default {

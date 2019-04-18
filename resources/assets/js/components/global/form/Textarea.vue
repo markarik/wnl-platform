@@ -2,26 +2,25 @@
 	<div class="field">
 
 		<label :for="name" class="label">
-			<slot></slot>
+			<slot />
 		</label>
 
 		<textarea
-					class="textarea normal"
-					:name="name"
-					@input="onTextInput"
-					:placeholder="placeholder"
-					v-model="inputValue"
-					@keydown.enter.stop
-		>
-		</textarea>
+			v-model="inputValue"
+			class="textarea normal"
+			:name="name"
+			:placeholder="placeholder"
+			@input="onTextInput"
+			@keydown.enter.stop
+		/>
 
 		<template v-if="hasErrors">
 			<span
-				class="help is-danger"
 				v-for="(error, index) in getErrors"
-				v-text="error"
 				:key="index"
-			></span>
+				class="help is-danger"
+				v-text="error"
+			/>
 		</template>
 	</div>
 </template>
@@ -34,8 +33,8 @@ import { formInput } from 'js/mixins/form-input';
 
 export default {
 	name: 'Textarea',
-	props: ['name', 'placeholder'],
 	mixins: [formInput],
+	props: ['name', 'placeholder'],
 	computed: {
 		default() {
 			return '';

@@ -6,13 +6,18 @@
 		:meta="meta"
 	>
 		<span slot="title">{{item.name}}</span>
-		<wnl-section-item v-for="section in screenSections" :key="section.id" :item="section" slot="children"/>
+		<wnl-section-item
+			v-for="section in screenSections"
+			:key="section.id"
+			slot="children"
+			:item="section"
+		/>
 	</wnl-lesson-navigation-item>
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
-import {STATUS_COMPLETE} from 'js/services/progressStore';
+import { mapGetters } from 'vuex';
+import { STATUS_COMPLETE } from 'js/services/progressStore';
 import WnlSectionItem from 'js/components/course/navigation/SectionItem';
 import WnlLessonNavigationItem from 'js/components/course/navigation/LessonNavigationItem';
 

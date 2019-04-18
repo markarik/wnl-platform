@@ -5,18 +5,18 @@
 			:is-detached="!isSidenavMounted"
 			:is-narrow="true"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 		</wnl-sidenav-slot>
-		<div v-if="$currentEditionParticipant.isAllowed('access') && currentStep" class="onboarding-wrapper">
+		<div v-if="currentStep" class="onboarding-wrapper">
 			<wnl-stepper
+				v-if="!currentStep.hideOnStepper"
 				class="onboarding-stepper"
 				:steps="stepsForStepper"
 				:current-step="currentStepIndexForStepper"
-				v-if="!currentStep.hideOnStepper"
 			/>
 			<component
-				class="scrollable-container"
 				:is="currentStep.component"
+				class="scrollable-container"
 			/>
 			<div class="has-text-centered buttons">
 				<button
@@ -36,7 +36,6 @@
 				>{{currentStep.buttonText || 'Dalej'}}</button>
 			</div>
 		</div>
-		<wnl-splash-screen v-else/>
 	</div>
 </template>
 
@@ -147,7 +146,7 @@
 </style>
 
 <script>
-import {mapGetters, mapActions} from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 import WnlSidenavSlot from 'js/components/global/SidenavSlot';
 import WnlMainNav from 'js/components/MainNav';
@@ -158,19 +157,15 @@ import WnlOnboardingScreenTutorial from 'js/components/onboarding/OnboardingScre
 import WnlOnboardingScreenSatisfactionGuarantee from 'js/components/onboarding/OnboardingScreenSatisfactionGuarantee';
 import WnlOnboardingScreenFinal from 'js/components/onboarding/OnboardingScreenFinal';
 import WnlStepper from 'js/components/onboarding/Stepper';
-import WnlSplashScreen from 'js/components/global/splashscreens/SplashScreen';
 
-import {resource} from 'js/utils/config';
-import {ONBOARDING_STEPS} from 'js/consts/user';
-import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { resource } from 'js/utils/config';
+import { ONBOARDING_STEPS } from 'js/consts/user';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
-	perimeters: [currentEditionParticipant],
 	components: {
 		WnlMainNav,
 		WnlSidenavSlot,
-		WnlSplashScreen,
 		WnlStepper,
 	},
 	props: {
@@ -187,37 +182,37 @@ export default {
 					name: ONBOARDING_STEPS.WELCOME,
 					component: WnlOnboardingScreenWelcome,
 					hideOnStepper: true,
-					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.WELCOME}},
+					linkTo: { name: 'onboarding', params: { step: ONBOARDING_STEPS.WELCOME } },
 				},
 				{
 					name: ONBOARDING_STEPS.LEARNING_STYLE,
 					component: WnlOnboardingScreenLearningStyle,
 					text: '5 sposobów',
-					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.LEARNING_STYLE}},
+					linkTo: { name: 'onboarding', params: { step: ONBOARDING_STEPS.LEARNING_STYLE } },
 				},
 				{
 					name: ONBOARDING_STEPS.USER_PLAN,
 					component: WnlOnboardingScreenUserPlan,
 					text: 'Plan pracy',
-					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.USER_PLAN}},
+					linkTo: { name: 'onboarding', params: { step: ONBOARDING_STEPS.USER_PLAN } },
 				},
 				{
 					name: ONBOARDING_STEPS.TUTORIAL,
 					component: WnlOnboardingScreenTutorial,
 					text: 'Wideo',
-					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.TUTORIAL}},
+					linkTo: { name: 'onboarding', params: { step: ONBOARDING_STEPS.TUTORIAL } },
 				},
 				{
 					name: ONBOARDING_STEPS.SATISFACTION_GUARANTEE,
 					component: WnlOnboardingScreenSatisfactionGuarantee,
 					text: 'Gwarancja ',
-					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.SATISFACTION_GUARANTEE}},
+					linkTo: { name: 'onboarding', params: { step: ONBOARDING_STEPS.SATISFACTION_GUARANTEE } },
 				},
 				{
 					name: ONBOARDING_STEPS.FINAL,
 					component: WnlOnboardingScreenFinal,
 					text: 'Powitanie',
-					linkTo: {name: 'onboarding', params: {step: ONBOARDING_STEPS.FINAL}},
+					linkTo: { name: 'onboarding', params: { step: ONBOARDING_STEPS.FINAL } },
 					buttonText: 'Otwórz Wstępny LEK',
 				},
 			]
@@ -230,7 +225,7 @@ export default {
 			'isSidenavMounted',
 		]),
 		currentStep() {
-			return this.steps.find(({name}) => name === this.step);
+			return this.steps.find(({ name }) => name === this.step);
 		},
 		nextStep() {
 			return this.steps[this.currentStepIndex + 1] || null;
@@ -239,14 +234,22 @@ export default {
 			return this.nextStep === null;
 		},
 		currentStepIndex() {
-			return this.steps.findIndex(({name}) => name === this.step);
+			return this.steps.findIndex(({ name }) => name === this.step);
 		},
 		currentStepIndexForStepper() {
-			return this.stepsForStepper.findIndex(({name}) => name === this.step);
+			return this.stepsForStepper.findIndex(({ name }) => name === this.step);
 		},
 		stepsForStepper() {
 			return this.steps.filter(step => !step.hideOnStepper);
 		},
+	},
+	watch: {
+		step() {
+			this.validateCurrentStep();
+		}
+	},
+	mounted() {
+		this.validateCurrentStep();
 	},
 	methods: {
 		...mapActions([
@@ -258,14 +261,14 @@ export default {
 			const lastStep = this.currentUserLastestProductState && this.currentUserLastestProductState.onboarding_step;
 
 			if (lastStep === ONBOARDING_STEPS.FINISHED) {
-				return this.$router.replace({name: resource('courses'), params: {courseId: 1}});
+				return this.$router.replace({ name: resource('courses'), params: { courseId: 1 } });
 			}
 
 			if (this.currentStepIndex === -1) {
 				let stepToRedirectTo;
 
 				if (lastStep) {
-					stepToRedirectTo = this.steps.find(({name}) => name === lastStep);
+					stepToRedirectTo = this.steps.find(({ name }) => name === lastStep);
 				} else {
 					stepToRedirectTo = this.steps[0];
 				}
@@ -279,7 +282,7 @@ export default {
 			if (!lastStep) {
 				maxStepIndex = 0;
 			} else {
-				maxStepIndex = this.steps.findIndex(({name}) => name === lastStep);
+				maxStepIndex = this.steps.findIndex(({ name }) => name === lastStep);
 			}
 
 			if (this.currentStepIndex > maxStepIndex) {
@@ -289,11 +292,11 @@ export default {
 		async onNextClick() {
 			await this.updateOnboardingStep(this.nextStep ? this.nextStep.name : ONBOARDING_STEPS.FINISHED);
 			// TODO get lessonId for ldek and stop using hardcoded values
-			this.$router.replace(this.nextStep ? this.nextStep.linkTo : {name: resource('lessons'), params: {courseId: 1, lessonId: 85}});
+			this.$router.replace(this.nextStep ? this.nextStep.linkTo : { name: resource('lessons'), params: { courseId: 1, lessonId: 85 } });
 		},
 		async onCancelClick() {
 			await this.updateOnboardingStep(ONBOARDING_STEPS.FINISHED);
-			this.$router.replace({name: resource('courses'), params: {courseId: 1}});
+			this.$router.replace({ name: resource('courses'), params: { courseId: 1 } });
 		},
 		async updateOnboardingStep(step) {
 			this.isLoading = true;
@@ -313,13 +316,5 @@ export default {
 			}
 		}
 	},
-	watch: {
-		step() {
-			this.validateCurrentStep();
-		}
-	},
-	mounted() {
-		this.validateCurrentStep();
-	}
 };
 </script>

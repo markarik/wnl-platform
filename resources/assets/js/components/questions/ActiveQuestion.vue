@@ -4,7 +4,7 @@
 		<div class="active-question-controls">
 			<div class="widget-control">
 				<a class="small unselectable" @click="previousQuestion()">
-					<span class="icon is-small"><i class="fa fa-angle-left"></i></span> Poprzednie
+					<span class="icon is-small"><i class="fa fa-angle-left" /></span> Poprzednie
 				</a>
 			</div>
 			<div class="widget-control">
@@ -13,14 +13,14 @@
 			</div>
 			<div class="widget-control">
 				<a class="small unselectable" @click="nextQuestion()">
-					Następne <span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+					Następne <span class="icon is-small"><i class="fa fa-angle-right" /></span>
 				</a>
 			</div>
 		</div>
 		<wnl-quiz-question
 			v-if="question"
-			:class="`quiz-question-${question.id}`"
 			:id="question.id"
+			:class="`quiz-question-${question.id}`"
 			:question="question"
 			:show-comments="displayResults"
 			:get-reaction="getReaction"
@@ -40,10 +40,19 @@
 			@editorDestroyed="onContentItemClassifierEditorDestroyed"
 		/>
 		<p class="active-question-button has-text-centered">
-			<a v-if="!question.isResolved" class="button is-primary" :disabled="!hasAnswer" @click="verify">
+			<a
+				v-if="!question.isResolved"
+				class="button is-primary"
+				:disabled="!hasAnswer"
+				@click="verify"
+			>
 				Sprawdź odpowiedź
 			</a>
-			<a v-else class="button is-primary is-outlined" @click="nextQuestion()">
+			<a
+				v-else
+				class="button is-primary is-outlined"
+				@click="nextQuestion()"
+			>
 				Następne
 			</a>
 		</p>
@@ -76,17 +85,17 @@
 </style>
 
 <script>
-import {nextTick} from 'vue';
-import {isNumber} from 'lodash';
+import { nextTick } from 'vue';
+import { isNumber } from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
 import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
-import {KEYS} from 'js/consts/keys';
+import { KEYS } from 'js/consts/keys';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 export default {
 	name: 'ActiveQuestion',
@@ -153,6 +162,20 @@ export default {
 			return this.question.isResolved;
 		},
 	},
+	watch: {
+		async isContentItemClassifierEditorActive() {
+			if (this.isContentItemClassifierEditorActive) {
+				await nextTick();
+				scrollToElement(this.$el);
+			}
+		},
+	},
+	mounted() {
+		window.addEventListener('keydown', this.keyDown);
+	},
+	beforeDestroy() {
+		window.removeEventListener('keydown', this.keyDown);
+	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),
@@ -187,9 +210,9 @@ export default {
 					return false;
 				}
 				if (this.selectedAnswerIndex < 1) {
-					this.selectAnswer({id: this.question.id, answer: this.question.answers.length - 1});
+					this.selectAnswer({ id: this.question.id, answer: this.question.answers.length - 1 });
 				} else {
-					this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex - 1});
+					this.selectAnswer({ id: this.question.id, answer: this.selectedAnswerIndex - 1 });
 				}
 				return false;
 			}
@@ -203,9 +226,9 @@ export default {
 					return false;
 				}
 				if (this.selectedAnswerIndex > this.question.answers.length - 2) {
-					this.selectAnswer({id: this.question.id, answer: 0});
+					this.selectAnswer({ id: this.question.id, answer: 0 });
 				} else {
-					this.selectAnswer({id: this.question.id, answer: this.selectedAnswerIndex + 1});
+					this.selectAnswer({ id: this.question.id, answer: this.selectedAnswerIndex + 1 });
 				}
 				return false;
 			}
@@ -232,19 +255,5 @@ export default {
 			this.deregister(this.activateWithShortcutKeyId);
 		},
 	},
-	mounted() {
-		window.addEventListener('keydown', this.keyDown);
-	},
-	beforeDestroy() {
-		window.removeEventListener('keydown', this.keyDown);
-	},
-	watch: {
-		async isContentItemClassifierEditorActive() {
-			if (this.isContentItemClassifierEditorActive) {
-				await nextTick();
-				scrollToElement(this.$el);
-			}
-		},
-	}
 };
 </script>

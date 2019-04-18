@@ -1,6 +1,6 @@
 import axios from 'axios';
+import { cloneDeep, get } from 'lodash';
 import Errors from './Errors';
-import {cloneDeep} from 'lodash';
 
 export default class Form {
 	/**
@@ -94,15 +94,15 @@ export default class Form {
 	 */
 	submit(requestType, url, payload) {
 		return new Promise((resolve, reject) => {
-			axios[requestType](url, {...this.data(), ...payload})
+			axios[requestType](url, { ...this.data(), ...payload })
 				.then(response => {
-					this.onSuccess(response.data);
+					this.onSuccess();
 
 					resolve(response.data);
 				})
 				.catch(error => {
 					if (error.response.status === 422) {
-						this.errors.record(_.get(error.response, 'data.errors', error.response.data));
+						this.errors.record(get(error.response, 'data.errors', error.response.data));
 					}
 					reject(error);
 				});
@@ -131,10 +131,8 @@ export default class Form {
 
 	/**
 	 * Handle a successful form submission.
-	 *
-	 * @param {object} data
 	 */
-	onSuccess(data) {
+	onSuccess() {
 		this.errors.clear();
 	}
 

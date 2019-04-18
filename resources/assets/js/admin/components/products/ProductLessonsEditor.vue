@@ -8,7 +8,12 @@
 			</div>
 		</div>
 		<template v-if="productLessons.length">
-			<input v-model="filterPhrase" class="input margin bottom" placeholder="filtruj..." ref="filterInput">
+			<input
+				ref="filterInput"
+				v-model="filterPhrase"
+				class="input margin bottom"
+				placeholder="filtruj..."
+			>
 			<wnl-sortable-table
 				:columns="tableColumns"
 				:active-sort-column-name="activeSort.activeSortColumnName"
@@ -16,7 +21,7 @@
 				:list="visibleProductLessons"
 				@changeOrder="onSort"
 			>
-				<tbody slot-scope="table" slot="tbody">
+				<tbody slot="tbody" slot-scope="table">
 					<tr v-for="productLesson in table.list" :key="productLesson.id">
 						<td>{{productLesson.lesson_id}}</td>
 						<td>{{productLesson.lesson_name}}</td>
@@ -34,7 +39,7 @@
 								type="button"
 								@click="confirmLessonRemoval(productLesson)"
 							>
-								<span class="icon"><i class="fa fa-trash"></i></span>
+								<span class="icon"><i class="fa fa-trash" /></span>
 							</button>
 						</td>
 					</tr>
@@ -55,12 +60,13 @@
 </style>
 
 <script>
+import axios from 'axios';
 import moment from 'moment';
-import {nextTick} from 'vue';
-import {mapActions, mapState} from 'vuex';
-import {orderBy} from 'lodash';
+import { nextTick } from 'vue';
+import { mapActions, mapState } from 'vuex';
+import { orderBy } from 'lodash';
 
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import { swalConfig } from 'js/utils/swal';
 import WnlDatepicker from 'js/components/global/Datepicker';
 import WnlSortableTable from 'js/admin/components/lists/SortableTable';
@@ -114,15 +120,39 @@ export default {
 	computed: {
 		...mapState('lessons', ['lessons']),
 		visibleProductLessons() {
-			const {sortDirection: sort, activeSortColumnName: key} = this.activeSort;
+			const { sortDirection: sort, activeSortColumnName: key } = this.activeSort;
 
 			const filteredLessons = this.filterPhrase ?
 				this.productLessons
-					.filter(({lesson_name}) => lesson_name.toLowerCase().startsWith(this.filterPhrase.toLowerCase()))
+					.filter(({ lesson_name }) => lesson_name.toLowerCase().startsWith(this.filterPhrase.toLowerCase()))
 				: this.productLessons;
 
 			return orderBy(filteredLessons, key, [sort]);
 		},
+	},
+	async mounted() {
+		this.loading = true;
+		try {
+			const [productLessonResponse] = await Promise.all([
+				axios.post(getApiUrl('lesson_product/query'), {
+					product_id: this.id
+				}),
+				this.fetchAllLessons()
+			]);
+			this.productLessons = this.getProductLessons(productLessonResponse);
+
+			nextTick(() => {
+				this.$refs.filterInput && this.$refs.filterInput.focus();
+			});
+		} catch (e) {
+			this.addAutoDismissableAlert({
+				text: 'Nie udało się pobrać planu dla tego produktu',
+				type: 'error'
+			});
+			$wnl.logger.capture(e);
+		} finally {
+			this.loading = false;
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -136,8 +166,8 @@ export default {
 			};
 		},
 		async onAddLesson(lesson) {
-			if (!this.productLessons.some(({lesson_id}) => lesson_id === lesson.lessonId)) {
-				const {data: productLesson} = await axios.post(getApiUrl('lesson_product'), {
+			if (!this.productLessons.some(({ lesson_id }) => lesson_id === lesson.lessonId)) {
+				const { data: productLesson } = await axios.post(getApiUrl('lesson_product'), {
 					product_id: this.id,
 					lesson_id: lesson.lessonId,
 					start_date: moment.utc(lesson.startDate).unix(),
@@ -148,7 +178,7 @@ export default {
 		async performLessonRemoval(productLesson) {
 			try {
 				await axios.delete(getApiUrl(`lesson_product/${productLesson.id}`));
-				const index = this.productLessons.findIndex(({lesson_id}) => productLesson.lesson_id === lesson_id);
+				const index = this.productLessons.findIndex(({ lesson_id }) => productLesson.lesson_id === lesson_id);
 				this.productLessons.splice(index, 1);
 				this.addAutoDismissableAlert({
 					text: 'Usunięto!',
@@ -177,7 +207,7 @@ export default {
 			}
 		},
 		getProductLessons(productLessonResponse) {
-			const { data: {...productLessons}} = productLessonResponse;
+			const { data: { ...productLessons } } = productLessonResponse;
 
 			const productLessonsList = Object.values(productLessons);
 
@@ -209,29 +239,5 @@ export default {
 			this.activeSort = sort;
 		}
 	},
-	async mounted() {
-		this.loading = true;
-		try {
-			const [productLessonResponse] = await Promise.all([
-				axios.post(getApiUrl('lesson_product/query'), {
-					product_id: this.id
-				}),
-				this.fetchAllLessons()
-			]);
-			this.productLessons = this.getProductLessons(productLessonResponse);
-
-			nextTick(() => {
-				this.$refs.filterInput && this.$refs.filterInput.focus();
-			});
-		} catch (e) {
-			this.addAutoDismissableAlert({
-				text: 'Nie udało się pobrać planu dla tego produktu',
-				type: 'error'
-			});
-			$wnl.logger.capture(e);
-		} finally {
-			this.loading = false;
-		}
-	}
 };
 </script>

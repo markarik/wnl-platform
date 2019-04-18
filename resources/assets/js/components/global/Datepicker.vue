@@ -1,8 +1,10 @@
 <template>
-	<input class="input datepicker" :class="{'withBorder': withBorder}"
+	<input
+		class="input datepicker"
+		:class="{'withBorder': withBorder}"
 		:placeholder="placeholder"
 		:value="date"
-	/>
+	>
 </template>
 
 <style lang="sass" rel="stylesheet/sass">
@@ -34,7 +36,7 @@
 <script>
 import moment from 'moment';
 import Flatpickr from 'flatpickr';
-import {pl} from 'flatpickr/dist/l10n/pl.js';
+import { pl } from 'flatpickr/dist/l10n/pl.js';
 
 export default {
 	name: 'Datepicker',
@@ -69,21 +71,10 @@ export default {
 			return this.$t('ui.placeholders.date');
 		},
 	},
-	methods: {
-		dateUpdated(selectedDates, dateStr) {
-			this.date = dateStr;
-		},
-		onChange(payload) {
-			this.$emit('onChange', payload);
-		},
-		redraw(newConfig) {
-			this.datepicker.config = Object.assign(this.datepicker.config, newConfig);
-			this.datepicker.redraw();
-			this.datepicker.jumpToDate();
-		},
-		setDate(newDate, oldDate) {
-			newDate && this.datepicker.setDate(newDate);
-		},
+	watch: {
+		value() {
+			this.setDate(this.value);
+		}
 	},
 	mounted() {
 		if (!this.datepicker) {
@@ -101,16 +92,27 @@ export default {
 		}
 		this.$watch('config', this.redraw);
 	},
-	watch: {
-		value() {
-			this.setDate(this.value);
-		}
-	},
 	beforeDestroy () {
 		if (this.datepicker) {
 			this.datepicker.destroy();
 			this.datepicker = null;
 		}
+	},
+	methods: {
+		dateUpdated(selectedDates, dateStr) {
+			this.date = dateStr;
+		},
+		onChange(payload) {
+			this.$emit('onChange', payload);
+		},
+		redraw(newConfig) {
+			this.datepicker.config = Object.assign(this.datepicker.config, newConfig);
+			this.datepicker.redraw();
+			this.datepicker.jumpToDate();
+		},
+		setDate(newDate) {
+			newDate && this.datepicker.setDate(newDate);
+		},
 	},
 };
 </script>

@@ -1,19 +1,19 @@
 <template>
-			<table class="table">
-				<thead>
-				<tr>
-					<wnl-sortable-table-column-header
-						v-for="column in columns"
-						:key="column.name"
-						@click="changeOrder(column)"
-						:label="column.label"
-						:is-active="column.name === activeSortColumnName"
-						:sort-direction="sortDirection"
-					/>
-				</tr>
-				</thead>
-				<slot name="tbody" :list="list" />
-			</table>
+	<table class="table">
+		<thead>
+		<tr>
+			<wnl-sortable-table-column-header
+				v-for="column in columns"
+				:key="column.name"
+				:label="column.label"
+				:is-active="column.name === activeSortColumnName"
+				:sort-direction="sortDirection"
+				@click="changeOrder(column)"
+			/>
+		</tr>
+		</thead>
+		<slot name="tbody" :list="list" />
+	</table>
 </template>
 
 <style lang="sass">
@@ -54,18 +54,17 @@ export default {
 			return this.$route.query.sort;
 		},
 	},
-	methods: {
-		changeOrder({name, sortable = true}) {
-			if (!sortable) return;
-			const sortDirection = this.activeSortColumnName === name && this.sortDirection === 'asc' ? 'desc' : 'asc';
-
-			this.$emit('changeOrder', {
-				sortDirection,
-				activeSortColumnName: name,
-			});
-
-			this.$router.push({ query: { ...this.$route.query, sortDirection, sort: name }, hash: this.$route.hash});
+	watch: {
+		sortDirection(newVal) {
+			if (this.routerSortDirection !== newVal) {
+				this.$router.push({ query: { ...this.$route.query, sortDirection: newVal } });
+			}
 		},
+		activeSortColumnName(newVal) {
+			if (this.routerSort !== newVal) {
+				this.$router.push({ query: { ...this.$route.query, sort: newVal } });
+			}
+		}
 	},
 	mounted() {
 		if (this.routerSort && (this.routerSortDirection !== this.sortDirection || this.routerSort !== this.activeSortColumnName)) {
@@ -75,17 +74,18 @@ export default {
 			});
 		}
 	},
-	watch: {
-		sortDirection(newVal) {
-			if (this.routerSortDirection !== newVal) {
-				this.$router.push({ query: { ...this.$route.query, sortDirection: newVal }});
-			}
+	methods: {
+		changeOrder({ name, sortable = true }) {
+			if (!sortable) return;
+			const sortDirection = this.activeSortColumnName === name && this.sortDirection === 'asc' ? 'desc' : 'asc';
+
+			this.$emit('changeOrder', {
+				sortDirection,
+				activeSortColumnName: name,
+			});
+
+			this.$router.push({ query: { ...this.$route.query, sortDirection, sort: name }, hash: this.$route.hash });
 		},
-		activeSortColumnName(newVal) {
-			if (this.routerSort !== newVal) {
-				this.$router.push({ query: { ...this.$route.query, sort: newVal }});
-			}
-		}
 	}
 };
 </script>

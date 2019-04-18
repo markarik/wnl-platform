@@ -1,7 +1,7 @@
 <template>
 	<a class="button is-small is-outlined" @click="toggleNotifications">
-		<span>{{ toggleText }}</span>
-		<span class="toggle-icon icon is-small"><i class="fa" :class="toggleIcon"></i></span>
+		<span>{{toggleText}}</span>
+		<span class="toggle-icon icon is-small"><i class="fa" :class="toggleIcon" /></span>
 	</a>
 </template>
 
@@ -46,7 +46,7 @@ export default {
 			return this.$t(`notifications.personal.${key}`);
 		},
 		toggleNotifications() {
-			this.changeUserSettingAndSync({setting: this.setting, value: !this.isOn});
+			this.changeUserSettingAndSync({ setting: this.setting, value: !this.isOn });
 		},
 	},
 };

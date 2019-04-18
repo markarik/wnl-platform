@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {get} from 'lodash';
-import {getApiUrl} from 'js/utils/env';
+import { get } from 'lodash';
+import { getApiUrl } from 'js/utils/env';
 import * as types from 'js/store/mutations-types';
 
 const getCsrfToken = async () => {
@@ -8,7 +8,7 @@ const getCsrfToken = async () => {
 	return get(response, 'data.token');
 };
 
-export default (Vue, {store, router}) => {
+export default (Vue, { store, router }) => {
 	/**
 	 * We'll register a HTTP interceptor to attach the "CSRF" header to each of
 	 * the outgoing requests issued by this application. The CSRF middleware

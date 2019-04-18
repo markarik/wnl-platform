@@ -3,17 +3,17 @@
 		<div v-if="selected" class="selected-container">
 			<span>{{selected.full_name}}</span>
 			<a class="button is-primary is-outlined" @click="onChange(null)">
-			<span class="icon is-small">
-			<i class="fa fa-times"></i>
-			</span>
-		</a></div>
+				<span class="icon is-small">
+					<i class="fa fa-times" />
+				</span>
+			</a></div>
 		<wnl-autocomplete
 			v-else
 			v-model="textInputValue"
 			:items="usersListFiltered"
 			@change="onChange"
 		>
-			<wnl-user-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
+			<wnl-user-autocomplete-item slot-scope="slotProps" :item="slotProps.item" />
 		</wnl-autocomplete>
 
 	</div>
@@ -31,16 +31,13 @@
 </style>
 
 <script>
-import {KEYS} from 'js/consts/keys';
-
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
 
 export default {
-	data() {
-		return {
-			textInputValue: '',
-		};
+	components: {
+		WnlAutocomplete,
+		WnlUserAutocompleteItem,
 	},
 	props: {
 		usersList: {
@@ -52,9 +49,10 @@ export default {
 			default: () => ({}),
 		}
 	},
-	components: {
-		WnlAutocomplete,
-		WnlUserAutocompleteItem,
+	data() {
+		return {
+			textInputValue: '',
+		};
 	},
 	computed: {
 		usersListFiltered() {
@@ -63,8 +61,7 @@ export default {
 			}
 
 			return this.usersList.filter(moderator => {
-				const name = moderator.display_name ? moderator.display_name : moderator.full_name;
-				return name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1;
+				return moderator.full_name.toLowerCase().indexOf(this.textInputValue.toLowerCase()) > -1;
 			});
 		},
 	},

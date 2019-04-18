@@ -1,5 +1,5 @@
 <template>
-	<router-view/>
+	<router-view />
 </template>
 
 <script>
@@ -10,7 +10,7 @@ export default {
 	perimeters: [currentEditionParticipant],
 	mounted() {
 		if (!this.$currentEditionParticipant.isAllowed('access')) {
-			this.$router.replace({name: 'dashboard'});
+			this.$router.replace({ name: 'dashboard' });
 		}
 	}
 };

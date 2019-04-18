@@ -3,13 +3,18 @@
 		<div class="refresh">
 			<div class="refresh-link">
 				<span class="icon is-tiny">
-					<i class="fa fa-refresh" :class="{'fa-spin': loading}"></i>
+					<i class="fa fa-refresh" :class="{'fa-spin': loading}" />
 				</span>
 				<a @click="$emit('refresh')">{{$t('questions.filters.refresh')}}</a>
 			</div>
 			<div class="autorefresh control">
 				<label for="autorefresh">{{$t('questions.filters.autorefresh')}}</label>
-				<input id="autorefresh" type="checkbox" class="checkbox" v-model="autorefresh">
+				<input
+					id="autorefresh"
+					v-model="autorefresh"
+					type="checkbox"
+					class="checkbox"
+				>
 			</div>
 		</div>
 		<div class="filtering-result">
@@ -24,16 +29,17 @@
 				{{$t('questions.filters.activeHeading')}}
 			</span>
 			<span class="active-filters-heading-slot">
-				<slot name="heading"/>
+				<slot name="heading" />
 			</span>
 		</div>
-		<div v-if="this.activeFilters.length > 0" class="active-filters-list">
-			<span v-for="(filter, index) in activeFiltersObjects"
-				class="tag is-success"
+		<div v-if="activeFilters.length > 0" class="active-filters-list">
+			<span
+				v-for="(filter, index) in activeFiltersObjects"
 				:key="index"
+				class="tag is-success"
 			>
 				{{filterDisplayName(filter)}}
-				<button class="delete is-tiny" @click="removeFilter(filter.path)"></button>
+				<button class="delete is-tiny" @click="removeFilter(filter.path)" />
 			</span>
 		</div>
 		<div v-else class="active-filters-list">
@@ -115,8 +121,8 @@
 </style>
 
 <script>
-import {nextTick} from 'vue';
-import {cloneDeep, isEqual, get} from 'lodash';
+import { nextTick } from 'vue';
+import { get } from 'lodash';
 
 export default {
 	name: 'ActiveFilters',
@@ -152,8 +158,19 @@ export default {
 	},
 	computed: {
 		activeFiltersObjects() {
-			return this.activeFilters.map(filter => ({path: filter, ...this.getFilter(filter)}));
+			return this.activeFilters.map(filter => ({ path: filter, ...this.getFilter(filter) }));
 		},
+	},
+	watch: {
+		activeFilters() {
+			nextTick(this.emitHeight);
+		},
+		autorefresh(to) {
+			this.$emit('autorefreshChange', to);
+		},
+	},
+	mounted() {
+		this.emitHeight();
 	},
 	methods: {
 		filterDisplayName(filter) {
@@ -177,18 +194,7 @@ export default {
 			this.$emit('elementHeight', this.$el.offsetHeight);
 		},
 		removeFilter(filter) {
-			this.$emit('activeFiltersChanged', {filter, active: false});
-		},
-	},
-	mounted() {
-		this.emitHeight();
-	},
-	watch: {
-		activeFilters() {
-			nextTick(this.emitHeight);
-		},
-		autorefresh(to) {
-			this.$emit('autorefreshChange', to);
+			this.$emit('activeFiltersChanged', { filter, active: false });
 		},
 	}
 };

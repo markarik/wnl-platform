@@ -23,25 +23,29 @@
 				slot-scope="parentAutocomplete"
 				:selected="parent"
 				@change="parentAutocomplete.validateAndChangeParent"
-			></wnl-taxonomy-term-autocomplete>
+			/>
 
 			<wnl-tag-autocomplete
 				slot="autocomplete"
 				:selected="tag"
 				@change="onSelectTag"
-			></wnl-tag-autocomplete>
+			/>
 
-			<div class="field" slot="extra-fields">
+			<div slot="extra-fields" class="field">
 				<label class="label is-uppercase"><strong>Notatka</strong></label>
 				<span class="info">(Opcjonalnie) Dodaj notatkę niewidoczną dla użytkowników.</span>
-				<textarea class="textarea margin bottom" v-model="description" placeholder="Wpisz tekst" />
+				<textarea
+					v-model="description"
+					class="textarea margin bottom"
+					placeholder="Wpisz tekst"
+				/>
 			</div>
 		</wnl-nested-set-editor-form>
 	</div>
 </template>
 
 <script>
-import {mapActions, mapState, mapGetters} from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 
 import WnlTaxonomyTermEditorCurrentTerm from 'js/admin/components/taxonomies/TaxonomyTermEditorCurrentTerm';
 import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
@@ -70,9 +74,9 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters('taxonomyTerms', {termById: 'nodeById'}),
+		...mapGetters('taxonomyTerms', { termById: 'nodeById' }),
 		...mapGetters('taxonomyTerms', ['getAncestorNodesById']),
-		...mapState('taxonomyTerms', {selectedTerms: 'selectedNodes', isSaving: 'isSaving'}),
+		...mapState('taxonomyTerms', { selectedTerms: 'selectedNodes', isSaving: 'isSaving' }),
 		parent() {
 			if (this.selectedTerms.length === 0) {
 				return null;

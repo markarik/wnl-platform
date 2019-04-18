@@ -20,12 +20,12 @@
 		<div class="content-classifier-filter__active-filters">
 			<h5 class="title is-5">Aktywne filtry</h5>
 
-			<div class="content-classifier-filter__active-filters__list margin bottom" v-if="hasActiveFilters">
+			<div v-if="hasActiveFilters" class="content-classifier-filter__active-filters__list margin bottom">
 				<wnl-taxonomy-term-with-ancestors
 					v-for="term in byTaxonomyTermsFilter"
+					:key="term.id"
 					:term="term"
 					:ancestors="term.ancestors"
-					:key="term.id"
 					class="content-classifier-filter__active-filters__term"
 					is-bordered
 				>
@@ -34,7 +34,7 @@
 						class="icon is-small margin right clickable"
 						@click="onTaxonomyTermDelete(term)"
 					>
-						<i class="fa fa-times"></i>
+						<i class="fa fa-times" />
 					</span>
 				</wnl-taxonomy-term-with-ancestors>
 
@@ -48,14 +48,23 @@
 						class="icon is-small margin right clickable"
 						@click="onTagDelete(tag)"
 					>
-						<i class="fa fa-times"></i>
+						<i class="fa fa-times" />
 					</span>
 				</wnl-tag>
 			</div>
 
 			<div class="content-classifier-filter__type-filters">
-				<div v-for="(meta, contentType) in contentTypes" :key="contentType" class="field is-grouped content-classifier-filter__type-filters__item">
-					<input :id="`type-${contentType}`" type="checkbox" class="checkbox" v-model="activeContentTypesMap[contentType]"/>
+				<div
+					v-for="(meta, contentType) in contentTypes"
+					:key="contentType"
+					class="field is-grouped content-classifier-filter__type-filters__item"
+				>
+					<input
+						:id="`type-${contentType}`"
+						v-model="activeContentTypesMap[contentType]"
+						type="checkbox"
+						class="checkbox"
+					>
 					<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
 				</div>
 			</div>
@@ -103,7 +112,7 @@
 </style>
 
 <script>
-import { mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 import WnlTagAutocomplete from 'js/admin/components/global/TagAutocomplete';
 import WnlTaxonomyTermSelector from 'js/components/global/taxonomies/TaxonomyTermSelector';
@@ -150,12 +159,12 @@ export default {
 	},
 	methods: {
 		onTagSelect(tag) {
-			if (!this.byTagsFilter.find(({id}) => id === tag.id)) {
+			if (!this.byTagsFilter.find(({ id }) => id === tag.id)) {
 				this.byTagsFilter.push(tag);
 			}
 		},
 		onTermSelect(term, taxonomyId) {
-			if (!this.byTaxonomyTermsFilter.find(({id}) => id === term.id)) {
+			if (!this.byTaxonomyTermsFilter.find(({ id }) => id === term.id)) {
 				this.byTaxonomyTermsFilter.push({
 					...term,
 					taxonomy: this.taxonomyById(taxonomyId),
@@ -164,13 +173,13 @@ export default {
 			}
 		},
 		onTagDelete(tag) {
-			const index = this.byTagsFilter.findIndex(({id}) => id === tag.id);
+			const index = this.byTagsFilter.findIndex(({ id }) => id === tag.id);
 			if (index > -1) {
 				this.byTagsFilter.splice(index, 1);
 			}
 		},
 		onTaxonomyTermDelete(term) {
-			const index = this.byTaxonomyTermsFilter.findIndex(({id}) => id === term.id);
+			const index = this.byTaxonomyTermsFilter.findIndex(({ id }) => id === term.id);
 			if (index > -1) {
 				this.byTaxonomyTermsFilter.splice(index, 1);
 			}

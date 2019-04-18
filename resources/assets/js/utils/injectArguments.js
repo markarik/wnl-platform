@@ -1,4 +1,4 @@
-import {get} from 'lodash';
+import { get } from 'lodash';
 
 const PLACEHOLDER_RGX = /{{[a-z0-9]*}}/gi;
 

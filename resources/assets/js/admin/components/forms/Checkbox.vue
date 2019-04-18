@@ -1,18 +1,23 @@
 <template>
 	<div class="field wnl-form-checkbox">
 
-		<input type="checkbox"
-			   :name="name"
-			   :checked="form[name]"
-			   @change="$emit('input', $event.target.checked)"
-			   :id="name">
+		<input
+			:id="name"
+			type="checkbox"
+			:name="name"
+			:checked="form[name]"
+			@change="$emit('input', $event.target.checked)"
+		>
 
 		<label :for="name" class="label">
-			<slot></slot>
+			<slot />
 		</label>
 
-		<span class="help is-danger" v-if="form.errors.has(name)"
-			  v-text="form.errors.get(name)"></span>
+		<span
+			v-if="form.errors.has(name)"
+			class="help is-danger"
+			v-text="form.errors.get(name)"
+		/>
 	</div>
 </template>
 

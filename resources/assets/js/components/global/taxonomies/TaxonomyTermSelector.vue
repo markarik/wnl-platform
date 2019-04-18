@@ -1,9 +1,9 @@
 <template>
 	<div class="term-select">
 		<wnl-select
+			v-model="taxonomyId"
 			:options="taxonomiesOptions"
 			class="is-marginless"
-			v-model="taxonomyId"
 			@input="onTaxonomyChange"
 		/>
 		<wnl-taxonomy-term-autocomplete
@@ -29,13 +29,13 @@
 </style>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
-import {ALERT_TYPES} from 'js/consts/alert';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 import WnlSelect from 'js/admin/components/forms/Select';
 import WnlTaxonomyTermAutocomplete from 'js/components/global/taxonomies/TaxonomyTermAutocomplete';
-import {USER_SETTING_NAMES} from 'js/consts/settings';
+import { USER_SETTING_NAMES } from 'js/consts/settings';
 
 export default {
 	components: {
@@ -63,8 +63,26 @@ export default {
 		...mapGetters(['getSetting']),
 		...mapState('taxonomies', ['taxonomies']),
 		taxonomiesOptions() {
-			return this.taxonomies.map(taxonomy => ({value: taxonomy.id, text: taxonomy.name}));
+			return this.taxonomies.map(taxonomy => ({ value: taxonomy.id, text: taxonomy.name }));
 		},
+	},
+	async mounted() {
+		try {
+			await this.fetchTaxonomies();
+
+			await this.setupCurrentUser();
+			const defaultTaxonomyId = this.getSetting(USER_SETTING_NAMES.DEFAULT_TAXONOMY_ID);
+
+			if (this.taxonomyById(defaultTaxonomyId)) {
+				this.taxonomyId = defaultTaxonomyId;
+			}
+		} catch (error) {
+			$wnl.logger.capture(error);
+			this.addAutoDismissableAlert({
+				text: 'Coś poszło nie tak przy pobieraniu listy Taksonomii',
+				type: ALERT_TYPES.ERROR
+			});
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -86,24 +104,6 @@ export default {
 		},
 		onChange(term) {
 			this.$emit('change', term, this.taxonomyId);
-		}
-	},
-	async mounted() {
-		try {
-			await this.fetchTaxonomies();
-
-			await this.setupCurrentUser();
-			const defaultTaxonomyId = this.getSetting(USER_SETTING_NAMES.DEFAULT_TAXONOMY_ID);
-
-			if (this.taxonomyById(defaultTaxonomyId)) {
-				this.taxonomyId = defaultTaxonomyId;
-			}
-		} catch (error) {
-			$wnl.logger.capture(error);
-			this.addAutoDismissableAlert({
-				text: 'Coś poszło nie tak przy pobieraniu listy Taksonomii',
-				type: ALERT_TYPES.ERROR
-			});
 		}
 	},
 };

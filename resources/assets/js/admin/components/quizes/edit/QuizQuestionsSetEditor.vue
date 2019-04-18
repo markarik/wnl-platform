@@ -6,28 +6,30 @@
 					Edycja zestawu pytań zamkniętych
 					<span v-if="isEdit">(Id: {{quizQuestionsSetId}})</span>
 				</h3>
-				<button class="button is-small is-success"
+				<button
+					class="button is-small is-success"
 					:class="{'is-loading': loading}"
 					:disabled="!hasChanged"
 					type="submit"
 				>
 					<span class="margin right">Zapisz</span>
 					<span class="icon is-small">
-						<i class="fa fa-save"></i>
+						<i class="fa fa-save" />
 					</span>
 				</button>
 			</div>
 			<wnl-form-input
+				v-model="form.name"
 				name="name"
 				:form="form"
-				v-model="form.name"
 			>Nazwa
 			</wnl-form-input>
 			<label class="label">Lekcja, której dotyczy zestaw</label>
 			<span class="select quiz-questions-set-editor-select">
-				<wnl-select :form="form"
-					:options="lessonsOptions"
+				<wnl-select
 					v-model="form.lesson_id"
+					:form="form"
+					:options="lessonsOptions"
 					name="lesson_id"
 				/>
 			</span>
@@ -42,25 +44,30 @@
 			/>
 			<h4 class="title margin top">Dodaj pytanie</h4>
 			<input
+				v-model="quizQuestionInput"
 				class="quiz-question-id-input"
 				type="number"
 				name="quizQuestionInput"
-				v-model="quizQuestionInput"
 				placeholder="Podaj numer id pytania"
 			>
-			<button class="button is-small is-success"
+			<button
+				class="button is-small is-success"
 				type="button"
 				name="button"
 				@click="addQuizQuestion(quizQuestionInput)"
 			>Dodaj
 			</button>
 			<h4 class="title margin top">Lista pytań</h4>
-			<div class="quiz-questions-admin" v-if="form.quiz_questions && formPopulated">
-				<wnl-draggable v-model="form.quiz_questions" @start="drag=true" @end="drag=false">
+			<div v-if="form.quiz_questions && formPopulated" class="quiz-questions-admin">
+				<wnl-draggable
+					v-model="form.quiz_questions"
+					@start="drag=true"
+					@end="drag=false"
+				>
 					<wnl-quiz-questions-set-list-item
 						v-for="questionId in form.quiz_questions"
-						:key="questionId"
 						:id="questionId"
+						:key="questionId"
 						:content="getQuizQuestionContent(questionId)"
 						@remove="removeQuestion(questionId)"
 					/>
@@ -108,13 +115,14 @@
 </style>
 
 <script>
-import {isEqual, isEmpty} from 'lodash';
-import {mapState, mapActions} from 'vuex';
+import axios from 'axios';
+import { isEqual, isEmpty } from 'lodash';
+import { mapState, mapActions } from 'vuex';
 import WnlDraggable from 'vuedraggable';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 import Form from 'js/classes/forms/Form';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 import WnlFormInput from 'js/admin/components/forms/Input';
 import WnlQuill from 'js/admin/components/forms/Quill';
@@ -162,9 +170,17 @@ export default {
 			return !isEqual(this.form.originalData, this.form.data());
 		}
 	},
+	mounted() {
+		if (this.isEdit) {
+			this.populateForm();
+		} else {
+			this.formPopulated = true;
+		}
+		this.setupLessons();
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('lessons', {setupLessons: 'setup'}),
+		...mapActions('lessons', { setupLessons: 'setup' }),
 		getQuizQuestionContent(questionId) {
 			return Object.values(this.quizQuestionsObjects).find(question => question.id === questionId).text;
 		},
@@ -172,7 +188,7 @@ export default {
 			const fetchedForm = await this.form.populate(this.quizQuestionsSetResourceUrl);
 
 			if (fetchedForm.included && fetchedForm.included.quiz_questions) {
-				this.quizQuestionsObjects = {...fetchedForm.included.quiz_questions};
+				this.quizQuestionsObjects = { ...fetchedForm.included.quiz_questions };
 			} else {
 				this.quizQuestionsObjects = {};
 			}
@@ -283,14 +299,6 @@ export default {
 			}
 			this.quizQuestionInput = '';
 		},
-	},
-	mounted() {
-		if (this.isEdit) {
-			this.populateForm();
-		} else {
-			this.formPopulated = true;
-		}
-		this.setupLessons();
 	},
 };
 </script>

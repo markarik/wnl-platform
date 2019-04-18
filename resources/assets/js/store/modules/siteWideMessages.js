@@ -1,8 +1,9 @@
-import {set} from 'vue';
+import axios from 'axios';
+import { set } from 'vue';
 
 import * as types from 'js/store/mutations-types';
-import {getApiUrl} from 'js/utils/env';
-import {MESSAGE_TARGETS} from 'js/consts/siteWideMessage';
+import { getApiUrl } from 'js/utils/env';
+import { MESSAGE_TARGETS } from 'js/consts/siteWideMessage';
 
 const state = {
 	siteWideMessages: []
@@ -23,7 +24,7 @@ const mutations = {
 };
 
 const actions = {
-	async fetchUserSiteWideMessages({commit, rootGetters}) {
+	async fetchUserSiteWideMessages({ commit, rootGetters }) {
 		try {
 			const response = await axios.get(getApiUrl(`users/${rootGetters.currentUserId}/site_wide_messages`));
 			if (!Array.isArray(response.data)) {
@@ -37,7 +38,7 @@ const actions = {
 			$wnl.logger.error(e);
 		}
 	},
-	async updateSiteWideMessage({commit}, messageId) {
+	async updateSiteWideMessage(_, messageId) {
 		try {
 			await axios.put(getApiUrl(`site_wide_messages/${messageId}/read`), {
 				read_at: new Date()

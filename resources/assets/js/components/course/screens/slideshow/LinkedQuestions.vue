@@ -10,8 +10,8 @@
 
 <script>
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
-import {debounce, isEmpty} from 'lodash';
+import { getApiUrl } from 'js/utils/env';
+import { debounce, isEmpty } from 'lodash';
 
 const defaultMessage = 'Szukam powiązanych pytań...';
 
@@ -32,10 +32,18 @@ export default {
 			return 'slides/' + this.slideId + '?include=quiz_questions';
 		},
 	},
+	watch: {
+		'slideId' () {
+			this.debouncedGetLinkedQuestions();
+		}
+	},
+	mounted() {
+		this.setLinkedQuestions();
+	},
 	methods: {
-		debouncedGetLinkedQuestions: _.debounce(function (to, from) {
+		debouncedGetLinkedQuestions: debounce(function () {
 			this.setLinkedQuestions();
-		}, 300, {leading: false, trailing: true}),
+		}, 300, { leading: false, trailing: true }),
 		getLinkedQuestions() {
 			this.linkedQuestions = defaultMessage;
 			return axios.get(getApiUrl(this.slideApiUrl))
@@ -58,18 +66,10 @@ export default {
 				.then((response) => {
 					this.linkedQuestions = response;
 				})
-				.catch((e) => {
+				.catch(() => {
 					this.linkedQuestions = 'Nie powiodło się...';
 				});
 		},
 	},
-	mounted() {
-		this.setLinkedQuestions();
-	},
-	watch: {
-		'slideId' () {
-			this.debouncedGetLinkedQuestions();
-		}
-	}
 };
 </script>

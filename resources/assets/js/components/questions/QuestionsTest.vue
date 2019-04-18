@@ -1,36 +1,57 @@
 <template>
 	<div>
 		<div class="questions-test-header-container" :class="{'is-mobile': isMobile, 'is-complete': isComplete}">
-			<div class="questions-test-header" :class="{'is-sticky': hasStickyHeader}" ref="header">
+			<div
+				ref="header"
+				class="questions-test-header"
+				:class="{'is-sticky': hasStickyHeader}"
+			>
 				<div v-if="!isComplete">
 					<div class="in-progress">
 						<span>
-							<span class="answered" v-if="!isMobile || unansweredCount === 0">
+							<span v-if="!isMobile || unansweredCount === 0" class="answered">
 								{{$t('questions.solving.test.headers.answered', {
 									answered: answeredCount,
 									total: totalCount,
 								})}}
 							</span>
-							<a v-show="unansweredCount > 0" class="toggle-unanswered"
-								@click="filterUnanswered = !filterUnanswered">
+							<a
+								v-show="unansweredCount > 0"
+								class="toggle-unanswered"
+								@click="filterUnanswered = !filterUnanswered"
+							>
 								{{unansweredToggleMessage}}
 								({{unansweredToggleCount}})
 							</a>
 						</span>
-						<wnl-quiz-timer ref="timer"
+						<wnl-quiz-timer
+							ref="timer"
 							:hide-time="hideTime"
 							:time="time"
 							@clicked="hideTime = !hideTime"
-							@timesUp="onTimesUp"/>
+							@timesUp="onTimesUp"
+						/>
 					</div>
-					<progress class="progress is-success" :max="totalCount" :value="answeredCount">
+					<progress
+						class="progress is-success"
+						:max="totalCount"
+						:value="answeredCount"
+					>
 						{{answeredCount}}
 					</progress>
 					<div class="test-controls">
-						<a class="is-small is-primary is-outlined" :class="{'button': !isMobile}" @click="checkQuiz">
+						<a
+							class="is-small is-primary is-outlined"
+							:class="{'button': !isMobile}"
+							@click="checkQuiz"
+						>
 							{{$t('questions.solving.resolve')}}
 						</a>
-						<a class="is-small" :class="{'button': !isMobile}" @click="$emit('endQuiz')">
+						<a
+							class="is-small"
+							:class="{'button': !isMobile}"
+							@click="$emit('endQuiz')"
+						>
 							{{$t('questions.solving.abort')}}
 						</a>
 					</div>
@@ -53,12 +74,12 @@
 							{{$t('questions.solving.results.displayOnly')}}
 						</span>
 						<span
-							v-for="(questions, status) in testResultsWithQuestions"
-							:class="[{'is-active': filterResults === status}, `results-${status}`]"
+							v-for="(questionsForStatus, status) in testResultsWithQuestions"
 							:key="status"
+							:class="[{'is-active': filterResults === status}, `results-${status}`]"
 							@click="toggleFilter(status)"
 						>
-							{{$t(`questions.solving.results.${status}`)}} ({{questions.length}})
+							{{$t(`questions.solving.results.${status}`)}} ({{questionsForStatus.length}})
 						</span>
 					</div>
 				</div>
@@ -75,8 +96,8 @@
 		</div>
 
 		<wnl-quiz-list
-			module="questions"
 			ref="quizlist"
+			module="questions"
 			:all-questions="questionsCurrentPage"
 			:get-reaction="getReaction"
 			:is-complete="isComplete"
@@ -99,7 +120,11 @@
 		</div>
 
 		<p v-if="!isComplete" class="questions-test-resolve">
-			<a class="button is-outlined is-small is-primary" :class="{'is-loading': testProcessing}" @click="checkQuiz">
+			<a
+				class="button is-outlined is-small is-primary"
+				:class="{'is-loading': testProcessing}"
+				@click="checkQuiz"
+			>
 				{{$t('questions.solving.resolve')}}
 			</a>
 		</p>
@@ -228,8 +253,8 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
-import {debounce, isEmpty, isNumber, size} from 'lodash';
+import { mapGetters } from 'vuex';
+import { debounce, isEmpty, isNumber, size } from 'lodash';
 
 import QuizList from 'js/components/quiz/QuizList';
 import QuizTimer from 'js/components/quiz/QuizTimer';
@@ -238,7 +263,7 @@ import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 import context from 'js/consts/events_map/context.json';
 
-import {scrollToElement} from 'js/utils/animations';
+import { scrollToElement } from 'js/utils/animations';
 
 export default {
 	name: 'QuestionsTest',
@@ -335,6 +360,26 @@ export default {
 				: this.$t('questions.solving.unanswered.filter');
 		},
 	},
+	watch: {
+		hasStickyHeader(to) {
+			this.hideTime = to;
+		},
+		lastPage(to) {
+			if (to < this.currentPage) this.currentPage = to;
+		},
+	},
+	mounted() {
+		!this.isComplete && this.$refs.timer.startTimer();
+		this.headerOffset = this.$refs.header.offsetTop;
+
+		// TODO: Pass class name as props
+		this.scrollableContainer = document.getElementsByClassName('scrollable-main-container')[0];
+		this.scrollableContainer.addEventListener('scroll', this.onScroll);
+		this.$emit('testStart');
+	},
+	beforeDestroy() {
+		this.scrollableContainer.removeEventListener('scroll', this.onScroll);
+	},
 	methods: {
 		changePage(n) {
 			this.currentPage = n;
@@ -343,7 +388,7 @@ export default {
 			}
 		},
 		checkQuiz() {
-			this.$emit('checkQuiz', {unansweredCount: this.unansweredCount});
+			this.$emit('checkQuiz', { unansweredCount: this.unansweredCount });
 			if (this.unansweredCount > 0) {
 				this.$refs.quizlist.scrollToFirstUnanswered();
 			}
@@ -351,7 +396,7 @@ export default {
 		toggleFilter(status) {
 			this.filterResults = this.filterResults === status ? '' : status;
 		},
-		onScroll: debounce(function({target: {scrollTop}}) {
+		onScroll: debounce(function({ target: { scrollTop } }) {
 			if (this.isMobile) {
 				this.canShowStickyHeader = scrollTop < this.currentScroll;
 			}
@@ -374,25 +419,5 @@ export default {
 			this.$emit('updateTime', this.$refs.timer.remainingTime);
 		}
 	},
-	mounted() {
-		!this.isComplete && this.$refs.timer.startTimer();
-		this.headerOffset = this.$refs.header.offsetTop;
-
-		// TODO: Pass class name as props
-		this.scrollableContainer = document.getElementsByClassName('scrollable-main-container')[0];
-		this.scrollableContainer.addEventListener('scroll', this.onScroll);
-		this.$emit('testStart');
-	},
-	beforeDestroy() {
-		this.scrollableContainer.removeEventListener('scroll', this.onScroll);
-	},
-	watch: {
-		hasStickyHeader(to, from) {
-			this.hideTime = to;
-		},
-		lastPage(to, from) {
-			if (to < this.currentPage) this.currentPage = to;
-		},
-	}
 };
 </script>

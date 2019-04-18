@@ -1,27 +1,36 @@
 <template>
-	<article class="media wnl-chat-message" :class="{ 'is-full': showAuthor }" :data-id="id">
-		<figure class="media-left" @click="showModal" :class="{'author-forgotten': author.deleted_at}">
+	<article
+		class="media wnl-chat-message"
+		:class="{ 'is-full': showAuthor }"
+		:data-id="id"
+	>
+		<figure
+			class="media-left"
+			:class="{'author-forgotten': author.deleted_at}"
+			@click="showModal"
+		>
 			<wnl-avatar
+				v-if="showAuthor"
 				:full-name="fullName"
 				:url="avatar"
-				v-if="showAuthor">
-			</wnl-avatar>
-			<div class="media-left-placeholder" v-else></div>
+			/>
+			<div v-else class="media-left-placeholder" />
 		</figure>
 		<div class="media-content">
 			<div class="content">
-				<p class="wnl-message-meta" v-if="showAuthor">
+				<p v-if="showAuthor" class="wnl-message-meta">
 					<strong
 						class="author"
 						:class="{'author-forgotten': author.deleted_at}"
-						@click="showModal">{{ nameToDisplay }}</strong>
-					<small class="wnl-message-time">{{ formattedTime }}</small>
+						@click="showModal"
+					>{{fullName}}</strong>
+					<small class="wnl-message-time">{{formattedTime}}</small>
 				</p>
-				<p class="wnl-message-content" v-html="content"></p>
+				<p class="wnl-message-content" v-html="content" />
 			</div>
 		</div>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="author"/>
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
+			<wnl-user-profile-modal :author="author" />
 		</wnl-modal>
 	</article>
 </template>
@@ -72,7 +81,6 @@
 					margin: 0
 </style>
 <script>
-import { mapActions } from 'vuex';
 import { timeFromMs } from 'js/utils/time';
 
 import Modal from 'js/components/global/Modal.vue';
@@ -80,12 +88,12 @@ import UserProfileModal from 'js/components/users/UserProfileModal';
 import Avatar from 'js/components/global/Avatar';
 
 export default{
-	props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
 	components: {
 		'wnl-avatar': Avatar,
 		'wnl-user-profile-modal': UserProfileModal,
 		'wnl-modal': Modal
 	},
+	props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
 	data() {
 		return {
 			isVisible: false
@@ -95,9 +103,6 @@ export default{
 		formattedTime () {
 			return timeFromMs(this.time);
 		},
-		nameToDisplay() {
-			return this.author.display_name || this.fullName;
-		}
 	},
 	methods: {
 		showModal() {

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import _ from 'lodash';
 import Vue from 'vue';
 import Raven from 'raven-js';
@@ -28,7 +29,7 @@ export default class Logger {
 		};
 	}
 
-	constructor(options = {}) {
+	constructor() {
 		this.level     = envValue('APP_LOG_LEVEL');
 		this.levelCode = Logger.LEVELS[this.level];
 
@@ -61,7 +62,7 @@ export default class Logger {
 	}
 
 	capture(exception) {
-		if (this.useExternal()) {
+		if (!isDev()) {
 			Raven.captureException(exception);
 		}
 

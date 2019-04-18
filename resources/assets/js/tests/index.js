@@ -1,13 +1,15 @@
-import Vue from 'vue';
+/* eslint-disable no-console */
+require('jsdom-global')();
 
+const Vue = require('vue');
 Vue.config.productionTip = false;
 
-window.$wnl = {
+$wnl = {
+	env: {
+		appUrl: 'http://test',
+	},
 	logger: {
+		capture: console.log,
 		warning: console.log
 	}
 };
-
-// require all test files (files that ends with .spec.js)
-const testsContext = require.context('../', true, /\.spec$/);
-testsContext.keys().forEach(testsContext);

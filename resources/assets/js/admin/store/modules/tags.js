@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash';
 import axios from 'axios';
 import { set } from 'vue';
 import { getApiUrl } from 'js/utils/env';
@@ -28,11 +27,11 @@ const mutations = {
 
 // Actions
 const actions = {
-	async fetchAll({commit}) {
+	async fetchAll({ commit }) {
 		commit(types.SETUP_TAGS, []);
 		commit(types.SET_TAGS_LOADING, true);
 		try {
-			const {data: tags} = await axios.get(getApiUrl('tags/all'));
+			const { data: tags } = await axios.get(getApiUrl('tags/all'));
 			commit(types.SETUP_TAGS, tags);
 		} catch (error) {
 			throw error;
@@ -40,8 +39,8 @@ const actions = {
 			commit(types.SET_TAGS_LOADING, false);
 		}
 	},
-	async create({commit}, name) {
-		const {data: tag} = await axios.post(getApiUrl('tags'), {
+	async create({ commit }, name) {
+		const { data: tag } = await axios.post(getApiUrl('tags'), {
 			name
 		});
 		commit(types.ADD_TAG, tag);

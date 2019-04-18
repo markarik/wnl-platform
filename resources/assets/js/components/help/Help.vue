@@ -1,22 +1,24 @@
 <template>
 	<div class="wnl-app-layout wnl-course-layout">
 		<wnl-sidenav-slot
-				:is-visible="isSidenavVisible"
-				:is-detached="!isSidenavMounted"
+			:is-visible="isSidenavVisible"
+			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 			<aside class="sidenav-aside help-sidenav">
-				<wnl-sidenav :items="sidenavItems"
-							 items-heading="Pomoc"></wnl-sidenav>
+				<wnl-sidenav
+					:items="sidenavItems"
+					items-heading="Pomoc"
+				/>
 			</aside>
 		</wnl-sidenav-slot>
 		<div class="wnl-course-content wnl-column">
 			<div class="scrollable-main-container">
 				<router-view
-						:arguments="templateArguments"
-						:slug="$route.name"
-						@userEvent="onUserEvent"
-				></router-view>
+					:arguments="templateArguments"
+					:slug="$route.name"
+					@userEvent="onUserEvent"
+				/>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -24,11 +26,19 @@
 			:is-detached="!isChatMounted"
 			:has-chat="hasChat"
 		>
-			<wnl-public-chat v-if="hasChat" :rooms="chatRooms" title="W czym możemy Ci pomóc?"></wnl-public-chat>
+			<wnl-public-chat
+				v-if="hasChat"
+				:rooms="chatRooms"
+				title="W czym możemy Ci pomóc?"
+			/>
 		</wnl-sidenav-slot>
-		<div v-if="hasChat && isChatToggleVisible" class="wnl-chat-toggle" @click="toggleChat">
+		<div
+			v-if="hasChat && isChatToggleVisible"
+			class="wnl-chat-toggle"
+			@click="toggleChat"
+		>
 			<span class="icon is-big">
-				<i class="fa fa-chevron-left"></i>
+				<i class="fa fa-chevron-left" />
 				<span>Pokaż czat</span>
 			</span>
 		</div>
@@ -63,7 +73,7 @@
 </style>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import MainNav from 'js/components/MainNav';
 import PublicChat from 'js/components/chat/PublicChat';
@@ -178,18 +188,36 @@ export default {
 						method: 'push',
 						iconClass: 'fa-mortar-board',
 						iconTitle: 'Pomoc w nauce',
-					});
+					},
+					{
+						text: 'Najczęściej zadawane pytania',
+						itemClass: 'has-icon',
+						to: {
+							name: 'help-faq',
+							params: {},
+						},
+						isDisabled: false,
+						method: 'push',
+						iconClass: 'fa-question-circle',
+						iconTitle: 'Najczęściej zadawane pytania',
+					}
+				);
 			}
 
 			return navItems;
 		},
 		chatRooms() {
 			return [
-				{name: '#pomoc', channel: 'help-tech'},
+				{ name: '#pomoc', channel: 'help-tech' },
 			];
 		},
 		hasChat() {
 			return this.$currentEditionParticipant.isAllowed('access');
+		}
+	},
+	watch: {
+		'$route.query.chatChannel'(newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
 		}
 	},
 	methods: {
@@ -201,10 +229,5 @@ export default {
 			});
 		}
 	},
-	watch: {
-		'$route.query.chatChannel'(newVal) {
-			newVal && !this.isChatVisible && this.toggleChat();
-		}
-	}
 };
 </script>

@@ -5,9 +5,9 @@
 			:resource-route="resourceRoute"
 			:populate="isEdit"
 			:hide-default-submit="true"
+			name="TaxonomyEditor"
 			@formIsLoaded="onFormIsLoaded"
 			@submitSuccess="onSubmitSuccess"
-			name="TaxonomyEditor"
 		>
 			<div class="header">
 				<h2 class="title is-2">
@@ -19,17 +19,22 @@
 				</h2>
 				<div class="field is-grouped">
 					<!-- TODO PLAT-924 unblock deleting "reserved" taxonomies -->
-					<button v-if="isEdit && id > 3" class="button is-danger margin right" type="button" @click="onDelete">
-						<span class="icon is-small"><i class="fa fa-trash"></i></span>
+					<button
+						v-if="isEdit && id > 3"
+						class="button is-danger margin right"
+						type="button"
+						@click="onDelete"
+					>
+						<span class="icon is-small"><i class="fa fa-trash" /></span>
 						<span>Usuń</span>
 					</button>
-					<wnl-submit v-if="!isEdit || isEditFormVisible" class="submit"/>
+					<wnl-submit v-if="!isEdit || isEditFormVisible" class="submit" />
 					<button
 						v-if="isEdit && !isEditFormVisible"
 						class="button"
 						@click="isEditFormVisible = true"
 					>
-						<span class="icon is-small"><i class="fa fa-pencil"></i></span>
+						<span class="icon is-small"><i class="fa fa-pencil" /></span>
 						<span>Edytuj</span>
 					</button>
 				</div>
@@ -49,7 +54,7 @@
 				>Opis</wnl-textarea>
 			</div>
 		</wnl-form>
-		<wnl-taxonomy-terms-editor :taxonomy-id="id" v-if="isEdit" />
+		<wnl-taxonomy-terms-editor v-if="isEdit" :taxonomy-id="id" />
 	</div>
 </template>
 
@@ -72,11 +77,12 @@
 </style>
 
 <script>
-import {mapActions} from 'vuex';
-import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea, Color as WnlFormColor} from 'js/components/global/form';
+import axios from 'axios';
+import { mapActions } from 'vuex';
+import { Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea, Color as WnlFormColor } from 'js/components/global/form';
 import WnlTaxonomyTermsEditor from 'js/admin/components/taxonomies/TaxonomyTermsEditor';
-import {getApiUrl} from 'js/utils/env';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { getApiUrl } from 'js/utils/env';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	components: {
@@ -113,17 +119,17 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('taxonomies', ['resetTaxonomies']),
-		onFormIsLoaded({name}) {
+		onFormIsLoaded({ name }) {
 			this.name = name;
 		},
-		onSubmitSuccess({id, name}) {
+		onSubmitSuccess({ id, name }) {
 			this.resetTaxonomies();
 			this.name = name;
 
 			if (this.isEdit) {
 				this.isEditFormVisible = false;
 			} else {
-				this.$router.push({name: 'taxonomy-edit', params: {id}});
+				this.$router.push({ name: 'taxonomy-edit', params: { id } });
 			}
 		},
 		async onDelete() {

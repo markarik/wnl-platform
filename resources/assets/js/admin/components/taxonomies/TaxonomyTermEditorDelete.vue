@@ -14,20 +14,20 @@
 			:disabled="isSaving"
 			@click="onDelete"
 		>
-			<span class="icon is-small"><i class="fa fa-trash" aria-hidden="true"></i></span>
+			<span class="icon is-small"><i class="fa fa-trash" aria-hidden="true" /></span>
 			<span>Usuń pojęcie</span>
 		</button>
 	</div>
 	<div v-else class="notification is-info">
 		<span class="icon">
-			<i class="fa fa-info-circle"></i>
+			<i class="fa fa-info-circle" />
 		</span>
 		Najpierw wybierz pojęcie
 	</div>
 </template>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 import WnlTaxonomyTermEditorCurrentTerm from 'js/admin/components/taxonomies/TaxonomyTermEditorCurrentTerm';
 
@@ -36,7 +36,7 @@ export default {
 		WnlTaxonomyTermEditorCurrentTerm,
 	},
 	computed: {
-		...mapGetters('taxonomyTerms', {termById: 'nodeById'}),
+		...mapGetters('taxonomyTerms', { termById: 'nodeById' }),
 		...mapState('taxonomyTerms', {
 			isSaving: 'isSaving',
 			selectedTerms: 'selectedNodes'

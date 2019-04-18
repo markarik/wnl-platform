@@ -1,26 +1,31 @@
 <template>
-	<div class="qna-answer-container" ref="highlight">
+	<div ref="highlight" class="qna-answer-container">
 		<div class="qna-answer">
-				<wnl-vote
-					type="up"
-					:reactable-id="id"
-					:reactable-resource="reactableResource"
-					:state="upvoteState"
-					module="qna"
-				></wnl-vote>
+			<wnl-vote
+				type="up"
+				:reactable-id="id"
+				:reactable-resource="reactableResource"
+				:state="upvoteState"
+				module="qna"
+			/>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-answer-content content" v-html="content"></div>
+					<div class="qna-answer-content content" v-html="content" />
 				</div>
 				<div class="qna-meta">
-					<div class="modal-activator" :class="{'author-forgotten': author.deleted_at}" @click="showModal">
-						<wnl-avatar class="avatar"
-								:full-name="author.full_name"
-								:url="author.avatar"
-								size="medium">
-						</wnl-avatar>
+					<div
+						class="modal-activator"
+						:class="{'author-forgotten': author.deleted_at}"
+						@click="showModal"
+					>
+						<wnl-avatar
+							class="avatar"
+							:full-name="author.full_name"
+							:url="author.avatar"
+							size="medium"
+						/>
 						<span class="qna-meta-info">
-							{{ author.display_name }} ·
+							{{author.full_name}} ·
 						</span>
 					</div>
 					<span class="qna-meta-info">
@@ -31,7 +36,7 @@
 							:target="deleteTarget"
 							:request-route="resourceRoute"
 							@deleteSuccess="onDeleteSuccess"
-						></wnl-delete>
+						/>
 					</span>
 				</div>
 			</div>
@@ -45,11 +50,10 @@
 				:commentable-id="id"
 				:hide-watchlist="true"
 				:is-unique="false"
-			>
-			</wnl-comments-list>
+			/>
 		</div>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="author"/>
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
+			<wnl-user-profile-modal :author="author" />
 		</wnl-modal>
 	</div>
 </template>
@@ -178,6 +182,26 @@ export default {
 			return this.isAnswerInUrl || this.isReactionInUrl;
 		}
 	},
+	watch: {
+		'$route' () {
+			if (this.shouldHighlight) {
+				this.refreshAnswer()
+					.then(() => {
+						!this.isOverlayVisible && this.scrollAndHighlight();
+					});
+			}
+		},
+		'isOverlayVisible' () {
+			if (!this.isOverlayVisible && this.shouldHighlight) {
+				this.scrollAndHighlight();
+			}
+		}
+	},
+	mounted() {
+		if (this.shouldHighlight) {
+			!this.isOverlayVisible && this.scrollAndHighlight();
+		}
+	},
 	methods: {
 		...mapActions('qna', ['removeAnswer']),
 		showModal() {
@@ -196,25 +220,5 @@ export default {
 			return this.refresh();
 		}
 	},
-	mounted() {
-		if (this.shouldHighlight) {
-			!this.isOverlayVisible && this.scrollAndHighlight();
-		}
-	},
-	watch: {
-		'$route' (newRoute, oldRoute) {
-			if (this.shouldHighlight) {
-				this.refreshAnswer()
-					.then(() => {
-						!this.isOverlayVisible && this.scrollAndHighlight();
-					});
-			}
-		},
-		'isOverlayVisible' () {
-			if (!this.isOverlayVisible && this.shouldHighlight) {
-				this.scrollAndHighlight();
-			}
-		}
-	}
 };
 </script>

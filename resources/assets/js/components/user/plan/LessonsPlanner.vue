@@ -1,13 +1,13 @@
 <template>
 	<div>
-		<div class="level" v-if="currentUserSubscriptionActive">
+		<div v-if="currentUserSubscriptionActive" class="level">
 			<div class="level-left">
 				<div class="level-item">
 					<div>
 						Twój dostęp do kursu jest aktywny do:&nbsp;
 					</div>
 					<div class="big strong">
-						{{ userFriendlySubscriptionDate }}
+						{{userFriendlySubscriptionDate}}
 					</div>
 				</div>
 			</div>
@@ -24,40 +24,44 @@
 		<div class="wnl-screen-title">
 			<div class="level-left">
 				<div class="big strong">
-					{{ $t('lessonsAvailability.viewsExplanation') }}
+					{{$t('lessonsAvailability.viewsExplanation')}}
 				</div>
 			</div>
 		</div>
 		<div class="views-control">
-			<a v-for="view in views"
-				 class="panel-toggle view"
-				 :class="{'is-active': view.isActive}"
-				 :key="view.title"
-				 @click="toggleView(view)"
-			>{{ view.title }}
+			<a
+				v-for="view in views"
+				:key="view.title"
+				class="panel-toggle view"
+				:class="{'is-active': view.isActive}"
+				@click="toggleView(view)"
+			>{{view.title}}
 				<span class="icon is-small">
-					<i class="fa"
-						 :class="[view.isActive ? 'fa-check-circle' : 'fa-circle-o']"></i>
+					<i
+						class="fa"
+						:class="[view.isActive ? 'fa-check-circle' : 'fa-circle-o']"
+					/>
 				</span>
 			</a>
 		</div>
-		<component :is="activeViewComponent" @userEvent="proxyUserEvent"/>
+		<component :is="activeViewComponent" @userEvent="proxyUserEvent" />
 	</div>
 </template>
 
 <style lang="sass" scoped>
-@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/variables'
 
-.plan-details
-	display: flex
-	flex-direction: column
+	.plan-details
+		display: flex
+		flex-direction: column
 
-.views-control
-	display: inline-flex
-	justify-content: flex-start
-	margin-bottom: $margin-base
-	.panel-toggle:last-child
-		margin-right: $margin-small
+	.views-control
+		display: inline-flex
+		justify-content: flex-start
+		margin-bottom: $margin-base
+
+		.panel-toggle:last-child
+			margin-right: $margin-small
 
 </style>
 
@@ -66,7 +70,7 @@ import OpenAllPlan from './OpenAllPlan';
 import AutomaticPlan from './AutomaticPlan';
 import DefaultPlan from './DefaultPlan';
 import ManualPlan from './ManualPlan';
-import { first,last } from 'lodash';
+import { first, last } from 'lodash';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
 import emits_events from 'js/mixins/emits-events';
@@ -98,7 +102,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters('course', ['userLessons', 'getRequiredLessons']),
+		...mapGetters('course', ['getRequiredLessons']),
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
 		sortedRequiredUserLessons() {
 			return this.requiredLessons
@@ -131,7 +135,7 @@ export default {
 			return this.activeView.component;
 		},
 		userFriendlySubscriptionDate() {
-			return moment(this.currentUserSubscriptionDates.max*1000).locale('pl').format('LL');
+			return moment(this.currentUserSubscriptionDates.max * 1000).locale('pl').format('LL');
 		}
 	},
 	methods: {

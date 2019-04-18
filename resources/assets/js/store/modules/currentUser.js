@@ -1,10 +1,10 @@
 import axios from 'axios';
-import {set} from 'vue';
+import { set } from 'vue';
 
 import * as types from 'js/store/mutations-types';
-import {getApiUrl} from 'js/utils/env';
-import {USER_SETTING_NAMES} from 'js/consts/settings';
-import {ONBOARDING_STEPS, ROLES, SUBSCRIPTION_STATUS} from 'js/consts/user';
+import { getApiUrl } from 'js/utils/env';
+import { USER_SETTING_NAMES } from 'js/consts/settings';
+import { ONBOARDING_STEPS, ROLES, SUBSCRIPTION_STATUS } from 'js/consts/user';
 
 let getCurrentUserPromise;
 
@@ -21,7 +21,6 @@ const state = {
 		full_name: '',
 		public_email: '',
 		public_phone: '',
-		display_name: '',
 		username: '',
 		avatar: '',
 		identity: {
@@ -56,7 +55,6 @@ const getters = {
 	currentUserEmail: state => state.profile.public_email,
 	currentUserName: state => state.profile.first_name,
 	currentUserFullName: state => state.profile.full_name,
-	currentUserDisplayName: state => state.profile.display_name,
 	currentUserIdentity: state => state.profile.identity,
 
 	currentUserRoles: state => state.roles,
@@ -102,6 +100,9 @@ const mutations = {
 	[types.USERS_SET_IDENTITY] (state, payload) {
 		set(state.profile, 'identity', payload);
 	},
+	[types.USERS_SET_PROFILE] (state, payload) {
+		set(state, 'profile', payload);
+	},
 	[types.USERS_SET_ACCOUNT_SUSPENDED] (state, payload) {
 		set(state, 'accountSuspended', payload);
 	},
@@ -116,9 +117,7 @@ const actions = {
 		// Make sure that setup happens only once
 		if (!getCurrentUserPromise) {
 			getCurrentUserPromise = Promise
-				.all([
-					dispatch('fetchCurrentUser'),
-				])
+				.resolve(dispatch('fetchCurrentUser'))
 				.catch((error) => {
 					$wnl.logger.error(error);
 					commit(types.USERS_SET_LOADING_ERROR, true);
@@ -129,7 +128,7 @@ const actions = {
 		return getCurrentUserPromise;
 	},
 
-	async fetchCurrentUser({commit}) {
+	async fetchCurrentUser({ commit }) {
 		let response;
 
 		try {
@@ -145,6 +144,7 @@ const actions = {
 			id,
 			has_finished_entry_exam,
 			has_latest_course_product,
+			suspended,
 			profile,
 			subscription,
 			settings,
@@ -188,9 +188,13 @@ const actions = {
 			throw new Error('current user returned user with ID 0');
 		}
 		commit(types.USERS_UPDATE_CURRENT, currentUser);
+
+		if (suspended) {
+			commit(types.USERS_SET_ACCOUNT_SUSPENDED, true);
+		}
 	},
 
-	async fetchUserSubscription({commit}) {
+	async fetchUserSubscription({ commit }) {
 		try {
 			const response = await axios.get(getApiUrl('user_subscription/current'));
 			commit(types.USERS_SET_SUBSCRIPTION, response.data);
@@ -199,10 +203,10 @@ const actions = {
 		}
 	},
 
-	fetchCurrentUserStats({commit, getters}) {
+	fetchCurrentUserStats({ commit, getters }) {
 		return new Promise((resolve, reject) => {
 			_fetchUserStats(getters.currentUserId)
-				.then(({data}) => {
+				.then(({ data }) => {
 					commit(types.USERS_SET_STATS, data);
 					resolve();
 				})
@@ -228,8 +232,12 @@ const actions = {
 		}
 	},
 
-	updateCurrentUser({commit}, userData) {
+	updateCurrentUser({ commit }, userData) {
 		commit(types.USERS_UPDATE_CURRENT, userData);
+	},
+
+	updateCurrentUserProfile({ commit }, profileData) {
+		commit(types.USERS_SET_PROFILE, profileData);
 	},
 
 	changeUserSetting({ commit }, payload) {
@@ -240,7 +248,7 @@ const actions = {
 		commit(types.USERS_SET_IDENTITY, payload);
 	},
 
-	changeUserSettingAndSync({ commit, dispatch }, payload) {
+	changeUserSettingAndSync({ dispatch }, payload) {
 		dispatch('changeUserSetting', payload);
 		dispatch('syncSettings');
 	},
@@ -251,17 +259,17 @@ const actions = {
 		});
 	},
 
-	syncSettings({ commit, getters }) {
+	syncSettings({ getters }) {
 		return axios.put(getApiUrl('users/current/settings'), getters.getAllSettings);
 	},
 
-	deleteAccount({getters}, payload) {
+	deleteAccount({ getters }, payload) {
 		return axios.patch(getApiUrl(`users/${getters.currentUserId}/forget`), {
 			password: payload
 		});
 	},
 
-	updateLatestProductState({commit, getters}, payload) {
+	updateLatestProductState({ commit, getters }, payload) {
 		return axios.put(getApiUrl(`users/${getters.currentUserId}/user_product_state/latest`), payload)
 			.then(() => {
 				commit(types.USERS_UPDATE_CURRENT, {

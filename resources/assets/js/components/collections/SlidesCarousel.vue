@@ -1,26 +1,36 @@
 <template>
 	<div class="wnl-slides-collection">
 		<p class="title is-4">{{$t('collections.slides.savedSlidesTitle')}} <span>({{savedSlidesCount}})</span>
-			<a v-if="!!savedSlidesCount" class="saved-slides-toggle panel-toggle" :class="{'is-active': mode === contentModes.bookmark}" @click="toggleBookmarked()">
-					{{$t('collections.slides.showOnlySaved')}}
-					<span class="icon is-small">
-						<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']"></i>
-					</span>
+			<a
+				v-if="!!savedSlidesCount"
+				class="saved-slides-toggle panel-toggle"
+				:class="{'is-active': mode === contentModes.bookmark}"
+				@click="toggleBookmarked()"
+			>
+				{{$t('collections.slides.showOnlySaved')}}
+				<span class="icon is-small">
+					<i class="fa" :class="[mode === contentModes.bookmark ? 'fa-check-circle' : 'fa-circle-o']" />
+				</span>
 			</a>
 		</p>
-		<div class="slides-carousel-container" v-if="bookmarkedSlidesIds.length > 0">
+		<div v-if="bookmarkedSlidesIds.length > 0" class="slides-carousel-container">
 			<div class="slides-carousel">
-				<wnl-slide-thumb :key="index" v-for="(slide, index) in sortedSlides" @slideClick="showSlide(index)" :slide="slide">
+				<wnl-slide-thumb
+					v-for="(slide, index) in sortedSlides"
+					:key="index"
+					:slide="slide"
+					@slideClick="showSlide(index)"
+				>
 					{{getSlideDisplayNumberFromIndex(index)}}
 				</wnl-slide-thumb>
 			</div>
 		</div>
 		<div v-else class="notification has-text-centered">
-			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
+			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right" /></span> {{categoryName}}</span> nie ma jeszcze zapisanych slajdów. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o" /></span> <span class="metadata">ZAPISZ</span> na wybranym slajdzie!
 		</div>
 		<wnl-slideshow
-			ref="slideshow"
 			v-if="htmlContent"
+			ref="slideshow"
 			:html-content="htmlContent"
 			:preserve-route="true"
 			:screen-data="screenData"
@@ -28,7 +38,7 @@
 			@slideBookmarked="onSlideBookmarked"
 			@refreshSlideshow="onRefreshSlideshow"
 			@userEvent="proxyUserEvent"
-		></wnl-slideshow>
+		/>
 	</div>
 </template>
 <style lang="sass" rel="stylesheet/sass" scoped>
@@ -74,16 +84,21 @@
 </style>
 
 <script>
+import axios from 'axios';
 import { mapActions, mapGetters } from 'vuex';
 import Slideshow from 'js/components/course/screens/slideshow/Slideshow.vue';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 import emits_events from 'js/mixins/emits-events';
 import WnlSlideThumb from 'js/components/course/SlideThumb';
 
 export default {
 	name: 'SlidesCarousel',
-	props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount'],
+	components: {
+		'wnl-slideshow': Slideshow,
+		WnlSlideThumb,
+	},
 	mixins: [emits_events],
+	props: ['categoryId', 'rootCategoryName', 'categoryName', 'savedSlidesCount'],
 	data() {
 		return {
 			presentableType: 'App\\Models\\Category',
@@ -106,18 +121,14 @@ export default {
 			}
 		};
 	},
-	components: {
-		'wnl-slideshow': Slideshow,
-		WnlSlideThumb,
-	},
 	computed: {
 		...mapGetters('collections', ['slidesContent', 'getSlidesIdsForCategory']),
-		...mapGetters('slideshow', {'currentPresentableSlides': 'slides',}),
+		...mapGetters('slideshow', { 'currentPresentableSlides': 'slides', }),
 		...mapGetters('slideshow', ['presentableSortedSlidesIds']),
 		sortedSlides() {
 			return this.currentSlideshowSlides
 				.slice()
-				.sort(({id: id1}, {id: id2}) => {
+				.sort(({ id: id1 }, { id: id2 }) => {
 					const slideOne = this.currentPresentableSlides[id1];
 					const slideTwo = this.currentPresentableSlides[id2];
 
@@ -140,6 +151,19 @@ export default {
 			return this.getSlidesIdsForCategory(this.categoryName);
 		}
 	},
+	watch: {
+		'categoryId'() {
+			this.htmlContent = '';
+			this.loadedHtmlContents = {};
+			this.selectedSlideIndex = 0;
+			this.mode = '';
+
+			this.loadSlideshow();
+		}
+	},
+	mounted() {
+		this.loadSlideshow();
+	},
 	methods: {
 		...mapActions('collections', ['addSlideToCollection', 'removeSlideFromCollection', 'fetchReactions', 'fetchSlidesByTagName']),
 		...mapActions('slideshow', ['setSortedSlidesIds','setup']),
@@ -150,7 +174,7 @@ export default {
 			}
 			this.selectedSlideIndex = index;
 		},
-		onSlideBookmarked({slideId, hasReacted}) {
+		onSlideBookmarked({ slideId, hasReacted }) {
 			if (hasReacted) {
 				this.addSlideToCollection(slideId);
 			} else {
@@ -189,7 +213,7 @@ export default {
 							});
 						}).then(() => {
 							return this._fetchBookmarkedSlideshow();
-						}).then( () => {
+						}).then(({ data }) => {
 							const slidesIds = this.currentSlideshowSlides.map(slide => slide.id);
 							this.loadedHtmlContents[this.contentModes.bookmark] = data;
 							const sortedSlides = this.sortSlidesByOrderNumber(slidesIds);
@@ -199,7 +223,7 @@ export default {
 						});
 				}
 
-				this._fetchBookmarkedSlideshow().then(({data}) => {
+				this._fetchBookmarkedSlideshow().then(({ data }) => {
 					const slidesIds = this.currentSlideshowSlides.map(slide => slide.id);
 					this.loadedHtmlContents[this.contentModes.bookmark] = data;
 					const sortedSlides = this.sortSlidesByOrderNumber(slidesIds);
@@ -209,7 +233,7 @@ export default {
 				});
 			} else {
 				return this._fetchAllSlideshow()
-					.then(({data}) => {
+					.then(({ data }) => {
 						this.loadedHtmlContents[this.contentModes.full] = data;
 						this.setSortedSlidesIds(this.presentableSortedSlidesIds);
 						this.mode = htmlContentKey;
@@ -230,23 +254,23 @@ export default {
 				return;
 			}
 
-			this.toggleOverlay({source: 'collection-slideshow', display: true});
+			this.toggleOverlay({ source: 'collection-slideshow', display: true });
 
-			this.setup({id: this.categoryId, type: this.presentableType})
+			this.setup({ id: this.categoryId, type: this.presentableType })
 				.then(() => this.showContent(this.contentModes.bookmark))
-				.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
-				.catch(() => this.toggleOverlay({source: 'collection-slideshow', display: false}));
+				.then(() => this.toggleOverlay({ source: 'collection-slideshow', display: false }))
+				.catch(() => this.toggleOverlay({ source: 'collection-slideshow', display: false }));
 		},
 		onRefreshSlideshow() {
-			this.toggleOverlay({source: 'collection-slideshow', display: true});
+			this.toggleOverlay({ source: 'collection-slideshow', display: true });
 
-			this.setup({id: this.categoryId, type: this.presentableType})
+			this.setup({ id: this.categoryId, type: this.presentableType })
 				.then(() => this.showContent(this.mode, true))
-				.then(() => this.toggleOverlay({source: 'collection-slideshow', display: false}))
+				.then(() => this.toggleOverlay({ source: 'collection-slideshow', display: false }))
 				.catch(() => {
 					this.loadedHtmlContents[this.mode] = '';
 					this.htmlContent = this.loadedHtmlContents[this.mode];
-					this.toggleOverlay({source: 'collection-slideshow', display: false});
+					this.toggleOverlay({ source: 'collection-slideshow', display: false });
 				});
 		},
 		_fetchBookmarkedSlideshow() {
@@ -257,18 +281,5 @@ export default {
 			return axios.get(getApiUrl(`slideshow_builder/category/${this.categoryId}`));
 		}
 	},
-	watch: {
-		'categoryId'() {
-			this.htmlContent = '';
-			this.loadedHtmlContents = {};
-			this.selectedSlideIndex = 0;
-			this.mode = '';
-
-			this.loadSlideshow();
-		}
-	},
-	mounted() {
-		this.loadSlideshow();
-	}
 };
 </script>

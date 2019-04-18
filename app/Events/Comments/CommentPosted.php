@@ -59,7 +59,6 @@ class CommentPosted extends Event
 				'first_name'   => $actor->profile->first_name,
 				'last_name'    => $actor->profile->last_name,
 				'full_name'    => $actor->profile->full_name,
-				'display_name' => $actor->profile->display_name,
 				'avatar'       => $actor->profile->avatar_url,
 			],
 			'referer' => $this->referer,

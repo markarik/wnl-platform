@@ -1,40 +1,46 @@
 <template>
 	<div class="notification-wrapper" :class="{'is-desktop': !isTouchScreen}">
 		<div class="questions-notification" :class="{'is-read': isRead, deleted}">
-			<div class="notification-container" :class="{'unseen': !isSeen}"
+			<div
+				class="notification-container"
+				:class="{'unseen': !isSeen}"
 				@click="dispatchMarkAsSeen"
 				@contextmenu="dispatchMarkAsSeen"
 			>
 				<router-link class="notification-link" :to="routeContext">
 					<div class="meta">
 						<div class="avatar meta-actor" @click="showModal">
-							<wnl-avatar :size="isMobile ? 'medium' : 'large'"
+							<wnl-avatar
+								:size="isMobile ? 'medium' : 'large'"
 								:full-name="message.actors.full_name"
-								:url="message.actors.avatar">
-							</wnl-avatar>
+								:url="message.actors.avatar"
+							/>
 						</div>
-						<span class="icon is-small"><i class="fa" :class="icon"></i></span>
+						<span class="icon is-small"><i class="fa" :class="icon" /></span>
 						<span class="meta-time">{{justDate}}</span>
 						<span class="meta-time">{{justTime}}</span>
 					</div>
 					<div class="notification-content">
 						<div class="notification-header">
-							<span class="actor">{{ message.actors.display_name }}</span>
-							<span class="action">{{ action }}</span>
-							<span class="object">{{ object }}</span>
-							<span class="context">{{ contextInfo }}</span>
+							<span class="actor">{{message.actors.full_name}}</span>
+							<span class="action">{{action}}</span>
+							<span class="object">{{object}}</span>
+							<span class="context">{{contextInfo}}</span>
 						</div>
-						<div class="object-text wrap" v-if="objectText">{{ objectText }}</div>
-						<div class="subject wrap" :class="{'unseen': !isSeen}" v-if="subjectText">{{ subjectText }}</div>
-						<div class="time">
-						</div>
+						<div v-if="objectText" class="object-text wrap">{{objectText}}</div>
+						<div
+							v-if="subjectText"
+							class="subject wrap"
+							:class="{'unseen': !isSeen}"
+						>{{subjectText}}</div>
+						<div class="time" />
 					</div>
 				</router-link>
 			</div>
 		</div>
-		<div class="delete-message" v-if="deleted">{{$t('notifications.messages.deleted')}}</div>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="message.actors"/>
+		<div v-if="deleted" class="delete-message">{{$t('notifications.messages.deleted')}}</div>
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
+			<wnl-user-profile-modal :author="message.actors" />
 		</wnl-modal>
 	</div>
 </template>
@@ -124,7 +130,7 @@
 </style>
 
 <script>
-import { truncate } from 'lodash';
+import { camelCase } from 'lodash';
 import { mapActions, mapGetters } from 'vuex';
 
 import Avatar from 'js/components/global/Avatar';
@@ -135,12 +141,12 @@ import { justTimeFromS, justMonthAndDayFromS } from 'js/utils/time';
 
 export default {
 	name: 'QuestionsNotification',
-	mixins: [notification],
 	components: {
 		'wnl-avatar': Avatar,
 		'wnl-modal': Modal,
 		'wnl-user-profile-modal': UserProfileModal
 	},
+	mixins: [notification],
 	props: {
 		icon: {
 			required: true,
@@ -157,7 +163,7 @@ export default {
 	computed: {
 		...mapGetters(['currentUserId', 'isMobile', 'isTouchScreen']),
 		action() {
-			return this.$t(`notifications.events.${_.camelCase(this.message.event)}`);
+			return this.$t(`notifications.events.${camelCase(this.message.event)}`);
 		},
 		justDate() {
 			return justMonthAndDayFromS(this.message.timestamp);
@@ -168,10 +174,10 @@ export default {
 		object() {
 			const objects = this.message.objects;
 			const subject = this.message.subject;
-			const type = !!objects ? objects.type : subject.type;
-			const choice = !!objects ? this.currentUserId === objects.author ? 2 : 1 : 1;
+			const type = objects ? objects.type : subject.type;
+			const choice = objects ? this.currentUserId === objects.author ? 2 : 1 : 1;
 
-			return this.$tc(`notifications.objects.${_.camelCase(type)}`, choice);
+			return this.$tc(`notifications.objects.${camelCase(type)}`, choice);
 		},
 	},
 	methods: {
@@ -186,11 +192,11 @@ export default {
 			this.loading = true;
 
 			if (this.isRead) {
-				return this.markAsUnread({notification: this.message, channel: this.channel})
+				return this.markAsUnread({ notification: this.message, channel: this.channel })
 					.then(() => this.loading = false);
 			}
 
-			return this.markAsRead({notification: this.message, channel: this.channel})
+			return this.markAsRead({ notification: this.message, channel: this.channel })
 				.then(() => this.loading = false);
 		},
 		dispatchMarkAsSeen() {
@@ -199,7 +205,7 @@ export default {
 			this.loading = true;
 
 			if (!this.isSeen) {
-				this.markAsSeen({notification: this.message, channel: this.channel})
+				this.markAsSeen({ notification: this.message, channel: this.channel })
 					.then(() => {
 						this.loading = false;
 					});

@@ -30,7 +30,7 @@
 			@search="onSearchById"
 		/>
 
-		<div class="content-classifier__panels" v-if="filteredContent !== null">
+		<div v-if="filteredContent !== null" class="content-classifier__panels">
 			<div class="content-classifier__panel-results">
 				<div class="content-classifier__panel-results__header">
 					<h4 class="title is-4 margin bottom">Wyniki wyszukiwania</h4>
@@ -43,21 +43,21 @@
 						:key="contentType"
 					>
 						<template v-if="groupedFilteredContent[contentType] && groupedFilteredContent[contentType].length">
-						<h5 class="title is-5 is-marginless">{{meta.name}}
-							<strong class="content-classifier__result-count">({{getSelectedCountsByContentType(contentType)}}/{{groupedFilteredContent[contentType].length}})</strong>
-						</h5>
-						<ul
-							class="content-classifier__result-list margin bottom"
-						>
-							<component
-								v-for="contentItem in groupedFilteredContent[contentType]"
-								:key="contentItem.id"
-								:is="meta.component"
-								:item="contentItem"
-								:is-active="selectedItems.findIndex(item => item.id === contentItem.id && item.type === contentItem.type) > -1"
-								@click="toggleSelected(contentItem)"
-							/>
-						</ul>
+							<h5 class="title is-5 is-marginless">{{meta.name}}
+								<strong class="content-classifier__result-count">({{getSelectedCountsByContentType(contentType)}}/{{groupedFilteredContent[contentType].length}})</strong>
+							</h5>
+							<ul
+								class="content-classifier__result-list margin bottom"
+							>
+								<component
+									:is="meta.component"
+									v-for="contentItem in groupedFilteredContent[contentType]"
+									:key="contentItem.id"
+									:item="contentItem"
+									:is-active="selectedItems.findIndex(item => item.id === contentItem.id && item.type === contentItem.type) > -1"
+									@click="toggleSelected(contentItem)"
+								/>
+							</ul>
 						</template>
 					</div>
 				</div>
@@ -65,8 +65,8 @@
 			</div>
 			<div class="content-classifier__panel-editor">
 				<wnl-content-classifier-editor
-					class="content-classifier__panel-editor__editor"
 					v-show="!isLoading"
+					class="content-classifier__panel-editor__editor"
 					:items="selectedItems"
 					@taxonomyTermAttached="onTaxonomyTermAttached"
 					@taxonomyTermDetached="onTaxonomyTermDetached"
@@ -113,11 +113,11 @@
 
 <script>
 import axios from 'axios';
-import {mapActions} from 'vuex';
-import {groupBy} from 'lodash';
+import { mapActions } from 'vuex';
+import { groupBy } from 'lodash';
 
-import {getApiUrl} from 'js/utils/env';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { getApiUrl } from 'js/utils/env';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 import WnlHtmlResult from 'js/admin/components/contentClassifier/HtmlResult';
 import WnlSlideResult from 'js/admin/components/contentClassifier/SlideResult';
@@ -126,8 +126,8 @@ import WnlAnnotationResult from 'js/admin/components/contentClassifier/Annotatio
 import WnlContentClassifierEditor from 'js/components/global/contentClassifier/ContentClassifierEditor';
 import WnlContentClassifierFilterByIds from 'js/admin/components/contentClassifier/ContentClassifierFilterByIds';
 import WnlContentClassifierFilterByClassification from 'js/admin/components/contentClassifier/ContentClassifierFilterByClassification';
-import {parseTaxonomyTermsFromIncludes} from 'js/utils/contentClassifier';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { parseTaxonomyTermsFromIncludes } from 'js/utils/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 const TABS = {
 	BY_CLASSIFICATION: 'by-classification',
@@ -188,7 +188,7 @@ export default {
 
 			if (filter !== '') {
 				filters.push({
-					by_ids: {ids: filter.split(',')},
+					by_ids: { ids: filter.split(',') },
 				});
 			}
 
@@ -214,14 +214,14 @@ export default {
 				return [];
 			}
 
-			const {data} = await axios.post(getApiUrl(resourceName), {
+			const { data } = await axios.post(getApiUrl(resourceName), {
 				filters,
 				include: 'taxonomy_terms.tag,taxonomy_terms.taxonomy,taxonomy_terms.ancestors.tag',
 				// TODO use wnl-paginated-list instead
 				limit: 10000,
 			});
 
-			const {data: {included = {}, ...items}} = data;
+			const { data: { included = {}, ...items } } = data;
 
 			return Object.values(items).map(item => {
 				item.type = contentType;
@@ -235,7 +235,7 @@ export default {
 
 			this.onSearch(promises);
 		},
-		async onSearchByTag({byTagsFilter, byTaxonomyTermsFilter, activeContentTypesMap}) {
+		async onSearchByTag({ byTagsFilter, byTaxonomyTermsFilter, activeContentTypesMap }) {
 			const promises = Object.entries(this.contentTypes)
 				.filter(([contentType]) => activeContentTypesMap[contentType])
 				.map(([contentType, meta]) => this.fetchContentByTag(contentType, meta, byTagsFilter, byTaxonomyTermsFilter));
@@ -265,14 +265,14 @@ export default {
 		},
 		onTaxonomyTermAttached(term) {
 			this.filteredContent.forEach((item) => {
-				if (!item.taxonomyTerms.find(({id}) => id === term.id)) {
+				if (!item.taxonomyTerms.find(({ id }) => id === term.id)) {
 					item.taxonomyTerms.push(term);
 				}
 			});
 		},
 		onTaxonomyTermDetached(term) {
 			this.filteredContent.forEach((item) => {
-				const index = item.taxonomyTerms.findIndex(({id}) => id === term.id);
+				const index = item.taxonomyTerms.findIndex(({ id }) => id === term.id);
 
 				if (index > -1) {
 					item.taxonomyTerms.splice(index, 1);

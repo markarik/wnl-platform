@@ -1,14 +1,19 @@
 <template>
-	<form :name="name" @keydown="keyEvent" @submit.prevent="onSubmitForm">
-		<wnl-alert v-for="(alert, timestamp) in alerts"
+	<form
+		:name="name"
+		@keydown="keyEvent"
+		@submit.prevent="onSubmitForm"
+	>
+		<wnl-alert
+			v-for="(alert, timestamp) in alerts"
+			:key="timestamp"
 			css-class="fixed"
 			:alert="alert"
-			:key="timestamp"
 			:timestamp="timestamp"
 			@delete="onDelete"
-		></wnl-alert>
-		<slot :on-submit="onSubmitForm"></slot>
-		<wnl-submit v-if="!hideDefaultSubmit"></wnl-submit>
+		/>
+		<slot :on-submit="onSubmitForm" />
+		<wnl-submit v-if="!hideDefaultSubmit" />
 	</form>
 </template>
 
@@ -84,19 +89,70 @@ export default {
 			return this.getter('getData');
 		}
 	},
+	watch: {
+		formData(newVal) {
+			this.$emit('change', { formData: newVal });
+		},
+		resourceRoute() {
+			this.mutation(
+				types.FORM_UPDATE_URL,
+				getApiUrl(this.resourceRoute)
+			);
+		}
+	},
+	created() {
+		this.mutation(types.FORM_INITIAL_SETUP);
+	},
+	async mounted() {
+		let dataModel = {}, defaults = {};
+
+		_.each(this.$children, (child) => {
+			let options = child.$options;
+
+			if (!_.isUndefined(_.get(options, 'computed.fillable'))) {
+				let name = options.propsData.name,
+					defaultValue = options.computed.default() || '';
+
+				dataModel[name] = defaultValue;
+				defaults[name] = defaultValue;
+			}
+		});
+
+		this.mutation(types.FORM_SETUP, {
+			data: dataModel,
+			defaults,
+			resourceUrl: getApiUrl(this.resourceRoute),
+		});
+
+		if (this.populate) {
+			await this.action('populateFormFromApi');
+		} else if (this.value) {
+			this.action('populateFormFromValue', this.value);
+		}
+
+		this.mutation(types.FORM_IS_LOADED);
+		this.$emit('formIsLoaded', dataModel);
+
+		this.cacheAttach();
+
+		this.$on('submitForm', this.onSubmitForm);
+	},
+	beforeDestroy() {
+		this.mutation(types.FORM_RESET);
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		action(action, payload = {}) {
-			return this.$store.dispatch(`form/${action}`, {payload, formName: this.name});
+			return this.$store.dispatch(`form/${action}`, { payload, formName: this.name });
 		},
 		getter(getter) {
 			return this.$store.getters[`form/${getter}`](this.name);
 		},
 		getterFunction(getter, payload = {}) {
-			return this.$store.getters[`form/${getter}`]({payload, formName: this.name});
+			return this.$store.getters[`form/${getter}`]({ payload, formName: this.name });
 		},
 		mutation(mutation, payload = {}) {
-			return this.$store.commit(`form/${mutation}`, {payload, formName: this.name});
+			return this.$store.commit(`form/${mutation}`, { payload, formName: this.name });
 		},
 		keyEvent(event) {
 			if (event.keyCode === 13 && !this.suppressEnter) {
@@ -184,56 +240,5 @@ export default {
 			return !this.anyErrors && (hasFieldChanges || hasAttachChanges);
 		},
 	},
-	created() {
-		this.mutation(types.FORM_INITIAL_SETUP);
-	},
-	async mounted() {
-		let dataModel = {}, defaults = {};
-
-		_.each(this.$children, (child) => {
-			let options = child.$options;
-
-			if (!_.isUndefined(_.get(options, 'computed.fillable'))) {
-				let name = options.propsData.name,
-					defaultValue = options.computed.default() || '';
-
-				dataModel[name] = defaultValue;
-				defaults[name] = defaultValue;
-			}
-		});
-
-		this.mutation(types.FORM_SETUP, {
-			data: dataModel,
-			defaults,
-			resourceUrl: getApiUrl(this.resourceRoute),
-		});
-
-		if (this.populate) {
-			await this.action('populateFormFromApi');
-		} else if (this.value) {
-			this.action('populateFormFromValue', this.value);
-		}
-
-		this.mutation(types.FORM_IS_LOADED);
-		this.$emit('formIsLoaded', dataModel);
-
-		this.cacheAttach();
-
-		this.$on('submitForm', this.onSubmitForm);
-	},
-	watch: {
-		formData(newVal) {
-			this.$emit('change', {formData: newVal});
-		},
-		resourceRoute(val) {
-			this.mutation(
-				types.FORM_UPDATE_URL,
-				getApiUrl(this.resourceRoute)
-			);
-		}
-	},
-	beforeDestroy() {
-		this.mutation(types.FORM_RESET);
-	}
 };
 </script>

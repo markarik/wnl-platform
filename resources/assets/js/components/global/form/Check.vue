@@ -1,13 +1,16 @@
 <template>
 	<div class="field">
 		<wnl-toggler
-				@toggle="onToggle"
-				:value="inputValue"
-				:name="name"
+			:value="inputValue"
+			:name="name"
+			@toggle="onToggle"
+		/>
+		<label
+			v-if="$slots.default"
+			:for="name"
+			class="label"
 		>
-		</wnl-toggler>
-		<label :for="name" class="label" v-if="$slots.default">
-			<slot></slot>
+			<slot />
 		</label>
 	</div>
 </template>
@@ -19,15 +22,15 @@
 
 <script>
 import Toggler from 'js/components/global/Toggler';
-import {formInput} from 'js/mixins/form-input';
+import { formInput } from 'js/mixins/form-input';
 
 export default {
 	name: 'WnlFormCheck',
-	props: ['name', 'placeholder'],
-	mixins: [formInput],
 	components: {
 		'wnl-toggler': Toggler,
 	},
+	mixins: [formInput],
+	props: ['name', 'placeholder'],
 	computed: {
 		default() {
 			return '';

@@ -16,9 +16,9 @@
 			>
 				<wnl-quiz-question-list-item
 					v-for="question in slotParams.list"
+					:id="question.id"
 					:key="question.id"
 					:text="question.text"
-					:id="question.id"
 				/>
 			</template>
 

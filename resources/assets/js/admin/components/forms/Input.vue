@@ -1,25 +1,29 @@
 <template>
 	<div class="control">
-		<label :for="name" class="label" v-if="this.$slots.default">
-			<slot></slot>
+		<label
+			v-if="this.$slots.default"
+			:for="name"
+			class="label"
+		>
+			<slot />
 		</label>
 
-		<input :type="type"
+		<input
+			:id="name"
+			:type="type"
 			class="input"
 			:name="name"
 			:value="form[name]"
-			@input="$emit('input', $event.target.value)"
 			:placeholder="name"
-			:id="name"
+			@input="$emit('input', $event.target.value)"
 		>
-		<span class="help is-danger" v-if="form.errors.has(name)"
-			  v-text="form.errors.get(name)"
-		></span>
+		<span
+			v-if="form.errors.has(name)"
+			class="help is-danger"
+			v-text="form.errors.get(name)"
+		/>
 	</div>
 </template>
-
-<style lang="sass">
-</style>
 
 <script>
 export default {

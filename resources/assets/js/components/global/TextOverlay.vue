@@ -1,7 +1,7 @@
 <template>
-	<div class="wnl-overlay" v-if="isLoading">
-		<span class="loader"></span>
-		<span class="loader-text">{{ text}}</span>
+	<div v-if="isLoading" class="wnl-overlay">
+		<span class="loader" />
+		<span class="loader-text">{{text}}</span>
 	</div>
 </template>
 

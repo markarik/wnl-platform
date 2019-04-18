@@ -1,25 +1,29 @@
 <template>
-	<div class="wnl-comments" ref="highlight">
+	<div ref="highlight" class="wnl-comments">
 		<div class="separate-controls">
 			<div class="comments-controls">
-				<span class="icon is-small comment-icon"><i class="fa fa-comments-o"></i></span>
+				<span class="icon is-small comment-icon"><i class="fa fa-comments-o" /></span>
 				Komentarze ({{comments.length}})
-				<span v-if="comments.length > 0 || this.showComments"> ·
-					<a class="secondary-link" @click="toggleComments" v-text="toggleCommentsText"></a>
+				<span v-if="comments.length > 0 || showComments"> ·
+				<a
+					class="secondary-link"
+					@click="toggleComments"
+					v-text="toggleCommentsText"
+				/>
 				</span> ·
 				<span v-if="!readOnly">
 					<a class="secondary-link" @click="toggleCommentsForm">Skomentuj</a>
 				</span>
 				<wnl-watch
-				v-if="!hideWatchlist"
-				:reactable-id="commentableId"
-				:reactable-resource="commentableResource"
-				:state="watchState"
-				:reactions-disabled="false"
-				:module="module"
+					v-if="!hideWatchlist"
+					:reactable-id="commentableId"
+					:reactable-resource="commentableResource"
+					:state="watchState"
+					:reactions-disabled="false"
+					:module="module"
 				/>
 			</div>
-			<slot/>
+			<slot />
 		</div>
 		<template v-if="showComments">
 			<wnl-comment
@@ -33,12 +37,13 @@
 			/>
 			<div class="form-container">
 				<transition name="fade">
-					<wnl-new-comment-form v-if="!readOnly"
+					<wnl-new-comment-form
+						v-if="!readOnly"
 						:commentable-resource="commentableResource"
 						:commentable-id="commentableId"
 						:is-unique="isUnique"
-						@submitSuccess="onSubmitSuccess">
-					</wnl-new-comment-form>
+						@submitSuccess="onSubmitSuccess"
+					/>
 				</transition>
 			</div>
 		</template>
@@ -122,6 +127,40 @@ export default {
 			);
 		},
 	},
+	watch: {
+		'comments' (newValue, oldValue) {
+			if (newValue !== oldValue) {
+				this.$emit('commentsUpdated', newValue);
+			}
+		},
+		'isOverlayVisible' () {
+			if (!this.isOverlayVisible && this.isCommentableInUrl) {
+				this.scrollAndHighlight();
+				this.showComments = true;
+			}
+		},
+		'showComments' (newValue) {
+			let eventName = newValue ? 'commentsShown' : 'commentsHidden';
+			this.$emit(eventName);
+		},
+		'$route' () {
+			if (!this.isOverlayVisible && this.isCommentableInUrl) {
+				this.refresh()
+					.then(() => {
+						this.scrollAndHighlight();
+						this.showComments = true;
+					});
+			}
+		},
+	},
+	mounted() {
+		this.formElement = this.$el.getElementsByClassName('form-container')[0];
+
+		if (!this.isOverlayVisible && this.isCommentableInUrl) {
+			this.scrollAndHighlight();
+			this.showComments = true;
+		}
+	},
 	methods: {
 		action(action, payload = {}) {
 			return this.$store.dispatch(`${this.module}/${action}`, payload);
@@ -200,40 +239,6 @@ export default {
 				ids: [this.commentableId]
 			});
 		}
-	},
-	mounted() {
-		this.formElement = this.$el.getElementsByClassName('form-container')[0];
-
-		if (!this.isOverlayVisible && this.isCommentableInUrl) {
-			this.scrollAndHighlight();
-			this.showComments = true;
-		}
-	},
-	watch: {
-		'comments' (newValue, oldValue) {
-			if (newValue !== oldValue) {
-				this.$emit('commentsUpdated', newValue);
-			}
-		},
-		'isOverlayVisible' () {
-			if (!this.isOverlayVisible && this.isCommentableInUrl) {
-				this.scrollAndHighlight();
-				this.showComments = true;
-			}
-		},
-		'showComments' (newValue) {
-			let eventName = newValue ? 'commentsShown' : 'commentsHidden';
-			this.$emit(eventName);
-		},
-		'$route' () {
-			if (!this.isOverlayVisible && this.isCommentableInUrl) {
-				this.refresh()
-					.then(() => {
-						this.scrollAndHighlight();
-						this.showComments = true;
-					});
-			}
-		},
 	},
 };
 </script>

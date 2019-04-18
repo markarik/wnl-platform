@@ -1,6 +1,6 @@
 <template>
 	<div class="current-term margin bottom">
-		<p class="margin right"><slot></slot></p>
+		<p class="margin right"><slot /></p>
 		<wnl-taxonomy-term-with-ancestors
 			:ancestors="getAncestorNodesById(term.id)"
 			:term="term"
@@ -21,7 +21,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 

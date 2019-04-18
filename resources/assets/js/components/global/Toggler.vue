@@ -1,6 +1,12 @@
 <template>
 	<div class="switch" :class="classObject">
-		<input type="checkbox" :name="name" :disabled="disabled" :value="value" @input="$emit('toggle')">
+		<input
+			type="checkbox"
+			:name="name"
+			:disabled="disabled"
+			:value="value"
+			@input="$emit('toggle')"
+		>
 	</div>
 </template>
 
@@ -84,7 +90,7 @@ export default {
 	],
 	computed: {
 		classObject () {
-			const {type, size} = this;
+			const { type, size } = this;
 			return {
 				[`is-${type}`]: type,
 				[`is-${size}`]: size,

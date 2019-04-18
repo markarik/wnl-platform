@@ -1,8 +1,13 @@
 <template>
-	<div @click="click" class="wnl-upload">
-		<slot></slot>
+	<div class="wnl-upload" @click="click">
+		<slot />
 		<form @submit.prevent>
-			<input :id="inputId" @change="inputChanged" type="file" class="form-control"/>
+			<input
+				:id="inputId"
+				type="file"
+				class="form-control"
+				@change="inputChanged"
+			>
 		</form>
 	</div>
 
@@ -21,7 +26,7 @@
 
 <script>
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 export default {
 	props: ['endpoint'],
@@ -30,6 +35,9 @@ export default {
 			inputId: `${this._uid}-input`,
 			input: {}
 		};
+	},
+	mounted() {
+		this.input = document.getElementById(this.inputId);
 	},
 	methods: {
 		click() {
@@ -50,9 +58,6 @@ export default {
 					this.$emit('uploadError', error);
 				});
 		}
-	},
-	mounted() {
-		this.input = document.getElementById(this.inputId);
 	}
 };
 </script>

@@ -52,10 +52,9 @@
 </style>
 
 <script>
-import {SOCKET_EVENT_USER_SENT_MESSAGE} from 'js/plugins/chat-connection';
+import { SOCKET_EVENT_USER_SENT_MESSAGE } from 'js/plugins/chat-connection';
 import MessageForm from './MessageForm.vue';
 import MessagesList from './MessagesList.vue';
-import {getApiUrl} from 'js/utils/env';
 
 import { mapGetters, mapActions } from 'vuex';
 
@@ -80,13 +79,13 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['isOverlayVisible', 'currentUserId', 'currentUserDisplayName']),
+		...mapGetters(['isOverlayVisible', 'currentUserId', 'currentUserFullName']),
 		...mapGetters('chatMessages', ['getProfileByUserId', 'profiles', 'getInterlocutor']),
 		interlocutorProfile() {
 			return this.getInterlocutor(this.room.profiles);
 		},
 		chatTitle() {
-			return this.interlocutorProfile.display_name || this.currentUserDisplayName;
+			return this.interlocutorProfile.full_name || this.currentUserFullName;
 		},
 		hasMore() {
 			return !!this.room.pagination && this.room.pagination.has_more;
@@ -95,21 +94,27 @@ export default {
 			return this.room.pagination.next;
 		}
 	},
+	mounted() {
+		this.addEventListeners();
+	},
+	beforeDestroy() {
+		this.removeEventListeners();
+	},
 	methods: {
 		...mapActions('chatMessages', ['markRoomAsRead', 'onNewMessage', 'fetchRoomMessages']),
 		getMessageAuthor(message) {
 			return this.getProfileByUserId(message.user_id);
 		},
-		onMessageSent({sent, ...data}) {
+		onMessageSent({ sent, ...data }) {
 			this.onNewMessage(data);
 		},
 		pullMore() {
-			return this.fetchRoomMessages({room: this.room, currentCursor: this.cursor, limit: this.PRIVATE_CHAT_MESSAGES_LIMIT, append: true})
+			return this.fetchRoomMessages({ room: this.room, currentCursor: this.cursor, limit: this.PRIVATE_CHAT_MESSAGES_LIMIT, append: true })
 				.catch(error => $wnl.logger.error(error));
 		},
-		markAsRead({room}) {
+		markAsRead({ room }) {
 			if (room.id === this.room.id) {
-				const {messages, ...room} = this.room;
+				const { messages, ...room } = this.room;
 				this.$socketMarkRoomAsRead(room)
 					.then(() => this.markRoomAsRead(this.room.id))
 					.catch(err => $wnl.logger.error(err));
@@ -122,12 +127,6 @@ export default {
 			this.$socketRemoveListener(SOCKET_EVENT_USER_SENT_MESSAGE, this.markAsRead);
 		}
 	},
-	mounted() {
-		this.addEventListeners();
-	},
-	beforeDestroy() {
-		this.removeEventListeners();
-	}
 };
 
 </script>

@@ -1,6 +1,7 @@
 <template>
 	<div class="wnl-quiz-question-container">
-		<div class="wnl-quiz-question card"
+		<div
+			class="wnl-quiz-question card"
 			:class="{
 				'is-correct': displayResults && !isUnanswered && isCorrect,
 				'is-incorrect': displayResults && !isUnanswered && !isCorrect,
@@ -8,11 +9,16 @@
 				'is-unanswered': isUnanswered,
 				'is-large-desktop': isLargeDesktop,
 				'is-mobile': isMobile,
-			}">
+			}"
+		>
 			<header class="quiz-header card-header">
 				<div class="quiz-header-top">
-					<div class="card-header-title" :class="{'clickable': headerOnly, 'is-short-form': headerOnly}" @click="$emit('headerClicked')">
-						<div v-html="question.text"></div>
+					<div
+						class="card-header-title"
+						:class="{'clickable': headerOnly, 'is-short-form': headerOnly}"
+						@click="$emit('headerClicked')"
+					>
+						<div v-html="question.text" />
 					</div>
 					<div class="card-header-icons">
 						<wnl-bookmark
@@ -21,32 +27,34 @@
 							:reactable-resource="reactableResource"
 							:state="reactionState"
 							:module="module"
-						></wnl-bookmark>
+						/>
 					</div>
 				</div>
 			</header>
-			<div class="quiz-answers card-content" v-if="!headerOnly">
+			<div v-if="!headerOnly" class="quiz-answers card-content">
 				<ul>
-					<wnl-quiz-answer v-for="(answer, answerIndex) in answers"
+					<wnl-quiz-answer
+						v-for="(answer, answerIndex) in answers"
+						:key="answerIndex"
 						:answer="answer"
 						:index="answerIndex"
 						:question-id="question.id"
 						:total-hits="question.total_hits"
-						:key="answerIndex"
 						:read-only="readOnly"
 						:is-selected="question.selectedAnswer === answerIndex"
 						:answers-stats="displayResults && question.answersStats"
 						@answerSelected="selectAnswer(answerIndex)"
 						@dblclick.native="$emit('answerDoubleclick', {answer: answerIndex})"
-					></wnl-quiz-answer>
+					/>
 				</ul>
 				<div class="quiz-question-meta">
 					<div class="quiz-question-tags">
 						<template v-if="displayResults && question.tags">
 							<span>{{$t('questions.question.tags')}}:</span>
-							<span v-for="(tag, index) in question.tags"
+							<span
+								v-for="(tag, tagIndex) in question.tags"
+								:key="tagIndex"
 								class="quiz-question-tag"
-								:key="index"
 							>{{trim(tag.name)}}</span>
 						</template>
 					</div>
@@ -54,7 +62,7 @@
 						#{{question.id}}
 					</div>
 				</div>
-				<div class="question-edit-link" v-if="isAdmin">
+				<div v-if="isAdmin" class="question-edit-link">
 					<a
 						class="small"
 						target="_blank"
@@ -62,46 +70,53 @@
 					>
 						{{$t('questions.question.edit')}}
 						<span class="icon is-small">
-							<i class="fa fa-pencil"></i>
+							<i class="fa fa-pencil" />
 						</span>
 					</a>
 				</div>
 			</div>
-			<div class="card-footer quiz-question-card-footer" v-if="!hideComments && ((!headerOnly && displayResults) || showComments)">
+			<div v-if="!hideComments && ((!headerOnly && displayResults) || showComments)" class="card-footer quiz-question-card-footer">
 				<div v-if="question.explanation" class="card-item relative">
 					<header>
-						<span class="icon is-small comment-icon"><i class="fa fa-info"></i></span>
-						<span v-t="'quiz.annotations.explanation.header'"/>&nbsp;·&nbsp;<a class="secondary-link" @click="toggleExplanation">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
+						<span class="icon is-small comment-icon"><i class="fa fa-info" /></span>
+						<span v-t="'quiz.annotations.explanation.header'" />&nbsp;·&nbsp;<a class="secondary-link" @click="toggleExplanation">{{showExplanation ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
-					<div :class="{'collapsed': !showExplanation}" v-html="explanation"></div>
+					<div :class="{'collapsed': !showExplanation}" v-html="explanation" />
 				</div>
 				<div v-if="hasSlides" class="card-item">
 					<header @click="toggleSlidesList">
-						<span class="icon is-small comment-icon"><i class="fa fa-caret-square-o-right"></i></span>
+						<span class="icon is-small comment-icon"><i class="fa fa-caret-square-o-right" /></span>
 						{{$t('quiz.annotations.slides.header')}} ({{slides.length}})
 						&nbsp;·&nbsp;
 						<a class="secondary-link">{{slidesExpanded ? $t('ui.action.hide') : $t('ui.action.show')}}</a>
 					</header>
 					<template v-if="slidesExpanded">
-						<a class="slide-list-item" v-for="(slide, index) in slides" :key="index" @click="currentSlideIndex = index">
+						<a
+							v-for="(slide, slideIndex) in slides"
+							:key="slideIndex"
+							class="slide-list-item"
+							@click="currentSlideIndex = slideIndex"
+						>
 							{{slideLink(slide)}}
 						</a>
 					</template>
 					<wnl-slide-preview
-							:show-modal="show"
-							:content="slideContent"
-							:slides-count="hasSlides"
-							@closeModal="hideSlidePreview"
-							@switchSlide="changeSlide" v-if="slideContent && currentModalSlide.id"
-							@userEvent="onRelatedSlideUserEvent"
+						v-if="slideContent && currentModalSlide.id"
+						:show-modal="show"
+						:content="slideContent"
+						:slides-count="hasSlides"
+						@closeModal="hideSlidePreview"
+						@switchSlide="changeSlide"
+						@userEvent="onRelatedSlideUserEvent"
 					>
 						<span slot="header">{{slideLink(currentModalSlide)}}</span>
 						<wnl-slide-link
-							class="button is-primary is-outlined is-small"
 							slot="footer"
+							class="button is-primary is-outlined is-small"
 							:context="currentModalSlide.context"
-							:blank-page="blankPage">
-								{{$t('quiz.slideModal.goToPrezentation')}}
+							:blank-page="blankPage"
+						>
+							{{$t('quiz.slideModal.goToPrezentation')}}
 						</wnl-slide-link>
 					</wnl-slide-preview>
 				</div>
@@ -111,8 +126,8 @@
 						url-param="quiz_question"
 						:module="module"
 						:commentable-id="question.id"
-						:is-unique="showComments">
-					</wnl-comments-list>
+						:is-unique="showComments"
+					/>
 				</div>
 			</div>
 		</div>
@@ -272,6 +287,7 @@
 
 </style>
 <script>
+import axios from 'axios';
 import { isNumber, trim, get } from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 import { getApiUrl } from 'js/utils/env';
@@ -342,11 +358,25 @@ export default {
 		},
 		currentModalSlide() {
 			if (this.currentSlideIndex < 0) {
-				return {id: 0};
+				return { id: 0 };
 			}
 			// return 0
 			return this.slides[this.currentSlideIndex];
 		},
+	},
+	watch: {
+		'currentModalSlide.id'(slideId) {
+			if (!slideId) return;
+			axios.get(getApiUrl(`slideshow_builder/slide/${slideId}`))
+				.then(({ data }) => {
+					this.slideContent = data;
+					this.show = true;
+				})
+				.catch(error => {
+					$wnl.logger.capture(error);
+					this.addAutoDismissableAlert(this.alertError);
+				});
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -365,7 +395,7 @@ export default {
 			this.currentSlideIndex = nextSlideIndex;
 		},
 		selectAnswer(answerIndex) {
-			const data = {id: this.question.id, answer: answerIndex};
+			const data = { id: this.question.id, answer: answerIndex };
 			const eventName = !this.question.isResolved ? 'selectAnswer' : 'resultsClicked';
 
 			this.question.selectedAnswer !== answerIndex && this.emitUserEvent({
@@ -389,10 +419,10 @@ export default {
 		slideLink(slide) {
 			let linkText = '';
 
-			if (_.get(slide, 'context.lesson.id')) {
+			if (get(slide, 'context.lesson.id')) {
 				linkText += this.getLesson(slide.context.lesson.id).name;
 
-				if (_.get(slide, 'context.section.id')) {
+				if (get(slide, 'context.section.id')) {
 					linkText += ` / ${get(slide, 'context.section.name')}`;
 				}
 			}
@@ -407,19 +437,5 @@ export default {
 			});
 		},
 	},
-	watch: {
-		'currentModalSlide.id'(slideId) {
-			if (!slideId) return;
-			axios.get(getApiUrl(`slideshow_builder/slide/${slideId}`))
-				.then(({data}) => {
-					this.slideContent = data;
-				}).then(() => {
-					this.show = true;
-				}).catch(error => {
-					$wnl.logger.capture(error);
-					this.addAutoDismissableAlert(this.alertError);
-				});
-		}
-	}
 };
 </script>

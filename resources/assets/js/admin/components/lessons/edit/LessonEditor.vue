@@ -2,30 +2,33 @@
 	<div class="lesson-editor">
 		<form @submit.prevent="lessonFormSubmit">
 			<div class="field is-grouped">
-				<wnl-input :form="form"
-					name="name"
+				<wnl-input
 					v-model="form.name"
-				></wnl-input>
+					:form="form"
+					name="name"
+				/>
 				<wnl-form-checkbox
+					v-model="form.is_required"
 					class="checkbox button"
 					:form="form"
 					name="is_required"
-					v-model="form.is_required"
 				>Lekcja obowiązkowa</wnl-form-checkbox>
 				<div class="control">
-					<a class="button is-small is-success"
+					<a
+						class="button is-small is-success"
 						:class="{'is-loading': loading}"
 						:disabled="!hasChanged"
-						@click="lessonFormSubmit">
+						@click="lessonFormSubmit"
+					>
 						<span class="margin right">Zapisz</span>
 						<span class="icon is-small">
-							<i class="fa fa-save"></i>
+							<i class="fa fa-save" />
 						</span>
 					</a>
 				</div>
 			</div>
 		</form>
-		<wnl-screens-editor v-if="isEdit" :lesson-id="lessonId"></wnl-screens-editor>
+		<wnl-screens-editor v-if="isEdit" :lesson-id="lessonId" />
 		<p v-else>Zapisz lekcję, żeby dodać do niej ekran</p>
 	</div>
 </template>
@@ -50,16 +53,16 @@ import { getApiUrl } from 'js/utils/env';
 import ScreensEditor from 'js/admin/components/lessons/edit/ScreensEditor.vue';
 import Input from 'js/admin/components/forms/Input.vue';
 import Checkbox from 'js/admin/components/forms/Checkbox.vue';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	name: 'LessonEditor',
-	props: ['lessonId'],
 	components: {
 		'wnl-screens-editor': ScreensEditor,
 		'wnl-input': Input,
 		'wnl-form-checkbox': Checkbox,
 	},
+	props: ['lessonId'],
 	data() {
 		return {
 			form: new Form({
@@ -81,6 +84,11 @@ export default {
 		},
 		hasChanged() {
 			return !_.isEqual(this.form.originalData, this.form.data());
+		}
+	},
+	mounted() {
+		if (this.isEdit) {
+			this.form.populate(this.resourceUrl);
 		}
 	},
 	methods: {
@@ -116,10 +124,5 @@ export default {
 				});
 		}
 	},
-	mounted() {
-		if (this.isEdit) {
-			this.form.populate(this.resourceUrl);
-		}
-	}
 };
 </script>

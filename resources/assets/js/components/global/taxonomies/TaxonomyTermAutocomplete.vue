@@ -5,7 +5,7 @@
 				<span v-if="ancestors.length">{{ancestors.map(ancestor => ancestor.tag.name).join(' > ')}} ></span>
 				{{selected.tag.name}}
 			</span>
-			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
+			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true" /></span>
 		</div>
 		<wnl-autocomplete
 			v-else
@@ -19,9 +19,9 @@
 			@change="onSelect"
 		>
 			<wnl-taxonomy-term-with-ancestors
+				slot-scope="slotProps"
 				:term="slotProps.item"
 				:ancestors="getAncestorNodesById(slotProps.item.id)"
-				slot-scope="slotProps"
 			/>
 		</wnl-autocomplete>
 	</div>
@@ -41,14 +41,17 @@
 </style>
 
 <script>
-import {nextTick} from 'vue';
-import {mapState, mapGetters} from 'vuex';
-import {uniqBy} from 'lodash';
+import { mapState, mapGetters } from 'vuex';
+import { uniqBy } from 'lodash';
 
 import WnlAutocomplete from 'js/components/global/Autocomplete';
 import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 
 export default {
+	components: {
+		WnlAutocomplete,
+		WnlTaxonomyTermWithAncestors
+	},
 	props: {
 		disabled: {
 			type: Boolean,
@@ -76,12 +79,8 @@ export default {
 			search: '',
 		};
 	},
-	components: {
-		WnlAutocomplete,
-		WnlTaxonomyTermWithAncestors
-	},
 	computed: {
-		...mapState('taxonomyTerms', {terms: 'nodes'}),
+		...mapState('taxonomyTerms', { terms: 'nodes' }),
 		...mapGetters('taxonomyTerms', ['getAncestorNodesById']),
 		autocompleteTerms() {
 			if (!this.search) {

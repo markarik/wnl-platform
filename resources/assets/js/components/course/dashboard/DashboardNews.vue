@@ -1,16 +1,16 @@
 <template>
 	<wnl-dashboard-news-content
-			v-if="showNews"
-			:message="dashboardNews.message"
-			:message-arguments="messageArguments"
-			:slug="dashboardNews.slug"
-			@onClose="closed"
-			@onContentClick="contentClicked"
+		v-if="showNews"
+		:message="dashboardNews.message"
+		:message-arguments="messageArguments"
+		:slug="dashboardNews.slug"
+		@onClose="closed"
+		@onContentClick="contentClicked"
 	/>
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 import store from 'js/services/messagesStore';
 import WnlDashboardNewsContent from 'js/components/course/dashboard/DashboardNewsContent';
 import dashboardNewsMessageArguments from 'js/mixins/dashboard-news-message-arguments';
@@ -18,15 +18,15 @@ import context from 'js/consts/events_map/context.json';
 
 export default {
 	name: 'DashboardNews',
+	components: {
+		WnlDashboardNewsContent
+	},
 	mixins: [dashboardNewsMessageArguments],
 	data() {
 		return {
 			featureContext: context.dashboard.features.news_message,
 			showNews: false
 		};
-	},
-	components: {
-		WnlDashboardNewsContent
 	},
 	computed: {
 		...mapGetters('siteWideMessages', ['dashboardNews']),
@@ -37,13 +37,20 @@ export default {
 			return `seen-dashboard-news-${this.dashboardNews.id}`;
 		},
 	},
+	mounted() {
+		this.showNews = this.dashboardNews && !this.hasSeenNews;
+
+		if (this.showNews) {
+			this.track(this.featureContext.actions.open.value);
+		}
+	},
 	methods: {
 		closed() {
 			this.track(this.featureContext.actions.close.value);
 			this.showNews = false;
 			store.set(this.newsStoreKey, true);
 		},
-		contentClicked({target}) {
+		contentClicked({ target }) {
 			const href = target.getAttribute('href');
 
 			if (target && href) {
@@ -87,13 +94,6 @@ export default {
 				context: context.dashboard.value,
 			});
 		},
-	},
-	mounted() {
-		this.showNews = this.dashboardNews && !this.hasSeenNews;
-
-		if (this.showNews) {
-			this.track(this.featureContext.actions.open.value);
-		}
 	},
 };
 </script>

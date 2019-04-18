@@ -1,28 +1,28 @@
 <template>
-		<wnl-paginated-list
-			:resource-name="resourceName"
-			:custom-request-params="requestParams"
-			:is-search-enabled="isSearchEnabled"
+	<wnl-paginated-list
+		:resource-name="resourceName"
+		:custom-request-params="requestParams"
+		:is-search-enabled="isSearchEnabled"
+	>
+		<template slot="header">
+			<slot name="header" />
+		</template>
+
+		<wnl-sortable-table
+			slot="list"
+			slot-scope="slotProps"
+			:columns="columns"
+			:active-sort-column-name="activeSortColumnName"
+			:sort-direction="sortDirection"
+			:list="slotProps.list"
+			@changeOrder="changeOrder"
 		>
-			<template slot="header">
-				<slot name="header"></slot>
+			<template slot="tbody" slot-scope="tableProps">
+				<slot name="tbody" :list="tableProps.list" />
 			</template>
+		</wnl-sortable-table>
 
-			<wnl-sortable-table
-				slot-scope="slotProps"
-				slot="list"
-				:columns="columns"
-				:active-sort-column-name="activeSortColumnName"
-				:sort-direction="sortDirection"
-				:list="slotProps.list"
-				@changeOrder="changeOrder"
-			>
-				<template slot="tbody" slot-scope="tableProps">
-					<slot name="tbody" :list="tableProps.list"></slot>
-				</template>
-			</wnl-sortable-table>
-
-		</wnl-paginated-list>
+	</wnl-paginated-list>
 </template>
 
 <script>
@@ -33,12 +33,6 @@ export default {
 	components: {
 		WnlPaginatedList,
 		WnlSortableTable,
-	},
-	data() {
-		return {
-			activeSortColumnName: this.columns[0].name,
-			sortDirection: 'asc',
-		};
 	},
 	props: {
 		columns: {
@@ -62,6 +56,12 @@ export default {
 			default: true,
 		}
 	},
+	data() {
+		return {
+			activeSortColumnName: this.columns[0].name,
+			sortDirection: 'asc',
+		};
+	},
 	computed: {
 		requestParams() {
 			return {
@@ -73,7 +73,7 @@ export default {
 		}
 	},
 	methods: {
-		changeOrder({activeSortColumnName, sortDirection}) {
+		changeOrder({ activeSortColumnName, sortDirection }) {
 			this.sortDirection = sortDirection;
 			this.activeSortColumnName = activeSortColumnName;
 		},

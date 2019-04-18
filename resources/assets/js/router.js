@@ -1,12 +1,13 @@
+import axios from 'axios';
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from 'js/store/store';
-import {scrollToTop} from 'js/utils/animations';
-import {resource} from 'js/utils/config';
+import { scrollToTop } from 'js/utils/animations';
+import { resource } from 'js/utils/config';
 import moderatorFeatures from 'js/perimeters/moderator';
 import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
-import {createSandbox} from 'vue-kindergarten';
-import {getApiUrl} from 'js/utils/env';
+import { createSandbox } from 'vue-kindergarten';
+import { getApiUrl } from 'js/utils/env';
 
 import Course from 'js/components/course/Course.vue';
 import Overview from 'js/components/course/dashboard/Overview.vue';
@@ -38,16 +39,17 @@ import ModeratorsDashboard from 'js/components/moderators/ModeratorsDashboard';
 import MainUsers from 'js/components/users/MainUsers';
 import UserProfile from 'js/components/users/UserProfile';
 import Onboarding from 'js/components/onboarding/Onboarding';
+import SplashScreen from 'js/components/global/splashscreens/SplashScreen';
 
 Vue.use(Router);
 
 const routes = [
 	{
-		name: 'course',
 		path: '/app/courses/:courseId',
 		component: Course,
 		props: true,
 		meta: {
+			requiresCurrentEditionAccess: true,
 			requiresOnboardingPassed: true,
 		},
 		children: [
@@ -70,18 +72,6 @@ const routes = [
 						props: true,
 					}
 				],
-				beforeEnter: (to, from, next) => {
-					store.dispatch('setupCurrentUser').then(() => {
-						const sandbox = createSandbox(store.getters.currentUser, {
-							perimeters: [currentEditionParticipant],
-						});
-
-						if (!sandbox.isAllowed('access')) {
-							return next('/');
-						}
-						return next();
-					});
-				},
 			}
 		],
 	},
@@ -163,6 +153,7 @@ const routes = [
 		component: Collections,
 		props: true,
 		meta: {
+			requiresCurrentEditionAccess: true,
 			requiresOnboardingPassed: true,
 		},
 		children: [
@@ -173,24 +164,12 @@ const routes = [
 				component: Collections
 			},
 		],
-		beforeEnter: (to, from, next) => {
-			store.dispatch('setupCurrentUser').then(() => {
-				const sandbox = createSandbox(store.getters.currentUser, {
-					perimeters: [currentEditionParticipant],
-				});
-
-				if (!sandbox.isAllowed('access')) {
-					return next('/');
-				}
-				return next();
-			});
-		},
 	},
 	{
 		name: 'help',
 		path: '/app/help',
 		component: Help,
-		redirect: {name: 'help-tech'},
+		redirect: { name: 'help-tech' },
 		children: [
 			{
 				name: 'help-learning',
@@ -204,7 +183,7 @@ const routes = [
 						});
 
 						if (!sandbox.isAllowed('access')) {
-							return next({name: 'help-service'});
+							return next({ name: 'help-service' });
 						}
 						return next();
 					});
@@ -222,7 +201,7 @@ const routes = [
 						});
 
 						if (!sandbox.isAllowed('access')) {
-							return next({name: 'help-service'});
+							return next({ name: 'help-service' });
 						}
 						return next();
 					});
@@ -240,7 +219,7 @@ const routes = [
 						});
 
 						if (!sandbox.isAllowed('access')) {
-							return next({name: 'help-service'});
+							return next({ name: 'help-service' });
 						}
 						return next();
 					});
@@ -260,6 +239,11 @@ const routes = [
 				name: 'key-shortcuts',
 				path: 'shortcuts',
 				component: Page,
+			},
+			{
+				name: 'help-faq',
+				path: 'faq',
+				component: Page,
 			}
 		]
 	},
@@ -267,6 +251,7 @@ const routes = [
 		path: '/app/questions',
 		component: Questions,
 		meta: {
+			requiresCurrentEditionAccess: true,
 			requiresOnboardingPassed: true,
 		},
 		children: [
@@ -307,18 +292,6 @@ const routes = [
 			},
 
 		],
-		beforeEnter: (to, from, next) => {
-			store.dispatch('setupCurrentUser').then(() => {
-				const sandbox = createSandbox(store.getters.currentUser, {
-					perimeters: [currentEditionParticipant],
-				});
-
-				if (!sandbox.isAllowed('access')) {
-					return next('/');
-				}
-				return next();
-			});
-		},
 	},
 	{
 		name: 'moderatorFeed',
@@ -340,13 +313,16 @@ const routes = [
 	{
 		name: 'dashboard',
 		path: '/app',
-		redirect: {name: 'courses', params: {courseId: 1}},
+		redirect: { name: 'courses', params: { courseId: 1 } },
 	},
 	{
 		name: 'onboarding',
 		path: '/app/onboarding/:step?',
 		component: Onboarding,
 		props: true,
+		meta: {
+			requiresCurrentEditionAccess: true,
+		},
 	},
 	{
 		name: 'logout',
@@ -360,7 +336,7 @@ const routes = [
 		name: 'all-users',
 		component: MainUsers,
 		props: true,
-		redirect: {name: 'user'},
+		redirect: { name: 'user' },
 		children: [
 			{
 				name: 'user',
@@ -370,17 +346,33 @@ const routes = [
 		]
 	},
 	{
+		path: '/app/splash-screen',
+		name: 'splash-screen',
+		component: SplashScreen,
+		beforeEnter: (to, from, next) => {
+			const sandbox = createSandbox(store.getters.currentUser, {
+				perimeters: [currentEditionParticipant],
+			});
+
+			if (sandbox.isAllowed('access')) {
+				return next('/');
+			}
+
+			return next();
+		},
+	},
+	{
 		name: 'dynamicContextMiddleRoute',
 		path: '/app/dynamic/:resource/:context',
 		beforeEnter: (to, from, next) => {
 			axios.post(getApiUrl(`${to.params.resource}/.context`), {
 				context: to.params.context
-			}).then(({data}) => {
+			}).then(({ data }) => {
 				return next({
 					...data,
 					query: to.query
 				});
-			}).catch(err => {
+			}).catch(() => {
 				return next(from);
 			});
 		}
@@ -395,7 +387,7 @@ const routes = [
 const router =  new Router({
 	mode: 'history',
 	linkActiveClass: 'is-active',
-	scrollBehavior: (to, from, savedPosition) => {
+	scrollBehavior: (to, from) => {
 		if (to.query && to.query.noScroll) {
 			return;
 		}
@@ -404,7 +396,7 @@ const router =  new Router({
 			parseInt(from.params.screenId) !== parseInt(to.params.screenId))
 		{
 			scrollToTop();
-			return {x: 0, y: 0};
+			return { x: 0, y: 0 };
 		}
 	},
 	routes
@@ -412,6 +404,19 @@ const router =  new Router({
 
 router.beforeEach(async (to, from, next) => {
 	await store.dispatch('setupCurrentUser');
+
+	const sandbox = createSandbox(store.getters.currentUser, {
+		perimeters: [currentEditionParticipant],
+	});
+
+	if (
+		to.matched.some(record => record.meta.requiresCurrentEditionAccess) &&
+		!sandbox.isAllowed('access')
+	) {
+		return next({
+			name: 'splash-screen'
+		});
+	}
 
 	if (
 		to.matched.some(record => record.meta.requiresOnboardingPassed) &&

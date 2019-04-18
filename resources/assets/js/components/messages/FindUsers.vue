@@ -2,15 +2,15 @@
 	<div class="wnl-find-users">
 		<div class="wnl-find-users-input control" :class="{'is-loading': loading}">
 			<input
-				:placeholder="$t('messages.search.placeholder')"
+				ref="input"
 				v-model="textInputValue"
+				:placeholder="$t('messages.search.placeholder')"
 				@input="onInput"
 				@keydown="onKeyDown"
-				ref="input"
-			/>
+			>
 		</div>
-		<div class="wnl-find-users-info notification aligncenter" v-if="info">
-			{{ info }}
+		<div v-if="info" class="wnl-find-users-info notification aligncenter">
+			{{info}}
 		</div>
 	</div>
 </template>
@@ -53,8 +53,8 @@
 <script>
 import _ from 'lodash';
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
-import {KEYS} from 'js/consts/keys';
+import { getApiUrl } from 'js/utils/env';
+import { KEYS } from 'js/consts/keys';
 
 export default {
 	name: 'FindUsers',
@@ -66,8 +66,11 @@ export default {
 			info: '',
 		};
 	},
+	mounted(){
+		this.$refs.input.focus();
+	},
 	methods: {
-		onInput: _.debounce(function ({target: {value}}) {
+		onInput: _.debounce(function ({ target: { value } }) {
 			if (value.length === 0) return;
 
 			this.loadingStart();
@@ -127,8 +130,5 @@ export default {
 			this.$emit('close');
 		},
 	},
-	mounted(){
-		this.$refs.input.focus();
-	}
 };
 </script>

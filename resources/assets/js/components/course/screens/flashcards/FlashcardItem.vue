@@ -1,78 +1,98 @@
 <template>
 	<li
-			:class="['flashcards-list__item', flashcard.answer !== 'unsolved' && 'flashcards-list__item--solved']"
+		:class="['flashcards-list__item', flashcard.answer !== 'unsolved' && 'flashcards-list__item--solved']"
 	>
 		<span class="flashcards-list__item__index">{{index}}</span>
 		<div class="flashcards-list__item__container">
 			<div class="flashcards-list__item__text__container">
 				<p class="flashcards-list__item__text">{{flashcard.content}}</p>
 				<div
+					v-if="flashcard.answer === 'unsolved'"
 					class="flashcards-list__item__buttons"
 					:class="{'wnl-is-loading': isLoading}"
-					v-if="flashcard.answer === 'unsolved'"
 				>
-					<a class="flashcards-list__item__buttons__button text--easy"
-					   @click="submitAnswer(flashcard, 'easy')"
-					   :title="ANSWERS_MAP.easy.text"
+					<a
+						class="flashcards-list__item__buttons__button text--easy"
+						:title="ANSWERS_MAP.easy.text"
+						@click="submitAnswer(flashcard, 'easy')"
 					>
-						<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span>
-					</a>
-					<a class="flashcards-list__item__buttons__button text--hard"
-					   @click="submitAnswer(flashcard, 'hard')"
-					   :title="ANSWERS_MAP.hard.text"
-					>
-						<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span>
+						<span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]" /></span>
 					</a>
 					<a
-							class="flashcards-list__item__buttons__button text--do-not-know"
-							@click="submitAnswer(flashcard, 'do_not_know')"
-							:title="ANSWERS_MAP.do_not_know.text"
+						class="flashcards-list__item__buttons__button text--hard"
+						:title="ANSWERS_MAP.hard.text"
+						@click="submitAnswer(flashcard, 'hard')"
 					>
-						<span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span>
+						<span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]" /></span>
+					</a>
+					<a
+						class="flashcards-list__item__buttons__button text--do-not-know"
+						:title="ANSWERS_MAP.do_not_know.text"
+						@click="submitAnswer(flashcard, 'do_not_know')"
+					>
+						<span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]" /></span>
 					</a>
 				</div>
 				<div
-						class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
-						v-else
+					v-else
+					class="flashcards-list__item__buttons flashcards-list__item__buttons--retake"
 				>
 					<span
-							class="flashcards-list__item__buttons__button"
-							@click="onRetakeFlashcard(flashcard)"
-							title="Ponów"
+						class="flashcards-list__item__buttons__button"
+						title="Ponów"
+						@click="onRetakeFlashcard(flashcard)"
 					>
-						<span class="icon"><i class="fa fa-undo"></i></span>
+						<span class="icon"><i class="fa fa-undo" /></span>
 					</span>
 					<span
-							:class="['flashcards-list__item__buttons__button is-disabled', ANSWERS_MAP[flashcard.answer].buttonClass]"
-							:title="ANSWERS_MAP[flashcard.answer].text"
+						:class="['flashcards-list__item__buttons__button is-disabled', ANSWERS_MAP[flashcard.answer].buttonClass]"
+						:title="ANSWERS_MAP[flashcard.answer].text"
 					>
-						<span class="icon"><i
-								:class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]"></i></span>
+						<span class="icon">
+							<i :class="['fa', ANSWERS_MAP[flashcard.answer].iconClass]" />
+						</span>
 					</span>
 				</div>
 			</div>
 			<div v-if="flashcard.answer !== 'unsolved'">
-				<wnl-text-button v-if="!flashcard.note && !isNoteEditorOpen" @click="toggleNoteEditor" type="button">+ DODAJ NOTATKĘ</wnl-text-button>
+				<wnl-text-button
+					v-if="!flashcard.note && !isNoteEditorOpen"
+					type="button"
+					@click="toggleNoteEditor"
+				>+ DODAJ NOTATKĘ</wnl-text-button>
 				<div v-if="flashcard.note && !isNoteEditorOpen">
-					<label class="label">TWOJA NOTATKA <wnl-text-button type="button" @click="toggleNoteEditor" icon="edit">EDYTUJ</wnl-text-button></label>
+					<label class="label">TWOJA NOTATKA
+					<wnl-text-button
+						type="button"
+						icon="edit"
+						@click="toggleNoteEditor"
+					>EDYTUJ</wnl-text-button>
+					</label>
 					<span class="flashcards-list__item__note-content content" v-html="flashcard.note.note" />
 				</div>
 				<wnl-form
-						v-if="isNoteEditorOpen"
-						:method="noteFormMethod"
-						:reset-after-submit="true"
-						:resource-route="noteFormResourceRoute"
-						:name="`flashcardNote-${flashcard.id}`"
-						:suppress-enter="true"
-						:hide-default-submit="true"
-						@submitSuccess="onSubmitSuccess">
-					<label class="label">TWOJA NOTATKA <wnl-text-button type="button" @click="toggleNoteEditor" icon="close">ANULUJ</wnl-text-button></label>
+					v-if="isNoteEditorOpen"
+					:method="noteFormMethod"
+					:reset-after-submit="true"
+					:resource-route="noteFormResourceRoute"
+					:name="`flashcardNote-${flashcard.id}`"
+					:suppress-enter="true"
+					:hide-default-submit="true"
+					@submitSuccess="onSubmitSuccess"
+				>
+					<label class="label">TWOJA NOTATKA
+					<wnl-text-button
+						type="button"
+						icon="close"
+						@click="toggleNoteEditor"
+					>ANULUJ</wnl-text-button>
+					</label>
 					<wnl-quill
-							name="note"
-							class="margin bottom flashcards-list__item__note-editor"
-							:options="{ theme: 'snow', placeholder: 'Wpisz swoją notatkę...' }"
-							:toolbar="[['bold', 'italic', 'underline', 'link'], [{ color: fontColors }], ['clean']]"
-							v-model="note"
+						v-model="note"
+						name="note"
+						class="margin bottom flashcards-list__item__note-editor"
+						:options="{ theme: 'snow', placeholder: 'Wpisz swoją notatkę...' }"
+						:toolbar="[['bold', 'italic', 'underline', 'link'], [{ color: fontColors }], ['clean']]"
 					/>
 					<div class="level">
 						<div class="level-item">
@@ -195,17 +215,22 @@
 </style>
 
 <script>
-import {mapActions, mapMutations} from 'vuex';
-import {nextTick} from 'vue';
+import { mapActions, mapMutations } from 'vuex';
 import * as mutationsTypes from 'js/store/mutations-types';
-import {Quill as WnlQuill, Form as WnlForm, Submit as WnlSubmit} from 'js/components/global/form/index';
+import { Quill as WnlQuill, Form as WnlForm, Submit as WnlSubmit } from 'js/components/global/form/index';
 import WnlTextButton from 'js/components/global/TextButton';
-import {ANSWERS_MAP} from 'js/consts/flashcard';
+import { ANSWERS_MAP } from 'js/consts/flashcard';
 import { fontColors } from 'js/utils/colors';
 import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
 
 export default {
+	components: {
+		WnlQuill,
+		WnlForm,
+		WnlTextButton,
+		WnlSubmit,
+	},
 	mixins: [emits_events],
 	props: {
 		context: {
@@ -220,12 +245,6 @@ export default {
 			type: Number,
 			required: true,
 		},
-	},
-	components: {
-		WnlQuill,
-		WnlForm,
-		WnlTextButton,
-		WnlSubmit,
 	},
 	data() {
 		return {

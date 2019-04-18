@@ -6,15 +6,15 @@
 		>
 			<wnl-taxonomy-term-item
 				v-for="term in terms"
-				:term="term"
 				:key="term.id"
+				:term="term"
 			/>
 		</vue-draggable>
 	</ul>
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 
 import VueDraggable from 'vuedraggable';
 import WnlTaxonomyTermItem from 'js/admin/components/taxonomies/TaxonomyTermItem';
@@ -36,13 +36,13 @@ export default {
 			reorderSiblings: 'reorderSiblings',
 		}),
 		...mapActions(['addAutoDismissableAlert']),
-		async submitMove({direction, ...args}) {
+		async submitMove({ direction, ...args }) {
 			if (direction === 0) {
 				return;
 			}
 
 			try {
-				await this.moveTerm({direction, ...args});
+				await this.moveTerm({ direction, ...args });
 				this.addAutoDismissableAlert({
 					type: 'success',
 					text: 'Zapisano!'
@@ -56,13 +56,13 @@ export default {
 				throw (e);
 			}
 		},
-		async onTermDrag({newIndex, oldIndex}) {
+		async onTermDrag({ newIndex, oldIndex }) {
 			const direction = newIndex - oldIndex;
 			const term = this.terms[oldIndex];
 			try {
-				await this.submitMove({direction, node: term});
+				await this.submitMove({ direction, node: term });
 			} catch (e) {
-				await this.reorderSiblings({direction: oldIndex - newIndex, node: term});
+				await this.reorderSiblings({ direction: oldIndex - newIndex, node: term });
 			}
 		},
 	}

@@ -2,42 +2,46 @@
 	<div
 		ref="preview-modal"
 		class="modal"
-		:class="{'is-active': showModal}">
+		:class="{'is-active': showModal}"
+	>
 		<div
+			v-show="hasManySlides"
 			class="previous-slide"
-			v-show="hasManySlides">
+		>
 			<span class="icon" @click="$emit('switchSlide', -1)">
-				<i class="fa fa-angle-left"></i>
+				<i class="fa fa-angle-left" />
 			</span>
 		</div>
-		<div class="modal-background" @click="$emit('closeModal')"></div>
+		<div class="modal-background" @click="$emit('closeModal')" />
 		<div class="modal-card">
 			<header class="modal-card-header">
-				<slot name="header"></slot>
+				<slot name="header" />
 			</header>
 			<div class="modal-card-body">
 				<iframe
+					v-show="!isLoading"
 					name="slidePreview"
 					:srcdoc="content"
 					@load="onLoad"
-					v-show="!isLoading"/>
+				/>
 			</div>
 			<footer class="modal-card-footer">
-				<slot name="footer"></slot>
+				<slot name="footer" />
 			</footer>
 		</div>
 		<div
+			v-if="hasManySlides"
 			class="next-slide"
-			v-if="hasManySlides">
+		>
 			<span class="icon" @click="$emit('switchSlide', 1)">
-				<i class="fa fa-angle-right"></i>
+				<i class="fa fa-angle-right" />
 			</span>
 		</div>
 		<button
 			class="modal-close is-large"
 			aria-label="close"
 			@click="$emit('closeModal')"
-		></button>
+		/>
 	</div>
 </template>
 
@@ -78,17 +82,12 @@
 </style>
 
 <script>
-import {nextTick} from 'vue';
+import { nextTick } from 'vue';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 
 export default {
 	name: 'SlidePreview',
-	data() {
-		return {
-			isLoading: true
-		};
-	},
 	mixins: [emits_events],
 	props: {
 		content: {
@@ -103,10 +102,26 @@ export default {
 			type: [Number, String],
 		}
 	},
+	data() {
+		return {
+			isLoading: true
+		};
+	},
 	computed: {
 		hasManySlides() {
 			return this.slidesCount > 1;
 		}
+	},
+	watch: {
+		'showModal' (newValue) {
+			this.isLoading = newValue;
+		}
+	},
+	mounted() {
+		document.body.addEventListener('keydown', this.onKeydown);
+	},
+	beforeDestroy() {
+		document.body.removeEventListener('keydown', this.onKeydown);
 	},
 	methods: {
 		onLoad() {
@@ -131,17 +146,6 @@ export default {
 				break;
 			}
 		}
-	},
-	watch: {
-		'showModal' (newValue) {
-			this.isLoading = newValue;
-		}
-	},
-	mounted() {
-		document.body.addEventListener('keydown', this.onKeydown);
-	},
-	beforeDestroy() {
-		document.body.removeEventListener('keydown', this.onKeydown);
 	}
 };
 </script>

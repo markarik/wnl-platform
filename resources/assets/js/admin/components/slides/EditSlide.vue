@@ -9,16 +9,16 @@
 	>
 		<wnl-slide-search
 			slot="above-content"
+			:slide-id="Number(slideId) || 0"
+			:screen-id="Number(screenId) || 0"
 			@screenIdChange="saveScreenId"
 			@slideIdChange="saveSlideId"
 			@resourceUrlFetched="onResourceUrlFetched"
-			:slide-id="Number(slideId) || 0"
-			:screen-id="Number(screenId) || 0"
 		/>
 		<wnl-content-item-classifier-editor
 			v-if="slideId > 0"
-			class="margin bottom"
 			slot="below-content"
+			class="margin bottom"
 			:is-always-active="true"
 			:content-item-id="slideId"
 			:content-item-type="CONTENT_TYPES.SLIDE"
@@ -27,14 +27,14 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 
 import WnlSlideEditor from 'js/admin/components/slides/SlideEditor';
 import WnlSlideSearch from 'js/admin/components/slides/SlidesSearch';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 
-import {getApiUrl} from 'js/utils/env';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { getApiUrl } from 'js/utils/env';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 export default {
 	name: 'EditSlide',
@@ -51,22 +51,12 @@ export default {
 			CONTENT_TYPES,
 		};
 	},
-	methods: {
-		...mapActions(['setupCurrentUser']),
-		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
-		resetSearchInputs() {
-			this.slideId = 0;
-			this.screenId = 0;
-		},
-		saveScreenId(event) {
-			this.screenId = event.target.value;
-		},
-		saveSlideId(event) {
-			this.slideId = event.target.value;
-		},
-		onResourceUrlFetched({url, slideId}) {
-			this.slideId = slideId;
-			this.resourceUrl = url;
+	watch: {
+		async slideId(slideId) {
+			if (slideId) {
+				await this.setupCurrentUser();
+				await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId] });
+			}
 		}
 	},
 	mounted() {
@@ -80,13 +70,23 @@ export default {
 			});
 		}
 	},
-	watch: {
-		async slideId(slideId) {
-			if (slideId) {
-				await this.setupCurrentUser();
-				await this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId]});
-			}
+	methods: {
+		...mapActions(['setupCurrentUser']),
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
+		resetSearchInputs() {
+			this.slideId = 0;
+			this.screenId = 0;
+		},
+		saveScreenId(event) {
+			this.screenId = event.target.value;
+		},
+		saveSlideId(event) {
+			this.slideId = event.target.value;
+		},
+		onResourceUrlFetched({ url, slideId }) {
+			this.slideId = slideId;
+			this.resourceUrl = url;
 		}
-	}
+	},
 };
 </script>

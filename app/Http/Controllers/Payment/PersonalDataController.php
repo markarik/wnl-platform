@@ -91,32 +91,7 @@ class PersonalDataController extends Controller
 
 		if (!empty($coupon) && $coupon->isApplicableForProduct($order->product)) {
 			$this->addCoupon($order, $coupon);
-		} else if ($order->product->slug !== Product::SLUG_WNL_ALBUM) {
-			$this->generateStudyBuddy($order);
 		}
-	}
-
-	protected function generateStudyBuddy($order)
-	{
-		$expires = Carbon::now()->addYears(1);
-		$coupon = new Coupon([
-			'name' => 'Study Buddy',
-			'type' => 'amount',
-			'value' => 100,
-			'expires_at' => $expires,
-			'code' => strtoupper(str_random(7)),
-			'times_usable' => 0,
-			'kind' => Coupon::KIND_STUDY_BUDDY,
-		]);
-
-		$order->studyBuddy()->create([
-			'code' => $coupon->code,
-		]);
-
-		$coupon->save();
-		$coupon->products()->attach(
-			Product::whereIn('slug', [Product::SLUG_WNL_ONLINE])->get()
-		);
 	}
 
 	protected function updateAccount($user, $request, $form, $addresEnabled = true)

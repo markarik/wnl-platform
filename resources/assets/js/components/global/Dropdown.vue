@@ -1,9 +1,17 @@
 <template>
 	<div class="wnl-dropdown">
-		<div class="activator" :class="{ 'is-active' : isActive }" @click="toggleActive">
-			<slot name="activator"></slot>
-			<div v-if="isActive" class="box drawer" :class="{'is-mobile': isMobile, 'is-wide': options.isWide}">
-				<slot name="content"></slot>
+		<div
+			class="activator"
+			:class="{ 'is-active' : isActive }"
+			@click="toggleActive"
+		>
+			<slot name="activator" />
+			<div
+				v-if="isActive"
+				class="box drawer"
+				:class="{'is-mobile': isMobile, 'is-wide': options.isWide}"
+			>
+				<slot name="content" />
 			</div>
 		</div>
 	</div>
@@ -178,7 +186,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
 	name: 'Dropdown',
@@ -200,8 +208,14 @@ export default {
 	computed: {
 		...mapGetters(['isMobile'])
 	},
+	beforeDestroy() {
+		document.removeEventListener('click', this.clickHandler);
+	},
+	mounted() {
+		document.addEventListener('click', this.clickHandler);
+	},
 	methods: {
-		clickHandler({target}) {
+		clickHandler({ target }) {
 			if (this.isActive && !this.$el.contains(target)) {
 				this.isActive = false;
 				this.$emit('toggled', false);
@@ -211,12 +225,6 @@ export default {
 			this.isActive = !this.isActive;
 			this.$emit('toggled', this.isActive);
 		},
-	},
-	beforeDestroy() {
-		document.removeEventListener('click', this.clickHandler);
-	},
-	mounted() {
-		document.addEventListener('click', this.clickHandler);
 	},
 };
 </script>

@@ -1,10 +1,11 @@
-import {set} from 'vue';
+import axios from 'axios';
+import { set } from 'vue';
 
 import * as types from 'js/store/mutations-types';
-import {getApiUrl} from 'js/utils/env';
-import {modelToResourceMap} from 'js/utils/config';
-import {commentsGetters, commentsMutations, commentsActions, commentsState} from 'js/store/modules/comments';
-import {reactionsGetters, reactionsActions, reactionsMutations} from 'js/store/modules/reactions';
+import { getApiUrl } from 'js/utils/env';
+import { modelToResourceMap } from 'js/utils/config';
+import { commentsGetters, commentsMutations, commentsActions, commentsState } from 'js/store/modules/comments';
+import { reactionsGetters, reactionsActions, reactionsMutations } from 'js/store/modules/reactions';
 
 function _fetchReactables(presentables) {
 	let slideIds = presentables.map(presentable => presentable.slide_id);
@@ -156,14 +157,14 @@ const mutations = {
 const actions = {
 	...commentsActions,
 	...reactionsActions,
-	setup({commit, dispatch, getters}, {id, type='App\\Models\\Slideshow'}) {
+	setup({ dispatch }, { id, type='App\\Models\\Slideshow' }) {
 		return new Promise((resolve, reject) => {
-			dispatch('setupPresentablesWithReactions', {id, type})
+			dispatch('setupPresentablesWithReactions', { id, type })
 				.then(resolve)
 				.catch((reason) => reject(reason));
 		});
 	},
-	setupPresentablesWithReactions({commit}, {id, type='App\\Models\\Slideshow'}) {
+	setupPresentablesWithReactions({ commit }, { id, type='App\\Models\\Slideshow' }) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(id, type)
 				.then((response) => _fetchReactables(response.data))
@@ -178,7 +179,7 @@ const actions = {
 				});
 		});
 	},
-	setupPresentables({commit}, {id, type='App\\Models\\Slideshow'}) {
+	setupPresentables({ commit }, { id, type='App\\Models\\Slideshow' }) {
 		return new Promise((resolve, reject) => {
 			_fetchPresentables(id, type)
 				.then((presentables) => {
@@ -192,21 +193,21 @@ const actions = {
 				});
 		});
 	},
-	setupSlideshowComments({commit, dispatch}, args) {
+	setupSlideshowComments({ commit, dispatch }, args) {
 		commit(types.SLIDESHOW_LOADING_COMMENTS, true);
-		return dispatch('setupComments', {resource: modelToResourceMap['App\\Models\\Slide'], ...args})
+		return dispatch('setupComments', { resource: modelToResourceMap['App\\Models\\Slide'], ...args })
 			.then(() => {
 				commit(types.SLIDESHOW_LOADING_COMMENTS, false);
 			})
 			.catch(() => commit(types.SLIDESHOW_LOADING_COMMENTS, false));
 	},
-	setupSlideComments({commit, dispatch}, {id, ...args}) {
-		return dispatch('setupSlideshowComments', {commentable_id: id, ...args});
+	setupSlideComments({ dispatch }, { id, ...args }) {
+		return dispatch('setupSlideshowComments', { commentable_id: id, ...args });
 	},
-	resetModule({commit}) {
+	resetModule({ commit }) {
 		commit(types.RESET_MODULE);
 	},
-	setSortedSlidesIds({commit}, ids) {
+	setSortedSlidesIds({ commit }, ids) {
 		commit(types.SLIDESHOW_SET_SORTED_SLIDES_IDS, ids);
 	}
 };

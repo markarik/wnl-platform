@@ -2,9 +2,13 @@
 	<div class="stream-filtering">
 		<div v-if="!isMobile" class="tabs">
 			<ul>
-				<li v-for="(option, index) in filteringOptions" :key="index" :class="{'is-active': isTabActive(option.slug)}">
+				<li
+					v-for="(option, index) in filteringOptions"
+					:key="index"
+					:class="{'is-active': isTabActive(option.slug)}"
+				>
 					<a @click="changeFiltering(option.slug)">
-						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{option.text}}
+						<span class="icon is-small"><i class="fa" :class="option.icon" /></span> {{option.text}}
 					</a>
 				</li>
 			</ul>
@@ -12,12 +16,13 @@
 		<div v-else class="control">
 			<span class="select">
 				<select @input="changeFilteringWithSelect">
-					<option v-for="(option, index) in filteringOptions"
+					<option
+						v-for="(option, index) in filteringOptions"
 						:key="index"
 						:value="option.slug"
 						:selected="isTabActive(option.slug)"
 					>
-						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{option.text}}
+						<span class="icon is-small"><i class="fa" :class="option.icon" /></span> {{option.text}}
 					</option>
 				</select>
 			</span>
@@ -25,7 +30,7 @@
 		<a class="button is-small toggle-archived" @click="$emit('toggleShowRead')">
 			<span class="text">{{buttonMessage}}</span>
 			<span class="icon is-small">
-				<i class="fa" :class="showRead ? 'fa-eye' : 'fa-eye-slash'"></i>
+				<i class="fa" :class="showRead ? 'fa-eye' : 'fa-eye-slash'" />
 			</span>
 		</a>
 	</div>
@@ -62,7 +67,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 const filteringOptions = [
 	{

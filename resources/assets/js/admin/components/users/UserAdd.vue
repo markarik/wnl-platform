@@ -1,17 +1,21 @@
 <template>
 	<div>
 		<h2 class="title is-3 margin bottom">Nowy Użytkownik</h2>
-		<user-edit-form @success="onSuccess" @error="onError" :resource-url="resourceUrl"/>
+		<user-edit-form
+			:resource-url="resourceUrl"
+			@success="onSuccess"
+			@error="onError"
+		/>
 	</div>
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 import UserEditForm from './UserEditForm';
 
 
 export default {
-	components: {UserEditForm},
+	components: { UserEditForm },
 	computed: {
 		resourceUrl() {
 			return 'users';

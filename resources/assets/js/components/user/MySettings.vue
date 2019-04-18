@@ -8,13 +8,15 @@
 			</div>
 		</div>
 
-		<wnl-form class="margin vertical"
+		<wnl-form
+			class="margin vertical"
 			name="Settings"
 			method="put"
 			resource-route="users/current/settings"
 			populate="true"
 			hide-default-submit="true"
-			@submitSuccess="onSubmitSuccess">
+			@submitSuccess="onSubmitSuccess"
+		>
 			<template slot-scope="slotParams">
 				<!-- <wnl-form-check name="newsletter">Otrzymuj newsletter</wnl-form-check> -->
 				<wnl-form-check
@@ -51,7 +53,7 @@
 import { mapGetters, mapActions, mapState } from 'vuex';
 
 import { Form as WnlForm, Check as WnlFormCheck, Select as WnlFormSelect } from 'js/components/global/form';
-import {USER_SETTING_NAMES} from 'js/consts/settings';
+import { USER_SETTING_NAMES } from 'js/consts/settings';
 
 export default {
 	components: {
@@ -69,7 +71,12 @@ export default {
 		...mapGetters(['isAdmin']),
 		...mapState('taxonomies', ['taxonomies']),
 		taxonomiesSelectOptions() {
-			return this.taxonomies.map(taxonomy => ({value: taxonomy.id, text: taxonomy.name}));
+			return this.taxonomies.map(taxonomy => ({ value: taxonomy.id, text: taxonomy.name }));
+		}
+	},
+	mounted() {
+		if (this.isAdmin) {
+			this.fetchTaxonomies();
 		}
 	},
 	methods: {
@@ -81,15 +88,10 @@ export default {
 			Object.keys(newData).forEach(setting => {
 				let value = newData[setting];
 				if (newData[setting] !== this.getAllSettings[setting]) {
-					this.changeUserSetting({setting, value});
+					this.changeUserSetting({ setting, value });
 				}
 			});
 		},
-	},
-	mounted() {
-		if (this.isAdmin) {
-			this.fetchTaxonomies();
-		}
 	},
 };
 </script>

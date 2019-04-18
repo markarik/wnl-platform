@@ -11,20 +11,24 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr v-for="user in users" class="users-users__item" @click="goToDetails(user.id)" :key="user.id">
-					<td>{{ user.id }}</td>
+				<tr
+					v-for="user in users"
+					:key="user.id"
+					class="users-users__item"
+					@click="goToDetails(user.id)"
+				>
+					<td>{{user.id}}</td>
 					<td>
-						{{ user.full_name }}
+						{{user.full_name}}
 						<span
-							class="tag"
 							v-for="(role, index) in user.roles"
 							:key="index"
-							:style="{backgroundColor: getColourForStr(role.name)}">
-						{{ role.name }}
-						</span>
+							class="tag"
+							:style="{backgroundColor: getColourForStr(role.name)}"
+						>{{role.name}}</span>
 					</td>
-					<td>{{ user.email }}</td>
-					<td>{{ getCreatedDate(user) }}</td>
+					<td>{{user.email}}</td>
+					<td>{{getCreatedDate(user)}}</td>
 				</tr>
 				</tbody>
 			</table>
@@ -59,20 +63,20 @@ import { getColourForStr } from 'js/utils/colors.js';
 
 export default {
 	name: 'UsersList',
-	data() {
-		return {
-			getColourForStr
-		};
-	},
 	props: {
 		usersResponse: {
 			type: [Object, Array],
 			required: true
 		},
 	},
+	data() {
+		return {
+			getColourForStr
+		};
+	},
 	computed: {
 		users() {
-			const {included, ...users} = this.usersResponse;
+			const { included, ...users } = this.usersResponse;
 			return Object.values(users).map(user => ({
 				...user,
 				roles: (user.roles || []).map(roleId => included.roles[roleId])

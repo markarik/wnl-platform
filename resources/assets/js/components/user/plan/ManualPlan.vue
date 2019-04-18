@@ -1,21 +1,21 @@
 <template>
 	<div>
-		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')"/>
+		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')" />
 		<div class="all-lessons-view">
 			<div class="level-left all-lessons-annotation-header">
 				<div class="level">
-					{{ $t('lessonsAvailability.allLessonsAnnotation.header')}}
+					{{$t('lessonsAvailability.allLessonsAnnotation.header')}}
 				</div>
 			</div>
 			<div class="level-left all-lessons-annotation-explanation">
 				<div class="level">
-					{{ $t('lessonsAvailability.allLessonsAnnotation.explanation')}}
+					{{$t('lessonsAvailability.allLessonsAnnotation.explanation')}}
 				</div>
 			</div>
-			<div class="manual-start-dates" v-if="manualStartDates.length > 0">
+			<div v-if="manualStartDates.length > 0" class="manual-start-dates">
 				<div class="level-left">
 					<div class="level-item">
-						{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
+						{{$t('lessonsAvailability.lessonsToBeChangedList')}}
 					</div>
 				</div>
 				<table class="table is-fullwidth">
@@ -25,22 +25,22 @@
 						<th>Nowa data</th>
 					</tr>
 					<tr v-for="(manualStartDate, index) in sortedManualStartDates" :key="index">
-						<td>{{ manualStartDate.lessonName }}</td>
-						<td>{{ manualStartDate.oldDate }}</td>
-						<td>{{ manualStartDate.formatedStartDate }}</td>
+						<td>{{manualStartDate.lessonName}}</td>
+						<td>{{manualStartDate.oldDate}}</td>
+						<td>{{manualStartDate.formatedStartDate}}</td>
 					</tr>
 				</table>
 				<div class="accept-plan">
 					<a
-						@click="acceptPlan"
 						class="button button is-primary is-outlined is-big"
-					>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+						@click="acceptPlan"
+					>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 					</a>
 				</div>
 			</div>
 			<div class="level-left">
 				<div class="level-item big strong margin bottom">
-					{{ $t('lessonsAvailability.viewsDropdownInfo') }}
+					{{$t('lessonsAvailability.viewsDropdownInfo')}}
 				</div>
 			</div>
 			<wnl-manual-plan-nodes-list
@@ -49,10 +49,10 @@
 				@change="onStartDateChange"
 			/>
 
-			<div class="manual-start-dates" v-show="manualStartDates.length > 0">
+			<div v-show="manualStartDates.length > 0" class="manual-start-dates">
 				<div class="level-left">
 					<div class="level-item">
-						{{ $t('lessonsAvailability.lessonsToBeChangedList') }}
+						{{$t('lessonsAvailability.lessonsToBeChangedList')}}
 					</div>
 				</div>
 				<table class="table is-fullwidth">
@@ -62,18 +62,18 @@
 						<th>Nowa data</th>
 					</tr>
 					<tr v-for="(manualStartDate, index) in sortedManualStartDates" :key="index">
-						<td>{{ manualStartDate.lessonName }}</td>
-						<td>{{ manualStartDate.oldDate }}</td>
-						<td>{{ manualStartDate.formatedStartDate }}</td>
+						<td>{{manualStartDate.lessonName}}</td>
+						<td>{{manualStartDate.oldDate}}</td>
+						<td>{{manualStartDate.formatedStartDate}}</td>
 					</tr>
 				</table>
 			</div>
 		</div>
 		<div class="accept-plan">
 			<a
-				@click="acceptPlan"
 				class="button button is-primary is-outlined is-big"
-			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+				@click="acceptPlan"
+			>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 			</a>
 		</div>
 	</div>
@@ -114,6 +114,7 @@
 </style>
 
 <script>
+import axios from 'axios';
 import WnlTextOverlay from 'js/components/global/TextOverlay.vue';
 import { mapGetters, mapActions } from 'vuex';
 import moment from 'moment';
@@ -167,7 +168,7 @@ export default {
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('course', ['setStructure']),
-		onStartDateChange({newStartDate, lesson}) {
+		onStartDateChange({ newStartDate, lesson }) {
 			if (!newStartDate[0]) return;
 
 			const lessonWithStartDate = {
@@ -223,7 +224,7 @@ export default {
 					$wnl.logger.capture(error);
 					this.addAutoDismissableAlert(this.alertError);
 				}
-			}).catch(e => {
+			}).catch(() => {
 				// ignore cancellation of swal
 			});
 		},

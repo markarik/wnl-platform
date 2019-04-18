@@ -1,28 +1,29 @@
 <template>
 	<div class="wnl-search" @click="showOverlay">
 		<span class="icon">
-			<i class="fa fa-search"></i>
+			<i class="fa fa-search" />
 		</span>
 
 		<transition name="fade">
-			<div v-show="active"
-				class="search-overlay"
+			<div
+				v-show="active"
 				ref="overlay"
+				class="search-overlay"
 				:class="{'is-touch-screen': isTouchScreen}"
 				@click.stop="$refs.input.focus()"
 			>
 				<div class="search-input">
 					<div class="control" :class="{'is-loading': loading}">
 						<input
+							ref="input"
 							class="input"
 							placeholder="Szukaj..."
-							ref="input"
 							type="text"
 							@input="debounceInput"
 						>
 					</div>
 					<span class="close-icon icon is-large" @click="hideOverlay">
-						<i class="fa fa-close"></i>
+						<i class="fa fa-close" />
 					</span>
 				</div>
 				<div class="results">
@@ -146,10 +147,12 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
-import {scrollToY} from 'js/utils/animations';
+import { mapGetters } from 'vuex';
+import { debounce } from 'lodash';
 
-import SlidesSearch from './SlidesSearch';
+import SlidesSearch from 'js/components/global/search/SlidesSearch';
+
+import { scrollToY } from 'js/utils/animations';
 
 export default {
 	name: 'Search',
@@ -166,8 +169,14 @@ export default {
 	computed: {
 		...mapGetters(['isTouchScreen']),
 	},
+	mounted() {
+		window.addEventListener('keydown', this.keyDown);
+	},
+	beforeDestroy() {
+		window.removeEventListener('keydown', this.keyDown);
+	},
 	methods: {
-		debounceInput: _.debounce(function({target: {value}}) {
+		debounceInput: debounce(function({ target: { value } }) {
 			this.phrase = value;
 		}, 500),
 		hideOverlay() {
@@ -193,11 +202,5 @@ export default {
 			this.$nextTick(() => this.$refs.input.select());
 		},
 	},
-	mounted() {
-		window.addEventListener('keydown', this.keyDown);
-	},
-	beforeDestroy() {
-		window.removeEventListener('keydown', this.keyDown);
-	}
 };
 </script>

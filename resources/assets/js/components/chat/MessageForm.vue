@@ -2,7 +2,7 @@
 	<div class="wnl-chat-form">
 		<article class="media">
 			<figure class="media-left">
-				<wnl-avatar :full-name="currentUserFullName" :url="currentUserAvatar"></wnl-avatar>
+				<wnl-avatar :full-name="currentUserFullName" :url="currentUserAvatar" />
 			</figure>
 			<div class="media-content wnl-chat-form-wrapper">
 				<wnl-form
@@ -15,19 +15,19 @@
 					resource-route="qna_questions"
 				>
 					<wnl-quill
+						id="elo-elo"
 						ref="editor"
 						name="text"
-						id="elo-elo"
 						:options="quillOptions"
 						:keyboard="keyboard"
 						:toolbar="toolbar"
 						:allow-mentions="true"
 						@input="onInput"
-					></wnl-quill>
+					/>
 				</wnl-form>
-				<span class="characters-counter metadata">{{ `${message.length} / 5000` }}</span>
-				<div class="message is-warning" v-if="error.length > 0">
-					<div class="message-body">{{ error }}</div>
+				<span class="characters-counter metadata">{{`${message.length} / 5000`}}</span>
+				<div v-if="error.length > 0" class="message is-warning">
+					<div class="message-body">{{error}}</div>
 				</div>
 			</div>
 			<div class="media-right">
@@ -37,8 +37,8 @@
 					alt="Wyślij wiadomość"
 					:disabled="sendingDisabled || sendingMessage"
 					:loading="sendingMessage"
-					@buttonclicked="sendMessage">
-				</wnl-image-button>
+					@buttonclicked="sendMessage"
+				/>
 			</div>
 		</article>
 	</div>
@@ -73,6 +73,10 @@ import { nextTick } from 'vue';
 import _ from 'lodash';
 
 export default{
+	components: {
+		'wnl-form': Form,
+		'wnl-quill': Quill
+	},
 	props: {
 		room: {
 			type: Object,
@@ -101,8 +105,8 @@ export default{
 					tab: false,
 					handleEnter: {
 						key: 13,
-						handler: (event) => {
-							this.sendMessage(event);
+						handler: () => {
+							this.sendMessage();
 							return false;
 						}
 					}
@@ -112,10 +116,6 @@ export default{
 			mentions: [],
 			sendingMessage: false
 		};
-	},
-	components: {
-		'wnl-form': Form,
-		'wnl-quill': Quill
 	},
 	computed: {
 		...mapGetters([
@@ -147,16 +147,23 @@ export default{
 			return `chat-message-form-${this._uid}`;
 		}
 	},
+	watch: {
+		'room.id'() {
+			if (this.autofocusOnRoomChange && this.room.id) {
+				nextTick(() => this.quillEditor.quill.focus());
+			}
+		}
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
-		sendMessage(event) {
+		sendMessage() {
 			if (this.sendingDisabled) {
 				return false;
 			}
 			this.sendingMessage = true;
 			this.error = '';
 			this.isWaitingToSendMentions = true;
-			const {messages, ...room} = this.room;
+			const { messages, ...room } = this.room;
 			this.$socketSendMessage({
 				room,
 				message: {
@@ -192,7 +199,7 @@ export default{
 				const mentions = this.getMentions();
 
 				if (mentions && mentions.length) {
-					this.$emit('foundMentions', {mentions, context: data.message});
+					this.$emit('foundMentions', { mentions, context: data.message });
 				}
 
 				this.mentions = [];
@@ -205,7 +212,7 @@ export default{
 				}
 			}
 		},
-		onInput(input) {
+		onInput() {
 			this.message = this.quillEditor.quill.getText().trim();
 			this.mentions = this.getMentions();
 			this.content = this.quillEditor.editor.innerHTML;
@@ -216,13 +223,6 @@ export default{
 			}
 		}
 	},
-	watch: {
-		'room.id'() {
-			if (this.autofocusOnRoomChange && this.room.id) {
-				nextTick(() => this.quillEditor.quill.focus());
-			}
-		}
-	}
 };
 
 </script>

@@ -1,7 +1,7 @@
-import {uniq} from 'lodash';
-import {set} from 'vue';
+import { uniq } from 'lodash';
+import { set } from 'vue';
 import * as types from 'js/store/mutations-types';
-import {NESTED_SET_EDITOR_MODES} from 'js/consts/nestedSet';
+import { NESTED_SET_EDITOR_MODES } from 'js/consts/nestedSet';
 
 export const initialState = {
 	editorMode: NESTED_SET_EDITOR_MODES.ADD,
@@ -72,7 +72,7 @@ export const nestedSetMutations = {
 		set(state, 'editorMode', payload);
 	},
 	// the order of items in passed list is important!
-	[types.UPDATE_NESTED_SET_ORDER_NUMBERS](state, {list}) {
+	[types.UPDATE_NESTED_SET_ORDER_NUMBERS](state, { list }) {
 		const updatedList = list
 			.map((item, index) => ({
 				...item,
@@ -80,7 +80,7 @@ export const nestedSetMutations = {
 			}));
 
 		set(state, 'nodes', state.nodes.map(stateNode => {
-			const updatedNode = updatedList.find(({id}) => id === stateNode.id);
+			const updatedNode = updatedList.find(({ id }) => id === stateNode.id);
 
 			if (updatedNode) {
 				return updatedNode;
@@ -93,7 +93,7 @@ export const nestedSetMutations = {
 
 // Actions
 export const nestedSetActions = {
-	async setUpNestedSet({commit, dispatch}, setId) {
+	async setUpNestedSet({ commit, dispatch }, setId) {
 		commit(types.RESET_NESTED_SET_STATE);
 		commit(types.SET_NESTED_SET_LOADING, true);
 		const nodes = await dispatch('_fetch', setId);
@@ -116,7 +116,7 @@ export const nestedSetActions = {
 			commit(types.SET_NESTED_SET_LOADING, false);
 		}
 	},
-	async create({commit, state, getters, dispatch}, nodeData) {
+	async create({ commit, getters, dispatch }, nodeData) {
 		commit(types.SET_NESTED_SET_SAVING, true);
 		try {
 			const node = await dispatch('_post', nodeData);
@@ -132,18 +132,18 @@ export const nestedSetActions = {
 		}
 	},
 
-	async update({commit, state, getters, dispatch}, nodeData) {
+	async update({ commit, getters, dispatch }, nodeData) {
 		commit(types.SET_NESTED_SET_SAVING, true);
 		try {
 			const node = await dispatch('_put', nodeData);
-			const {parent_id: originalParentId} = getters.nodeById(node.id);
-			const {parent_id: updatedParentId} = node;
+			const { parent_id: originalParentId } = getters.nodeById(node.id);
+			const { parent_id: updatedParentId } = node;
 
 			if (originalParentId !== updatedParentId) {
 				node.orderNumber = getters.getChildrenNodesByParentId(updatedParentId).length;
 			}
 
-			commit(types.UPDATE_NESTED_SET_NODE, {...nodeData, ...node});
+			commit(types.UPDATE_NESTED_SET_NODE, { ...nodeData, ...node });
 			return node;
 		} catch (error) {
 			throw error;
@@ -152,7 +152,7 @@ export const nestedSetActions = {
 		}
 	},
 
-	async delete({commit, state, getters, dispatch}, node) {
+	async delete({ commit, getters, dispatch }, node) {
 		commit(types.SET_NESTED_SET_SAVING, true);
 		try {
 			await dispatch('_delete', node);
@@ -168,12 +168,12 @@ export const nestedSetActions = {
 		}
 	},
 
-	async moveNode({dispatch, commit}, {node, direction}) {
+	async moveNode({ dispatch, commit }, { node, direction }) {
 		commit(types.SET_NESTED_SET_SAVING, true);
 
 		try {
-			dispatch('reorderSiblings', {node, direction});
-			dispatch('_move', {node, direction});
+			dispatch('reorderSiblings', { node, direction });
+			dispatch('_move', { node, direction });
 		} catch (e) {
 			throw e;
 		} finally {
@@ -181,7 +181,7 @@ export const nestedSetActions = {
 		}
 	},
 
-	reorderSiblings({getters, commit}, {node, direction}) {
+	reorderSiblings({ getters, commit }, { node, direction }) {
 		const allSiblings = getters.getChildrenNodesByParentId(node.parent_id);
 		const oldIndex = allSiblings.findIndex(sibling => sibling.id === node.id);
 		const newIndex = oldIndex + direction;
@@ -193,30 +193,30 @@ export const nestedSetActions = {
 		allSiblings.splice(oldIndex, 1);
 		allSiblings.splice(newIndex, 0, node);
 
-		commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, {list: allSiblings});
+		commit(types.UPDATE_NESTED_SET_ORDER_NUMBERS, { list: allSiblings });
 	},
 
-	setEditorMode({commit}, editorMode) {
+	setEditorMode({ commit }, editorMode) {
 		commit(types.SET_NESTED_SET_EDITOR_MODE, editorMode);
 	},
 
-	select({commit}, selectedNodes) {
+	select({ commit }, selectedNodes) {
 		commit(types.SELECT_NESTED_SET, selectedNodes);
 	},
 
-	collapse({commit, state}, nodeId) {
+	collapse({ commit, state }, nodeId) {
 		commit(types.SET_EXPANDED_NESTED_SET, state.expandedNodes.filter(id => id !== nodeId));
 	},
 
-	collapseAll({commit}) {
+	collapseAll({ commit }) {
 		commit(types.SET_EXPANDED_NESTED_SET, []);
 	},
 
-	expandAll({commit, state}) {
+	expandAll({ commit, state }) {
 		commit(types.SET_EXPANDED_NESTED_SET, state.nodes.map(node => node.id));
 	},
 
-	expand({commit, getters, state}, nodeId) {
+	expand({ commit, getters, state }, nodeId) {
 		const node = getters.nodeById(nodeId);
 
 		commit(types.SET_EXPANDED_NESTED_SET, uniq([
@@ -225,7 +225,7 @@ export const nestedSetActions = {
 			node.id
 		]));
 	},
-	focus({dispatch}, node) {
+	focus({ dispatch }, node) {
 		dispatch('collapseAll');
 		dispatch('select', [node.id]);
 		dispatch('expand', node.id);

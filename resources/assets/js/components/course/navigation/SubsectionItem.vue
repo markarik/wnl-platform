@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
-import {STATUS_COMPLETE} from 'js/services/progressStore';
+import { mapGetters } from 'vuex';
+import { STATUS_COMPLETE } from 'js/services/progressStore';
 import WnlLessonNavigationItem from 'js/components/course/navigation/LessonNavigationItem';
 
 export default {

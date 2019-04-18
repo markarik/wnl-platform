@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<user-edit-form :populate="true" :resource-url="resourceUrl" method="put"/>
+		<user-edit-form
+			:populate="true"
+			:resource-url="resourceUrl"
+			method="put"
+		/>
 	</div>
 </template>
 
@@ -9,7 +13,7 @@ import UserEditForm from './UserEditForm';
 
 
 export default {
-	components: {UserEditForm},
+	components: { UserEditForm },
 	props: {
 		user: {
 			type: Object,

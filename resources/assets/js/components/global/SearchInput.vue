@@ -3,7 +3,12 @@
 		<div class="users-search">
 			<div class="field has-addons">
 				<div class="control">
-					<input class="input" v-model="currentPhrase" placeholder="Szukaj..." @keyup.enter="search"/>
+					<input
+						v-model="currentPhrase"
+						class="input"
+						placeholder="Szukaj..."
+						@keyup.enter="search"
+					>
 				</div>
 				<div class="control">
 					<a class="button is-primary" @click="search">
@@ -11,17 +16,27 @@
 					</a>
 				</div>
 			</div>
-			<div class="search-settings__field field" v-if="availableFields.length > 1">
+			<div v-if="availableFields.length > 1" class="search-settings__field field">
 				<input
-						type="checkbox" id="allFields" :checked="!searchFields.length"
-						@change="onSelectAll" class="search-settings__field__input is-checkradio"
+					id="allFields"
+					type="checkbox"
+					:checked="!searchFields.length"
+					class="search-settings__field__input is-checkradio"
+					@change="onSelectAll"
 				>
 				<label for="allFields" class="search-settings__field__label checkbox">Wszystkie Pola</label>
 			</div>
-			<div v-for="field in availableFields" :key="field.value" class="search-settings__field field">
+			<div
+				v-for="field in availableFields"
+				:key="field.value"
+				class="search-settings__field field"
+			>
 				<input
-						type="checkbox" v-model="searchFields"
-						:id="field.value" :value="field.value" class="search-settings__field__input is-checkradio"
+					:id="field.value"
+					v-model="searchFields"
+					type="checkbox"
+					:value="field.value"
+					class="search-settings__field__input is-checkradio"
 				>
 				<label :for="field.value" class="search-settings__field__label checkbox">{{field.title}}</label>
 			</div>
@@ -29,8 +44,8 @@
 		<div v-if="searchPhrase" class="active-search">
 			<span>Aktualne wyszukiwanie:</span>
 			<span class="tag is-success">
-				{{ searchPhrase }}
-				<button class="delete is-small" @click="clearSearch"></button>
+				{{searchPhrase}}
+				<button class="delete is-small" @click="clearSearch" />
 			</span>
 		</div>
 	</div>
@@ -54,7 +69,7 @@
 		margin-top: $margin-base
 </style>
 <script>
-import {isEqual} from 'lodash';
+import { isEqual } from 'lodash';
 
 export default {
 	props: {
@@ -89,6 +104,15 @@ export default {
 			return fields || [];
 		}
 	},
+	mounted() {
+		const query = this.$route.query.q || '';
+
+		if (query !== this.searchPhrase || !isEqual(this.searchFields, this.routerSearchFields)) {
+			this.searchPhrase = this.$route.query.q;
+			this.searchFields = this.routerSearchFields;
+			this.emitSearch();
+		}
+	},
 	methods: {
 		onSelectAll() {
 			this.searchFields = [];
@@ -110,15 +134,6 @@ export default {
 		},
 		clearSearch() {
 			this.searchPhrase = '';
-			this.emitSearch();
-		}
-	},
-	mounted() {
-		const query = this.$route.query.q || '';
-
-		if (query !== this.searchPhrase || !isEqual(this.searchFields, this.routerSearchFields)) {
-			this.searchPhrase = this.$route.query.q;
-			this.searchFields = this.routerSearchFields;
 			this.emitSearch();
 		}
 	}

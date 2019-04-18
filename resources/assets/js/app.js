@@ -1,13 +1,13 @@
 import 'vendor/imageviewer/imageviewer.scss';
 
 import Vue from 'vue';
-import {sync} from 'vuex-router-sync';
+import { sync } from 'vuex-router-sync';
 import store from 'js/store/store';
 import router from 'js/router';
 import Quill from 'quill';
 import MentionBlot from 'js/classes/mentionblot';
 import VueI18n from 'vue-i18n';
-import {pl} from 'js/i18n';
+import { pl } from 'js/i18n';
 import VueSweetAlert from 'vue-sweetalert';
 import VueSimpleBreakpoints from 'vue-simple-breakpoints';
 import VueKindergarten from 'vue-kindergarten';
@@ -39,15 +39,15 @@ sync(store, router);
 Vue.use(VueI18n);
 Vue.config.lang = 'pl';
 
-const messages = {pl};
-const i18n = new VueI18n({fallbackLocal: 'pl', locale: 'pl', messages});
+const messages = { pl };
+const i18n = new VueI18n({ fallbackLocal: 'pl', locale: 'pl', messages });
 
 // SweetAlert2
 Vue.use(VueSweetAlert);
-Vue.use(ChatConnection, {store});
-Vue.use(WnlAxios, {store, router});
-Vue.use(EventsTracker, {store, router});
-Vue.use(ShortcutKeys, {store});
+Vue.use(ChatConnection, { store });
+Vue.use(WnlAxios, { store, router });
+Vue.use(EventsTracker, { store, router });
+Vue.use(ShortcutKeys, { store });
 
 // Simple Breakpoints
 Vue.use(VueSimpleBreakpoints, {
@@ -80,7 +80,7 @@ $wnl.logger = new Logger();
 // Set up App
 $wnl.logger.debug('Starting application...');
 
-const app = new Vue({
+new Vue({
 	router,
 	store,
 	i18n,
@@ -93,7 +93,7 @@ Quill.register({
 
 // TODO: Move it to a separate component
 $.ajaxSetup({
-	headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+	headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
 	url: $('body').data('base') + '/ax',
 	data: {},
 	method: 'POST',

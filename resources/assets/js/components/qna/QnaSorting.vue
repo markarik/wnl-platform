@@ -2,22 +2,27 @@
 	<div class="qna-sorting">
 		<div v-if="!isMobile" class="tabs">
 			<ul>
-				<li v-for="(option, index) in sortingOptions" :key="index" :class="{'is-active': isTabActive(option.slug)}">
+				<li
+					v-for="(option, index) in sortingOptions"
+					:key="index"
+					:class="{'is-active': isTabActive(option.slug)}"
+				>
 					<a @click="changeSorting(option.slug)">
-						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{$t(`qna.sorting.${option.slug}`)}}
+						<span class="icon is-small"><i class="fa" :class="option.icon" /></span> {{$t(`qna.sorting.${option.slug}`)}}
 					</a>
 				</li>
 			</ul>
 		</div>
-		<div class="control" v-else>
+		<div v-else class="control">
 			<span class="select">
 				<select @input="changeSortingWithSelect">
-					<option v-for="(option, index) in sortingOptions"
+					<option
+						v-for="(option, index) in sortingOptions"
 						:key="index"
 						:value="option.slug"
 						:selected="isTabActive(option.slug)"
 					>
-						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{$t(`qna.sorting.${option.slug}`)}}
+						<span class="icon is-small"><i class="fa" :class="option.icon" /></span> {{$t(`qna.sorting.${option.slug}`)}}
 					</option>
 				</select>
 			</span>
@@ -42,7 +47,7 @@
 </style>
 
 <script>
-import {mapGetters, mapActions} from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 const sortingOptions = [
 	{

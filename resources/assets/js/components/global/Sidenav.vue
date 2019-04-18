@@ -1,18 +1,18 @@
 <template>
 	<div class="wnl-sidenav" :class="{ mobile: isMobileNavigation }">
-		<ul class="items" v-if="items">
-			<li class="item heading small" v-if="itemsHeading">
+		<ul v-if="items" class="items">
+			<li v-if="itemsHeading" class="item heading small">
 				<span class="item-wrapper">
 					{{itemsHeading}}
 				</span>
 			</li>
-			<wnl-sidenav-group v-for="(item, index) in items"
-				:item="item"
+			<wnl-sidenav-group
+				v-for="(item, index) in items"
 				:key="index"
+				:item="item"
 				:force-group-open="isOption('forceGroupsOpen')"
 				:show-subitems-count="isOption('showSubitemsCount')"
-			>
-			</wnl-sidenav-group>
+			/>
 		</ul>
 	</div>
 </template>
@@ -127,10 +127,10 @@ import SidenavGroup from 'js/components/global/SidenavGroup';
 import { mapGetters } from 'vuex';
 
 export default {
-	props: ['items', 'itemsHeading', 'options'],
 	components: {
 		'wnl-sidenav-group': SidenavGroup,
 	},
+	props: ['items', 'itemsHeading', 'options'],
 	computed: {
 		...mapGetters(['isMobileNavigation'])
 	},

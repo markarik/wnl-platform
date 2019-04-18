@@ -11,15 +11,15 @@
 		<wnl-subsection-item
 			v-for="subsection in sectionSubsections"
 			:key="subsection.id"
-			:item="subsection"
 			slot="children"
-		></wnl-subsection-item>
+			:item="subsection"
+		/>
 	</wnl-lesson-navigation-item>
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
-import {STATUS_COMPLETE} from 'js/services/progressStore';
+import { mapGetters } from 'vuex';
+import { STATUS_COMPLETE } from 'js/services/progressStore';
 import WnlSubsectionItem from 'js/components/course/navigation/SubsectionItem';
 import WnlLessonNavigationItem from 'js/components/course/navigation/LessonNavigationItem';
 

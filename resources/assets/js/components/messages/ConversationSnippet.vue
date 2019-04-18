@@ -2,27 +2,27 @@
 	<div :class="{'active-in-route': isActive, 'conversation-snippet': true}">
 		<figure class="media-left">
 			<wnl-avatar
-				:full-name="profile.display_name"
+				:full-name="profile.full_name"
 				:url="profile.avatar"
-				size="medium">
-			</wnl-avatar>
+				size="medium"
+			/>
 		</figure>
 		<div class="media-content">
 			<div class="content">
 				<div class="conversation-meta">
 					<div class="conversation-names">
-						<span class="display-name">{{ profile.display_name }}</span>
+						<span class="full-name">{{profile.full_name}}</span>
 					</div>
 
-					<div class="conversation-time" v-if="room && room.last_message_time">
-						<small>{{ time(room.last_message_time) }}</small>
+					<div v-if="room && room.last_message_time" class="conversation-time">
+						<small>{{time(room.last_message_time)}}</small>
 					</div>
 				</div>
 				<div v-if="bothNames">
-					<span class="full-name">{{ profile.full_name }}</span>
+					<span class="full-name">{{profile.full_name}}</span>
 				</div>
 
-				<div class="conversation-message" v-html="lastMessageContent"/>
+				<div class="conversation-message" v-html="lastMessageContent" />
 			</div>
 		</div>
 	</div>
@@ -72,7 +72,7 @@
 					white-space: nowrap
 					text-overflow: ellipsis
 
-					.display-name
+					.full-name
 						font-size: $font-size-base
 
 				.conversation-time
@@ -98,8 +98,7 @@
 
 <script>
 import { shortTimeFromMs } from 'js/utils/time';
-import { mapGetters } from 'vuex';
-import {last} from 'lodash';
+import { last } from 'lodash';
 
 export default {
 	name: 'ConversationSnippet',

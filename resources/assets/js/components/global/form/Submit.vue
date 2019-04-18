@@ -1,7 +1,9 @@
 <template>
-	<a :class="[{'is-loading': isLoading}, cssClass ? cssClass : 'button is-primary is-wide']"
+	<a
+		:class="[{'is-loading': isLoading}, cssClass ? cssClass : 'button is-primary is-wide']"
 		:disabled="!hasChanges || anyErrors"
-		@click="submitParent">
+		@click="submitParent"
+	>
 		<slot>Zapisz</slot>
 	</a>
 </template>

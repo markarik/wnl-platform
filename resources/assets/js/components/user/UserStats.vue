@@ -1,5 +1,9 @@
 <template>
-	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}" v-if="currentUserStats">
+	<div
+		v-if="currentUserStats"
+		class="scrollable-main-container wnl-user-profile"
+		:class="{mobile: isMobileProfile}"
+	>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
@@ -8,8 +12,8 @@
 			</div>
 		</div>
 		<div class="reset-progress">
-			<p v-t="'progress.reset.info'"/>
-			<button @click="satisfactionGuaranteeModalVisible = true" class="button is-danger to-right">Wyczyść postęp w nauce</button>
+			<p v-t="'progress.reset.info'" />
+			<button class="button is-danger to-right" @click="satisfactionGuaranteeModalVisible = true">Wyczyść postęp w nauce</button>
 		</div>
 
 		<div class="level wnl-screen-title">
@@ -62,7 +66,7 @@ import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/Satisfact
 
 export default {
 	name: 'UserStats',
-	components: {WnlSatisfactionGuaranteeModal},
+	components: { WnlSatisfactionGuaranteeModal },
 	mixins: [emits_events],
 	data() {
 		return {
@@ -72,14 +76,14 @@ export default {
 	computed: {
 		...mapGetters(['isMobileProfile', 'currentUserStats']),
 		timeSpent() {
-			return moment.duration({...this.currentUserStats.time}).asMinutes();
+			return moment.duration({ ...this.currentUserStats.time }).asMinutes();
 		},
 		lessonsStartedPerc() {
-			const {started, total} = this.currentUserStats.lessons;
+			const { started, total } = this.currentUserStats.lessons;
 			return Math.floor(started / total * 100);
 		},
 		lessonsCompletedPerc() {
-			const {total, completed} = this.currentUserStats.lessons;
+			const { total, completed } = this.currentUserStats.lessons;
 			return Math.floor(completed / total * 100);
 		},
 		lessonsTotal(){
@@ -92,7 +96,7 @@ export default {
 			return this.currentUserStats.lessons.started;
 		},
 		questionsSolvedPerc() {
-			const {total, solved} = this.currentUserStats.quiz_questions;
+			const { total, solved } = this.currentUserStats.quiz_questions;
 			return Math.floor(solved / total * 100);
 		},
 		questionsTotal() {
@@ -105,6 +109,9 @@ export default {
 			return Object.values(this.currentUserStats.social).reduce((a,b) => a + b, 0);
 		}
 	},
+	mounted() {
+		this.fetchCurrentUserStats();
+	},
 	methods: {
 		...mapActions(['fetchCurrentUserStats', 'toggleOverlay']),
 		...mapActions('progress', ['deleteProgress', 'setupCourse']),
@@ -116,18 +123,15 @@ export default {
 					features: features.progress.value,
 					action: features.progress.actions.erase_progress.value
 				});
-				this.toggleOverlay({source: 'userStats', display: true});
+				this.toggleOverlay({ source: 'userStats', display: true });
 				await this.deleteProgress();
 				await Promise.all([this.fetchCurrentUserStats(), this.setupCourse()]);
 			} catch (error) {
 				$wnl.logger.error(error);
 			} finally {
-				this.toggleOverlay({source: 'userStats', display: false});
+				this.toggleOverlay({ source: 'userStats', display: false });
 			}
 		}
 	},
-	mounted() {
-		this.fetchCurrentUserStats();
-	}
 };
 </script>

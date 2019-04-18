@@ -3,18 +3,19 @@
 		<div v-if="!isSingle" class="quiz-widget-controls">
 			<div class="widget-control">
 				<a class="small unselectable" @click="previousQuestion()">
-					<span class="icon is-small"><i class="fa fa-angle-left"></i></span> Poprzednie
+					<span class="icon is-small"><i class="fa fa-angle-left" /></span> Poprzednie
 				</a>
 			</div>
 			<div class="widget-control">
 				<a class="small unselectable" @click="nextQuestion()">
-					Następne <span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+					Następne <span class="icon is-small"><i class="fa fa-angle-right" /></span>
 				</a>
 			</div>
 		</div>
 		<wnl-quiz-question
-			:class="`quiz-question-${currentQuestion.id}`"
+			v-if="currentQuestion"
 			:id="currentQuestion.id"
+			:class="`quiz-question-${currentQuestion.id}`"
 			:question="currentQuestion"
 			:show-comments="true"
 			:get-reaction="getReaction"
@@ -22,17 +23,25 @@
 			@selectAnswer="selectAnswer"
 			@answerDoubleclick="onAnswerDoubleClick"
 			@userEvent="proxyUserEvent"
-			v-if="currentQuestion"
-		></wnl-quiz-question>
+		/>
 		<p class="has-text-centered">
-			<a v-if="!currentQuestion.isResolved" class="button is-primary" :disabled="isSubmitDisabled" @click="verify">
+			<a
+				v-if="!currentQuestion.isResolved"
+				class="button is-primary"
+				:disabled="isSubmitDisabled"
+				@click="verify"
+			>
 				Sprawdź odpowiedź
 			</a>
-			<a v-else-if="hasOtherQuestions" class="button is-primary is-outlined" @click="nextQuestion()">
+			<a
+				v-else-if="hasOtherQuestions"
+				class="button is-primary is-outlined"
+				@click="nextQuestion()"
+			>
 				Następne
 			</a>
 		</p>
-		<div class="other-questions" v-if="hasOtherQuestions">
+		<div v-if="hasOtherQuestions" class="other-questions">
 			<p class="notification small">
 				Możesz wybrać dowolne pytanie z listy klikając na jego tytuł
 			</p>
@@ -49,7 +58,7 @@
 					@headerClicked="selectQuestionFromList(index)"
 					@selectAnswer="selectAnswer"
 					@answerDoubleclick="onAnswerDoubleClick"
-				></wnl-quiz-question>
+				/>
 			</template>
 		</div>
 	</div>
@@ -77,7 +86,7 @@ import WnlQuizQuestion from 'js/components/quiz/QuizQuestion.vue';
 import { scrollToElement } from 'js/utils/animations';
 import emits_events from 'js/mixins/emits-events';
 import feature_components from 'js/consts/events_map/feature_components.json';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 
 
 export default {
@@ -139,8 +148,17 @@ export default {
 			return this.otherQuestions.length > 0;
 		},
 		questionsIds() {
-			return this.questions.map(({id}) => id);
+			return this.questions.map(({ id }) => id);
 		}
+	},
+	watch: {
+		'currentQuestion.id'() {
+			this.trackQuizQuestionChanged();
+		}
+	},
+	created() {
+		this.trackQuizQuestionChanged();
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
 	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
@@ -162,7 +180,7 @@ export default {
 			this.$emit('changeQuestion', fullIndex);
 			scrollToElement(this.$el, 75);
 		},
-		selectAnswer({answer}) {
+		selectAnswer({ answer }) {
 			this.allowDoubleclick = false;
 			this.$emit('selectAnswer', {
 				id: this.currentQuestion.id,
@@ -172,7 +190,7 @@ export default {
 				this.allowDoubleclick = true;
 			}, 500);
 		},
-		onAnswerDoubleClick({answer}) {
+		onAnswerDoubleClick() {
 			this.allowDoubleclick && this.displayResults && this.nextQuestion();
 		},
 		trackQuizQuestionChanged() {
@@ -183,14 +201,5 @@ export default {
 			});
 		}
 	},
-	created() {
-		this.trackQuizQuestionChanged();
-		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds});
-	},
-	watch: {
-		'currentQuestion.id'() {
-			this.trackQuizQuestionChanged();
-		}
-	}
 };
 </script>

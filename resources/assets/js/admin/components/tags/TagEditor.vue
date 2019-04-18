@@ -5,10 +5,10 @@
 			:resource-route="resourceRoute"
 			:populate="isEdit"
 			:hide-default-submit="true"
-			@change="onChange"
-			@submitSuccess="onSubmitSuccess"
 			name="TagEditor"
 			class="editor"
+			@change="onChange"
+			@submitSuccess="onSubmitSuccess"
 		>
 			<div class="header">
 				<h2 class="title is-2">Edycja tagu <span v-if="isEdit">(Id: {{id}})</span></h2>
@@ -19,8 +19,8 @@
 						:taggables-count="formData.taggables_count"
 						@tagDeleted="onTagDeleted"
 					>Usuń</wnl-tag-delete>
-					<wnl-submit class="submit"/>
-					</div>
+					<wnl-submit class="submit" />
+				</div>
 			</div>
 			<wnl-form-text
 				name="name"
@@ -45,25 +45,35 @@
 			<div slot="header">
 				<h3 class="title is-3">Lista elementów powiązanych</h3>
 				<div class="filters">
-					<div class="field" v-for="(filter, model) in taggableTypeFilters" :key="model">
-						<input type="checkbox" :id="`filter${model}`" :value="model" v-model="selectedFilters" class="is-checkradio">
+					<div
+						v-for="(filter, model) in taggableTypeFilters"
+						:key="model"
+						class="field"
+					>
+						<input
+							:id="`filter${model}`"
+							v-model="selectedFilters"
+							type="checkbox"
+							:value="model"
+							class="is-checkradio"
+						>
 						<label :for="`filter${model}`" class="checkbox">{{filter.label}}</label>
 					</div>
 				</div>
 			</div>
-			<tbody slot-scope="slotProps" slot="tbody">
+			<tbody slot="tbody" slot-scope="slotProps">
 			<tr v-for="taggable in slotProps.list" :key="taggable.id">
 				<td>{{taggable.taggable_id}}</td>
 				<td>{{taggable.taggable_type}}</td>
 				<td>
 					<a
-						:href="getTaggableLink(taggable)"
 						v-if="getTaggableLink(taggable)"
+						:href="getTaggableLink(taggable)"
 						target="_blank"
 					>
 						Przejdź do elementu
 					</a>
-					<span class="table-cell--no-link" v-else>nie umiemy zrobić linka dla tego zasobu</span>
+					<span v-else class="table-cell--no-link">nie umiemy zrobić linka dla tego zasobu</span>
 				</td>
 			</tr>
 			</tbody>
@@ -107,11 +117,19 @@
 <script>
 import { get } from 'lodash';
 
-import {Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea} from 'js/components/global/form';
+import { Form as WnlForm, Text as WnlFormText, Submit as WnlSubmit, Textarea as WnlTextarea } from 'js/components/global/form';
 import WnlTagDelete from 'js/admin/components/tags/TagDelete';
 import WnlPaginatedSortableTable from 'js/admin/components/lists/PaginatedSortableTable';
 
 export default {
+	components: {
+		WnlFormText,
+		WnlForm,
+		WnlSubmit,
+		WnlTagDelete,
+		WnlTextarea,
+		WnlPaginatedSortableTable,
+	},
 	props: {
 		id: {
 			type: [String, Number],
@@ -194,16 +212,8 @@ export default {
 			};
 		},
 	},
-	components: {
-		WnlFormText,
-		WnlForm,
-		WnlSubmit,
-		WnlTagDelete,
-		WnlTextarea,
-		WnlPaginatedSortableTable,
-	},
 	methods: {
-		onChange({formData}) {
+		onChange({ formData }) {
 			this.formData = this.normalizeFormData(formData);
 		},
 		onSubmitSuccess(data) {
@@ -224,7 +234,7 @@ export default {
 				is_rename_allowed: get(formData, `included.metas.${formData.id}.is_rename_allowed`, true),
 			};
 		},
-		getTaggableLink({taggable_type, taggable_id}) {
+		getTaggableLink({ taggable_type, taggable_id }) {
 			if (!this.taggableTypeFilters[taggable_type]) return;
 
 			return this.taggableTypeFilters[taggable_type].getLink(taggable_id);

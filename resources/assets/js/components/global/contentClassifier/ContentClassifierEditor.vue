@@ -32,25 +32,25 @@
 									title="Odznacz"
 									@click="onDetachTaxonomyTerm(term)"
 								>
-									<i class="fa fa-close"></i>
+									<i class="fa fa-close" />
 								</span>
 								<span
-									slot="right"
 									v-if="allItemsCount > 1"
+									slot="right"
 									:class="{
-									'margin': true,
-									'left': true,
-									'tag': true,
-									'strong': hasAllItemsAttached(term),
-									'is-white': !hasAllItemsAttached(term),
-									'clickable': !hasAllItemsAttached(term),
-								}"
+										'margin': true,
+										'left': true,
+										'tag': true,
+										'strong': hasAllItemsAttached(term),
+										'is-white': !hasAllItemsAttached(term),
+										'clickable': !hasAllItemsAttached(term),
+									}"
 									:title="!hasAllItemsAttached(term) && 'Dodaj do wszystkich'"
 									@click="!hasAllItemsAttached(term) && onAttachTaxonomyTerm(term)"
 								>
-								<span class="icon is-small" v-if="!hasAllItemsAttached(term)"><i class="fa fa-plus"></i></span>
-								<span>{{term.itemsCount}}/{{allItemsCount}}</span>
-							</span>
+									<span v-if="!hasAllItemsAttached(term)" class="icon is-small"><i class="fa fa-plus" /></span>
+									<span>{{term.itemsCount}}/{{allItemsCount}}</span>
+								</span>
 							</wnl-taxonomy-term-with-ancestors>
 
 						</li>
@@ -76,7 +76,7 @@
 			</div>
 		</div>
 		<div v-else class="notification is-info">
-			<span class="icon"><i class="fa fa-info-circle"></i></span>
+			<span class="icon"><i class="fa fa-info-circle" /></span>
 			<span>Najpierw wybierz treść do klasyfikacji</span>
 		</div>
 	</div>
@@ -105,25 +105,35 @@
 
 <script>
 import axios from 'axios';
-import {mapActions, mapGetters} from 'vuex';
-import {uniqBy, cloneDeep} from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
+import { uniqBy, cloneDeep } from 'lodash';
 
-import {getApiUrl} from 'js/utils/env';
-import {ALERT_TYPES} from 'js/consts/alert';
+import { getApiUrl } from 'js/utils/env';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 import WnlContentClassifierEditorRecentTerms from 'js/components/global/contentClassifier/ContentClassifierEditorRecentTerms';
 import WnlTaxonomyTermWithAncestors from 'js/components/global/taxonomies/TaxonomyTermWithAncestors';
 import WnlTaxonomyTermSelector from 'js/components/global/taxonomies/TaxonomyTermSelector';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 import contentClassifierStore from 'js/services/contentClassifierStore';
-import {CONTENT_CLASSIFIER_STORE_KEYS} from 'js/services/contentClassifierStore';
-import {scrollToElement} from 'js/utils/animations';
+import { CONTENT_CLASSIFIER_STORE_KEYS } from 'js/services/contentClassifierStore';
+import { scrollToElement } from 'js/utils/animations';
 
 export default {
 	components: {
 		WnlTaxonomyTermSelector,
 		WnlTaxonomyTermWithAncestors,
 		WnlContentClassifierEditorRecentTerms,
+	},
+	props: {
+		items: {
+			type: Array,
+			required: true,
+		},
+		isFocused: {
+			type: Boolean,
+			default: false
+		},
 	},
 	data() {
 		return {
@@ -135,16 +145,6 @@ export default {
 			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM),
 			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS, []),
 		};
-	},
-	props: {
-		items: {
-			type: Array,
-			required: true,
-		},
-		isFocused: {
-			type: Boolean,
-			default: false
-		},
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById', 'getAncestorNodesById']),
@@ -177,6 +177,16 @@ export default {
 				.forEach(taxonomyId => groupedTerms[taxonomyId].terms.sort((a, b) => b.itemsCount - a.itemsCount));
 
 			return groupedTerms;
+		},
+	},
+	watch: {
+		async isFocused() {
+			if (this.isFocused) {
+				scrollToElement(this.$el);
+				this.$el.focus();
+			} else {
+				this.$el.blur();
+			}
 		},
 	},
 	methods: {
@@ -264,16 +274,6 @@ export default {
 					}
 					break;
 				}
-			}
-		},
-	},
-	watch: {
-		async isFocused() {
-			if (this.isFocused) {
-				scrollToElement(this.$el);
-				this.$el.focus();
-			} else {
-				this.$el.blur();
 			}
 		},
 	},

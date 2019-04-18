@@ -1,13 +1,13 @@
 <template>
 	<div class="your-progress">
-		<p class="heading">{{ $t('dashboard.progress.howYouDoin') }}</p>
+		<p class="heading">{{$t('dashboard.progress.howYouDoin')}}</p>
 		<wnl-progress
 			:value="progressValue"
 			:max="progressMax"
 			:has-numbers="progressHasNumbers"
-			:modifying-class="progressModifyingClass">
-		</wnl-progress>
-		<p class="progress-message">{{ progressMessage }}</p>
+			:modifying-class="progressModifyingClass"
+		/>
+		<p class="progress-message">{{progressMessage}}</p>
 	</div>
 </template>
 
@@ -34,7 +34,7 @@ const STATE_FULL = 'full',
 	STATE_DANGER = 'danger',
 	stateData = {
 		[STATE_FULL]: {
-			message: `Świetnie Ci idzie! Wszystkie dostępne lekcje są już zakończone i należy Ci się zasłużony odpoczynek! ${emoji.get('slightly_smiling_face')}`,
+			message: `Świetnie Ci idzie! Wszystkie dostępne lekcje są już zakończone i należy Ci się zasłużony odpoczynek! ${emoji.get('slightly_smiling_face')}`,
 			modifyingClass: 'is-success'
 		},
 		[STATE_GOOD]: {
@@ -52,15 +52,18 @@ const STATE_FULL = 'full',
 	};
 
 export default {
+	components: {
+		'wnl-progress': Progress,
+	},
 	computed: {
 		...mapGetters('course', [
-			'userLessons',
+			'getRequiredLessons',
 		]),
 		...mapGetters('progress', [
 			'getCompleteLessons'
 		]),
 		progressLessons() {
-			return this.userLessons.filter(lesson => lesson.isAvailable && lesson.is_required);
+			return this.getRequiredLessons.filter(lesson => lesson.isAvailable);
 		},
 		courseId() {
 			return this.$route.params.courseId;
@@ -92,9 +95,6 @@ export default {
 		progressMessage() {
 			return stateData[this.progressState].message;
 		},
-	},
-	components: {
-		'wnl-progress': Progress,
 	},
 };
 </script>

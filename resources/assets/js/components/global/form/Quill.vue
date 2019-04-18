@@ -5,10 +5,10 @@
 			:active-index="activeIndex"
 			@change="insertMention"
 		>
-			<wnl-user-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
+			<wnl-user-autocomplete-item slot-scope="slotProps" :item="slotProps.item" />
 		</wnl-autocomplete-list>
 		<div ref="quill">
-			<slot></slot>
+			<slot />
 		</div>
 	</div>
 </template>
@@ -25,13 +25,11 @@
 
 <script>
 import Quill from 'quill';
-import { set } from 'vue';
 import { mapActions } from 'vuex';
 import { cloneDeep } from 'lodash';
 
 import { formInput } from 'js/mixins/form-input';
 import { fontColors } from 'js/utils/colors';
-import { mentionBlot } from 'js/classes/mentionblot';
 import WnlAutocompleteList from 'js/components/global/AutocompleteList';
 import WnlUserAutocompleteItem from 'js/components/global/UserAutocompleteItem';
 import WnlAutocompleteKeyboardNavigation from 'js/mixins/autocomplete-keyboard-navigation';
@@ -48,11 +46,11 @@ const autocompleteChar = '@';
 
 export default {
 	name: 'Quill',
-	mixins: [formInput, WnlAutocompleteKeyboardNavigation],
 	components: {
 		WnlAutocompleteList,
 		WnlUserAutocompleteItem
 	},
+	mixins: [formInput, WnlAutocompleteKeyboardNavigation],
 	props: {
 		options: {
 			type: Object,
@@ -65,7 +63,7 @@ export default {
 					['bold', 'italic', 'underline', 'link'],
 					[{ color: fontColors }],
 					['clean'],
-					[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+					[{ list: 'ordered' }, { list: 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
 				];
 			}
 		},
@@ -107,13 +105,13 @@ export default {
 			const keyboardModule = cloneDeep(this.keyboard);
 
 			if (keyboardModule && keyboardModule.bindings && keyboardModule.bindings.handleEnter) {
-				keyboardModule.bindings.handleEnter.handler = (event) => {
+				keyboardModule.bindings.handleEnter.handler = () => {
 					if (this.items.length) {
 						// Prevent enter handler when autocomplete is open
 						return;
 					}
 
-					this.keyboard.bindings.handleEnter.handler(event);
+					this.keyboard.bindings.handleEnter.handler();
 				};
 			}
 
@@ -129,6 +127,29 @@ export default {
 				}
 			};
 		},
+	},
+	watch: {
+		focused (val) {
+			this.editor[val ? 'focus' : 'blur']();
+		},
+		inputValue (newValue) {
+			if (newValue !== this.editor.innerHTML) {
+				this.editor.innerHTML = newValue;
+			}
+		}
+	},
+	mounted () {
+		this.quill = new Quill(this.$refs.quill, this.quillOptions);
+		this.QuillEmbed = Quill.import('blots/embed');
+		this.editor = this.$refs.quill.firstElementChild;
+		this.$nextTick(() => {
+			this.editor.innerHTML = this.value;
+			this.quill.on('text-change', this.onTextChange);
+			document.addEventListener('click', this.clickHandler);
+		});
+	},
+	beforeDestroy() {
+		document.removeEventListener('click', this.clickHandler);
 	},
 	methods: {
 		...mapActions(['requestUsersAutocomplete']),
@@ -160,10 +181,8 @@ export default {
 			if (!range || range.length != 0) return;
 			const position = range.index - lastMentionQueryLength;
 
-			const name = data.display_name ? data.display_name : data.full_name;
-
 			this.quill.insertEmbed(position, 'mention', {
-				name: `${autocompleteChar}${name}`,
+				name: `${autocompleteChar}${data.full_name}`,
 				id: data.user_id
 			}, Quill.sources.API);
 			this.quill.insertText(position + 1, ' ', Quill.sources.API);
@@ -223,7 +242,7 @@ export default {
 			return false;
 		},
 
-		onEsc(evt) {
+		onEsc() {
 			this.items = [];
 			this.editor.focus();
 		},
@@ -239,28 +258,5 @@ export default {
 			this.quill.deleteText(0, this.editor.innerHTML.length);
 		}
 	},
-	mounted () {
-		this.quill = new Quill(this.$refs.quill, this.quillOptions);
-		this.QuillEmbed = Quill.import('blots/embed');
-		this.editor = this.$refs.quill.firstElementChild;
-		this.$nextTick(() => {
-			this.editor.innerHTML = this.value;
-			this.quill.on('text-change', this.onTextChange);
-			document.addEventListener('click', this.clickHandler);
-		});
-	},
-	beforeDestroy() {
-		document.removeEventListener('click', this.clickHandler);
-	},
-	watch: {
-		focused (val) {
-			this.editor[val ? 'focus' : 'blur']();
-		},
-		inputValue (newValue) {
-			if (newValue !== this.editor.innerHTML) {
-				this.editor.innerHTML = newValue;
-			}
-		}
-	}
 };
 </script>

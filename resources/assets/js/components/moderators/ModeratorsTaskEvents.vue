@@ -4,20 +4,25 @@
 		<div class="moderators-notification">
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ displayName(lastEvent.data.actors.full_name) }}</span>
-					<span class="action">{{ eventAction(lastEvent) }}</span>
-					<span class="object" v-if="eventObject(lastEvent)">{{ eventObject(lastEvent) }}</span>
-					<span class="object-text wrap" v-if="objectText">{{ objectText }}</span>
+					<span class="actor">{{lastEvent.data.actors.full_name}}</span>
+					<span class="action">{{eventAction(lastEvent)}}</span>
+					<span v-if="eventObject(lastEvent)" class="object">{{eventObject(lastEvent)}}</span>
+					<span v-if="objectText" class="object-text wrap">{{objectText}}</span>
 					<span class="subject wrap">{{eventText(lastEvent)}}</span>
 				</div>
 			</div>
 		</div>
-		<div class="moderators-notification" v-show="expanded" v-for="(event, index) in rest" :key="index">
+		<div
+			v-for="(event, index) in rest"
+			v-show="expanded"
+			:key="index"
+			class="moderators-notification"
+		>
 			<div class="notification-content">
 				<div class="notification-header">
-					<span class="actor">{{ displayName(event.data.actors.full_name) }}</span>
-					<span class="action">{{ eventAction(event) }}</span>
-					<span class="object" v-if="eventObject(event)">{{ eventObject(event) }}</span>
+					<span class="actor">{{event.data.actors.full_name}}</span>
+					<span class="action">{{eventAction(event)}}</span>
+					<span v-if="eventObject(event)" class="object">{{eventObject(event)}}</span>
 					<span class="subject wrap">{{eventText(event)}}</span>
 				</div>
 			</div>
@@ -25,7 +30,7 @@
 		<p v-if="hasMore">
 			<a class="secondary-link toggable-icon" @click="toggleEvents">
 				{{expanded ? $t('ui.action.hide') : $t('ui.action.showAll')}}
-				<span class="icon"><i class="fa" :class="iconClass"></i></span>
+				<span class="icon"><i class="fa" :class="iconClass" /></span>
 			</a>
 		</p>
 
@@ -106,10 +111,8 @@
 
 <script>
 import { decode } from 'he';
-import { isObject, get, truncate, camelCase } from 'lodash';
-import {mapGetters} from 'vuex';
-import { timeFromS } from 'js/utils/time';
-import { sanitizeName } from 'js/store/modules/users';
+import { last, truncate, camelCase } from 'lodash';
+import { mapGetters } from 'vuex';
 
 export default {
 	props: {
@@ -126,18 +129,18 @@ export default {
 	computed: {
 		...mapGetters('course', ['getLesson']),
 		lastEvent() {
-			return _.last(this.events);
+			return last(this.events);
 		},
 		iconClass() {
 			return this.expanded ? 'fa-chevron-up' : 'fa-chevron-down';
 		},
 		text() {
-			return decode(truncate(this.lastEvent.data.subject.text, {length: 256}));
+			return decode(truncate(this.lastEvent.data.subject.text, { length: 256 }));
 		},
 		objectText() {
 			if (!this.lastEvent.data.objects) return false;
 
-			return decode(truncate(this.lastEvent.data.objects.text, {length: 256}));
+			return decode(truncate(this.lastEvent.data.objects.text, { length: 256 }));
 		},
 		hasMore() {
 			return this.events.length > 1;
@@ -150,9 +153,6 @@ export default {
 		}
 	},
 	methods: {
-		displayName(name) {
-			return sanitizeName(name);
-		},
 		toggleEvents() {
 			this.expanded = !this.expanded;
 		},
@@ -160,7 +160,7 @@ export default {
 			return this.$t(`notifications.events.${camelCase(event.data.event)}`);
 		},
 		eventText(event) {
-			return decode(truncate(event.data.subject.text, {length: 256}));
+			return decode(truncate(event.data.subject.text, { length: 256 }));
 		},
 		eventObject(event) {
 			const objects = event.data.objects;
@@ -169,10 +169,10 @@ export default {
 
 			// Qna Quesiton posted
 			if (subject && !objects) {
-				return this.$tc(`notifications.objects.${_.camelCase(subject.type)}`, 1);
+				return this.$tc(`notifications.objects.${camelCase(subject.type)}`, 1);
 			}
 
-			return this.$tc(`notifications.objects.${_.camelCase(objects.type)}`, 1);
+			return this.$tc(`notifications.objects.${camelCase(objects.type)}`, 1);
 		},
 	}
 };

@@ -1,16 +1,28 @@
 <template>
 	<div class="flashcards">
 		<div class="flashcards__title content">
-			<h2 class="flashcards__title__header" id="flashacardsSetHeader">Zestawy powtórkowe na dziś</h2>
+			<h2 id="flashacardsSetHeader" class="flashcards__title__header">Zestawy powtórkowe na dziś</h2>
 			<ul class="flashcards__title__list">
-				<li class="flashcards__title__list__item" v-for="set in sets" :key="set.id"
-					@click="scrollToSet(set.id)">{{set.name}}
+				<li
+					v-for="set in sets"
+					:key="set.id"
+					class="flashcards__title__list__item"
+					@click="scrollToSet(set.id)"
+				>{{set.name}}
 				</li>
 			</ul>
 		</div>
-		<div class="flashcards__description content" v-html="screenData.content"/>
-		<div class="flashcards-set" v-for="set in sets" :key="set.id">
-			<div class="flashcards-set__title" :name="set.name" :id="`set-${set.id}`">
+		<div class="flashcards__description content" v-html="screenData.content" />
+		<div
+			v-for="set in sets"
+			:key="set.id"
+			class="flashcards-set"
+		>
+			<div
+				:id="`set-${set.id}`"
+				class="flashcards-set__title"
+				:name="set.name"
+			>
 				<h3 class="flashcards-set__title__header">
 					{{set.name}}
 				</h3>
@@ -19,29 +31,33 @@
 			<div class="flashcards-set__results">
 				<table class="flashcards-set__results__table">
 					<tr class="text--easy">
-						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span></td>
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]" /></span></td>
 						<td>{{ANSWERS_MAP.easy.text}}</td>
 						<td>{{getEasyForSet(set)}}</td>
 					</tr>
 					<tr class="text--hard">
-						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span></td>
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]" /></span></td>
 						<td>{{ANSWERS_MAP.hard.text}}</td>
 						<td>{{getHardForSet(set)}}</td>
 					</tr>
 					<tr class="text--do-not-know">
-						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span></td>
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]" /></span></td>
 						<td>{{ANSWERS_MAP.do_not_know.text}}</td>
 						<td>{{getDontKnowForSet(set)}}</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td />
 						<td>Bez odpowiedzi</td>
 						<td>{{getUnsolvedForSet(set)}}</td>
 					</tr>
 				</table>
 
-				<button type="button" @click="onRetakeSet(set)" class="flashcards-set__retake button">
-					<span class="icon"><i class="fa fa-undo"></i></span>
+				<button
+					type="button"
+					class="flashcards-set__retake button"
+					@click="onRetakeSet(set)"
+				>
+					<span class="icon"><i class="fa fa-undo" /></span>
 					ponów cały zestaw
 				</button>
 			</div>
@@ -72,7 +88,7 @@
 			</ol>
 		</div>
 		<div class="flashcards-scroll" @click="scrollTop">
-			<span class="icon is-small"><i class="fa fa-arrow-up"></i></span>
+			<span class="icon is-small"><i class="fa fa-arrow-up" /></span>
 		</div>
 	</div>
 </template>
@@ -188,20 +204,24 @@
 </style>
 
 <script>
-import {mapActions, mapGetters, mapMutations} from 'vuex';
-import {nextTick} from 'vue';
-import {get} from 'lodash';
-import {scrollToElement} from 'js/utils/animations';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { get } from 'lodash';
+import { scrollToElement } from 'js/utils/animations';
 import * as mutationsTypes from 'js/store/mutations-types';
 import WnlFlashcardItem from 'js/components/course/screens/flashcards/FlashcardItem';
-import {ANSWERS_MAP} from 'js/consts/flashcard';
+import { ANSWERS_MAP } from 'js/consts/flashcard';
 import features from 'js/consts/events_map/features.json';
 import emits_events from 'js/mixins/emits-events';
-import {CONTENT_TYPES} from 'js/consts/contentClassifier';
+import { CONTENT_TYPES } from 'js/consts/contentClassifier';
 import WnlContentItemClassifierEditor from 'js/components/global/contentClassifier/ContentItemClassifierEditor';
 import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
 
 export default {
+	components: {
+		WnlFlashcardItem,
+		WnlContentItemClassifierEditor,
+		WnlActivateWithShortcutKey,
+	},
 	mixins: [emits_events],
 	props: {
 		screenData: {
@@ -212,11 +232,6 @@ export default {
 			type: String,
 			required: true
 		}
-	},
-	components: {
-		WnlFlashcardItem,
-		WnlContentItemClassifierEditor,
-		WnlActivateWithShortcutKey,
 	},
 	data() {
 		return {
@@ -232,7 +247,7 @@ export default {
 		},
 		flashcardsIds() {
 			return [].concat(...this.sets.map(set => {
-				return set.flashcards.map(({id}) => id);
+				return set.flashcards.map(({ id }) => id);
 			}));
 		},
 		getUnsolvedForSet() {
@@ -247,6 +262,36 @@ export default {
 		getDontKnowForSet() {
 			return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'do_not_know').length;
 		}
+	},
+	async mounted() {
+		this.toggleOverlay({ source: 'flashcards', display: true });
+		const resources = get(this.screenData, 'meta.resources', []);
+
+		try {
+			await Promise.all(resources.map(({ id }) => {
+				return this.setFlashcardsSet({
+					setId: id,
+					include: 'flashcards.user_flashcard_notes',
+					context_type: this.context,
+					context_id: this.screenData.id
+				});
+			}));
+		} catch (e) {
+			$wnl.logger.error(e);
+		} finally {
+			this.toggleOverlay({ source: 'flashcards', display: false });
+		}
+
+		this.applicableSetsIds = resources.map(({ id }) => id);
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.FLASHCARD, contentIds: this.flashcardsIds });
+
+		resources.forEach(({ id }) => {
+			this.trackUserEvent({
+				feature_component: features.flashcards.feature_components.set.value,
+				action: features.flashcards.feature_components.set.actions.open.value,
+				target: id
+			});
+		});
 	},
 	methods: {
 		...mapActions(['toggleOverlay']),
@@ -274,35 +319,5 @@ export default {
 			});
 		}
 	},
-	async mounted() {
-		this.toggleOverlay({source: 'flashcards', display: true});
-		const resources = get(this.screenData, 'meta.resources', []);
-
-		try {
-			await Promise.all(resources.map(({id}) => {
-				return this.setFlashcardsSet({
-					setId: id,
-					include: 'flashcards.user_flashcard_notes',
-					context_type: this.context,
-					context_id: this.screenData.id
-				});
-			}));
-		} catch (e) {
-			$wnl.logger.error(e);
-		} finally {
-			this.toggleOverlay({source: 'flashcards', display: false});
-		}
-
-		this.applicableSetsIds = resources.map(({id}) => id);
-		this.fetchTaxonomyTerms({contentType: CONTENT_TYPES.FLASHCARD, contentIds: this.flashcardsIds});
-
-		resources.forEach(({id}) => {
-			this.trackUserEvent({
-				feature_component: features.flashcards.feature_components.set.value,
-				action: features.flashcards.feature_components.set.actions.open.value,
-				target: id
-			});
-		});
-	}
 };
 </script>

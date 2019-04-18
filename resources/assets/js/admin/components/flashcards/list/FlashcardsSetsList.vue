@@ -1,5 +1,5 @@
 <template>
-	<div class="flashcards-list" >
+	<div class="flashcards-list">
 		<wnl-paginated-list
 			:resource-name="'flashcards_sets/.filter'"
 		>
@@ -11,10 +11,11 @@
 				>+ Nowy zestaw</router-link>
 			</template>
 			<template slot="list" slot-scope="slotParams">
-				<wnl-flashcards-sets-list-item v-for="flashcardsSet in slotParams.list"
+				<wnl-flashcards-sets-list-item
+					v-for="flashcardsSet in slotParams.list"
+					:id="flashcardsSet.id"
 					:key="flashcardsSet.id"
 					:name="flashcardsSet.name"
-					:id="flashcardsSet.id"
 				/>
 			</template>
 		</wnl-paginated-list>

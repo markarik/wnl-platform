@@ -1,19 +1,23 @@
 <template>
 	<div class="content">
-		<div class="page content" v-html="content"></div>
+		<div class="page content" v-html="content" />
 		<wnl-qna
+			v-if="hasQna"
 			:context-tags="tags"
 			:reactions-disabled="true"
 			:discussion-id="discussion_id"
-			v-if="hasQna"/>
+		/>
 	</div>
 </template>
 
 <script>
-import Qna from 'js/components/qna/Qna';
 import axios from 'axios';
-import {getApiUrl} from 'js/utils/env';
-import {mapActions} from 'vuex';
+import { each } from 'lodash';
+import { mapActions } from 'vuex';
+
+import Qna from 'js/components/qna/Qna';
+
+import { getApiUrl } from 'js/utils/env';
 import emits_events from 'js/mixins/emits-events';
 import features from 'js/consts/events_map/features.json';
 import injectArguments from 'js/utils/injectArguments';
@@ -51,6 +55,20 @@ export default {
 			return this.is_discussable && this.discussion_id;
 		}
 	},
+	watch:{
+		content(newValue) {
+			this.content = injectArguments(newValue, this.arguments);
+		},
+		discussion_id() {
+			this.hasQna && this.fetchQuestionsForDiscussion(this.discussion_id);
+		},
+		slug: function () {
+			this.fetch();
+		}
+	},
+	mounted() {
+		this.fetch();
+	},
 	methods: {
 		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 		wrapEmbedded() {
@@ -58,7 +76,7 @@ export default {
 				wrapperClass = 'ratio-16-9-wrapper';
 
 			if (iframes.length > 0) {
-				_.each(iframes, (iframe) => {
+				each(iframes, (iframe) => {
 					let wrapper = document.createElement('div'),
 						parent = iframe.parentNode;
 
@@ -86,19 +104,5 @@ export default {
 			});
 		},
 	},
-	mounted() {
-		this.fetch();
-	},
-	watch:{
-		content(newValue) {
-			this.content = injectArguments(newValue, this.arguments);
-		},
-		discussion_id() {
-			this.hasQna && this.fetchQuestionsForDiscussion(this.discussion_id);
-		},
-		slug: function () {
-			this.fetch();
-		}
-	}
 };
 </script>

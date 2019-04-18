@@ -5,31 +5,35 @@
 		</slot>
 
 		<wnl-search-input
-			class="search"
 			v-if="isSearchEnabled"
-			@search="onSearch"
+			class="search"
 			:available-fields="searchAvailableFields"
+			@search="onSearch"
 		/>
 		<wnl-pagination
 			v-if="lastPage > 1"
 			:current-page="page"
 			:last-page="lastPage"
-			@changePage="onPageChange"
 			class="pagination"
+			@changePage="onPageChange"
 		/>
 
 		<template v-if="!isLoading">
-			<slot name="list" v-if="!isEmpty(list)" :list="list"/>
-			<div class="title is-6" v-else>Nic tu nie ma...</div>
+			<slot
+				v-if="!isEmpty(list)"
+				name="list"
+				:list="list"
+			/>
+			<div v-else class="title is-6">Nic tu nie ma...</div>
 		</template>
-		<wnl-text-loader v-else></wnl-text-loader>
+		<wnl-text-loader v-else />
 
 		<wnl-pagination
 			v-if="lastPage > 1"
 			:current-page="page"
 			:last-page="lastPage"
-			@changePage="onPageChange"
 			class="pagination"
+			@changePage="onPageChange"
 		/>
 	</div>
 </template>
@@ -45,27 +49,18 @@
 </style>
 
 <script>
-import {mapActions} from 'vuex';
-import {isEmpty} from 'lodash';
+import axios from 'axios';
+import { mapActions } from 'vuex';
+import { isEmpty } from 'lodash';
 
 import WnlPagination from 'js/components/global/Pagination';
 import WnlSearchInput from 'js/components/global/SearchInput';
-import {getApiUrl} from 'js/utils/env';
+import { getApiUrl } from 'js/utils/env';
 
 export default {
 	components: {
 		WnlPagination,
 		WnlSearchInput,
-	},
-	data() {
-		return {
-			list: [],
-			searchPhrase: '',
-			lastPage: 1,
-			page: 1,
-			isLoading: true,
-			searchFields: [],
-		};
 	},
 	props: {
 		searchAvailableFields: {
@@ -89,6 +84,31 @@ export default {
 			default: true,
 		}
 	},
+	data() {
+		return {
+			list: [],
+			searchPhrase: '',
+			lastPage: 1,
+			page: 1,
+			isLoading: true,
+			searchFields: [],
+		};
+	},
+	watch: {
+		customRequestParams() {
+			this.fetch();
+		},
+		async dirty() {
+			if (this.dirty) {
+				await this.fetch();
+			}
+
+			this.$emit('updated');
+		}
+	},
+	mounted() {
+		this.fetch();
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		isEmpty,
@@ -102,7 +122,7 @@ export default {
 
 			if (this.searchPhrase) {
 				params.active = [`search.${this.searchPhrase}`];
-				params.filters = [{search: {phrase: this.searchPhrase, fields: this.searchFields}}];
+				params.filters = [{ search: { phrase: this.searchPhrase, fields: this.searchFields } }];
 			}
 
 			return {
@@ -114,7 +134,7 @@ export default {
 			this.page = page;
 			this.fetch();
 		},
-		async onSearch({phrase, fields}) {
+		async onSearch({ phrase, fields }) {
 			this.searchPhrase = phrase;
 			this.searchFields = fields;
 
@@ -134,14 +154,14 @@ export default {
 					this.getRequestParams(),
 					{ cancelToken: this.requestCancelTokenSource.token }
 				);
-				const {data: {data, ...paginationMeta}} = response;
+				const { data: { data, ...paginationMeta } } = response;
 				this.list = data;
 				this.lastPage = paginationMeta.last_page;
 				this.isLoading = false;
 			} catch (error) {
 				if (!axios.isCancel(error)) {
 					this.addAutoDismissableAlert({
- 						text: 'Ups, nie udało się pobrać listy. Odśwież stronę, żeby spróbować ponownie.',
+						text: 'Ups, nie udało się pobrać listy. Odśwież stronę, żeby spróbować ponownie.',
 						type: 'error'
 					});
 					$wnl.logger.capture(error);
@@ -150,20 +170,5 @@ export default {
 			}
 		},
 	},
-	mounted() {
-		this.fetch();
-	},
-	watch: {
-		customRequestParams() {
-			this.fetch();
-		},
-		async dirty() {
-			if (this.dirty) {
-				await this.fetch();
-			}
-
-			this.$emit('updated');
-		}
-	}
 };
 </script>

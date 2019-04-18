@@ -3,9 +3,9 @@
 		:is-visible="isSidenavVisible"
 		:is-detached="!isSidenavMounted"
 	>
-		<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+		<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 		<aside class="sidenav-aside">
-			<wnl-sidenav :items="navigationItems"></wnl-sidenav>
+			<wnl-sidenav :items="navigationItems" />
 		</aside>
 	</wnl-sidenav-slot>
 </template>
@@ -22,7 +22,7 @@
 </style>
 
 <script>
-import {mapGetters} from 'vuex';
+import { mapGetters } from 'vuex';
 
 import MainNav from 'js/components/MainNav';
 import Sidenav from 'js/components/global/Sidenav';

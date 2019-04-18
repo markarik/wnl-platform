@@ -1,6 +1,6 @@
 <template>
 	<div class="qna-thread" :class="{'is-mobile': isMobile}">
-		<div class="qna-question" ref="highlight">
+		<div ref="highlight" class="qna-question">
 			<wnl-vote
 				type="up"
 				:reactable-id="questionId"
@@ -10,7 +10,7 @@
 			/>
 			<div class="qna-container">
 				<div class="qna-wrapper">
-					<div class="qna-question-content content" v-html="content"></div>
+					<div class="qna-question-content content" v-html="content" />
 					<wnl-bookmark
 						class="qna-bookmark"
 						:reactable-id="questionId"
@@ -18,22 +18,31 @@
 						:state="bookmarkState"
 						:reactions-disabled="reactionsDisabled"
 						module="qna"
-					></wnl-bookmark>
+					/>
 				</div>
-				<div class="tags" v-if="tags.length > 0">
-					<span v-for="(tag, key) in tags" class="tag is-light" :key="key">
+				<div v-if="tags.length > 0" class="tags">
+					<span
+						v-for="(tag, key) in tags"
+						:key="key"
+						class="tag is-light"
+					>
 						<span>{{tag}}</span>
 					</span>
 				</div>
 				<div class="qna-question-meta qna-meta">
-					<div class="modal-activator" :class="{'author-forgotten': author.deleted_at}" @click="showModal">
-						<wnl-avatar class="avatar"
-								:full-name="author.full_name"
-								:url="author.avatar"
-								size="medium">
-						</wnl-avatar>
+					<div
+						class="modal-activator"
+						:class="{'author-forgotten': author.deleted_at}"
+						@click="showModal"
+					>
+						<wnl-avatar
+							class="avatar"
+							:full-name="author.full_name"
+							:url="author.avatar"
+							size="medium"
+						/>
 						<span class="qna-meta-info">
-							{{ author.display_name }}
+							{{author.full_name}}
 						</span>
 					</div>
 					<span class="qna-meta-info">
@@ -44,14 +53,18 @@
 							:target="deleteTarget"
 							:request-route="resourceRoute"
 							@deleteSuccess="onDeleteSuccess"
-						></wnl-delete>
+						/>
 					</span>
-					<wnl-resolve @resolveResource="resolveQuestion(id)" :resource="question" @unresolveResource="unresolveQuestion(id)"/>
+					<wnl-resolve
+						:resource="question"
+						@resolveResource="resolveQuestion(id)"
+						@unresolveResource="unresolveQuestion(id)"
+					/>
 				</div>
-				<slot name="context"></slot>
+				<slot name="context" />
 			</div>
 		</div>
-		 <div :class="{'qna-answers': true, 'disabled': question.resolved}">
+		<div :class="{'qna-answers': true, 'disabled': question.resolved}">
 			<div class="level">
 				<div class="level-left qna-answers-heading">
 					<p>Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
@@ -61,26 +74,34 @@
 						:state="watchState"
 						:reactions-disabled="reactionsDisabled"
 						module="qna"
-					>
-					</wnl-watch>
+					/>
 				</div>
-				<div class="level-right" v-if="!readOnly">
-					<a class="button is-small" v-if="!showAnswerForm" @click="showAnswerForm = true">
+				<div v-if="!readOnly" class="level-right">
+					<a
+						v-if="!showAnswerForm"
+						class="button is-small"
+						@click="showAnswerForm = true"
+					>
 						<span>Odpowiedz</span>
 						<span class="icon is-small answer-icon">
-							<i class="fa fa-comment-o"></i>
+							<i class="fa fa-comment-o" />
 						</span>
 					</a>
-					<a class="button is-small" v-if="showAnswerForm" @click="showAnswerForm = false">
+					<a
+						v-if="showAnswerForm"
+						class="button is-small"
+						@click="showAnswerForm = false"
+					>
 						<span>Ukryj</span>
 					</a>
 				</div>
 			</div>
 			<transition name="fade">
-				<wnl-qna-new-answer-form v-if="showAnswerForm"
-					:question-id="this.id"
-					@submitSuccess="onSubmitSuccess">
-				</wnl-qna-new-answer-form>
+				<wnl-qna-new-answer-form
+					v-if="showAnswerForm"
+					:question-id="id"
+					@submitSuccess="onSubmitSuccess"
+				/>
 			</transition>
 			<wnl-qna-answer
 				v-if="hasAnswers && !showAllAnswers"
@@ -88,23 +109,26 @@
 				:question-id="questionId"
 				:read-only="readOnly"
 				:refresh="refreshQuestionAndShowAnswers"
-			></wnl-qna-answer>
-			<wnl-qna-answer v-else-if="showAllAnswers"
+			/>
+			<wnl-qna-answer
 				v-for="answer in allAnswers"
+				v-else-if="showAllAnswers"
+				:key="answer.id"
 				:answer="answer"
 				:question-id="questionId"
-				:key="answer.id"
 				:read-only="readOnly"
 				:refresh="refreshQuestionAndShowAnswers"
-			></wnl-qna-answer>
-			<a class="qna-answers-show-all"
+			/>
+			<a
 				v-if="!showAllAnswers && otherAnswers.length > 0"
-				@click="showAllAnswers = true">
-				<span class="icon is-small"><i class="fa fa-angle-down"></i></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
+				class="qna-answers-show-all"
+				@click="showAllAnswers = true"
+			>
+				<span class="icon is-small"><i class="fa fa-angle-down" /></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
-		<wnl-modal @closeModal="closeModal" v-if="isVisible">
-			<wnl-user-profile-modal :author="author"/>
+		<wnl-modal v-if="isVisible" @closeModal="closeModal">
+			<wnl-user-profile-modal :author="author" />
 		</wnl-modal>
 	</div>
 </template>
@@ -131,6 +155,7 @@
 		cursor: pointer
 		align-items: center
 		color: $color-sky-blue
+
 		&.author-forgotten
 			color: $color-gray
 			pointer-events: none
@@ -213,8 +238,6 @@ import moderatorFeatures from 'js/perimeters/moderator';
 import { timeFromS } from 'js/utils/time';
 
 export default {
-	mixins: [ highlight ],
-	perimeters: [moderatorFeatures],
 	components: {
 		'wnl-delete': Delete,
 		'wnl-resolve': Resolve,
@@ -226,6 +249,8 @@ export default {
 		'wnl-modal': Modal,
 		'wnl-user-profile-modal': UserProfileModal,
 	},
+	mixins: [highlight],
+	perimeters: [moderatorFeatures],
 	props: ['questionId', 'readOnly', 'reactionsDisabled', 'config'],
 	data() {
 		return {
@@ -320,6 +345,33 @@ export default {
 			return questionId == this.questionId && this.answerInUrl;
 		},
 	},
+	watch: {
+		'$route'() {
+			if (!this.isOverlayVisible && this.isQuestionInUrl) {
+				this.dispatchFetchQuestion()
+					.then(() => this.scrollAndHighlight());
+			}
+
+			if (this.isQuestionAnswerInUrl) {
+				if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion();
+				this.showAllAnswers = true;
+			}
+		},
+		'isOverlayVisible'() {
+			if (!this.isOverlayVisible && this.isQuestionInUrl) {
+				this.scrollAndHighlight();
+			}
+		},
+	},
+	mounted() {
+		if (this.isQuestionAnswerInUrl) {
+			this.showAllAnswers = true;
+		}
+
+		if (!this.isOverlayVisible && this.isQuestionInUrl) {
+			this.scrollAndHighlight();
+		}
+	},
 	methods: {
 		...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
 		showModal() {
@@ -352,33 +404,6 @@ export default {
 				this.showAllAnswers = true;
 			});
 		}
-	},
-	mounted() {
-		if (this.isQuestionAnswerInUrl) {
-			this.showAllAnswers = true;
-		}
-
-		if (!this.isOverlayVisible && this.isQuestionInUrl) {
-			this.scrollAndHighlight();
-		}
-	},
-	watch: {
-		'$route' (newRoute, oldRoute) {
-			if (!this.isOverlayVisible && this.isQuestionInUrl) {
-				this.dispatchFetchQuestion()
-					.then(() => this.scrollAndHighlight());
-			}
-
-			if (this.isQuestionAnswerInUrl) {
-				if (this.isNotFetchedAnswerInUrl) this.dispatchFetchQuestion();
-				this.showAllAnswers = true;
-			}
-		},
-		'isOverlayVisible' () {
-			if (!this.isOverlayVisible && this.isQuestionInUrl) {
-				this.scrollAndHighlight();
-			}
-		},
 	},
 };
 </script>

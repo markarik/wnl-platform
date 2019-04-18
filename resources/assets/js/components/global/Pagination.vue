@@ -2,7 +2,12 @@
 	<nav class="pagination" role="navigation">
 		<ul class="pagination-list">
 			<li v-for="(n, index) in items" :key="index">
-				<a v-if="isPage(n)" class="pagination-link" :class="{'is-current': currentPage === n}" @click="changePage(n)">{{n}}</a>
+				<a
+					v-if="isPage(n)"
+					class="pagination-link"
+					:class="{'is-current': currentPage === n}"
+					@click="changePage(n)"
+				>{{n}}</a>
 				<span v-else class="pagination-ellipsis">&hellip;</span>
 			</li>
 		</ul>
@@ -89,20 +94,6 @@ export default {
 			return this.$route.query.page && parseInt(this.$route.query.page, 10) || 1;
 		}
 	},
-	methods: {
-		changePage(page) {
-			this.$emit('changePage', page);
-			this.$router.push({ query: { ...this.$route.query, page }});
-		},
-		isPage(item) {
-			return typeof item === 'number';
-		},
-	},
-	mounted() {
-		if (this.routerPage !== this.currentPage) {
-			this.$emit('changePage', this.routerPage);
-		}
-	},
 	watch: {
 		currentPage(newVal) {
 			if (newVal > this.lastPage) {
@@ -110,9 +101,23 @@ export default {
 			}
 
 			if (this.routerPage !== newVal) {
-				this.$router.push({ query: { ...this.$route.query, page: newVal }});
+				this.$router.push({ query: { ...this.$route.query, page: newVal } });
 			}
 		}
+	},
+	mounted() {
+		if (this.routerPage !== this.currentPage) {
+			this.$emit('changePage', this.routerPage);
+		}
+	},
+	methods: {
+		changePage(page) {
+			this.$emit('changePage', page);
+			this.$router.push({ query: { ...this.$route.query, page } });
+		},
+		isPage(item) {
+			return typeof item === 'number';
+		},
 	}
 };
 </script>

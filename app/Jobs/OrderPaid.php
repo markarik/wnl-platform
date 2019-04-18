@@ -4,8 +4,9 @@ namespace App\Jobs;
 
 use App\Models\Invoice as InvoiceModel;
 use App\Models\Order;
+use App\Models\Payment;
 use Illuminate\Bus\Queueable;
-use Lib\Invoice\Invoice;
+use Lib\Invoice\Invoice as InvoiceGenerator;
 use App\Mail\PaymentConfirmation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
@@ -67,10 +68,10 @@ class OrderPaid implements ShouldQueue
 
 		if ($order->product->delivery_date->isFuture()) {
 			Log::notice("OrderPaid: Generating advance invoice for order #{$order->id}");
-			return (new Invoice)->advance($order);
+			return (new InvoiceGenerator)->advance($order);
 		} else if ($this->shouldGenerateVatInvoice($order)) {
 			Log::notice("OrderPaid: Generating vat invoice for order #{$order->id}");
-			return (new Invoice)->vatInvoice($order);
+			return (new InvoiceGenerator)->vatInvoice($order);
 		} else {
 			Log::notice("OrderPaid: Skipping invoice generation for order #{$order->id}");
 			return null;
@@ -79,7 +80,7 @@ class OrderPaid implements ShouldQueue
 
 	private function shouldGenerateVatInvoice(Order $order): bool
 	{
-		$numberOfSuccessfulPayments = $order->payments->where('status', '=', 'success')->count();
+		$numberOfSuccessfulPayments = $order->payments->where('status', '=', Payment::STATUS_SUCCESS)->count();
 		$numberOfVatInvoices = $order->invoices->where('type', '=', 'vat')->count();
 
 		return $numberOfVatInvoices === 0 || $numberOfVatInvoices < $numberOfSuccessfulPayments;
@@ -95,7 +96,7 @@ class OrderPaid implements ShouldQueue
 	private function unsuspendUser()
 	{
 		Log::notice("OrderPaid: unsuspendUser called for order #{$this->order->id}");
-		if ($this->order->method !== 'instalments') return;
+		if ($this->order->method !== Order::PAYMENT_METHOD_INSTALMENTS) return;
 
 		if ($this->order->user->suspended && !$this->order->is_overdue) {
 			$this->order->user->suspended = false;

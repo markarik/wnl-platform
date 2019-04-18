@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { get, set } from 'lodash';
+
 import { getApiUrl } from 'js/utils/env';
 
 // TODO: Mar 9, 2017 - Use config when it's ready
@@ -29,20 +31,12 @@ const completeSubsection = (lessonState, payload) => {
 	const stateWithScreen = _getScreenProgress(lessonState, payload);
 	const stateWithSections = _getSectionProgress(stateWithScreen, payload);
 
-	if (!lessonState.screens[screenId].sections[sectionId].subsections) {
-		lessonState.screens[screenId].sections[sectionId].subsections = {
-			[subsectionId]: {
-				status: STATUS_COMPLETE
-			}
-		};
-	} else {
-		lessonState.screens[screenId].sections[sectionId].subsections = {
-			...lessonState.screens[screenId].sections[sectionId].subsections,
-			[subsectionId]: {
-				status: STATUS_COMPLETE
-			}
-		};
-	}
+	set(lessonState, `screens[${screenId}].sections[${sectionId}].subsections`, {
+		...get(lessonState, `screens[${screenId}].sections[${sectionId}].subsections`, {}),
+		[subsectionId]: {
+			status: STATUS_COMPLETE
+		}
+	});
 
 	setLessonProgress(payload, lessonState);
 

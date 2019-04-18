@@ -1,5 +1,5 @@
 <template>
-		<div class="tag-autocomplete-item">{{item.name}}</div>
+	<div class="tag-autocomplete-item">{{item.name}}</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>

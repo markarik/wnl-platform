@@ -1,11 +1,15 @@
 <template>
 	<div class="field">
 		<ol>
-			<draggable v-model="inputValue" @start="drag=true" @end="drag=false">
+			<draggable
+				v-model="inputValue"
+				@start="drag=true"
+				@end="drag=false"
+			>
 				<li
-						class="item"
-						v-for="item in inputValue"
-						:key="item"
+					v-for="item in inputValue"
+					:key="item"
+					class="item"
 				>
 					<slot :item="formData.included[name][item]" />
 				</li>
@@ -14,11 +18,11 @@
 
 		<template v-if="hasErrors">
 			<span
-				class="help is-danger"
 				v-for="(error, index) in getErrors"
-				v-text="error"
 				:key="index"
-			></span>
+				class="help is-danger"
+				v-text="error"
+			/>
 		</template>
 	</div>
 </template>
@@ -43,12 +47,12 @@ export default {
 	components: {
 		draggable,
 	},
+	mixins: [formInput],
 	props: {
 		name: {
 			type: String,
 		},
 	},
-	mixins: [formInput],
 	computed: {
 		default() {
 			return [];

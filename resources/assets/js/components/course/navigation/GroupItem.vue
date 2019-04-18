@@ -2,21 +2,21 @@
 	<div class="navigation-group" :class="{'no-items': !hasChildren}">
 		<div class="navigation-group__toggle" @click="toggleNavigationGroup({groupIndex: item.id, isOpen: !isOpen})">
 			<div class="navigation-group__item">
-				<span class="icon is-small" v-if="hasChildren">
-					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}"></i>
+				<span v-if="hasChildren" class="icon is-small">
+					<i class="toggle fa fa-angle-down" :class="{'fa-rotate-180': isOpen}" />
 				</span>
 				<span class="sidenav-item-content">
 					{{groupItem.text}}
-					<span class="navigation-group__count" v-if="hasChildren">({{children.length}})</span>
+					<span v-if="hasChildren" class="navigation-group__count">({{children.length}})</span>
 				</span>
 			</div>
 		</div>
 		<div v-if="canRenderChildren">
 			<wnl-lesson-item
 				v-for="(subitem) in children"
-				:item="subitem"
 				:key="subitem.id"
-			></wnl-lesson-item>
+				:item="subitem"
+			/>
 		</div>
 	</div>
 </template>
@@ -78,10 +78,10 @@ import WnlLessonItem from 'js/components/course/navigation/LessonItem';
 import navigation from 'js/services/navigation';
 
 export default {
+	name: 'GroupItem',
 	components: {
 		WnlLessonItem
 	},
-	name: 'GroupItem',
 	props: {
 		item: {
 			type: Object,

@@ -3,42 +3,45 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.progressReset.header') }}
+					{{$t('user.progressReset.header')}}
 				</div>
 			</div>
 		</div>
 
 		<div class="message is-danger reset-container">
 			<div class="message-header">
-					<strong v-t="'user.progressReset.progressHeader'"></strong>
-				</div>
-				<div class="message-body" v-t="'progress.reset.info'"></div>
+				<strong v-t="'user.progressReset.progressHeader'" />
+			</div>
+			<div v-t="'progress.reset.info'" class="message-body" />
 			<button
+				v-t="'user.progressReset.progressButton'"
+				class="button is-danger to-right"
 				@click="resetProgress"
-				class="button is-danger to-right"
-				v-t="'user.progressReset.progressButton'"/>
+			/>
 		</div>
 
 		<div class="message is-danger reset-container">
 			<div class="message-header">
-					<strong v-t="'user.progressReset.questionsHeader'"/>
-				</div>
-			<div class="message-body" v-t="'user.progressReset.questionsWarning'"/>
+				<strong v-t="'user.progressReset.questionsHeader'" />
+			</div>
+			<div v-t="'user.progressReset.questionsWarning'" class="message-body" />
 			<button
+				v-t="'user.progressReset.questionsButton'"
+				class="button is-danger to-right"
 				@click="resetQuestions"
-				class="button is-danger to-right"
-				v-t="'user.progressReset.questionsButton'"/>
+			/>
 		</div>
 
 		<div class="message is-danger reset-container">
 			<div class="message-header">
-					<strong v-t="'user.progressReset.collectionsHeader'"></strong>
-				</div>
-			<div class="message-body" v-t="'user.progressReset.collectionsWarning'"/>
+				<strong v-t="'user.progressReset.collectionsHeader'" />
+			</div>
+			<div v-t="'user.progressReset.collectionsWarning'" class="message-body" />
 			<button
-				@click="resetCollections"
+				v-t="'user.progressReset.questionsButton'"
 				class="button is-danger to-right"
-				v-t="'user.progressReset.questionsButton'"/>
+				@click="resetCollections"
+			/>
 		</div>
 		<wnl-satisfaction-guarantee-modal
 			:visible="satisfactionGuaranteeModalVisible"

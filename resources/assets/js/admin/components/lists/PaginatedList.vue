@@ -5,31 +5,35 @@
 		</slot>
 
 		<wnl-search-input
-			class="search"
 			v-if="isSearchEnabled"
-			@search="onSearch"
+			class="search"
 			:available-fields="searchAvailableFields"
+			@search="onSearch"
 		/>
 		<wnl-pagination
 			v-if="lastPage > 1"
 			:current-page="page"
 			:last-page="lastPage"
-			@changePage="onPageChange"
 			class="pagination"
+			@changePage="onPageChange"
 		/>
 
 		<template v-if="!isLoading">
-			<slot name="list" v-if="!isEmpty(list)" :list="list"/>
-			<div class="title is-6" v-else>Nic tu nie ma...</div>
+			<slot
+				v-if="!isEmpty(list)"
+				name="list"
+				:list="list"
+			/>
+			<div v-else class="title is-6">Nic tu nie ma...</div>
 		</template>
-		<wnl-text-loader v-else></wnl-text-loader>
+		<wnl-text-loader v-else />
 
 		<wnl-pagination
 			v-if="lastPage > 1"
 			:current-page="page"
 			:last-page="lastPage"
-			@changePage="onPageChange"
 			class="pagination"
+			@changePage="onPageChange"
 		/>
 	</div>
 </template>
@@ -58,16 +62,6 @@ export default {
 		WnlPagination,
 		WnlSearchInput,
 	},
-	data() {
-		return {
-			list: [],
-			searchPhrase: '',
-			lastPage: 1,
-			page: 1,
-			isLoading: true,
-			searchFields: [],
-		};
-	},
 	props: {
 		searchAvailableFields: {
 			type: Array,
@@ -89,6 +83,31 @@ export default {
 			type: Boolean,
 			default: true,
 		}
+	},
+	data() {
+		return {
+			list: [],
+			searchPhrase: '',
+			lastPage: 1,
+			page: 1,
+			isLoading: true,
+			searchFields: [],
+		};
+	},
+	watch: {
+		customRequestParams() {
+			this.fetch();
+		},
+		async dirty() {
+			if (this.dirty) {
+				await this.fetch();
+			}
+
+			this.$emit('updated');
+		}
+	},
+	mounted() {
+		this.fetch();
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -151,20 +170,5 @@ export default {
 			}
 		},
 	},
-	mounted() {
-		this.fetch();
-	},
-	watch: {
-		customRequestParams() {
-			this.fetch();
-		},
-		async dirty() {
-			if (this.dirty) {
-				await this.fetch();
-			}
-
-			this.$emit('updated');
-		}
-	}
 };
 </script>

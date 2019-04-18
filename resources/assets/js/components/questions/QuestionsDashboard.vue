@@ -1,40 +1,49 @@
 <template>
 	<div class="wnl-app-layout">
-		<wnl-questions-navigation/>
+		<wnl-questions-navigation />
 		<div class="wnl-middle wnl-app-layout-main">
 			<div class="scrollable-main-container">
 				<div class="questions-header">
 					<div class="questions-breadcrumbs">
 						<div class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-check-square-o"></i></span>
+							<span class="icon is-small"><i class="fa fa-check-square-o" /></span>
 						</div>
 						<div class="breadcrumb" @click="$router.push({name: 'questions-dashboard'})">
-							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 							<span>{{$t('questions.nav.dashboard')}}</span>
 						</div>
 						<div v-if="id" class="breadcrumb">
-							<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+							<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 							<span>#{{id}}</span>
 						</div>
 					</div>
-					<a v-if="isMobile" class="toggle-notifications" @click="toggleChat">
+					<a
+						v-if="isMobile"
+						class="toggle-notifications"
+						@click="toggleChat"
+					>
 						<span>{{$t('questions.dashboard.notifications.toggle')}}</span>
 						<span class="icon is-small">
-							<i class="fa fa-commenting-o"></i>
+							<i class="fa fa-commenting-o" />
 						</span>
 					</a>
 				</div>
 				<div v-if="!id">
 					<div class="questions-dashboard-plan">
 						<div class="questions-dashboard-heading">
-							<span class="icon is-small"><i class="fa fa-calendar"></i></span>
+							<span class="icon is-small"><i class="fa fa-calendar" /></span>
 							{{$t('questions.dashboard.plan.heading')}}
 						</div>
 						<div v-if="plan === null" class="margin vertical">
-							<wnl-text-loader/>
+							<wnl-text-loader />
 						</div>
-						<wnl-questions-plan-progress v-else-if="hasPlan" :allow-change="false" :plan="plan" @userEvent="onUserEvent"/>
-						<div class="questions-plan-create" v-else>
+						<wnl-questions-plan-progress
+							v-else-if="hasPlan"
+							:allow-change="false"
+							:plan="plan"
+							@userEvent="onUserEvent"
+						/>
+						<div v-else class="questions-plan-create">
 							<p class="questions-plan-create-heading">
 								{{$t('questions.dashboard.plan.create.heading')}}
 							</p>
@@ -52,31 +61,34 @@
 						{{$t('questions.dashboard.stats.error')}}
 					</div>
 					<div v-else-if="!hasStats" class="margin vertical">
-						<wnl-text-loader/>
+						<wnl-text-loader />
 					</div>
 					<div v-else>
 						<!-- All questions -->
 						<div class="questions-dashboard-heading">
-							<span class="icon is-small"><i class="fa fa-bar-chart"></i></span>
+							<span class="icon is-small"><i class="fa fa-bar-chart" /></span>
 							{{$t('questions.dashboard.stats.heading')}}
 						</div>
 						<div class="questions-dashboard-subheading">
-							<span class="icon is-small"><i class="fa fa-tasks"></i></span>
+							<span class="icon is-small"><i class="fa fa-tasks" /></span>
 							{{$t('questions.dashboard.stats.scores')}}
 						</div>
 						<div class="questions-stats margin bottom">
-							<div v-for="(stats, index) in parseStats(stats)"
+							<div
+								v-for="(statsItem, index) in parseStats(stats)"
+								:key="index"
 								class="stats-item stats-resolved"
 								:class="{'is-first': index === 0}"
-								:key="index"
 							>
-								<span class="stats-title">{{stats.title}}</span>
+								<span class="stats-title">{{statsItem.title}}</span>
 								<div class="progress-bar">
-									<progress class="progress"
-										:value="stats.progress"
-										:max="stats.total"/>
-									<span class="progress-number">{{stats.progressNumber}}</span>
-									<div class="score" :class="scoreClass(stats.score)">{{stats.score}}%</div>
+									<progress
+										class="progress"
+										:value="statsItem.progress"
+										:max="statsItem.total"
+									/>
+									<span class="progress-number">{{statsItem.progressNumber}}</span>
+									<div class="score" :class="scoreClass(statsItem.score)">{{statsItem.score}}%</div>
 								</div>
 							</div>
 						</div>
@@ -84,11 +96,15 @@
 						<!-- Mock exam -->
 						<div v-if="stats.mock_exams.length">
 							<div class="questions-dashboard-subheading margin top">
-								<span class="icon is-small"><i class="fa fa-tachometer"></i></span>
+								<span class="icon is-small"><i class="fa fa-tachometer" /></span>
 								{{$t('questions.dashboard.stats.mockExam')}}
 							</div>
-							<div class="questions-stats stats-exam" v-for="(mockExam, index) in stats.mock_exams" :key="index">
-								<div @click="toggleExamExpand(index)" :class="{'exam-header': true, 'is-expanded': expandedExams.includes(index)}">
+							<div
+								v-for="(mockExam, mockExamIndex) in stats.mock_exams"
+								:key="mockExamIndex"
+								class="questions-stats stats-exam"
+							>
+								<div :class="{'exam-header': true, 'is-expanded': expandedExams.includes(mockExamIndex)}" @click="toggleExamExpand(mockExamIndex)">
 									<span class="exam-header__name">
 										{{mockExam.exam_name}}
 									</span>
@@ -98,30 +114,35 @@
 										<span class="exam-header__date">{{parseDate(mockExam.created_at)}}</span>
 									</span>
 									<span class="exam-header__expand icon is-small">
-										<i :class="['fa', expandedExams.includes(index) ? 'fa-chevron-up' : 'fa-chevron-down']"></i>
+										<i :class="['fa', expandedExams.includes(mockExamIndex) ? 'fa-chevron-up' : 'fa-chevron-down']" />
 									</span>
 								</div>
-								<div v-show="expandedExams.includes(index)">
-									<div v-for="(stats, index) in parseStats(mockExam)"
-										:key="index"
+								<div v-show="expandedExams.includes(mockExamIndex)">
+									<div
+										v-for="(statsItem, statsIndex) in parseStats(mockExam)"
+										:key="statsIndex"
 										class="stats-item stats-exam"
-										:class="{'is-first': index === 0}"
+										:class="{'is-first': statsIndex === 0}"
 									>
-										<span class="stats-title">{{stats.title}}</span>
-										<span class="progress-number" :class="scoreClass(stats.scoreTotal)">{{stats.scoreNumber}}</span>
-										<div class="score" :class="scoreClass(stats.scoreTotal)">{{stats.scoreTotal}}%</div>
+										<span class="stats-title">{{statsItem.title}}</span>
+										<span class="progress-number" :class="scoreClass(statsItem.scoreTotal)">{{statsItem.scoreNumber}}</span>
+										<div class="score" :class="scoreClass(statsItem.scoreTotal)">{{statsItem.scoreTotal}}%</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="questions-dashboard-heading margin vertical"/>
+						<div class="questions-dashboard-heading margin vertical" />
 						<button
-							@click="satisfactionGuaranteeModalVisible = true"
 							class="button is-danger to-right"
+							@click="satisfactionGuaranteeModalVisible = true"
 						>{{$t('questions.dashboard.stats.resetButton')}}</button>
 					</div>
 				</div>
-				<router-view v-else :id="id" @userEvent="onUserEvent"/>
+				<router-view
+					v-else
+					:id="id"
+					@userEvent="onUserEvent"
+				/>
 			</div>
 		</div>
 		<wnl-sidenav-slot
@@ -132,22 +153,22 @@
 			<div class="questions-feed-container">
 				<div class="questions-feed-heading" :class="{'detached': !isChatMounted}">
 					<div>
-						<span class="icon is-small"><i class="fa fa-commenting-o"></i></span>
+						<span class="icon is-small"><i class="fa fa-commenting-o" /></span>
 						{{$t('questions.dashboard.notifications.heading')}}
 					</div>
 					<div class="clickable" @click="toggleChat">
 						<span class="metadata">{{$t('questions.dashboard.notifications.close')}}</span>
 						<span class="icon is-small">
-							<i class="fa fa-close"></i>
+							<i class="fa fa-close" />
 						</span>
 					</div>
 				</div>
-				<wnl-questions-feed/>
+				<wnl-questions-feed />
 			</div>
 		</wnl-sidenav-slot>
 		<div v-if="isChatToggleVisible" class="wnl-chat-toggle">
 			<span class="icon is-big" @click="toggleChat">
-				<i class="fa fa-commenting-o"></i>
+				<i class="fa fa-commenting-o" />
 				<span>{{$t('questions.dashboard.notifications.toggleBar')}}</span>
 			</span>
 		</div>
@@ -391,6 +412,26 @@ export default {
 			return !isEmpty(this.stats);
 		},
 	},
+	watch: {
+		'$route' () {
+			!this.isChatMounted && this.isChatVisible && this.toggleChat();
+		},
+		'$route.query.chatChannel' (newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
+		}
+	},
+	mounted() {
+		this.getPlan();
+		this.getStats();
+		isEmpty(this.filters)
+			? this.fetchDynamicFilters().then(this.setPlanRoute)
+			: this.setPlanRoute();
+		this.$trackUserEvent({
+			context: this.context.value,
+			feature: this.feature.value,
+			action: this.feature.actions.open.value
+		});
+	},
 	methods: {
 		...mapActions(['toggleChat', 'toggleOverlay']),
 		...mapActions('questions', ['fetchDynamicFilters', 'deleteProgress']),
@@ -499,25 +540,5 @@ export default {
 			}).catch(() => false);
 		}
 	},
-	mounted() {
-		this.getPlan();
-		this.getStats();
-		isEmpty(this.filters)
-			? this.fetchDynamicFilters().then(this.setPlanRoute)
-			: this.setPlanRoute();
-		this.$trackUserEvent({
-			context: this.context.value,
-			feature: this.feature.value,
-			action: this.feature.actions.open.value
-		});
-	},
-	watch: {
-		'$route' () {
-			!this.isChatMounted && this.isChatVisible && this.toggleChat();
-		},
-		'$route.query.chatChannel' (newVal) {
-			newVal && !this.isChatVisible && this.toggleChat();
-		}
-	}
 };
 </script>

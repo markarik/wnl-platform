@@ -6,7 +6,7 @@
 			</p>
 			<div v-if="isLoadingComments" class="loading-comments">
 				<span class="icon is-small status-icon">
-					<i class="fa fa-circle-o-notch fa-spin"></i>
+					<i class="fa fa-circle-o-notch fa-spin" />
 				</span>
 				Ładuję komentarze...
 			</div>
@@ -22,12 +22,12 @@
 			@commentsHidden="$emit('commentsHidden')"
 			@commentsUpdated="onCommentsUpdated"
 		>
-		<wnl-edit-slide-button
-			:current-slide-id="Number(currentSlideId)"
-			:screen-id="Number(screenId)"
-			v-if="isAdmin"
-		/>
-	</wnl-comments-list>
+			<wnl-edit-slide-button
+				v-if="isAdmin"
+				:current-slide-id="Number(currentSlideId)"
+				:screen-id="Number(screenId)"
+			/>
+		</wnl-comments-list>
 	</div>
 </template>
 

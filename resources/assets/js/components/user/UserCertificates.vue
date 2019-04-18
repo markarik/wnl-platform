@@ -56,6 +56,12 @@ export default {
 	computed: {
 		...mapGetters(['isMobileProfile']),
 	},
+	async mounted() {
+		const { data } = await axios.get(getApiUrl('certificates'));
+
+		this.participationCertificates = Object.values(data.participation);
+		this.finalCertificates = Object.values(data.final);
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		formatDate(date) {
@@ -94,11 +100,5 @@ export default {
 			$wnl.logger.capture(err);
 		},
 	},
-	async mounted() {
-		const { data } = await axios.get(getApiUrl('certificates'));
-
-		this.participationCertificates = Object.values(data.participation);
-		this.finalCertificates = Object.values(data.final);
-	}
 };
 </script>

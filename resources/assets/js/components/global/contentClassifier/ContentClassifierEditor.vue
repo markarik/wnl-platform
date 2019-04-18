@@ -32,25 +32,25 @@
 									title="Odznacz"
 									@click="onDetachTaxonomyTerm(term)"
 								>
-									<i class="fa fa-close"></i>
+									<i class="fa fa-close" />
 								</span>
 								<span
-									slot="right"
 									v-if="allItemsCount > 1"
+									slot="right"
 									:class="{
-									'margin': true,
-									'left': true,
-									'tag': true,
-									'strong': hasAllItemsAttached(term),
-									'is-white': !hasAllItemsAttached(term),
-									'clickable': !hasAllItemsAttached(term),
-								}"
+										'margin': true,
+										'left': true,
+										'tag': true,
+										'strong': hasAllItemsAttached(term),
+										'is-white': !hasAllItemsAttached(term),
+										'clickable': !hasAllItemsAttached(term),
+									}"
 									:title="!hasAllItemsAttached(term) && 'Dodaj do wszystkich'"
 									@click="!hasAllItemsAttached(term) && onAttachTaxonomyTerm(term)"
 								>
-								<span class="icon is-small" v-if="!hasAllItemsAttached(term)"><i class="fa fa-plus"></i></span>
-								<span>{{term.itemsCount}}/{{allItemsCount}}</span>
-							</span>
+									<span v-if="!hasAllItemsAttached(term)" class="icon is-small"><i class="fa fa-plus" /></span>
+									<span>{{term.itemsCount}}/{{allItemsCount}}</span>
+								</span>
 							</wnl-taxonomy-term-with-ancestors>
 
 						</li>
@@ -76,7 +76,7 @@
 			</div>
 		</div>
 		<div v-else class="notification is-info">
-			<span class="icon"><i class="fa fa-info-circle"></i></span>
+			<span class="icon"><i class="fa fa-info-circle" /></span>
 			<span>Najpierw wybierz treść do klasyfikacji</span>
 		</div>
 	</div>
@@ -125,6 +125,16 @@ export default {
 		WnlTaxonomyTermWithAncestors,
 		WnlContentClassifierEditorRecentTerms,
 	},
+	props: {
+		items: {
+			type: Array,
+			required: true,
+		},
+		isFocused: {
+			type: Boolean,
+			default: false
+		},
+	},
 	data() {
 		return {
 			isLoading: false,
@@ -135,16 +145,6 @@ export default {
 			lastUsedTerm: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.LAST_TERM),
 			lastUsedTermsSet: contentClassifierStore.get(CONTENT_CLASSIFIER_STORE_KEYS.ALL_TERMS, []),
 		};
-	},
-	props: {
-		items: {
-			type: Array,
-			required: true,
-		},
-		isFocused: {
-			type: Boolean,
-			default: false
-		},
 	},
 	computed: {
 		...mapGetters('taxonomyTerms', ['termById', 'getAncestorNodesById']),
@@ -177,6 +177,16 @@ export default {
 				.forEach(taxonomyId => groupedTerms[taxonomyId].terms.sort((a, b) => b.itemsCount - a.itemsCount));
 
 			return groupedTerms;
+		},
+	},
+	watch: {
+		async isFocused() {
+			if (this.isFocused) {
+				scrollToElement(this.$el);
+				this.$el.focus();
+			} else {
+				this.$el.blur();
+			}
 		},
 	},
 	methods: {
@@ -264,16 +274,6 @@ export default {
 					}
 					break;
 				}
-			}
-		},
-	},
-	watch: {
-		async isFocused() {
-			if (this.isFocused) {
-				scrollToElement(this.$el);
-				this.$el.focus();
-			} else {
-				this.$el.blur();
 			}
 		},
 	},

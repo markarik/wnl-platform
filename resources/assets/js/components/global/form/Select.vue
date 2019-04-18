@@ -1,33 +1,37 @@
 <template>
 	<div class="field">
-		<label :for="name" class="label" v-if="$slots.default">
-			<slot></slot>
+		<label
+			v-if="$slots.default"
+			:for="name"
+			class="label"
+		>
+			<slot />
 		</label>
 		<div class="control" :class="{'is-loading': isLoading}">
 			<select
+				v-model="inputValue"
 				class="select"
 				:class="{'is-danger': hasErrors}"
 				:name="name"
 				:disabled="disabled"
 				@input="onInput"
-				v-model="inputValue"
 			>
 				<option
 					v-for="(option, key) in options"
 					:key="key"
 					:value="option.value"
-					v-text="option.text">
-				</option>
+					v-text="option.text"
+				/>
 			</select>
 		</div>
 
 		<template v-if="hasErrors">
 			<span
-				class="help is-danger"
 				v-for="(error, index) in getErrors"
-				v-text="error"
 				:key="index"
-			></span>
+				class="help is-danger"
+				v-text="error"
+			/>
 		</template>
 	</div>
 </template>
@@ -36,6 +40,7 @@
 import { formInput } from 'js/mixins/form-input';
 
 export default {
+	mixins: [formInput],
 	props: {
 		name: {
 			type: String,
@@ -50,6 +55,5 @@ export default {
 			required: true,
 		}
 	},
-	mixins: [formInput],
 };
 </script>

@@ -1,8 +1,12 @@
 <template>
 	<div>
-		<span v-for="(breadcrumb, key) in breadcrumbs" :key="key" class="breadcrumb-item">
+		<span
+			v-for="(breadcrumb, key) in breadcrumbs"
+			:key="key"
+			class="breadcrumb-item"
+		>
 			<router-link class="breadcrumb-link" :to="breadcrumb.to">{{breadcrumb.text}}</router-link>
-			<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+			<span class="icon is-small"><i class="fa fa-angle-right" /></span>
 		</span>
 	</div>
 </template>

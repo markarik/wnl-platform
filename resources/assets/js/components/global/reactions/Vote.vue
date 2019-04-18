@@ -1,10 +1,14 @@
 <template>
-	<div class="vote" :class="iconClass" @click="toggleReaction">
+	<div
+		class="vote"
+		:class="iconClass"
+		@click="toggleReaction"
+	>
 		<span class="icon is-small">
-			<i class="fa" :class="hasReactedClass"></i>
+			<i class="fa" :class="hasReactedClass" />
 		</span>
-		<span class="count">{{ count }}</span>
-		<span class="flash-bg" :class="{'flash': wasJustClicked}"></span>
+		<span class="count">{{count}}</span>
+		<span class="flash-bg" :class="{'flash': wasJustClicked}" />
 	</div>
 </template>
 

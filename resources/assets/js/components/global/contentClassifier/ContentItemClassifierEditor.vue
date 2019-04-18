@@ -8,11 +8,11 @@
 					@click="updateIsActive(false)"
 				>
 					<div>
-						<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
+						<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags" /></span>
 						<strong>{{CONTENT_TYPE_NAMES[contentItem.type]}} #{{contentItem.id}}</strong>
 					</div>
 					<span class="content-item-classifier__collapse-icon icon is-small">
-						<i class="fa fa-chevron-up"></i>
+						<i class="fa fa-chevron-up" />
 					</span>
 				</div>
 				<wnl-content-classifier-editor
@@ -24,17 +24,21 @@
 					@taxonomyTermDetached="onTaxonomyTermDetached"
 				/>
 			</div>
-			<div v-else class="clickable content-item-classifier__tag-names" @click="updateIsActive(true)">
-				<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags"></i></span>
+			<div
+				v-else
+				class="clickable content-item-classifier__tag-names"
+				@click="updateIsActive(true)"
+			>
+				<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-tags" /></span>
 				<span v-if="hasTaxonomyTerms">{{contentItem.taxonomyTerms.map(term => term.tag.name).join(', ')}}</span>
 				<span v-else>brak</span>
 			</div>
 		</template>
 		<div v-else-if="isError">
-			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-exclamation"></i></span>
+			<span class="content-item-classifier__tag-icon icon is-small"><i class="fa fa-exclamation" /></span>
 			Ups, nie udalo się załadować przypisanych pojęć. Odśwież stronę, aby spróbować ponownie.
 		</div>
-		<wnl-text-loader v-else></wnl-text-loader>
+		<wnl-text-loader v-else />
 	</div>
 </template>
 
@@ -86,11 +90,6 @@ export default {
 	components: {
 		WnlContentClassifierEditor,
 	},
-	data() {
-		return {
-			CONTENT_TYPE_NAMES,
-		};
-	},
 	props: {
 		contentItemId: {
 			type: [Number, String],
@@ -113,6 +112,11 @@ export default {
 			default: false
 		},
 	},
+	data() {
+		return {
+			CONTENT_TYPE_NAMES,
+		};
+	},
 	computed: {
 		...mapGetters('contentClassifier', ['getContentItem', 'canAccess', 'getContentItemState']),
 		contentItem() {
@@ -127,6 +131,12 @@ export default {
 		isError() {
 			return this.getContentItemState({ contentItemType: this.contentItemType, contentItemId: this.contentItemId }) === REQUEST_STATES.ERROR;
 		},
+	},
+	mounted() {
+		if (this.canAccess) this.$emit('editorCreated');
+	},
+	beforeDestroy() {
+		this.$emit('editorDestroyed');
 	},
 	methods: {
 		...mapMutations('contentClassifier', {
@@ -148,12 +158,6 @@ export default {
 		updateIsActive(isActive) {
 			this.$emit('updateIsActive', isActive);
 		},
-	},
-	mounted() {
-		if (this.canAccess) this.$emit('editorCreated');
-	},
-	beforeDestroy() {
-		this.$emit('editorDestroyed');
 	},
 };
 </script>

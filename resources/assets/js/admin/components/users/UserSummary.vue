@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<user-edit-form :populate="true" :resource-url="resourceUrl" method="put"/>
+		<user-edit-form
+			:populate="true"
+			:resource-url="resourceUrl"
+			method="put"
+		/>
 	</div>
 </template>
 

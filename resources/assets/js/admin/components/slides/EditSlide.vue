@@ -9,16 +9,16 @@
 	>
 		<wnl-slide-search
 			slot="above-content"
+			:slide-id="Number(slideId) || 0"
+			:screen-id="Number(screenId) || 0"
 			@screenIdChange="saveScreenId"
 			@slideIdChange="saveSlideId"
 			@resourceUrlFetched="onResourceUrlFetched"
-			:slide-id="Number(slideId) || 0"
-			:screen-id="Number(screenId) || 0"
 		/>
 		<wnl-content-item-classifier-editor
 			v-if="slideId > 0"
-			class="margin bottom"
 			slot="below-content"
+			class="margin bottom"
 			:is-always-active="true"
 			:content-item-id="slideId"
 			:content-item-type="CONTENT_TYPES.SLIDE"
@@ -51,6 +51,25 @@ export default {
 			CONTENT_TYPES,
 		};
 	},
+	watch: {
+		async slideId(slideId) {
+			if (slideId) {
+				await this.setupCurrentUser();
+				await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId] });
+			}
+		}
+	},
+	mounted() {
+		const slideId = this.$route.query.slideId;
+		this.screenId = this.$route.query.screenId;
+		this.slideId = slideId;
+		if (slideId) {
+			this.onResourceUrlFetched({
+				url: getApiUrl(`slides/${slideId}`),
+				slideId: slideId,
+			});
+		}
+	},
 	methods: {
 		...mapActions(['setupCurrentUser']),
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
@@ -69,24 +88,5 @@ export default {
 			this.resourceUrl = url;
 		}
 	},
-	mounted() {
-		const slideId = this.$route.query.slideId;
-		this.screenId = this.$route.query.screenId;
-		this.slideId = slideId;
-		if (slideId) {
-			this.onResourceUrlFetched({
-				url: getApiUrl(`slides/${slideId}`),
-				slideId: slideId,
-			});
-		}
-	},
-	watch: {
-		async slideId(slideId) {
-			if (slideId) {
-				await this.setupCurrentUser();
-				await this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.SLIDE, contentIds: [slideId] });
-			}
-		}
-	}
 };
 </script>

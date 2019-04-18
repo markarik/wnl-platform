@@ -1,9 +1,7 @@
 module.exports = {
 	extends: [
 		'eslint:recommended',
-		// TODO use recommended rules
-		// 'plugin:vue/recommended'
-		'plugin:vue/strongly-recommended'
+		'plugin:vue/recommended',
 	],
 	plugins: [
 		'import'
@@ -45,49 +43,53 @@ module.exports = {
 			'error',
 			'always'
 		],
-
-		// TODO enable eslint:recommended rules below
-		'no-console': [
-			'off'
-		],
-
 		'import/no-relative-parent-imports': 'error',
 		'vue/component-name-in-template-casing': [
 			'error',
 			'kebab-case'
 		],
-		// TODO enable strongly-recommended rules below
 		'vue/html-indent': [
-			'off'
-		],
-		'vue/require-prop-types': [
-			'off'
-		],
-		'vue/singleline-html-element-content-newline': [
-			'off'
+			'error',
+			'tab',
+			{
+				'ignores': [
+					'VElement[name=thead].children',
+					'VElement[name=tbody].children',
+				]
+			}
 		],
 		'vue/mustache-interpolation-spacing': [
-			'off'
+			'error',
+			'never',
 		],
 		'vue/max-attributes-per-line': [
-			'off'
+			'error',
+			{
+				'singleline': 2,
+			}
 		],
-		'vue/html-self-closing': [
-			'off'
+		'vue/attributes-order': [
+			'error',
 		],
-		'vue/html-closing-bracket-newline': [
-			'off'
-		],
-		'vue/html-closing-bracket-spacing': [
-			'off'
-		],
-		'vue/multiline-html-element-content-newline': [
+
+		// TODO enable vue/strongly-recommended rules below
+		'vue/require-prop-types': [
 			'off'
 		],
 		'vue/require-default-prop': [
 			'off'
 		],
-		'vue/no-template-shadow': [
+
+		// We use v-html a lot
+		'vue/no-v-html': [
+			'off'
+		],
+
+		// The two below don't seem useful
+		'vue/singleline-html-element-content-newline': [
+			'off'
+		],
+		'vue/multiline-html-element-content-newline': [
 			'off'
 		],
 	},

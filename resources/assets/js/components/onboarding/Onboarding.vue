@@ -5,18 +5,18 @@
 			:is-detached="!isSidenavMounted"
 			:is-narrow="true"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 		</wnl-sidenav-slot>
-		<div v-if="$currentEditionParticipant.isAllowed('access') && currentStep" class="onboarding-wrapper">
+		<div v-if="currentStep" class="onboarding-wrapper">
 			<wnl-stepper
+				v-if="!currentStep.hideOnStepper"
 				class="onboarding-stepper"
 				:steps="stepsForStepper"
 				:current-step="currentStepIndexForStepper"
-				v-if="!currentStep.hideOnStepper"
 			/>
 			<component
-				class="scrollable-container"
 				:is="currentStep.component"
+				class="scrollable-container"
 			/>
 			<div class="has-text-centered buttons">
 				<button
@@ -36,7 +36,6 @@
 				>{{currentStep.buttonText || 'Dalej'}}</button>
 			</div>
 		</div>
-		<wnl-splash-screen v-else/>
 	</div>
 </template>
 
@@ -158,19 +157,15 @@ import WnlOnboardingScreenTutorial from 'js/components/onboarding/OnboardingScre
 import WnlOnboardingScreenSatisfactionGuarantee from 'js/components/onboarding/OnboardingScreenSatisfactionGuarantee';
 import WnlOnboardingScreenFinal from 'js/components/onboarding/OnboardingScreenFinal';
 import WnlStepper from 'js/components/onboarding/Stepper';
-import WnlSplashScreen from 'js/components/global/splashscreens/SplashScreen';
 
 import { resource } from 'js/utils/config';
 import { ONBOARDING_STEPS } from 'js/consts/user';
-import currentEditionParticipant from 'js/perimeters/currentEditionParticipant';
 import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
-	perimeters: [currentEditionParticipant],
 	components: {
 		WnlMainNav,
 		WnlSidenavSlot,
-		WnlSplashScreen,
 		WnlStepper,
 	},
 	props: {
@@ -248,6 +243,14 @@ export default {
 			return this.steps.filter(step => !step.hideOnStepper);
 		},
 	},
+	watch: {
+		step() {
+			this.validateCurrentStep();
+		}
+	},
+	mounted() {
+		this.validateCurrentStep();
+	},
 	methods: {
 		...mapActions([
 			'setupCurrentUser',
@@ -313,13 +316,5 @@ export default {
 			}
 		}
 	},
-	watch: {
-		step() {
-			this.validateCurrentStep();
-		}
-	},
-	mounted() {
-		this.validateCurrentStep();
-	}
 };
 </script>

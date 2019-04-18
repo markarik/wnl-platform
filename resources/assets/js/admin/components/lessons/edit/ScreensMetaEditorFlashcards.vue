@@ -1,11 +1,15 @@
 <template>
 	<div class="margin left">
 		<h5 class="title is-5">Zarządzaj zestawami pytań</h5>
-		<div class="meta-flashcards" v-if="areFlashcardsSetsReady">
+		<div v-if="areFlashcardsSetsReady" class="meta-flashcards">
 			<div class="margin right">
 				<strong>Wybrane zestawy</strong>
 				<ul>
-					<draggable v-model="flashcardsSetIds" @start="drag=true" @end="drag=false">
+					<draggable
+						v-model="flashcardsSetIds"
+						@start="drag=true"
+						@end="drag=false"
+					>
 						<li
 							v-for="flashcardsSetId in flashcardsSetIds"
 							:key="flashcardsSetId"
@@ -14,9 +18,13 @@
 							<div class="flashcards-set-content">
 								{{flashcardsSetId}}. {{allFlashcardsSets.find(flashcardset => flashcardset.id === flashcardsSetId).name}}
 							</div>
-							<button class="flashcards-set-remove" type="button" @click="removeFlashcardsSet(flashcardsSetId)">
+							<button
+								class="flashcards-set-remove"
+								type="button"
+								@click="removeFlashcardsSet(flashcardsSetId)"
+							>
 								<span class="icon is-small">
-									<i class="fa fa-trash"></i>
+									<i class="fa fa-trash" />
 								</span>
 							</button>
 						</li>
@@ -24,14 +32,14 @@
 				</ul>
 			</div>
 			<wnl-autocomplete
-				class="flashcards-set-add"
 				v-model="flashcardsSetInput"
+				class="flashcards-set-add"
 				:items="flashcardsSetsAutocompleteItems"
-				@change="addFlashcardsSet"
 				label="Wybierz zestaw pytań"
 				placeholder="Id lub treść aby wyszukać"
+				@change="addFlashcardsSet"
 			>
-				<wnl-flashcards-set-autocomplete-item :item="slotProps.item" slot-scope="slotProps"/>
+				<wnl-flashcards-set-autocomplete-item slot-scope="slotProps" :item="slotProps.item" />
 			</wnl-autocomplete>
 		</div>
 	</div>
@@ -79,12 +87,12 @@ import WnlFlashcardsSetAutocompleteItem from 'js/admin/components/lessons/edit/F
 
 export default {
 	name: 'ScreensMetaEditorFlashcards',
-	props: ['value'],
 	components: {
 		draggable,
 		WnlAutocomplete,
 		WnlFlashcardsSetAutocompleteItem,
 	},
+	props: ['value'],
 	data: function() {
 		return {
 			flashcardsSetInput: '',
@@ -121,6 +129,9 @@ export default {
 			allFlashcardsSets: 'flashcardsSets'
 		}),
 	},
+	mounted() {
+		this.flashcardsSetsSetup();
+	},
 	methods: {
 		...mapActions('flashcardsSets', {
 			flashcardsSetsSetup: 'setup'
@@ -133,8 +144,5 @@ export default {
 			this.flashcardsSetIds = this.flashcardsSetIds.filter(id => id !== flashcardsSetId);
 		}
 	},
-	mounted() {
-		this.flashcardsSetsSetup();
-	}
 };
 </script>

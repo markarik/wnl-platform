@@ -5,25 +5,33 @@
 		</div>
 		<div class="tabs">
 			<ul>
-				<li v-for="(room, key) in rooms" :key="key" :class="{'is-active': isActive(room)}">
-					<a @click="changeRoom(room)">{{ room.name }}</a>
+				<li
+					v-for="(room, key) in rooms"
+					:key="key"
+					:class="{'is-active': isActive(room)}"
+				>
+					<a @click="changeRoom(room)">{{room.name}}</a>
 				</li>
 			</ul>
 		</div>
 		<a class="wnl-chat-close">
-			<span v-if="canShowCloseIconInChat" class="icon wnl-chat-close" @click="toggleChat">
-				<i class="fa fa-chevron-right"></i>
+			<span
+				v-if="canShowCloseIconInChat"
+				class="icon wnl-chat-close"
+				@click="toggleChat"
+			>
+				<i class="fa fa-chevron-right" />
 				<span>Ukryj czat</span>
 			</span>
 		</a>
 		<wnl-chat
+			ref="messagesList"
 			:room="currentRoom"
 			:messages="messages"
 			:highlighted-message-id="highlightedMessageId"
 			:has-more="hasMore"
 			:on-scroll-top="pullMore"
 			:loaded="loaded"
-			ref="messagesList"
 		/>
 		<wnl-message-form
 			:room-id="currentRoom.id"
@@ -32,7 +40,7 @@
 			:message-payload="{users: [currentUserProfile]}"
 			@messageSent="onMessageSent"
 			@foundMentions="processMentions"
-		></wnl-message-form>
+		/>
 	</div>
 </template>
 
@@ -125,6 +133,26 @@ export default {
 		hasMore() {
 			return !!this.pagination.has_more;
 		}
+	},
+	watch: {
+		'rooms' (newValue, oldValue) {
+			if (newValue.length === oldValue.length) return;
+			this.changeRoom(newValue[0]);
+		},
+		'$route.query.chatChannel'() {
+			this.$route.query.chatChannel && this.joinRoom();
+		},
+		'$route.query.messageId'() {
+			if (!this.$route.query.messageId) this.highlightedMessageId = 0;
+		}
+	},
+	mounted() {
+		this.joinRoom();
+		this.setListeners();
+	},
+	beforeDestroy() {
+		this.leaveRoom(this.currentRoom.id);
+		this.removeListeners();
 	},
 	methods: {
 		...mapActions(['toggleChat', 'saveMentions']),
@@ -258,25 +286,5 @@ export default {
 			};
 		}
 	},
-	mounted() {
-		this.joinRoom();
-		this.setListeners();
-	},
-	beforeDestroy() {
-		this.leaveRoom(this.currentRoom.id);
-		this.removeListeners();
-	},
-	watch: {
-		'rooms' (newValue, oldValue) {
-			if (newValue.length === oldValue.length) return;
-			this.changeRoom(newValue[0]);
-		},
-		'$route.query.chatChannel'() {
-			this.$route.query.chatChannel && this.joinRoom();
-		},
-		'$route.query.messageId'() {
-			if (!this.$route.query.messageId) this.highlightedMessageId = 0;
-		}
-	}
 };
 </script>

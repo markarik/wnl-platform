@@ -1,10 +1,10 @@
 <template>
-	<div class="wnl-accordion" v-if="hasItems">
+	<div v-if="hasItems" class="wnl-accordion">
 		<wnl-accordion-item
 			v-for="(item, path) in dataSource"
+			:key="path"
 			:config="configWithDefaults"
 			:item="item"
-			:key="path"
 			:level="0"
 			:loading="loading"
 			:path="path"

@@ -3,16 +3,17 @@
 		<wnl-paginated-list
 			:resource-name="'lessons/.filter'"
 		>
-			<p class="title is-4" slot="header">
+			<p slot="header" class="title is-4">
 				Lista lekcji
 				<router-link class="button is-success" :to="{name: 'lessons', params: { lessonId: 'new' } }">+ Dodaj lekcję</router-link>
 			</p>
 			<template slot="list" slot-scope="slotParams">
-				<wnl-lesson-list-item v-for="lesson in slotParams.list"
+				<wnl-lesson-list-item
+					v-for="lesson in slotParams.list"
+					:id="lesson.id"
 					:key="lesson.id"
 					:name="lesson.name"
-					:id="lesson.id">
-				</wnl-lesson-list-item>
+				/>
 			</template>
 		</wnl-paginated-list>
 	</div>

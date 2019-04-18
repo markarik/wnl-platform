@@ -1,12 +1,12 @@
 <template>
 	<div id="app">
-		<wnl-alerts :alerts="alerts"/>
+		<wnl-alerts :alerts="alerts" />
 		<div class="admin-main">
 			<div class="admin-left">
-				<wnl-sidenav></wnl-sidenav>
+				<wnl-sidenav />
 			</div>
 			<div class="admin-right">
-				<router-view></router-view>
+				<router-view />
 			</div>
 		</div>
 	</div>
@@ -49,12 +49,12 @@ export default {
 	computed: {
 		...mapGetters(['currentUserId', 'alerts'])
 	},
+	mounted() {
+		this.setupCurrentUser();
+	},
 	methods: {
 		...mapActions(['setupCurrentUser']),
 		...mapActions('notifications', ['initNotifications']),
-	},
-	mounted() {
-		this.setupCurrentUser();
 	},
 };
 </script>

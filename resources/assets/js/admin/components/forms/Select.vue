@@ -1,16 +1,16 @@
 <template>
 	<div class="field select">
 		<select
-			v-model="selected"
 			ref="select"
+			v-model="selected"
 			@keyup.esc="onEscape"
 		>
 			<option
 				v-for="(option, key) in options"
 				:key="key"
 				:value="option.value"
-				v-text="option.text">
-			</option>
+				v-text="option.text"
+			/>
 		</select>
 	</div>
 </template>
@@ -33,17 +33,17 @@ export default {
 			selected: this.value,
 		};
 	},
-	methods: {
-		onEscape() {
-			this.$refs.select.blur();
-		},
-	},
 	watch: {
 		selected(newValue) {
 			this.$emit('input', newValue);
 		},
 		value(newValue) {
 			this.selected = newValue;
+		},
+	},
+	methods: {
+		onEscape() {
+			this.$refs.select.blur();
 		},
 	},
 };

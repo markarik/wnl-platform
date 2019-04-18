@@ -1,37 +1,37 @@
 <template>
-	<li :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']" :id="`node-${term.id}`">
+	<li :id="`node-${term.id}`" :class="['taxonomy-term-item', isSaving && 'taxonomy-term-item--disabled']">
 		<div :class="['media', 'taxonomy-term-item__content', {'is-selected': isSelected}]">
 			<span class="icon-small taxonomy-term-item__action taxonomy-term-item__action--drag">
-				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']"></i>
+				<i title="drag" :class="['fa', isSaving ? 'fa-circle-o-notch fa-spin' : 'fa-bars']" />
 			</span>
 			<div class="media-content v-central">
 				<span>{{term.tag.name}}</span>
 			</div>
 			<div class="media-right central">
 				<span
+					v-if="childTerms.length"
 					class="icon-small taxonomy-term-item__action"
 					@click="toggle"
-					v-if="childTerms.length"
 				>
-					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]"></i>
+					<i :title="chevronTitle" :class="['fa', 'fa-chevron-down', {'fa-rotate-180': isExpanded}]" />
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
 					@click="onAdd"
 				>
-					<i title="Dodaj" class="fa fa-plus"></i>
+					<i title="Dodaj" class="fa fa-plus" />
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
 					@click="onEdit"
 				>
-					<i title="Edytuj" class="fa fa-pencil"></i>
+					<i title="Edytuj" class="fa fa-pencil" />
 				</span>
 				<span
 					class="icon-small taxonomy-term-item__action"
 					@click="onDelete"
 				>
-					<i title="Usuń" class="fa fa-trash"></i>
+					<i title="Usuń" class="fa fa-trash" />
 				</span>
 			</div>
 		</div>
@@ -119,6 +119,10 @@ export default {
 			return this.expandedTerms.includes(this.term.id)  && this.childTerms.length;
 		},
 	},
+	beforeCreate: function () {
+		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
+		this.$options.components.WnlTaxonomyTermsList = require('./TaxonomyTermsList.vue').default;
+	},
 	methods: {
 		...mapActions('taxonomyTerms', ['setEditorMode']),
 		...mapActions('taxonomyTerms', {
@@ -146,9 +150,5 @@ export default {
 			}
 		},
 	},
-	beforeCreate: function () {
-		// https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
-		this.$options.components.WnlTaxonomyTermsList = require('./TaxonomyTermsList.vue').default;
-	}
 };
 </script>

@@ -7,9 +7,21 @@
 		>
 			<div class="sidenav-icon-wrapper">
 				<span class="icon is-small">
-					<i title="W trakcie..." class="fa fa-ellipsis-h" v-if="isInProgress"></i>
-					<i title="Zrobione!" class="fa fa-check-square-o" v-else-if="isComplete"></i>
-					<i title="Jeszcze przed Tobą" class="fa fa-square-o" v-else></i>
+					<i
+						v-if="isInProgress"
+						title="W trakcie..."
+						class="fa fa-ellipsis-h"
+					/>
+					<i
+						v-else-if="isComplete"
+						title="Zrobione!"
+						class="fa fa-check-square-o"
+					/>
+					<i
+						v-else
+						title="Jeszcze przed Tobą"
+						class="fa fa-square-o"
+					/>
 				</span>
 			</div>
 			<span class="sidenav-item-content">

@@ -1,17 +1,17 @@
 <template>
 	<div class="wnl-modal">
 		<div class="modal is-active">
-			<div class="modal-background" @click.stop="$emit('closeModal')"></div>
+			<div class="modal-background" @click.stop="$emit('closeModal')" />
 			<div class="modal-content">
 				<div class="box">
-					<slot></slot>
+					<slot />
 				</div>
 			</div>
 			<button
 				class="modal-close is-large"
 				aria-label="close"
 				@click.stop="$emit('closeModal')"
-			></button>
+			/>
 		</div>
 	</div>
 </template>

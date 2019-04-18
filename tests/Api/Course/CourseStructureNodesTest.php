@@ -8,6 +8,7 @@ use App\Models\Lesson;
 use App\Models\LessonProduct;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\UserLesson;
 use App\Models\UserSubscription;
@@ -61,19 +62,87 @@ class CourseStructureNodesTest extends ApiTestCase
 
 		//// ASSERT ////
 		$response->assertStatus(200);
-		$this->assertCount(2, $responseLessons);
+		$this->assertCount(1, $responseLessons);
 
 		// Lesson in latest paid course product
 		$this->assertIsArray($responseLessons[$lessonInLatestPaidCourseProduct->id]);
 		$this->assertEquals($mediumTimeAgo->timestamp, $responseLessons[$lessonInLatestPaidCourseProduct->id]['startDate']);
 		$this->assertTrue($responseLessons[$lessonInLatestPaidCourseProduct->id]['isAccessible']);
 		$this->assertTrue($responseLessons[$lessonInLatestPaidCourseProduct->id]['isAvailable']);
+	}
 
-		// Lesson not in latest paid course product
-		$this->assertIsArray($responseLessons[$lessonNotInLatestPaidCourseProduct->id]);
-		$this->assertNull($responseLessons[$lessonNotInLatestPaidCourseProduct->id]['startDate']);
-		$this->assertFalse($responseLessons[$lessonNotInLatestPaidCourseProduct->id]['isAccessible']);
-		$this->assertFalse($responseLessons[$lessonNotInLatestPaidCourseProduct->id]['isAvailable']);
+	public function testLessonInCourseButNotProductRegularUser() {
+		//// PREPARE ////
+		$now = Carbon::now();
+
+		/** @var User $user */
+		$user = factory(User::class)->create();
+		factory(UserSubscription::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$product = $this->createProductWithOrder($user, $now, true);
+
+		$course = factory(Course::class)->create();
+		CourseProvider::shouldReceive('getCourseId')->andReturn($course->id);
+
+		/** @var Collection $lessons */
+		$lessons = factory(Lesson::class, 2)->create();
+
+		$lessonInProduct = $lessons->get(0);
+		$this->addLessonToCourseStructure($course, $lessonInProduct);
+		$this->addLessonToProduct($product, $lessonInProduct, $now);
+
+		$lessonNotInProduct = $lessons->get(1);
+		$this->addLessonToCourseStructure($course, $lessonNotInProduct);
+
+		//// RUN ////
+		$response = $this
+			->actingAs($user)
+			->json('GET', $this->url('/course_structure_nodes/' . $course->id . '?include=lessons,structurable'));
+		$responseLessons = $response->json('included.lessons');
+
+		//// ASSERT ////
+		$response->assertStatus(200);
+		$this->assertCount(1, $responseLessons);
+		$this->assertIsArray($responseLessons[$lessonInProduct->id]);
+	}
+
+	public function testLessonInCourseButNotProductAdmin() {
+		//// PREPARE ////
+		$now = Carbon::now();
+
+		/** @var User $user */
+		$user = factory(User::class)->create();
+		$adminRole = Role::byName('admin');
+		$user->roles()->attach($adminRole);
+
+		$product = $this->createProductWithOrder($user, $now, true);
+
+		$course = factory(Course::class)->create();
+		CourseProvider::shouldReceive('getCourseId')->andReturn($course->id);
+
+		/** @var Collection $lessons */
+		$lessons = factory(Lesson::class, 2)->create();
+
+		$lessonInProduct = $lessons->get(0);
+		$this->addLessonToCourseStructure($course, $lessonInProduct);
+		$this->addLessonToProduct($product, $lessonInProduct, $now);
+
+		$lessonNotInProduct = $lessons->get(1);
+		$this->addLessonToCourseStructure($course, $lessonNotInProduct);
+
+		//// RUN ////
+		$response = $this
+			->actingAs($user)
+			->json('GET', $this->url('/course_structure_nodes/' . $course->id . '?include=lessons,structurable'));
+		$responseLessons = $response->json('included.lessons');
+
+		//// ASSERT ////
+		$response->assertStatus(200);
+		$this->assertCount(2, $responseLessons);
+		$this->assertIsArray($responseLessons[$lessonInProduct->id]);
+		$this->assertIsArray($responseLessons[$lessonNotInProduct->id]);
 	}
 
 	public function testLessonsWithCustomStartDates() {

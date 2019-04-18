@@ -1,12 +1,12 @@
 <template>
-		<div class="user-autocomplete-item">
-			<div class="autocomplete-box__avatar">
-				<wnl-avatar :full-name="item.full_name" :url="item.avatar"></wnl-avatar>
-			</div>
-			<div class="autocomplete-box__text">
-				{{ item.full_name }}
-			</div>
+	<div class="user-autocomplete-item">
+		<div class="autocomplete-box__avatar">
+			<wnl-avatar :full-name="item.full_name" :url="item.avatar" />
 		</div>
+		<div class="autocomplete-box__text">
+			{{item.full_name}}
+		</div>
+	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>

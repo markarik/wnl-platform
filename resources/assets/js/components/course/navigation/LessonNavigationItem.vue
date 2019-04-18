@@ -1,17 +1,16 @@
 <template>
 	<div class="item todo">
 		<router-link
-				class="item-wrapper"
-				:class="{'is-active': isActive, 'is-completed': isCompleted, 'is-disabled': isDisabled}"
-				:to="to"
+			class="item-wrapper"
+			:class="{'is-active': isActive, 'is-completed': isCompleted, 'is-disabled': isDisabled}"
+			:to="to"
 		>
 			<span class="sidenav-item-content">
-				<slot name="title"></slot>
-				<span class="sidenav-item-meta" v-if="meta">{{meta}}</span>
+				<slot name="title" />
+				<span v-if="meta" class="sidenav-item-meta">{{meta}}</span>
 			</span>
 		</router-link>
-		<slot name="children">
-		</slot>
+		<slot name="children" />
 	</div>
 </template>
 

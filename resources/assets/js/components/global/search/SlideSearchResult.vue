@@ -1,16 +1,20 @@
 <template>
-	<wnl-slide-link class="slide-router-link unselectable" :context="context" blank-page="_blank">
+	<wnl-slide-link
+		class="slide-router-link unselectable"
+		:context="context"
+		blank-page="_blank"
+	>
 		<div class="slide-context">
 			<div class="group-and-lesson">
-					<span
-						v-for="(groupName, index) in groupNames"
-						:key="index"
-						class="group-name"
-						:title="groupName"
-					>
-						{{truncate(groupName, 15)}}
-						<span class="icon is-small"><i class="fa fa-angle-right"></i></span>
-					</span>
+				<span
+					v-for="(groupName, index) in groupNames"
+					:key="index"
+					class="group-name"
+					:title="groupName"
+				>
+					{{truncate(groupName, 15)}}
+					<span class="icon is-small"><i class="fa fa-angle-right" /></span>
+				</span>
 
 				<span class="lesson-name" :title="lessonName">{{truncate(lessonName, 30)}}</span>
 			</div>
@@ -21,15 +25,15 @@
 		<div class="slide-thumb" @click="onThumbnailClick">
 			<div class="thumb-meta">
 				<span class="slide-number">{{slideNumber}}</span>
-				<span class="icon is-tiny" v-if="media"><i class="fa" :class="media.icon"></i></span>
+				<span v-if="media" class="icon is-tiny"><i class="fa" :class="media.icon" /></span>
 			</div>
-			<p class="thumb-heading metadata" v-html="header"></p>
-			<div class="slide-snippet" v-html="snippet"></div>
-			<div class="slide-snippet has-media" v-if="media">
+			<p class="thumb-heading metadata" v-html="header" />
+			<div class="slide-snippet" v-html="snippet" />
+			<div v-if="media" class="slide-snippet has-media">
 				<span class="icon is-tiny">
-					<i class="fa" :class="media.icon"></i>
+					<i class="fa" :class="media.icon" />
 				</span>
-				{{ media.text }}
+				{{media.text}}
 			</div>
 			<div v-if="page" class="page">{{page}}</div>
 		</div>
@@ -139,14 +143,14 @@ const mediaMap = {
 
 export default {
 	name: 'SlideSearchResult',
+	components: {
+		'wnl-slide-link': SlideLink,
+	},
 	props: {
 		hit: {
 			required: true,
 			type: Object,
 		},
-	},
-	components: {
-		'wnl-slide-link': SlideLink,
 	},
 	computed: {
 		...mapGetters('course', ['getLesson', 'getGroupsByLessonId']),

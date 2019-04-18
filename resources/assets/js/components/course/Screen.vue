@@ -3,18 +3,18 @@
 		<h4>{{name}}</h4>
 		<component
 			:is="component"
+			:key="screenData.id"
 			:screen-data="screenData"
 			:context="model"
-			:key="screenData.id"
 			@userEvent="proxyUserEvent"
 		/>
 		<wnl-qna
-			:sorting-enabled="true"
 			v-if="showQna"
+			:sorting-enabled="true"
 			:context-tags="tags"
 			class="wnl-screen-qna"
 			:discussion-id="screenData.discussion_id"
-		></wnl-qna>
+		/>
 	</div>
 </template>
 
@@ -119,6 +119,16 @@ export default {
 			return TYPES_MAP[this.type].feature_component;
 		}
 	},
+	watch: {
+		screenId() {
+			this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
+			this.trackScreenOpen();
+		}
+	},
+	mounted() {
+		this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
+		this.trackScreenOpen();
+	},
 	methods: {
 		...mapActions('qna', ['fetchQuestionsForDiscussion']),
 		trackScreenOpen() {
@@ -130,15 +140,5 @@ export default {
 			});
 		}
 	},
-	mounted() {
-		this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
-		this.trackScreenOpen();
-	},
-	watch: {
-		screenId() {
-			this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
-			this.trackScreenOpen();
-		}
-	}
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
 	<div class="scrollable-main-container" :style="{height: `${elementHeight}px`}">
 		<template v-if="!shouldDisplaySatisfactionGuaranteeModal">
-			<div class="wnl-lesson" v-if="shouldShowLesson">
+			<div v-if="shouldShowLesson" class="wnl-lesson">
 				<div class="wnl-lesson-view">
 					<div class="level wnl-screen-title">
 						<div class="level-left">
@@ -15,15 +15,15 @@
 							</div>
 						</div>
 					</div>
-					<router-view v-if="!isLessonLoading" @userEvent="onUserEvent"/>
+					<router-view v-if="!isLessonLoading" @userEvent="onUserEvent" />
 				</div>
 				<div class="wnl-lesson-previous-next-nav">
-					<wnl-previous-next></wnl-previous-next>
+					<wnl-previous-next />
 				</div>
 			</div>
 			<div v-else-if="isPlanBuilderEnabled">
 				<p class="has-text-centered margin vertical">
-					<img src="https://media.giphy.com/media/BCfw7hyQeq9TNsC7st/giphy.gif"/>
+					<img src="https://media.giphy.com/media/BCfw7hyQeq9TNsC7st/giphy.gif">
 				</p>
 				<h5 class="title is-5 has-text-centered">Zgodnie z Twoim planem, ta lekcja otworzy się <strong>{{lessonStartDate}}</strong></h5>
 				<p class="has-text-centered margin vertical">Jeżeli chcesz zrealizować tę lekcję dziś, <router-link :to="{name: 'lessons-availabilites'}">zmień swój plan pracy</router-link>.</p>
@@ -31,7 +31,7 @@
 			<div v-else>
 				<h2 class="title is-2 has-text-centered margin vertical">{{lesson.name}}️</h2>
 				<p class="has-text-centered margin vertical">
-					<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif"/>
+					<img src="https://media.giphy.com/media/MQEBfbPco0fao/giphy.gif">
 				</p>
 				<h3 class="title is-3 has-text-centered"><strong>Lekcja nieaktywna</strong>🛡️</h3>
 				<h5 class="title is-5 has-text-centered">Lekcja będzie dostępna od <strong>{{lessonStartDate}}</strong></h5>
@@ -54,7 +54,7 @@
 			<template slot="title">⚠️ Rozpoczęcie nauki przed rozwiązaniem Wstępnego LEK-u wiąże się z utratą Gwarancji Satysfakcji!</template>
 			<template slot="body">Odzyskanie Gwarancji Satysfakcji jest możliwe przed oficjalnym startem kursu. Warunkiem jest usunięcie postępu, ułożenie nowego planu pracy i rozwiązanie Wstępnego LEK-u przed rozpoczęciem pierwszej obowiązkowej lekcji.</template>
 			<template slot="footer">
-				<span v-html="$t('ui.satisfactionGuarantee.noteInLesson', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
+				<span v-html="$t('ui.satisfactionGuarantee.noteInLesson', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})" />
 			</template>
 			<template slot="close">Wróć na dashboard</template>
 			<template slot="submit">Rozumiem, akceptuję</template>
@@ -238,6 +238,23 @@ export default {
 		shouldShowLesson() {
 			return this.isLessonAvailable(this.lessonId);
 		},
+	},
+	watch: {
+		lessonId() {
+			this.setup();
+		},
+		'$route'() {
+			if (!this.shouldDisplaySatisfactionGuaranteeModal) {
+				this.updateLessonProgress();
+			}
+		},
+	},
+	mounted () {
+		this.setup();
+	},
+	beforeDestroy () {
+		window.Echo.leave(this.presenceChannel);
+		window.removeEventListener('resize', this.updateElementHeight);
 	},
 	methods: {
 		...mapActions('progress', [
@@ -423,23 +440,6 @@ export default {
 			this.toggleOverlay({ source: 'lesson', display: false });
 			window.addEventListener('resize', this.updateElementHeight);
 		}
-	},
-	mounted () {
-		this.setup();
-	},
-	beforeDestroy () {
-		window.Echo.leave(this.presenceChannel);
-		window.removeEventListener('resize', this.updateElementHeight);
-	},
-	watch: {
-		lessonId() {
-			this.setup();
-		},
-		'$route'() {
-			if (!this.shouldDisplaySatisfactionGuaranteeModal) {
-				this.updateLessonProgress();
-			}
-		},
 	},
 };
 </script>

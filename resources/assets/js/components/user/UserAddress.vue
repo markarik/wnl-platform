@@ -3,7 +3,7 @@
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
-					{{ $t('user.address.address') }}
+					{{$t('user.address.address')}}
 				</div>
 			</div>
 		</div>
@@ -15,11 +15,11 @@
 			:populate="!address"
 			:value="address"
 		>
-			<wnl-form-text name="recipient">{{ $t('user.address.recipient') }}</wnl-form-text>
-			<wnl-form-text name="street">{{ $t('user.address.street') }}</wnl-form-text>
-			<wnl-form-text name="zip">{{ $t('user.address.zip') }}</wnl-form-text>
-			<wnl-form-text name="city">{{ $t('user.address.city') }}</wnl-form-text>
-			<wnl-form-text name="phone">{{ $t('user.address.phone') }}</wnl-form-text>
+			<wnl-form-text name="recipient">{{$t('user.address.recipient')}}</wnl-form-text>
+			<wnl-form-text name="street">{{$t('user.address.street')}}</wnl-form-text>
+			<wnl-form-text name="zip">{{$t('user.address.zip')}}</wnl-form-text>
+			<wnl-form-text name="city">{{$t('user.address.city')}}</wnl-form-text>
+			<wnl-form-text name="phone">{{$t('user.address.phone')}}</wnl-form-text>
 		</wnl-form>
 	</div>
 </template>
@@ -32,6 +32,10 @@
 import { Form, Text } from 'js/components/global/form';
 
 export default {
+	components: {
+		'wnl-form': Form,
+		'wnl-form-text': Text,
+	},
 	props: {
 		resourceRoute: {
 			type: String,
@@ -40,10 +44,6 @@ export default {
 		address: {
 			type: Object,
 		},
-	},
-	components: {
-		'wnl-form': Form,
-		'wnl-form-text': Text,
 	},
 };
 </script>

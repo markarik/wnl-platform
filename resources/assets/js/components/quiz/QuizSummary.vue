@@ -1,6 +1,6 @@
 <template>
 	<div class="wnl-quiz-summary">
-		<wnl-quiz-stats></wnl-quiz-stats>
+		<wnl-quiz-stats />
 		<wnl-quiz-list
 			:all-questions="getQuestionsWithAnswersAndStats"
 			:get-reaction="getReaction"
@@ -28,11 +28,11 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default {
 	name: 'QuizSummary',
-	mixins: [emits_events],
 	components: {
 		'wnl-quiz-list': QuizList,
 		'wnl-quiz-stats': QuizStats,
 	},
+	mixins: [emits_events],
 	computed: {
 		...mapGetters('quiz', [
 			'isComplete',

@@ -1,5 +1,9 @@
 <template>
-	<div class="scrollable-main-container wnl-user-profile" :class="{mobile: isMobileProfile}" v-if="currentUserStats">
+	<div
+		v-if="currentUserStats"
+		class="scrollable-main-container wnl-user-profile"
+		:class="{mobile: isMobileProfile}"
+	>
 		<div class="level wnl-screen-title">
 			<div class="level-left">
 				<div class="level-item big strong">
@@ -8,8 +12,8 @@
 			</div>
 		</div>
 		<div class="reset-progress">
-			<p v-t="'progress.reset.info'"/>
-			<button @click="satisfactionGuaranteeModalVisible = true" class="button is-danger to-right">Wyczyść postęp w nauce</button>
+			<p v-t="'progress.reset.info'" />
+			<button class="button is-danger to-right" @click="satisfactionGuaranteeModalVisible = true">Wyczyść postęp w nauce</button>
 		</div>
 
 		<div class="level wnl-screen-title">
@@ -105,6 +109,9 @@ export default {
 			return Object.values(this.currentUserStats.social).reduce((a,b) => a + b, 0);
 		}
 	},
+	mounted() {
+		this.fetchCurrentUserStats();
+	},
 	methods: {
 		...mapActions(['fetchCurrentUserStats', 'toggleOverlay']),
 		...mapActions('progress', ['deleteProgress', 'setupCourse']),
@@ -126,8 +133,5 @@ export default {
 			}
 		}
 	},
-	mounted() {
-		this.fetchCurrentUserStats();
-	}
 };
 </script>

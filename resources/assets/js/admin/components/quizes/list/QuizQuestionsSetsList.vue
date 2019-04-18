@@ -1,5 +1,5 @@
 <template>
-	<div class="quiz-questions-sets-list" >
+	<div class="quiz-questions-sets-list">
 		<wnl-paginated-list
 			:resource-name="'quiz_sets/.filter'"
 		>
@@ -11,10 +11,11 @@
 				>+ Nowy zestaw</router-link>
 			</template>
 			<template slot="list" slot-scope="slotParams">
-				<wnl-quiz-questions-sets-list-item v-for="quizQuestionsSet in slotParams.list"
+				<wnl-quiz-questions-sets-list-item
+					v-for="quizQuestionsSet in slotParams.list"
+					:id="quizQuestionsSet.id"
 					:key="quizQuestionsSet.id"
 					:name="quizQuestionsSet.name"
-					:id="quizQuestionsSet.id"
 				/>
 			</template>
 		</wnl-paginated-list>

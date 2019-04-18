@@ -1,12 +1,13 @@
 <template>
 	<div>
-		<wnl-alert v-for="(alert, timestamp) in alerts"
+		<wnl-alert
+			v-for="(alert, timestamp) in alerts"
+			:key="timestamp"
 			:alert="alert"
 			css-class="fixed"
-			:key="timestamp"
 			:timestamp="timestamp"
 			@delete="onDelete"
-		></wnl-alert>
+		/>
 
 		<a class="button is-primary" @click="updateCharts">Aktualizuj wszystkie diagramy</a>
 	</div>

@@ -1,6 +1,6 @@
 <template>
 	<router-link :to="to" :target="blankPage">
-        <slot></slot>
+		<slot />
 	</router-link>
 </template>
 

@@ -1,36 +1,45 @@
 <template>
 	<div class="dropdown-container">
-		<wnl-dropdown :options="{isWide: true}" @toggled="toggle" ref="dropdown">
-			<div slot="activator" class="notifications-toggle"
-				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }">
-				<div v-if="isOn && !!unseenCount" class="counter">{{ unseenCount }}</div>
-				<span v-if="!connecting" class="loader"><i class="fas fa-circle-notch fa-pulse"></i></span>
+		<wnl-dropdown
+			ref="dropdown"
+			:options="{isWide: true}"
+			@toggled="toggle"
+		>
+			<div
+				slot="activator"
+				class="notifications-toggle"
+				:class="{ 'is-active': isActive, 'is-off': !isOn, 'is-desktop': !isTouchScreen }"
+			>
+				<div v-if="isOn && !!unseenCount" class="counter">{{unseenCount}}</div>
+				<span v-if="!connecting" class="loader"><i class="fas fa-circle-notch fa-pulse" /></span>
 				<span class="icon">
-					<i class="fa" :class="iconClass"></i>
+					<i class="fa" :class="iconClass" />
 				</span>
 			</div>
 			<div slot="content">
 				<div class="feed-header">
-					<span class="feed-heading" v-t="'notifications.chat.heading'"/>
-					<wnl-notifications-toggle :setting="setting" :icons="icons"/>
+					<span v-t="'notifications.chat.heading'" class="feed-heading" />
+					<wnl-notifications-toggle :setting="setting" :icons="icons" />
 				</div>
 
 				<div class="feed-body">
-					<div class="zero-state" v-if="isEmpty">
-						<img class="zero-state-image"
+					<div v-if="isEmpty" class="zero-state">
+						<img
+							class="zero-state-image"
 							:alt="$t('notifications.personal.zeroStateImage')"
 							:src="zeroStateImage"
-							:title="$t('notifications.personal.zeroStateImage')">
-						<p class="zero-state-text" v-t="'notifications.chat.zeroState'"/>
+							:title="$t('notifications.personal.zeroStateImage')"
+						>
+						<p v-t="'notifications.chat.zeroState'" class="zero-state-text" />
 					</div>
-					<div class="feed-content" v-else>
-						<wnl-conversations-list :with-search="false"/>
+					<div v-else class="feed-content">
+						<wnl-conversations-list :with-search="false" />
 					</div>
 				</div>
 
 				<div class="feed-footer">
 					<router-link :to="{ name: 'messages' }">
-						<span class="messages-dashboard-redirect" v-t="'notifications.chat.footer'"/>
+						<span v-t="'notifications.chat.footer'" class="messages-dashboard-redirect" />
 					</router-link>
 				</div>
 			</div>

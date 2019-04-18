@@ -17,13 +17,13 @@
 				slot-scope="parentAutocomplete"
 				:selected="parent"
 				@change="parentAutocomplete.validateAndChangeParent"
-			></wnl-structure-node-editor-node-autocomplete>
+			/>
 
 			<wnl-structure-node-editor-structurable-autocomplete
 				slot="autocomplete"
 				:selected="structurable"
 				@change="onSelectStructurable"
-			></wnl-structure-node-editor-structurable-autocomplete>
+			/>
 		</wnl-nested-set-editor-form>
 	</div>
 </template>

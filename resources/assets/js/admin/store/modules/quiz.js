@@ -137,7 +137,7 @@ const actions = {
 				return response.data;
 			})
 			.catch(exception => {
-				console.error(exception);
+				$wnl.logger.error(exception);
 			});
 	},
 	async deleteQuizQuestion({ commit }, id) {

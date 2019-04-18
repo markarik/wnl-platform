@@ -2,14 +2,14 @@
 	<div>
 		<div class="quill-container">
 			<div ref="quill">
-				<slot></slot>
+				<slot />
 			</div>
 		</div>
 		<wnl-upload
 			v-if="uploadEnabled"
-			@success="onUploadSuccess"
 			endpoint="upload"
 			class="upload"
+			@success="onUploadSuccess"
 		>
 			<a class="button is-small is-outlined is-primary margin top">
 				Wstaff obraz
@@ -73,12 +73,14 @@ export default {
 			editor: null,
 		};
 	},
-	methods: {
-		onTextChange() {
-			this.$emit('input', this.editor.innerHTML);
+	watch: {
+		focused (val) {
+			this.editor[val ? 'focus' : 'blur']();
 		},
-		onUploadSuccess(data) {
-			this.editor.innerHTML = this.editor.innerHTML + `<img src="${data}"/>`;
+		value (newValue) {
+			if (newValue !== this.editor.innerHTML) {
+				this.editor.innerHTML = newValue || '';
+			}
 		}
 	},
 	mounted () {
@@ -91,14 +93,12 @@ export default {
 			this.quill.on('text-change', this.onTextChange);
 		});
 	},
-	watch: {
-		focused (val) {
-			this.editor[val ? 'focus' : 'blur']();
+	methods: {
+		onTextChange() {
+			this.$emit('input', this.editor.innerHTML);
 		},
-		value (newValue) {
-			if (newValue !== this.editor.innerHTML) {
-				this.editor.innerHTML = newValue || '';
-			}
+		onUploadSuccess(data) {
+			this.editor.innerHTML = this.editor.innerHTML + `<img src="${data}"/>`;
 		}
 	}
 };

@@ -5,8 +5,10 @@
 		<iframe
 			class="guide-iframe"
 			src="https://www.youtube.com/embed/IkPrPRegL_8"
-			frameborder="0" allow="encrypted-media" allowfullscreen
-		></iframe>
+			frameborder="0"
+			allow="encrypted-media"
+			allowfullscreen
+		/>
 	</div>
 </template>
 

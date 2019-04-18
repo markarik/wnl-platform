@@ -3,33 +3,42 @@
 		<header class="card-header">
 			<p class="card-header-title">{{title}}</p>
 			<p class="events-counter">
-				<span class="tag is-light is-medium" v-t="'tasks.task.fields.eventsCount'"/>
+				<span v-t="'tasks.task.fields.eventsCount'" class="tag is-light is-medium" />
 				<span class="tag is-danger is-medium">{{eventsCount}}</span>
 			</p>
 		</header>
 		<div class="card-content task-summary">
 			<div class="tags field has-addons">
-				<span class="tag is-light is-medium" v-t="'tasks.task.fields.status'"/>
+				<span v-t="'tasks.task.fields.status'" class="tag is-light is-medium" />
 				<wnl-dropdown>
-					<p slot="activator" class="tag is-medium" :class="statusTag.class">
+					<p
+						slot="activator"
+						class="tag is-medium"
+						:class="statusTag.class"
+					>
 						{{statusTag.text}}&nbsp;
 						<span class="icon is-small">
-							<i class="fa fa-angle-down"></i>
+							<i class="fa fa-angle-down" />
 						</span>
 					</p>
 					<div slot="content">
-						<div @click="$emit('statusSelected', {status: st, id: task.id})" class="dropdown-item" v-for="(st, index) in status" :key="index">
+						<div
+							v-for="(st, index) in status"
+							:key="index"
+							class="dropdown-item"
+							@click="$emit('statusSelected', {status: st, id: task.id})"
+						>
 							{{$t(`tasks.task.status.${st}`)}}
 						</div>
 					</div>
 				</wnl-dropdown>
 			</div>
 			<div class="tags field has-addons is-relative">
-				<span class="tag is-light is-medium" v-t="'tasks.task.fields.createdAt'"/>
+				<span v-t="'tasks.task.fields.createdAt'" class="tag is-light is-medium" />
 				<span class="tag is-medium">{{formatedCreatedAt}}</span>
 			</div>
 			<div class="tags field has-addons is-relative">
-				<span class="tag is-light is-medium" v-t="'tasks.task.fields.assignee'"/>
+				<span v-t="'tasks.task.fields.assignee'" class="tag is-light is-medium" />
 				<wnl-moderators-autocomplete
 					class="margin horizontal"
 					:selected="task.assignee"
@@ -38,15 +47,19 @@
 				/>
 			</div>
 			<div class="tags field has-addons is-relative">
-				<span class="tag is-light is-medium" v-t="'tasks.task.fields.updatedAt'"/>
+				<span v-t="'tasks.task.fields.updatedAt'" class="tag is-light is-medium" />
 				<span class="tag is-medium">{{formatedUpdatedAt}}</span>
 			</div>
 		</div>
 		<div class="card-content">
-			<wnl-task-events :events="task.events"/>
+			<wnl-task-events :events="task.events" />
 		</div>
 		<footer class="card-footer">
-			<router-link target="_blank" :to="taskContext" class="card-footer-item">{{$t('tasks.task.action.go')}}</router-link>
+			<router-link
+				target="_blank"
+				:to="taskContext"
+				class="card-footer-item"
+			>{{$t('tasks.task.action.go')}}</router-link>
 			<div class="card-footer-item" @click="$emit('assign', {assignee_id: currentUserId, id: task.id})">Biore to!</div>
 		</footer>
 	</div>
@@ -95,6 +108,11 @@ import WnlModeratorsAutocomplete from 'js/components/moderators/ModeratorsAutoco
 import { timeFromS } from 'js/utils/time';
 
 export default {
+	components: {
+		WnlDropdown,
+		WnlModeratorsAutocomplete,
+		WnlTaskEvents,
+	},
 	props: {
 		task: {
 			type: Object,
@@ -108,11 +126,6 @@ export default {
 			type: Boolean,
 			default: false
 		}
-	},
-	components: {
-		WnlDropdown,
-		WnlModeratorsAutocomplete,
-		WnlTaskEvents,
 	},
 	data() {
 		return {

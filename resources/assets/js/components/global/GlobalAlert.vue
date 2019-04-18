@@ -1,8 +1,12 @@
 <template>
 	<div>
 		<div class="notification" :class="typeToClass(type)">
-			<slot/>
-			<button v-if="dismissable" @click="$emit('onDismiss', {id: id})" class="delete"></button>
+			<slot />
+			<button
+				v-if="dismissable"
+				class="delete"
+				@click="$emit('onDismiss', {id: id})"
+			/>
 		</div>
 	</div>
 </template>

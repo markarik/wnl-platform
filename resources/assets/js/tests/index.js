@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 require('jsdom-global')();
 
 const Vue = require('vue');

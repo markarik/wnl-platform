@@ -1,9 +1,13 @@
 <template>
 	<div class="flashcard">
 		<div class="flashcard-content">{{id}}. {{content}}</div>
-		<button class="flashcard-remove" type="button" @click="$emit('remove')">
+		<button
+			class="flashcard-remove"
+			type="button"
+			@click="$emit('remove')"
+		>
 			<span class="icon is-small">
-				<i class="fa fa-trash"></i>
+				<i class="fa fa-trash" />
 			</span>
 		</button>
 	</div>

@@ -1,22 +1,22 @@
 <template>
 	<div>
-		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')"/>
+		<wnl-text-overlay :is-loading="isLoading" :text="$t('lessonsAvailability.loader')" />
 		<div class="open-all">
 			<div class="level">
-				{{ $t('lessonsAvailability.openAllLessons.annotation') }}
+				{{$t('lessonsAvailability.openAllLessons.annotation')}}
 			</div>
 			<div class="level">
-				{{ $t('lessonsAvailability.openAllLessons.paragraphAnnotation')}}
-				{{ this.completedLessonsLength }}/{{ this.availableLength }}.
-				wyświetli się: {{ this.completedLessonsLength }}/{{this.requiredLength}}.
+				{{$t('lessonsAvailability.openAllLessons.paragraphAnnotation')}}
+				{{completedLessonsLength}}/{{availableLength}}.
+				wyświetli się: {{completedLessonsLength}}/{{requiredLength}}.
 			</div>
-			<span>{{ $t('lessonsAvailability.openAllLessons.paragraphExplanation')}}</span>
+			<span>{{$t('lessonsAvailability.openAllLessons.paragraphExplanation')}}</span>
 		</div>
 		<div class="accept-plan">
 			<a
-				@click="acceptPlan"
 				class="button button is-primary is-outlined is-big"
-			>{{ $t('lessonsAvailability.buttons.acceptPlan') }}
+				@click="acceptPlan"
+			>{{$t('lessonsAvailability.buttons.acceptPlan')}}
 			</a>
 		</div>
 	</div>
@@ -70,26 +70,19 @@ export default {
 	},
 	computed: {
 		...mapGetters('course', [
+			'getLessons',
 			'getRequiredLessons',
-			'userLessons',
 		]),
 		...mapGetters('progress', ['getCompleteLessons']),
 		...mapGetters(['currentUserId']),
 		availableLength() {
-			return this.userLessons.filter(lesson => lesson.isAvailable && lesson.is_required).length;
+			return this.getLessons.filter(lesson => lesson.isAvailable && lesson.is_required).length;
 		},
 		requiredLength() {
-			return this.userLessons.filter(lesson => lesson.is_required).length;
-		},
-		inProgressLessonsLength() {
-			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
-				return !this.completedLessons.includes(Number(requiredLesson));
-			}).length;
+			return this.getRequiredLessons.length;
 		},
 		completedLessonsLength() {
-			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
-				return this.completedLessons.includes(Number(requiredLesson));
-			}).length;
+			return this.completedLessons.length;
 		},
 		completedLessons() {
 			return this.getCompleteLessons(1).map(lesson => lesson.id);

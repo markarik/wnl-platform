@@ -1,16 +1,28 @@
 <template>
 	<div class="flashcards">
 		<div class="flashcards__title content">
-			<h2 class="flashcards__title__header" id="flashacardsSetHeader">Zestawy powtórkowe na dziś</h2>
+			<h2 id="flashacardsSetHeader" class="flashcards__title__header">Zestawy powtórkowe na dziś</h2>
 			<ul class="flashcards__title__list">
-				<li class="flashcards__title__list__item" v-for="set in sets" :key="set.id"
-					@click="scrollToSet(set.id)">{{set.name}}
+				<li
+					v-for="set in sets"
+					:key="set.id"
+					class="flashcards__title__list__item"
+					@click="scrollToSet(set.id)"
+				>{{set.name}}
 				</li>
 			</ul>
 		</div>
-		<div class="flashcards__description content" v-html="screenData.content"/>
-		<div class="flashcards-set" v-for="set in sets" :key="set.id">
-			<div class="flashcards-set__title" :name="set.name" :id="`set-${set.id}`">
+		<div class="flashcards__description content" v-html="screenData.content" />
+		<div
+			v-for="set in sets"
+			:key="set.id"
+			class="flashcards-set"
+		>
+			<div
+				:id="`set-${set.id}`"
+				class="flashcards-set__title"
+				:name="set.name"
+			>
 				<h3 class="flashcards-set__title__header">
 					{{set.name}}
 				</h3>
@@ -19,29 +31,33 @@
 			<div class="flashcards-set__results">
 				<table class="flashcards-set__results__table">
 					<tr class="text--easy">
-						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]"></i></span></td>
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.easy.iconClass]" /></span></td>
 						<td>{{ANSWERS_MAP.easy.text}}</td>
 						<td>{{getEasyForSet(set)}}</td>
 					</tr>
 					<tr class="text--hard">
-						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]"></i></span></td>
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.hard.iconClass]" /></span></td>
 						<td>{{ANSWERS_MAP.hard.text}}</td>
 						<td>{{getHardForSet(set)}}</td>
 					</tr>
 					<tr class="text--do-not-know">
-						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]"></i></span></td>
+						<td><span class="icon"><i :class="['fa', ANSWERS_MAP.do_not_know.iconClass]" /></span></td>
 						<td>{{ANSWERS_MAP.do_not_know.text}}</td>
 						<td>{{getDontKnowForSet(set)}}</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td />
 						<td>Bez odpowiedzi</td>
 						<td>{{getUnsolvedForSet(set)}}</td>
 					</tr>
 				</table>
 
-				<button type="button" @click="onRetakeSet(set)" class="flashcards-set__retake button">
-					<span class="icon"><i class="fa fa-undo"></i></span>
+				<button
+					type="button"
+					class="flashcards-set__retake button"
+					@click="onRetakeSet(set)"
+				>
+					<span class="icon"><i class="fa fa-undo" /></span>
 					ponów cały zestaw
 				</button>
 			</div>
@@ -72,7 +88,7 @@
 			</ol>
 		</div>
 		<div class="flashcards-scroll" @click="scrollTop">
-			<span class="icon is-small"><i class="fa fa-arrow-up"></i></span>
+			<span class="icon is-small"><i class="fa fa-arrow-up" /></span>
 		</div>
 	</div>
 </template>
@@ -201,6 +217,11 @@ import WnlContentItemClassifierEditor from 'js/components/global/contentClassifi
 import WnlActivateWithShortcutKey from 'js/components/global/ActivateWithShortcutKey';
 
 export default {
+	components: {
+		WnlFlashcardItem,
+		WnlContentItemClassifierEditor,
+		WnlActivateWithShortcutKey,
+	},
 	mixins: [emits_events],
 	props: {
 		screenData: {
@@ -211,11 +232,6 @@ export default {
 			type: String,
 			required: true
 		}
-	},
-	components: {
-		WnlFlashcardItem,
-		WnlContentItemClassifierEditor,
-		WnlActivateWithShortcutKey,
 	},
 	data() {
 		return {
@@ -247,32 +263,6 @@ export default {
 			return (set) => set.flashcards.filter(flashcard => flashcard.answer === 'do_not_know').length;
 		}
 	},
-	methods: {
-		...mapActions(['toggleOverlay']),
-		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
-		...mapActions('flashcards', ['setFlashcardsSet']),
-		...mapMutations('flashcards', {
-			'updateFlashcard': mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD
-		}),
-		scrollToSet(setId) {
-			scrollToElement(document.getElementById(`set-${setId}`));
-		},
-		scrollTop() {
-			scrollToElement(document.getElementById('flashacardsSetHeader'));
-		},
-		onRetakeSet(set) {
-			set.flashcards.forEach(flashcard => this.updateFlashcard({
-				...flashcard,
-				answer: 'unsolved'
-			}));
-		},
-		trackUserEvent(payload) {
-			this.emitUserEvent({
-				feature: features.flashcards.value,
-				...payload
-			});
-		}
-	},
 	async mounted() {
 		this.toggleOverlay({ source: 'flashcards', display: true });
 		const resources = get(this.screenData, 'meta.resources', []);
@@ -302,6 +292,32 @@ export default {
 				target: id
 			});
 		});
-	}
+	},
+	methods: {
+		...mapActions(['toggleOverlay']),
+		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
+		...mapActions('flashcards', ['setFlashcardsSet']),
+		...mapMutations('flashcards', {
+			'updateFlashcard': mutationsTypes.FLASHCARDS_UPDATE_FLASHCARD
+		}),
+		scrollToSet(setId) {
+			scrollToElement(document.getElementById(`set-${setId}`));
+		},
+		scrollTop() {
+			scrollToElement(document.getElementById('flashacardsSetHeader'));
+		},
+		onRetakeSet(set) {
+			set.flashcards.forEach(flashcard => this.updateFlashcard({
+				...flashcard,
+				answer: 'unsolved'
+			}));
+		},
+		trackUserEvent(payload) {
+			this.emitUserEvent({
+				feature: features.flashcards.value,
+				...payload
+			});
+		}
+	},
 };
 </script>

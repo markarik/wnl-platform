@@ -3,18 +3,22 @@
 		<div class="field">
 			<label class=" label is-uppercase"><strong>{{parentTitle}}</strong></label>
 			<span class="info small">{{parentSubtitle}}</span>
-			<slot name="parent-autocomplete" :validate-and-change-parent="validateAndChangeParent"></slot>
+			<slot name="parent-autocomplete" :validate-and-change-parent="validateAndChangeParent" />
 		</div>
 
 		<div class="field">
 			<label class="label is-uppercase"><strong>{{title}}</strong></label>
 			<span class="info">{{subtitle}}</span>
-			<slot name="autocomplete"></slot>
+			<slot name="autocomplete" />
 		</div>
 
-		<slot name="extra-fields"></slot>
+		<slot name="extra-fields" />
 		<div class="has-text-centered">
-			<button class="button" @click="onSubmit" :disabled="submitDisabled">{{submitLabel}}</button>
+			<button
+				class="button"
+				:disabled="submitDisabled"
+				@click="onSubmit"
+			>{{submitLabel}}</button>
 		</div>
 	</div>
 </template>

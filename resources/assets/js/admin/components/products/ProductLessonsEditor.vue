@@ -8,7 +8,12 @@
 			</div>
 		</div>
 		<template v-if="productLessons.length">
-			<input v-model="filterPhrase" class="input margin bottom" placeholder="filtruj..." ref="filterInput">
+			<input
+				ref="filterInput"
+				v-model="filterPhrase"
+				class="input margin bottom"
+				placeholder="filtruj..."
+			>
 			<wnl-sortable-table
 				:columns="tableColumns"
 				:active-sort-column-name="activeSort.activeSortColumnName"
@@ -16,7 +21,7 @@
 				:list="visibleProductLessons"
 				@changeOrder="onSort"
 			>
-				<tbody slot-scope="table" slot="tbody">
+				<tbody slot="tbody" slot-scope="table">
 					<tr v-for="productLesson in table.list" :key="productLesson.id">
 						<td>{{productLesson.lesson_id}}</td>
 						<td>{{productLesson.lesson_name}}</td>
@@ -34,7 +39,7 @@
 								type="button"
 								@click="confirmLessonRemoval(productLesson)"
 							>
-								<span class="icon"><i class="fa fa-trash"></i></span>
+								<span class="icon"><i class="fa fa-trash" /></span>
 							</button>
 						</td>
 					</tr>
@@ -125,6 +130,30 @@ export default {
 			return orderBy(filteredLessons, key, [sort]);
 		},
 	},
+	async mounted() {
+		this.loading = true;
+		try {
+			const [productLessonResponse] = await Promise.all([
+				axios.post(getApiUrl('lesson_product/query'), {
+					product_id: this.id
+				}),
+				this.fetchAllLessons()
+			]);
+			this.productLessons = this.getProductLessons(productLessonResponse);
+
+			nextTick(() => {
+				this.$refs.filterInput && this.$refs.filterInput.focus();
+			});
+		} catch (e) {
+			this.addAutoDismissableAlert({
+				text: 'Nie udało się pobrać planu dla tego produktu',
+				type: 'error'
+			});
+			$wnl.logger.capture(e);
+		} finally {
+			this.loading = false;
+		}
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', ['fetchAllLessons']),
@@ -210,29 +239,5 @@ export default {
 			this.activeSort = sort;
 		}
 	},
-	async mounted() {
-		this.loading = true;
-		try {
-			const [productLessonResponse] = await Promise.all([
-				axios.post(getApiUrl('lesson_product/query'), {
-					product_id: this.id
-				}),
-				this.fetchAllLessons()
-			]);
-			this.productLessons = this.getProductLessons(productLessonResponse);
-
-			nextTick(() => {
-				this.$refs.filterInput && this.$refs.filterInput.focus();
-			});
-		} catch (e) {
-			this.addAutoDismissableAlert({
-				text: 'Nie udało się pobrać planu dla tego produktu',
-				type: 'error'
-			});
-			$wnl.logger.capture(e);
-		} finally {
-			this.loading = false;
-		}
-	}
 };
 </script>

@@ -43,7 +43,7 @@ class OrderPaid implements ShouldQueue
 		$this->unsuspendUser();
 
 		$invoice = $this->getInvoice();
-		
+
 		if ($invoice) {
 			$this->sendConfirmation($invoice);
 		}
@@ -66,10 +66,7 @@ class OrderPaid implements ShouldQueue
 	{
 		$order = $this->order;
 
-		if ($order->product->delivery_date->isFuture()) {
-			Log::notice("OrderPaid: Generating advance invoice for order #{$order->id}");
-			return (new InvoiceGenerator)->advance($order);
-		} else if ($this->shouldGenerateVatInvoice($order)) {
+		if ($this->shouldGenerateVatInvoice($order)) {
 			Log::notice("OrderPaid: Generating vat invoice for order #{$order->id}");
 			return (new InvoiceGenerator)->vatInvoice($order);
 		} else {

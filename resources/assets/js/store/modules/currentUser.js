@@ -100,6 +100,9 @@ const mutations = {
 	[types.USERS_SET_IDENTITY] (state, payload) {
 		set(state.profile, 'identity', payload);
 	},
+	[types.USERS_SET_PROFILE] (state, payload) {
+		set(state, 'profile', payload);
+	},
 	[types.USERS_SET_ACCOUNT_SUSPENDED] (state, payload) {
 		set(state, 'accountSuspended', payload);
 	},
@@ -231,6 +234,10 @@ const actions = {
 
 	updateCurrentUser({ commit }, userData) {
 		commit(types.USERS_UPDATE_CURRENT, userData);
+	},
+
+	updateCurrentUserProfile({ commit }, profileData) {
+		commit(types.USERS_SET_PROFILE, profileData);
 	},
 
 	changeUserSetting({ commit }, payload) {

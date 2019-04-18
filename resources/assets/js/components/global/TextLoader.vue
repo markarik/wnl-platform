@@ -1,6 +1,6 @@
 <template>
 	<div class="text-loader">
-		<span class="loader"></span>
+		<span class="loader" />
 		<slot>Momencik, ładuję dane...</slot>
 	</div>
 </template>

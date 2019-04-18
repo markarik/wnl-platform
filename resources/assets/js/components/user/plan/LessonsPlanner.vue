@@ -40,7 +40,7 @@
 					<i
 						class="fa"
 						:class="[view.isActive ? 'fa-check-circle' : 'fa-circle-o']"
-					></i>
+					/>
 				</span>
 			</a>
 		</div>
@@ -102,7 +102,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters('course', ['userLessons', 'getRequiredLessons']),
+		...mapGetters('course', ['getRequiredLessons']),
 		...mapGetters(['currentUserSubscriptionDates', 'currentUserSubscriptionActive']),
 		sortedRequiredUserLessons() {
 			return this.requiredLessons

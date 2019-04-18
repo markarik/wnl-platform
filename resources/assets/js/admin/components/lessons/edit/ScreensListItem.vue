@@ -6,10 +6,10 @@
 				class="icon is-small"
 				@click="moveScreen('up')"
 			>
-				<i class="fa fa-arrow-up"></i>
+				<i class="fa fa-arrow-up" />
 			</span>
 			<span v-else class="icon is-small is-disabled">
-				<i class="fa fa-arrow-up"></i>
+				<i class="fa fa-arrow-up" />
 			</span>
 
 			<span
@@ -17,10 +17,10 @@
 				class="icon is-small"
 				@click="moveScreen('down')"
 			>
-				<i class="fa fa-arrow-down"></i>
+				<i class="fa fa-arrow-down" />
 			</span>
 			<span v-else class="icon is-small is-disabled">
-				<i class="fa fa-arrow-down"></i>
+				<i class="fa fa-arrow-down" />
 			</span>
 		</div>
 		<div class="media-content">
@@ -29,7 +29,7 @@
 		</div>
 		<div class="media-right">
 			<span class="icon is-small" @click="deleteScreen()">
-				<i class="fa fa-trash"></i>
+				<i class="fa fa-trash" />
 			</span>
 		</div>
 	</div>

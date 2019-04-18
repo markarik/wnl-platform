@@ -5,13 +5,13 @@
 			:is-detached="!isSidenavMounted"
 			:is-narrow="true"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 		</wnl-sidenav-slot>
 
 		<div class="splash-screen">
 			<div class="splash-screen__container scrollable-main-container">
 				<div class="splash-screen__content">
-					<wnl-text-loader v-if="isLoading"></wnl-text-loader>
+					<wnl-text-loader v-if="isLoading" />
 					<template v-else>
 						<wnl-splash-screen-generic-error v-if="currentUserLoadingError" />
 						<wnl-splash-screen-account-suspended v-else-if="currentUserAccountSuspended" :orders="orders" />
@@ -77,13 +77,6 @@ import { PRODUCTS_SLUGS } from 'js/consts/products';
 import { SUBSCRIPTION_STATUS } from 'js/consts/user';
 
 export default {
-	data() {
-		return {
-			isLoading: true,
-			EXPIRED: SUBSCRIPTION_STATUS.EXPIRED,
-			orders: []
-		};
-	},
 	components: {
 		WnlMainNav,
 		WnlSidenavSlot,
@@ -94,6 +87,13 @@ export default {
 		WnlSplashScreenDefault,
 		WnlSplashScreenGenericError,
 		WnlSplashScreenOrderCanceled
+	},
+	data() {
+		return {
+			isLoading: true,
+			EXPIRED: SUBSCRIPTION_STATUS.EXPIRED,
+			orders: []
+		};
 	},
 	perimeters: [upcomingEditionParticipant],
 	computed: {
@@ -114,12 +114,6 @@ export default {
 			return this.latestCourseOrders.every(order => order.canceled);
 		},
 	},
-	methods: {
-		async fetchOrders() {
-			const { data: orders } = await axios.get(getApiUrl('users/current/orders/all'));
-			this.orders = orders;
-		},
-	},
 	async mounted() {
 		try {
 			await this.fetchOrders();
@@ -128,6 +122,12 @@ export default {
 		} finally {
 			this.isLoading = false;
 		}
+	},
+	methods: {
+		async fetchOrders() {
+			const { data: orders } = await axios.get(getApiUrl('users/current/orders/all'));
+			this.orders = orders;
+		},
 	}
 };
 </script>

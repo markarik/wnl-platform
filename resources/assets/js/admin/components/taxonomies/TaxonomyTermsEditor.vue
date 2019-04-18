@@ -8,7 +8,7 @@
 					@change="onSearch"
 				/>
 				<span class="icon is-small is-right">
-					<i class="fa fa-search"></i>
+					<i class="fa fa-search" />
 				</span>
 			</span>
 		</template>
@@ -44,6 +44,9 @@ export default {
 		WnlTaxonomyTermAutocomplete,
 		WnlNestedSetEditor
 	},
+	mixins: [
+		scrollToNodeMixin,
+	],
 	props: {
 		taxonomyId: {
 			type: [String, Number],
@@ -57,17 +60,6 @@ export default {
 		}),
 		...mapGetters('taxonomyTerms', ['getChildrenNodesByParentId', 'getRootNodes']),
 	},
-	methods: {
-		...mapActions(['addAutoDismissableAlert']),
-		...mapActions('taxonomyTerms', ['setUpNestedSet', 'focus']),
-		async onSearch(term) {
-			this.focus(term);
-			this.scrollToNode(term);
-		},
-	},
-	mixins: [
-		scrollToNodeMixin,
-	],
 	async mounted() {
 		try {
 			this.setUpNestedSet(this.taxonomyId);
@@ -77,6 +69,14 @@ export default {
 				type: 'error'
 			});
 		}
+	},
+	methods: {
+		...mapActions(['addAutoDismissableAlert']),
+		...mapActions('taxonomyTerms', ['setUpNestedSet', 'focus']),
+		async onSearch(term) {
+			this.focus(term);
+			this.scrollToNode(term);
+		},
 	},
 };
 </script>

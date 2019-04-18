@@ -74,6 +74,11 @@ export default {
 			return this.taxonomies.map(taxonomy => ({ value: taxonomy.id, text: taxonomy.name }));
 		}
 	},
+	mounted() {
+		if (this.isAdmin) {
+			this.fetchTaxonomies();
+		}
+	},
 	methods: {
 		...mapActions(['changeUserSetting']),
 		...mapActions('taxonomies', {
@@ -87,11 +92,6 @@ export default {
 				}
 			});
 		},
-	},
-	mounted() {
-		if (this.isAdmin) {
-			this.fetchTaxonomies();
-		}
 	},
 };
 </script>

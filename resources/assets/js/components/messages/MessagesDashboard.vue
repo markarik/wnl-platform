@@ -5,7 +5,7 @@
 			:is-detached="!isSidenavMounted"
 			:is-max-width="true"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 			<aside class="sidenav-aside rooms-sidenav">
 				<wnl-conversations-list />
 			</aside>
@@ -16,7 +16,7 @@
 				:room="currentRoom"
 				:users="currentRoomUsers"
 				:messages-loaded="messagesLoaded"
-			></wnl-private-chat>
+			/>
 		</div>
 	</div>
 </template>
@@ -56,18 +56,18 @@ import { first } from 'lodash';
 
 export default {
 	name: 'MessagesDashboard',
+	components: {
+		'wnl-main-nav': MainNav,
+		'wnl-sidenav-slot': SidenavSlot,
+		'wnl-private-chat': PrivateChat,
+		'wnl-conversations-list': ConversationsList,
+	},
 	data() {
 		return {
 			currentRoom: {},
 			currentRoomUsers: [],
 			messagesLoaded: true,
 		};
-	},
-	components: {
-		'wnl-main-nav': MainNav,
-		'wnl-sidenav-slot': SidenavSlot,
-		'wnl-private-chat': PrivateChat,
-		'wnl-conversations-list': ConversationsList,
 	},
 	computed: {
 		...mapGetters([
@@ -85,6 +85,19 @@ export default {
 		mostRecentRoomId() {
 			return this.sortedRooms[0];
 		}
+	},
+	watch: {
+		'$route.query.roomId'(roomId) {
+			roomId && this.openRoomById(roomId);
+		},
+		ready(newValue, oldValue) {
+			!oldValue && newValue && this.openInitialRoom();
+			newValue && this.toggleOverlay({ source: 'messagesDashboard', display: false });
+		}
+	},
+	mounted() {
+		!this.ready && this.toggleOverlay({ source: 'messagesDashboard', display: true });
+		this.ready && this.openInitialRoom();
 	},
 	methods: {
 		...mapActions(['toggleOverlay']),
@@ -148,18 +161,5 @@ export default {
 			}
 		},
 	},
-	watch: {
-		'$route.query.roomId'(roomId) {
-			roomId && this.openRoomById(roomId);
-		},
-		ready(newValue, oldValue) {
-			!oldValue && newValue && this.openInitialRoom();
-			newValue && this.toggleOverlay({ source: 'messagesDashboard', display: false });
-		}
-	},
-	mounted() {
-		!this.ready && this.toggleOverlay({ source: 'messagesDashboard', display: true });
-		this.ready && this.openInitialRoom();
-	}
 };
 </script>

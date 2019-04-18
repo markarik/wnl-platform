@@ -12,7 +12,7 @@
 			>
 				<div v-if="isOn && !!unseenCount" class="counter">{{unseenCount}}</div>
 				<span class="icon">
-					<i class="fa" :class="iconClass"></i>
+					<i class="fa" :class="iconClass" />
 				</span>
 			</div>
 			<div slot="content">
@@ -61,7 +61,7 @@
 						class="link"
 						@click="allRead"
 					/>
-					<span v-if="allReadLoading" class="loader"></span>
+					<span v-if="allReadLoading" class="loader" />
 				</div>
 			</div>
 		</wnl-dropdown>
@@ -96,7 +96,6 @@ import { USER_SETTING_NAMES } from 'js/consts/settings';
 
 export default {
 	name: 'PersonalFeed',
-	mixins: [feed],
 	components: {
 		'wnl-dropdown': Dropdown,
 		'wnl-event-comment-posted': CommentPosted,
@@ -111,6 +110,7 @@ export default {
 		'wnl-event-assigned-to-task': AssignedToTask,
 		'wnl-notifications-toggle': NotificationsToggle,
 	},
+	mixins: [feed],
 	data() {
 		return {
 			allReadLoading: false,

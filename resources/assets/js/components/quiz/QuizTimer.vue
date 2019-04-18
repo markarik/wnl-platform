@@ -2,7 +2,7 @@
 	<span class="timer" @click="$emit('clicked')">
 		<span v-show="!hideTime">{{hms}}</span>
 		<span v-show="!hideIcon" class="icon is-small">
-			<i class="fa" :class="hourglassClass"></i>
+			<i class="fa" :class="hourglassClass" />
 		</span>
 	</span>
 </template>
@@ -53,6 +53,9 @@ export default {
 			return `fa-hourglass-${Math.ceil((this.time - this.remainingTime) * 3 / this.time)}`;
 		},
 	},
+	beforeDestroy() {
+		clearInterval(this.timerId);
+	},
 	methods: {
 		startTimer() {
 			// passed time is in minutes
@@ -66,9 +69,6 @@ export default {
 				this.$emit('timesUp');
 			}
 		}
-	},
-	beforeDestroy() {
-		clearInterval(this.timerId);
 	}
 };
 </script>

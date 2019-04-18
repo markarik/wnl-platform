@@ -28,7 +28,7 @@
 				@success="onUploadSuccess"
 				@uploadError="onUploadError"
 			>
-				<wnl-avatar size="extraextralarge" class="clickable-avatar"></wnl-avatar>
+				<wnl-avatar size="extraextralarge" class="clickable-avatar" />
 				<a class="change-avatar-button button is-small is-outlined is-primary margin top" :class="{'is-loading': loading}">
 					Zmień avatar
 				</a>
@@ -103,6 +103,7 @@ import { mapActions, mapGetters } from 'vuex';
 import Upload from 'js/components/global/Upload';
 import { Form, Text } from 'js/components/global/form';
 import { isProduction } from 'js/utils/env';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	name: 'MyProfile',
@@ -133,21 +134,27 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions(['updateCurrentUser']),
+		...mapActions(['updateCurrentUserProfile', 'addAutoDismissableAlert']),
 		onFormLoaded() {
 			this.formLoaded = true;
 		},
 		getter(getter) {
 			return this.$store.getters[`MyProfile/${getter}`];
 		},
-		onUploadError() {
+		onUploadError(e) {
 			this.loading = false;
+
+			$wnl.logger.error(e);
+			this.addAutoDismissableAlert({
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			});
 		},
 		onUploadStarted() {
 			this.loading = true;
 		},
 		onUploadSuccess(userData) {
-			this.updateCurrentUser(userData);
+			this.updateCurrentUserProfile(userData);
 			this.loading = false;
 		},
 	},

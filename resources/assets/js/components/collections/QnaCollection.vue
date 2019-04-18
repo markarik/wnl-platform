@@ -4,9 +4,9 @@
 			:sorting-enabled="true"
 			title="Zapisane pytania i odpowiedzi"
 			:read-only="true"
-		></wnl-qna>
+		/>
 		<div v-if="isZeroState" class="notification has-text-centered margin top">
-			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right"></i></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań i odpowiedzi. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o"></i></span> <span class="metadata">ZAPISZ</span> przy wybranym wątku!
+			W temacie <span class="metadata">{{rootCategoryName}} <span class="icon is-small"><i class="fa fa-angle-right" /></span> {{categoryName}}</span> nie ma jeszcze zapisanych pytań i odpowiedzi. Możesz łatwo to zmienić klikając na <span class="icon is-small"><i class="fa fa-star-o" /></span> <span class="metadata">ZAPISZ</span> przy wybranym wątku!
 		</div>
 	</div>
 </template>

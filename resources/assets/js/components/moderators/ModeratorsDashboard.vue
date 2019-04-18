@@ -4,7 +4,7 @@
 			:is-visible="isSidenavVisible"
 			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 			<aside class="sidenav-aside dashboard-sidenav">
 				<wnl-accordion
 					:data-source="subjectTypeFilters"
@@ -55,7 +55,7 @@
 						>
 							{{sort.name}}
 							<span class="icon is-small">
-								<i class="fa" :class="[sort.dir === 'desc' ? 'fa-arrow-down' : 'fa-arrow-up']"></i>
+								<i class="fa" :class="[sort.dir === 'desc' ? 'fa-arrow-down' : 'fa-arrow-up']" />
 							</span>
 						</a>
 					</div>
@@ -88,7 +88,7 @@
 			:is-detached="!isChatMounted"
 			:has-chat="true"
 		>
-			<wnl-public-chat :rooms="chatRooms" title="USZANOWANKO"></wnl-public-chat>
+			<wnl-public-chat :rooms="chatRooms" title="USZANOWANKO" />
 		</wnl-sidenav-slot>
 		<div
 			v-if="isChatToggleVisible"
@@ -96,7 +96,7 @@
 			@click="toggleChat"
 		>
 			<span class="icon is-big">
-				<i class="fa fa-chevron-left"></i>
+				<i class="fa fa-chevron-left" />
 				<span>Pokaż czat</span>
 			</span>
 		</div>
@@ -178,6 +178,16 @@ import Alert from 'js/components/global/GlobalAlert';
 
 export default {
 	name: 'ModeratorsDashboard',
+	components: {
+		'wnl-main-nav': MainNav,
+		'wnl-moderators-feed': ModeratorsFeed,
+		'wnl-moderators-autocomplete': ModeratorsAutocomplete,
+		'wnl-public-chat': PublicChat,
+		'wnl-sidenav-slot': SidenavSlot,
+		'wnl-accordion': Accordion,
+		'wnl-alert': Alert
+	},
+	mixins: [withChat],
 	data() {
 		return {
 			quickFilters: this.initialQuickFilters(),
@@ -191,16 +201,6 @@ export default {
 			bodyClicked: false
 		};
 	},
-	components: {
-		'wnl-main-nav': MainNav,
-		'wnl-moderators-feed': ModeratorsFeed,
-		'wnl-moderators-autocomplete': ModeratorsAutocomplete,
-		'wnl-public-chat': PublicChat,
-		'wnl-sidenav-slot': SidenavSlot,
-		'wnl-accordion': Accordion,
-		'wnl-alert': Alert
-	},
-	mixins: [withChat],
 	computed: {
 		...mapGetters([
 			'isSidenavVisible',
@@ -237,6 +237,45 @@ export default {
 		activeFiltersByLesson() {
 			return Object.keys(this.selectedByLabelFilters).filter(key => this.selectedByLabelFilters[key]);
 		}
+	},
+	watch: {
+		'$route.query.chatChannel' (newVal) {
+			newVal && !this.isChatVisible && this.toggleChat();
+		}
+	},
+	mounted() {
+		document.addEventListener('click', this.clickHandler);
+
+		this.toggleOverlay({ source: 'moderatorsFeed', display: true });
+
+		const promisedTasks = this.pullTasks(this.buildRequestParams());
+		const promisedFilters = axios.post(getApiUrl('tasks/.filterList'), {
+			filters: []
+		});
+
+		Promise.all([promisedTasks, promisedFilters])
+			.then(([, filtersList]) => {
+				this.moderators = filtersList.data['task-assignee'];
+
+				this.labelFilters = this.parseSubjectFilters(filtersList.data['task-labels']);
+				this.selectedByLabelFilters = this.buildByLessonFiltering();
+
+				this.subjectTypeFilters = this.parseSubjectTypeFilters(filtersList.data['task-subject_type']);
+				this.selectedByTypeFilters = this.buildByTypeFiltering();
+
+				this.toggleOverlay({ source: 'moderatorsFeed', display: false });
+			})
+			.catch(error => {
+				this.toggleOverlay({ source: 'moderatorsFeed', display: false });
+				this.$store.dispatch('addAlert', {
+					text: this.$t('ui.error.somethingWentWrongUnofficial'),
+					type: 'error'
+				});
+				$wnl.logger.error(error);
+			});
+	},
+	beforeDestroy() {
+		document.removeEventListener('click', this.clickHandler);
 	},
 	methods: {
 		...mapActions(['toggleChat', 'toggleOverlay']),
@@ -403,44 +442,6 @@ export default {
 					})
 				}
 			};
-		}
-	},
-	mounted() {
-		document.addEventListener('click', this.clickHandler);
-
-		this.toggleOverlay({ source: 'moderatorsFeed', display: true });
-
-		const promisedTasks = this.pullTasks(this.buildRequestParams());
-		const promisedFilters = axios.post(getApiUrl('tasks/.filterList'), {
-			filters: []
-		});
-
-		Promise.all([promisedTasks, promisedFilters])
-			.then(([, filtersList]) => {
-				this.moderators = filtersList.data['task-assignee'];
-
-				this.labelFilters = this.parseSubjectFilters(filtersList.data['task-labels']);
-				this.selectedByLabelFilters = this.buildByLessonFiltering();
-
-				this.subjectTypeFilters = this.parseSubjectTypeFilters(filtersList.data['task-subject_type']);
-				this.selectedByTypeFilters = this.buildByTypeFiltering();
-
-				this.toggleOverlay({ source: 'moderatorsFeed', display: false });
-			}).catch(error => {
-				this.toggleOverlay({ source: 'moderatorsFeed', display: false });
-				this.$store.dispatch('addAlert', {
-					text: this.$t('ui.error.somethingWentWrongUnofficial'),
-					type: 'error'
-				});
-				$wnl.logger.error(error);
-			});
-	},
-	beforeDestroy() {
-		document.removeEventListener('click', this.clickHandler);
-	},
-	watch: {
-		'$route.query.chatChannel' (newVal) {
-			newVal && !this.isChatVisible && this.toggleChat();
 		}
 	},
 };

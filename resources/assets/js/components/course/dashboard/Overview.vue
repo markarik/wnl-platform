@@ -42,7 +42,7 @@
 			>
 				{{panel.name}}
 				<span class="icon is-small">
-					<i class="fa" :class="panel.icon"></i>
+					<i class="fa" :class="panel.icon" />
 				</span>
 			</a>
 		</div>
@@ -160,6 +160,9 @@ export default {
 			return getUrl('payment/account');
 		},
 	},
+	mounted() {
+		this.fetchLatestQuestions();
+	},
 	methods: {
 		...mapActions(['changeOverviewView']),
 		...mapActions('qna', ['fetchLatestQuestions']),
@@ -170,8 +173,5 @@ export default {
 			});
 		}
 	},
-	mounted() {
-		this.fetchLatestQuestions();
-	}
 };
 </script>

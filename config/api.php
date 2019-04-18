@@ -2,6 +2,7 @@
 
 return [
 	'resources' => [
-		'coupons' => 'coupons'
+		'coupons' => 'coupons',
+		'products' => 'products',
 	],
 ];

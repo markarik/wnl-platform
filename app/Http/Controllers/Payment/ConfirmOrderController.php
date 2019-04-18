@@ -74,6 +74,10 @@ class ConfirmOrderController extends Controller
 		$order->method = $request->input('method');
 		$order->save();
 
+		if ($order->method === Order::PAYMENT_METHOD_INSTALMENTS) {
+			$order->generateAndSavePaymentSchedule();
+		}
+
 		Session::forget(['coupon', 'productId', 'orderId']);
 
 		$amount = (int)$order->total_with_coupon * 100;

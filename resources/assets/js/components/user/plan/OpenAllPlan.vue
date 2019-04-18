@@ -7,8 +7,8 @@
 			</div>
 			<div class="level">
 				{{$t('lessonsAvailability.openAllLessons.paragraphAnnotation')}}
-				{{this.completedLessonsLength}}/{{this.availableLength}}.
-				wyświetli się: {{this.completedLessonsLength}}/{{this.requiredLength}}.
+				{{completedLessonsLength}}/{{availableLength}}.
+				wyświetli się: {{completedLessonsLength}}/{{requiredLength}}.
 			</div>
 			<span>{{$t('lessonsAvailability.openAllLessons.paragraphExplanation')}}</span>
 		</div>
@@ -70,26 +70,19 @@ export default {
 	},
 	computed: {
 		...mapGetters('course', [
+			'getLessons',
 			'getRequiredLessons',
-			'userLessons',
 		]),
 		...mapGetters('progress', ['getCompleteLessons']),
 		...mapGetters(['currentUserId']),
 		availableLength() {
-			return this.userLessons.filter(lesson => lesson.isAvailable && lesson.is_required).length;
+			return this.getLessons.filter(lesson => lesson.isAvailable && lesson.is_required).length;
 		},
 		requiredLength() {
-			return this.userLessons.filter(lesson => lesson.is_required).length;
-		},
-		inProgressLessonsLength() {
-			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
-				return !this.completedLessons.includes(Number(requiredLesson));
-			}).length;
+			return this.getRequiredLessons.length;
 		},
 		completedLessonsLength() {
-			return Object.keys(this.getRequiredLessons).filter(requiredLesson => {
-				return this.completedLessons.includes(Number(requiredLesson));
-			}).length;
+			return this.completedLessons.length;
 		},
 		completedLessons() {
 			return this.getCompleteLessons(1).map(lesson => lesson.id);

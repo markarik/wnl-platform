@@ -7,7 +7,7 @@
 			css-class="fixed"
 			:timestamp="timestamp"
 			@delete="onDelete"
-		></wnl-alert>
+		/>
 
 		<a class="button is-primary" @click="updateCharts">Aktualizuj wszystkie diagramy</a>
 	</div>

@@ -65,10 +65,10 @@ import SidenavItem from 'js/components/global/SidenavItem';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
+	name: 'SidenavGroup',
 	components: {
 		'wnl-sidenav-item': SidenavItem
 	},
-	name: 'SidenavGroup',
 	props: ['item', 'forceGroupOpen', 'showSubitemsCount'],
 	computed: {
 		...mapGetters(['isNavigationGroupExpanded']),
@@ -88,13 +88,13 @@ export default {
 			return `${this.$route.name}/${this.item.text}`;
 		}
 	},
-	methods: {
-		...mapActions(['toggleNavigationGroup'])
-	},
 	mounted() {
 		if (this.forceGroupOpen && this.isNavigationGroupExpanded(this.groupIndex) !== false) {
 			this.toggleNavigationGroup({ groupIndex: this.groupIndex, isOpen: true });
 		}
+	},
+	methods: {
+		...mapActions(['toggleNavigationGroup'])
 	},
 };
 </script>

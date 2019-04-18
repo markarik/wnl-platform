@@ -24,7 +24,7 @@
 								@click="removeFlashcardsSet(flashcardsSetId)"
 							>
 								<span class="icon is-small">
-									<i class="fa fa-trash"></i>
+									<i class="fa fa-trash" />
 								</span>
 							</button>
 						</li>
@@ -87,12 +87,12 @@ import WnlFlashcardsSetAutocompleteItem from 'js/admin/components/lessons/edit/F
 
 export default {
 	name: 'ScreensMetaEditorFlashcards',
-	props: ['value'],
 	components: {
 		draggable,
 		WnlAutocomplete,
 		WnlFlashcardsSetAutocompleteItem,
 	},
+	props: ['value'],
 	data: function() {
 		return {
 			flashcardsSetInput: '',
@@ -129,6 +129,9 @@ export default {
 			allFlashcardsSets: 'flashcardsSets'
 		}),
 	},
+	mounted() {
+		this.flashcardsSetsSetup();
+	},
 	methods: {
 		...mapActions('flashcardsSets', {
 			flashcardsSetsSetup: 'setup'
@@ -141,8 +144,5 @@ export default {
 			this.flashcardsSetIds = this.flashcardsSetIds.filter(id => id !== flashcardsSetId);
 		}
 	},
-	mounted() {
-		this.flashcardsSetsSetup();
-	}
 };
 </script>

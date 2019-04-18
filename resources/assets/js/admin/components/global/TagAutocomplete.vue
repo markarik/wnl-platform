@@ -2,7 +2,7 @@
 	<div>
 		<div v-if="selected" class="autocomplete-selected">
 			{{selected.name}}
-			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true"></i></span>
+			<span class="icon is-small clickable" @click="onSelect(null)"><i class="fa fa-close" aria-hidden="true" /></span>
 		</div>
 		<wnl-autocomplete
 			v-else
@@ -21,7 +21,7 @@
 				<div class="autocomplete-footer-button-container">
 					<button class="button" @click="onTagAdd">
 						<span class="icon is-small">
-							<i class="fa fa-plus" aria-hidden="true"></i>
+							<i class="fa fa-plus" aria-hidden="true" />
 						</span>
 						<span>Dodaj nowy tag</span>
 					</button>
@@ -54,6 +54,9 @@ import WnlAutocomplete from 'js/components/global/Autocomplete';
 import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
+	components: {
+		WnlAutocomplete
+	},
 	props: {
 		selected: {
 			type: Object,
@@ -83,8 +86,17 @@ export default {
 			return uniqBy(tags, 'id').slice(0, 25);
 		},
 	},
-	components: {
-		WnlAutocomplete
+	async mounted() {
+		try {
+			await this.fetchAllTags();
+		} catch (error) {
+			$wnl.logger.capture(error);
+
+			this.addAutoDismissableAlert({
+				text: 'Ups, coś poszło nie tak przy pobieraniu listy dostępnych tagów, spróbuj ponownie.',
+				type: ALERT_TYPES.ERROR,
+			});
+		}
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
@@ -111,18 +123,5 @@ export default {
 			}
 		},
 	},
-	async mounted() {
-		try {
-			await this.fetchAllTags();
-		} catch (error) {
-			$wnl.logger.capture(error);
-
-			this.addAutoDismissableAlert({
-				text: 'Ups, coś poszło nie tak przy pobieraniu listy dostępnych tagów, spróbuj ponownie.',
-				type: ALERT_TYPES.ERROR,
-			});
-		}
-
-	}
 };
 </script>

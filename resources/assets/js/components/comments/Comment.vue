@@ -12,8 +12,7 @@
 							size="medium"
 							:full-name="profile.full_name"
 							:url="profile.avatar"
-						>
-						</wnl-avatar>
+						/>
 					</p>
 				</div>
 			</figure>
@@ -31,7 +30,7 @@
 				:class="{'author-forgotten': profile.deleted_at}"
 				@click="showModal"
 			>{{profile.full_name}}</span>
-			<div class="comment-text wrap content" v-html="comment.text"></div>
+			<div class="comment-text wrap content" v-html="comment.text" />
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
 				&nbsp;·
@@ -39,7 +38,7 @@
 					:request-route="requestRoute"
 					:target="target"
 					@deleteSuccess="onDeleteSuccess"
-				></wnl-delete>
+				/>
 			</span>
 			<wnl-resolve
 				:resource="comment"

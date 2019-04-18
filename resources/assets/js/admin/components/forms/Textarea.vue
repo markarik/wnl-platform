@@ -2,7 +2,7 @@
 	<div class="field">
 
 		<label :for="name" class="label">
-			<slot></slot>
+			<slot />
 		</label>
 
 		<textarea
@@ -12,14 +12,13 @@
 			:value="form[name]"
 			:placeholder="name"
 			@input="$emit('input', $event.target.value)"
-		>
-		</textarea>
+		/>
 
 		<span
 			v-if="form.errors.has(name)"
 			class="help is-danger"
 			v-text="form.errors.get(name)"
-		></span>
+		/>
 	</div>
 </template>
 

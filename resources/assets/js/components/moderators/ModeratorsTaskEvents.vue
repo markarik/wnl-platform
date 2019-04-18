@@ -30,7 +30,7 @@
 		<p v-if="hasMore">
 			<a class="secondary-link toggable-icon" @click="toggleEvents">
 				{{expanded ? $t('ui.action.hide') : $t('ui.action.showAll')}}
-				<span class="icon"><i class="fa" :class="iconClass"></i></span>
+				<span class="icon"><i class="fa" :class="iconClass" /></span>
 			</a>
 		</p>
 

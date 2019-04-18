@@ -40,6 +40,9 @@ import moment from 'moment';
 import WnlPaginatedSortableTable from 'js/admin/components/lists/PaginatedSortableTable';
 
 export default {
+	components: {
+		WnlPaginatedSortableTable,
+	},
 	data() {
 		return {
 			products: [],
@@ -67,9 +70,6 @@ export default {
 				},
 			],
 		};
-	},
-	components: {
-		WnlPaginatedSortableTable,
 	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),

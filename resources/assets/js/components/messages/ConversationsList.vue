@@ -5,11 +5,11 @@
 			<div class="rooms-list-controls">
 				<span class="rooms-list-controls-item is-active" @click="toggleUserSearch">
 					<div v-if="!userSearchVisible" class="search-icon">
-						<i class="fa fa-search" :title="$t('messages.search.searchButton')"></i>
+						<i class="fa fa-search" :title="$t('messages.search.searchButton')" />
 						<span class="text">{{$t('messages.search.searchButton')}}</span>
 					</div>
 					<div v-else class="close-icon">
-						<i class="fa fa-times" :title="$t('messages.search.closeButton')"></i>
+						<i class="fa fa-times" :title="$t('messages.search.closeButton')" />
 						<span class="text">{{$t('messages.search.closeButton')}}</span>
 					</div>
 				</span>

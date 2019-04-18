@@ -1,5 +1,5 @@
 <template>
-	<div class="wnl-screen-html content" v-html="content"></div>
+	<div class="wnl-screen-html content" v-html="content" />
 </template>
 
 <style lang="sass" rel="stylesheet/sass">

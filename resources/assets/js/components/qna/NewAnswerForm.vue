@@ -15,11 +15,10 @@
 			name="text"
 			:options="{ theme: 'snow', placeholder: 'Zacznij swoją odpowiedź...' }"
 			:toolbar="toolbar"
-		>
-		</wnl-quill>
+		/>
 
 		<div class="level">
-			<div class="level-left"></div>
+			<div class="level-left" />
 			<div class="level-right">
 				<div class="level-item">
 					<wnl-submit css-class="button is-small is-primary">

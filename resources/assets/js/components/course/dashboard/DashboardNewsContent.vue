@@ -1,8 +1,8 @@
 <template>
 	<div class="notification content">
-		<button class="delete" @click="$emit('onClose')"></button>
-		<p class="has-text-centered"><strong v-html="slug"></strong></p>
-		<span @click="$emit('onContentClick', $event)" v-html="parsedMessage"></span>
+		<button class="delete" @click="$emit('onClose')" />
+		<p class="has-text-centered"><strong v-html="slug" /></p>
+		<span @click="$emit('onContentClick', $event)" v-html="parsedMessage" />
 	</div>
 </template>
 

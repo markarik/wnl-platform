@@ -6,7 +6,7 @@
 			</p>
 			<div v-if="isLoadingComments" class="loading-comments">
 				<span class="icon is-small status-icon">
-					<i class="fa fa-circle-o-notch fa-spin"></i>
+					<i class="fa fa-circle-o-notch fa-spin" />
 				</span>
 				Ładuję komentarze...
 			</div>

@@ -33,7 +33,7 @@
 
 		<div slot="below-content" class="notification is-info">
 			<span class="icon">
-				<i class="fa fa-info-circle"></i>
+				<i class="fa fa-info-circle" />
 			</span>
 			Przypisanie pojęć do slajdu jest możliwe tylko w trybie edycji
 		</div>

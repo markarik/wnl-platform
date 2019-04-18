@@ -462,7 +462,7 @@ class Parser
 		return $snippet;
 	}
 
-	public function handleImages($html, bool $force = false)
+	public function handleImages($html, bool $force = false, bool $resize = true)
 	{
 		$matches = $this->match(self::IMAGE_PATTERN, $html);
 
@@ -479,53 +479,35 @@ class Parser
 				continue;
 			}
 
-			try {
-				$image = Image::make(Url::encodeFullUrl($imageUrl));
-			}
-			catch (\Exception $e) {
-				\Log::error("Fetching image from {$imageUrl} failed with message: {$e->getMessage()}.");
-				continue;
-			}
-
+			$image = Image::make(Url::encodeFullUrl($imageUrl));
 			$mime = $image->mime;
-			$supported = ['image/jpeg', 'image/gif', 'image/png'];
-			if (!in_array($mime, $supported)) {
-				\Log::error("Unsupported image type: {$mime}");
-
-				continue;
-			}
 
 			$template = self::IMAGE_TEMPLATE;
 
-			if ($mime === 'image/gif') {
-				$data = @file_get_contents($imageUrl);
-				$ext = 'gif';
-				$template = self::GIF_TEMPLATE;
-			} else if ($mime === 'image/png') {
-				$data = $image->resize(1920, 1080, function ($constraint) {
-					$constraint->aspectRatio();
-					$constraint->upsize();
-				})->stream('png');
-				$ext = 'png';
-			}
-			else {
-				$background = $image->resize(1920, 1080, function ($constraint) {
-					$constraint->aspectRatio();
-					$constraint->upsize();
-				});
-				$canvas = Image::canvas($image->width(), $image->height(), '#fff');
-				$data = $canvas->insert($background)->stream('jpg', 80);
-				$ext = 'jpg';
+			switch ($mime){
+				case 'image/gif':
+					$data = @file_get_contents($imageUrl);
+					$ext = 'gif';
+					$template = self::GIF_TEMPLATE;
+					break;
+				case 'image/png':
+					$data = $resize ? $this->getPng($image) : @file_get_contents($imageUrl);
+					$ext = 'png';
+					break;
+				case 'image/jpeg':
+					$data = $resize ? $this->getJpg($imageUrl) : @file_get_contents($imageUrl);
+					$ext = 'jpg';
+					break;
+				default:
+					throw new ParseErrorException("Unsupported image type: {$mime}");
 			}
 
-			if (!$data) {
-				\Log::error("Fetching image from {$imageUrl} failed.");
-
-				continue;
+			if (!is_string($data)) {
+				$data = $data->__toString();
 			}
 
 			$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
-			Storage::put('public/' . $path, $data->__toString(), 'public');
+			Storage::put('public/' . $path, $data, 'public');
 
 			$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
 			$html = str_replace($imgTag, $viewerHtml, $html);
@@ -569,5 +551,31 @@ class Parser
 		} finally {
 			return $lastSectionFound;
 		}
+	}
+
+	/**
+	 * @param string $imageUrl
+	 * @return \Psr\Http\Message\StreamInterface
+	 */
+	private function getPng(string $imageUrl)
+	{
+		return $image->resize(1920, 1080, function ($constraint) {
+			$constraint->aspectRatio();
+			$constraint->upsize();
+		})->stream('png');
+	}
+
+	/**
+	 * @param string $imageUrl
+	 * @return \Psr\Http\Message\StreamInterface
+	 */
+	private function getJpg(string $imageUrl)
+	{
+		$background = $image->resize(1920, 1080, function ($constraint) {
+			$constraint->aspectRatio();
+			$constraint->upsize();
+		});
+		$canvas = Image::canvas($image->width(), $image->height(), '#fff');
+		return $canvas->insert($background)->stream('jpg', 80);
 	}
 }

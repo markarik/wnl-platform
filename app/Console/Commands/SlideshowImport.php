@@ -124,6 +124,7 @@ class SlideshowImport extends Command
 
 	/**
 	 * @param array $slides
+	 * @throws \App\Exceptions\ParseErrorException
 	 */
 	private function saveSlides(array $slides): void
 	{
@@ -132,7 +133,7 @@ class SlideshowImport extends Command
 			unset($slide['id']);
 			unset($slide['snippet']);
 			$parser = new Parser;
-			$slide['content'] = $parser->handleImages($slide['content'], true);
+			$slide['content'] = $parser->handleImages($slide['content'], true, false);
 
 			$slide = Slide::create($slide);
 			$this->slides->put($originalSlideId, $slide);

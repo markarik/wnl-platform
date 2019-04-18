@@ -21,7 +21,7 @@ class SlideshowImport extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'slideshow:import {lessonId} {filename} {--dry-run}';
+	protected $signature = 'slideshow:import {lessonId} {filePath} {--dry-run}';
 
 	/**
 	 * The console command description.
@@ -66,8 +66,8 @@ class SlideshowImport extends Command
 			return 1;
 		}
 
-		$filename = $this->argument('filename');
-		$fileContents = Storage::drive()->get($filename);
+		$filePath = $this->argument('filePath');
+		$fileContents = Storage::drive()->get($filePath);
 		$data = json_decode($fileContents, true);
 
 		DB::beginTransaction();
@@ -115,7 +115,9 @@ class SlideshowImport extends Command
 		unset($slideshowData['id']);
 
 		$parser = new Parser;
-		$slideshowData['background'] = $parser->downloadBackground($slideshowData['background_url']);
+		if (!empty($slideshowData['background_url'])){
+			$slideshowData['background'] = $parser->downloadBackground($slideshowData['background_url']);
+		}
 
 		return Slideshow::create($slideshowData);
 	}

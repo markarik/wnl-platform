@@ -6,7 +6,7 @@
 					v-model="form.name"
 					:form="form"
 					name="name"
-				></wnl-input>
+				/>
 				<wnl-form-checkbox
 					v-model="form.is_required"
 					class="checkbox button"
@@ -22,13 +22,13 @@
 					>
 						<span class="margin right">Zapisz</span>
 						<span class="icon is-small">
-							<i class="fa fa-save"></i>
+							<i class="fa fa-save" />
 						</span>
 					</a>
 				</div>
 			</div>
 		</form>
-		<wnl-screens-editor v-if="isEdit" :lesson-id="lessonId"></wnl-screens-editor>
+		<wnl-screens-editor v-if="isEdit" :lesson-id="lessonId" />
 		<p v-else>Zapisz lekcję, żeby dodać do niej ekran</p>
 	</div>
 </template>
@@ -57,12 +57,12 @@ import { ALERT_TYPES } from 'js/consts/alert';
 
 export default {
 	name: 'LessonEditor',
-	props: ['lessonId'],
 	components: {
 		'wnl-screens-editor': ScreensEditor,
 		'wnl-input': Input,
 		'wnl-form-checkbox': Checkbox,
 	},
+	props: ['lessonId'],
 	data() {
 		return {
 			form: new Form({
@@ -84,6 +84,11 @@ export default {
 		},
 		hasChanged() {
 			return !_.isEqual(this.form.originalData, this.form.data());
+		}
+	},
+	mounted() {
+		if (this.isEdit) {
+			this.form.populate(this.resourceUrl);
 		}
 	},
 	methods: {
@@ -119,10 +124,5 @@ export default {
 				});
 		}
 	},
-	mounted() {
-		if (this.isEdit) {
-			this.form.populate(this.resourceUrl);
-		}
-	}
 };
 </script>

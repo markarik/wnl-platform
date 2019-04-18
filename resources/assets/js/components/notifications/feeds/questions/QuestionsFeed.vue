@@ -2,7 +2,7 @@
 	<div class="questions-feed">
 		<div v-if="!loading">
 			<div class="stream-notifications">
-				<div class="stream-line"></div>
+				<div class="stream-line" />
 				<component
 					:is="getEventComponent(message)"
 					v-for="message in filtered"
@@ -88,10 +88,10 @@ import { feed } from 'js/components/notifications/feed';
 
 export default {
 	name: 'QuestionsFeed',
-	mixins: [feed],
 	components: {
 		'wnl-event-comment-posted': CommentPosted,
 	},
+	mixins: [feed],
 	data() {
 		return {
 			limit: 100,

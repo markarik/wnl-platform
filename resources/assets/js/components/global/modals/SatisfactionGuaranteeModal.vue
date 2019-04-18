@@ -2,7 +2,7 @@
 	<wnl-modal v-if="visible" @closeModal="$emit('closeModal')">
 		<div class="satisfaction-guarantee-modal normal">
 			<h4 class="margin bottom">
-				<slot name="title"></slot>
+				<slot name="title" />
 			</h4>
 			<p v-if="displayHeadline" class="strong margin bottom">{{$t('ui.satisfactionGuarantee.headline')}}</p>
 			<p class="margin bottom">
@@ -11,7 +11,7 @@
 			<p class="margin bottom text-dimmed satisfaction-guarantee-modal__extra-info">
 				<i class="fa fa-info-circle" />
 				<slot name="footer">
-					<span v-html="$t('ui.satisfactionGuarantee.note', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})"></span>
+					<span v-html="$t('ui.satisfactionGuarantee.note', {url: $router.resolve({name: 'satisfaction-guarantee'}).href})" />
 				</slot>
 			</p>
 			<div class="satisfaction-guarantee-modal__actions">

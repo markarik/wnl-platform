@@ -13,9 +13,8 @@
 				v-if="showAuthor"
 				:full-name="fullName"
 				:url="avatar"
-			>
-			</wnl-avatar>
-			<div v-else class="media-left-placeholder"></div>
+			/>
+			<div v-else class="media-left-placeholder" />
 		</figure>
 		<div class="media-content">
 			<div class="content">
@@ -27,7 +26,7 @@
 					>{{fullName}}</strong>
 					<small class="wnl-message-time">{{formattedTime}}</small>
 				</p>
-				<p class="wnl-message-content" v-html="content"></p>
+				<p class="wnl-message-content" v-html="content" />
 			</div>
 		</div>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
@@ -89,12 +88,12 @@ import UserProfileModal from 'js/components/users/UserProfileModal';
 import Avatar from 'js/components/global/Avatar';
 
 export default{
-	props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
 	components: {
 		'wnl-avatar': Avatar,
 		'wnl-user-profile-modal': UserProfileModal,
 		'wnl-modal': Modal
 	},
+	props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
 	data() {
 		return {
 			isVisible: false

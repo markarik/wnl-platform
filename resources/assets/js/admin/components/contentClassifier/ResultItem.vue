@@ -4,10 +4,10 @@
 		:class="{'is-active': isActive}"
 		@click="$emit('click', $event)"
 	>
-		<div class="result-item__top-left"><slot name="top-left"></slot></div>
-		<div class="result-item__content"><slot></slot></div>
+		<div class="result-item__top-left"><slot name="top-left" /></div>
+		<div class="result-item__content"><slot /></div>
 		<span class="icon result-item__icon">
-			<i class="fa fa-check-circle"></i>
+			<i class="fa fa-check-circle" />
 		</span>
 	</li>
 </template>

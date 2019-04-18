@@ -13,7 +13,7 @@
 			:key="subsection.id"
 			slot="children"
 			:item="subsection"
-		></wnl-subsection-item>
+		/>
 	</wnl-lesson-navigation-item>
 </template>
 

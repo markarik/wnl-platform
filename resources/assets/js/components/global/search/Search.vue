@@ -1,7 +1,7 @@
 <template>
 	<div class="wnl-search" @click="showOverlay">
 		<span class="icon">
-			<i class="fa fa-search"></i>
+			<i class="fa fa-search" />
 		</span>
 
 		<transition name="fade">
@@ -23,7 +23,7 @@
 						>
 					</div>
 					<span class="close-icon icon is-large" @click="hideOverlay">
-						<i class="fa fa-close"></i>
+						<i class="fa fa-close" />
 					</span>
 				</div>
 				<div class="results">
@@ -169,6 +169,12 @@ export default {
 	computed: {
 		...mapGetters(['isTouchScreen']),
 	},
+	mounted() {
+		window.addEventListener('keydown', this.keyDown);
+	},
+	beforeDestroy() {
+		window.removeEventListener('keydown', this.keyDown);
+	},
 	methods: {
 		debounceInput: debounce(function({ target: { value } }) {
 			this.phrase = value;
@@ -196,11 +202,5 @@ export default {
 			this.$nextTick(() => this.$refs.input.select());
 		},
 	},
-	mounted() {
-		window.addEventListener('keydown', this.keyDown);
-	},
-	beforeDestroy() {
-		window.removeEventListener('keydown', this.keyDown);
-	}
 };
 </script>

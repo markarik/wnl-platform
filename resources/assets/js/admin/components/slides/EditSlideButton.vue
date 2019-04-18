@@ -7,7 +7,7 @@
 		>
 			{{$t('admin.editSlide')}}
 			<span class="icon is-small">
-				<i class="fa fa-pencil"></i>
+				<i class="fa fa-pencil" />
 			</span>
 		</a>
 	</div>

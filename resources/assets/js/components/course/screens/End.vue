@@ -1,5 +1,5 @@
 <template>
-	<wnl-html :show-backlink="true" :screen-data="screenData"></wnl-html>
+	<wnl-html :show-backlink="true" :screen-data="screenData" />
 </template>
 
 <script>

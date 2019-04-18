@@ -7,14 +7,14 @@
 		@click="onClick"
 	>
 		<div class="thumb-meta">
-			<span class="thumb-top-left"><slot></slot></span>
-			<span v-if="media" class="icon is-tiny"><i class="fa" :class="media.icon"></i></span>
+			<span class="thumb-top-left"><slot /></span>
+			<span v-if="media" class="icon is-tiny"><i class="fa" :class="media.icon" /></span>
 		</div>
 		<p class="thumb-heading metadata">{{slide.snippet.header}}</p>
-		<div class="slide-snippet" v-html="slide.snippet.content"></div>
+		<div class="slide-snippet" v-html="slide.snippet.content" />
 		<div v-if="media" class="slide-snippet has-media">
 			<span class="icon is-tiny">
-				<i class="fa" :class="media.icon"></i>
+				<i class="fa" :class="media.icon" />
 			</span>
 			{{media.text}}
 		</div>

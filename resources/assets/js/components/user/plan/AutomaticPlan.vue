@@ -21,7 +21,7 @@
 						<i
 							class="fa"
 							:class="[isDayActive(day.dayNumber) ? 'fa-check-circle' : 'fa-circle-o']"
-						></i>
+						/>
 					</span>
 				</a>
 			</div>
@@ -44,7 +44,7 @@
 						<i
 							class="fa"
 							:class="[isPresetActive(preset.preset) ? 'fa-check-circle' : 'fa-circle-o']"
-						></i>
+						/>
 					</span>
 				</a>
 			</div>
@@ -56,18 +56,17 @@
 				</div>
 				<div class="work-load-control">
 					<a
-						v-for="workLoad in availableWorkLoads"
-						:key="workLoad.workLoad"
+						v-for="workLoadItem in availableWorkLoads"
+						:key="workLoadItem.workLoad"
 						class="panel-toggle work-load-button"
-						:class="{'is-active': isWorkLoadActive(workLoad.workLoad)}"
-						@click="chooseWorkload(workLoad.workLoad)"
-					>{{$t(workLoad.translation)}}
+						:class="{'is-active': isWorkLoadActive(workLoadItem.workLoad)}"
+						@click="chooseWorkload(workLoadItem.workLoad)"
+					>{{$t(workLoadItem.translation)}}
 						<span class="icon is-small">
 							<i
 								class="fa"
-								:class="[isWorkLoadActive(workLoad.workLoad) ? 'fa-check-circle' : 'fa-circle-o']"
-							>
-							</i>
+								:class="[isWorkLoadActive(workLoadItem.workLoad) ? 'fa-check-circle' : 'fa-circle-o']"
+							/>
 						</span>
 					</a>
 				</div>
@@ -82,7 +81,7 @@
 							<label class="date-label">
 								{{$t('questions.plan.headings.startDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-1"></i>
+									<i class="fa fa-hourglass-1" />
 								</span>
 							</label>
 							<wnl-datepicker
@@ -110,7 +109,7 @@
 							<label class="date-label">
 								{{$t('questions.plan.headings.startDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-1"></i>
+									<i class="fa fa-hourglass-1" />
 								</span>
 							</label>
 							<wnl-datepicker
@@ -129,7 +128,7 @@
 							<label class="date-label">
 								{{$t('questions.plan.headings.endDate')}}
 								<span class="icon is-small">
-									<i class="fa fa-hourglass-3"></i>
+									<i class="fa fa-hourglass-3" />
 								</span>
 							</label>
 							<wnl-datepicker
@@ -155,9 +154,9 @@
 				</div>
 				<div class="annotation">
 					<div class="level">
-						<div v-if="this.completedLessonsLength > 0" class="level-item">
+						<div v-if="completedLessonsLength > 0" class="level-item">
 							{{$t('lessonsAvailability.annotation.header')}}
-							{{this.completedLessonsLength}}{{$t('lessonsAvailability.annotation.info')}}
+							{{completedLessonsLength}}{{$t('lessonsAvailability.annotation.info')}}
 						</div>
 					</div>
 				</div>

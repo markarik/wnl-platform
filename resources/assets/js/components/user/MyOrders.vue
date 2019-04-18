@@ -13,7 +13,7 @@
 					data-button="order-album"
 				>
 					<span class="icon is-small status-icon">
-						<i class="fa fa-shopping-cart"></i>
+						<i class="fa fa-shopping-cart" />
 					</span> Zamów album map myśli ({{getAlbum.price}}zł)
 				</a>
 			</div>
@@ -39,11 +39,11 @@
 					v-for="(order, index) in orders"
 					:key="index"
 					:order-instance="order"
-				></wnl-order>
+				/>
 			</div>
 			<div v-else>
 				<div class="box has-text-centered">
-					<p class="title is-5">Brak potwierdzonych zamówień <wnl-emoji name="package"></wnl-emoji></p>
+					<p class="title is-5">Brak potwierdzonych zamówień <wnl-emoji name="package" /></p>
 					<p class="has-text-centered">
 						<a :href="paymentUrl" class="button is-primary">Zapisz się na kurs</a>
 					</p>
@@ -66,6 +66,9 @@ import { envValue } from 'js/utils/env';
 
 export default {
 	name: 'MyOrders',
+	components: {
+		'wnl-order': Order,
+	},
 	data () {
 		return {
 			loaded: false,
@@ -104,6 +107,19 @@ export default {
 			return getUrl('payment/personal-data/wnl-album');
 		},
 	},
+	mounted() {
+		this.getOrders();
+	},
+	created() {
+		if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {
+			const { payment, amount, ...query } = this.$route.query;
+			typeof fbq === 'function' && fbq('track', 'Purchase', { value: amount / 100, currency: 'PLN', platform: envValue('appInstanceName') });
+			this.$router.push({
+				...this.$route,
+				query
+			});
+		}
+	},
 	methods: {
 		getOrders() {
 			axios.get(getApiUrl('users/current/orders/all?include=invoices,payments,study_buddy'))
@@ -134,21 +150,5 @@ export default {
 			return !_.isEmpty(order.method);
 		},
 	},
-	mounted() {
-		this.getOrders();
-	},
-	created() {
-		if (this.$route.query.hasOwnProperty('payment') && this.$route.query.amount) {
-			const { payment, amount, ...query } = this.$route.query;
-			typeof fbq === 'function' && fbq('track', 'Purchase', { value: amount / 100, currency: 'PLN', platform: envValue('appInstanceName') });
-			this.$router.push({
-				...this.$route,
-				query
-			});
-		}
-	},
-	components: {
-		'wnl-order': Order,
-	}
 };
 </script>

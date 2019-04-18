@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<wnl-text-loader v-if="updateInProgress"></wnl-text-loader>
+		<wnl-text-loader v-if="updateInProgress" />
 		<template v-else>
 			<img
 				class="splash-screen-image"
@@ -104,24 +104,6 @@ export default {
 			return moment(new Date(this.currentUserSubscriptionDates.max * 1000)).format('LL');
 		}
 	},
-	methods: {
-		...mapActions([
-			'fetchUserSubscription',
-			'addAutoDismissableAlert'
-		]),
-		...mapActions('course', { courseSetup: 'setup' }),
-	},
-	created() {
-		const accessStart = new Date(this.currentUserSubscriptionDates.min * 1000);
-		const now = new Date();
-		this.diff = moment(accessStart).diff(now, 'minutes');
-		this.intervalId = setInterval(() => {
-			this.diff = this.diff - 1;
-		}, 30000);
-	},
-	beforeDestroy() {
-		clearInterval(this.intervalId);
-	},
 	watch: {
 		async diff() {
 			if (this.diff < 0 && !this.updateInProgress) {
@@ -144,6 +126,24 @@ export default {
 				}
 			}
 		}
-	}
+	},
+	created() {
+		const accessStart = new Date(this.currentUserSubscriptionDates.min * 1000);
+		const now = new Date();
+		this.diff = moment(accessStart).diff(now, 'minutes');
+		this.intervalId = setInterval(() => {
+			this.diff = this.diff - 1;
+		}, 30000);
+	},
+	beforeDestroy() {
+		clearInterval(this.intervalId);
+	},
+	methods: {
+		...mapActions([
+			'fetchUserSubscription',
+			'addAutoDismissableAlert'
+		]),
+		...mapActions('course', { courseSetup: 'setup' }),
+	},
 };
 </script>

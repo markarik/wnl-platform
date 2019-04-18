@@ -6,7 +6,7 @@
 			:to="{ name: 'courses', params: { courseId: 1, keepsNavOpen: true }}"
 		>
 			<span class="icon is-medium">
-				<i class="fa fa-home"></i>
+				<i class="fa fa-home" />
 			</span>
 			<span class="text">Kurs</span>
 		</router-link>
@@ -16,7 +16,7 @@
 			:to="{ name: 'onboarding' }"
 		>
 			<span class="icon is-medium">
-				<i class="fa fa-play"></i>
+				<i class="fa fa-play" />
 			</span>
 			<span class="text">Start</span>
 		</router-link>
@@ -26,7 +26,7 @@
 			:to="{ name: 'collections', params: { keepsNavOpen: true } }"
 		>
 			<span class="icon is-medium">
-				<i class="fa fa-star-o"></i>
+				<i class="fa fa-star-o" />
 			</span>
 			<span class="text">Kolekcje</span>
 		</router-link>
@@ -36,7 +36,7 @@
 			:to="{name: 'questions-dashboard', params: { keepsNavOpen: true } }"
 		>
 			<span class="icon is-medium">
-				<i class="fa fa-check-square-o"></i>
+				<i class="fa fa-check-square-o" />
 			</span>
 			<span class="text">{{$t('nav.sideNav.questions')}}</span>
 		</router-link>
@@ -45,7 +45,7 @@
 			:to="{ name: 'myself', params: { keepsNavOpen: true } }"
 		>
 			<span class="icon is-medium">
-				<i class="fa fa-user-o"></i>
+				<i class="fa fa-user-o" />
 			</span>
 			<span class="text">Konto</span>
 		</router-link>
@@ -54,7 +54,7 @@
 			:to="{ name: 'help', params: { keepsNavOpen: true } }"
 		>
 			<span class="icon is-medium">
-				<i class="fa fa-heartbeat"></i>
+				<i class="fa fa-heartbeat" />
 			</span>
 			<span class="text">Pomoc</span>
 		</router-link>
@@ -64,7 +64,7 @@
 			:href="signUpLink"
 		>
 			<span class="icon is-medium">
-				<i class="fa fa-thumbs-o-up"></i>
+				<i class="fa fa-thumbs-o-up" />
 			</span>
 			<span class="text">Zapisz się!</span>
 		</a>
@@ -74,7 +74,7 @@
 			:to="{name: 'moderatorFeed'}"
 		>
 			<span class="icon is-medium">
-				<i class="fa fa-list"></i>
+				<i class="fa fa-list" />
 			</span>
 			<span class="text">Feed</span>
 		</router-link>

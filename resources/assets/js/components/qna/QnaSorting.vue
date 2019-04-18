@@ -8,7 +8,7 @@
 					:class="{'is-active': isTabActive(option.slug)}"
 				>
 					<a @click="changeSorting(option.slug)">
-						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{$t(`qna.sorting.${option.slug}`)}}
+						<span class="icon is-small"><i class="fa" :class="option.icon" /></span> {{$t(`qna.sorting.${option.slug}`)}}
 					</a>
 				</li>
 			</ul>
@@ -22,7 +22,7 @@
 						:value="option.slug"
 						:selected="isTabActive(option.slug)"
 					>
-						<span class="icon is-small"><i class="fa" :class="option.icon"></i></span> {{$t(`qna.sorting.${option.slug}`)}}
+						<span class="icon is-small"><i class="fa" :class="option.icon" /></span> {{$t(`qna.sorting.${option.slug}`)}}
 					</option>
 				</select>
 			</span>

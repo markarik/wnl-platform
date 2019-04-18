@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div v-if="loading" class="qna-loader">
-			<wnl-text-loader></wnl-text-loader>
+			<wnl-text-loader />
 		</div>
 		<div v-if="!loading" class="wnl-qna">
 			<div class="wnl-qna-header level">
@@ -9,7 +9,7 @@
 					<div>
 						<div class="wnl-qna-header" :class="isUserProfileClass">
 							<span v-if="icon" class="icon is-big user-profile-icon">
-								<i :class="icon"></i>
+								<i :class="icon" />
 							</span>
 							<p v-if="!hideTitle" class="wnl-qna-header-title">
 								{{displayedTitle}}&nbsp;
@@ -24,7 +24,7 @@
 								:key="tag.id"
 								class="tag is-light"
 								v-text="tag.name"
-							></span>
+							/>
 						</div>
 					</div>
 				</div>
@@ -43,7 +43,7 @@
 					>
 						<span>Zadaj pytanie</span>
 						<span id="question-icon" class="icon is-small">
-							<i class="fa fa-question-circle-o"></i>
+							<i class="fa fa-question-circle-o" />
 						</span>
 					</a>
 				</div>
@@ -212,16 +212,6 @@ export default {
 			return this.title || this.$t('qna.title.titleToDisplay');
 		},
 	},
-	methods: {
-		...mapActions('qna', ['destroyQna']),
-	},
-	mounted() {
-		if (!this.sortingEnabled && this.passedQuestions) {
-			this.questionsList = this.passedQuestions;
-		} else {
-			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
-		}
-	},
 	watch: {
 		'currentSorting' (newValue) {
 			this.questionsList = this.getSortedQuestions(newValue, this.questions);
@@ -232,8 +222,18 @@ export default {
 			}
 		}
 	},
+	mounted() {
+		if (!this.sortingEnabled && this.passedQuestions) {
+			this.questionsList = this.passedQuestions;
+		} else {
+			this.questionsList = this.getSortedQuestions(this.currentSorting, this.questions);
+		}
+	},
 	beforeDestroy() {
 		this.destroyQna();
-	}
+	},
+	methods: {
+		...mapActions('qna', ['destroyQna']),
+	},
 };
 </script>

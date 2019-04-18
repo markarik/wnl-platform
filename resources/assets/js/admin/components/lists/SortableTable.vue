@@ -54,6 +54,26 @@ export default {
 			return this.$route.query.sort;
 		},
 	},
+	watch: {
+		sortDirection(newVal) {
+			if (this.routerSortDirection !== newVal) {
+				this.$router.push({ query: { ...this.$route.query, sortDirection: newVal } });
+			}
+		},
+		activeSortColumnName(newVal) {
+			if (this.routerSort !== newVal) {
+				this.$router.push({ query: { ...this.$route.query, sort: newVal } });
+			}
+		}
+	},
+	mounted() {
+		if (this.routerSort && (this.routerSortDirection !== this.sortDirection || this.routerSort !== this.activeSortColumnName)) {
+			this.$emit('changeOrder', {
+				sortDirection: this.routerSortDirection,
+				activeSortColumnName: this.routerSort,
+			});
+		}
+	},
 	methods: {
 		changeOrder({ name, sortable = true }) {
 			if (!sortable) return;
@@ -66,26 +86,6 @@ export default {
 
 			this.$router.push({ query: { ...this.$route.query, sortDirection, sort: name }, hash: this.$route.hash });
 		},
-	},
-	mounted() {
-		if (this.routerSort && (this.routerSortDirection !== this.sortDirection || this.routerSort !== this.activeSortColumnName)) {
-			this.$emit('changeOrder', {
-				sortDirection: this.routerSortDirection,
-				activeSortColumnName: this.routerSort,
-			});
-		}
-	},
-	watch: {
-		sortDirection(newVal) {
-			if (this.routerSortDirection !== newVal) {
-				this.$router.push({ query: { ...this.$route.query, sortDirection: newVal } });
-			}
-		},
-		activeSortColumnName(newVal) {
-			if (this.routerSort !== newVal) {
-				this.$router.push({ query: { ...this.$route.query, sort: newVal } });
-			}
-		}
 	}
 };
 </script>

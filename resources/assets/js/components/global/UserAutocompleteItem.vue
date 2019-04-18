@@ -1,7 +1,7 @@
 <template>
 	<div class="user-autocomplete-item">
 		<div class="autocomplete-box__avatar">
-			<wnl-avatar :full-name="item.full_name" :url="item.avatar"></wnl-avatar>
+			<wnl-avatar :full-name="item.full_name" :url="item.avatar" />
 		</div>
 		<div class="autocomplete-box__text">
 			{{item.full_name}}

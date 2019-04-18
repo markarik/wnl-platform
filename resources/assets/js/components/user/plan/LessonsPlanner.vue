@@ -40,7 +40,7 @@
 					<i
 						class="fa"
 						:class="[view.isActive ? 'fa-check-circle' : 'fa-circle-o']"
-					></i>
+					/>
 				</span>
 			</a>
 		</div>

@@ -34,7 +34,7 @@
 						class="icon is-small margin right clickable"
 						@click="onTaxonomyTermDelete(term)"
 					>
-						<i class="fa fa-times"></i>
+						<i class="fa fa-times" />
 					</span>
 				</wnl-taxonomy-term-with-ancestors>
 
@@ -48,7 +48,7 @@
 						class="icon is-small margin right clickable"
 						@click="onTagDelete(tag)"
 					>
-						<i class="fa fa-times"></i>
+						<i class="fa fa-times" />
 					</span>
 				</wnl-tag>
 			</div>
@@ -64,7 +64,7 @@
 						v-model="activeContentTypesMap[contentType]"
 						type="checkbox"
 						class="checkbox"
-					/>
+					>
 					<label class="label" :for="`type-${contentType}`">{{meta.name}}</label>
 				</div>
 			</div>

@@ -4,7 +4,7 @@
 		<div class="active-question-controls">
 			<div class="widget-control">
 				<a class="small unselectable" @click="previousQuestion()">
-					<span class="icon is-small"><i class="fa fa-angle-left"></i></span> Poprzednie
+					<span class="icon is-small"><i class="fa fa-angle-left" /></span> Poprzednie
 				</a>
 			</div>
 			<div class="widget-control">
@@ -13,7 +13,7 @@
 			</div>
 			<div class="widget-control">
 				<a class="small unselectable" @click="nextQuestion()">
-					Następne <span class="icon is-small"><i class="fa fa-angle-right"></i></span>
+					Następne <span class="icon is-small"><i class="fa fa-angle-right" /></span>
 				</a>
 			</div>
 		</div>
@@ -162,6 +162,20 @@ export default {
 			return this.question.isResolved;
 		},
 	},
+	watch: {
+		async isContentItemClassifierEditorActive() {
+			if (this.isContentItemClassifierEditorActive) {
+				await nextTick();
+				scrollToElement(this.$el);
+			}
+		},
+	},
+	mounted() {
+		window.addEventListener('keydown', this.keyDown);
+	},
+	beforeDestroy() {
+		window.removeEventListener('keydown', this.keyDown);
+	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		...mapActions('activateWithShortcutKey', ['setActiveInstance', 'resetActiveInstance', 'register', 'deregister']),
@@ -241,19 +255,5 @@ export default {
 			this.deregister(this.activateWithShortcutKeyId);
 		},
 	},
-	mounted() {
-		window.addEventListener('keydown', this.keyDown);
-	},
-	beforeDestroy() {
-		window.removeEventListener('keydown', this.keyDown);
-	},
-	watch: {
-		async isContentItemClassifierEditorActive() {
-			if (this.isContentItemClassifierEditorActive) {
-				await nextTick();
-				scrollToElement(this.$el);
-			}
-		},
-	}
 };
 </script>

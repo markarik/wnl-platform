@@ -5,7 +5,7 @@
 				{{$t('questions.plan.progress.day', {day: daysSoFar})}}
 				/ {{plannedDaysCount}}
 			</span>
-			<span v-else></span>
+			<span v-else />
 			<a
 				v-if="allowChange"
 				class="button is-outlined is-small"
@@ -58,7 +58,7 @@
 			<div v-else>
 				<p class="plan-starts">
 					{{$t('questions.plan.start.heading', {
-						date: this.planStartDate.format('LL')
+						date: planStartDate.format('LL')
 					})}}
 				</p>
 				<p class="plan-progress-average">{{$t('questions.plan.start.tip', {

@@ -8,7 +8,7 @@
 						class="input"
 						placeholder="Szukaj..."
 						@keyup.enter="search"
-					/>
+					>
 				</div>
 				<div class="control">
 					<a class="button is-primary" @click="search">
@@ -45,7 +45,7 @@
 			<span>Aktualne wyszukiwanie:</span>
 			<span class="tag is-success">
 				{{searchPhrase}}
-				<button class="delete is-small" @click="clearSearch"></button>
+				<button class="delete is-small" @click="clearSearch" />
 			</span>
 		</div>
 	</div>
@@ -104,6 +104,15 @@ export default {
 			return fields || [];
 		}
 	},
+	mounted() {
+		const query = this.$route.query.q || '';
+
+		if (query !== this.searchPhrase || !isEqual(this.searchFields, this.routerSearchFields)) {
+			this.searchPhrase = this.$route.query.q;
+			this.searchFields = this.routerSearchFields;
+			this.emitSearch();
+		}
+	},
 	methods: {
 		onSelectAll() {
 			this.searchFields = [];
@@ -125,15 +134,6 @@ export default {
 		},
 		clearSearch() {
 			this.searchPhrase = '';
-			this.emitSearch();
-		}
-	},
-	mounted() {
-		const query = this.$route.query.q || '';
-
-		if (query !== this.searchPhrase || !isEqual(this.searchFields, this.routerSearchFields)) {
-			this.searchPhrase = this.$route.query.q;
-			this.searchFields = this.routerSearchFields;
 			this.emitSearch();
 		}
 	}

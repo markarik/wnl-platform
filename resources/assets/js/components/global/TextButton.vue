@@ -5,7 +5,7 @@
 		:type="type"
 		@click="$emit('click', $event)"
 	>
-		<i v-if="icon" :class="`icon fa fa-${icon}`"></i>
+		<i v-if="icon" :class="`icon fa fa-${icon}`" />
 		<slot />
 	</button>
 </template>

@@ -4,9 +4,9 @@
 		:to="{ name: 'messages', query: {roomId: roomIdParam} }"
 		@click="$emit('navigate')"
 	>
-		<slot></slot>
+		<slot />
 	</router-link>
-	<a v-else @click="createPrivateRoomAndRedirect"><slot></slot></a>
+	<a v-else @click="createPrivateRoomAndRedirect"><slot /></a>
 </template>
 
 <script>

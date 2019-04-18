@@ -3,6 +3,7 @@ import { baseProps, getContextRoute, mapMessageToRoute } from './event';
 
 export default {
 	functional: true,
+	props: baseProps,
 	render: (createElement, { props: { message, notificationComponent }, data: { on } }) => {
 		const query = {
 			[message.objects.type]: message.objects.id,
@@ -23,7 +24,6 @@ export default {
 			},
 			on,
 		});
-	},
-	props: baseProps
+	}
 };
 </script>

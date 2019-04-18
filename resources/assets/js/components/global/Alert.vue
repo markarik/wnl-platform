@@ -1,8 +1,8 @@
 <template>
 	<transition name="fade">
 		<div class="notification" :class="fullCssClass">
-			<button class="delete" @click.prevent="onDelete"></button>
-			<span v-html="alert.message"></span>
+			<button class="delete" @click.prevent="onDelete" />
+			<span v-html="alert.message" />
 		</div>
 	</transition>
 </template>

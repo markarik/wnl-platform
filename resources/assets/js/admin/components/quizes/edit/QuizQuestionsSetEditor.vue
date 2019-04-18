@@ -14,7 +14,7 @@
 				>
 					<span class="margin right">Zapisz</span>
 					<span class="icon is-small">
-						<i class="fa fa-save"></i>
+						<i class="fa fa-save" />
 					</span>
 				</button>
 			</div>
@@ -170,6 +170,14 @@ export default {
 			return !isEqual(this.form.originalData, this.form.data());
 		}
 	},
+	mounted() {
+		if (this.isEdit) {
+			this.populateForm();
+		} else {
+			this.formPopulated = true;
+		}
+		this.setupLessons();
+	},
 	methods: {
 		...mapActions(['addAutoDismissableAlert']),
 		...mapActions('lessons', { setupLessons: 'setup' }),
@@ -291,14 +299,6 @@ export default {
 			}
 			this.quizQuestionInput = '';
 		},
-	},
-	mounted() {
-		if (this.isEdit) {
-			this.populateForm();
-		} else {
-			this.formPopulated = true;
-		}
-		this.setupLessons();
 	},
 };
 </script>

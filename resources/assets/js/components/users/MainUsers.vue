@@ -4,15 +4,14 @@
 			:is-visible="isSidenavVisible"
 			:is-detached="!isSidenavMounted"
 		>
-			<wnl-main-nav :is-horizontal="!isSidenavMounted"></wnl-main-nav>
+			<wnl-main-nav :is-horizontal="!isSidenavMounted" />
 		</wnl-sidenav-slot>
 		<div class="scrollable-main-container wnl-main" :class="{'full-width': isMobileProfile, 'mobile-main': isMobileProfile}">
 			<router-view
 				:filter-by-help="filterByHelp"
 				:filter-by-location="filterByLocation"
 				@userDataLoaded="onDataLoaded"
-			>
-			</router-view>
+			/>
 		</div>
 		<wnl-sidenav-slot
 			v-if="!isMainRoute && (isLargeDesktop || isSmallDesktop)"
@@ -20,7 +19,7 @@
 			:is-visible="true"
 			:is-detached="false"
 		>
-			<wnl-user-about v-if="profile" :profile="profile"></wnl-user-about>
+			<wnl-user-about v-if="profile" :profile="profile" />
 		</wnl-sidenav-slot>
 	</div>
 </template>

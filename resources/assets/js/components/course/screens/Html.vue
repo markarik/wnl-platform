@@ -4,20 +4,19 @@
 		:class="{'wnl-repetitions': isRepetitions}"
 		@click="onClick"
 	>
-		<div class="content" v-html="content">
-		</div>
+		<div class="content" v-html="content" />
 		<p v-if="showBacklink" class="end-button has-text-centered">
 			<router-link :to="{name: 'dashboard'}" class="button is-primary is-outlined">
 				Wróć do auli
 			</router-link>
 		</p>
 		<div class="image-gallery-wrapper" :class="{ isVisible: isVisible }">
-			<div class="image-container"></div>
-			<span class="prev" @click="goToImage(previousImageIndex)"><i class="fa fa-angle-left"></i></span>
-			<span class="next" @click="goToImage(nextImageIndex)"><i class="fa fa-angle-right"></i></span>
-			<span class="iv-close" @click="isVisible = false"></span>
+			<div class="image-container" />
+			<span class="prev" @click="goToImage(previousImageIndex)"><i class="fa fa-angle-left" /></span>
+			<span class="next" @click="goToImage(nextImageIndex)"><i class="fa fa-angle-right" /></span>
+			<span class="iv-close" @click="isVisible = false" />
 			<div class="footer-info">
-				<span class="current">{{this.currentImageIndex + 1}}</span>/<span class="total">{{this.images.length}}</span>
+				<span class="current">{{currentImageIndex + 1}}</span>/<span class="total">{{images.length}}</span>
 			</div>
 		</div>
 	</div>
@@ -152,6 +151,16 @@ export default {
 			return this.currentImageIndex === this.images.length -1 ? 0 : this.currentImageIndex + 1;
 		},
 	},
+	watch: {
+		screenData() {
+			nextTick(() => this.wrapEmbedded());
+		}
+	},
+	mounted() {
+		this.wrapEmbedded();
+		this.addFullscreen();
+		document.body.addEventListener('keydown', this.onKeydown);
+	},
 	methods: {
 		goToImage(index) {
 			if (index < 0 || !this.images.length) return;
@@ -223,16 +232,6 @@ export default {
 				this.isVisible = false;
 				break;
 			}
-		}
-	},
-	mounted() {
-		this.wrapEmbedded();
-		this.addFullscreen();
-		document.body.addEventListener('keydown', this.onKeydown);
-	},
-	watch: {
-		screenData() {
-			nextTick(() => this.wrapEmbedded());
 		}
 	}
 

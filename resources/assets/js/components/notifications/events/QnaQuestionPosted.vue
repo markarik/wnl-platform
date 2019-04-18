@@ -3,6 +3,7 @@ import { getContextRoute, baseProps, mapMessageToRoute } from './event';
 
 export default {
 	functional: true,
+	props: baseProps,
 	render: (createElement, { props: { message, notificationComponent }, data: { on } }) => {
 		const contextRoute = () => mapMessageToRoute(message, {
 			'qna_question': message.subject.id
@@ -17,7 +18,6 @@ export default {
 			},
 			on,
 		});
-	},
-	props: baseProps
+	}
 };
 </script>

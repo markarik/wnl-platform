@@ -27,7 +27,7 @@
 						:get-reaction="getReaction"
 						@selectAnswer="onSelectAnswer"
 						@userEvent="proxyUserEvent"
-					></wnl-quiz-question>
+					/>
 					<wnl-content-item-classifier-editor
 						class="quiz-question__content-item-classifier-editor"
 						:content-item-id="question.id"
@@ -132,6 +132,16 @@ export default {
 			return `${_.size(this.questionsUnresolved)}/${_.size(this.allQuestions)}`;
 		},
 	},
+	watch: {
+		questionsIds(newValue, oldValue) {
+			if (_.isEqual(newValue, oldValue)) return;
+
+			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
+		}
+	},
+	mounted() {
+		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
+	},
 	methods: {
 		...mapActions('contentClassifier', ['fetchTaxonomyTerms']),
 		confirmQuizEnd(unanswered) {
@@ -181,16 +191,6 @@ export default {
 			const id = _.head(this.questionsUnaswered).id;
 			scrollToElement(document.querySelector(`.quiz-question-${id}`));
 		},
-	},
-	mounted() {
-		this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
-	},
-	watch: {
-		questionsIds(newValue, oldValue) {
-			if (_.isEqual(newValue, oldValue)) return;
-
-			this.fetchTaxonomyTerms({ contentType: CONTENT_TYPES.QUIZ_QUESTION, contentIds: this.questionsIds });
-		}
 	},
 };
 </script>

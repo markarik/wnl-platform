@@ -6,12 +6,11 @@
 			:to="to"
 		>
 			<span class="sidenav-item-content">
-				<slot name="title"></slot>
+				<slot name="title" />
 				<span v-if="meta" class="sidenav-item-meta">{{meta}}</span>
 			</span>
 		</router-link>
-		<slot name="children">
-		</slot>
+		<slot name="children" />
 	</div>
 </template>
 

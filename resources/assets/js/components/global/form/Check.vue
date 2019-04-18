@@ -4,14 +4,13 @@
 			:value="inputValue"
 			:name="name"
 			@toggle="onToggle"
-		>
-		</wnl-toggler>
+		/>
 		<label
 			v-if="$slots.default"
 			:for="name"
 			class="label"
 		>
-			<slot></slot>
+			<slot />
 		</label>
 	</div>
 </template>
@@ -27,11 +26,11 @@ import { formInput } from 'js/mixins/form-input';
 
 export default {
 	name: 'WnlFormCheck',
-	props: ['name', 'placeholder'],
-	mixins: [formInput],
 	components: {
 		'wnl-toggler': Toggler,
 	},
+	mixins: [formInput],
+	props: ['name', 'placeholder'],
 	computed: {
 		default() {
 			return '';

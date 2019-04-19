@@ -46,7 +46,7 @@ class SlideshowMigrationTest extends TestCase
 			]
 		]);
 		$originalSlides = factory(Slide::class, self::SLIDES_COUNT)->create();
-		$originalSections = factory(Section::class, 10)->create([
+		$originalSections = factory(Section::class, self::SECTIONS_COUNT)->create([
 			'screen_id' => $originalScreen->id,
 		]);
 		$chunkedSlides = $originalSlides->chunk(self::SLIDES_PER_SECTION);

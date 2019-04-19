@@ -2,15 +2,20 @@
 
 namespace Tests\Api\Qna;
 
+use App\Jobs\LogResourceUpdate;
 use App\Models\Discussion;
 use App\Models\Lesson;
 use App\Models\Page;
 use App\Models\QnaQuestion;
+use App\Models\Role;
 use App\Models\Screen;
 use App\Models\Tag;
 use App\Models\User;
+use Carbon\Carbon;
 use Facades\App\Contracts\CourseProvider;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Queue;
 use Tests\Api\ApiTestCase;
 
 
@@ -98,5 +103,30 @@ class QuestionsTest extends ApiTestCase
 			->assertJson([
 				'name' => $page->slug,
 			]);
+	}
+
+	/** @test */
+	public function verify_qna_question() {
+		Bus::fake();
+
+		$expectedDate = Carbon::create(1990, 12, 07, 12, 00, 00);
+		Carbon::setTestNow($expectedDate);
+
+		$user = factory(User::class)->create();
+		$user->roles()->attach(Role::byName('admin'));
+
+		$question = factory(QnaQuestion::class)->create();
+
+		$response = $this
+			->actingAs($user)
+			->json('PUT', $this->url('/qna_questions/' . $question->id), [
+				'verified' => true
+			]);
+
+		$response
+			->assertStatus(200);
+
+		$this->assertEquals($question->fresh()->verified_at, $expectedDate);
+		Bus::assertDispatched(LogResourceUpdate::class);
 	}
 }

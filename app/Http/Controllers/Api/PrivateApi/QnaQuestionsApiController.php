@@ -10,6 +10,7 @@ use App\Http\Requests\Qna\UpdateQuestion;
 use App\Models\QnaQuestion;
 use App\Models\Tag;
 use Auth;
+use Carbon\Carbon;
 use Facades\App\Contracts\CourseProvider;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
@@ -52,24 +53,32 @@ class QnaQuestionsApiController extends ApiController
 	public function put(UpdateQuestion $request)
 	{
 		$qnaQuestion = QnaQuestion::withTrashed()->find($request->route('id'));
+		$currentUserId = Auth::user()->id;
 
 		if (!$qnaQuestion) {
 			return $this->respondNotFound();
 		}
 
+		if ($request->has('text')) {
+			$qnaQuestion->text = $request->input('text');
+		}
+
+		if ($request->input('verified')) {
+			$qnaQuestion->verified_at = Carbon::now();
+		}
+
+
+		$qnaQuestion->save();
+
 		$statusResolved = $request->input('resolved');
 		if (isset($statusResolved)) {
 			if ($statusResolved) {
 				$qnaQuestion->delete();
-				event(new QnaQuestionRemoved($qnaQuestion, Auth::user()->id, 'resolved'));
+				event(new QnaQuestionRemoved($qnaQuestion, $currentUserId, 'resolved'));
 			} else {
 				$qnaQuestion->restore();
-				event(new QnaQuestionRestoredEvent($qnaQuestion, Auth::user()->id));
+				event(new QnaQuestionRestoredEvent($qnaQuestion, $currentUserId));
 			}
-		} else {
-			$qnaQuestion->update([
-				'text' => $request->input('text'),
-			]);
 		}
 
 		return $this->respondOk();

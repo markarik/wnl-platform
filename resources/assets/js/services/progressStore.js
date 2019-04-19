@@ -11,7 +11,10 @@ const setCourseProgress = ({ courseId, profileId }, value) => {
 	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}`), value);
 };
 
-const setLessonProgress = ({ courseId, lessonId, profileId }, value) => {
+const setLessonProgress = ({ courseId, lessonId, profileId, route }, value) => {
+	if (route) {
+		value.route = route;
+	}
 	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}/lesson/${lessonId}`), {
 		lesson: value
 	});
@@ -30,6 +33,7 @@ const completeSubsection = (lessonState, payload) => {
 	const { sectionId, screenId, subsectionId } = payload;
 	const stateWithScreen = _getScreenProgress(lessonState, payload);
 	const stateWithSections = _getSectionProgress(stateWithScreen, payload);
+
 
 	set(lessonState, `screens[${screenId}].sections[${sectionId}].subsections`, {
 		...get(lessonState, `screens[${screenId}].sections[${sectionId}].subsections`, {}),

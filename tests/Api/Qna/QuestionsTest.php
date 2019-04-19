@@ -15,7 +15,6 @@ use Carbon\Carbon;
 use Facades\App\Contracts\CourseProvider;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Queue;
 use Tests\Api\ApiTestCase;
 
 

@@ -11,9 +11,12 @@
 			:title="usernameToUse"
 			class="wnl-avatar-automatic"
 		>{{initials}}</div>
+		<div class="badge">
+			<img :src="badgeUrl">
+		</div>
 	</div>
 </template>
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 	@import 'resources/assets/sass/mixins'
 
@@ -34,16 +37,29 @@
 	.wnl-avatar
 		overflow: hidden
 		user-select: none
+		position: relative
+
+	.badge
+		position: absolute
+		bottom: 0
+		right: 0
+		background: #fff
 
 </style>
 <script>
 import _ from 'lodash';
 import { mapGetters } from 'vuex';
 import { getInitials } from 'js/utils/strings';
+import { getImageUrl } from 'js/utils/env';
 
 export default {
 	name: 'Avatar',
-	props: ['fullName', 'size', 'url'],
+	props: {
+		'fullName': String,
+		'size': String,
+		'url': String,
+		'roles': Array,
+	},
 	computed: {
 		...mapGetters([
 			'currentUserFullName',
@@ -78,6 +94,9 @@ export default {
 		},
 		imageClass() {
 			return this.isCustom ? 'with-image' : 'without-image';
+		},
+		badgeUrl() {
+			return getImageUrl('wnl-crew-badge.svg');
 		},
 	},
 };

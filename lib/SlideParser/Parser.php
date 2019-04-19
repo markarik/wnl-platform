@@ -484,7 +484,8 @@ class Parser
 			$image = Image::make(Url::encodeFullUrl($imageUrl));
 			$mime = $image->mime;
 
-			$template = self::IMAGE_TEMPLATE;
+			$isChart = (bool) $this->match(self::MEDIA_PATTERNS['chart'], $imgTag);
+			$template = $isChart ? self::CHART_TEMPLATE : self::IMAGE_TEMPLATE;
 
 			switch ($mime){
 				case 'image/gif':
@@ -511,9 +512,6 @@ class Parser
 			$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
 			Storage::put('public/' . $path, $data, 'public');
 
-			if(strpos($imgTag, 'class="chart"') !== false) {
-				$template = self::CHART_TEMPLATE;
-			}
 			$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
 			$html = str_replace($imgTag, $viewerHtml, $html);
 		}

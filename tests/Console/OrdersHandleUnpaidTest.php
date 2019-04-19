@@ -38,7 +38,7 @@ class OrdersHandleUnpaidTestTest extends TestCase
 
 	public function testUnpaidOrder()
 	{
-		$this->markTestSkipped();
+		$this->markTestSkipped('PLAT-1246');
 		/** @var Order $order */
 		$order = factory(Order::class)->create([
 			'paid' => false,
@@ -77,7 +77,7 @@ class OrdersHandleUnpaidTestTest extends TestCase
 
 	public function testTwoOrdersForOneProduct()
 	{
-		$this->markTestSkipped();
+		$this->markTestSkipped('PLAT-1246');
 		/** @var Product $product */
 		$product = factory(Product::class)->create();
 
@@ -128,7 +128,7 @@ class OrdersHandleUnpaidTestTest extends TestCase
 
 	public function testUnpaidInstalment()
 	{
-		$this->markTestSkipped();
+		$this->markTestSkipped('PLAT-1246');
 		/** @var User $user */
 		$user = factory(User::class)->create([
 			'suspended' => false,

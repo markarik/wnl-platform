@@ -21,7 +21,7 @@ class OrdersHandleUnpaidTestTest extends TestCase
 
 	public function testNoRemindersSent()
 	{
-		$this->markTestSkipped();
+		$this->markTestSkipped('PLAT-1246');
 		$order = factory(Order::class)->create([
 			'paid' => false,
 			'created_at' => Carbon::now()->subDays(3),

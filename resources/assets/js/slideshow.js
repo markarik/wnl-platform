@@ -43,6 +43,10 @@ const setupReveal = () => {
 		progress: true,
 	});
 
+	Reveal.addEventListener('ready', (event) => {
+		initImageViewer(event.currentSlide);
+	});
+
 	Reveal.addEventListener('slidechanged', (event) => {
 		initImageViewer(event.currentSlide);
 

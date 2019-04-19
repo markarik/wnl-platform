@@ -355,9 +355,9 @@ export default {
 			}
 
 			this.updateLessonNav({
-				activeSection: (this.currentSection && this.currentSection.id) || 0,
-				activeSubsection: (this.currentSubsection && this.currentSection.id) || 0,
-				activeScreen: parseInt(this.screenId)
+				activeSection: (this.currentSection && this.currentSection.id) || null,
+				activeSubsection: (this.currentSubsection && this.currentSection.id) || null,
+				activeScreen: this.screenId
 			});
 		},
 		async displaySatisfactionGuaranteeModalIfNeeded() {
@@ -397,7 +397,7 @@ export default {
 			});
 		},
 		async updateLessonProgress() {
-			if (typeof this.screenId !== 'undefined') {
+			if (this.screenId !== null) {
 				if (this.currentSection) {
 					if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
 						await this.completeSection({ ...this.lessonProgressContext, sectionId: this.currentSection.id });
@@ -423,9 +423,9 @@ export default {
 				}
 
 				this.updateLessonNav({
-					activeSection: (this.currentSection && this.currentSection.id) || 0,
-					activeSubsection: parseInt(this.currentSubsection && this.currentSubsection.id,) || 0,
-					activeScreen: this.screenId || 0,
+					activeSection: (this.currentSection && this.currentSection.id) || null,
+					activeSubsection: parseInt(this.currentSubsection && this.currentSubsection.id,) || null,
+					activeScreen: this.screenId,
 				});
 			}
 		},

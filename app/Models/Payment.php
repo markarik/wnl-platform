@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+	const STATUS_SUCCESS = 'success';
+
 	protected $fillable = [
 		'external_id',
 		'order_id',

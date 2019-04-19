@@ -48,9 +48,6 @@ class InvoiceResend extends Command
 			}
 
 			switch ($this->argument('type')) {
-				case 'advance' :
-					(new InvoiceGenerator)->advance($invoice->order, $invoice);
-					break;
 				case 'vat' :
 					(new InvoiceGenerator)->vatInvoice($invoice->order, $invoice);
 					break;

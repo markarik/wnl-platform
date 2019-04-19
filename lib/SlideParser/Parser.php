@@ -498,7 +498,7 @@ class Parser
 					$ext = 'png';
 					break;
 				case 'image/jpeg':
-					$data = $resize ? $this->getJpg($imageUrl) : @file_get_contents($imageUrl);
+					$data = $resize ? $this->getJpg($image) : @file_get_contents($imageUrl);
 					$ext = 'jpg';
 					break;
 				default:
@@ -556,29 +556,23 @@ class Parser
 		}
 	}
 
-	/**
-	 * @param string $imageUrl
-	 * @return \Psr\Http\Message\StreamInterface
-	 */
-	private function getPng(string $imageUrl)
+	private function getPng(\Intervention\Image\Image  $image): StreamInterface
 	{
-		return $image->resize(1920, 1080, function ($constraint) {
+		return $image->resize(1920, 1080, function (Constraint $constraint) {
 			$constraint->aspectRatio();
 			$constraint->upsize();
 		})->stream('png');
 	}
 
-	/**
-	 * @param string $imageUrl
-	 * @return \Psr\Http\Message\StreamInterface
-	 */
-	private function getJpg(string $imageUrl)
+	private function getJpg(\Intervention\Image\Image  $image): StreamInterface
 	{
-		$background = $image->resize(1920, 1080, function ($constraint) {
+		$background = $image->resize(1920, 1080, function (Constraint $constraint) {
 			$constraint->aspectRatio();
 			$constraint->upsize();
 		});
+
 		$canvas = Image::canvas($image->width(), $image->height(), '#fff');
+
 		return $canvas->insert($background)->stream('jpg', 80);
 	}
 }

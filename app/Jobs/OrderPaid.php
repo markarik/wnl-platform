@@ -2,21 +2,25 @@
 
 namespace App\Jobs;
 
+use App\Models\Invoice as InvoiceModel;
 use App\Models\Order;
-use App\Models\UserSubscription;
+use App\Models\Payment;
 use Illuminate\Bus\Queueable;
-use Lib\Invoice\Invoice;
+use Lib\Invoice\Invoice as InvoiceGenerator;
 use App\Mail\PaymentConfirmation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Log;
 
 class OrderPaid implements ShouldQueue
 {
 	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-	protected $order;
+
+	/** @var Order $order */
+	private $order;
 
 	/**
 	 * Create a new job instance.
@@ -35,15 +39,21 @@ class OrderPaid implements ShouldQueue
 	 */
 	public function handle()
 	{
-		$this->handleCoupon();
-		$this->handleInstalments();
-		$this->sendConfirmation();
+		$this->updateCoupon();
+		$this->unsuspendUser();
+
+		$invoice = $this->getInvoice();
+
+		if ($invoice) {
+			$this->sendConfirmation($invoice);
+		}
+
 		$this->cancelRemainingOrders();
 	}
 
-	protected function handleCoupon()
+	private function updateCoupon()
 	{
-		\Log::notice("OrderPaid: handleCoupon called for order #{$this->order->id}");
+		Log::notice("OrderPaid: updateCoupon called for order #{$this->order->id}");
 		$order = $this->order;
 
 		if ($order->coupon && $order->coupon->times_usable > 0) {
@@ -52,31 +62,38 @@ class OrderPaid implements ShouldQueue
 		}
 	}
 
-	protected function sendConfirmation()
+	private function getInvoice(): ?InvoiceModel
 	{
-		\Log::notice("OrderPaid: sendConfirmation called for order #{$this->order->id}");
 		$order = $this->order;
 
-		\Log::debug('Issuing invoice and sending order confirmation.');
+		if ($this->shouldGenerateVatInvoice($order)) {
+			Log::notice("OrderPaid: Generating vat invoice for order #{$order->id}");
+			return (new InvoiceGenerator)->vatInvoice($order);
+		} else {
+			Log::notice("OrderPaid: Skipping invoice generation for order #{$order->id}");
+			return null;
+		}
+	}
 
-		$invoice = $this->getInvoice($order);
+	private function shouldGenerateVatInvoice(Order $order): bool
+	{
+		$numberOfSuccessfulPayments = $order->payments->where('status', '=', Payment::STATUS_SUCCESS)->count();
+		$numberOfVatInvoices = $order->invoices->where('type', '=', 'vat')->count();
 
+		return $numberOfVatInvoices === 0 || $numberOfVatInvoices < $numberOfSuccessfulPayments;
+	}
+
+	private function sendConfirmation(InvoiceModel $invoice)
+	{
+		$order = $this->order;
+		Log::notice("OrderPaid: sendConfirmation called for order #{$order->id}");
 		Mail::to($order->user)->send(new PaymentConfirmation($order, $invoice));
 	}
 
-	protected function getInvoice($order)
+	private function unsuspendUser()
 	{
-		if ($order->product->delivery_date->isPast()) {
-			return (new Invoice)->vatInvoice($order);
-		}
-
-		return (new Invoice)->advance($order);
-	}
-
-	protected function handleInstalments()
-	{
-		\Log::notice("OrderPaid: handleInstalments called for order #{$this->order->id}");
-		if ($this->order->method !== 'instalments') return;
+		Log::notice("OrderPaid: unsuspendUser called for order #{$this->order->id}");
+		if ($this->order->method !== Order::PAYMENT_METHOD_INSTALMENTS) return;
 
 		if ($this->order->user->suspended && !$this->order->is_overdue) {
 			$this->order->user->suspended = false;
@@ -92,6 +109,7 @@ class OrderPaid implements ShouldQueue
 				&& $order->id !== $this->order->id
 				&& $order->product->id === $this->order->product->id
 			) {
+				Log::notice("OrderPaid: canceling order #{$order->id}");
 				$order->cancel();
 			}
 		});

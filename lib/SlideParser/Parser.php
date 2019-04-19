@@ -9,11 +9,14 @@ use App\Models\Slide;
 use App\Models\Slideshow;
 use App\Models\Subsection;
 use App\Models\Tag;
+use Closure;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Intervention\Image\Constraint;
 use Intervention\Image\Facades\Image;
 use Facades\App\Contracts\CourseProvider;
 use Facades\Lib\Bethink\Bethink;
+use Psr\Http\Message\StreamInterface;
 use Storage;
 
 class Parser
@@ -90,10 +93,9 @@ class Parser
 	}
 
 	/**
-	 * @param $fileContents - string/html
-	 *
-	 * @param null $screenId
-	 * @param null $discussionId
+	 * @param string $fileContents - html
+	 * @param int $screenId
+	 * @param int $discussionId
 	 * @param bool $enableSlidesMatching
 	 */
 	public function parse($fileContents, $screenId = null, $discussionId = null, $enableSlidesMatching = false)
@@ -112,7 +114,7 @@ class Parser
 
 			foreach ($this->categoryModels as $index => $model) {
 				if (!in_array($model->name, $names)) {
-					Log::debug("($iteration)" . str_repeat(' ', 5 - strlen($iteration)) . str_repeat('-', $index) . $model->name);
+					Log::debug("($iteration)" . str_repeat(' ', 5 - strlen((string)$iteration)) . str_repeat('-', $index) . $model->name);
 					$names[$model->name] = $model->name;
 				}
 			}
@@ -241,11 +243,11 @@ class Parser
 	}
 
 	/**
-	 * @param $data - string/html
+	 * @param string $data - html
 	 *
 	 * @return array
 	 */
-	public function matchSlides($data):array
+	public function matchSlides($data): array
 	{
 		$matches = [];
 
@@ -255,24 +257,23 @@ class Parser
 	}
 
 	/**
-	 * @param $data - string/html
+	 * @param string $data - html
 	 *
 	 * @return bool
 	 */
-	protected function isFunctional($data):bool
+	protected function isFunctional($data): bool
 	{
 		return (bool)preg_match(self::FUNCTIONAL_SLIDE_PATTERN, $data);
 	}
 
 	/**
-	 * @param $pattern
-	 * @param $data
-	 * @param \Closure $errback
+	 * @param string $pattern
+	 * @param string $data
+	 * @param Closure $errback
 	 *
 	 * @return mixed
-	 * @internal param \Closure $callback
 	 */
-	public function match($pattern, $data, \Closure $errback = null)
+	public function match($pattern, $data, Closure $errback = null)
 	{
 		$match = [];
 		$matchingResult = preg_match_all($pattern, $data, $match, PREG_SET_ORDER);
@@ -289,7 +290,7 @@ class Parser
 	}
 
 	/**
-	 * @param $slideHtml
+	 * @param string $slideHtml
 	 *
 	 * @return array
 	 */
@@ -498,7 +499,7 @@ class Parser
 					$ext = 'png';
 					break;
 				case 'image/jpeg':
-					$data = $resize ? $this->getJpg($imageUrl) : @file_get_contents($imageUrl);
+					$data = $resize ? $this->getJpg($image) : @file_get_contents($imageUrl);
 					$ext = 'jpg';
 					break;
 				default:
@@ -520,9 +521,10 @@ class Parser
 	}
 
 	/**
-	 * @param $slide
-	 * @param $orderNumber
-	 * @param $lastSectionFound
+	 * @param Slide $slide
+	 * @param int $orderNumber
+	 * @param Section|null $lastSectionFound
+	 * @return Section
 	 */
 	protected function attachToPresentables($slide, $orderNumber, $lastSectionFound)
 	{
@@ -556,29 +558,23 @@ class Parser
 		}
 	}
 
-	/**
-	 * @param string $imageUrl
-	 * @return \Psr\Http\Message\StreamInterface
-	 */
-	private function getPng(string $imageUrl)
+	private function getPng(\Intervention\Image\Image  $image): StreamInterface
 	{
-		return $image->resize(1920, 1080, function ($constraint) {
+		return $image->resize(1920, 1080, function (Constraint $constraint) {
 			$constraint->aspectRatio();
 			$constraint->upsize();
 		})->stream('png');
 	}
 
-	/**
-	 * @param string $imageUrl
-	 * @return \Psr\Http\Message\StreamInterface
-	 */
-	private function getJpg(string $imageUrl)
+	private function getJpg(\Intervention\Image\Image  $image): StreamInterface
 	{
-		$background = $image->resize(1920, 1080, function ($constraint) {
+		$background = $image->resize(1920, 1080, function (Constraint $constraint) {
 			$constraint->aspectRatio();
 			$constraint->upsize();
 		});
+
 		$canvas = Image::canvas($image->width(), $image->height(), '#fff');
+
 		return $canvas->insert($background)->stream('jpg', 80);
 	}
 }

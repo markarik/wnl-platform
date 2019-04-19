@@ -29,7 +29,7 @@ script:
   - php vendor/bin/phpunit --filter=Http
   - php vendor/bin/phpunit --filter=Models
   - php vendor/bin/phpunit --filter=Console
-  - php artisan code:analyse
+  - php artisan code:analyse --paths="app,checks,lib,routes"
   - yarn run test
   - yarn run lint
 

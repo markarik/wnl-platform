@@ -71,7 +71,12 @@ export default {
 		WnlDashboardNewsContent
 	},
 	mixins: [dashboardNewsMessageArguments],
-	props: ['id'],
+	props: {
+		id: {
+			type: [Number, String],
+			default: 'new',
+		},
+	},
 	data() {
 		return {
 			datepickerConfig: {

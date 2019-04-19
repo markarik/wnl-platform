@@ -38,7 +38,17 @@
 <script>
 export default {
 	name: 'Alert',
-	props: ['timestamp', 'alert', 'cssClass'],
+	props: {
+		timestamp: {
+			type: Date,
+		},
+		alert: {
+			type: Object,
+		},
+		cssClass: {
+			type: String,
+		}
+	},
 	computed: {
 		fullCssClass() {
 			return `${this.alert.cssClass} ${this.cssClass}`;

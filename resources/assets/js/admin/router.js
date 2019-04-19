@@ -40,12 +40,17 @@ let routes = [
 		name: 'lessons',
 		path: '/admin/app/lessons/:lessonId?',
 		component: Lessons,
-		props: true,
+		props: route => ({
+			...(route.params.lessonId && { lessonId: Number(route.params.lessonId) }),
+		}),
 		children: [
 			{
 				name: 'screen-edit',
 				path: 'screens/:screenId?',
-				component: ScreensEditor
+				component: ScreensEditor,
+				props: route => ({
+					...(route.params.screenId && { screenId: Number(route.params.screenId) }),
+				}),
 			},
 		]
 	},
@@ -53,13 +58,17 @@ let routes = [
 		name: 'structure-edit',
 		path: '/admin/app/course-structure/:courseId',
 		component: StructureEditor,
-		props: true,
+		props: route => ({
+			courseId: Number(route.params.courseId),
+		}),
 	},
 	{
 		name: 'course-edit',
 		path: '/admin/app/courses/:id',
 		component: CourseEditor,
-		props: true,
+		props: route => ({
+			id: Number(route.params.id),
+		}),
 	},
 	{
 		name: 'groups',
@@ -71,12 +80,18 @@ let routes = [
 		name: 'group-edit',
 		path: '/admin/app/groups/:id',
 		component: GroupEditor,
-		props: true,
+		props: route => ({
+			id: Number(route.params.id),
+		}),
 	},
 	{
 		name: 'slides',
 		path: '/admin/app/slides/edit/:lessonId?/:screenId?',
 		component: EditSlide,
+		props: route => ({
+			...(route.params.lessonId && { lessonId: Number(route.params.screenId) }),
+			...(route.params.screenId && { screenId: Number(route.params.screenId) }),
+		}),
 	},
 	{
 		name: 'add-slide',

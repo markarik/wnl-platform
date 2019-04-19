@@ -30,7 +30,14 @@ export default {
 		'wnl-toggler': Toggler,
 	},
 	mixins: [formInput],
-	props: ['name', 'placeholder'],
+	props: {
+		name: {
+			type: String,
+		},
+		placeholder: {
+			type: String,
+		},
+	},
 	computed: {
 		default() {
 			return '';

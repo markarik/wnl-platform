@@ -86,15 +86,29 @@ export default {
 		'wnl-watch': Watch,
 	},
 	mixins: [highlight],
-	props: [
-		'module',
-		'commentableResource',
-		'commentableId',
-		'isUnique',
-		'urlParam',
-		'hideWatchlist',
-		'readOnly',
-	],
+	props: {
+		module: {
+			type: String,
+		},
+		commentableResource: {
+			type: String,
+		},
+		commentableId: {
+			type: Number,
+		},
+		isUnique: {
+			type: Boolean,
+		},
+		urlParam: {
+			type: String,
+		},
+		hideWatchlist: {
+			type: Boolean,
+		},
+		readOnly: {
+			type: Boolean,
+		},
+	},
 	data() {
 		return {
 			formElement: {},

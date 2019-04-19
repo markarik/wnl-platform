@@ -47,7 +47,6 @@ const routes = [
 	{
 		path: '/app/courses/:courseId',
 		component: Course,
-		props: true,
 		meta: {
 			requiresCurrentEditionAccess: true,
 			requiresOnboardingPassed: true,
@@ -57,19 +56,27 @@ const routes = [
 				name: resource('courses'),
 				path: '',
 				component: Overview,
-				props: true,
+				props: route => ({
+					courseId: Number(route.params.courseId)
+				}),
 			},
 			{
 				name: resource('lessons'),
 				path: '/app/courses/:courseId/lessons/:lessonId',
 				component: Lesson,
-				props: true,
+				props: route => ({
+					courseId: Number(route.params.courseId),
+					lessonId: Number(route.params.lessonId),
+				}),
 				children: [
 					{
 						name: resource('screens'),
 						path: 'screens/:screenId/:slide?',
 						component: Screen,
-						props: true,
+						props: route => ({
+							screenId: Number(route.params.screenId),
+							...(route.params.slide && { slide: Number(route.params.slide) }),
+						}),
 					}
 				],
 			}
@@ -79,7 +86,6 @@ const routes = [
 		name: 'myself',
 		path: '/app/myself',
 		component: Myself,
-		props: true,
 		children: [
 			{
 				name: 'my-orders',
@@ -269,10 +275,12 @@ const routes = [
 				],
 			},
 			{
-				props: true,
 				name: 'quiz-question',
 				path: 'single/:quizQuestionId',
 				component: SingleQuestion,
+				props: route => ({
+					quizQuestionId: Number(route.params.quizQuestionId),
+				}),
 			},
 			{
 				name: 'questions-list',

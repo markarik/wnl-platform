@@ -51,7 +51,6 @@ export default {
 		'wnl-sidenav': Sidenav,
 		'wnl-sidenav-slot': SidenavSlot,
 	},
-	props: ['view'],
 	computed: {
 		...mapGetters(['isSidenavMounted', 'isSidenavVisible', 'isMobileProfile', 'isOnboardingFinished']),
 
@@ -200,11 +199,6 @@ export default {
 	},
 	methods: {
 		...mapActions(['killChat']),
-		goToDefaultRoute() {
-			if (!this.view) {
-				this.$router.replace({ name: 'my-orders' });
-			}
-		},
 		onUserEvent(payload) {
 			this.$trackUserEvent({
 				context: context.account.value,

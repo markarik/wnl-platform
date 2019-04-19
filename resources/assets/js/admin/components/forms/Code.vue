@@ -21,7 +21,14 @@ const themelist = brace.acequire('ace/ext/themelist');
 
 export default {
 	name: 'WnlFormCode',
-	props: ['type', 'name', 'form', 'value'],
+	props: {
+		name: {
+			type: String,
+		},
+		value: {
+			type: String,
+		},
+	},
 	data() {
 		return {
 			code: '',

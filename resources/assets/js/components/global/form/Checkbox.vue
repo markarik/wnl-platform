@@ -22,9 +22,11 @@ export default {
 			type: String,
 		},
 		checkboxValue: {
+			type: Boolean,
 			required: true
 		},
 		checkboxId: {
+			type: String,
 			required: true
 		}
 	},

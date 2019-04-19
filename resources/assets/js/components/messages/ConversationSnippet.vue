@@ -104,12 +104,13 @@ export default {
 	name: 'ConversationSnippet',
 	props: {
 		room: {
+			type: Object,
 			required: false,
 			default: () => ({})
 		},
 		profile: {
-			required: false,
 			type: Object,
+			required: false,
 			default: () => ({})
 		},
 		bothNames: {

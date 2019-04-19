@@ -118,7 +118,14 @@ export default {
 		'wnl-user-profile-modal': UserProfileModal
 	},
 	perimeters: [moderatorFeatures],
-	props: ['comment', 'profile'],
+	props: {
+		comment: {
+			type: Object,
+		},
+		profile: {
+			type: Object,
+		},
+	},
 	data() {
 		return {
 			isVisible: false

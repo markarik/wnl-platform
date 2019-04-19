@@ -39,9 +39,7 @@
 			<div class="slide-content-editor">
 				<wnl-code
 					v-model="form.content"
-					type="text"
 					name="content"
-					:form="form"
 				/>
 			</div>
 

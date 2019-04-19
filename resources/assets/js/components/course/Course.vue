@@ -77,7 +77,20 @@ export default {
 		'wnl-main-nav': MainNav,
 	},
 	mixins: [withChat, breadcrumb],
-	props: ['courseId', 'lessonId', 'screenId', 'slide'],
+	props: {
+		courseId: {
+			type: Number,
+		},
+		lessonId: {
+			type: Number,
+		},
+		screenId: {
+			type: Number,
+		},
+		slide: {
+			type: Number,
+		},
+	},
 	computed: {
 		...mapState('course', ['isPlanBuilderEnabled']),
 		...mapGetters('course', ['isLessonAvailable', 'ready']),

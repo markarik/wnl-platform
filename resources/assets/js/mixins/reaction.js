@@ -1,7 +1,23 @@
 import { mapActions } from 'vuex';
 
 export const reaction = {
-	props: ['module', 'reactableResource', 'reactableId', 'updateLocally', 'state', 'reactionsDisabled'],
+	props: {
+		module: {
+			type: String,
+		},
+		reactableResource: {
+			type: String,
+		},
+		reactableId: {
+			type: Number,
+		},
+		state: {
+			type: Object,
+		},
+		reactionsDisabled: {
+			type: Boolean,
+		},
+	},
 	data() {
 		return {
 			isLoading: false,

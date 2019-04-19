@@ -179,7 +179,14 @@ export default {
 		'wnl-quiz-collection': QuizCollection,
 		'wnl-slides-carousel': SlidesCarousel
 	},
-	props: ['categoryName', 'rootCategoryName'],
+	props: {
+		categoryName: {
+			type: String,
+		},
+		rootCategoryName: {
+			type: String,
+		},
+	},
 	data() {
 		return {
 			activePanels: ['slides', 'quiz'],

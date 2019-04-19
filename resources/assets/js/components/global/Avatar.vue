@@ -43,7 +43,17 @@ import { getInitials } from 'js/utils/strings';
 
 export default {
 	name: 'Avatar',
-	props: ['fullName', 'size', 'url'],
+	props: {
+		fullName: {
+			type: String,
+		},
+		size: {
+			type: String,
+		},
+		url: {
+			type: String,
+		},
+	},
 	computed: {
 		...mapGetters([
 			'currentUserFullName',

@@ -72,10 +72,7 @@ module.exports = {
 			'error',
 		],
 
-		// TODO enable vue/strongly-recommended rules below
-		'vue/require-prop-types': [
-			'off'
-		],
+		// TODO enable vue/strongly-recommended rule below
 		'vue/require-default-prop': [
 			'off'
 		],

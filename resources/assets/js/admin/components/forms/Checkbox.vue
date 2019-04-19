@@ -30,6 +30,16 @@
 <script>
 export default {
 	name: 'WnlFormCheckbox',
-	props: ['type', 'name', 'form'],
+	props: {
+		name: {
+			type: String,
+		},
+		form: {
+			type: Object,
+		},
+		type: {
+			type: String,
+		},
+	},
 };
 </script>

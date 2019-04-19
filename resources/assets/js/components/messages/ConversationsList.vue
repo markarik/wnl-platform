@@ -121,6 +121,7 @@ export default {
 	},
 	props: {
 		withSearch: {
+			type: Boolean,
 			required: false,
 			default: true
 		},

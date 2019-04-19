@@ -64,7 +64,12 @@ export default {
 		WnlForm,
 		WnlSubmit,
 	},
-	props: ['id'],
+	props: {
+		id: {
+			type: [Number, String],
+			default: 'new',
+		},
+	},
 	computed: {
 		isEdit() {
 			return this.id !== 'new';

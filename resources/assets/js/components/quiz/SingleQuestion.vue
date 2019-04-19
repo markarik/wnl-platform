@@ -83,7 +83,7 @@ export default {
 	props: {
 		quizQuestionId: {
 			required: true,
-			type: [String, Number],
+			type: Number,
 		}
 	},
 	data() {

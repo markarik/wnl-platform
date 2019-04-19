@@ -44,6 +44,8 @@ class Parser
 
 	const IMAGE_TEMPLATE = '<img src="%s">';
 
+	const CHART_TEMPLATE = '<img src="%s" class="chart">';
+
 	const IMAGE_VIEWER_TEMPLATE = '
 		<div class="iv-image-container">
 			<img src="%s" class="chart">
@@ -509,6 +511,9 @@ class Parser
 			$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
 			Storage::put('public/' . $path, $data, 'public');
 
+			if(strpos($imgTag, 'class="chart"') !== false) {
+				$template = self::CHART_TEMPLATE;
+			}
 			$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
 			$html = str_replace($imgTag, $viewerHtml, $html);
 		}

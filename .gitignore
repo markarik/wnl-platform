@@ -18,6 +18,7 @@ public/mix-manifest.json
 public/report.html
 
 storage/debugbar
+storage/framework/testing
 .DS_Store
 yarn-error.log
 npm-debug.log

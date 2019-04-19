@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Unit\Commands;
+namespace Tests\Console;
 
 use App\Models\Presentable;
 use App\Models\Screen;
@@ -18,6 +18,7 @@ class ReorderSectionsTest extends TestCase
 
 	public function testSlidesInCorrectOrder()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		list ($screen, $sections) = $this->setupDb();
 
 		$slideshow = $screen->slideshow;
@@ -52,6 +53,7 @@ class ReorderSectionsTest extends TestCase
 
 	public function testSlidesInCorrectOrderWithSubsections()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		$subsectionsCount = 6;
 		$slidesCount = 30;
 		$sectionsCount = 3;
@@ -87,6 +89,7 @@ class ReorderSectionsTest extends TestCase
 
 	public function testSectionsFromDifferentScreens()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		$slidesInSection = 10;
 
 		list ($screenOne, $sectionScreenOne) = $this->setupDb($slidesInSection, 1);
@@ -145,6 +148,7 @@ class ReorderSectionsTest extends TestCase
 
 	public function testSlideshowsOrderFixed()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		$slidesInSection = 10;
 
 		list ($screenOne, $sectionScreenOne) = $this->setupDb($slidesInSection, 3);
@@ -183,6 +187,7 @@ class ReorderSectionsTest extends TestCase
 
 	public function testSectionsFirstSlideFixed()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		$slidesCount = 30;
 		list ($screenOne, $sectionScreenOne) = $this->setupDb($slidesCount, 3);
 		list ($screenTwo, $sectionScreenTwo) = $this->setupDb($slidesCount, 1);
@@ -213,6 +218,7 @@ class ReorderSectionsTest extends TestCase
 
 	public function testSubSectionsFirstSlideFixed()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		$slidesCount = 30;
 		$slidesInSubsection = 5;
 		list ($screenOne, $sectionScreenOne) = $this->setupDb($slidesCount, 3);
@@ -260,6 +266,7 @@ class ReorderSectionsTest extends TestCase
 
 	public function testSlideTagsCorrectlySet()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		$slidesCount = 30;
 		$screenOneTags = factory(Tag::class, 2)->create();
 		$screenTwoTags = factory(Tag::class, 2)->create();
@@ -292,6 +299,7 @@ class ReorderSectionsTest extends TestCase
 
 	public function testSectionsOrderNumberSet()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		$slidesCount = 30;
 
 		list ($screenOne, $sectionScreenOne) = $this->setupDb($slidesCount, 3);

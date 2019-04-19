@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Commands;
+namespace Tests\Console;
 
 use App\Mail\AccountSuspendedUnpaidInstalment;
 use App\Mail\InstalmentReminder;
@@ -21,6 +21,7 @@ class OrdersHandleUnpaidTestTest extends TestCase
 
 	public function testNoRemindersSent()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		$order = factory(Order::class)->create([
 			'paid' => false,
 			'created_at' => Carbon::now()->subDays(3),
@@ -37,6 +38,7 @@ class OrdersHandleUnpaidTestTest extends TestCase
 
 	public function testUnpaidOrder()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		/** @var Order $order */
 		$order = factory(Order::class)->create([
 			'paid' => false,
@@ -75,6 +77,7 @@ class OrdersHandleUnpaidTestTest extends TestCase
 
 	public function testTwoOrdersForOneProduct()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		/** @var Product $product */
 		$product = factory(Product::class)->create();
 
@@ -125,6 +128,7 @@ class OrdersHandleUnpaidTestTest extends TestCase
 
 	public function testUnpaidInstalment()
 	{
+		$this->markTestSkipped('PLAT-1246');
 		/** @var User $user */
 		$user = factory(User::class)->create([
 			'suspended' => false,

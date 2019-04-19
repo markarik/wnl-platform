@@ -358,3 +358,14 @@ $factory->define(App\Models\OrderInstalment::class, function () {
 	return [];
 });
 
+$factory->define(App\Models\Payment::class, function () {
+	return [];
+});
+
+$factory->define(App\Models\Invoice::class, function (Faker\Generator $faker) {
+	return [
+		'number' => $faker->numberBetween(1, 32000),
+		'series' => 'TEST',
+	];
+});
+

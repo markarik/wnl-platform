@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\App;
+use Log;
 
 
 class OrderObserver
@@ -22,7 +23,7 @@ class OrderObserver
 
 	public function updated(Order $order)
 	{
-		\Log::notice("OrderObserver: Order #{$order->id} updated");
+		Log::notice("OrderObserver: Order #{$order->id} updated");
 
 		// This has to be called very early to make sure
 		// all the methods called below are using correct state of instalments
@@ -32,23 +33,23 @@ class OrderObserver
 
 		$settlement = $order->paid_amount - $order->getOriginal('paid_amount');
 		if (!$order->isDirty(['paid']) && $order->isDirty(['paid_amount']) && $settlement > 0) {
-			\Log::notice(">>> OrderObserver: #{$order->id} paid amount is dirty");
+			Log::notice(">>> OrderObserver: #{$order->id} paid amount is dirty");
 
 			if ($order->paidAmountSufficient() && !$order->paid) {
-				\Log::notice("___ OrderObserver: #{$order->id} marking order as paid");
+				Log::notice("___ OrderObserver: #{$order->id} marking order as paid");
 				$order->paid = true;
 				$order->paid_at = Carbon::now();
 				$order->save();
 			}
 
-			\Log::notice("OrderObserver: Dispatching OrderPaid for order #$order->id");
+			Log::notice("OrderObserver: Dispatching OrderPaid for order #$order->id");
 			$this->dispatch(new OrderPaid($order));
 			$this->dispatchNow(new CreateSubscription($order));
 
-			\Log::notice("OrderPaid: handleStudyBuddy called for order #{$order->id}");
+			Log::notice("OrderPaid: handleStudyBuddy called for order #{$order->id}");
 			$this->dispatchNow(new OrderStudyBuddy($order));
 		} else {
-			\Log::notice(
+			Log::notice(
 				"OrderObserver: Order #$order->id NOT updated. Order was not dirty or settlement was smaller than 0"
 			);
 		}
@@ -78,7 +79,7 @@ class OrderObserver
 
 	protected function handlePaymentMethodSet(Order $order)
 	{
-		\Log::debug('Order payment method set, decrementing product quantity.');
+		Log::debug('Order payment method set, decrementing product quantity.');
 		$this->dispatch(new OrderConfirmed($order));
 		$order->product->quantity--;
 		$order->product->save();
@@ -89,7 +90,7 @@ class OrderObserver
 		}
 
 		if (intval($order->total_with_coupon) === 0) {
-			\Log::notice('Order total is 0, marking as paid and dispatching OrderPaid job.');
+			Log::notice('Order total is 0, marking as paid and dispatching OrderPaid job.');
 			$order->paid = true;
 			$order->save();
 			$this->dispatch(new OrderPaid($order));
@@ -105,7 +106,7 @@ class OrderObserver
 
 	protected function handleCouponChange(Order $order)
 	{
-		\Log::debug('Order coupon changed.');
+		Log::debug('Order coupon changed.');
 		if ($order->studyBuddy) {
 			$order->studyBuddy->delete();
 		}

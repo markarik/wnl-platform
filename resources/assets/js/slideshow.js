@@ -212,7 +212,7 @@ function initImageViewer(currentSlideElement) {
 
 	if ($chartContainer.length > 0) {
 		let $element = $chartContainer.find('.chart');
-		let lofi = $element.attr('data-src');
+		let lofi = $element.attr('src');
 		let hifi = $element.attr('data-high-res-src');
 
 		window.ImageViewer($element);

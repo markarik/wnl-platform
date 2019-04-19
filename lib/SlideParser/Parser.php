@@ -510,7 +510,7 @@ class Parser
 				$data = $data->__toString();
 			}
 
-			$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
+			$path = $this->getStoragePathForImage($ext);
 			Storage::put('public/' . $path, $data, 'public');
 
 			$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
@@ -556,6 +556,11 @@ class Parser
 		} finally {
 			return $lastSectionFound;
 		}
+	}
+
+	protected function getStoragePathForImage(string $ext): string
+	{
+		return 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
 	}
 
 	private function getPng(\Intervention\Image\Image  $image): StreamInterface

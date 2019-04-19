@@ -30,7 +30,7 @@ export default {
 		},
 		to() {
 			return {
-				name: 'screens',
+				name: 'lessons',
 				params: {
 					courseId: this.context.course.id,
 					lessonId: this.context.lesson.id,

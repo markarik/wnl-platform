@@ -36,7 +36,7 @@ export const notification = {
 
 			const route = this.routeContext.dynamic ? this.routeContext.route : this.routeContext;
 
-			if (route.name === 'screens') {
+			if (route.name === 'lessons') {
 				const lessonId = route.params.lessonId;
 				const slide = route.params.slide;
 

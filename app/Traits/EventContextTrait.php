@@ -51,7 +51,7 @@ trait EventContextTrait {
 					])->first()->order_number;
 
 					return [
-						'name' => 'screens',
+						'name' => 'lessons',
 						'params' => [
 							'courseId' => CourseProvider::getCourseId(),
 							'lessonId' => $lesson->id,

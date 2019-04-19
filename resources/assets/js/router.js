@@ -12,7 +12,6 @@ import { getApiUrl } from 'js/utils/env';
 import Course from 'js/components/course/Course.vue';
 import Overview from 'js/components/course/dashboard/Overview.vue';
 import Lesson from 'js/components/course/Lesson.vue';
-import Screen from 'js/components/course/Screen.vue';
 import Myself from 'js/components/user/Myself.vue';
 import MyOrders from 'js/components/user/MyOrders.vue';
 import MyProfile from 'js/components/user/MyProfile';
@@ -61,7 +60,7 @@ const routes = [
 			},
 			{
 				name: resource('lessons'),
-				path: '/app/courses/:courseId/lessons/:lessonId',
+				path: '/app/courses/:courseId/lessons/:lessonId/(screens)?/:screenId?/:slide?',
 				component: Lesson,
 				props: route => ({
 					courseId: Number(route.params.courseId),
@@ -69,17 +68,12 @@ const routes = [
 					...route.params.screenId && { screenId: Number(route.params.screenId) },
 					...route.params.slide && { slide: Number(route.params.slide) },
 				}),
-				children: [
-					{
-						name: resource('screens'),
-						path: 'screens/:screenId/:slide?',
-						component: Screen,
-						props: route => ({
-							screenId: Number(route.params.screenId),
-							slide: Number(route.params.slide),
-						})
-					}
-				],
+			},
+			{
+				// We need this route for backwards compatibility with progressStore in redis and notifications
+				name: resource('screens'),
+				path: '/screens',
+				redirect: { name: resource('lessons') },
 			}
 		],
 	},

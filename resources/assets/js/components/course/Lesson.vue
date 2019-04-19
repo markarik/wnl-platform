@@ -107,7 +107,28 @@ export default {
 		WnlSatisfactionGuaranteeModal,
 	},
 	mixins: [breadcrumb],
-	props: ['courseId', 'lessonId', 'presenceChannel', 'screenId', 'slide'],
+	props: {
+		courseId: {
+			type: Number,
+			required: true,
+		},
+		lessonId: {
+			type: Number,
+			required: true,
+		},
+		screenId: {
+			type: Number,
+			required: true,
+		},
+		slide: {
+			type: Number,
+			required: true,
+		},
+		presenceChannel: {
+			type: String,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			/**
@@ -323,6 +344,8 @@ export default {
 					params.slide = 1;
 				}
 				this.$router.replace({ name: resource('screens'), params, query });
+			} else {
+				this.updateLessonProgress();
 			}
 
 			this.updateLessonNav({
@@ -396,7 +419,7 @@ export default {
 				this.updateLessonNav({
 					activeSection: (this.currentSection && this.currentSection.id) || 0,
 					activeSubsection: parseInt(this.currentSubsection && this.currentSubsection.id,) || 0,
-					activeScreen: parseInt(this.screenId) || 0,
+					activeScreen: this.screenId || 0,
 				});
 			}
 		},

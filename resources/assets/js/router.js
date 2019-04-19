@@ -63,13 +63,21 @@ const routes = [
 				name: resource('lessons'),
 				path: '/app/courses/:courseId/lessons/:lessonId',
 				component: Lesson,
-				props: true,
+				props: route => ({
+					courseId: Number(route.params.courseId),
+					lessonId: Number(route.params.lessonId),
+					...route.params.screenId && { screenId: Number(route.params.screenId) },
+					...route.params.slide && { slide: Number(route.params.slide) },
+				}),
 				children: [
 					{
 						name: resource('screens'),
 						path: 'screens/:screenId/:slide?',
 						component: Screen,
-						props: true,
+						props: route => ({
+							screenId: Number(route.params.screenId),
+							slide: Number(route.params.slide),
+						})
 					}
 				],
 			}

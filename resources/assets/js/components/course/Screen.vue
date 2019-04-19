@@ -83,7 +83,12 @@ export default {
 		'wnl-flashcards': Flashcards
 	},
 	mixins: [emits_events],
-	props: ['screenId'],
+	props: {
+		screenId: {
+			type: Number,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			model: 'App\\Models\\Screen'

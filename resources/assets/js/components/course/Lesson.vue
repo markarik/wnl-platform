@@ -118,11 +118,11 @@ export default {
 		},
 		screenId: {
 			type: Number,
-			required: true,
+			default: null,
 		},
 		slide: {
 			type: Number,
-			required: true,
+			default: null,
 		},
 		presenceChannel: {
 			type: String,

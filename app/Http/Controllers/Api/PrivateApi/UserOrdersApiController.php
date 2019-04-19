@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\PrivateApi;
 
 use App\Http\Requests\Payment\UseCoupon;
+use App\Jobs\CreateSubscription;
 use App\Jobs\OrderPaid;
 use App\Jobs\OrderStudyBuddy;
 use App\Models\Coupon;
@@ -76,6 +77,7 @@ class UserOrdersApiController extends ApiController
 			$order->paid = true;
 			$order->save();
 			$this->dispatch(new OrderPaid($order));
+			$this->dispatchNow(new CreateSubscription($order));
 		}
 
 		if ($order->paid && $coupon->times_usable > 0) {

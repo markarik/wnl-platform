@@ -215,11 +215,6 @@ function initImageViewer(currentSlideElement) {
 	let $chartContainer = $(currentSlideElement).find('.iv-image-container');
 
 	if ($chartContainer.length > 0) {
-		if ($chartContainer.has('.iv-container').length === 0) {
-			// It was initialized before
-			return;
-		}
-
 		let $element = $chartContainer.find('.chart');
 		let lofi = $element.attr('src');
 		let hifi = $element.attr('data-high-res-src');

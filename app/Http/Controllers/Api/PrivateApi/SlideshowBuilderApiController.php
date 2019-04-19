@@ -205,7 +205,7 @@ class SlideshowBuilderApiController extends ApiController
 		$slidesContent = str_replace($search, $replace, $slides->implode('content', ' '));
 
 		// Force lazy loading
-		$slidesContent = preg_replace('/\ssrc="(.+)"/mU', ' data-src="$1"', $slidesContent);
+		$slidesContent = preg_replace('/\ssrc="(.+?)"/m', ' data-src="$1"', $slidesContent);
 
 		return [
 			'slides' => $slidesContent,

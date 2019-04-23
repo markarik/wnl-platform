@@ -15,14 +15,6 @@ function _resolveQuestion(questionId, status = true) {
 	});
 }
 
-function _getQuestionsLatest() {
-	return axios.get(getApiUrl('qna_questions/latest'), {
-		params: {
-			include: `tags,${include}`
-		}
-	});
-}
-
 function _getQuestionsByTagName(tagName, ids) {
 	return axios.post(getApiUrl('qna_questions/byTags'), {
 		tags_names: [tagName],

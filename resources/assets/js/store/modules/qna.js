@@ -15,14 +15,6 @@ function _resolveQuestion(questionId, status = true) {
 	});
 }
 
-function _getQuestionsLatest() {
-	return axios.get(getApiUrl('qna_questions/latest'), {
-		params: {
-			include: `tags,${include}`
-		}
-	});
-}
-
 function _getQuestionsByTagName(tagName, ids) {
 	return axios.post(getApiUrl('qna_questions/byTags'), {
 		tags_names: [tagName],
@@ -278,22 +270,6 @@ const actions = {
 	...commentsActions,
 	changeSorting({ commit }, sorting) {
 		commit(types.QNA_CHANGE_SORTING, sorting);
-	},
-
-	fetchLatestQuestions({ commit, dispatch }, limit = 10) {
-		commit(types.IS_LOADING, true);
-
-		return new Promise((resolve, reject) => {
-			_getQuestionsLatest(limit)
-				.then((response) => {
-					_handleGetQuestionsSuccess({ commit, dispatch }, response);
-					resolve();
-				})
-				.catch((error) => {
-					_handleGetQuestionsError(commit, error);
-					reject();
-				});
-		});
 	},
 
 	async fetchQuestionsForDiscussion({ commit, dispatch }, { discussionId, cancelToken }) {

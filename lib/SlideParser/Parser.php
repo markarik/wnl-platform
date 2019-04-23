@@ -37,17 +37,13 @@ class Parser
 
 	const PAGE_PATTERN = '/<p>((?!<p>)[\s\S])*(\d\/\d)[\s\S]*<\/p>/';
 
-	const IMAGE_PATTERN = '/<img.*src="(.*?)".*?>/';
+	const IMAGE_PATTERN = '/<img.*?style="(.*?)".*?src="(.*?)".*?>/';
 
 	const MEDIA_PATTERNS = [
 		'chart' => '/<img.*class="chart".*>/',
 		'movie' => '/<iframe.*youtube\.com.*>/',
 		'audio' => '/<iframe.*clyp.it.*>/',
 	];
-
-	const IMAGE_TEMPLATE = '<img src="%s">';
-
-	const CHART_TEMPLATE = '<img src="%s" class="chart">';
 
 	const IMAGE_VIEWER_TEMPLATE = '
 		<div class="iv-image-container">
@@ -60,8 +56,6 @@ class Parser
 				</span>
 			</a>
 		</div>';
-
-	const GIF_TEMPLATE = '<img src="%s" class="gif">';
 
 	protected $categoryTags;
 	protected $courseTags;
@@ -475,7 +469,7 @@ class Parser
 
 		foreach ($matches as $match) {
 			$imgTag = $match[0];
-			$imageUrl = $match[1];
+			$imageUrl = $match[2];
 
 			if (stripos($imgTag, 'data-') === false && !$force) {
 				// Check if img tag contains data attributes - if not we don't need to migrate it
@@ -485,14 +479,10 @@ class Parser
 			$image = Image::make(Url::encodeFullUrl($imageUrl));
 			$mime = $image->mime;
 
-			$isChart = (bool) $this->match(self::MEDIA_PATTERNS['chart'], $imgTag);
-			$template = $isChart ? self::CHART_TEMPLATE : self::IMAGE_TEMPLATE;
-
 			switch ($mime){
 				case 'image/gif':
 					$data = @file_get_contents($imageUrl);
 					$ext = 'gif';
-					$template = self::GIF_TEMPLATE;
 					break;
 				case 'image/png':
 					$data = $resize ? $this->getPng($image) : @file_get_contents($imageUrl);
@@ -513,8 +503,8 @@ class Parser
 			$path = $this->getStoragePathForImage($ext);
 			Storage::put('public/' . $path, $data, 'public');
 
-			$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
-			$html = str_replace($imgTag, $viewerHtml, $html);
+			$imageHtml = $this->getImageHtml($match, $mime, $path);
+			$html = str_replace($imgTag, $imageHtml, $html);
 		}
 
 		return $html;
@@ -581,5 +571,30 @@ class Parser
 		$canvas = Image::canvas($image->width(), $image->height(), '#fff');
 
 		return $canvas->insert($background)->stream('jpg', 80);
+	}
+
+	private function getImageHtml(array $match, string $mime, string $path): string
+	{
+		$class = null;
+
+		if ($this->match(self::MEDIA_PATTERNS['chart'], $match[0])) {
+			$class = 'chart';
+		} else if ($mime === 'image/gif') {
+			$class = 'gif';
+		}
+
+		$html = '<img';
+
+		if (!empty($match[1])) {
+			$html .= ' style="' . $match[1] . '"';
+		}
+
+		if ($class) {
+			$html .= ' class="' . $class . '"';
+		}
+
+		$html .= ' src="' . Bethink::getAssetPublicUrl($path) . '">';
+
+		return $html;
 	}
 }

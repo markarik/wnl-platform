@@ -3,8 +3,8 @@
 namespace Tests\lib\SlideParser;
 
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 use Lib\SlideParser\Parser;
-use Mockery;
 use Tests\TestCase;
 
 class ParserTest extends TestCase
@@ -17,7 +17,9 @@ class ParserTest extends TestCase
 	public function testCleanSlide(string $input, string $expectedOutput)
 	{
 		Storage::fake();
-		Mockery::mock('overload:Str')->shouldReceive('random')->andReturn('RANDOM');
+
+		$pixelPng = Image::make('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
+		Image::shouldReceive('make')->andReturn($pixelPng);
 
 		$this->assertEquals($expectedOutput, (new FakeParser)->cleanSlide($input));
 	}
@@ -26,7 +28,7 @@ class ParserTest extends TestCase
 	{
 		yield [
 			'
-<section data-id="3ecfab0054259c9b2711ce15ae825792" data-background-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<section data-id="3ecfab0054259c9b2711ce15ae825792" data-background-image="https://s3.amazonaws.com/REDACTED">
 	<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 81px; top: 101px;" data-block-id="4c20543565ae2045be03f23b57ff1281">
 		<div class="sl-block-content" data-line-x1="-299" data-line-y1="-180" data-line-x2="500" data-line-y2="-180" data-line-color="#052c50" data-line-start-type="none" data-line-end-type="none" style="z-index: 11;" data-line-width="2px" data-line-style="dotted">
 			<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="799" height="1" viewbox="-299 -180 799 1">
@@ -58,7 +60,7 @@ class ParserTest extends TestCase
 		</div>
 	</div>
 	<div class="sl-block" data-block-type="image" data-block-id="b2b0a98e96bd8c35dce58a4f2b63d178" style="min-width: 4px; min-height: 4px; width: 450px; height: 321px; left: 253px; top: 224px;">
-		<div class="sl-block-content" style="z-index: 15;"><img data-natural-width="450" data-natural-height="321" style="" data-lazy-loaded="" data-src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>
+		<div class="sl-block-content" style="z-index: 15;"><img data-natural-width="450" data-natural-height="321" style="" data-lazy-loaded="" data-src="https://s3.amazonaws.com/REDACTED"></div>
 	</div>
 
 	<div class="sl-block" data-block-type="text" style="width: 806px; left: 75px; top: 643px; height: auto;" data-block-id="38cbcbfe0f25ee0e0406acb3123e4b81">
@@ -110,7 +112,7 @@ class ParserTest extends TestCase
 		</div>
 	</div>
 	<div class="sl-block" data-block-type="image" data-block-id="b2b0a98e96bd8c35dce58a4f2b63d178" style="min-width: 4px; min-height: 4px; width: 450px; height: 321px; left: 253px; top: 224px;">
-		<div class="sl-block-content" style="z-index: 15;"><img class="gif" src="http://platform.local/storage/FAKE_PATH.gif"></div>
+		<div class="sl-block-content" style="z-index: 15;"><img src="http://platform.local/storage/FAKE_PATH.png"></div>
 	</div>
 
 	<div class="sl-block" data-block-type="text" style="width: 806px; left: 75px; top: 643px; height: auto;" data-block-id="38cbcbfe0f25ee0e0406acb3123e4b81">
@@ -150,7 +152,7 @@ class ParserTest extends TestCase
 		</div>
 	</div>
 	<div class="sl-block" data-block-type="image" style="width: 438px; height: 212px; left: 261px; top: 367px; min-width: 4px; min-height: 4px;" data-block-id="27b90c33906ef6a6fe4543169f6e78fa">
-		<div class="sl-block-content" style="z-index: 12;"><img style="left: 0px; top: -119px; width: 438px; height: 438px;" data-natural-width="600" data-natural-height="600" data-crop-x="0" data-crop-y="0.270968" data-crop-width="1" data-crop-height="0.483871" data-lazy-loaded="" data-src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>
+		<div class="sl-block-content" style="z-index: 12;"><img style="left: 0px; top: -119px; width: 438px; height: 438px;" data-natural-width="600" data-natural-height="600" data-crop-x="0" data-crop-y="0.270968" data-crop-width="1" data-crop-height="0.483871" data-lazy-loaded="" data-src="https://s3.amazonaws.com/REDACTED"></div>
 	</div>
 	<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 594px;" data-block-id="e16a188c77f84e5ce5e76f8662257f63">
 		<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; color: rgb(5, 44, 80);">
@@ -197,7 +199,7 @@ class ParserTest extends TestCase
 		</div>
 	</div>
 	<div class="sl-block" data-block-type="image" style="width: 438px; height: 212px; left: 261px; top: 367px; min-width: 4px; min-height: 4px;" data-block-id="27b90c33906ef6a6fe4543169f6e78fa">
-		<div class="sl-block-content" style="z-index: 12;"><img style="left: 0px; top: -119px; width: 438px; height: 438px;" class="gif" src="http://platform.local/storage/FAKE_PATH.gif"></div>
+		<div class="sl-block-content" style="z-index: 12;"><img style="left: 0px; top: -119px; width: 438px; height: 438px;" src="http://platform.local/storage/FAKE_PATH.png"></div>
 	</div>
 	<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 594px;" data-block-id="e16a188c77f84e5ce5e76f8662257f63">
 		<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; color: rgb(5, 44, 80);">
@@ -223,6 +225,79 @@ class ParserTest extends TestCase
 	<div class="sl-block" data-block-type="text" style="width: 799px; left: 80px; top: 27px; height: auto;" data-block-id="d8eea0ad9ae5e2d2d3abccf73d605e34">
 		<div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 16; color: rgb(5, 44, 80); font-size: 52%;">
 			<h1 style="text-align: left;">REDACTED</h1>
+		</div>
+	</div>
+</section>'
+		];
+
+		yield [
+			'
+<section data-id="eed9bc730492bd9b38deba1eb1a39a5e">
+
+
+	<div class="sl-block" data-block-type="iframe" data-block-id="3000ad3357cac083a45e4db9754aea2f" style="min-width: 30px; min-height: 30px; width: 799px; height: 533px; left: 81px; top: 97px;">
+		<div class="sl-block-content" style="z-index: 11;">
+			<iframe webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="" sandbox="allow-forms allow-scripts allow-popups allow-same-origin allow-pointer-lock" data-src="https://www.lucidchart.com/documents/embeddedchart/XXX-YYY-ZZZ"></iframe>
+		</div>
+	</div>
+	<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 80px; top: 70px;" data-block-id="50e000024954d4ba2c0371caf0a93a9b">
+		<div class="sl-block-content" data-line-x1="-299" data-line-y1="-180" data-line-x2="500" data-line-y2="-180" data-line-color="#052c50" data-line-start-type="none" data-line-end-type="none" style="z-index: 12;" data-line-width="2px" data-line-style="dotted">
+			<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="799" height="1" viewbox="-299 -180 799 1">
+				<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-299" y1="-180" x2="500" y2="-180"></line>
+				<line stroke="#052c50" stroke-width="2" stroke-dasharray="0 3.995" stroke-linecap="round" x1="-299" y1="-180" x2="500" y2="-180"></line>
+			</svg>
+		</div>
+	</div>
+	<div class="sl-block" data-block-type="text" style="width: 799px; left: 80px; top: 27px; height: auto;" data-block-id="50893ffa5d19b1b0338360418edbce4e">
+		<div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 13; color: rgb(5, 44, 80); font-size: 52%;">
+			<h1 style="text-align:left">REDACTED</h1>
+		</div>
+	</div>
+	<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 82px; top: 663px;" data-block-id="c9e29b76eb8d310021c4511824ddcf12">
+		<div class="sl-block-content" data-line-x1="-299" data-line-y1="-180" data-line-x2="498" data-line-y2="-180" data-line-color="#052c50" data-line-start-type="none" data-line-end-type="none" style="z-index: 14;" data-line-width="2px" data-line-style="dotted">
+			<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="797" height="1" viewbox="-299 -180 797 1">
+				<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-299" y1="-180" x2="498" y2="-180"></line>
+				<line stroke="#052c50" stroke-width="2" stroke-dasharray="0 3.985" stroke-linecap="round" x1="-299" y1="-180" x2="498" y2="-180"></line>
+			</svg>
+		</div>
+	</div>
+</section>',
+			'
+<section data-id="eed9bc730492bd9b38deba1eb1a39a5e">
+
+
+	<div class="sl-block" data-block-type="iframe" data-block-id="3000ad3357cac083a45e4db9754aea2f" style="min-width: 30px; min-height: 30px; width: 799px; height: 533px; left: 81px; top: 97px;">
+		
+		<div class="iv-image-container">
+			<img src="http://platform.local/storage/charts/XXX-YYY-ZZZ.png" class="chart">
+			<a class="iv-image-fullscreen" title="Pełen ekran">
+				<span class="fullscreen-icon">
+					<span class="inner"></span>
+					<span class="horizontal"></span>
+					<span class="vertical"></span>
+				</span>
+			</a>
+		</div>
+	</div>
+	<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 80px; top: 70px;" data-block-id="50e000024954d4ba2c0371caf0a93a9b">
+		<div class="sl-block-content" data-line-x1="-299" data-line-y1="-180" data-line-x2="500" data-line-y2="-180" data-line-color="#052c50" data-line-start-type="none" data-line-end-type="none" style="z-index: 12;" data-line-width="2px" data-line-style="dotted">
+			<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="799" height="1" viewbox="-299 -180 799 1">
+				<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-299" y1="-180" x2="500" y2="-180"></line>
+				<line stroke="#052c50" stroke-width="2" stroke-dasharray="0 3.995" stroke-linecap="round" x1="-299" y1="-180" x2="500" y2="-180"></line>
+			</svg>
+		</div>
+	</div>
+	<div class="sl-block" data-block-type="text" style="width: 799px; left: 80px; top: 27px; height: auto;" data-block-id="50893ffa5d19b1b0338360418edbce4e">
+		<div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 13; color: rgb(5, 44, 80); font-size: 52%;">
+			<h1 style="text-align:left">REDACTED</h1>
+		</div>
+	</div>
+	<div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 82px; top: 663px;" data-block-id="c9e29b76eb8d310021c4511824ddcf12">
+		<div class="sl-block-content" data-line-x1="-299" data-line-y1="-180" data-line-x2="498" data-line-y2="-180" data-line-color="#052c50" data-line-start-type="none" data-line-end-type="none" style="z-index: 14;" data-line-width="2px" data-line-style="dotted">
+			<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="797" height="1" viewbox="-299 -180 797 1">
+				<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-299" y1="-180" x2="498" y2="-180"></line>
+				<line stroke="#052c50" stroke-width="2" stroke-dasharray="0 3.985" stroke-linecap="round" x1="-299" y1="-180" x2="498" y2="-180"></line>
+			</svg>
 		</div>
 	</div>
 </section>'

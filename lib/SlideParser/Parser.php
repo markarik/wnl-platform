@@ -585,6 +585,7 @@ class Parser
 
 		$html = '<img';
 
+		// Keep in mind that handleCharts strips the inline styles, so this will be always false for charts
 		if (!empty($match[1])) {
 			$html .= ' style="' . $match[1] . '"';
 		}

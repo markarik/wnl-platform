@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use Altek\Accountant\Contracts\Recordable;
 use App\Events\Comments\CommentPosted;
 use App\Models\Contracts\WithReactions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use \Altek\Accountant\Recordable as RecordableTrait;
 
-class Comment extends Model implements WithReactions
+class Comment extends Model implements WithReactions, Recordable
 {
-	use SoftDeletes;
+	use SoftDeletes, RecordableTrait;
 
 	protected $fillable = ['text', 'user_id'];
 	protected $dates = ['deleted_at'];

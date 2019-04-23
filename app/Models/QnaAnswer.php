@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
+use Altek\Accountant\Contracts\Recordable;
 use App\Events\Qna\QnaAnswerPosted;
 use App\Models\Concerns\Cached;
 use App\Models\Contracts\WithReactions;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
+use \Altek\Accountant\Recordable as RecordableTrait;
 
-class QnaAnswer extends Model implements WithReactions
+class QnaAnswer extends Model implements WithReactions, Recordable
 {
-	use Cached, Searchable;
+	use Cached, Searchable, RecordableTrait;
 
 	protected $fillable = ['text', 'user_id', 'question_id'];
 

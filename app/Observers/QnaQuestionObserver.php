@@ -25,6 +25,6 @@ class QnaQuestionObserver
 
 	public function updated(QnaQuestion $qnaQuestion)
 	{
-		$this->dispatch(new LogResourceUpdate($qnaQuestion, Auth::user()->id));
+//		$this->dispatch(new LogResourceUpdate($qnaQuestion, Auth::user()->id));
 	}
 }

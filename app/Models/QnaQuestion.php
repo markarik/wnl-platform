@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Altek\Accountant\Contracts\Recordable;
 use App\Events\Qna\QnaQuestionPosted;
 use App\Models\Concerns\Cached;
 use App\Models\Contracts\WithReactions;
@@ -9,10 +10,11 @@ use App\Models\Contracts\WithTags;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
+use \Altek\Accountant\Recordable as RecordableTrait;
 
-class QnaQuestion extends Model implements WithReactions, WithTags
+class QnaQuestion extends Model implements WithReactions, WithTags, Recordable
 {
-	use Cached, Searchable, SoftDeletes;
+	use Cached, Searchable, SoftDeletes, RecordableTrait;
 
 	protected $fillable = ['text', 'user_id', 'meta', 'discussion_id'];
 

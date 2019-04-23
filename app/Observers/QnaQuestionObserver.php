@@ -1,11 +1,8 @@
 <?php namespace App\Observers;
 
-use App\Events;
 use App\Jobs\DeleteModels;
 use App\Jobs\DetachReactions;
-use App\Jobs\LogResourceUpdate;
 use App\Models\QnaQuestion;
-use Auth;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class QnaQuestionObserver
@@ -21,10 +18,5 @@ class QnaQuestionObserver
 	public function created(QnaQuestion $qnaQuestion)
 	{
 		//
-	}
-
-	public function updated(QnaQuestion $qnaQuestion)
-	{
-//		$this->dispatch(new LogResourceUpdate($qnaQuestion, Auth::user()->id));
 	}
 }

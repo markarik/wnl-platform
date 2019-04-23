@@ -103,29 +103,4 @@ class QuestionsTest extends ApiTestCase
 				'name' => $page->slug,
 			]);
 	}
-
-	/** @test */
-	public function verify_qna_question() {
-		Bus::fake();
-
-		$expectedDate = Carbon::create(1990, 12, 07, 12, 00, 00);
-		Carbon::setTestNow($expectedDate);
-
-		$user = factory(User::class)->create();
-		$user->roles()->attach(Role::byName('admin'));
-
-		$question = factory(QnaQuestion::class)->create();
-
-		$response = $this
-			->actingAs($user)
-			->json('PUT', $this->url('/qna_questions/' . $question->id), [
-				'verified' => true
-			]);
-
-		$response
-			->assertStatus(200);
-
-		$this->assertEquals($question->fresh()->verified_at, $expectedDate);
-		Bus::assertDispatched(LogResourceUpdate::class);
-	}
 }

@@ -24,7 +24,7 @@
 				v-for="(error, index) in getErrors"
 				:key="index"
 				class="help is-danger"
-				v-text="error"
+				v-html="error"
 			/>
 		</template>
 	</div>

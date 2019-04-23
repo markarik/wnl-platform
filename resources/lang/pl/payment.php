@@ -24,6 +24,7 @@ return [
 	'voucher-existing-user' => 'Chcesz skorzystać z 50% zniżki na Kurs internetowy dla uczestników poprzednich edycji? Zaloguj się i kontynuuj zamówienie!',
 	'voucher-existing-user-button' => 'Zaloguj się',
 	'product-coupon-too-late' => 'Niestety już nie można dodawać kuponów do tego produktu.',
+	'price-higher-after-coupon' => 'W trosce o przyszłość kolejnych edycji zniżki nie łączą się. :) <br> Po zmianie kuponu na :couponName cena Twojego kursu wzrosłaby z :currentPricezł do :priceWithCouponzł, dlatego zablokowaliśmy tę akcję. :)',
 
 	/**
 	 * 1. Select Product step

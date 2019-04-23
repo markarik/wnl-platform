@@ -114,6 +114,17 @@ class UserOrdersApiController extends ApiController
 			array_push($errors, trans('payment.product-coupon-too-late'));
 		}
 
+		$tmpOrder = $order->replicate();
+		$tmpOrder->coupon()->associate($coupon);
+		if ($tmpOrder->total_with_coupon >= $order->total_with_coupon)
+		{
+			array_push($errors, trans('payment.price-higher-after-coupon', [
+				'couponName' => $coupon->name,
+				'currentPrice' => $order->total_with_coupon,
+				'priceWithCoupon' => $tmpOrder->total_with_coupon,
+			]));
+		}
+
 		return $errors;
 	}
 

@@ -207,6 +207,9 @@ class SlideshowBuilderApiController extends ApiController
 		// Force lazy loading
 		$slidesContent = preg_replace('/\ssrc="(.+?)"/m', ' data-src="$1"', $slidesContent);
 
+		// It would override the background
+		$slidesContent = preg_replace('/data-background-color=".*?"/m', '', $slidesContent);
+
 		return [
 			'slides' => $slidesContent,
 			'background_url' => $background,

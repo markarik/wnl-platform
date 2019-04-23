@@ -11,7 +11,7 @@
 							<span v-if="icon" class="icon is-big user-profile-icon">
 								<i :class="icon" />
 							</span>
-							<p v-if="!hideTitle" class="wnl-qna-header-title">
+							<p class="wnl-qna-header-title">
 								{{displayedTitle}}&nbsp;
 							</p>
 							<p v-if="!numbersDisabled" class="wnl-qna-header-title">
@@ -164,10 +164,6 @@ export default {
 		'wnl-qna-sorting': QnaSorting
 	},
 	props: {
-		hideTitle: {
-			type: Boolean,
-			default: false,
-		},
 		icon: String,
 		isUserProfileClass: String,
 		contextTags: Array,

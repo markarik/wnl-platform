@@ -11,7 +11,6 @@ const state = {
 	isChatOpen: false,
 	navigationToggleState: {},
 	overlays: {},
-	overviewView: 'stream',
 	modalVisible: false
 };
 
@@ -50,7 +49,6 @@ const getters = {
 	isOverlayVisible: state => size(state.overlays) > 0,
 	shouldDisplayOverlay: state => Object.keys(state.overlays).length > 0,
 	isNavigationGroupExpanded: state => groupId => state.navigationToggleState[groupId],
-	overviewView: state => state.overviewView,
 	overlayTexts: state => values(pickBy(state.overlays, isString)),
 	modalVisible: state => state.modalVisible
 };
@@ -104,9 +102,6 @@ const mutations = {
 	[types.UI_TOGGLE_NAVIGATION_GROUP] (state, { groupIndex, isOpen }) {
 		set(state.navigationToggleState, groupIndex, isOpen);
 	},
-	[types.UI_CHANGE_OVERVIEW_VIEW] (state, view) {
-		set(state, 'overviewView', view);
-	}
 };
 
 // Actions
@@ -137,9 +132,6 @@ const actions = {
 	},
 	toggleNavigationGroup({ commit }, payload) {
 		commit(types.UI_TOGGLE_NAVIGATION_GROUP, payload);
-	},
-	changeOverviewView({ commit }, view) {
-		commit(types.UI_CHANGE_OVERVIEW_VIEW, view);
 	},
 	showNotification({ commit }, { type = 'success', message, timeout = 3000 }) {
 		commit(types.UI_SHOW_GLOBAL_NOTIFICATION, { type, message });

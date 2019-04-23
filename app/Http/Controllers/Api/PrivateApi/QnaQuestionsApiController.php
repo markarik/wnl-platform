@@ -161,12 +161,6 @@ class QnaQuestionsApiController extends ApiController
 		return $this->transformAndRespond($qnaQuestions);
 	}
 
-	public function getLatest() {
-		$qnaQuestions = QnaQuestion::limit(10)->orderBy('created_at', 'desc')->get();
-
-		return $this->transformAndRespond($qnaQuestions);
-	}
-
 	public function query(Request $request) {
 		$qnaQuestionQuery = QnaQuestion::select();
 

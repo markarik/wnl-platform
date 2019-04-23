@@ -111,6 +111,7 @@
 			</div>
 		</form>
 		<wnl-slide-preview
+			v-if="showPreviewModal"
 			:show-modal="showPreviewModal"
 			:content="previewModalContent"
 			@closeModal="showPreviewModal=false"

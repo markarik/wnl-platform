@@ -298,7 +298,7 @@ class Invoice
 	{
 		$previousAdvances = $order->invoices()->where('series', config('invoice.advance_series'))->get();
 		$recentSettlement = $order->paid_amount - $previousAdvances->sum('amount');
-		$vatValue = $corrected->vat === '23' ? 0.23 : 0;
+		$vatValue = $corrected->vat === '23' ? 0.23 : 0.0;
 		$vatString = $this->getVatString($vatValue);
 		/** @var InvoiceModel $invoice */
 		$invoice = $order->invoices()->create([

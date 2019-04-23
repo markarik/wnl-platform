@@ -280,22 +280,6 @@ const actions = {
 		commit(types.QNA_CHANGE_SORTING, sorting);
 	},
 
-	fetchLatestQuestions({ commit, dispatch }, limit = 10) {
-		commit(types.IS_LOADING, true);
-
-		return new Promise((resolve, reject) => {
-			_getQuestionsLatest(limit)
-				.then((response) => {
-					_handleGetQuestionsSuccess({ commit, dispatch }, response);
-					resolve();
-				})
-				.catch((error) => {
-					_handleGetQuestionsError(commit, error);
-					reject();
-				});
-		});
-	},
-
 	async fetchQuestionsForDiscussion({ commit, dispatch }, { discussionId, cancelToken }) {
 		commit(types.IS_LOADING, true);
 

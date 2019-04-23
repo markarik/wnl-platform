@@ -14,6 +14,7 @@ const setCourseProgress = ({ courseId, profileId }, value) => {
 const setLessonProgress = ({ courseId, lessonId, profileId, route }, value) => {
 	if (route) {
 		// We need this to update last route not the previous one.
+		// suspected problem: parameters order was mixed somewhere higher
 		value.route = route;
 	}
 	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}/lesson/${lessonId}`), {

@@ -997,7 +997,8 @@ html.decks.offline.fonts-are-ready .reveal {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	vertical-align: top
+	vertical-align: top;
+	position: relative;
 }
 
 .reveal .sl-block[data-block-type="image"] .sl-block-content svg {

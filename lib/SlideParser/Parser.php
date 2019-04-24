@@ -37,7 +37,8 @@ class Parser
 
 	const PAGE_PATTERN = '/<p>((?!<p>)[\s\S])*(\d\/\d)[\s\S]*<\/p>/';
 
-	const IMAGE_PATTERN = '/<img.*?style="(.*?)".*?src="(.*?)".*?>/';
+	// Provided by digitok at #regex, lookahead is used so the order of attributes doesn't matter
+	const IMAGE_PATTERN = '/<img(?=[^>]*?style="([^"]*)"|)[^>]*src="([^"]*)"[^>]*>/';
 
 	const MEDIA_PATTERNS = [
 		'chart' => '/<img.*class="chart".*>/',

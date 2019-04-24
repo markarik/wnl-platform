@@ -27,6 +27,7 @@ class ParserTest extends TestCase
 
 	public function cleanSlideProvider(): \Generator
 	{
+		// Slide with an image without inline styles
 		yield [
 			'
 <section data-id="3ecfab0054259c9b2711ce15ae825792" data-background-image="https://s3.amazonaws.com/REDACTED">
@@ -61,7 +62,7 @@ class ParserTest extends TestCase
 		</div>
 	</div>
 	<div class="sl-block" data-block-type="image" data-block-id="b2b0a98e96bd8c35dce58a4f2b63d178" style="min-width: 4px; min-height: 4px; width: 450px; height: 321px; left: 253px; top: 224px;">
-		<div class="sl-block-content" style="z-index: 15;"><img data-natural-width="450" data-natural-height="321" style="" data-lazy-loaded="" data-src="https://s3.amazonaws.com/REDACTED"></div>
+		<div class="sl-block-content" style="z-index: 15;"><img data-natural-width="450" data-natural-height="321" data-lazy-loaded="" data-src="https://s3.amazonaws.com/REDACTED"></div>
 	</div>
 
 	<div class="sl-block" data-block-type="text" style="width: 806px; left: 75px; top: 643px; height: auto;" data-block-id="38cbcbfe0f25ee0e0406acb3123e4b81">
@@ -134,6 +135,7 @@ class ParserTest extends TestCase
 </section>'
 		];
 
+		// Slide with an image with inline styles
 		yield [
 			'
 <section data-id="aec4e91743f049f69b2d18fe2c2b1b37">
@@ -231,6 +233,7 @@ class ParserTest extends TestCase
 </section>'
 		];
 
+		// Slide with a chart
 		yield [
 			'
 <section data-id="eed9bc730492bd9b38deba1eb1a39a5e">

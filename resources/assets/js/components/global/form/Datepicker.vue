@@ -20,7 +20,7 @@
 				class="control"
 				@click="clearDate()"
 			>
-				<span class="icon is-small clickable"><i class="fa fa-close"></i></span>
+				<span class="icon is-small clickable"><i class="fa fa-close" /></span>
 			</div>
 		</div>
 

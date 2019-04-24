@@ -7,14 +7,11 @@ use App\Models\Discussion;
 use App\Models\Lesson;
 use App\Models\Page;
 use App\Models\QnaQuestion;
-use App\Models\Role;
 use App\Models\Screen;
 use App\Models\Tag;
 use App\Models\User;
-use Carbon\Carbon;
 use Facades\App\Contracts\CourseProvider;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Bus;
 use Tests\Api\ApiTestCase;
 
 

@@ -21,17 +21,22 @@
 		display: flex
 		font-size: $font-size-minus-2
 		font-weight: $font-weight-bold
-		padding: 0 $margin-small
 		position: relative
 		transition: all 0.2s
+		height: 27px
+		line-height: 14px
+		min-width: 50px
+		background-color: $color-white
 
-	.vote-up
-		color: $color-green
-		flex-direction: column
+		.icon
+			margin-right: $margin-small-minus
 
-	.vote-down
-		color: $color-red
-		flex-direction: column-reverse
+		&.vote-up
+			color: $color-green
+			border: 1px solid currentColor
+
+		&.vote-down
+			color: $color-red
 
 	.flash-bg
 		border-radius: 100px

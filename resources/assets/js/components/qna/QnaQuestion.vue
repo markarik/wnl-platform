@@ -1,85 +1,61 @@
 <template>
 	<div class="qna-thread" :class="{'is-mobile': isMobile}">
 		<div ref="highlight" class="qna-question">
-			<wnl-vote
-				type="up"
-				:reactable-id="questionId"
-				:reactable-resource="reactableResource"
-				:state="voteState"
-				module="qna"
-			/>
-			<div class="qna-container">
-				<div class="qna-wrapper">
-					<div class="qna-question-content content" v-html="content" />
-					<wnl-bookmark
-						class="qna-bookmark"
-						:reactable-id="questionId"
-						:reactable-resource="reactableResource"
-						:state="bookmarkState"
-						:reactions-disabled="reactionsDisabled"
-						module="qna"
-					/>
-				</div>
-				<div v-if="tags.length > 0" class="tags">
-					<span
-						v-for="(tag, key) in tags"
-						:key="key"
-						class="tag is-light"
-					>
-						<span>{{tag}}</span>
-					</span>
-				</div>
-				<div class="qna-question-meta qna-meta">
-					<div
-						class="modal-activator"
-						:class="{'author-forgotten': author.deleted_at}"
+			<div class="qna-meta qna-question__header">
+				<div class="qna-question__header__meta">
+					<wnl-avatar
+						:class="{'author-forgotten': author.deleted_at, 'avatar': true}"
+						:full-name="author.full_name"
+						:url="author.avatar"
+						size="medium"
 						@click="showModal"
-					>
-						<wnl-avatar
-							class="avatar"
-							:full-name="author.full_name"
-							:url="author.avatar"
-							size="medium"
-						/>
-						<span class="qna-meta-info">
+					/>
+					<div class="qna-question__header__meta__x">
+						<span :class="{'author-forgotten': author.deleted_at}" @click="showModal">
 							{{author.full_name}}
 						</span>
+						<div>
+							<span class="qna-question__header__meta__separator">·</span>
+							<span>{{time}}</span>
+							<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
+								<span class="qna-question__header__meta__separator">·</span>
+								<wnl-delete
+									:target="deleteTarget"
+									:request-route="resourceRoute"
+									@deleteSuccess="onDeleteSuccess"
+								/>
+							</span>
+							<wnl-resolve
+								:resource="question"
+								@resolveResource="resolveQuestion(id)"
+								@unresolveResource="unresolveQuestion(id)"
+							/>
+						</div>
 					</div>
-					<span class="qna-meta-info">
-						· {{time}}
-					</span>
-					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
-						&nbsp;·&nbsp;<wnl-delete
-							:target="deleteTarget"
-							:request-route="resourceRoute"
-							@deleteSuccess="onDeleteSuccess"
-						/>
-					</span>
-					<wnl-resolve
-						:resource="question"
-						@resolveResource="resolveQuestion(id)"
-						@unresolveResource="unresolveQuestion(id)"
-					/>
 				</div>
-				<slot name="context" />
+				<wnl-bookmark
+					:reactable-id="questionId"
+					:reactable-resource="reactableResource"
+					:state="bookmarkState"
+					:reactions-disabled="reactionsDisabled"
+					module="qna"
+				/>
 			</div>
-		</div>
-		<div :class="{'qna-answers': true, 'disabled': question.resolved}">
-			<div class="level">
-				<div class="level-left qna-answers-heading">
-					<p>Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
-					<wnl-watch
-						:reactable-id="questionId"
-						:reactable-resource="reactableResource"
-						:state="watchState"
-						:reactions-disabled="reactionsDisabled"
-						module="qna"
-					/>
-				</div>
-				<div v-if="!readOnly" class="level-right">
+			<div class="qna-question__content" v-html="content" />
+			<slot name="context" />
+			<div class="qna-question__actions">
+				<wnl-vote
+					class="qna-question__actions__action"
+					type="up"
+					:reactable-id="questionId"
+					:reactable-resource="reactableResource"
+					:state="voteState"
+					module="qna"
+				/>
+				<template v-if="!readOnly">
 					<a
 						v-if="!showAnswerForm"
-						class="button is-small"
+						class="button is-small qna-question__actions__action"
 						@click="showAnswerForm = true"
 					>
 						<span>Odpowiedz</span>
@@ -88,21 +64,31 @@
 						</span>
 					</a>
 					<a
-						v-if="showAnswerForm"
-						class="button is-small"
+						v-else
+						class="button is-small qna-question__actions__action"
 						@click="showAnswerForm = false"
 					>
 						<span>Ukryj</span>
 					</a>
-				</div>
-			</div>
-			<transition name="fade">
-				<wnl-qna-new-answer-form
-					v-if="showAnswerForm"
-					:question-id="id"
-					@submitSuccess="onSubmitSuccess"
+				</template>
+				<wnl-watch
+					class="qna-question__actions__action"
+					:reactable-id="questionId"
+					:reactable-resource="reactableResource"
+					:state="watchState"
+					:reactions-disabled="reactionsDisabled"
+					module="qna"
 				/>
-			</transition>
+			</div>
+		</div>
+		<transition name="fade">
+			<wnl-qna-new-answer-form
+				v-if="showAnswerForm"
+				:question-id="id"
+				@submitSuccess="onSubmitSuccess"
+			/>
+		</transition>
+		<div v-if="hasAnswers" :class="{'qna-answers': true, 'disabled': question.resolved}">
 			<wnl-qna-answer
 				v-if="hasAnswers && !showAllAnswers"
 				:answer="latestAnswer"
@@ -135,6 +121,7 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
 
 	.qna-thread
 		border: $border-light-gray
@@ -148,34 +135,69 @@
 		background: $color-background-lighter-gray
 		border-bottom: $border-light-gray
 		padding: $margin-base
-
-	.modal-activator
 		display: flex
-		flex-direction: row
-		cursor: pointer
-		align-items: center
-		color: $color-sky-blue
+		flex-direction: column
 
-		&.author-forgotten
-			color: $color-gray
-			pointer-events: none
+		&__header
+			display: flex
+			align-items: flex-start
+			margin-bottom: $margin-base
 
-	.qna-question-content
-		font-size: $font-size-plus-1
-		justify-content: flex-start
-		padding-right: $margin-base
-		width: 100%
-		word-wrap: break-word
-		word-break: break-word
+			@media #{$media-query-tablet}
+				align-items: center
 
-		strong
-			font-weight: $font-weight-black
+			&__meta
+				flex-grow: 1
+				display: flex
+				align-items: flex-start
+				flex-direction: row
+				line-height: 1em
 
-	.qna-answers-heading
+				@media #{$media-query-tablet}
+					align-items: center
+
+				/deep/ &__separator
+					margin: 0 $margin-small-minus
+					display: inline-block
+
+				&__x
+					display: flex
+					flex-direction: column
+					margin-left: $margin-small
+
+					@media #{$media-query-tablet}
+						flex-direction: row
+						align-items: center
+
+		&__content
+			font-size: $font-size-plus-1
+			justify-content: flex-start
+			padding-right: $margin-base
+			width: 100%
+			word-wrap: break-word
+			word-break: break-word
+			margin-bottom: $margin-big
+
+			strong
+				font-weight: $font-weight-black
+
+		&__actions
+			display: flex
+
+			&__action
+				margin-right: $margin-base
+				@include action-button
+
+				&:last-child
+					margin-right: 0
+
+	.author-forgotten
 		color: $color-gray
+		pointer-events: none
 
 	.qna-answers
-		margin: $margin-base $margin-huge $margin-huge $margin-huge
+		padding: $margin-base
+		margin: $margin-base 0 $margin-huge 0
 		position: relative
 
 		&.disabled:before
@@ -188,10 +210,6 @@
 			top: -$margin-base
 			width: calc(100% + #{$margin-huge} + #{$margin-huge})
 			z-index: $z-index-overlay
-
-	.qna-thread.is-mobile
-		.qna-answers
-			margin: $margin-base
 
 	.qna-answers-show-all
 		display: block
@@ -207,17 +225,6 @@
 
 		&:hover
 			color: $color-darkest-gray
-
-	.qna-wrapper
-		display: flex
-		align-items: flex-start
-
-	.qna-bookmark
-		justify-content: flex-end
-
-	.tag
-		margin-right: $margin-small
-		margin-top: $margin-small
 </style>
 
 <script>
@@ -266,7 +273,6 @@ export default {
 			'profile',
 			'getQuestion',
 			'questionAnswersFromHighestUpvoteCount',
-			'questionTags',
 			'getReaction',
 			'questionAnswers',
 			'answer'
@@ -315,9 +321,6 @@ export default {
 		},
 		allAnswers() {
 			return this.answersFromHighestUpvoteCount;
-		},
-		tags() {
-			return this.questionTags(this.questionId).map((tag) => tag.name) || [];
 		},
 		bookmarkState() {
 			return this.getReaction(this.reactableResource, this.questionId, 'bookmark');

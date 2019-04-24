@@ -5,7 +5,7 @@
 		:class="{'has-reacted': hasReacted}"
 		@click="toggleReaction"
 	>
-		<span v-if="!isMobile" v-t="reactionMessage" />
+		<span v-t="reactionMessage" />
 		<span v-if="!isLoading" class="icon is-small watch-icon">
 			<i class="fa" :class="hasReactedClass" />
 		</span>
@@ -18,13 +18,15 @@
 
 	.watch
 		align-items: center
-		border: $border-light-gray
+		border-color: #A7ACBD
 		cursor: pointer
 		display: inline-flex
 		font-size: $font-size-minus-2
-		margin: 0 $margin-small
 		padding: 0 $margin-small
 		text-transform: uppercase
+		height: 27px
+		color: $color-gray
+		background-color: $color-white
 
 		&.has-reacted
 			border-color: $color-green

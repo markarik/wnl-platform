@@ -4,12 +4,12 @@
 		class="resolvable icon"
 		@click="$emit('unresolveResource')"
 	>
-		&nbsp;·
+		<span class="qna-question__header__meta__separator">·</span>
 		<i class="fa fa-undo" />
 		<span v-t="'ui.action.undo'" />
 	</p>
 	<span v-else-if="$moderatorFeatures.isAllowed('access')" class="resolvable icon">
-		&nbsp;·
+		<span class="qna-question__header__meta__separator">·</span>
 		<i class="fa fa-check" @click="$emit('resolveResource')" />
 	</span>
 </template>

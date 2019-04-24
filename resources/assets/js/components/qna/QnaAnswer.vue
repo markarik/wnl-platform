@@ -72,7 +72,6 @@
 		width: 100%
 
 	.qna-answer
-		padding: 0 $margin-base
 		margin-top: $margin-base
 
 	.modal-activator

@@ -56,7 +56,7 @@ export default {
 			};
 
 			return {
-				name: 'screens',
+				name: 'lessons',
 				params
 			};
 		},

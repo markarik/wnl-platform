@@ -402,4 +402,21 @@ class PaymentTest extends DuskTestCase
 			(new MyOrdersModule())->assertStudyBuddyCodeNotActive($browser);
 		});
 	}
+
+	public function testOrderWithCouponCantUseLowerCoupon() {
+		$this->browse(function (BethinkBrowser $browser) {
+			(new AccountModule())->signUp($browser);
+			(new PersonalDataModule())->assertCartContainsCourse($browser);
+			(new PersonalDataModule())->submitNoInvoice($browser);
+			(new ConfirmOrderModule())->payOnlineLater($browser);
+			(new MyOrdersModule())->assertOrderPlaced($browser);
+			(new MyOrdersModule())->useCoupon($browser, 10);
+			(new MyOrdersModule())->payNow($browser);
+			(new OnlinePaymentModule())->successfulPayment($browser, '1350.00');
+			(new MyOrdersModule())->assertPaid($browser, '1350zł / 1350zł');
+			(new MyOrdersModule())->useCoupon($browser, 5);
+			(new MyOrdersModule())->assertPriceHigherAfterCouponError($browser);
+			(new MyOrdersModule())->assertPaid($browser, '1350zł / 1350zł');
+		});
+	}
 }

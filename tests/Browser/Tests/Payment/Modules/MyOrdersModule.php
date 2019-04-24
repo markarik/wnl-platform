@@ -72,6 +72,11 @@ class MyOrdersModule
 		$browser->waitForText('Wpłacono ' . $expectedAmount, 60);
 	}
 
+	public function assertPriceHigherAfterCouponError(BethinkBrowser $browser)
+	{
+		$browser->waitForText('W trosce o przyszłość kolejnych edycji zniżki nie łączą się', 60);
+	}
+
 	public function assertNotPaid(BethinkBrowser $browser)
 	{
 		$order = $browser->order;

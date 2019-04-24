@@ -50,13 +50,7 @@ class Mentioned extends Event
 			$this->data['context'] = $this->payload['context'];
 		}
 
-		$this->data['actors'] = [
-			'id'           => $actor->id,
-			'first_name'   => $actor->profile->first_name,
-			'last_name'    => $actor->profile->last_name,
-			'full_name'    => $actor->profile->full_name,
-			'avatar'       => $actor->profile->avatar_url,
-		];
+		$this->data['actors'] = $this->transformActor($actor);
 
 		$this->data['referer'] = $this->referer;
 

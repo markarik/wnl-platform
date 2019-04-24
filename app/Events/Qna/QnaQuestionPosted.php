@@ -4,6 +4,7 @@ namespace App\Events\Qna;
 
 use App\Events\Event;
 use App\Events\SanitizesUserContent;
+use App\Events\TransformsEventActor;
 use App\Models\QnaQuestion;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -16,7 +17,8 @@ class QnaQuestionPosted extends Event
 		InteractsWithSockets,
 		InteractsWithQueue,
 		SanitizesUserContent,
-		EventContextTrait;
+		EventContextTrait,
+		TransformsEventActor;
 
 	public $model;
 
@@ -42,13 +44,7 @@ class QnaQuestionPosted extends Event
 				'id'   => $this->model->id,
 				'text' => $this->sanitize($this->model->text),
 			],
-			'actors'  => [
-				'id'           => $this->model->user->id,
-				'first_name'   => $this->model->user->profile->first_name,
-				'last_name'    => $this->model->user->profile->last_name,
-				'full_name'    => $this->model->user->profile->full_name,
-				'avatar'       => $this->model->user->profile->avatar_url,
-			],
+			'actors'  => $this->transformActor($this->model->user),
 			'referer' => $this->referer,
 			'context' => $this->addEventContext($this->model)
 		];

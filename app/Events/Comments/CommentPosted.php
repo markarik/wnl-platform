@@ -4,6 +4,7 @@ namespace App\Events\Comments;
 
 use App\Events\Event;
 use App\Events\SanitizesUserContent;
+use App\Events\TransformsEventActor;
 use App\Models\Comment;
 use App\Traits\EventContextTrait;
 use Illuminate\Broadcasting\Channel;
@@ -15,7 +16,8 @@ class CommentPosted extends Event
 	use Dispatchable,
 		InteractsWithSockets,
 		SanitizesUserContent,
-		EventContextTrait;
+		EventContextTrait,
+		TransformsEventActor;
 
 	public $model;
 
@@ -54,13 +56,7 @@ class CommentPosted extends Event
 				'id'   => $comment->id,
 				'text' => $this->sanitize($comment->text),
 			],
-			'actors'  => [
-				'id'           => $actor->id,
-				'first_name'   => $actor->profile->first_name,
-				'last_name'    => $actor->profile->last_name,
-				'full_name'    => $actor->profile->full_name,
-				'avatar'       => $actor->profile->avatar_url,
-			],
+			'actors'  => $this->transformActor($actor),
 			'referer' => $this->referer,
 			'context' => $this->addEventContext($commentable),
 		];

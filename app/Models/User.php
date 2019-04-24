@@ -267,6 +267,11 @@ class User extends Authenticatable
 				->count() > 0;
 	}
 
+	public function getRolesNamesAttribute()
+	{
+		return $this->roles->pluck('name')->toArray();
+	}
+
 	public function getLatestPaidCourseProductId()
 	{
 		if (!$this->productIdForDefaultLessonsStartDatesLoaded) {

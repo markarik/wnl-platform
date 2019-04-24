@@ -4,6 +4,7 @@ namespace App\Events\Reactions;
 
 use App\Events\Event;
 use App\Events\SanitizesUserContent;
+use App\Events\TransformsEventActor;
 use App\Models\Reaction;
 use App\Models\User;
 use App\Traits\EventContextTrait;
@@ -16,7 +17,8 @@ class ReactionAdded extends Event
 	use Dispatchable,
 		InteractsWithSockets,
 		SanitizesUserContent,
-		EventContextTrait;
+		EventContextTrait,
+		TransformsEventActor;
 
 	public $reaction;
 
@@ -57,13 +59,7 @@ class ReactionAdded extends Event
 				'reaction_type' => $reaction->type,
 				'reaction_id'   => $reaction->id,
 			],
-			'actors'  => [
-				'id'           => $actor->id,
-				'first_name'   => $actor->profile->first_name,
-				'last_name'    => $actor->profile->last_name,
-				'full_name'    => $actor->profile->full_name,
-				'avatar'       => $actor->profile->avatar_url,
-			],
+			'actors'  => $this->transformActor($actor),
 			'referer' => $this->referer,
 			'context' => $this->addEventContext($reactable)
 		];

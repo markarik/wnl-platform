@@ -3,6 +3,7 @@
 namespace App\Events\Tasks;
 
 use App\Events\Event;
+use App\Events\TransformsEventActor;
 use App\Models\Task;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -12,7 +13,8 @@ class AssignedToTask extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
-		SerializesModels;
+		SerializesModels,
+		TransformsEventActor;
 
 	public $task;
 
@@ -42,13 +44,7 @@ class AssignedToTask extends Event
 				'text' => $task->text,
 			],
 			'subject' => [],
-			'actors'  => [
-				'id'           => $this->actor->id,
-				'first_name'   => $this->actor->profile->first_name,
-				'last_name'    => $this->actor->profile->last_name,
-				'full_name'    => $this->actor->profile->full_name,
-				'avatar'       => $this->actor->profile->avatar_url,
-			],
+			'actors'  => $this->transformActor($this->model->user),
 			'referer' => $this->referer,
 			'context' => []
 		];

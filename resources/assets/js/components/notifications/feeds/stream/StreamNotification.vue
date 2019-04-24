@@ -7,6 +7,7 @@
 						:size="isMobile ? 'medium' : 'large'"
 						:full-name="message.actors.full_name"
 						:url="message.actors.avatar"
+						:roles="message.actors.roles"
 					/>
 				</div>
 				<span class="icon is-small"><i class="fa" :class="icon" /></span>
@@ -98,7 +99,7 @@
 			class="delete-message"
 		/>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :author="userForModal" />
+			<wnl-user-profile-modal :profile="userForModal" />
 		</wnl-modal>
 	</div>
 </template>

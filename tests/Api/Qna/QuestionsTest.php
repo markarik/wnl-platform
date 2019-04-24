@@ -2,6 +2,7 @@
 
 namespace Tests\Api\Qna;
 
+use App\Jobs\LogResourceUpdate;
 use App\Models\Discussion;
 use App\Models\Lesson;
 use App\Models\Page;

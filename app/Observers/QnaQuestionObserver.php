@@ -1,6 +1,5 @@
 <?php namespace App\Observers;
 
-use App\Events;
 use App\Jobs\DeleteModels;
 use App\Jobs\DetachReactions;
 use App\Models\QnaQuestion;
@@ -20,5 +19,4 @@ class QnaQuestionObserver
 	{
 		//
 	}
-
 }

@@ -5,6 +5,7 @@
 	"type": "project",
 	"require": {
 		"php": ">=7.3.2",
+		"altek/accountant": "^1.1",
 		"barryvdh/laravel-cors": "^0.11.3",
 		"barryvdh/laravel-dompdf": "^0.8.0",
 		"bethink/elastic-scout": "3.0.8",

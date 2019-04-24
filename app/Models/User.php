@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Altek\Accountant\Contracts\Identifiable;
 use App\Traits\CourseProgressStats;
 use Facades\App\Contracts\CourseProvider;
 use Carbon\Carbon;
@@ -13,7 +14,7 @@ use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use ScoutEngines\Elasticsearch\Searchable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements Identifiable
 {
 	use Notifiable, CourseProgressStats, Searchable;
 
@@ -519,5 +520,15 @@ class User extends Authenticatable
 				$lessonsAvailability->push($productLesson);
 			}
 		};
+	}
+
+	/**
+	 * Get a unique identifier.
+	 *
+	 * @return mixed
+	 */
+	public function getIdentifier()
+	{
+		return $this->id;
 	}
 }

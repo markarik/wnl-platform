@@ -37,7 +37,11 @@ class Parser
 
 	const PAGE_PATTERN = '/<p>((?!<p>)[\s\S])*(\d\/\d)[\s\S]*<\/p>/';
 
-	// Provided by digitok at #regex, lookahead is used so the order of attributes doesn't matter
+	// Provided by digitok at #regex with explanation:
+	// the style="" capture is inside a lookahead
+	// so we look forward from the current position to find style="" in which case it gets placed in group 1
+	// after that, having not advanced the position, we start matching for src=""
+	// the | at the end of the lookahead allows that lookahead to match nothing, for cases where there's no style
 	const IMAGE_PATTERN = '/<img(?=[^>]*?style="([^"]*)"|)[^>]*src="([^"]*)"[^>]*>/';
 
 	const MEDIA_PATTERNS = [

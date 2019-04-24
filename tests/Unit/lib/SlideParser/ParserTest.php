@@ -5,6 +5,7 @@ namespace Tests\Unit\lib\SlideParser;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Lib\SlideParser\Parser;
+use Mockery;
 use Tests\TestCase;
 
 class ParserTest extends TestCase
@@ -17,6 +18,12 @@ class ParserTest extends TestCase
 	public function testCleanSlide(string $input, string $expectedOutput)
 	{
 		Storage::fake();
+
+		// Warning: overload impacts global state but I don't expect it to be a problem
+		// See http://docs.mockery.io/en/stable/cookbook/mocking_hard_dependencies.html
+		Mockery::mock('overload:Lib\Bethink\Bethink')->shouldReceive('getAssetPublicUrl')->andReturnUsing(function ($arg) {
+			return "FAKE_HOST/{$arg}";
+		});
 
 		$pixelPng = Image::make('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
 		Image::shouldReceive('make')->andReturn($pixelPng);
@@ -112,7 +119,7 @@ class ParserTest extends TestCase
 		</div>
 	</div>
 	<div class="sl-block" data-block-type="image" data-block-id="b2b0a98e96bd8c35dce58a4f2b63d178" style="min-width: 4px; min-height: 4px; width: 450px; height: 321px; left: 253px; top: 224px;">
-		<div class="sl-block-content" style="z-index: 15;"><img src="http://platform.local/storage/FAKE_PATH.png"></div>
+		<div class="sl-block-content" style="z-index: 15;"><img src="FAKE_HOST/FAKE_PATH.png"></div>
 	</div>
 
 	<div class="sl-block" data-block-type="text" style="width: 806px; left: 75px; top: 643px; height: auto;" data-block-id="38cbcbfe0f25ee0e0406acb3123e4b81">
@@ -199,7 +206,7 @@ class ParserTest extends TestCase
 		</div>
 	</div>
 	<div class="sl-block" data-block-type="image" style="width: 438px; height: 212px; left: 261px; top: 367px; min-width: 4px; min-height: 4px;" data-block-id="27b90c33906ef6a6fe4543169f6e78fa">
-		<div class="sl-block-content" style="z-index: 12;"><img style="left: 0px; top: -119px; width: 438px; height: 438px;" src="http://platform.local/storage/FAKE_PATH.png"></div>
+		<div class="sl-block-content" style="z-index: 12;"><img style="left: 0px; top: -119px; width: 438px; height: 438px;" src="FAKE_HOST/FAKE_PATH.png"></div>
 	</div>
 	<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 594px;" data-block-id="e16a188c77f84e5ce5e76f8662257f63">
 		<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; color: rgb(5, 44, 80);">
@@ -269,7 +276,7 @@ class ParserTest extends TestCase
 	<div class="sl-block" data-block-type="iframe" data-block-id="3000ad3357cac083a45e4db9754aea2f" style="min-width: 30px; min-height: 30px; width: 799px; height: 533px; left: 81px; top: 97px;">
 		
 		<div class="iv-image-container">
-			<img src="http://platform.local/storage/charts/XXX-YYY-ZZZ.png" class="chart">
+			<img src="FAKE_HOST/charts/XXX-YYY-ZZZ.png" class="chart">
 			<a class="iv-image-fullscreen" title="Pełen ekran">
 				<span class="fullscreen-icon">
 					<span class="inner"></span>

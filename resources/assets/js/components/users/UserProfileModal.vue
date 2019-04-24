@@ -4,8 +4,9 @@
 			<div class="left">
 				<wnl-avatar
 					class="avatar"
-					:full-name="author.full_name"
-					:url="author.avatar"
+					:full-name="profile.full_name"
+					:url="profile.avatar"
+					:roles="profile.roles"
 					size="extralarge"
 				/>
 			</div>
@@ -13,19 +14,19 @@
 				<div class="content">
 					<div class="user-info-name-content">
 						<div class="user-info-full-name">
-							<span>{{author.full_name}}</span>
+							<span>{{profile.full_name}}</span>
 						</div>
 					</div>
-					<div v-if="author.city" class="user-info-city">
+					<div v-if="profile.city" class="user-info-city">
 						<span class="icon is-small">
 							<i class="fa fa-map-marker" />
 						</span>
-						<span class="city-title">{{author.city}}</span>
+						<span class="city-title">{{profile.city}}</span>
 					</div>
-					<div v-if="author.help" class="user-info-help">
+					<div v-if="profile.help" class="user-info-help">
 						<span class="help-title">{{$t('user.userProfile.helpTitle')}}</span>
 						<div class="notification">
-							<span class="user-help">{{author.help}}</span>
+							<span class="user-help">{{profile.help}}</span>
 						</div>
 					</div>
 				</div>
@@ -97,10 +98,10 @@ export default {
 	components: {
 		'wnl-message-link': MessageLink,
 	},
-	props: ['author'],
+	props: ['profile'],
 	data() {
 		return {
-			userId: this.author.user_id
+			userId: this.profile.user_id
 		};
 	},
 };

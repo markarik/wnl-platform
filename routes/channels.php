@@ -4,7 +4,6 @@
 use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('active-users', function ($user) {
-	// TODO AUTH ME
 	return [
 		'id' => $user->id,
 		'profile' => [
@@ -13,6 +12,7 @@ Broadcast::channel('active-users', function ($user) {
 			'full_name' => $user->profile->full_name,
 			'help' => $user->profile->help,
 			'user_id' => $user->profile->user_id,
+			'roles' => $user->roles->pluck('name')->toArray(),
 		],
 	];
 });

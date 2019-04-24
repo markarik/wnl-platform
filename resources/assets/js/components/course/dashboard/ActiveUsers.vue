@@ -13,6 +13,7 @@
 							<wnl-avatar
 								:full-name="user.profile.full_name"
 								:url="user.profile.avatar"
+								:roles="user.profile.roles"
 								size="medium"
 							/>
 						</div>
@@ -21,7 +22,7 @@
 			</div>
 		</div>
 		<wnl-modal v-if="modalVisible" @closeModal="toggleModal(false)">
-			<wnl-user-profile-modal :author="modalUser" />
+			<wnl-user-profile-modal :profile="modalUser" />
 		</wnl-modal>
 	</div>
 </template>

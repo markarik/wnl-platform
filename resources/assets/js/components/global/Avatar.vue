@@ -11,7 +11,7 @@
 			:title="usernameToUse"
 			class="wnl-avatar-automatic"
 		>{{initials}}</div>
-		<div class="badge">
+		<div class="badge" v-if="isModerator">
 			<img :src="badgeUrl">
 		</div>
 	</div>
@@ -51,6 +51,7 @@ import _ from 'lodash';
 import { mapGetters } from 'vuex';
 import { getInitials } from 'js/utils/strings';
 import { getImageUrl } from 'js/utils/env';
+import { ROLES } from 'js/consts/user';
 
 export default {
 	name: 'Avatar',
@@ -58,7 +59,10 @@ export default {
 		'fullName': String,
 		'size': String,
 		'url': String,
-		'roles': Array,
+		'roles': {
+			type: Array,
+			default: () => [],
+		},
 	},
 	computed: {
 		...mapGetters([
@@ -97,6 +101,9 @@ export default {
 		},
 		badgeUrl() {
 			return getImageUrl('wnl-crew-badge.svg');
+		},
+		isModerator() {
+			return this.roles.indexOf(ROLES.MODERATOR) !== -1;
 		},
 	},
 };

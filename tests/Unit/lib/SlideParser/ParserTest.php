@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\lib\SlideParser;
+namespace Tests\Unit\lib\SlideParser;
 
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;

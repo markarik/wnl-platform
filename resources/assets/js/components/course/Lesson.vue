@@ -356,7 +356,7 @@ export default {
 
 			this.updateLessonNav({
 				activeSection: (this.currentSection && this.currentSection.id) || null,
-				activeSubsection: (this.currentSubsection && this.currentSection.id) || null,
+				activeSubsection: (this.currentSubsection && this.currentSubsection.id) || null,
 				activeScreen: this.screenId
 			});
 		},

@@ -35,7 +35,7 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.datepicker-container
@@ -50,8 +50,6 @@
 
 	.icon
 		padding: $margin-base
-
-
 </style>
 
 <script>

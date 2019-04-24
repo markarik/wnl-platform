@@ -5,6 +5,7 @@ import { getApiUrl } from 'js/utils/env';
 import { set, delete as destroy } from 'vue';
 import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions';
 import { commentsGetters, commentsMutations, commentsActions, commentsState } from 'js/store/modules/comments';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 const include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles';
 const discussionsInclude = 'qna_questions,qna_questions.profiles,qna_questions.reactions,qna_questions.qna_answers.profiles,qna_questions.qna_answers.comments,qna_questions.qna_answers.comments.profiles';
@@ -213,6 +214,18 @@ const mutations = {
 		destroy(state.qna_questions, id);
 		set(state, 'questionsIds', questionsIds);
 	},
+	[types.QNA_RESOLVE_QUESTION] (state, payload) {
+		let id = payload.questionId,
+			question = state.qna_questions[id];
+
+		set(state.qna_questions, id, { ...question, resolved: true });
+	},
+	[types.QNA_UNRESOLVE_QUESTION] (state, payload) {
+		let id = payload.questionId,
+			question = state.qna_questions[id];
+
+		set(state.qna_questions, id, { ...question, resolved: false });
+	},
 	[types.QNA_UPDATE_ANSWER] (state, payload) {
 		let id = payload.answerId,
 			data = _.merge(state.qna_answers[id], payload.data);
@@ -319,22 +332,53 @@ const actions = {
 			resolve();
 		});
 	},
-	async resolveQuestion({commit}, questionId) {
-		// TODO check why resolved is not marked
-		await _updateQuestion(questionId, { resolved: true });
-		commit(types.QNA_UPDATE_QUESTION, { questionId, data: { resolved: true } });
+	async resolveQuestion({ commit, dispatch }, questionId) {
+		try {
+			await _updateQuestion(questionId, { resolved: true });
+			commit(types.QNA_RESOLVE_QUESTION, { questionId });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
 	},
-	async unresolveQuestion({commit}, questionId) {
-		await _updateQuestion(questionId, { resolved: false });
-		commit(types.QNA_UPDATE_QUESTION, { questionId, data: { resolved: false } });
+	async unresolveQuestion({ commit, dispatch }, questionId) {
+		try {
+			await _updateQuestion(questionId, { resolved: false });
+			commit(types.QNA_UNRESOLVE_QUESTION, { questionId });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
 	},
-	async verifyQuestion({ commit }, questionId) {
-		const { data: question } = await _updateQuestion(questionId, { verified: true });
-		commit(types.QNA_UPDATE_QUESTION, { questionId, data: { verified_at: question.verified_at } });
+	async verifyQuestion({ commit, dispatch }, questionId) {
+		try {
+			const { data: question } = await _updateQuestion(questionId, { verified: true });
+			commit(types.QNA_UPDATE_QUESTION, { questionId, data: { verified_at: question.verified_at } });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
 	},
-	async unverifyQuestion({ commit }, questionId) {
-		const { data: question } = await _updateQuestion(questionId, { verified: false });
-		commit(types.QNA_UPDATE_QUESTION, { questionId, data: { verified_at: question.verified_at } });
+	async unverifyQuestion({ commit, dispatch }, questionId) {
+		try {
+			const { data: question } = await _updateQuestion(questionId, { verified: false });
+			commit(types.QNA_UPDATE_QUESTION, { questionId, data: { verified_at: question.verified_at } });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
 	},
 	removeAnswer({ commit }, payload) {
 		return new Promise((resolve) => {

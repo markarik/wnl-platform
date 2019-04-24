@@ -19,12 +19,6 @@ class ParserTest extends TestCase
 	{
 		Storage::fake();
 
-		// Warning: overload impacts global state but I don't expect it to be a problem
-		// See http://docs.mockery.io/en/stable/cookbook/mocking_hard_dependencies.html
-		Mockery::mock('overload:Lib\Bethink\Bethink')->shouldReceive('getAssetPublicUrl')->andReturnUsing(function ($arg) {
-			return "FAKE_HOST/{$arg}";
-		});
-
 		$pixelPng = Image::make('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
 		Image::shouldReceive('make')->andReturn($pixelPng);
 
@@ -315,5 +309,10 @@ class ParserTest extends TestCase
 class FakeParser extends Parser {
 	protected function getStoragePathForImage(string $ext): string {
 		return "FAKE_PATH.{$ext}";
+	}
+
+	protected function getAssetPublicUrl(string $path): string
+	{
+		return "FAKE_HOST/{$path}";
 	}
 }

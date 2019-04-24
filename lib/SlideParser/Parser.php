@@ -388,7 +388,7 @@ class Parser
 
 		return sprintf(
 			self::IMAGE_VIEWER_TEMPLATE,
-			Bethink::getAssetPublicUrl($path)
+			$this->getAssetPublicUrl($path)
 		);
 	}
 
@@ -553,6 +553,11 @@ class Parser
 		return 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
 	}
 
+	protected function getAssetPublicUrl(string $path): string
+	{
+		return Bethink::getAssetPublicUrl($path);
+	}
+
 	private function getPng(\Intervention\Image\Image  $image): StreamInterface
 	{
 		return $image->resize(1920, 1080, function (Constraint $constraint) {
@@ -594,7 +599,7 @@ class Parser
 			$html .= ' class="' . $class . '"';
 		}
 
-		$html .= ' src="' . Bethink::getAssetPublicUrl($path) . '">';
+		$html .= ' src="' . $this->getAssetPublicUrl($path) . '">';
 
 		return $html;
 	}

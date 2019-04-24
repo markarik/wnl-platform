@@ -31,7 +31,7 @@
 			</div>
 		</div>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :author="author" />
+			<wnl-user-profile-modal :roles="author.roles" />
 		</wnl-modal>
 	</article>
 </template>

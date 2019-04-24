@@ -29,6 +29,7 @@
 						size="extraextralarge"
 						:full-name="fullName"
 						:url="profile.avatar"
+						:roles="profile.roles"
 					/>
 					<div class="user-info-header">
 						<div class="user-info-header-edit">
@@ -42,6 +43,7 @@
 							</wnl-message-link>
 							<span class="user-info-header-names">
 								<p class="fullname-title">{{profile.full_name}}</p>
+								<wnl-user-signature size="big" :roles="profile.roles"></wnl-user-signature>
 							</span>
 						</div>
 						<span v-if="cityToDisplay" class="user-info-city">
@@ -280,13 +282,15 @@ import {
 import Avatar from 'js/components/global/Avatar';
 import Qna from 'js/components/qna/Qna';
 import MessageLink from 'js/components/global/MessageLink';
+import UserSignature from 'js/components/global/UserSignature';
 
 export default {
 	name: 'UserProfile',
 	components: {
 		'wnl-avatar': Avatar,
 		'wnl-qna': Qna,
-		'wnl-message-link': MessageLink
+		'wnl-message-link': MessageLink,
+		'wnl-user-signature': UserSignature,
 	},
 	data() {
 		return {

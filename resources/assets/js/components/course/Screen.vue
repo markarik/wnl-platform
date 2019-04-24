@@ -126,7 +126,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
+		this.showQna && this.fetchQuestionsForDiscussion({ discussionId: this.screenData.discussion_id });
 		this.trackScreenOpen();
 	},
 	methods: {

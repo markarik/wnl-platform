@@ -383,6 +383,7 @@ import { gaEvent } from 'js/utils/tracking';
 import { Form, Text, Submit } from 'js/components/global/form';
 import P24Form from 'js/components/user/P24Form';
 import { swalConfig } from 'js/utils/swal';
+import { PRODUCTS_SLUGS } from 'js/consts/products';
 
 export default {
 	components: {
@@ -510,7 +511,7 @@ export default {
 			return this.paymentMethods[this.order.method];
 		},
 		canChangePaymentMethod() {
-			return !this.order.paid && !this.order.canceled && this.order.total > 0;
+			return !this.order.paid && !this.order.canceled && this.order.total > 0 && this.order.product.slug !== PRODUCTS_SLUGS.SLUG_ALBUM;
 		},
 		orderNumber() {
 			return `Zamówienie numer ${this.order.id}`;

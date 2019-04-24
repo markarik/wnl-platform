@@ -31,11 +31,27 @@
 			</div>
 
 			<div class="column dates">
-				<wnl-datepicker name="course_start" :config="datepickerConfig">Start kursu</wnl-datepicker>
-				<wnl-datepicker name="course_end" :config="datepickerConfig">Koniec kursu</wnl-datepicker>
+				<wnl-datepicker
+					name="course_start"
+					:config="datepickerConfig"
+					is-optional
+				>Start kursu</wnl-datepicker>
+				<wnl-datepicker
+					name="course_end"
+					:config="datepickerConfig"
+					is-optional
+				>Koniec kursu</wnl-datepicker>
 
-				<wnl-datepicker name="access_start" :config="datepickerConfig">Początek dostępu</wnl-datepicker>
-				<wnl-datepicker name="access_end" :config="datepickerConfig">Koniec dostępu</wnl-datepicker>
+				<wnl-datepicker
+					name="access_start"
+					:config="datepickerConfig"
+					is-optional
+				>Początek dostępu</wnl-datepicker>
+				<wnl-datepicker
+					name="access_end"
+					:config="datepickerConfig"
+					is-optional
+				>Koniec dostępu</wnl-datepicker>
 
 				<wnl-datepicker name="signups_start" :config="datepickerConfig">Start zapisów</wnl-datepicker>
 				<wnl-datepicker name="signups_end" :config="datepickerConfig">

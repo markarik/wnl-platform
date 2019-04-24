@@ -57,6 +57,10 @@ class Parser
 			</a>
 		</div>';
 
+	const MIME_IMAGE_GIF = 'image/gif';
+	const MIME_IMAGE_JPEG = 'image/jpeg';
+	const MIME_IMAGE_PNG = 'image/png';
+
 	protected $categoryTags;
 	protected $courseTags;
 	protected $questionTag = 'question';
@@ -480,15 +484,15 @@ class Parser
 			$mime = $image->mime;
 
 			switch ($mime){
-				case 'image/gif':
+				case self::MIME_IMAGE_GIF:
 					$data = @file_get_contents($imageUrl);
 					$ext = 'gif';
 					break;
-				case 'image/png':
+				case self::MIME_IMAGE_PNG:
 					$data = $resize ? $this->getPng($image) : @file_get_contents($imageUrl);
 					$ext = 'png';
 					break;
-				case 'image/jpeg':
+				case self::MIME_IMAGE_JPEG:
 					$data = $resize ? $this->getJpg($image) : @file_get_contents($imageUrl);
 					$ext = 'jpg';
 					break;
@@ -580,11 +584,11 @@ class Parser
 
 	private function getImageHtml(array $match, string $mime, string $path): string
 	{
-		$class = null;
+		$class = '';
 
 		if ($this->match(self::MEDIA_PATTERNS['chart'], $match[0])) {
 			$class = 'chart';
-		} else if ($mime === 'image/gif') {
+		} else if ($mime === self::MIME_IMAGE_GIF) {
 			$class = 'gif';
 		}
 
@@ -595,7 +599,7 @@ class Parser
 			$html .= ' style="' . $match[1] . '"';
 		}
 
-		if ($class) {
+		if (!empty($class)) {
 			$html .= ' class="' . $class . '"';
 		}
 

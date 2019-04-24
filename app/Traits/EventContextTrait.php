@@ -2,7 +2,12 @@
 
 namespace App\Traits;
 
+use App\Models\Comment;
 use App\Models\Presentable;
+use App\Models\QnaAnswer;
+use App\Models\QnaQuestion;
+use App\Models\QuizQuestion;
+use App\Models\Slide;
 use Facades\App\Contracts\CourseProvider;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +16,7 @@ trait EventContextTrait {
 	{
 		switch (get_class($model)) {
 			case 'App\Models\QnaQuestion':
+				/** @var QnaQuestion $model */
 				if (!empty($model->meta)) {
 					return [
 						'dynamic' => [
@@ -22,14 +28,17 @@ trait EventContextTrait {
 						'params' => $model->meta['context']['params'] ?? []
 					];
 				}
+				return [];
 
 			case 'App\Models\QnaAnswer':
+				/** @var QnaAnswer $model */
 				if (!empty($model->question)) {
 					return $this->addEventContext($model->question);
 				}
 				return [];
 
 			case 'App\Models\QuizQuestion':
+				/** @var QuizQuestion $model */
 				if (!empty($model)) {
 					return [
 						'name' => 'quizQuestion',
@@ -41,6 +50,7 @@ trait EventContextTrait {
 				return [];
 
 			case 'App\Models\Slide':
+				/** @var Slide $model */
 				if ($model->sections->count() > 0) {
 					$section = $model->sections->first();
 					$screen = $section->screen;
@@ -63,6 +73,7 @@ trait EventContextTrait {
 				return [];
 
 			case 'App\Models\Comment':
+				/** @var Comment $model */
 				return $this->addEventContext($model->commentable);
 
 			default:

@@ -10,6 +10,8 @@
 					:content="question"
 					@resolveResource="resolveQuestion(id)"
 					@unresolveResource="unresolveQuestion(id)"
+					@verify="verifyQuestion(id)"
+					@unverify="unverifyQuestion(id)"
 				/>
 				<wnl-bookmark
 					:reactable-id="questionId"
@@ -313,7 +315,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
+		...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion', 'verifyQuestion', 'unverifyQuestion']),
 		dispatchFetchQuestion() {
 			return this.fetchQuestion(this.id)
 				.catch((error) => {

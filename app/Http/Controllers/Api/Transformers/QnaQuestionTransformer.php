@@ -22,6 +22,7 @@ class QnaQuestionTransformer extends ApiTransformer
 			'text'       => $question->text,
 			'created_at' => $question->created_at->timestamp,
 			'updated_at' => $question->updated_at->timestamp,
+			'verified_at' => $question->verified_at->timestamp ?? null,
 			'discussions' => $question->discussion_id
 		];
 

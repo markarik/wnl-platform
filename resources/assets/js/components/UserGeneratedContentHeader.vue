@@ -27,6 +27,11 @@
 					@resolveResource="$emit('resolveResource')"
 					@unresolveResource="$emit('unresolveResource')"
 				/>
+				<wnl-verify
+					:resource="content"
+					@verify="$emit('verify')"
+					@unverify="$emit('unverify')"
+				/>
 			</div>
 		</div>
 		<wnl-modal v-if="modalVisible" @closeModal="closeModal">
@@ -72,13 +77,14 @@
 <script>
 import WnlDelete from 'js/components/global/Delete';
 import WnlResolve from 'js/components/global/Resolve';
+import WnlVerify from 'js/components/global/Verify';
 import WnlUserProfileModal from 'js/components/users/UserProfileModal';
 import WnlModal from 'js/components/global/Modal';
 import { timeFromS } from 'js/utils/time';
 
 
 export default {
-	components: { WnlModal, WnlDelete, WnlResolve, WnlUserProfileModal },
+	components: { WnlModal, WnlDelete, WnlResolve, WnlUserProfileModal, WnlVerify },
 	props: {
 		author: {
 			type: Object,

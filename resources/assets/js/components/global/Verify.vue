@@ -7,8 +7,12 @@
 		<i class="fa fa-undo" />
 		<span>Zweryfikowano</span>
 	</p>
-	<span v-else-if="$moderatorFeatures.isAllowed('access')" class="verify icon">
-		<i class="fa fa-check" @click="$emit('verify')" />
+	<span
+		v-else-if="$moderatorFeatures.isAllowed('access')"
+		class="verify icon"
+		@click="$emit('verify')"
+	>
+		<i class="fa fa-check" />
 		<span>Zweryfikuj</span>
 	</span>
 </template>

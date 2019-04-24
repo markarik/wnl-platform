@@ -213,18 +213,6 @@ const mutations = {
 		destroy(state.qna_questions, id);
 		set(state, 'questionsIds', questionsIds);
 	},
-	[types.QNA_RESOLVE_QUESTION] (state, payload) {
-		let id = payload.questionId,
-			question = state.qna_questions[id];
-
-		set(state.qna_questions, id, { ...question, resolved: true });
-	},
-	[types.QNA_UNRESOLVE_QUESTION] (state, payload) {
-		let id = payload.questionId,
-			question = state.qna_questions[id];
-
-		set(state.qna_questions, id, { ...question, resolved: false });
-	},
 	[types.QNA_UPDATE_ANSWER] (state, payload) {
 		let id = payload.answerId,
 			data = _.merge(state.qna_answers[id], payload.data);
@@ -332,22 +320,21 @@ const actions = {
 		});
 	},
 	async resolveQuestion({commit}, questionId) {
+		// TODO check why resolved is not marked
 		await _updateQuestion(questionId, { resolved: true });
-		commit(types.QNA_RESOLVE_QUESTION, { questionId });
+		commit(types.QNA_UPDATE_QUESTION, { questionId, data: { resolved: true } });
 	},
 	async unresolveQuestion({commit}, questionId) {
 		await _updateQuestion(questionId, { resolved: false });
-		commit(types.QNA_UNRESOLVE_QUESTION, { questionId });
+		commit(types.QNA_UPDATE_QUESTION, { questionId, data: { resolved: false } });
 	},
 	async verifyQuestion({ commit }, questionId) {
-		await _updateQuestion(questionId, { verified: true });
-		// TODO
-		commit(types.QNA_UNRESOLVE_QUESTION, { questionId });
+		const { data: question } = await _updateQuestion(questionId, { verified: true });
+		commit(types.QNA_UPDATE_QUESTION, { questionId, data: { verified_at: question.verified_at } });
 	},
 	async unverifyQuestion({ commit }, questionId) {
-		await _updateQuestion(questionId, { verified: false });
-		// TODO
-		commit(types.QNA_UNRESOLVE_QUESTION, { questionId });
+		const { data: question } = await _updateQuestion(questionId, { verified: false });
+		commit(types.QNA_UPDATE_QUESTION, { questionId, data: { verified_at: question.verified_at } });
 	},
 	removeAnswer({ commit }, payload) {
 		return new Promise((resolve) => {

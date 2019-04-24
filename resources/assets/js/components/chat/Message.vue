@@ -26,6 +26,7 @@
 					>{{fullName}}</strong>
 					<small class="wnl-message-time">{{formattedTime}}</small>
 				</p>
+				<wnl-user-signature :user="author"></wnl-user-signature>
 				<p class="wnl-message-content" v-html="content" />
 			</div>
 		</div>
@@ -86,12 +87,14 @@ import { timeFromMs } from 'js/utils/time';
 import Modal from 'js/components/global/Modal.vue';
 import UserProfileModal from 'js/components/users/UserProfileModal';
 import Avatar from 'js/components/global/Avatar';
+import UserSignature from 'js/components/global/UserSignature';
 
 export default{
 	components: {
 		'wnl-avatar': Avatar,
 		'wnl-user-profile-modal': UserProfileModal,
-		'wnl-modal': Modal
+		'wnl-modal': Modal,
+		'wnl-user-signature': UserSignature,
 	},
 	props: ['author', 'avatar', 'time', 'showAuthor', 'content', 'id', 'fullName'],
 	data() {

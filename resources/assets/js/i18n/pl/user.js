@@ -24,7 +24,10 @@ export const user = {
 		bestQuestions: 'Najlepsze Pytania',
 		bestAnswers: 'Najlepsze Odpowiedzi',
 		about: 'Informacje o uczestniku',
-		showContext: 'Pokaż kontekst'
+		showContext: 'Pokaż kontekst',
+		signatures: {
+			wnlCrew: 'zespół wnl',
+		}
 	},
 	userAboutLabels: {
 		city: 'Miasto, w którym mieszkam',
@@ -119,5 +122,5 @@ export const user = {
 	},
 	plan: {
 		changePlanConfirmation: 'Czy na pewno chcesz zmienić plan pracy?'
-	}
+	},
 };

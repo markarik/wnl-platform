@@ -129,7 +129,6 @@
 		white-space: nowrap
 
 	.qna-question,
-	.qna-answer,
 	.qna-comment
 		display: flex
 

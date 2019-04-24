@@ -18,7 +18,7 @@
 	.vote
 		align-items: center
 		cursor: pointer
-		display: flex
+		display: inline-flex
 		font-size: $font-size-minus-2
 		font-weight: $font-weight-bold
 		position: relative
@@ -27,6 +27,7 @@
 		line-height: 14px
 		min-width: 50px
 		background-color: $color-white
+		justify-content: center
 
 		.icon
 			margin-right: $margin-small-minus

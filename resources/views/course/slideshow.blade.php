@@ -22,9 +22,6 @@
 			border: 1px solid #7a7f91 !important;
 		}
 	</style>
-	@php
-		$themeStyleSheet = config('app.instance_name') === 'bodywork' ? 'reveal-theme-bodywork.css' : 'reveal-theme-wnl.css';
-	@endphp
 	<link href="{{ mix("css/{$themeStyleSheet}")  }}" rel="stylesheet">
 </head>
 	<body>

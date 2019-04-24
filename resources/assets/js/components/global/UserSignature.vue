@@ -1,6 +1,6 @@
 <template>
 	<div
-		v-if="roles.length"
+		v-if="isModerator"
 		class="wnl-user-signature"
 		:class="size"
 	>
@@ -20,17 +20,16 @@
 
 		&.regular
 			height: 10px
-			font-size: $font-size-minus-3
-
+			font-size: 8px
 			img
 				height: 8px
 
 		&.big
-			height: 24px
-			font-size: $font-size-plus-2
-
+			height: 20px
+			font-size: 16px
+			margin-bottom: 14px
 			img
-				height: 20px
+				height: 14px
 
 </style>
 
@@ -44,7 +43,7 @@ export default {
 	props: {
 		'roles': {
 			type: Array,
-			default: () => ['moderator'],
+			default: () => [],
 		},
 		'size': {
 			type: String,

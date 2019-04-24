@@ -16,6 +16,7 @@
 						<div class="user-info-full-name">
 							<span>{{profile.full_name}}</span>
 						</div>
+						<wnl-user-signature size="big" :roles="profile.roles"></wnl-user-signature>
 					</div>
 					<div v-if="profile.city" class="user-info-city">
 						<span class="icon is-small">
@@ -92,11 +93,13 @@
 
 <script>
 import MessageLink from 'js/components/global/MessageLink';
+import UserSignature from 'js/components/global/UserSignature';
 
 export default {
 	name: 'UserProfileModal',
 	components: {
 		'wnl-message-link': MessageLink,
+		'wnl-user-signature': UserSignature,
 	},
 	props: ['profile'],
 	data() {

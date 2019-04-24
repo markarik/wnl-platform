@@ -13,6 +13,7 @@
 				v-if="showAuthor"
 				:full-name="fullName"
 				:url="avatar"
+				:roles="author.roles"
 			/>
 			<div v-else class="media-left-placeholder" />
 		</figure>
@@ -26,12 +27,12 @@
 					>{{fullName}}</strong>
 					<small class="wnl-message-time">{{formattedTime}}</small>
 				</p>
-				<wnl-user-signature :user="author"></wnl-user-signature>
+				<wnl-user-signature :roles="author.roles"></wnl-user-signature>
 				<p class="wnl-message-content" v-html="content" />
 			</div>
 		</div>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :roles="author.roles" />
+			<wnl-user-profile-modal :profile="author" />
 		</wnl-modal>
 	</article>
 </template>

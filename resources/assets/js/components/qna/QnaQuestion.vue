@@ -2,37 +2,15 @@
 	<div class="qna-thread" :class="{'is-mobile': isMobile}">
 		<div ref="highlight" class="qna-question">
 			<div class="qna-meta qna-question__header">
-				<div class="qna-question__header__meta">
-					<wnl-avatar
-						:class="{'author-forgotten': author.deleted_at, 'avatar': true}"
-						:full-name="author.full_name"
-						:url="author.avatar"
-						size="medium"
-						@click="showModal"
-					/>
-					<div class="qna-question__header__meta__x">
-						<span :class="{'author-forgotten': author.deleted_at}" @click="showModal">
-							{{author.full_name}}
-						</span>
-						<div>
-							<span class="qna-question__header__meta__separator">·</span>
-							<span>{{time}}</span>
-							<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
-								<span class="qna-question__header__meta__separator">·</span>
-								<wnl-delete
-									:target="deleteTarget"
-									:request-route="resourceRoute"
-									@deleteSuccess="onDeleteSuccess"
-								/>
-							</span>
-							<wnl-resolve
-								:resource="question"
-								@resolveResource="resolveQuestion(id)"
-								@unresolveResource="unresolveQuestion(id)"
-							/>
-						</div>
-					</div>
-				</div>
+				<wnl-user-generated-content-header
+					:author="author"
+					:can-delete="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')"
+					:delete-target="deleteTarget"
+					:delete-resource-rotue="resourceRoute"
+					:content="question"
+					@resolveResource="resolveQuestion(id)"
+					@unresolveResource="unresolveQuestion(id)"
+				/>
 				<wnl-bookmark
 					:reactable-id="questionId"
 					:reactable-resource="reactableResource"
@@ -113,9 +91,6 @@
 				<span class="icon is-small"><i class="fa fa-angle-down" /></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
-		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :author="author" />
-		</wnl-modal>
 	</div>
 </template>
 
@@ -146,29 +121,6 @@
 			@media #{$media-query-tablet}
 				align-items: center
 
-			&__meta
-				flex-grow: 1
-				display: flex
-				align-items: flex-start
-				flex-direction: row
-				line-height: 1em
-
-				@media #{$media-query-tablet}
-					align-items: center
-
-				/deep/ &__separator
-					margin: 0 $margin-small-minus
-					display: inline-block
-
-				&__x
-					display: flex
-					flex-direction: column
-					margin-left: $margin-small
-
-					@media #{$media-query-tablet}
-						flex-direction: row
-						align-items: center
-
 		&__content
 			font-size: $font-size-plus-1
 			justify-content: flex-start
@@ -190,10 +142,6 @@
 
 				&:last-child
 					margin-right: 0
-
-	.author-forgotten
-		color: $color-gray
-		pointer-events: none
 
 	.qna-answers
 		padding: $margin-base
@@ -231,30 +179,23 @@
 import _ from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
-import UserProfileModal from 'js/components/users/UserProfileModal';
-import Delete from 'js/components/global/form/Delete';
-import Resolve from 'js/components/global/form/Resolve';
+import WnlUserGeneratedContentHeader from 'js/components/UserGeneratedContentHeader';
 import NewAnswerForm from 'js/components/qna/NewAnswerForm';
 import QnaAnswer from 'js/components/qna/QnaAnswer';
 import Vote from 'js/components/global/reactions/Vote';
 import Bookmark from 'js/components/global/reactions/Bookmark';
 import highlight from 'js/mixins/highlight';
 import Watch from 'js/components/global/reactions/Watch';
-import Modal from 'js/components/global/Modal';
 import moderatorFeatures from 'js/perimeters/moderator';
-import { timeFromS } from 'js/utils/time';
 
 export default {
 	components: {
-		'wnl-delete': Delete,
-		'wnl-resolve': Resolve,
+		WnlUserGeneratedContentHeader,
 		'wnl-vote': Vote,
 		'wnl-qna-answer': QnaAnswer,
 		'wnl-qna-new-answer-form': NewAnswerForm,
 		'wnl-bookmark': Bookmark,
 		'wnl-watch': Watch,
-		'wnl-modal': Modal,
-		'wnl-user-profile-modal': UserProfileModal,
 	},
 	mixins: [highlight],
 	perimeters: [moderatorFeatures],
@@ -265,7 +206,6 @@ export default {
 			showAnswerForm: false,
 			reactableResource: 'qna_questions',
 			highlightableResources: ['qna_question', 'reaction'],
-			isVisible: false,
 		};
 	},
 	computed: {
@@ -298,9 +238,6 @@ export default {
 		},
 		deleteTarget() {
 			return 'to pytanie';
-		},
-		time() {
-			return timeFromS(this.question.created_at);
 		},
 		answersFromHighestUpvoteCount() {
 			return this.questionAnswersFromHighestUpvoteCount(this.id);
@@ -377,12 +314,6 @@ export default {
 	},
 	methods: {
 		...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
-		showModal() {
-			this.isVisible = true;
-		},
-		closeModal() {
-			this.isVisible = false;
-		},
 		dispatchFetchQuestion() {
 			return this.fetchQuestion(this.id)
 				.catch((error) => {

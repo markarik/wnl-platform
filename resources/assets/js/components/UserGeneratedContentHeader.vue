@@ -70,8 +70,8 @@
 </style>
 
 <script>
-import WnlDelete from 'js/components/global/form/Delete';
-import WnlResolve from 'js/components/global/form/Resolve';
+import WnlDelete from 'js/components/global/Delete';
+import WnlResolve from 'js/components/global/Resolve';
 import WnlUserProfileModal from 'js/components/users/UserProfileModal';
 import WnlModal from 'js/components/global/Modal';
 import { timeFromS } from 'js/utils/time';

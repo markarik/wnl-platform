@@ -9,10 +9,8 @@ import { commentsGetters, commentsMutations, commentsActions, commentsState } fr
 const include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles';
 const discussionsInclude = 'qna_questions,qna_questions.profiles,qna_questions.reactions,qna_questions.qna_answers.profiles,qna_questions.qna_answers.comments,qna_questions.qna_answers.comments.profiles';
 
-function _resolveQuestion(questionId, status = true) {
-	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
-		resolved: status
-	});
+function _updateQuestion(questionId, payload) {
+	return axios.put(getApiUrl(`qna_questions/${questionId}`), payload);
 }
 
 function _getQuestionsByTagName(tagName, ids) {
@@ -333,13 +331,23 @@ const actions = {
 			resolve();
 		});
 	},
-	resolveQuestion({ commit }, questionId) {
-		return _resolveQuestion(questionId)
-			.then(() => commit(types.QNA_RESOLVE_QUESTION, { questionId }));
+	async resolveQuestion({commit}, questionId) {
+		await _updateQuestion(questionId, { resolved: true });
+		commit(types.QNA_RESOLVE_QUESTION, { questionId });
 	},
-	unresolveQuestion({ commit }, questionId) {
-		return _resolveQuestion(questionId, false)
-			.then(() => commit(types.QNA_UNRESOLVE_QUESTION, { questionId }));
+	async unresolveQuestion({commit}, questionId) {
+		await _updateQuestion(questionId, { resolved: false });
+		commit(types.QNA_UNRESOLVE_QUESTION, { questionId });
+	},
+	async verifyQuestion({ commit }, questionId) {
+		await _updateQuestion(questionId, { verified: true });
+		// TODO
+		commit(types.QNA_UNRESOLVE_QUESTION, { questionId });
+	},
+	async unverifyQuestion({ commit }, questionId) {
+		await _updateQuestion(questionId, { verified: false });
+		// TODO
+		commit(types.QNA_UNRESOLVE_QUESTION, { questionId });
 	},
 	removeAnswer({ commit }, payload) {
 		return new Promise((resolve) => {

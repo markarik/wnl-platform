@@ -100,8 +100,8 @@ import { mapGetters } from 'vuex';
 
 import UserProfileModal from 'js/components/users/UserProfileModal';
 import Avatar from 'js/components/global/Avatar';
-import Delete from 'js/components/global/form/Delete';
-import Resolve from 'js/components/global/form/Resolve';
+import Delete from 'js/components/global/Delete';
+import Resolve from 'js/components/global/Resolve';
 import { timeFromS } from 'js/utils/time';
 import moderatorFeatures from 'js/perimeters/moderator';
 import Vote from 'js/components/global/reactions/Vote';

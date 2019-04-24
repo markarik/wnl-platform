@@ -109,7 +109,7 @@ import { mapGetters, mapActions } from 'vuex';
 
 import UserProfileModal from 'js/components/users/UserProfileModal';
 import Avatar from 'js/components/global/Avatar';
-import Delete from 'js/components/global/form/Delete';
+import Delete from 'js/components/global/Delete';
 import Vote from 'js/components/global/reactions/Vote';
 import highlight from 'js/mixins/highlight';
 import CommentsList from 'js/components/comments/CommentsList';

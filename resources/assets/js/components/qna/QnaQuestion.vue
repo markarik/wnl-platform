@@ -3,6 +3,7 @@
 		<div ref="highlight" class="qna-question">
 			<div class="qna-meta qna-question__header">
 				<wnl-user-generated-content-header
+					resolvable
 					:author="author"
 					:can-delete="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')"
 					:delete-target="deleteTarget"
@@ -69,6 +70,9 @@
 			/>
 		</transition>
 		<div v-if="hasAnswers" :class="{'qna-answers': true, 'disabled': question.resolved}">
+			<div class="qna-question__answers-counter">
+				<span class="qna-question__answers-counter__text">Odpowiedzi: {{allAnswers.length}}</span>
+			</div>
 			<wnl-qna-answer
 				v-if="hasAnswers && !showAllAnswers"
 				:answer="latestAnswer"
@@ -145,9 +149,28 @@
 				&:last-child
 					margin-right: 0
 
+		&__answers-counter
+			font-weight: 600
+			color: $color-gray
+			text-align: center
+			position: relative
+
+			&:before
+				left: 0
+				top: 50%
+				content: ' '
+				border-bottom: 1px solid $color-light-gray
+				width: 100%
+				position: absolute
+				z-index: -1
+
+			&__text
+				display: inline-block
+				background-color: $color-white
+				padding: 0 $margin-medium
+
 	.qna-answers
-		padding: $margin-base
-		margin: $margin-base 0 $margin-huge 0
+		margin: $margin-base $margin-base $margin-huge $margin-base
 		position: relative
 
 		&.disabled:before

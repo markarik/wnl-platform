@@ -1,46 +1,22 @@
 <template>
-	<div ref="highlight" class="qna-answer-container">
-		<div class="qna-answer">
-			<wnl-vote
-				type="up"
-				:reactable-id="id"
-				:reactable-resource="reactableResource"
-				:state="upvoteState"
-				module="qna"
+	<div>
+		<div ref="highlight" class="qna-answer-container">
+			<wnl-user-generated-content-header
+				:author="author"
+				:content="answer"
+				:can-delete="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')"
+				:delete-target="deleteTarget"
+				:delete-resource-rotue="resourceRoute"
 			/>
-			<div class="qna-container">
-				<div class="qna-wrapper">
-					<div class="qna-answer-content content" v-html="content" />
-				</div>
-				<div class="qna-meta">
-					<div
-						class="modal-activator"
-						:class="{'author-forgotten': author.deleted_at}"
-						@click="showModal"
-					>
-						<wnl-avatar
-							class="avatar"
-							:full-name="author.full_name"
-							:url="author.avatar"
-							size="medium"
-						/>
-						<span class="qna-meta-info">
-							{{author.full_name}} ·
-						</span>
-					</div>
-					<span class="qna-meta-info">
-						{{time}}
-					</span>
-					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
-						&nbsp;·&nbsp;<wnl-delete
-							:target="deleteTarget"
-							:request-route="resourceRoute"
-							@deleteSuccess="onDeleteSuccess"
-						/>
-					</span>
-				</div>
-			</div>
+			<div class="qna-answer-content" v-html="content" />
 		</div>
+		<wnl-vote
+			type="up"
+			:reactable-id="id"
+			:reactable-resource="reactableResource"
+			:state="upvoteState"
+			module="qna"
+		/>
 		<div class="qna-answer-comments">
 			<wnl-comments-list
 				commentable-resource="qna_answers"
@@ -52,9 +28,6 @@
 				:is-unique="false"
 			/>
 		</div>
-		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :author="author" />
-		</wnl-modal>
 	</div>
 </template>
 
@@ -62,27 +35,15 @@
 	@import 'resources/assets/sass/variables'
 
 	.qna-answer-container
-		border-top: $border-light-gray
 		margin-bottom: $margin-big
+		padding-top: $margin-big
 
 	.qna-answer-content
+		margin-top: $margin-big
 		word-wrap: break-word
 		word-break: break-word
 		justify-content: flex-start
 		width: 100%
-
-	.qna-answer
-		margin-top: $margin-base
-
-	.modal-activator
-		display: flex
-		flex-direction: row
-		cursor: pointer
-		align-items: center
-		color: $color-sky-blue
-		&.author-forgotten
-			color: $color-gray
-			pointer-events: none
 
 	.qna-answer-comments
 		margin-left: 60px
@@ -107,26 +68,18 @@
 import _ from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
-import UserProfileModal from 'js/components/users/UserProfileModal';
-import Avatar from 'js/components/global/Avatar';
-import Delete from 'js/components/global/Delete';
+import WnlUserGeneratedContentHeader from 'js/components/UserGeneratedContentHeader';
 import Vote from 'js/components/global/reactions/Vote';
 import highlight from 'js/mixins/highlight';
 import CommentsList from 'js/components/comments/CommentsList';
 import moderatorFeatures from 'js/perimeters/moderator';
-import Modal from 'js/components/global/Modal';
-
-import { timeFromS } from 'js/utils/time';
 
 export default {
 	name: 'QnaAnswer',
 	components: {
-		'wnl-avatar': Avatar,
-		'wnl-delete': Delete,
+		WnlUserGeneratedContentHeader,
 		'wnl-vote': Vote,
 		'wnl-comments-list': CommentsList,
-		'wnl-modal': Modal,
-		'wnl-user-profile-modal': UserProfileModal
 	},
 	perimeters: [moderatorFeatures],
 	mixins: [ highlight ],
@@ -136,7 +89,6 @@ export default {
 			loading: false,
 			reactableResource: 'qna_answers',
 			highlightableResources: ['qna_answer', 'qna_question', 'reaction'],
-			isVisible: false
 		};
 	},
 	computed: {
@@ -153,9 +105,6 @@ export default {
 		},
 		content() {
 			return this.answer.text;
-		},
-		time() {
-			return timeFromS(this.answer.created_at);
 		},
 		author() {
 			return this.profile(this.answer.profiles[0]);
@@ -203,12 +152,6 @@ export default {
 	},
 	methods: {
 		...mapActions('qna', ['removeAnswer']),
-		showModal() {
-			this.isVisible = true;
-		},
-		closeModal() {
-			this.isVisible = false;
-		},
 		onDeleteSuccess() {
 			this.removeAnswer({
 				questionId: this.questionId,

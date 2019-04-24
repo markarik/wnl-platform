@@ -34,7 +34,7 @@
 	@import 'resources/assets/sass/variables'
 
 	.qna-new-answer-form
-		margin-bottom: $margin-small
+		margin: $margin-base $margin-base $margin-small $margin-base
 
 		.ql-container
 			height: auto

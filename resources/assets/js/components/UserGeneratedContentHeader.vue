@@ -23,6 +23,7 @@
 					/>
 				</span>
 				<wnl-resolve
+					v-if="resolvable"
 					:resource="content"
 					@resolveResource="$emit('resolveResource')"
 					@unresolveResource="$emit('unresolveResource')"
@@ -42,7 +43,6 @@
 
 <style lang="sass" scoped>
 @import 'resources/assets/sass/variables'
-@import 'resources/assets/sass/mixins'
 
 .user-generated-content-header
 	flex-grow: 1
@@ -105,6 +105,10 @@ export default {
 		content: {
 			type: Object,
 			required: true
+		},
+		resolvable: {
+			type: Boolean,
+			default: false
 		}
 	},
 	data() {

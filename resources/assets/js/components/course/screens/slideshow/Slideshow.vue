@@ -501,7 +501,10 @@ export default {
 		updateRoute(slideNumber) {
 			!this.preserveRoute && this.$router.replace({
 				name: 'lessons',
-				params: { slide: slideNumber }
+				params: {
+					screenId: this.screenId,
+					slide: slideNumber
+				}
 			});
 		},
 		navigateToSlide(slideNumber) {

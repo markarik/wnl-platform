@@ -44,7 +44,7 @@ class AssignedToTask extends Event
 				'text' => $task->text,
 			],
 			'subject' => [],
-			'actors'  => $this->transformActor($this->model->user),
+			'actors'  => $this->transformActor($this->actor),
 			'referer' => $this->referer,
 			'context' => []
 		];

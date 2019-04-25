@@ -1,6 +1,7 @@
 <?php namespace App\Events\Mentions;
 
 use App\Events\Event;
+use App\Events\TransformsEventActor;
 use App\Http\Controllers\Api\ApiController;
 use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -11,7 +12,8 @@ class Mentioned extends Event
 {
 	use Dispatchable,
 		InteractsWithSockets,
-		SerializesModels;
+		SerializesModels,
+		TransformsEventActor;
 
 	/**
 	 * @var array $mentioned

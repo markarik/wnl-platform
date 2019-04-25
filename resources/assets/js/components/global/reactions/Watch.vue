@@ -18,7 +18,7 @@
 
 	.watch
 		align-items: center
-		border-color: #A7ACBD
+		border: 1px solid #A7ACBD
 		cursor: pointer
 		display: inline-flex
 		font-size: $font-size-minus-2

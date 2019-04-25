@@ -1,59 +1,20 @@
 <template>
 	<article class="wnl-comment media">
 		<div class="wnl-comment-side">
-			<figure class="media-left">
-				<div
-					class="avatar-activator"
-					:class="{'author-forgotten': profile.deleted_at}"
-					@click="showModal"
-				>
-					<p class="image is-32x32">
-						<wnl-avatar
-							size="medium"
-							:full-name="profile.full_name"
-							:url="profile.avatar"
-						/>
-					</p>
-				</div>
-			</figure>
-			<wnl-vote
-				type="up"
-				:reactable-id="id"
-				reactable-resource="comments"
-				:state="voteState"
-				module="comments"
-			/>
-		</div>
-		<div class="media-content comment-content">
-			<span
-				class="author"
-				:class="{'author-forgotten': profile.deleted_at}"
-				@click="showModal"
-			>{{profile.full_name}}</span>
-			<div class="comment-text wrap content" v-html="comment.text" />
-			<small>{{time}}</small>
-			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
-				&nbsp;·
-				<wnl-delete
-					:request-route="requestRoute"
-					:target="target"
-					@deleteSuccess="onDeleteSuccess"
-				/>
-			</span>
-			<wnl-resolve
-				:resource="comment"
-				@resolveResource="$emit('resolveComment', id)"
-				@unresolveResource="$emit('unresolveComment', id)"
-			/>
-			<wnl-verify
-				:resource="comment"
+			<wnl-user-generated-content-header
+				:author="profile"
+				:content="comment"
+				:can-delete="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')"
+				:delete-target="target"
+				:delete-resource-rotue="requestRoute"
+				@deleteSuccess="$emit('deleteSuccess')"
 				@verify="$emit('verify')"
 				@unverify="$emit('unverify')"
 			/>
 		</div>
-		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :author="profile" />
-		</wnl-modal>
+		<div class="media-content comment-content">
+			<div class="comment-text wrap content" v-html="comment.text" />
+		</div>
 	</article>
 </template>
 
@@ -100,26 +61,13 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import WnlUserProfileModal from 'js/components/users/UserProfileModal';
-import WnlAvatar from 'js/components/global/Avatar';
-import WnlDelete from 'js/components/global/Delete';
-import WnlResolve from 'js/components/global/Resolve';
-import { timeFromS } from 'js/utils/time';
+import WnlUserGeneratedContentHeader from 'js/components/UserGeneratedContentHeader';
 import moderatorFeatures from 'js/perimeters/moderator';
-import WnlVote from 'js/components/global/reactions/Vote';
-import WnlModal from 'js/components/global/Modal.vue';
-import WnlVerify from 'js/components/global/Verify';
 
 export default {
 	name: 'Comment',
 	components: {
-		WnlAvatar,
-		WnlDelete,
-		WnlResolve,
-		WnlVote,
-		WnlModal,
-		WnlUserProfileModal,
-		WnlVerify
+		WnlUserGeneratedContentHeader
 	},
 	perimeters: [moderatorFeatures],
 	props: ['comment', 'profile'],
@@ -133,9 +81,6 @@ export default {
 		...mapGetters('comments', ['getReaction']),
 		id() {
 			return this.comment.id;
-		},
-		time() {
-			return timeFromS(this.comment.created_at);
 		},
 		requestRoute() {
 			return `comments/${this.id}`;

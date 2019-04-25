@@ -16,6 +16,7 @@
 				</span>
 				<wnl-watch
 					v-if="!hideWatchlist"
+					class="wnl-comments__watch"
 					:reactable-id="commentableId"
 					:reactable-resource="commentableResource"
 					:state="watchState"
@@ -54,6 +55,9 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.wnl-comments__watch
+		margin-left: $margin-base
 
 	.separate-controls
 		display: flex

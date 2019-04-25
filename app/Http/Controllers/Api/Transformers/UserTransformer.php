@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Transformers;
 
 use App\Models\User;
 use App\Http\Controllers\Api\ApiTransformer;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\UnauthorizedException;
 
 class UserTransformer extends ApiTransformer
 {
@@ -30,6 +32,10 @@ class UserTransformer extends ApiTransformer
 
 	public function transform(User $user)
 	{
+		if (!Auth::user()->can('view', $user)) {
+			throw new UnauthorizedException();
+		}
+
 		$data = [
 			'id' => $user->id,
 			'first_name' => $user->first_name,

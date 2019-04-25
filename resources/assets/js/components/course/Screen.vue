@@ -83,7 +83,12 @@ export default {
 		'wnl-flashcards': Flashcards
 	},
 	mixins: [emits_events],
-	props: ['screenId'],
+	props: {
+		screenId: {
+			type: Number,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			model: 'App\\Models\\Screen'
@@ -126,7 +131,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.showQna && this.fetchQuestionsForDiscussion(this.screenData.discussion_id);
+		this.showQna && this.fetchQuestionsForDiscussion({ discussionId: this.screenData.discussion_id });
 		this.trackScreenOpen();
 	},
 	methods: {

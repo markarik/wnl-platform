@@ -22,6 +22,7 @@ class Slideshow extends Model implements WithSlides
 
 	public function getBackgroundUrlAttribute()
 	{
-		return Bethink::getAssetPublicUrl("backgrounds/{$this->background}") ?? null;
+		if (is_null($this->background)) return null;
+		return Bethink::getAssetPublicUrl("backgrounds/{$this->background}");
 	}
 }

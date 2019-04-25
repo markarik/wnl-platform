@@ -15,8 +15,9 @@ const state = {
 		 */
 	],
 	lessonState: {
-		activeSection: 0,
-		activeScreen: 0
+		activeSection: null,
+		activeSubsection: null,
+		activeScreen: null
 	}
 };
 

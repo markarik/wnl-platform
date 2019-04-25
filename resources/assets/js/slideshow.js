@@ -14,7 +14,6 @@ imageviewer($, window, document);
 
 const container = document.getElementsByClassName('reveal')[0];
 const $controls = $('.wnl-slideshow-control');
-const $chartsContainers = $('.slides').find('.iv-image-container');
 const $slideshowAnnotations = $('.slideshow-annotations');
 const $slideAnnotations = $slideshowAnnotations.find('.annotations-to-slide');
 const $annotationsCounters = $('.annotations-count');
@@ -44,22 +43,17 @@ const setupReveal = () => {
 		progress: true,
 	});
 
-	Reveal.addEventListener('slidechanged', (event) => {
-		let $chartContainer = $(event.currentSlide).find('.iv-image-container');
+	Reveal.addEventListener('ready', (event) => {
+		initImageViewer(event.currentSlide);
+	});
 
-		if ($chartContainer.length > 0) {
-			let index = $.inArray($chartContainer[0], $chartsContainers);
-			if (index > -1) {
-				viewers[index].refresh();
-			}
-		}
+	Reveal.addEventListener('slidechanged', (event) => {
+		initImageViewer(event.currentSlide);
 
 		if (typeof fullScreenViewer.hide === 'function') {
 			fullScreenViewer.hide();
 		}
 	});
-
-	refreshChart(0);
 };
 
 const setupHandshake = () => {
@@ -175,9 +169,6 @@ const setupHandshake = () => {
 		setSlideOrderNumber(orderNumber) {
 			$orderNumberContainer.text(orderNumber);
 		},
-		refreshChart(index) {
-			refreshChart(index);
-		}
 	});
 };
 
@@ -188,29 +179,16 @@ setupHandshake()
 		setMenuListeners(parent);
 		setBookmarkClickListener(parent);
 	}).catch(exception => {
-	// eslint-disable-next-line no-console
+		// eslint-disable-next-line no-console
 		console.error(exception);
 		parent.emit('error');
 	});
 
-let parent = {},
-	viewers = [],
-	fullScreenViewer = {};
+let parent = {};
+let fullScreenViewer = {};
 
 $(() => {
 	fullScreenViewer = window.ImageViewer($('#iv-container'), { snapViewPersist: false });
-
-	$.each($chartsContainers, (index, container) => {
-		let $container = $(container),
-			$element = $container.find('.chart'),
-			lofi = $element.attr('src'),
-			hifi = $element.attr('data-high-res-src');
-
-		viewers[index] = window.ImageViewer($element);
-		$container.find('.iv-image-fullscreen').click({ lofi, hifi }, (e) => {
-			fullScreenViewer.show(e.data.lofi, e.data.hifi);
-		});
-	});
 
 	if ($controls.length > 0) {
 		$.each($controls, (index, element) => {
@@ -233,6 +211,21 @@ $(() => {
 	});
 });
 
+function initImageViewer(currentSlideElement) {
+	let $chartContainer = $(currentSlideElement).find('.iv-image-container');
+
+	if ($chartContainer.length > 0) {
+		let $element = $chartContainer.find('.chart');
+		let lofi = $element.attr('src');
+		let hifi = $element.attr('data-high-res-src');
+
+		window.ImageViewer($element);
+		$chartContainer.find('.iv-image-fullscreen').click({ lofi, hifi }, (e) => {
+			fullScreenViewer.show(e.data.lofi, e.data.hifi);
+		});
+	}
+}
+
 function toggleModifiedSlidesList() {
 	modifiedSlidesList.classList.toggle('visible');
 }
@@ -249,7 +242,6 @@ function animateControl(event) {
 
 function handleControlClick(event) {
 	animateControl(event);
-	$.each(viewers, (index, viewer) => viewer.refresh());
 }
 
 function createAnnotations(annotations) {
@@ -327,8 +319,4 @@ function toggleBookmark(parent) {
 
 function emitToggleFullscreen(state = true) {
 	parent.emit('toggle-fullscreen', state);
-}
-
-function refreshChart(index) {
-	viewers[index] && viewers[index].refresh();
 }

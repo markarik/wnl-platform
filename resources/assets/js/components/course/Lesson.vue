@@ -15,7 +15,11 @@
 							</div>
 						</div>
 					</div>
-					<router-view v-if="!isLessonLoading" @userEvent="onUserEvent" />
+					<wnl-screen
+						v-if="!isLessonLoading && screenId"
+						:screen-id="screenId"
+						@userEvent="onUserEvent"
+					/>
 				</div>
 				<div class="wnl-lesson-previous-next-nav">
 					<wnl-previous-next />
@@ -90,6 +94,7 @@ import { get, isEmpty, head, noop } from 'lodash';
 import moment from 'moment';
 import { mapGetters, mapActions, mapState } from 'vuex';
 
+import WnlScreen from 'js/components/course/Screen.vue';
 import WnlPreviousNext from 'js/components/course/PreviousNext';
 import WnlSatisfactionGuaranteeModal from 'js/components/global/modals/SatisfactionGuaranteeModal';
 
@@ -103,11 +108,33 @@ import { ALERT_TYPES } from 'js/consts/alert';
 export default {
 	name: 'Lesson',
 	components: {
+		WnlScreen,
 		WnlPreviousNext,
 		WnlSatisfactionGuaranteeModal,
 	},
 	mixins: [breadcrumb],
-	props: ['courseId', 'lessonId', 'presenceChannel', 'screenId', 'slide'],
+	props: {
+		courseId: {
+			type: Number,
+			required: true,
+		},
+		lessonId: {
+			type: Number,
+			required: true,
+		},
+		screenId: {
+			type: Number,
+			default: null,
+		},
+		slide: {
+			type: Number,
+			default: null,
+		},
+		presenceChannel: {
+			type: String,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			/**
@@ -297,7 +324,7 @@ export default {
 				this.setupCurrentUser().then(() => {
 					this.getSavedLesson(this.courseId, this.lessonId, this.currentUserProfileId)
 						.then(({ route, status }) => {
-							if (this.firstScreenId && (!route || status === STATUS_COMPLETE || route && route.name !== resource('screens'))) {
+							if (this.firstScreenId && (!route || !route.params.screenId || status === STATUS_COMPLETE)) {
 								const params = {
 									courseId: this.courseId,
 									lessonId: this.lessonId,
@@ -306,7 +333,7 @@ export default {
 								if (this.getScreen(this.firstScreenId) && this.getScreen(this.firstScreenId).type === 'slideshow' && !get(route, 'params.slide')) {
 									params.slide = 1;
 								}
-								this.$router.replace({ name: resource('screens'), params, query });
+								this.$router.replace({ name: resource('lessons'), params, query });
 							} else if (route && route.hasOwnProperty('name')) {
 								this.$router.replace({ ...route, query });
 							}
@@ -322,13 +349,15 @@ export default {
 				if (this.currentScreen.type === 'slideshow') {
 					params.slide = 1;
 				}
-				this.$router.replace({ name: resource('screens'), params, query });
+				this.$router.replace({ name: resource('lessons'), params, query });
+			} else {
+				this.updateLessonProgress();
 			}
 
 			this.updateLessonNav({
-				activeSection: (this.currentSection && this.currentSection.id) || 0,
-				activeSubsection: (this.currentSubsection && this.currentSection.id) || 0,
-				activeScreen: parseInt(this.screenId)
+				activeSection: (this.currentSection && this.currentSection.id) || null,
+				activeSubsection: (this.currentSubsection && this.currentSubsection.id) || null,
+				activeScreen: this.screenId
 			});
 		},
 		async displaySatisfactionGuaranteeModalIfNeeded() {
@@ -368,7 +397,7 @@ export default {
 			});
 		},
 		async updateLessonProgress() {
-			if (typeof this.screenId !== 'undefined') {
+			if (this.screenId !== null) {
 				if (this.currentSection) {
 					if (this.getScreenSectionsCheckpoints(this.screenId).includes(this.slide)) {
 						await this.completeSection({ ...this.lessonProgressContext, sectionId: this.currentSection.id });
@@ -394,9 +423,9 @@ export default {
 				}
 
 				this.updateLessonNav({
-					activeSection: (this.currentSection && this.currentSection.id) || 0,
-					activeSubsection: parseInt(this.currentSubsection && this.currentSubsection.id,) || 0,
-					activeScreen: parseInt(this.screenId) || 0,
+					activeSection: (this.currentSection && this.currentSection.id) || null,
+					activeSubsection: (this.currentSubsection && this.currentSubsection.id) || null,
+					activeScreen: this.screenId,
 				});
 			}
 		},

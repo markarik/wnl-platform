@@ -12,9 +12,6 @@ export const dashboard = {
 		'available-CTA': 'rozpocznij lekcję',
 	},
 	news: {
-		description: 'W Dyskusjach znajdziesz powiadomienia o rozmowach, w których jeszcze nie uczestniczysz, a w Ostatnich pytaniach najnowsze wątki pytań i odpowiedzi',
 		heading: 'Co nowego?',
-		stream: 'Dyskusje',
-		qna: 'Ostatnie pytania',
 	}
 };

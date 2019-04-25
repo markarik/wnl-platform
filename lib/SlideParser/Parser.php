@@ -9,11 +9,14 @@ use App\Models\Slide;
 use App\Models\Slideshow;
 use App\Models\Subsection;
 use App\Models\Tag;
+use Closure;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Intervention\Image\Constraint;
 use Intervention\Image\Facades\Image;
 use Facades\App\Contracts\CourseProvider;
 use Facades\Lib\Bethink\Bethink;
+use Psr\Http\Message\StreamInterface;
 use Storage;
 
 class Parser
@@ -43,6 +46,8 @@ class Parser
 	];
 
 	const IMAGE_TEMPLATE = '<img src="%s">';
+
+	const CHART_TEMPLATE = '<img src="%s" class="chart">';
 
 	const IMAGE_VIEWER_TEMPLATE = '
 		<div class="iv-image-container">
@@ -88,10 +93,9 @@ class Parser
 	}
 
 	/**
-	 * @param $fileContents - string/html
-	 *
-	 * @param null $screenId
-	 * @param null $discussionId
+	 * @param string $fileContents - html
+	 * @param int $screenId
+	 * @param int $discussionId
 	 * @param bool $enableSlidesMatching
 	 */
 	public function parse($fileContents, $screenId = null, $discussionId = null, $enableSlidesMatching = false)
@@ -110,7 +114,7 @@ class Parser
 
 			foreach ($this->categoryModels as $index => $model) {
 				if (!in_array($model->name, $names)) {
-					Log::debug("($iteration)" . str_repeat(' ', 5 - strlen($iteration)) . str_repeat('-', $index) . $model->name);
+					Log::debug("($iteration)" . str_repeat(' ', 5 - strlen((string)$iteration)) . str_repeat('-', $index) . $model->name);
 					$names[$model->name] = $model->name;
 				}
 			}
@@ -239,11 +243,11 @@ class Parser
 	}
 
 	/**
-	 * @param $data - string/html
+	 * @param string $data - html
 	 *
 	 * @return array
 	 */
-	public function matchSlides($data):array
+	public function matchSlides($data): array
 	{
 		$matches = [];
 
@@ -253,24 +257,23 @@ class Parser
 	}
 
 	/**
-	 * @param $data - string/html
+	 * @param string $data - html
 	 *
 	 * @return bool
 	 */
-	protected function isFunctional($data):bool
+	protected function isFunctional($data): bool
 	{
 		return (bool)preg_match(self::FUNCTIONAL_SLIDE_PATTERN, $data);
 	}
 
 	/**
-	 * @param $pattern
-	 * @param $data
-	 * @param \Closure $errback
+	 * @param string $pattern
+	 * @param string $data
+	 * @param Closure $errback
 	 *
 	 * @return mixed
-	 * @internal param \Closure $callback
 	 */
-	public function match($pattern, $data, \Closure $errback = null)
+	public function match($pattern, $data, Closure $errback = null)
 	{
 		$match = [];
 		$matchingResult = preg_match_all($pattern, $data, $match, PREG_SET_ORDER);
@@ -287,7 +290,7 @@ class Parser
 	}
 
 	/**
-	 * @param $slideHtml
+	 * @param string $slideHtml
 	 *
 	 * @return array
 	 */
@@ -319,6 +322,11 @@ class Parser
 
 		$url = $match[0][1];
 
+		return $this->downloadBackground($url);
+	}
+
+	public function downloadBackground($url)
+	{
 		$canvas = Image::canvas(1920, 1080, '#fff');
 
 		$background = Image::make($url)->resize(1920, 1080);
@@ -457,7 +465,7 @@ class Parser
 		return $snippet;
 	}
 
-	public function handleImages($html)
+	public function handleImages($html, bool $force = false, bool $resize = true)
 	{
 		$matches = $this->match(self::IMAGE_PATTERN, $html);
 
@@ -469,58 +477,41 @@ class Parser
 			$imgTag = $match[0];
 			$imageUrl = $match[1];
 
-			if (stripos($imgTag, 'data-') === false) {
+			if (stripos($imgTag, 'data-') === false && !$force) {
 				// Check if img tag contains data attributes - if not we don't need to migrate it
 				continue;
 			}
 
-			try {
-				$image = Image::make(Url::encodeFullUrl($imageUrl));
-			}
-			catch (\Exception $e) {
-				\Log::error("Fetching image from {$imageUrl} failed with message: {$e->getMessage()}.");
-				continue;
-			}
-
+			$image = Image::make(Url::encodeFullUrl($imageUrl));
 			$mime = $image->mime;
-			$supported = ['image/jpeg', 'image/gif', 'image/png'];
-			if (!in_array($mime, $supported)) {
-				\Log::error("Unsupported image type: {$mime}");
 
-				continue;
+			$isChart = (bool) $this->match(self::MEDIA_PATTERNS['chart'], $imgTag);
+			$template = $isChart ? self::CHART_TEMPLATE : self::IMAGE_TEMPLATE;
+
+			switch ($mime){
+				case 'image/gif':
+					$data = @file_get_contents($imageUrl);
+					$ext = 'gif';
+					$template = self::GIF_TEMPLATE;
+					break;
+				case 'image/png':
+					$data = $resize ? $this->getPng($image) : @file_get_contents($imageUrl);
+					$ext = 'png';
+					break;
+				case 'image/jpeg':
+					$data = $resize ? $this->getJpg($image) : @file_get_contents($imageUrl);
+					$ext = 'jpg';
+					break;
+				default:
+					throw new ParseErrorException("Unsupported image type: {$mime}");
 			}
 
-			$template = self::IMAGE_TEMPLATE;
-
-			if ($mime === 'image/gif') {
-				$data = @file_get_contents($imageUrl);
-				$ext = 'gif';
-				$template = self::GIF_TEMPLATE;
-			} else if ($mime === 'image/png') {
-				$data = $image->resize(1920, 1080, function ($constraint) {
-					$constraint->aspectRatio();
-					$constraint->upsize();
-				})->stream('png');
-				$ext = 'png';
-			}
-			else {
-				$background = $image->resize(1920, 1080, function ($constraint) {
-					$constraint->aspectRatio();
-					$constraint->upsize();
-				});
-				$canvas = Image::canvas($image->width(), $image->height(), '#fff');
-				$data = $canvas->insert($background)->stream('jpg', 80);
-				$ext = 'jpg';
-			}
-
-			if (!$data) {
-				\Log::error("Fetching image from {$imageUrl} failed.");
-
-				continue;
+			if (!is_string($data)) {
+				$data = $data->__toString();
 			}
 
 			$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
-			Storage::put('public/' . $path, $data->__toString(), 'public');
+			Storage::put('public/' . $path, $data, 'public');
 
 			$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
 			$html = str_replace($imgTag, $viewerHtml, $html);
@@ -530,9 +521,10 @@ class Parser
 	}
 
 	/**
-	 * @param $slide
-	 * @param $orderNumber
-	 * @param $lastSectionFound
+	 * @param Slide $slide
+	 * @param int $orderNumber
+	 * @param Section|null $lastSectionFound
+	 * @return Section
 	 */
 	protected function attachToPresentables($slide, $orderNumber, $lastSectionFound)
 	{
@@ -564,5 +556,25 @@ class Parser
 		} finally {
 			return $lastSectionFound;
 		}
+	}
+
+	private function getPng(\Intervention\Image\Image  $image): StreamInterface
+	{
+		return $image->resize(1920, 1080, function (Constraint $constraint) {
+			$constraint->aspectRatio();
+			$constraint->upsize();
+		})->stream('png');
+	}
+
+	private function getJpg(\Intervention\Image\Image  $image): StreamInterface
+	{
+		$background = $image->resize(1920, 1080, function (Constraint $constraint) {
+			$constraint->aspectRatio();
+			$constraint->upsize();
+		});
+
+		$canvas = Image::canvas($image->width(), $image->height(), '#fff');
+
+		return $canvas->insert($background)->stream('jpg', 80);
 	}
 }

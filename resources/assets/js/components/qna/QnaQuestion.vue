@@ -170,7 +170,7 @@
 				padding: 0 $margin-medium
 
 	.qna-answers
-		margin: $margin-base $margin-base $margin-huge $margin-base
+		margin: $margin-base
 		position: relative
 
 		&.disabled:before

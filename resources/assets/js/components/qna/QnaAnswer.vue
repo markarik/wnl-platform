@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<div ref="highlight" class="qna-answer">
+	<div class="qna-answer">
+		<div ref="highlight">
 			<wnl-user-generated-content-header
 				:author="author"
 				:content="answer"
@@ -14,14 +14,13 @@
 		</div>
 		<div class="qna-answer__actions">
 			<wnl-vote
+				class="qna-answer__actions__upvote"
 				type="up"
 				:reactable-id="id"
 				:reactable-resource="reactableResource"
 				:state="upvoteState"
 				module="qna"
 			/>
-		</div>
-		<div class="qna-answer-comments">
 			<wnl-comments-list
 				commentable-resource="qna_answers"
 				url-param="qna_answer"
@@ -39,8 +38,19 @@
 	@import 'resources/assets/sass/variables'
 
 	.qna-answer
-		margin-bottom: $margin-big
 		padding-top: $margin-big
+		padding-bottom: $margin-base
+		border-bottom: $border-light-gray
+		&:last-child
+			border-bottom: none
+
+		&__actions
+			display: flex
+			align-items: flex-start
+
+			&__upvote
+				margin-top: 13px
+				margin-right: $margin-base
 
 	.qna-answer-content
 		margin-top: $margin-big

@@ -29,7 +29,7 @@
 
 	.wnl-comment
 		border-bottom: $border-light-gray
-		padding-bottom: $margin-big
+		padding-bottom: $margin-base
 
 		&__header
 			margin: $margin-base 0

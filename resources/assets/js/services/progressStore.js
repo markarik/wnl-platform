@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { get, set } from 'lodash';
+
 import { getApiUrl } from 'js/utils/env';
 
 // TODO: Mar 9, 2017 - Use config when it's ready
@@ -9,7 +11,12 @@ const setCourseProgress = ({ courseId, profileId }, value) => {
 	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}`), value);
 };
 
-const setLessonProgress = ({ courseId, lessonId, profileId }, value) => {
+const setLessonProgress = ({ courseId, lessonId, profileId, route }, value) => {
+	if (route) {
+		// We need this to update last route not the previous one.
+		// suspected problem: parameters order was mixed somewhere higher
+		value.route = route;
+	}
 	return axios.put(getApiUrl(`users/${profileId}/state/course/${courseId}/lesson/${lessonId}`), {
 		lesson: value
 	});
@@ -29,20 +36,13 @@ const completeSubsection = (lessonState, payload) => {
 	const stateWithScreen = _getScreenProgress(lessonState, payload);
 	const stateWithSections = _getSectionProgress(stateWithScreen, payload);
 
-	if (!lessonState.screens[screenId].sections[sectionId].subsections) {
-		lessonState.screens[screenId].sections[sectionId].subsections = {
-			[subsectionId]: {
-				status: STATUS_COMPLETE
-			}
-		};
-	} else {
-		lessonState.screens[screenId].sections[sectionId].subsections = {
-			...lessonState.screens[screenId].sections[sectionId].subsections,
-			[subsectionId]: {
-				status: STATUS_COMPLETE
-			}
-		};
-	}
+
+	set(lessonState, `screens[${screenId}].sections[${sectionId}].subsections`, {
+		...get(lessonState, `screens[${screenId}].sections[${sectionId}].subsections`, {}),
+		[subsectionId]: {
+			status: STATUS_COMPLETE
+		}
+	});
 
 	setLessonProgress(payload, lessonState);
 

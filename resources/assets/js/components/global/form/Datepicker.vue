@@ -1,17 +1,28 @@
 <template>
-	<div class="field">
+	<div class="field ">
 		<label :for="name" class="label">
 			<slot />
 		</label>
 
-		<input
-			ref="input"
-			v-model="inputValue"
-			class="input datepicker"
-			:name="name"
-			:placeholder="placeholder"
-			@input="onDateInput"
-		>
+		<div class="field has-addons">
+			<div class="control is-expanded">
+				<input
+					ref="input"
+					v-model="inputValue"
+					class="input datepicker"
+					:name="name"
+					:placeholder="placeholder"
+					@input="onDateInput"
+				>
+			</div>
+			<div
+				v-if="isOptional"
+				class="control"
+				@click="clearDate()"
+			>
+				<span class="icon is-small clickable"><i class="fa fa-close" /></span>
+			</div>
+		</div>
 
 		<template v-if="hasErrors">
 			<span
@@ -24,20 +35,21 @@
 	</div>
 </template>
 
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.datepicker-container
 		position: relative
 
 	.datepicker
-
 		&.hasColorBackground
 			background-color: $color-background-lighter-gray
 
 		&.active
 			background: $color-background-light-gray
 
+	.icon
+		padding: $margin-base
 </style>
 
 <script>
@@ -56,6 +68,10 @@ export default {
 		name: {
 			type: String,
 		},
+		isOptional: {
+			type: Boolean,
+			default: false,
+		}
 	},
 	data() {
 		return {
@@ -101,6 +117,9 @@ export default {
 		},
 		setDate(newDate) {
 			newDate && this.datepicker.setDate(newDate);
+		},
+		clearDate() {
+			this.datepicker.setDate(null);
 		},
 		onDateInput(event) {
 			this.onInput(event);

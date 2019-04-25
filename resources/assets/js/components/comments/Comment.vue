@@ -45,6 +45,11 @@
 				@resolveResource="$emit('resolveComment', id)"
 				@unresolveResource="$emit('unresolveComment', id)"
 			/>
+			<wnl-verify
+				:resource="comment"
+				@verify="$emit('verify')"
+				@unverify="$emit('unverify')"
+			/>
 		</div>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
 			<wnl-user-profile-modal :author="profile" />
@@ -54,9 +59,6 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
-
-	.media-left
-
 
 	.author
 		color: $color-sky-blue
@@ -98,24 +100,26 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import UserProfileModal from 'js/components/users/UserProfileModal';
-import Avatar from 'js/components/global/Avatar';
-import Delete from 'js/components/global/Delete';
-import Resolve from 'js/components/global/Resolve';
+import WnlUserProfileModal from 'js/components/users/UserProfileModal';
+import WnlAvatar from 'js/components/global/Avatar';
+import WnlDelete from 'js/components/global/Delete';
+import WnlResolve from 'js/components/global/Resolve';
 import { timeFromS } from 'js/utils/time';
 import moderatorFeatures from 'js/perimeters/moderator';
-import Vote from 'js/components/global/reactions/Vote';
-import Modal from 'js/components/global/Modal.vue';
+import WnlVote from 'js/components/global/reactions/Vote';
+import WnlModal from 'js/components/global/Modal.vue';
+import WnlVerify from 'js/components/global/Verify';
 
 export default {
 	name: 'Comment',
 	components: {
-		'wnl-avatar': Avatar,
-		'wnl-delete': Delete,
-		'wnl-resolve': Resolve,
-		'wnl-vote': Vote,
-		'wnl-modal': Modal,
-		'wnl-user-profile-modal': UserProfileModal
+		WnlAvatar,
+		WnlDelete,
+		WnlResolve,
+		WnlVote,
+		WnlModal,
+		WnlUserProfileModal,
+		WnlVerify
 	},
 	perimeters: [moderatorFeatures],
 	props: ['comment', 'profile'],

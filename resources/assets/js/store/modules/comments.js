@@ -31,10 +31,8 @@ function _fetchComments({ ...commentsQuery }) {
 		});
 }
 
-function _resolveComment(id, status = true) {
-	return axios.put(getApiUrl(`comments/${id}`), {
-		resolved: status
-	});
+function _updateComment(id, payload) {
+	return axios.put(getApiUrl(`comments/${id}`), payload);
 }
 
 export const commentsState = {
@@ -96,24 +94,11 @@ export const commentsMutations = {
 		destroy(state.comments, payload.id);
 		set(state[resource][resourceId], 'comments', comments);
 	},
-	[types.RESOLVE_COMMENT] (state, payload) {
-		const id = payload.id,
-			comment = state.comments[payload.id],
-			resource = payload.commentableResource,
-			resourceId = payload.commentableId,
-			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? { ...comment, resolved: true } : comment);
+	[types.UPDATE_COMMENT] (state, { id, resource, resourceId, updatedComment }) {
+		const comment = state.comments[id],
+			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? { ...comment, ...updatedComment } : comment);
 
-		set(state.comments, payload.id, { ...comment, resolved: true });
-		set(state[resource][resourceId], 'comments', comments);
-	},
-	[types.UNRESOLVE_COMMENT] (state, payload) {
-		const id = payload.id,
-			comment = state.comments[payload.id],
-			resource = payload.commentableResource,
-			resourceId = payload.commentableId,
-			comments = state[resource][resourceId].comments.map(comment => comment.id === id ? { ...comment, resolved: false } : comment);
-
-		set(state.comments, payload.id, { ...comment, resolved: false });
+		set(state.comments, id, { ...comment, ...updatedComment });
 		set(state[resource][resourceId], 'comments', comments);
 	},
 	[types.SET_COMMENTABLE_COMMENTS] (state, comments) {
@@ -171,13 +156,41 @@ export const commentsActions = {
 	removeComment({ commit }, payload) {
 		commit(types.REMOVE_COMMENT, payload);
 	},
-	resolveComment({ commit }, payload) {
-		_resolveComment(payload.id)
-			.then(() => commit(types.RESOLVE_COMMENT, payload));
+	async resolveComment({ commit }, payload) {
+		await _updateComment(payload.id, { resolved: true });
+		commit(types.UPDATE_COMMENT, {
+			id: payload.id,
+			resource: payload.commentableResource,
+			resourceId: payload.commentableId,
+			updatedComment: { resolved: true }
+		});
 	},
-	unresolveComment({ commit }, payload) {
-		_resolveComment(payload.id, false)
-			.then(() => commit(types.UNRESOLVE_COMMENT, payload));
+	async unresolveComment({ commit }, payload) {
+		await _updateComment(payload.id, { resolved: false });
+		commit(types.UPDATE_COMMENT, {
+			id: payload.id,
+			resource: payload.commentableResource,
+			resourceId: payload.commentableId,
+			updatedComment: { resolved: false }
+		});
+	},
+	async verifyComment({ commit }, payload) {
+		const { data: updatedComment } = await _updateComment(payload.id, { verified: true });
+		commit(types.UPDATE_COMMENT, {
+			id: payload.id,
+			resource: payload.commentableResource,
+			resourceId: payload.commentableId,
+			updatedComment
+		});
+	},
+	async unverifyComment({ commit }, payload) {
+		const { data: updatedComment } = await _updateComment(payload.id, { verified: false });
+		commit(types.UPDATE_COMMENT, {
+			id: payload.id,
+			resource: payload.commentableResource,
+			resourceId: payload.commentableId,
+			updatedComment
+		});
 	},
 	setComments({ commit }, { included, ...comments }) {
 		commit(types.SET_COMMENTS, comments);

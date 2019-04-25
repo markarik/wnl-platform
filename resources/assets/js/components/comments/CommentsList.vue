@@ -34,6 +34,8 @@
 				@removeComment="onRemoveComment"
 				@resolveComment="onResolveComment"
 				@unresolveComment="onUnresolveComment"
+				@verify="onVerify(comment.id)"
+				@unverify="onUnverify(comment.id)"
 			/>
 			<div class="form-container">
 				<transition name="fade">
@@ -228,6 +230,20 @@ export default {
 		},
 		onUnresolveComment(id) {
 			this.action('unresolveComment', {
+				commentableResource: this.commentableResource,
+				commentableId: this.commentableId,
+				id,
+			});
+		},
+		onVerify(id) {
+			this.action('verifyComment', {
+				commentableResource: this.commentableResource,
+				commentableId: this.commentableId,
+				id,
+			});
+		},
+		onUnverify(id) {
+			this.action('unverifyComment', {
 				commentableResource: this.commentableResource,
 				commentableId: this.commentableId,
 				id,

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Transformers\CommentTransformer;
 use App\Http\Requests\PostComment;
 use App\Http\Requests\UpdateComment;
 use App\Models\Comment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use League\Fractal\Resource\Item;
@@ -49,6 +50,16 @@ class CommentsApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
+		if ($request->has('text')) {
+			$comment->text = $request->input('text');
+		}
+
+		if ($request->has('verified')) {
+			$comment->verified_at = $request->input('verified') ? Carbon::now() : null;
+		}
+
+		$comment->save();
+
 		$statusResolved = $request->input('resolved');
 		if (isset($statusResolved)) {
 			if ($statusResolved) {
@@ -58,13 +69,9 @@ class CommentsApiController extends ApiController
 				$comment->restore();
 				event(new CommentRestored($comment, Auth::user()->id));
 			}
-		} else {
-			$comment->update([
-				'text' => $request->input('text'),
-			]);
 		}
 
-		return $this->respondOk();
+		return $this->transformAndRespond($comment);
 	}
 
 	public function query(Request $request) {

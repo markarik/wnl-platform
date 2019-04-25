@@ -14,6 +14,10 @@ function _updateQuestion(questionId, payload) {
 	return axios.put(getApiUrl(`qna_questions/${questionId}`), payload);
 }
 
+function _updateAnswer(answerId, payload) {
+	return axios.put(getApiUrl(`qna_answers/${answerId}`), payload);
+}
+
 function _getQuestionsByTagName(tagName, ids) {
 	return axios.post(getApiUrl('qna_questions/byTags'), {
 		tags_names: [tagName],
@@ -389,6 +393,32 @@ const actions = {
 			resolve();
 		});
 	},
+	async verifyAnswer({ commit, dispatch }, answerId) {
+		try {
+			const { data: answer } = await _updateAnswer(answerId, { verified: true });
+			commit(types.QNA_UPDATE_ANSWER, { answerId, data: { verified_at: answer.verified_at } });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
+	},
+
+	async unverifyAnswer({ commit, dispatch }, answerId) {
+		try {
+			const { data: answer } = await _updateAnswer(answerId, { verified: false });
+			commit(types.QNA_UPDATE_ANSWER, { answerId, data: { verified_at: answer.verified_at } });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
+	},
+
 	destroyQna({ commit }) {
 		commit(types.QNA_DESTROY);
 	},

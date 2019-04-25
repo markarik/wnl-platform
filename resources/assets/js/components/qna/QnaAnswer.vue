@@ -7,6 +7,8 @@
 				:can-delete="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')"
 				:delete-target="deleteTarget"
 				:delete-resource-rotue="resourceRoute"
+				@verify="verifyAnswer(id)"
+				@unverify="unverifyAnswer(id)"
 			/>
 			<div class="qna-answer-content" v-html="content" />
 		</div>
@@ -153,7 +155,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('qna', ['removeAnswer']),
+		...mapActions('qna', ['removeAnswer', 'verifyAnswer', 'unverifyAnswer']),
 		onDeleteSuccess() {
 			this.removeAnswer({
 				questionId: this.questionId,

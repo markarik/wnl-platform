@@ -27,7 +27,8 @@ class UpdateAnswer extends FormRequest
 	public function rules()
 	{
 		return [
-			'text' => 'required|string',
+			'text' => 'string',
+			'verified' => 'boolean'
 		];
 	}
 }

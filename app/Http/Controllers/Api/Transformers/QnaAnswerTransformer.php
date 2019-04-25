@@ -26,6 +26,7 @@ class QnaAnswerTransformer extends ApiTransformer
 			'qna_questions' => $answer->question_id,
 			'created_at'    => $answer->created_at->timestamp,
 			'updated_at'    => $answer->updated_at->timestamp,
+			'verified_at'    => $answer->verified_at->timestamp ?? null,
 		];
 
 		if ($this->parent) {

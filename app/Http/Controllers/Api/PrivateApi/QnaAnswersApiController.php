@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Qna\PostAnswer;
 use App\Http\Requests\Qna\UpdateAnswer;
 use App\Models\QnaAnswer;
+use Carbon\Carbon;
 use League\Fractal\Resource\Item;
 use Illuminate\Http\Request;
 use App\Models\QnaQuestion;
@@ -49,11 +50,17 @@ class QnaAnswersApiController extends ApiController
 			return $this->respondNotFound();
 		}
 
-		$qnaAnswer->update([
-			'text' => $request->input('text'),
-		]);
+		if ($request->has('text')) {
+			$qnaAnswer->text = $request->input('text');
+		}
 
-		return $this->respondOk();
+		if ($request->has('verified')) {
+			$qnaAnswer->verified_at = $request->input('verified') ? Carbon::now() : null;
+		}
+
+		$qnaAnswer->save();
+
+		return $this->transformAndRespond($qnaAnswer);
 	}
 
 	public function query(Request $request) {

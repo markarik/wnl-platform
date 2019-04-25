@@ -11,7 +11,7 @@
 			:title="usernameToUse"
 			class="wnl-avatar-automatic"
 		>{{initials}}</div>
-		<div class="badge" v-if="isModerator">
+		<div class="badge" v-if="showBadge">
 			<img :src="badgeUrl">
 		</div>
 	</div>
@@ -68,6 +68,7 @@ export default {
 		...mapGetters([
 			'currentUserFullName',
 			'currentUserAvatar',
+			'isModerator'
 		]),
 		isCurrentUser() {
 			return _.isEmpty(this.fullName);
@@ -102,8 +103,8 @@ export default {
 		badgeUrl() {
 			return getImageUrl('wnl-crew-badge.svg');
 		},
-		isModerator() {
-			return this.roles.indexOf(ROLES.MODERATOR) !== -1;
+		showBadge() {
+			return this.isCurrentUser ? this.isModerator : this.roles.indexOf(ROLES.MODERATOR) !== -1;
 		},
 	},
 };

@@ -4,7 +4,7 @@
 		class="verify icon"
 		@click="$emit('unverify')"
 	>
-		<i class="fa fa-undo" />
+		<file-verified-svg />
 		<span>Zweryfikowano</span>
 	</p>
 	<span
@@ -12,7 +12,7 @@
 		class="verify icon"
 		@click="$emit('verify')"
 	>
-		<i class="fa fa-check" />
+		<file-verified-svg />
 		<span>Zweryfikuj</span>
 	</span>
 </template>
@@ -38,8 +38,12 @@
 
 <script>
 import moderator from 'js/perimeters/moderator';
+import FileVerifiedSvg from 'images/icons/file-verified.svg';
 
 export default {
+	components: {
+		FileVerifiedSvg,
+	},
 	props: ['resource'],
 	perimeters: [
 		moderator,

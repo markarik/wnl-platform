@@ -40,10 +40,14 @@
 							:full-name="author.full_name"
 							:url="author.avatar"
 							size="medium"
+							:roles="author.roles"
 						/>
-						<span class="qna-meta-info">
-							{{author.full_name}}
-						</span>
+						<div>
+							<span class="qna-meta-info">
+								{{author.full_name}}
+							</span>
+							<wnl-user-signature :roles="author.roles" />
+						</div>
 					</div>
 					<span class="qna-meta-info">
 						· {{time}}
@@ -61,6 +65,7 @@
 						@unresolveResource="unresolveQuestion(id)"
 					/>
 				</div>
+
 				<slot name="context" />
 			</div>
 		</div>
@@ -235,6 +240,7 @@ import highlight from 'js/mixins/highlight';
 import Watch from 'js/components/global/reactions/Watch';
 import Modal from 'js/components/global/Modal';
 import moderatorFeatures from 'js/perimeters/moderator';
+import UserSignature from 'js/components/global/UserSignature';
 import { timeFromS } from 'js/utils/time';
 
 export default {
@@ -248,6 +254,7 @@ export default {
 		'wnl-watch': Watch,
 		'wnl-modal': Modal,
 		'wnl-user-profile-modal': UserProfileModal,
+		'wnl-user-signature': UserSignature,
 	},
 	mixins: [highlight],
 	perimeters: [moderatorFeatures],

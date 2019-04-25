@@ -11,7 +11,7 @@
 			:title="usernameToUse"
 			class="wnl-avatar-automatic"
 		>{{initials}}</div>
-		<div class="badge" v-if="showBadge">
+		<div v-if="showBadge" class="badge">
 			<img :src="badgeUrl">
 		</div>
 	</div>

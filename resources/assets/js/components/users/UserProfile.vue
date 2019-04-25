@@ -43,7 +43,7 @@
 							</wnl-message-link>
 							<span class="user-info-header-names">
 								<p class="fullname-title">{{profile.full_name}}</p>
-								<wnl-user-signature size="big" :roles="profile.roles"></wnl-user-signature>
+								<wnl-user-signature size="big" :roles="profile.roles" />
 							</span>
 						</div>
 						<span v-if="cityToDisplay" class="user-info-city">

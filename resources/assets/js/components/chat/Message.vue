@@ -27,7 +27,7 @@
 					>{{fullName}}</strong>
 					<small class="wnl-message-time">{{formattedTime}}</small>
 				</p>
-				<wnl-user-signature :roles="author.roles"></wnl-user-signature>
+				<wnl-user-signature :roles="author.roles" />
 				<p class="wnl-message-content" v-html="content" />
 			</div>
 		</div>

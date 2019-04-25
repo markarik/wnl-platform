@@ -16,7 +16,7 @@
 						<div class="user-info-full-name">
 							<span>{{profile.full_name}}</span>
 						</div>
-						<wnl-user-signature size="big" :roles="profile.roles"></wnl-user-signature>
+						<wnl-user-signature size="big" :roles="profile.roles" />
 					</div>
 					<div v-if="profile.city" class="user-info-city">
 						<span class="icon is-small">

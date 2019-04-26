@@ -60,7 +60,7 @@ const routes = [
 			},
 			{
 				name: resource('lessons'),
-				path: '/app/courses/:courseId/lessons/:lessonId/(screens)?/:screenId?/:slide?',
+				path: 'lessons/:lessonId/(screens)?/:screenId?/:slide?',
 				component: Lesson,
 				props: route => ({
 					courseId: Number(route.params.courseId),
@@ -72,7 +72,7 @@ const routes = [
 			{
 				// We need this route for backwards compatibility with progressStore in redis and notifications
 				name: resource('screens'),
-				path: '/screens',
+				path: ':lessonId/screens/:screenId?/:slide?',
 				redirect: { name: resource('lessons') },
 			}
 		],

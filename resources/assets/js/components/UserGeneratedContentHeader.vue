@@ -11,7 +11,7 @@
 			<span :class="{'author-forgotten': author.deleted_at}" @click="showModal">
 				{{author.full_name}}
 			</span>
-			<div>
+			<div class="user-generated-content-header__meta">
 				<span class="user-generated-content-header__separator">·</span>
 				<span>{{time}}</span>
 				<span v-if="canDelete">
@@ -22,12 +22,14 @@
 						@deleteSuccess="$emit('deleteSuccess')"
 					/>
 				</span>
+				<span class="user-generated-content-header__separator">·</span>
 				<wnl-resolve
 					v-if="resolvable"
 					:resource="content"
 					@resolveResource="$emit('resolveResource')"
 					@unresolveResource="$emit('unresolveResource')"
 				/>
+				<span class="user-generated-content-header__separator"/>
 				<wnl-verify
 					:resource="content"
 					@verify="$emit('verify')"
@@ -54,9 +56,13 @@
 	@media #{$media-query-tablet}
 		align-items: center
 
-	/deep/ &__separator
+	&__separator
 		margin: 0 $margin-small-minus
 		display: inline-block
+
+	&__meta
+		display: flex
+		align-items: center
 
 	&__info
 		display: flex

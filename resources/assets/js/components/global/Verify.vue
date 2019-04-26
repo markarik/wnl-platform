@@ -4,7 +4,7 @@
 		class="verify icon"
 		@click="$emit('unverify')"
 	>
-		<file-verified-svg />
+		<file-verified-svg class="verify__svg verify__svg--verified"/>
 		<span>Zweryfikowano</span>
 	</p>
 	<span
@@ -12,7 +12,7 @@
 		class="verify icon"
 		@click="$emit('verify')"
 	>
-		<file-verified-svg />
+		<file-verified-svg class="verify__svg"/>
 		<span>Zweryfikuj</span>
 	</span>
 </template>
@@ -23,9 +23,15 @@
 	.verify
 		cursor: pointer
 		width: auto
+		color: $color-green
+
+		&__svg
+			width: 16px
+			height: 16px
 
 		&:hover
 			color: $color-red
+
 
 		span
 			margin-left: $margin-small
@@ -44,7 +50,12 @@ export default {
 	components: {
 		FileVerifiedSvg,
 	},
-	props: ['resource'],
+	props: {
+		resource: {
+			type: Object,
+			required: true
+		}
+	},
 	perimeters: [
 		moderator,
 	]

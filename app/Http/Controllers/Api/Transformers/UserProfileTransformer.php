@@ -36,7 +36,7 @@ class UserProfileTransformer extends ApiTransformer
 			'about'             => $profile->about,
 			'learning_location' => $profile->learning_location,
 			'deleted_at'        => $profile->deleted_at,
-			'roles' => $profile->user->roles->pluck('name')->toArray(),
+			'roles' => $profile->user->roles_names,
 		];
 
 		if ($this->parent) {

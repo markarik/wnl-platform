@@ -3,7 +3,7 @@
 		class="rectangle-button"
 		@click="$emit('click')"
 	>
-		<slot></slot>
+		<slot />
 	</div>
 </template>
 

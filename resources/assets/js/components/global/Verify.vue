@@ -4,7 +4,7 @@
 		:class="['verify', 'icon', resource.verified_at && 'verify--verified']"
 		@click="onClick"
 	>
-		<file-verified-svg class="verify__svg"/>
+		<file-verified-svg class="verify__svg" />
 		<span>{{message}}</span>
 	</p>
 </template>

@@ -40,6 +40,11 @@ class QnaQuestion extends Model implements WithReactions, WithTags
 		return $this->belongsTo('App\Models\User');
 	}
 
+	public function profiles()
+	{
+		return $this->belongsTo('App\Models\Profile', 'user_id', 'user_id');
+	}
+
 	public function tags()
 	{
 		return $this->morphToMany('App\Models\Tag', 'taggable');

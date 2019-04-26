@@ -56,8 +56,8 @@ class QnaQuestionTransformer extends ApiTransformer
 
 	public function includeProfiles(QnaQuestion $question)
 	{
-		$profile = $question->user->profile;
+		$profile = $question->profiles;
 
-		return $this->item($profile, new UserProfileTransformer(['qna_questions' => $question->id]), 'profiles');
+		return $this->item($profile, new ProfileTransformer(['qna_questions' => $question->id]), 'profiles');
 	}
 }

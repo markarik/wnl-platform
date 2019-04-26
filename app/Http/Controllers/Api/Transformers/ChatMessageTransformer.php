@@ -43,7 +43,7 @@ class ChatMessageTransformer extends ApiTransformer
 
 		return $this->item(
 			$profile,
-			new UserProfileTransformer(['chat_messages' => $chatMessage->id]),
+			new ProfileTransformer(['chat_messages' => $chatMessage->id]),
 			'profiles'
 		);
 	}

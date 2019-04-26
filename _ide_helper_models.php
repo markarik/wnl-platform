@@ -190,6 +190,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read \App\Models\Profile $profiles
  * @property-read \App\Models\QnaQuestion $question
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reaction[] $reactions
  * @property-read \App\Models\User $user
@@ -204,58 +205,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\QnaAnswer whereUserId($value)
  */
 	class QnaAnswer extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\UserProfile
- *
- * @property int $id
- * @property int $user_id
- * @property string $first_name
- * @property string $last_name
- * @property string|null $public_email
- * @property string|null $public_phone
- * @property string|null $username
- * @property string|null $avatar
- * @property string|null $city
- * @property string|null $university
- * @property string|null $specialization
- * @property string|null $help
- * @property string|null $interests
- * @property string|null $about
- * @property string|null $learning_location
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property-read mixed $avatar_url
- * @property-read mixed $full_name
- * @property-read mixed $roles_names
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
- * @property-read \App\Models\User $user
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereAbout($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereAvatar($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereCity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereFirstName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereHelp($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereInterests($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereLastName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereLearningLocation($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile wherePublicEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile wherePublicPhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereSpecialization($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereUniversity($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile whereUsername($value)
- */
-	class UserProfile extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -821,7 +770,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
  * @property-read \App\Models\UserPersonalData $personalData
- * @property-read \App\Models\UserProfile $profile
+ * @property-read \App\Models\Profile $profile
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QnaAnswer[] $qnaAnswers
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reactable[] $reactables
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
@@ -1069,7 +1018,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $assignee
- * @property-read \App\Models\UserProfile|null $assigneeProfiles
+ * @property-read \App\Models\Profile|null $assigneeProfiles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Event[] $events
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reaction[] $reactions
@@ -1139,6 +1088,7 @@ namespace App\Models{
  * @property-read \App\Models\Discussion $discussion
  * @property-read mixed $page
  * @property-read mixed $screen
+ * @property-read \App\Models\Profile $profiles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QnaAnswer[] $qnaAnswers
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reaction[] $reactions
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tag[] $tags
@@ -1628,7 +1578,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $commentable
- * @property-read \App\Models\UserProfile $profiles
+ * @property-read \App\Models\Profile $profiles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reaction[] $reactions
  * @property-read \App\Models\User $user
  * @method static bool|null forceDelete()
@@ -1700,6 +1650,58 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserPlanProgress whereUserId($value)
  */
 	class UserPlanProgress extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Profile
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $first_name
+ * @property string $last_name
+ * @property string|null $public_email
+ * @property string|null $public_phone
+ * @property string|null $username
+ * @property string|null $avatar
+ * @property string|null $city
+ * @property string|null $university
+ * @property string|null $specialization
+ * @property string|null $help
+ * @property string|null $interests
+ * @property string|null $about
+ * @property string|null $learning_location
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read mixed $avatar_url
+ * @property-read mixed $full_name
+ * @property-read mixed $roles_names
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereAbout($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereAvatar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereHelp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereInterests($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereLearningLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile wherePublicEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile wherePublicPhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereSpecialization($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereUniversity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Profile whereUsername($value)
+ */
+	class Profile extends \Eloquent {}
 }
 
 namespace App\Models{

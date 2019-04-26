@@ -41,9 +41,9 @@ class QnaAnswerTransformer extends ApiTransformer
 
 	public function includeProfiles(QnaAnswer $answer)
 	{
-		$profile = $answer->user->profile;
+		$profile = $answer->profiles;
 
-		return $this->item($profile, new UserProfileTransformer(['qna_answers' => $answer->id]), 'profiles');
+		return $this->item($profile, new ProfileTransformer(['qna_answers' => $answer->id]), 'profiles');
 	}
 
 	public function includeComments(QnaAnswer $answer)

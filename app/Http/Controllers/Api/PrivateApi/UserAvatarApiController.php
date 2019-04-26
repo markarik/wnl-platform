@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
 use Intervention\Image\Facades\Image;
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Api\Transformers\UserProfileTransformer;
+use App\Http\Controllers\Api\Transformers\ProfileTransformer;
 
 class UserAvatarApiController extends ApiController
 {
@@ -45,7 +45,7 @@ class UserAvatarApiController extends ApiController
 		$user->profile->avatar = $path;
 		$user->profile->save();
 
-		$resource = new Item($user->profile, new UserProfileTransformer, 'user_profile');
+		$resource = new Item($user->profile, new ProfileTransformer, 'user_profile');
 		$data = $this->fractal->createData($resource)->toArray();
 
 		return $this->respondOk($data);

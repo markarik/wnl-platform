@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Lib\Bethink\Bethink;
 use ScoutEngines\Elasticsearch\Searchable;
 
-class UserProfile extends Model
+class Profile extends Model
 {
 	use Searchable;
 
@@ -26,6 +26,8 @@ class UserProfile extends Model
 	];
 
 	protected $guarded = ['deleted_at'];
+
+	protected $table = 'user_profiles';
 
 	public function user()
 	{

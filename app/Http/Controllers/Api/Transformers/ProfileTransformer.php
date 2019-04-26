@@ -3,11 +3,11 @@
 
 namespace App\Http\Controllers\Api\Transformers;
 
-use App\Models\UserProfile;
+use App\Models\Profile;
 use App\Http\Controllers\Api\ApiTransformer;
 
 
-class UserProfileTransformer extends ApiTransformer
+class ProfileTransformer extends ApiTransformer
 {
 	protected $parent;
 
@@ -16,7 +16,7 @@ class UserProfileTransformer extends ApiTransformer
 		$this->parent = $parent;
 	}
 
-	public function transform(UserProfile $profile)
+	public function transform(Profile $profile)
 	{
 		$data = [
 			'id' => $profile->id,

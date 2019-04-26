@@ -2,24 +2,24 @@
 
 namespace App\Observers;
 
-use App\Models\UserProfile;
+use App\Models\Profile;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
-class UserProfileObserver
+class ProfileObserver
 {
 	use DispatchesJobs;
 
-	public function created(UserProfile $userProfile)
+	public function created(Profile $userProfile)
 	{
 		$userProfile->searchable();
 	}
 
-	public function updated(UserProfile $userProfile)
+	public function updated(Profile $userProfile)
 	{
 		$userProfile->searchable();
 	}
 
-	public function deleted(UserProfile $userProfile)
+	public function deleted(Profile $userProfile)
 	{
 		$userProfile->unsearchable();
 	}

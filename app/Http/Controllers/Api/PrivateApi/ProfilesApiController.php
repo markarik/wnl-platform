@@ -2,11 +2,11 @@
 
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Requests\User\UpdateUserProfile;
+use App\Http\Requests\User\UpdateProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserProfilesApiController extends ApiController
+class ProfilesApiController extends ApiController
 {
 	public function __construct(Request $request)
 	{
@@ -25,7 +25,7 @@ class UserProfilesApiController extends ApiController
 		return $this->transformAndRespond($user->profile);
 	}
 
-	public function put(UpdateUserProfile $request)
+	public function put(UpdateProfile $request)
 	{
 		$user = User::fetch($request->route('id'));
 		$user->profile()->updateOrCreate(['user_id' => $user->id], $request->all());

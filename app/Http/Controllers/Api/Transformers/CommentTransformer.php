@@ -45,6 +45,6 @@ class CommentTransformer extends ApiTransformer
 	{
 		$profile = $comment->profiles;
 
-		return $this->item($profile, new UserProfileTransformer(['comments' => $comment->id]), 'profiles');
+		return $this->item($profile, new ProfileTransformer(['comments' => $comment->id]), 'profiles');
 	}
 }

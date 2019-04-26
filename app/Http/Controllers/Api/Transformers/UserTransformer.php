@@ -65,7 +65,7 @@ class UserTransformer extends ApiTransformer
 	{
 		$profile = $user->profile;
 
-		return $this->item($profile, new UserProfileTransformer(['users' => $user->id]), 'profiles');
+		return $this->item($profile, new ProfileTransformer(['users' => $user->id]), 'profiles');
 	}
 
 	public function includeSubscription(User $user)

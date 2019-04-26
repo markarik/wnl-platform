@@ -279,10 +279,10 @@ Route::group(['namespace' => 'Api\PrivateApi', 'middleware' => ['api-auth']], fu
 
 	Route::get("{$r['users']}/{id}", 'UsersApiController@get');
 
-	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@get');
-	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'UserProfilesApiController@put');
+	Route::get("{$r['users']}/{id}/{$r['user-profile']}", 'ProfilesApiController@get');
+	Route::put("{$r['users']}/{id}/{$r['user-profile']}", 'ProfilesApiController@put');
 
-	Route::get("{$r['profiles']}/.search", "UserProfilesApiController@search");
+	Route::get("{$r['profiles']}/.search", "ProfilesApiController@search");
 
 	Route::post("{$r['users']}/{id}/{$r['user-avatar']}", 'UserAvatarApiController@post');
 

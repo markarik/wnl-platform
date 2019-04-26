@@ -3,10 +3,10 @@
 namespace App\Policies\User;
 
 use App\Models\User;
-use App\Models\UserProfile;
+use App\Models\Profile;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserProfilePolicy
+class ProfilePolicy
 {
 	use HandlesAuthorization;
 
@@ -14,10 +14,10 @@ class UserProfilePolicy
 	 * Determine whether the user can view the userProfile.
 	 *
 	 * @param  User $user
-	 * @param  UserProfile $userProfile
+	 * @param  Profile $userProfile
 	 * @return mixed
 	 */
-	public function view(User $user, UserProfile $userProfile)
+	public function view(User $user, Profile $userProfile)
 	{
 		// Anyone can see your public profile.
 		return true;
@@ -39,10 +39,10 @@ class UserProfilePolicy
 	 * Determine whether the user can update the userProfile.
 	 *
 	 * @param  User $user
-	 * @param  UserProfile $userProfile
+	 * @param  Profile $userProfile
 	 * @return mixed
 	 */
-	public function update(User $user, UserProfile $userProfile)
+	public function update(User $user, Profile $userProfile)
 	{
 		return $user->id === $userProfile->user_id;
 	}
@@ -51,10 +51,10 @@ class UserProfilePolicy
 	 * Determine whether the user can delete the userProfile.
 	 *
 	 * @param  User $user
-	 * @param  UserProfile $userProfile
+	 * @param  Profile $userProfile
 	 * @return mixed
 	 */
-	public function delete(User $user, UserProfile $userProfile)
+	public function delete(User $user, Profile $userProfile)
 	{
 		// TODO: Profile should be deleted together with main User entity.
 		return false;

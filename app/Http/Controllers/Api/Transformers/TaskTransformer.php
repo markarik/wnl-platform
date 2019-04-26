@@ -53,7 +53,7 @@ class TaskTransformer extends ApiTransformer
 	{
 		if ($task->assigneeProfiles) {
 			$profile = $task->assigneeProfiles;
-			return $this->item($profile, new UserProfileTransformer(['tasks' => $task->id]), 'assigneeProfiles');
+			return $this->item($profile, new ProfileTransformer(['tasks' => $task->id]), 'assigneeProfiles');
 		}
 	}
 }

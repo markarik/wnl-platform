@@ -21,7 +21,7 @@ use App\Models\UserAddress;
 use App\Models\UserBillingData;
 use App\Models\UserCourseProgress;
 use App\Models\UserProductState;
-use App\Models\UserProfile;
+use App\Models\Profile;
 use App\Models\UserQuestionsBankState;
 use App\Models\UserSettings;
 use App\Policies\Chat\ChatRoomPolicy;
@@ -41,7 +41,7 @@ use App\Policies\TaxonomyTermPolicy;
 use App\Policies\User\UserAddressPolicy;
 use App\Policies\User\UserCourseProgressPolicy;
 use App\Policies\User\UserProductStatePolicy;
-use App\Policies\User\UserProfilePolicy;
+use App\Policies\User\ProfilePolicy;
 use App\Policies\User\UserBillingPolicy;
 use App\Policies\User\UserSettingsPolicy;
 use App\Policies\User\UserPolicy;
@@ -57,7 +57,7 @@ class AuthServiceProvider extends ServiceProvider
 	 */
 	protected $policies = [
 		User::class                   => UserPolicy::class,
-		UserProfile::class            => UserProfilePolicy::class,
+		Profile::class                => ProfilePolicy::class,
 		UserAddress::class            => UserAddressPolicy::class,
 		UserBillingData::class        => UserBillingPolicy::class,
 		UserSettings::class           => UserSettingsPolicy::class,

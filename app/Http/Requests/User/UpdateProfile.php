@@ -3,10 +3,10 @@
 namespace App\Http\Requests\User;
 
 use App\Models\User;
-use App\Models\UserProfile;
+use App\Models\Profile;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserProfile extends FormRequest
+class UpdateProfile extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -62,7 +62,7 @@ class UpdateUserProfile extends FormRequest
 	private function usernameIsInvalid()
 	{
 		if ($this->request->has('username') && !empty($this->request->get('username'))) {
-			$username = UserProfile::select('username')
+			$username = Profile::select('username')
 				->where('user_id', '!=', $this->user()->id)
 				->where('username', $this->request->get('username'))
 				->get();

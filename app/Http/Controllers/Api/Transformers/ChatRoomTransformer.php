@@ -45,7 +45,7 @@ class ChatRoomTransformer extends ApiTransformer
 
 		return $this->collection(
 			$profiles,
-			new UserProfileTransformer(['chat_rooms' => $chatRoom->id]),
+			new ProfileTransformer(['chat_rooms' => $chatRoom->id]),
 			'profiles'
 		);
 	}

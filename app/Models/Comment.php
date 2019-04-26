@@ -25,7 +25,7 @@ class Comment extends Model implements WithReactions
 
 	public function profiles()
 	{
-		return $this->belongsTo('App\Models\UserProfile', 'user_id', 'user_id');
+		return $this->belongsTo('App\Models\Profile', 'user_id', 'user_id');
 	}
 
 	public function reactions()

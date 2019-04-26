@@ -47,7 +47,7 @@ class Task extends Model implements WithReactions, WithTags
 
 	public function assigneeProfiles()
 	{
-		return $this->belongsTo('App\Models\UserProfile', 'assignee_id', 'user_id');
+		return $this->belongsTo('App\Models\Profile', 'assignee_id', 'user_id');
 	}
 
 	public function comments()

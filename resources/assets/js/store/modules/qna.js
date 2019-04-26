@@ -7,7 +7,9 @@ import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store
 import { commentsGetters, commentsMutations, commentsActions, commentsState } from 'js/store/modules/comments';
 
 const include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles';
-const discussionsInclude = 'qna_questions,qna_questions.profiles,qna_questions.reactions,qna_questions.qna_answers.profiles,qna_questions.qna_answers.comments,qna_questions.qna_answers.comments.profiles';
+const discussionsInclude = 'qna_questions,qna_questions.profiles,qna_questions.profiles.roles,qna_questions.reactions,' +
+	'qna_questions.qna_answers.profiles,qna_questions.qna_answers.profiles.roles,' +
+	'qna_questions.qna_answers.comments,qna_questions.qna_answers.comments.profiles,qna_questions.qna_answers.comments.profiles.roles';
 
 function _resolveQuestion(questionId, status = true) {
 	return axios.put(getApiUrl(`qna_questions/${questionId}`), {

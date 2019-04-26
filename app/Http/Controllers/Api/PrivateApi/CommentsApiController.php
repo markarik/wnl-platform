@@ -68,7 +68,7 @@ class CommentsApiController extends ApiController
 	}
 
 	public function query(Request $request) {
-		$commentsQuery = Comment::select();
+		$commentsQuery = $this->eagerLoadIncludes(Comment::class);
 
 		if ($request->has('commentable_id')) {
 			$commentableId = $request->get('commentable_id');

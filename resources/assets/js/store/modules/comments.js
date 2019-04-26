@@ -19,7 +19,7 @@ function _fetchComments({ ...commentsQuery }) {
 	const requestParams = {
 		commentable_type: commentsQuery.commentable_type,
 		commentable_id: commentsQuery.commentable_id,
-		include: 'profiles,reactions'
+		include: 'profiles,profiles.roles,reactions'
 	};
 
 	if (commentsQuery.hasOwnProperty('comment_id')) {

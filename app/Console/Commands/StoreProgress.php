@@ -132,7 +132,7 @@ class StoreProgress extends CommandWithMonitoring
 									'section_id' => null,
 								]);
 
-								$model->status = $screenData->status;
+								$model->status = $screenData->status ?? 'in-progress';
 								$model->save();
 
 								forEach($screenData as $key => $value) {

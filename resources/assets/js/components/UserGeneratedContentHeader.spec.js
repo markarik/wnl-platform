@@ -11,14 +11,25 @@ localVue.component('wnl-avatar', '<div></div>');
 localVue.directive('t', (args) => ({ ...args }));
 
 describe('UserGeneratedContentHeader.vue', () => {
-	let store;
-
 	const avatarStub = '<div id="avatar"></div>';
 	const resolveStub = '<div id="resolve"></div>';
 	const verifyStub = '<div id="verify"></div>';
 	const deleteStub = '<div id="delete"></div>';
 
-	const createComponent = ({ propsData = {} } = {} ) => {
+	const createStore = ({ getters = {} } = {}) => {
+		return new Vuex.Store({
+			modules: {
+				currentUser: {
+					getters: {
+						currentUserId: () => 7,
+						...getters
+					}
+				}
+			}
+		});
+	};
+
+	const createComponent = ({ propsData = {}, store = createStore(), isAllowed = false } = {} ) => {
 		return shallowMount(UserGeneratedContentHeaderComponent, {
 			store,
 			localVue,
@@ -33,6 +44,11 @@ describe('UserGeneratedContentHeader.vue', () => {
 				WnlVerify: verifyStub,
 				WnlDelete: deleteStub
 			},
+			mocks: {
+				$moderatorFeatures: {
+					isAllowed: () => isAllowed
+				}
+			},
 			sync: false
 		});
 	};
@@ -42,12 +58,12 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(wrapper.findAll('#avatar').length).to.equal(1);
 		expect(wrapper.findAll('#resolve').length).to.equal(0);
 		expect(wrapper.findAll('#delete').length).to.equal(0);
-		expect(wrapper.findAll('#verify').length).to.equal(1);
+		expect(wrapper.findAll('#verify').length).to.equal(0);
 	});
 
-	it('renders correctly when user can delete', () => {
+	it('renders correctly when user is a moderator', () => {
 		const wrapper = createComponent({
-			propsData: { canDelete: true }
+			isAllowed: true
 		});
 		expect(wrapper.findAll('#avatar').length).to.equal(1);
 		expect(wrapper.findAll('#resolve').length).to.equal(0);
@@ -55,14 +71,37 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(wrapper.findAll('#verify').length).to.equal(1);
 	});
 
-	it('renders correctly when user can resolve', () => {
+	it('renders correctly when user is a moderator and content is resolvable', () => {
 		const wrapper = createComponent({
-			propsData: { resolvable: true }
+			propsData: { resolvable: true },
+			isAllowed: true
 		});
 		expect(wrapper.findAll('#avatar').length).to.equal(1);
 		expect(wrapper.findAll('#resolve').length).to.equal(1);
-		expect(wrapper.findAll('#delete').length).to.equal(0);
+		expect(wrapper.findAll('#delete').length).to.equal(1);
 		expect(wrapper.findAll('#verify').length).to.equal(1);
+	});
+
+	it('renders correctly when user is a moderator and content is not resolvable', () => {
+		const wrapper = createComponent({
+			propsData: { resolvable: false },
+			isAllowed: true
+		});
+		expect(wrapper.findAll('#avatar').length).to.equal(1);
+		expect(wrapper.findAll('#resolve').length).to.equal(0);
+		expect(wrapper.findAll('#delete').length).to.equal(1);
+		expect(wrapper.findAll('#verify').length).to.equal(1);
+	});
+
+	it('renders correctly when user is an author', () => {
+		const wrapper = createComponent({
+			store: createStore({ getters: { currentUserId: () => 1 } }),
+			propsData: { author: { user_id: 1 } },
+		});
+		expect(wrapper.findAll('#avatar').length).to.equal(1);
+		expect(wrapper.findAll('#resolve').length).to.equal(0);
+		expect(wrapper.findAll('#delete').length).to.equal(1);
+		expect(wrapper.findAll('#verify').length).to.equal(0);
 	});
 
 	it('shows modal on avatar click', () => {
@@ -76,7 +115,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 
 	it('emits event on successful deletion', () => {
 		const wrapper = createComponent({
-			propsData: { canDelete: true }
+			isAllowed: true
 		});
 
 		const deleteComponent = wrapper.find('#delete');
@@ -86,7 +125,8 @@ describe('UserGeneratedContentHeader.vue', () => {
 
 	it('emits resolve events correctly', () => {
 		const wrapper = createComponent({
-			propsData: { resolvable: true }
+			propsData: { resolvable: true },
+			isAllowed: true
 		});
 
 		const resolveComponent = wrapper.find('#resolve');
@@ -98,7 +138,9 @@ describe('UserGeneratedContentHeader.vue', () => {
 	});
 
 	it('emits verify events correctly', () => {
-		const wrapper = createComponent();
+		const wrapper = createComponent({
+			isAllowed: true
+		});
 
 		const verifyComponent = wrapper.find('#verify');
 		verifyComponent.vm.$emit('verify');

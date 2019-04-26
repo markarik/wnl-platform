@@ -1,6 +1,6 @@
 <template>
 	<p
-		v-if="$moderatorFeatures.isAllowed('access') && resource.verified_at"
+		v-if="resource.verified_at"
 		class="verify icon"
 		@click="$emit('unverify')"
 	>
@@ -8,7 +8,7 @@
 		<span>Zweryfikowano</span>
 	</p>
 	<span
-		v-else-if="$moderatorFeatures.isAllowed('access')"
+		v-else
 		class="verify icon"
 		@click="$emit('verify')"
 	>
@@ -43,7 +43,6 @@
 </style>
 
 <script>
-import moderator from 'js/perimeters/moderator';
 import FileVerifiedSvg from 'images/icons/file-verified.svg';
 
 export default {
@@ -56,8 +55,5 @@ export default {
 			required: true
 		}
 	},
-	perimeters: [
-		moderator,
-	]
 };
 </script>

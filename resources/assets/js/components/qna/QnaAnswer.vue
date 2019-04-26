@@ -4,7 +4,6 @@
 			<wnl-user-generated-content-header
 				:author="author"
 				:content="answer"
-				:can-delete="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')"
 				:delete-target="deleteTarget"
 				:delete-resource-rotue="resourceRoute"
 				@verify="verifyAnswer(id)"

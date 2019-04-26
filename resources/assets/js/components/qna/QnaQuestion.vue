@@ -5,7 +5,6 @@
 				<wnl-user-generated-content-header
 					resolvable
 					:author="author"
-					:can-delete="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')"
 					:delete-target="deleteTarget"
 					:delete-resource-rotue="resourceRoute"
 					:content="question"

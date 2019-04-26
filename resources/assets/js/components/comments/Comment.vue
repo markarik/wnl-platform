@@ -4,7 +4,6 @@
 			class="wnl-comment__header"
 			:author="profile"
 			:content="comment"
-			:can-delete="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')"
 			:delete-target="target"
 			:delete-resource-rotue="requestRoute"
 			@deleteSuccess="$emit('deleteSuccess')"

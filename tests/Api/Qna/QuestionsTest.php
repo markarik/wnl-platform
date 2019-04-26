@@ -7,6 +7,7 @@ use App\Models\Discussion;
 use App\Models\Lesson;
 use App\Models\Page;
 use App\Models\QnaQuestion;
+use App\Models\Role;
 use App\Models\Screen;
 use App\Models\Tag;
 use App\Models\User;
@@ -99,5 +100,35 @@ class QuestionsTest extends ApiTestCase
 			->assertJson([
 				'name' => $page->slug,
 			]);
+	}
+
+	public function testQnaQuestionResolveUnresolve()
+	{
+		QnaQuestion::flushEventListeners();
+
+		/** @var User $user */
+		$user = factory(User::class)->create();
+		$moderatorRole = Role::byName('moderator');
+		$user->roles()->attach($moderatorRole);
+
+		$question = factory(QnaQuestion::class)->create();
+
+		$response = $this
+			->actingAs($user)
+			->json('GET', $this->url("/qna_questions/{$question->id}"));
+		$response->assertStatus(200);
+		$this->assertEquals(null, $response->json()['verified_at']);
+
+		$response = $this
+			->actingAs($user)
+			->json('PUT', $this->url("/qna_questions/{$question->id}"), [ 'verified' => true ]);
+		$response->assertStatus(200);
+		$this->assertNotEquals(null, $response->json()['verified_at']);
+
+		$response = $this
+			->actingAs($user)
+			->json('PUT', $this->url("/qna_questions/{$question->id}"), [ 'verified' => false ]);
+		$response->assertStatus(200);
+		$this->assertEquals(null, $response->json()['verified_at']);
 	}
 }

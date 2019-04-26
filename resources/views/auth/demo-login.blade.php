@@ -19,7 +19,7 @@
 					class="input {{ $errors->has('email') ? 'is-danger' : '' }}"
 					value="{{ old('email') }}" required autofocus="">
 				@if ($errors->has('email'))
-					<span class="help is-danger">{{ $errors->first('email') }}</span>
+					<span class="help is-danger pre-line">{{ $errors->first('email') }}</span>
 				@endif
 			</p>
 

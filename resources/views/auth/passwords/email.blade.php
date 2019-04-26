@@ -21,7 +21,7 @@
 					<input id="email" type="email" class="input {{ $errors->has('email') ? ' is-danger' : '' }}" name="email" value="{{ old('email') }}" autofocus="" required>
 
 					@if ($errors->has('email'))
-						<span class="help is-danger">
+						<span class="help is-danger pre-line">
 							<strong>{{ $errors->first('email') }}</strong>
 						</span>
 					@endif

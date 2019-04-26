@@ -120,8 +120,6 @@ class UserOrdersApiController extends ApiController
 		{
 			array_push($errors, trans('payment.price-higher-after-coupon', [
 				'couponName' => $coupon->name,
-				'currentPrice' => $order->total_with_coupon,
-				'priceWithCoupon' => $tmpOrder->total_with_coupon,
 			]));
 		}
 

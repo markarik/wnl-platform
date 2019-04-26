@@ -341,6 +341,10 @@ section.voucher {
 	word-wrap: break-word;
 }
 
+.pre-line {
+	white-space: pre-line;
+}
+
 /* Firefox hack :/ */
 @-moz-document url-prefix() {
 	.wnl-chat-content {

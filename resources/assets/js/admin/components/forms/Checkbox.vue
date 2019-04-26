@@ -15,7 +15,7 @@
 
 		<span
 			v-if="form.errors.has(name)"
-			class="help is-danger"
+			class="help is-danger pre-line"
 			v-text="form.errors.get(name)"
 		/>
 	</div>

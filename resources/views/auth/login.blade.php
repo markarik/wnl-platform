@@ -32,7 +32,7 @@
 						class="input {{ $errors->has('email') ? 'is-danger' : '' }}"
 						value="{{ old('email') }}" required autofocus="">
 					@if ($errors->has('email'))
-						<span class="help is-danger">{{ $errors->first('email') }}</span>
+						<span class="help is-danger pre-line">{{ $errors->first('email') }}</span>
 					@endif
 				</p>
 
@@ -43,7 +43,7 @@
 						   class="input {{ $errors->has('password') ? 'is-danger' : '' }}"
 						   value="{{ old('password') }}" required>
 					@if ($errors->has('password'))
-						<span class="help is-danger">{{ $errors->first('password') }}</span>
+						<span class="help is-danger pre-line">{{ $errors->first('password') }}</span>
 					@endif
 				</p>
 

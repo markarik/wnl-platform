@@ -23,8 +23,8 @@
 			<span
 				v-for="(error, index) in getErrors"
 				:key="index"
-				class="help is-danger"
-				v-html="error"
+				class="help is-danger pre-line"
+				v-text="error"
 			/>
 		</template>
 	</div>

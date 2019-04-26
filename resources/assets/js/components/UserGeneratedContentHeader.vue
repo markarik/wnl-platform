@@ -12,9 +12,11 @@
 				{{author.full_name}}
 			</span>
 			<div class="user-generated-content-header__meta">
-				<span class="user-generated-content-header__separator">·</span>
-				<span>{{time}}</span>
-				<span v-if="canDelete">
+				<span class="user-generated-content-header__meta__item">
+					<span class="user-generated-content-header__separator">·</span>
+					<span>{{time}}</span>
+				</span>
+				<span v-if="canDelete" class="user-generated-content-header__meta__item">
 					<span class="user-generated-content-header__separator">·</span>
 					<wnl-delete
 						:target="deleteTarget"
@@ -22,7 +24,7 @@
 						@deleteSuccess="$emit('deleteSuccess')"
 					/>
 				</span>
-				<span v-if="canResolve">
+				<span v-if="canResolve" class="user-generated-content-header__meta__item">
 					<span class="user-generated-content-header__separator">·</span>
 					<wnl-resolve
 						:resource="content"
@@ -30,7 +32,7 @@
 						@unresolveResource="$emit('unresolveResource')"
 					/>
 				</span>
-				<span v-if="canVerify">
+				<span v-if="canVerify" class="user-generated-content-header__meta__item">
 					<span class="user-generated-content-header__separator" />
 					<wnl-verify
 						:resource="content"
@@ -66,6 +68,10 @@
 	&__meta
 		display: flex
 		align-items: center
+
+		&__item
+			display: flex
+			align-items: center
 
 	&__info
 		display: flex

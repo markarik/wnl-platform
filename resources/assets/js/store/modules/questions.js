@@ -390,7 +390,7 @@ const actions = {
 			filters,
 			limit,
 			randomize,
-			include: 'quiz_answers,reactions,comments.profiles,slides',
+			include: 'quiz_answers,reactions,comments.profiles,comments.profiles.roles,slides',
 			cachedPagination: false
 		}).then(response => {
 			const { answers, questions, slides, included } = _handleResponse(response, commit);
@@ -406,7 +406,7 @@ const actions = {
 	fetchQuestionsByIds({ commit, dispatch }, ids) {
 		return axios.post(getApiUrl('quiz_questions/query'), {
 			ids,
-			include: 'quiz_answers,reactions,comments.profiles,slides',
+			include: 'quiz_answers,reactions,comments.profiles,comments.profiles.roles,slides',
 			cachedPagination: false,
 			limit: ids.length
 		}).then(response => {
@@ -507,7 +507,7 @@ const _fetchQuestions = (requestParams) => {
 };
 
 const _fetchQuestionsData = (id) => {
-	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles,slides,comments.reactions,reactions`));
+	return axios.get(getApiUrl(`quiz_questions/${id}?include=comments.profiles,comments.profiles.roles,slides,comments.reactions,reactions`));
 };
 
 const _fetchDynamicFilters = (activeFilters) => {

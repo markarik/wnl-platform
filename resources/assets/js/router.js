@@ -72,7 +72,7 @@ const routes = [
 			{
 				// We need this route for backwards compatibility with progressStore in redis and notifications
 				name: resource('screens'),
-				path: '/screens',
+				path: 'screens/:lessonId?/:screenId?/:slide?',
 				redirect: { name: resource('lessons') },
 			}
 		],

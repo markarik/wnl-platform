@@ -1,13 +1,13 @@
 <template>
 	<p
-		v-if="$moderatorFeatures.isAllowed('access') && resource.resolved"
+		v-if="resource.resolved"
 		class="resolvable icon"
 		@click="$emit('unresolveResource')"
 	>
 		<i class="fa fa-undo" />
 		<span v-t="'ui.action.undo'" />
 	</p>
-	<span v-else-if="$moderatorFeatures.isAllowed('access')" class="resolvable icon">
+	<span v-else class="resolvable icon">
 		<i class="fa fa-check" @click="$emit('resolveResource')" />
 	</span>
 </template>
@@ -32,12 +32,12 @@
 </style>
 
 <script>
-import moderator from 'js/perimeters/moderator';
-
 export default {
-	props: ['resource'],
-	perimeters: [
-		moderator,
-	]
+	props: {
+		resource: {
+			type: Object,
+			required: true
+		}
+	},
 };
 </script>

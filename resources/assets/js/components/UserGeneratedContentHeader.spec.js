@@ -58,7 +58,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(wrapper.findAll('#avatar').length).to.equal(1);
 		expect(wrapper.findAll('#resolve').length).to.equal(0);
 		expect(wrapper.findAll('#delete').length).to.equal(0);
-		expect(wrapper.findAll('#verify').length).to.equal(0);
+		expect(wrapper.findAll('#verify').length).to.equal(1);
 	});
 
 	it('renders correctly when user is a moderator', () => {
@@ -101,7 +101,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(wrapper.findAll('#avatar').length).to.equal(1);
 		expect(wrapper.findAll('#resolve').length).to.equal(0);
 		expect(wrapper.findAll('#delete').length).to.equal(1);
-		expect(wrapper.findAll('#verify').length).to.equal(0);
+		expect(wrapper.findAll('#verify').length).to.equal(1);
 	});
 
 	it('shows modal on avatar click', () => {

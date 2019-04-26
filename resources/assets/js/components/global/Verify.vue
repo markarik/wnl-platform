@@ -1,5 +1,6 @@
 <template>
 	<p
+		v-if="showBadge"
 		:class="['verify', 'icon', resource.verified_at && 'verify--verified']"
 		@click="onClick"
 	>
@@ -47,16 +48,28 @@ export default {
 		resource: {
 			type: Object,
 			required: true
+		},
+		canVerify: {
+			type: Boolean,
+			default: false
 		}
 	},
 	computed: {
+		showBadge() {
+			return this.verified || this.canVerify;
+		},
+		verified () {
+			return this.resource.verified_at;
+		},
 		message() {
-			return this.resource.verified_at ? 'Zweryfikowano' : 'Zweryfikuj';
+			return this.verified ? 'Zweryfikowano' : 'Zweryfikuj';
 		}
 	},
 	methods: {
 		onClick () {
-			if (this.resource.verified_at) this.$emit('unverify');
+			if (!this.canVerify) return;
+
+			if (this.verified) this.$emit('unverify');
 			else this.$emit('verify');
 		}
 	}

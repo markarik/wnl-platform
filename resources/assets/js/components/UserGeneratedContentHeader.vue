@@ -32,9 +32,10 @@
 						@unresolveResource="$emit('unresolveResource')"
 					/>
 				</span>
-				<span v-if="canVerify" class="user-generated-content-header__meta__item">
+				<span class="user-generated-content-header__meta__item">
 					<span class="user-generated-content-header__separator" />
 					<wnl-verify
+						:can-verify="canVerify"
 						:resource="content"
 						@verify="$emit('verify')"
 						@unverify="$emit('unverify')"

@@ -60,7 +60,7 @@ const routes = [
 			},
 			{
 				name: resource('lessons'),
-				path: '/app/courses/:courseId/lessons/:lessonId/(screens)?/:screenId?/:slide?',
+				path: 'lessons/:lessonId/(screens)?/:screenId?/:slide?',
 				component: Lesson,
 				props: route => ({
 					courseId: Number(route.params.courseId),

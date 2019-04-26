@@ -98,9 +98,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 	});
 
 	it('emits verify events correctly', () => {
-		const wrapper = createComponent({
-			propsData: { resolvable: true }
-		});
+		const wrapper = createComponent();
 
 		const verifyComponent = wrapper.find('#verify');
 		verifyComponent.vm.$emit('verify');

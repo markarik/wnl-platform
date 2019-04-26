@@ -119,6 +119,11 @@ class StoreProgress extends CommandWithMonitoring
 					$model->save();
 					foreach($lessonProgress as $key => $value) {
 						if ($key === 'screens') {
+							if (is_array($value)) {
+								// Filter out `null` values introduced due to bug: PLAT-1264
+								$value = array_filter($value, function($val) { return $val !== null; } );
+							}
+
 							forEach($value as $screenId => $screenData) {
 								$model = UserCourseProgress::firstOrNew([
 									'user_id' => $userId,
@@ -127,11 +132,16 @@ class StoreProgress extends CommandWithMonitoring
 									'section_id' => null,
 								]);
 
-								$model->status = $lessonData->status;
+								$model->status = $screenData->status ?? 'in-progress';
 								$model->save();
 
 								forEach($screenData as $key => $value) {
 									if ($key === 'sections') {
+										if (is_array($value)) {
+											// Filter out `null` values introduced due to bug: PLAT-1264
+											$value = array_filter($value, function($val) { return $val !== null; } );
+										}
+
 										forEach($value as $sectionId => $sectionData) {
 											$model = UserCourseProgress::firstOrNew([
 												'user_id' => $userId,

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { get, set } from 'lodash';
+import { get, setWith } from 'lodash';
 
 import { getApiUrl } from 'js/utils/env';
 
@@ -37,14 +37,14 @@ const completeSubsection = (lessonState, payload) => {
 	const stateWithSections = _getSectionProgress(stateWithScreen, payload);
 
 
-	set(lessonState, `screens[${screenId}].sections[${sectionId}].subsections`, {
-		...get(lessonState, `screens[${screenId}].sections[${sectionId}].subsections`, {}),
+	setWith(stateWithSections, `screens[${screenId}].sections[${sectionId}].subsections`, {
+		...get(stateWithSections, `screens[${screenId}].sections[${sectionId}].subsections`, {}),
 		[subsectionId]: {
 			status: STATUS_COMPLETE
 		}
-	});
+	}, Object);
 
-	setLessonProgress(payload, lessonState);
+	setLessonProgress(payload, stateWithSections);
 
 	return stateWithSections;
 };

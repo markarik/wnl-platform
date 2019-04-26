@@ -40,7 +40,7 @@
 		</div>
 		<div v-if="deleted" class="delete-message">{{$t('notifications.messages.deleted')}}</div>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :author="message.actors" />
+			<wnl-user-profile-modal :profile="message.actors" />
 		</wnl-modal>
 	</div>
 </template>

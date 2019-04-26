@@ -42,28 +42,34 @@
 							size="medium"
 							:roles="author.roles"
 						/>
-						<div>
-							<span class="qna-meta-info">
-								{{author.full_name}}
-							</span>
-							<wnl-user-signature :roles="author.roles" />
-						</div>
 					</div>
-					<span class="qna-meta-info">
-						· {{time}}
-					</span>
-					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
-						&nbsp;·&nbsp;<wnl-delete
-							:target="deleteTarget"
-							:request-route="resourceRoute"
-							@deleteSuccess="onDeleteSuccess"
+
+					<div class="qna-meta-info">
+						<span
+							class="modal-activator"
+							:class="{'author-forgotten': author.deleted_at}"
+							@click="showModal"
+						>
+							{{author.full_name}}
+						</span>
+						<span>
+							· {{time}}
+						</span>
+						<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
+							·&nbsp;<wnl-delete
+								:target="deleteTarget"
+								:request-route="resourceRoute"
+								@deleteSuccess="onDeleteSuccess"
+							/>
+						</span>
+						<wnl-resolve
+							:resource="question"
+							@resolveResource="resolveQuestion(id)"
+							@unresolveResource="unresolveQuestion(id)"
 						/>
-					</span>
-					<wnl-resolve
-						:resource="question"
-						@resolveResource="resolveQuestion(id)"
-						@unresolveResource="unresolveQuestion(id)"
-					/>
+
+						<wnl-user-signature :roles="author.roles" />
+					</div>
 				</div>
 
 				<slot name="context" />
@@ -133,7 +139,7 @@
 			</a>
 		</div>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :author="author" />
+			<wnl-user-profile-modal :profile="author" />
 		</wnl-modal>
 	</div>
 </template>
@@ -223,6 +229,7 @@
 	.tag
 		margin-right: $margin-small
 		margin-top: $margin-small
+
 </style>
 
 <script>

@@ -24,20 +24,28 @@
 							:url="author.avatar"
 							size="medium"
 						/>
-						<span class="qna-meta-info">
+					</div>
+
+					<div class="qna-meta-info">
+						<span
+							class="modal-activator"
+							:class="{'author-forgotten': author.deleted_at}"
+							@click="showModal"
+						>
 							{{author.full_name}} ·
 						</span>
+						<span>
+							{{time}}
+						</span>
+						<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
+							·&nbsp;<wnl-delete
+								:target="deleteTarget"
+								:request-route="resourceRoute"
+								@deleteSuccess="onDeleteSuccess"
+							/>
+						</span>
+						<wnl-user-signature :roles="author.roles" />
 					</div>
-					<span class="qna-meta-info">
-						{{time}}
-					</span>
-					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
-						&nbsp;·&nbsp;<wnl-delete
-							:target="deleteTarget"
-							:request-route="resourceRoute"
-							@deleteSuccess="onDeleteSuccess"
-						/>
-					</span>
 				</div>
 			</div>
 		</div>
@@ -53,7 +61,7 @@
 			/>
 		</div>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :author="author" />
+			<wnl-user-profile-modal :profile="author" />
 		</wnl-modal>
 	</div>
 </template>
@@ -116,6 +124,7 @@ import highlight from 'js/mixins/highlight';
 import CommentsList from 'js/components/comments/CommentsList';
 import moderatorFeatures from 'js/perimeters/moderator';
 import Modal from 'js/components/global/Modal';
+import UserSignature from 'js/components/global/UserSignature';
 
 import { timeFromS } from 'js/utils/time';
 
@@ -127,7 +136,8 @@ export default {
 		'wnl-vote': Vote,
 		'wnl-comments-list': CommentsList,
 		'wnl-modal': Modal,
-		'wnl-user-profile-modal': UserProfileModal
+		'wnl-user-profile-modal': UserProfileModal,
+		'wnl-user-signature': UserSignature,
 	},
 	perimeters: [moderatorFeatures],
 	mixins: [ highlight ],

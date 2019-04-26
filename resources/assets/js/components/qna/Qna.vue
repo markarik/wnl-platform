@@ -124,6 +124,9 @@
 		font-size: $font-size-minus-1
 		margin-top: $margin-base
 
+		.modal-activator
+			display: inline
+
 	.qna-meta-info
 		display: inline-block
 		margin-left: $margin-small

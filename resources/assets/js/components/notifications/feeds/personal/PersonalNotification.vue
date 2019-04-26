@@ -49,7 +49,7 @@
 			class="delete-message"
 		/>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :author="userForModal" />
+			<wnl-user-profile-modal :profile="userForModal" />
 		</wnl-modal>
 	</div>
 </template>

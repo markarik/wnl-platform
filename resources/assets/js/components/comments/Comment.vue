@@ -47,7 +47,7 @@
 			/>
 		</div>
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :author="profile" />
+			<wnl-user-profile-modal :profile="profile" />
 		</wnl-modal>
 	</article>
 </template>

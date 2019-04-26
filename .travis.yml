@@ -25,10 +25,7 @@ before_script:
   - php artisan db:seed --class=TestSeeder
 
 script:
-  - php vendor/bin/phpunit --filter=Api
-  - php vendor/bin/phpunit --filter=Http
-  - php vendor/bin/phpunit --filter=Models
-  - php vendor/bin/phpunit --filter=Console
+  - php vendor/bin/phpunit --filter='Tests\\(Api|Console|Models|Unit)'
   - php artisan code:analyse --paths="app,checks,lib,routes"
   - yarn run test
   - yarn run lint

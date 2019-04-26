@@ -76,4 +76,9 @@ class UserProfile extends Model
 	{
 		$this->attributes['username'] = $value === '' ? null : $value;
 	}
+
+	public function getRolesNamesAttribute()
+	{
+		return $this->roles->pluck('name')->toArray();
+	}
 }

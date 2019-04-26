@@ -230,6 +230,7 @@ namespace App\Models{
  * @property string|null $deleted_at
  * @property-read mixed $avatar_url
  * @property-read mixed $full_name
+ * @property-read mixed $roles_names
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\UserProfile newModelQuery()
@@ -807,12 +808,14 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Coupon[] $coupons
  * @property-read mixed $full_address
  * @property-read mixed $full_name
+ * @property-read mixed $has_latest_course_product
  * @property-read mixed $has_prolonged_course
  * @property-read mixed $initials
  * @property-read mixed $is_subscriber
  * @property-read mixed $passport_number
  * @property-read mixed $personal_identity_number
  * @property-read mixed $recipient
+ * @property-read mixed $roles_names
  * @property-read mixed $sign_up_complete
  * @property-read mixed $subscription_proxy
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notification[] $notifications
@@ -1448,6 +1451,7 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property string $slug
+ * @property int $is_plan_builder_enabled
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int|null $entry_exam_tag_id
@@ -1461,6 +1465,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereEntryExamLessonId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereEntryExamTagId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereIsPlanBuilderEnabled($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereUpdatedAt($value)
@@ -2000,7 +2005,7 @@ namespace App\Models{
  * @property int|null $times_usable
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $kind
+ * @property string $kind
  * @property-read mixed $is_percentage
  * @property-read mixed $value_with_unit
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products

@@ -12,6 +12,7 @@
 							size="medium"
 							:full-name="profile.full_name"
 							:url="profile.avatar"
+							:roles="profile.roles"
 						/>
 					</p>
 				</div>
@@ -24,13 +25,18 @@
 				module="comments"
 			/>
 		</div>
+
 		<div class="media-content comment-content">
 			<span
 				class="author"
 				:class="{'author-forgotten': profile.deleted_at}"
 				@click="showModal"
 			>{{profile.full_name}}</span>
+
+			<wnl-user-signature :roles="profile.roles" />
+
 			<div class="comment-text wrap content" v-html="comment.text" />
+
 			<small>{{time}}</small>
 			<span v-if="isCurrentUserAuthor || $moderatorFeatures.isAllowed('access')">
 				&nbsp;·
@@ -46,6 +52,7 @@
 				@unresolveResource="$emit('unresolveComment', id)"
 			/>
 		</div>
+
 		<wnl-modal v-if="isVisible" @closeModal="closeModal">
 			<wnl-user-profile-modal :profile="profile" />
 		</wnl-modal>
@@ -63,7 +70,6 @@
 		cursor: pointer
 
 	.comment-content
-		margin-top: -$margin-small
 
 		.comment-text
 			margin: $margin-small 0
@@ -106,6 +112,7 @@ import { timeFromS } from 'js/utils/time';
 import moderatorFeatures from 'js/perimeters/moderator';
 import Vote from 'js/components/global/reactions/Vote';
 import Modal from 'js/components/global/Modal.vue';
+import UserSignature from 'js/components/global/UserSignature';
 
 export default {
 	name: 'Comment',
@@ -115,7 +122,8 @@ export default {
 		'wnl-resolve': Resolve,
 		'wnl-vote': Vote,
 		'wnl-modal': Modal,
-		'wnl-user-profile-modal': UserProfileModal
+		'wnl-user-profile-modal': UserProfileModal,
+		'wnl-user-signature': UserSignature,
 	},
 	perimeters: [moderatorFeatures],
 	props: ['comment', 'profile'],

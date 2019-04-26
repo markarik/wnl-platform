@@ -22,6 +22,7 @@
 							class="avatar"
 							:full-name="author.full_name"
 							:url="author.avatar"
+							:roles="author.roles"
 							size="medium"
 						/>
 					</div>

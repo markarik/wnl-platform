@@ -5,6 +5,7 @@
 				size="medium"
 				:full-name="message.actors.full_name"
 				:url="message.actors.avatar"
+				:roles="message.actors.roles"
 			/>
 		</div>
 		<div

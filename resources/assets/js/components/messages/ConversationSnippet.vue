@@ -4,6 +4,7 @@
 			<wnl-avatar
 				:full-name="profile.full_name"
 				:url="profile.avatar"
+				:roles="profile.roles"
 				size="medium"
 			/>
 		</figure>

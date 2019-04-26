@@ -39,7 +39,7 @@ class ChatMessageTransformer extends ApiTransformer
 
 	public function includeProfiles(ChatMessage $chatMessage)
 	{
-		$profile = $chatMessage->user->profile;
+		$profile = $chatMessage->profiles;
 
 		return $this->item(
 			$profile,

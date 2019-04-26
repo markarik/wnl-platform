@@ -16,7 +16,7 @@ class ChatMessagesApiController extends ApiController
 
 	public function getByMultipleRooms(Request $request)
 	{
-		$user = \Auth::user();
+		$user = Auth::user();
 		$roomIds = $request->get('rooms');
 
 		$rooms = ChatRoom::with('users')->whereIn('id', $roomIds)->get();
@@ -36,7 +36,7 @@ class ChatMessagesApiController extends ApiController
 		$cursor = $request->currentCursor ?? null;
 
 		foreach ($rooms as $room) {
-			$messages = ChatMessage::select()
+			$messages = $this->eagerLoadIncludes(ChatMessage::class)
 				->where('chat_room_id', $room->id)
 				->orderBy('time', 'desc');
 
@@ -49,7 +49,7 @@ class ChatMessagesApiController extends ApiController
 
 	public function getWithContext(Request $request) {
 		$roomId = $request->roomId;
-		$user = \Auth::user();
+		$user = Auth::user();
 
 		if (!$user->can('view', ChatRoom::find($roomId))) {
 			return $this->respondForbidden();
@@ -59,7 +59,7 @@ class ChatMessagesApiController extends ApiController
 		$afterLimit = $request->afterLimit;
 		$beforeLimit = $request->beforeLimit;
 
-		$messagesAfterQuery = ChatMessage::select()
+		$messagesAfterQuery = $this->eagerLoadIncludes(ChatMessage::class)
 			->where('chat_room_id', $roomId)
 			->orderBy('time', 'desc')
 			->where('time', '>=', $messageTime);
@@ -70,7 +70,7 @@ class ChatMessagesApiController extends ApiController
 
 		$messagesAfter = $messagesAfterQuery->get();
 
-		$messagesBeforeQuery = ChatMessage::select()
+		$messagesBeforeQuery = $this->eagerLoadIncludes(ChatMessage::class)
 			->where('chat_room_id', $roomId)
 			->orderBy('time', 'desc')
 			->where('time', '<', $messageTime);
@@ -84,7 +84,8 @@ class ChatMessagesApiController extends ApiController
 		$allMessages = $messagesAfter->concat($messagesBefore);
 		$transformed = $this->transform($allMessages);
 		$next = $allMessages->count() > 0 ? $allMessages->last()->time : null;
-		$afterCount = ChatMessage::where('chat_room_id', $roomId)
+		$afterCount = $this->eagerLoadIncludes(ChatMessage::class)
+			->where('chat_room_id', $roomId)
 			->orderBy('time', 'desc')
 			->where('time', '<', $messageTime)
 			->count();

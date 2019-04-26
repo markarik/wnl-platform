@@ -2068,6 +2068,7 @@ namespace App\Models{
  * @property int|null $chat_room_id
  * @property int $time
  * @property-read \App\Models\ChatRoom|null $chatRoom
+ * @property-read \App\Models\Profile|null $profiles
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ChatMessage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\ChatMessage newQuery()

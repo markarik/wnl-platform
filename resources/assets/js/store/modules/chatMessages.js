@@ -208,7 +208,7 @@ const actions = {
 		const uniqUsers = uniq(users);
 		const response = await axios.post(getApiUrl('chat_rooms/.createPrivateRoom'), {
 			name: `private-${uniqUsers.join('-')}`,
-			include: 'profiles',
+			include: 'profiles,profiles.roles',
 			users: uniqUsers,
 		});
 		const { included, ...room } = response.data;
@@ -298,7 +298,7 @@ const actions = {
 const fetchUserRooms = async ({ limit, page }) => {
 	const { data: response } = await axios.get(getApiUrl('chat_rooms/.getPrivateRooms'), {
 		params: {
-			include: 'profiles',
+			include: 'profiles,profiles.roles',
 			limit,
 			page
 		}
@@ -345,7 +345,7 @@ const fetchUserRooms = async ({ limit, page }) => {
 const fetchPaginatedRoomMessages = async (roomId, currentCursor, limit = 10) =>  {
 	const { data } = await axios.post(getApiUrl('chat_messages/.getByRooms'), {
 		rooms: [roomId],
-		include: 'profiles',
+		include: 'profiles,profiles.roles',
 		limit,
 		currentCursor
 	});
@@ -373,7 +373,7 @@ const fetchRoomsMessages = async (roomsIds, limit) => {
 
 const fetchRoomMessagesWithContext = async (requestContext) => {
 	const { data: response } = await axios.post(getApiUrl('chat_messages/.getWithContext'), {
-		include: 'profiles',
+		include: 'profiles,profiles.roles',
 		...requestContext
 	});
 

@@ -6,10 +6,15 @@ import { set, delete as destroy } from 'vue';
 import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions';
 import { commentsGetters, commentsMutations, commentsActions, commentsState } from 'js/store/modules/comments';
 
-const include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles';
+const byTagInclude = 'profiles,profiles.roles,reactions,qna_answers.profiles,qna_answers.profiles.roles,' +
+	'qna_answers.comments,qna_answers.comments.profiles,qna_answers.comments.profiles.roles';
+
 const discussionsInclude = 'qna_questions,qna_questions.profiles,qna_questions.profiles.roles,qna_questions.reactions,' +
 	'qna_questions.qna_answers.profiles,qna_questions.qna_answers.profiles.roles,' +
 	'qna_questions.qna_answers.comments,qna_questions.qna_answers.comments.profiles,qna_questions.qna_answers.comments.profiles.roles';
+
+const singleQuestionInclude = 'profiles,profiles.roles,qna_answers.profiles,qna_answers.profiles.roles,' +
+	'qna_answers.comments,qna_answers.comments.profiles,qna_answers.comments.profiles.roles,reactions';
 
 function _resolveQuestion(questionId, status = true) {
 	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
@@ -21,7 +26,7 @@ function _getQuestionsByTagName(tagName, ids) {
 	return axios.post(getApiUrl('qna_questions/byTags'), {
 		tags_names: [tagName],
 		ids,
-		include
+		include: byTagInclude
 	});
 }
 
@@ -57,7 +62,7 @@ function _handleGetQuestionsError(commit, error) {
 }
 
 function _getAnswers(questionId) {
-	return axios.get(getApiUrl(`qna_questions/${questionId}?include=profiles,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles,reactions`));
+	return axios.get(getApiUrl(`qna_questions/${questionId}?include=${singleQuestionInclude}`));
 }
 
 function getInitialState() {

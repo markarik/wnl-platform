@@ -120,14 +120,15 @@ class QnaQuestionsApiController extends ApiController
 
 		$ids = $request->get('ids');
 
-		$qnaQuestions = QnaQuestion::whereIn('id', $ids)
+		$qnaQuestions = $this->eagerLoadIncludes(QnaQuestion::class)
+			->whereIn('id', $ids)
 			->get();
 
 		return $this->transformAndRespond($qnaQuestions);
 	}
 
 	public function getByTags(Request $request) {
-		$qnaQuestionsQuery = QnaQuestion::select();
+		$qnaQuestionsQuery = $this->eagerLoadIncludes(QnaQuestion::class);
 
 		$request->validate([
 			'tags_name' => 'array',
@@ -162,7 +163,7 @@ class QnaQuestionsApiController extends ApiController
 	}
 
 	public function query(Request $request) {
-		$qnaQuestionQuery = QnaQuestion::select();
+		$qnaQuestionQuery = $this->eagerLoadIncludes(QnaQuestion::class);
 
 		if ($request->has('user_id')) {
 			$qnaQuestionQuery->where('user_id', $request->get('user_id'));

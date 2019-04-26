@@ -433,7 +433,8 @@ export default {
 			}
 
 			const dataForQnaQuestions = {
-				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles',
+				include: 'context,profiles,profiles.roles,reactions,qna_answers.profiles,qna_answers.profiles.roles,' +
+					'qna_answers.comments,qna_answers.comments.profiles,qna_answers.comments.profiles.roles',
 				user_id: userId
 			};
 			const dataForQnaAnswers = {
@@ -483,7 +484,8 @@ export default {
 
 			const { data } = await axios.post(getApiUrl('qna_questions/byIds'), {
 				ids: questionsIds,
-				include: 'context,profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles'
+				include: 'context,profiles,profiles.roles,reactions,qna_answers.profiles,qna_answers.profiles.roles,' +
+					'qna_answers.comments,qna_answers.comments.profiles,qna_answers.comments.profiles.roles'
 			});
 			const { included, ...questionsForBestAnswers } = data;
 

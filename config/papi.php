@@ -42,7 +42,7 @@ return [
 		'reactables'              => 'reactables',
 		'categories'              => 'categories',
 		'slideshow-builder'       => 'slideshow_builder',
-		'profiles'                => 'user_profiles',
+		'profiles'                => 'profiles',
 		'user-plan'               => 'user_plan',
 		'tasks'                   => 'tasks',
 		'pages'                   => 'pages',

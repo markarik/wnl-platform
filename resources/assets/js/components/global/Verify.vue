@@ -1,29 +1,24 @@
 <template>
 	<p
-		v-if="resource.verified_at"
-		class="verify icon"
-		@click="$emit('unverify')"
-	>
-		<file-verified-svg class="verify__svg verify__svg--verified"/>
-		<span>Zweryfikowano</span>
-	</p>
-	<span
-		v-else
-		class="verify icon"
-		@click="$emit('verify')"
+		:class="['verify', 'icon', resource.verified_at && 'verify--verified']"
+		@click="onClick"
 	>
 		<file-verified-svg class="verify__svg"/>
-		<span>Zweryfikuj</span>
-	</span>
+		<span>{{message}}</span>
+	</p>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.verify
+		font-size: $font-size-minus-1
 		cursor: pointer
 		width: auto
-		color: $color-green
+		color: $color-gray
+
+		&--verified
+			color: $color-green
 
 		&__svg
 			width: 16px
@@ -31,7 +26,6 @@
 
 		&:hover
 			color: $color-red
-
 
 		span
 			margin-left: $margin-small
@@ -55,5 +49,16 @@ export default {
 			required: true
 		}
 	},
+	computed: {
+		message() {
+			return this.resource.verified_at ? 'Zweryfikowano' : 'Zweryfikuj';
+		}
+	},
+	methods: {
+		onClick () {
+			if (this.resource.verified_at) this.$emit('unverify');
+			else this.$emit('verify');
+		}
+	}
 };
 </script>

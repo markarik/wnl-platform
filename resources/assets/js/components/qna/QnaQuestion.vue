@@ -33,23 +33,17 @@
 					module="qna"
 				/>
 				<template v-if="!readOnly">
-					<a
-						v-if="!showAnswerForm"
-						class="button is-small qna-question__actions__action"
-						@click="showAnswerForm = true"
-					>
-						<span>Odpowiedz</span>
-						<span class="icon is-small answer-icon">
-							<i class="fa fa-comment-o" />
+					<wnl-rectangle-button class="qna-question__actions__action" @click="showAnswerForm = !showAnswerForm">
+						<span>
+							<template v-if="!showAnswerForm">
+								<span>Odpowiedz</span>
+								<span class="icon is-small answer-icon">
+									<i class="fa fa-comment-o" />
+								</span>
+							</template>
+							<span v-else>Ukryj</span>
 						</span>
-					</a>
-					<a
-						v-else
-						class="button is-small qna-question__actions__action"
-						@click="showAnswerForm = false"
-					>
-						<span>Ukryj</span>
-					</a>
+					</wnl-rectangle-button>
 				</template>
 				<wnl-watch
 					class="qna-question__actions__action"
@@ -107,10 +101,6 @@
 		border: $border-light-gray
 		margin-bottom: $margin-huge
 
-	.button .icon.answer-icon
-		margin-left: $margin-small
-		margin-right: $margin-tiny
-
 	.qna-question
 		background: $color-background-lighter-gray
 		border-bottom: $border-light-gray
@@ -143,7 +133,8 @@
 
 			&__action
 				margin-right: $margin-base
-				@include action-button
+				.icon.answer-icon
+					margin-left: $margin-small
 
 				&:last-child
 					margin-right: 0
@@ -211,10 +202,12 @@ import Bookmark from 'js/components/global/reactions/Bookmark';
 import highlight from 'js/mixins/highlight';
 import Watch from 'js/components/global/reactions/Watch';
 import moderatorFeatures from 'js/perimeters/moderator';
+import WnlRectangleButton from 'js/components/RecatangleButton';
 
 export default {
 	components: {
 		WnlUserGeneratedContentHeader,
+		WnlRectangleButton,
 		'wnl-vote': Vote,
 		'wnl-qna-answer': QnaAnswer,
 		'wnl-qna-new-answer-form': NewAnswerForm,

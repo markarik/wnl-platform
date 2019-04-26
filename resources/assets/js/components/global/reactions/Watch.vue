@@ -1,8 +1,7 @@
 <template>
-	<div
+	<wnl-rectangle-button
 		v-if="!reactionsDisabled"
-		class="watch"
-		:class="{'has-reacted': hasReacted}"
+		:class="{watch: true,'has-reacted': hasReacted}"
 		@click="toggleReaction"
 	>
 		<span v-t="reactionMessage" />
@@ -10,24 +9,14 @@
 			<i class="fa" :class="hasReactedClass" />
 		</span>
 		<span v-else class="loader" />
-	</div>
+	</wnl-rectangle-button>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.watch
-		align-items: center
-		border: 1px solid #A7ACBD
-		cursor: pointer
-		display: inline-flex
-		font-size: $font-size-minus-2
-		padding: 0 $margin-small
-		text-transform: uppercase
-		height: 27px
 		color: $color-gray
-		background-color: $color-white
-
 		&.has-reacted
 			border-color: $color-green
 			color: $color-green
@@ -45,9 +34,11 @@
 import { mapGetters } from 'vuex';
 
 import { reaction } from 'js/mixins/reaction';
+import WnlRectangleButton from 'js/components/RecatangleButton';
 
 export default {
 	name: 'Watch',
+	components: { WnlRectangleButton },
 	mixins: [reaction],
 	data() {
 		return {

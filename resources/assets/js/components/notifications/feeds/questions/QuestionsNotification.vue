@@ -14,6 +14,7 @@
 								:size="isMobile ? 'medium' : 'large'"
 								:full-name="message.actors.full_name"
 								:url="message.actors.avatar"
+								:roles="message.actors.roles"
 							/>
 						</div>
 						<span class="icon is-small"><i class="fa" :class="icon" /></span>

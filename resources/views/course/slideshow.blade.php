@@ -22,6 +22,7 @@
 			border: 1px solid #7a7f91 !important;
 		}
 	</style>
+	<link href="{{ mix("css/{$themeStyleSheet}")  }}" rel="stylesheet">
 </head>
 	<body>
 		<span id="orderNumberContainer" class="order-number-container"></span>
@@ -30,7 +31,7 @@
 			<img class="bookmark-image bookmark-image-remove" src="{{ asset('images/star.svg') }}" alt="Usuń z zakładek">
 			<span>zapisz</span>
 		</a>
-		<div class="theme-font-montserrat theme-color-white-blue" style="width: 100%; height: 100%;">
+		<div class="theme-font theme-color-white-blue" style="width: 100%; height: 100%;">
 			<div class="reveal image-custom-background">
 				<div class="slides">
 					{!! $slides !!}

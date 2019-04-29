@@ -1,7 +1,7 @@
 <template>
 	<p
 		v-if="showBadge"
-		:class="['verify', 'icon', resource.verified_at && 'verify--verified']"
+		:class="['verify', 'icon', verified && 'verify--verified', canVerify && 'verify--can_verify']"
 		@click="onClick"
 	>
 		<file-verified-svg class="verify__svg" />
@@ -14,27 +14,26 @@
 
 	.verify
 		font-size: $font-size-minus-1
-		cursor: pointer
-		width: auto
+		font-weight: bold
 		color: $color-gray
+		text-transform: uppercase
+		width: auto
 
 		&--verified
 			color: $color-green
+
+		&--can_verify
+			cursor: pointer
+
+			&:hover
+				color: $color-red
 
 		&__svg
 			width: 16px
 			height: 16px
 
-		&:hover
-			color: $color-red
-
 		span
 			margin-left: $margin-small
-
-		i
-			font-size: $font-size-minus-1
-			margin-left: $margin-small
-
 </style>
 
 <script>

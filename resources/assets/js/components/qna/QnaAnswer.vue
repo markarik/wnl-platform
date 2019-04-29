@@ -82,17 +82,17 @@ import _ from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
 import WnlUserGeneratedContentHeader from 'js/components/UserGeneratedContentHeader';
-import Vote from 'js/components/global/reactions/Vote';
+import WnlVote from 'js/components/global/reactions/Vote';
 import highlight from 'js/mixins/highlight';
-import CommentsList from 'js/components/comments/CommentsList';
+import WnlCommentsList from 'js/components/comments/CommentsList';
 import moderatorFeatures from 'js/perimeters/moderator';
 
 export default {
 	name: 'QnaAnswer',
 	components: {
 		WnlUserGeneratedContentHeader,
-		'wnl-vote': Vote,
-		'wnl-comments-list': CommentsList,
+		WnlVote,
+		WnlCommentsList,
 	},
 	perimeters: [moderatorFeatures],
 	mixins: [ highlight ],

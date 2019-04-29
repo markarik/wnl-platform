@@ -149,10 +149,10 @@ class StoreProgress extends CommandWithMonitoring
 												'screen_id' => $screenId,
 												'section_id' => $sectionId
 											]);
-											// it means it has old shape of data in redis
-											// can be removed when redis cleared before 2nd edition
+
 											if (!empty($sectionData) && empty($sectionData->status)) {
-												$model->status = $sectionData;
+												// Fill in missing section status
+												$model->status = 'complete';
 											} else {
 												$model->status = $sectionData->status;
 											}

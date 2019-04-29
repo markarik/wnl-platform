@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Api\Transformers;
 
 use App\Http\Controllers\Api\ApiTransformer;
 use App\Models\ChatRoom;
-
+use App\Models\User;
 
 class ChatRoomTransformer extends ApiTransformer
 {
@@ -38,10 +38,9 @@ class ChatRoomTransformer extends ApiTransformer
 
 	public function includeProfiles(ChatRoom $chatRoom)
 	{
-		$profiles = collect();
-		foreach ($chatRoom->users as $user) {
-			$profiles->push($user->profile);
-		}
+		$profiles = $chatRoom->users->map(function (User $user) {
+			return $user->profile;
+		});
 
 		return $this->collection(
 			$profiles,

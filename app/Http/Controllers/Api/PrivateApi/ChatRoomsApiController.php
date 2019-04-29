@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Chat\PostPrivateRoom;
-use App\Http\Requests\Chat\PostPublicRoom;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\ChatRoomUser;
@@ -30,7 +29,7 @@ class ChatRoomsApiController extends ApiController
 		];
 
 		/** @var Builder $rooms */
-		$rooms = ChatRoom::with('users.profile')
+		$rooms = ChatRoom::with('users.profile', 'users.profile.roles')
 			->select(\DB::raw(implode(',', $select)))
 			->join(
 				'chat_messages',

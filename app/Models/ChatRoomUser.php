@@ -13,6 +13,11 @@ class ChatRoomUser extends Model
 		return $this->belongsTo('App\Models\User');
 	}
 
+	public function profiles()
+	{
+		return $this->belongsTo('App\Models\Profile', 'user_id', 'user_id');
+	}
+
 	public function room()
 	{
 		return $this->belongsTo('App\Models\ChatRoom');

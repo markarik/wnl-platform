@@ -25,14 +25,10 @@ class SlideshowBuilderApiController extends ApiController
 
 	public function getEmpty()
 	{
-		$view = view('course.slideshow', [
+		return $this->respond([
 			'slides' => '',
 			'background_url' => '',
 		]);
-
-		$view->render();
-
-		return response($view);
 	}
 
 	public function getHtml($slideshowId)
@@ -94,14 +90,10 @@ class SlideshowBuilderApiController extends ApiController
 			$backgroundUrl = '';
 		}
 
-		$view = view('course.slideshow', [
+		return $this->respond([
 			'slides' => $content,
 			'background_url' => $backgroundUrl,
 		]);
-
-		$view->render();
-
-		return response($view);
 	}
 
 	public function byCategory($categoryId)
@@ -207,6 +199,9 @@ class SlideshowBuilderApiController extends ApiController
 		// Force lazy loading
 		$slidesContent = preg_replace('/\ssrc="(.+?)"/m', ' data-src="$1"', $slidesContent);
 
+		// It would override the background
+		$slidesContent = preg_replace('/data-background-color=".*?"/m', '', $slidesContent);
+
 		return [
 			'slides' => $slidesContent,
 			'background_url' => $background,
@@ -215,6 +210,11 @@ class SlideshowBuilderApiController extends ApiController
 
 	private function respond($viewData)
 	{
+		$themeStyleSheet = config('app.instance_name') === 'bodywork' ? 'reveal-theme-bodywork.css' : 'reveal-theme-wnl.css';
+
+		$viewData = array_merge($viewData, [
+			'themeStyleSheet' => $themeStyleSheet
+		]);
 		$view = view('course.slideshow', $viewData);
 
 		return response($view->render());

@@ -5,6 +5,8 @@ const sassOptions = {
 };
 
 mix.sass('resources/assets/sass/app.scss', 'public/css/app.css', sassOptions)
+	.sass('resources/vendor/reveal/reveal-theme-bodywork.scss', 'public/css/reveal-theme-bodywork.css', sassOptions)
+	.sass('resources/vendor/reveal/reveal-theme-wnl.scss', 'public/css/reveal-theme-wnl.css', sassOptions)
 	.sass('resources/vendor/emoji/emoji.scss', 'public/css/emoji.css', sassOptions);
 
 mix.js('resources/assets/js/app.js', 'public/js/app.js')

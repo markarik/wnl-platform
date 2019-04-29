@@ -75,7 +75,7 @@ export default {
 
 			this.loadingStart();
 			const query = encodeURIComponent(value);
-			axios.get(getApiUrl(`user_profiles/.search?q=${query}`))
+			axios.get(getApiUrl(`profiles/.search?q=${query}`))
 				.then(res => {
 					if (res.data.length === 0) {
 						this.info = this.$t('messages.search.emptyResults');

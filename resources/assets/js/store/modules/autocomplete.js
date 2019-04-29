@@ -23,7 +23,7 @@ const mutations = {
 const actions = {
 	requestUsersAutocomplete(_, data) {
 		let query = Object.values(data).join(' ');
-		return axios.get(getApiUrl(`user_profiles/.search?q=${query}`));
+		return axios.get(getApiUrl(`profiles/.search?q=${query}`));
 	},
 	requestTagsAutocomplete(_, { name, tags }) {
 		return axios.post(getApiUrl('tags/byName'), {

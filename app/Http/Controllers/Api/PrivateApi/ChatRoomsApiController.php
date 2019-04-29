@@ -29,7 +29,7 @@ class ChatRoomsApiController extends ApiController
 		];
 
 		/** @var Builder $rooms */
-		$rooms = ChatRoom::with('users.profile', 'users.profile.roles')
+		$rooms = $this->eagerLoadIncludes(ChatRoom::class)
 			->select(\DB::raw(implode(',', $select)))
 			->join(
 				'chat_messages',

@@ -143,20 +143,13 @@ class StoreProgress extends CommandWithMonitoring
 										}
 
 										forEach($value as $sectionId => $sectionData) {
-											$model = UserCourseProgress::firstOrNew([
+											UserCourseProgress::firstOrCreate([
 												'user_id' => $userId,
 												'lesson_id' => $lessonId,
 												'screen_id' => $screenId,
-												'section_id' => $sectionId
+												'section_id' => $sectionId,
+												'status' => 'complete',
 											]);
-											// it means it has old shape of data in redis
-											// can be removed when redis cleared before 2nd edition
-											if (!empty($sectionData) && empty($sectionData->status)) {
-												$model->status = $sectionData;
-											} else {
-												$model->status = $sectionData->status;
-											}
-											$model->save();
 										}
 									}
 								}

@@ -143,20 +143,13 @@ class StoreProgress extends CommandWithMonitoring
 										}
 
 										forEach($value as $sectionId => $sectionData) {
-											$model = UserCourseProgress::firstOrNew([
+											UserCourseProgress::firstOrCreate([
 												'user_id' => $userId,
 												'lesson_id' => $lessonId,
 												'screen_id' => $screenId,
-												'section_id' => $sectionId
+												'section_id' => $sectionId,
+												'status' => 'complete',
 											]);
-
-											if (!empty($sectionData) && empty($sectionData->status)) {
-												// Fill in missing section status
-												$model->status = 'complete';
-											} else {
-												$model->status = $sectionData->status;
-											}
-											$model->save();
 										}
 									}
 								}

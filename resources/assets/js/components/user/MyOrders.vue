@@ -102,7 +102,7 @@ export default {
 
 			const albumOrders = this.orders.filter(order => order.product.slug === PRODUCTS_SLUGS.SLUG_ALBUM && !order.canceled);
 
-			return albumOrders.length < prolongationOrders.length;
+			return albumOrders.length < prolongationOrders.length && this.getAlbum.quantity > 0;
 		},
 		orderAlbumUrl() {
 			return getUrl('payment/personal-data/wnl-album');

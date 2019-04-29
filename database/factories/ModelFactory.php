@@ -202,6 +202,7 @@ $factory->define(App\Models\Coupon::class, function () {
 		'code' => strtoupper(str_random(6)),
 		'expires_at' => \Carbon\Carbon::now()->addMinutes(1),
 		'times_usable' => 1,
+		'kind' => App\Models\Coupon::KIND_VOUCHER
 	];
 });
 
@@ -310,7 +311,7 @@ $factory->define(App\Models\Product::class, function (Faker\Generator $faker) {
 		'access_start'  => $faker->dateTime,
 		'access_end'    => $faker->dateTime,
 		'signups_start' => $faker->dateTime,
-		'signups_end'   => $faker->dateTime,
+		'signups_end'   => \Carbon\Carbon::now()->addDays(100),
 		'signups_close' => $faker->dateTime,
 		'vat_rate'      => 23,
 		'vat_note'      => '',

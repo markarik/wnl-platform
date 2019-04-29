@@ -2,7 +2,9 @@
 
 namespace Tests\Api\User;
 
+use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -56,5 +58,70 @@ class UserOrdersTest extends ApiTestCase
 			->json('GET', $this->url('/users/' . $user->id . '/orders/' . $order->id));
 
 		$response->assertStatus(403);
+	}
+
+	public function testUserCanAttachCouponToOrder()
+	{
+		$user = factory(User::class)->create();
+		$product = factory(Product::class)->create([
+			'price' => 1500
+		]);
+		$order = factory(Order::class)->create([
+			'user_id' => $user->id,
+			'product_id' => $product->id,
+		]);
+		$coupon = factory(Coupon::class)->create([
+			'type' => 'percentage',
+			'value' => 10
+		]);
+
+		$response = $this
+			->actingAs($user)
+			->json('PUT', $this->url('/users/' . $user->id . '/orders/' . $order->id . '/coupon'), [
+				'code' => $coupon->code
+			]);
+
+		$response->assertStatus(200);
+		$this->assertEquals(1350.00, $order->fresh()->total_with_coupon);
+	}
+
+	public function testUserCantAttachLowerCouponToOrder()
+	{
+		$user = factory(User::class)->create();
+		$product = factory(Product::class)->create([
+			'price' => 1500
+		]);
+		$order = factory(Order::class)->create([
+			'user_id' => $user->id,
+			'product_id' => $product->id,
+		]);
+		$coupon = factory(Coupon::class)->create([
+			'type' => 'percentage',
+			'value' => 10
+		]);
+
+		$response = $this
+			->actingAs($user)
+			->json('PUT', $this->url('/users/' . $user->id . '/orders/' . $order->id . '/coupon'), [
+				'code' => $coupon->code
+			]);
+
+		$response->assertStatus(200);
+		$this->assertEquals(1350.00, $order->fresh()->total_with_coupon);
+
+
+		$lowerCoupon = factory(Coupon::class)->create([
+			'type' => 'percentage',
+			'value' => 5
+		]);
+
+		$response = $this
+			->actingAs($user)
+			->json('PUT', $this->url('/users/' . $user->id . '/orders/' . $order->id . '/coupon'), [
+				'code' => $lowerCoupon->code
+			]);
+
+		$response->assertStatus(422);
+		$this->assertEquals(1350.00, $order->fresh()->total_with_coupon);
 	}
 }

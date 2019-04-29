@@ -1,10 +1,9 @@
-import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import navigation from 'js/services/navigation.js';
 
 describe('navigation service', () => {
 	describe('composeItem', () => {
-		it('default arguments as set as expected', () => {
+		test('default arguments as set as expected', () => {
 			expect(navigation.composeItem({
 				text: 'foo',
 				itemClass: 'wnl-foo',

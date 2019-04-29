@@ -1,4 +1,3 @@
-import { describe, it } from 'mocha';
 import chai from 'chai';
 import chatMessagesModule from 'js/store/modules/chatMessages';
 import * as types from 'js/store/mutations-types';
@@ -14,7 +13,7 @@ chai.use(sinonChai);
 describe('chatMessages module', () => {
 	describe('actions', () => {
 		describe('updateFromEventLog', () => {
-			it('update from event log mark room as read', () => {
+			test('update from event log mark room as read', () => {
 				const payload = [
 					{
 						name: 'markRoomAsRead',
@@ -31,7 +30,7 @@ describe('chatMessages module', () => {
 				expect(dispatchSpy).to.have.been.calledWith('markRoomAsRead', payload[0].room.id);
 			});
 
-			it('update from event log mark room as read', () => {
+			test('update from event log mark room as read', () => {
 				const payload = [
 					{
 						name: 'sendMessage',
@@ -46,7 +45,7 @@ describe('chatMessages module', () => {
 				expect(dispatchSpy).to.have.been.calledWith('onNewMessage', payload[0]);
 			});
 
-			it('update from event log when more than one event', () => {
+			test('update from event log when more than one event', () => {
 				const payload = [
 					{
 						name: 'sendMessage'
@@ -65,7 +64,7 @@ describe('chatMessages module', () => {
 			});
 		});
 		describe('onNewMessage', () => {
-			it('new message in public room', done => {
+			test('new message in public room', done => {
 				const payload = {
 					room: {
 						type: 'public',
@@ -88,7 +87,7 @@ describe('chatMessages module', () => {
 				], done);
 			});
 
-			it('new message in private room', done => {
+			test('new message in private room', done => {
 				const payload = {
 					room: {
 						type: 'private',
@@ -112,11 +111,12 @@ describe('chatMessages module', () => {
 				testAction(actions.onNewMessage, payload, context, [
 					{ type: types.CHAT_MESSAGES_ADD_PROFILES, payload: [] },
 					{ type: types.CHAT_MESSAGES_ADD_MESSAGE, payload: { roomId: payload.room.id, message: payload.message } },
-					{ type: types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, payload: { roomId: payload.room.id, newIndex: 0 } }
+					{ type: types.CHAT_MESSAGES_CHANGE_ROOM_SORTING, payload: { roomId: payload.room.id, newIndex: 0 } },
+					{ type: types.CHAT_MESSAGES_ROOM_INCREMENT_UNREAD, payload: 7 }
 				], done);
 			});
 
-			it('new message in private room from different user', done => {
+			test('new message in private room from different user', done => {
 				const payload = {
 					room: {
 						type: 'private',

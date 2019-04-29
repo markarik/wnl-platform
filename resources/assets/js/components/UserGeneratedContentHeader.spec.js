@@ -1,5 +1,4 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import Vuex from 'vuex';
 
@@ -53,7 +52,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 		});
 	};
 
-	it('renders correctly for regular user', () => {
+	test('renders correctly for regular user', () => {
 		const wrapper = createComponent();
 		expect(wrapper.findAll('#avatar').length).to.equal(1);
 		expect(wrapper.findAll('#resolve').length).to.equal(0);
@@ -61,7 +60,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(wrapper.findAll('#verify').length).to.equal(1);
 	});
 
-	it('renders correctly when user is a moderator', () => {
+	test('renders correctly when user is a moderator', () => {
 		const wrapper = createComponent({
 			isAllowed: true
 		});
@@ -71,7 +70,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(wrapper.findAll('#verify').length).to.equal(1);
 	});
 
-	it('renders correctly when user is a moderator and content is resolvable', () => {
+	test('renders correctly when user is a moderator and content is resolvable', () => {
 		const wrapper = createComponent({
 			propsData: { resolvable: true },
 			isAllowed: true
@@ -82,7 +81,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(wrapper.findAll('#verify').length).to.equal(1);
 	});
 
-	it('renders correctly when user is a moderator and content is not resolvable', () => {
+	test('renders correctly when user is a moderator and content is not resolvable', () => {
 		const wrapper = createComponent({
 			propsData: { resolvable: false },
 			isAllowed: true
@@ -93,7 +92,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(wrapper.findAll('#verify').length).to.equal(1);
 	});
 
-	it('renders correctly when user is an author', () => {
+	test('renders correctly when user is an author', () => {
 		const wrapper = createComponent({
 			store: createStore({ getters: { currentUserId: () => 1 } }),
 			propsData: { author: { user_id: 1 } },
@@ -104,7 +103,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(wrapper.findAll('#verify').length).to.equal(1);
 	});
 
-	it('shows modal on avatar click', () => {
+	test('shows modal on avatar click', () => {
 		const wrapper = createComponent();
 
 		const avatar = wrapper.find('#avatar');
@@ -113,7 +112,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(wrapper.vm.modalVisible).to.equal(true);
 	});
 
-	it('emits event on successful deletion', () => {
+	test('emits event on successful deletion', () => {
 		const wrapper = createComponent({
 			isAllowed: true
 		});
@@ -123,7 +122,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(Object.keys(wrapper.emitted()).includes('deleteSuccess')).to.equal(true);
 	});
 
-	it('emits resolve events correctly', () => {
+	test('emits resolve events correctly', () => {
 		const wrapper = createComponent({
 			propsData: { resolvable: true },
 			isAllowed: true
@@ -137,7 +136,7 @@ describe('UserGeneratedContentHeader.vue', () => {
 		expect(Object.keys(wrapper.emitted()).includes('unresolveResource')).to.equal(true);
 	});
 
-	it('emits verify events correctly', () => {
+	test('emits verify events correctly', () => {
 		const wrapper = createComponent({
 			isAllowed: true
 		});

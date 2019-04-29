@@ -1,9 +1,8 @@
-import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import injectArguments from 'js/utils/injectArguments.js';
 
 describe('injectArguments util', () => {
-	it('parses existing arguments', () => {
+	test('parses existing arguments', () => {
 		expect(injectArguments(
 			'Witaj {{currentUserName}}!',
 			{
@@ -12,7 +11,8 @@ describe('injectArguments util', () => {
 			}
 		)).to.eql('Witaj Zosia!');
 	});
-	it('doesn\'t fail on missing arguments', () => {
+	test('doesn\'t fail on missing arguments', () => {
+
 		expect(injectArguments(
 			'Witaj {{currentUserName}}!',
 			{}

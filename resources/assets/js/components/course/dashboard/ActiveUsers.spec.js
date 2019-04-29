@@ -1,5 +1,4 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import { describe, it, beforeEach } from 'mocha';
 import { expect } from 'chai';
 import Vuex from 'vuex';
 
@@ -38,7 +37,7 @@ describe('ActiveUsers.vue', () => {
 			});
 		});
 
-		it('Counts users correctly', () => {
+		test('Counts users correctly', () => {
 			const wrapper = shallowMount(ActiveUsers, { store, localVue, sync: false });
 			expect(wrapper.vm.activeUsersCount).to.equal(1);
 		});
@@ -63,7 +62,7 @@ describe('ActiveUsers.vue', () => {
 			});
 		});
 
-		it('Renders message', () => {
+		test('Renders message', () => {
 			const wrapper = shallowMount(ActiveUsers, { localVue, store, sync: false });
 			expect(wrapper.findAll('.avatar').length).to.equal(0);
 			expect(wrapper.vm.activeUsersCount).to.equal(0);

@@ -1,7 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import { expect } from 'chai';
-import { describe, it, afterEach } from 'mocha';
 import sinon from 'sinon';
 import Vuex from 'vuex';
 
@@ -11,6 +10,13 @@ import TextLoader from 'js/components/global/TextLoader.vue';
 const localVue = createLocalVue();
 localVue.use(Vuex);
 localVue.component('wnl-text-loader', TextLoader);
+
+const defaultStore = {
+	getters: {
+		isSidenavVisible: () => true,
+		isSidenavMounted: () => true
+	}
+};
 
 function fakeFetchOrders(data = null) {
 	if (data === null) {
@@ -71,9 +77,10 @@ describe('SplashScreen.vue', () => {
 		sinon.restore();
 	});
 
-	it('renders wnl-splash-screen-generic-error', async () => {
+	test('renders wnl-splash-screen-generic-error', async () => {
 		const store = new Vuex.Store({
 			getters: {
+				...defaultStore.getters,
 				currentUserLoadingError: () => true,
 			},
 		});
@@ -86,9 +93,10 @@ describe('SplashScreen.vue', () => {
 		expect(component.html()).to.include('<wnl-splash-screen-generic-error-stub');
 	});
 
-	it('renders wnl-splash-screen-account-suspended', async () => {
+	test('renders wnl-splash-screen-account-suspended', async () => {
 		const store = new Vuex.Store({
 			getters: {
+				...defaultStore.getters,
 				currentUserLoadingError: () => false,
 				currentUserAccountSuspended: () => true,
 				currentUserSubscriptionStatus: () => 'inactive',
@@ -103,9 +111,10 @@ describe('SplashScreen.vue', () => {
 		expect(component.html()).to.include('<wnl-splash-screen-account-suspended-stub');
 	});
 
-	it('renders wnl-splash-screen-order-canceled', async () => {
+	test('renders wnl-splash-screen-order-canceled', async () => {
 		const store = new Vuex.Store({
 			getters: {
+				...defaultStore.getters,
 				currentUserLoadingError: () => false,
 				currentUserAccountSuspended: () => false,
 				currentUserSubscriptionStatus: () => 'inactive',
@@ -139,9 +148,10 @@ describe('SplashScreen.vue', () => {
 		expect(component.html()).to.include('<wnl-splash-screen-order-canceled-stub');
 	});
 
-	it('renders wnl-splash-screen-upcoming-edition', async () => {
+	test('renders wnl-splash-screen-upcoming-edition', async () => {
 		const store = new Vuex.Store({
 			getters: {
+				...defaultStore.getters,
 				currentUserLoadingError: () => false,
 				currentUserAccountSuspended: () => false,
 				currentUserSubscriptionStatus: () => 'awaiting',
@@ -163,9 +173,10 @@ describe('SplashScreen.vue', () => {
 		expect(component.html()).to.include('<wnl-splash-screen-upcoming-edition-stub');
 	});
 
-	it('renders wnl-splash-screen-order-not-paid', async () => {
+	test('renders wnl-splash-screen-order-not-paid', async () => {
 		const store = new Vuex.Store({
 			getters: {
+				...defaultStore.getters,
 				currentUserLoadingError: () => false,
 				currentUserAccountSuspended: () => false,
 				currentUserSubscriptionStatus: () => 'inactive',
@@ -201,9 +212,10 @@ describe('SplashScreen.vue', () => {
 		expect(component.html()).to.include('<wnl-splash-screen-order-not-paid-stub');
 	});
 
-	it('renders wnl-splash-screen-subscription-expired', async () => {
+	test('renders wnl-splash-screen-subscription-expired', async () => {
 		const store = new Vuex.Store({
 			getters: {
+				...defaultStore.getters,
 				currentUserLoadingError: () => false,
 				currentUserAccountSuspended: () => false,
 				currentUserSubscriptionStatus: () => 'expired',
@@ -218,9 +230,10 @@ describe('SplashScreen.vue', () => {
 		expect(component.html()).to.include('<wnl-splash-screen-subscription-expired-stub');
 	});
 
-	it('renders wnl-splash-screen-default', async () => {
+	test('renders wnl-splash-screen-default', async () => {
 		const store = new Vuex.Store({
 			getters: {
+				...defaultStore.getters,
 				currentUserLoadingError: () => false,
 				currentUserAccountSuspended: () => false,
 				currentUserSubscriptionStatus: () => 'inactive',

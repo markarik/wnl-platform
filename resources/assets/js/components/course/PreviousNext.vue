@@ -120,7 +120,7 @@ export default {
 				return undefined;
 			} else {
 				return {
-					name: resource('screens'),
+					name: resource('lessons'),
 					params: {
 						courseId: this.$route.params.courseId,
 						lessonId: this.lessonId,

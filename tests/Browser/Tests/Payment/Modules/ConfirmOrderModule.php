@@ -5,6 +5,7 @@ namespace Tests\Browser\Tests\Payment\Modules;
 
 
 use App\Models\Coupon;
+use App\Models\Product;
 use Tests\BethinkBrowser;
 use Tests\Browser\Pages\Payment\ConfirmOrderPage;
 
@@ -77,9 +78,14 @@ class ConfirmOrderModule
 		$browser
 			->assertVisible('@cart')
 			->assertSeeIn('@cart', $order->product->name)
-			->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do')
 			->assertSeeIn('@cart', 'Kwota całkowita')
 			->assertSeeIn('@cart', $order->total_with_coupon);
+
+		if ($order->product->slug === Product::SLUG_WNL_ONLINE) {
+			$browser->assertSeeIn('@cart', 'Dostęp od momentu wpłaty do');
+		} else if ($order->product->slug === Product::SLUG_WNL_ALBUM) {
+			$browser->assertDontSeeIn('@cart', 'Dostęp od momentu wpłaty do');
+		}
 
 		if (!empty($browser->coupon) && $browser->coupon->kind === Coupon::KIND_PARTICIPANT) {
 			$browser

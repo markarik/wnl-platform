@@ -119,6 +119,11 @@ class StoreProgress extends CommandWithMonitoring
 					$model->save();
 					foreach($lessonProgress as $key => $value) {
 						if ($key === 'screens') {
+							if (is_array($value)) {
+								// Filter out `null` values introduced due to bug: PLAT-1264
+								$value = array_filter($value, function($val) { return $val !== null; } );
+							}
+
 							forEach($value as $screenId => $screenData) {
 								$model = UserCourseProgress::firstOrNew([
 									'user_id' => $userId,
@@ -127,26 +132,24 @@ class StoreProgress extends CommandWithMonitoring
 									'section_id' => null,
 								]);
 
-								$model->status = $lessonData->status;
+								$model->status = $screenData->status ?? 'in-progress';
 								$model->save();
 
 								forEach($screenData as $key => $value) {
 									if ($key === 'sections') {
+										if (is_array($value)) {
+											// Filter out `null` values introduced due to bug: PLAT-1264
+											$value = array_filter($value, function($val) { return $val !== null; } );
+										}
+
 										forEach($value as $sectionId => $sectionData) {
-											$model = UserCourseProgress::firstOrNew([
+											UserCourseProgress::firstOrCreate([
 												'user_id' => $userId,
 												'lesson_id' => $lessonId,
 												'screen_id' => $screenId,
-												'section_id' => $sectionId
+												'section_id' => $sectionId,
+												'status' => 'complete',
 											]);
-											// it means it has old shape of data in redis
-											// can be removed when redis cleared before 2nd edition
-											if (!empty($sectionData) && empty($sectionData->status)) {
-												$model->status = $sectionData;
-											} else {
-												$model->status = $sectionData->status;
-											}
-											$model->save();
 										}
 									}
 								}

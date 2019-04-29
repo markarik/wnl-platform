@@ -63,6 +63,7 @@ import { mapGetters } from 'vuex';
 import Order from './Order';
 import moment from 'moment';
 import { envValue } from 'js/utils/env';
+import { PRODUCTS_SLUGS } from 'js/consts/products';
 
 export default {
 	name: 'MyOrders',
@@ -92,14 +93,14 @@ export default {
 		},
 		displayAlbumLink() {
 			const prolongationOrders = this.orders.filter(order =>
-				order.product.slug === 'wnl-online' &&
+				order.product.slug === PRODUCTS_SLUGS.SLUG_ONLINE &&
 				order.coupon && order.coupon.value === 50 &&
 				order.coupon.type === 'percentage' &&
 				order.paid &&
 				!order.canceled
 			);
 
-			const albumOrders = this.orders.filter(order => order.product.slug === 'wnl-album');
+			const albumOrders = this.orders.filter(order => order.product.slug === PRODUCTS_SLUGS.SLUG_ALBUM && !order.canceled);
 
 			return albumOrders.length < prolongationOrders.length;
 		},

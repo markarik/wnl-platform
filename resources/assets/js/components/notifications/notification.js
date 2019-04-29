@@ -36,7 +36,8 @@ export const notification = {
 
 			const route = this.routeContext.dynamic ? this.routeContext.route : this.routeContext;
 
-			if (route.name === 'screens') {
+			// We support screens route to avoid migrating existing notifications
+			if (route.name === 'lessons' || route.name === 'screens') {
 				const lessonId = route.params.lessonId;
 				const slide = route.params.slide;
 

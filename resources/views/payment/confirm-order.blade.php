@@ -45,11 +45,9 @@
 						<div class="m-formGroup -checkbox -marginLess">
 							<input type="radio" name="payment_method" value="now" id="paymentMethodNow" class="a-radio" checked/>
 							<div>
+								<label for="paymentMethodNow" class="m-paymentOption__label">@lang('payment.confirm-order-payment-method-now-label')</label>
 								@if ($order->product->slug === App\Models\Product::SLUG_WNL_ONLINE)
-									<label for="paymentMethodNow" class="m-paymentOption__label">@lang('payment.confirm-order-payment-method-now-label')</label>
 									<span class="m-paymentOption__info">@lang('payment.confirm-order-payment-method-now-info')</span>
-								@else
-									<label for="paymentMethodNow" class="m-paymentOption__label">@lang('payment.confirm-order-payment-method-now-label-album')</label>
 								@endif
 							</div>
 						</div>

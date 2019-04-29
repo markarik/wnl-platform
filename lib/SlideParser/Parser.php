@@ -37,17 +37,18 @@ class Parser
 
 	const PAGE_PATTERN = '/<p>((?!<p>)[\s\S])*(\d\/\d)[\s\S]*<\/p>/';
 
-	const IMAGE_PATTERN = '/<img.*src="(.*?)".*>/';
+	// Provided by digitok at #regex with explanation:
+	// the style="" capture is inside a lookahead
+	// so we look forward from the current position to find style="" in which case it gets placed in group 1
+	// after that, having not advanced the position, we start matching for src=""
+	// the | at the end of the lookahead allows that lookahead to match nothing, for cases where there's no style
+	const IMAGE_PATTERN = '/<img(?=[^>]*?style="([^"]*)"|)[^>]*src="([^"]*)"[^>]*>/';
 
 	const MEDIA_PATTERNS = [
 		'chart' => '/<img.*class="chart".*>/',
 		'movie' => '/<iframe.*youtube\.com.*>/',
 		'audio' => '/<iframe.*clyp.it.*>/',
 	];
-
-	const IMAGE_TEMPLATE = '<img src="%s">';
-
-	const CHART_TEMPLATE = '<img src="%s" class="chart">';
 
 	const IMAGE_VIEWER_TEMPLATE = '
 		<div class="iv-image-container">
@@ -61,7 +62,9 @@ class Parser
 			</a>
 		</div>';
 
-	const GIF_TEMPLATE = '<img src="%s" class="gif">';
+	const MIME_IMAGE_GIF = 'image/gif';
+	const MIME_IMAGE_JPEG = 'image/jpeg';
+	const MIME_IMAGE_PNG = 'image/png';
 
 	protected $categoryTags;
 	protected $courseTags;
@@ -394,7 +397,7 @@ class Parser
 
 		return sprintf(
 			self::IMAGE_VIEWER_TEMPLATE,
-			Bethink::getAssetPublicUrl($path)
+			$this->getAssetPublicUrl($path)
 		);
 	}
 
@@ -475,7 +478,7 @@ class Parser
 
 		foreach ($matches as $match) {
 			$imgTag = $match[0];
-			$imageUrl = $match[1];
+			$imageUrl = $match[2];
 
 			if (stripos($imgTag, 'data-') === false && !$force) {
 				// Check if img tag contains data attributes - if not we don't need to migrate it
@@ -485,20 +488,16 @@ class Parser
 			$image = Image::make(Url::encodeFullUrl($imageUrl));
 			$mime = $image->mime;
 
-			$isChart = (bool) $this->match(self::MEDIA_PATTERNS['chart'], $imgTag);
-			$template = $isChart ? self::CHART_TEMPLATE : self::IMAGE_TEMPLATE;
-
 			switch ($mime){
-				case 'image/gif':
+				case self::MIME_IMAGE_GIF:
 					$data = @file_get_contents($imageUrl);
 					$ext = 'gif';
-					$template = self::GIF_TEMPLATE;
 					break;
-				case 'image/png':
+				case self::MIME_IMAGE_PNG:
 					$data = $resize ? $this->getPng($image) : @file_get_contents($imageUrl);
 					$ext = 'png';
 					break;
-				case 'image/jpeg':
+				case self::MIME_IMAGE_JPEG:
 					$data = $resize ? $this->getJpg($image) : @file_get_contents($imageUrl);
 					$ext = 'jpg';
 					break;
@@ -510,11 +509,11 @@ class Parser
 				$data = $data->__toString();
 			}
 
-			$path = 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
+			$path = $this->getStoragePathForImage($ext);
 			Storage::put('public/' . $path, $data, 'public');
 
-			$viewerHtml = sprintf($template, Bethink::getAssetPublicUrl($path));
-			$html = str_replace($imgTag, $viewerHtml, $html);
+			$imageHtml = $this->getImageHtml($match, $mime, $path);
+			$html = str_replace($imgTag, $imageHtml, $html);
 		}
 
 		return $html;
@@ -558,6 +557,16 @@ class Parser
 		}
 	}
 
+	protected function getStoragePathForImage(string $ext): string
+	{
+		return 'uploads/' . date('Y/m') . '/' . str_random(32) . '.' . $ext;
+	}
+
+	protected function getAssetPublicUrl(string $path): string
+	{
+		return Bethink::getAssetPublicUrl($path);
+	}
+
 	private function getPng(\Intervention\Image\Image  $image): StreamInterface
 	{
 		return $image->resize(1920, 1080, function (Constraint $constraint) {
@@ -576,5 +585,31 @@ class Parser
 		$canvas = Image::canvas($image->width(), $image->height(), '#fff');
 
 		return $canvas->insert($background)->stream('jpg', 80);
+	}
+
+	private function getImageHtml(array $match, string $mime, string $path): string
+	{
+		$class = '';
+
+		if ($this->match(self::MEDIA_PATTERNS['chart'], $match[0])) {
+			$class = 'chart';
+		} else if ($mime === self::MIME_IMAGE_GIF) {
+			$class = 'gif';
+		}
+
+		$html = '<img';
+
+		// Keep in mind that handleCharts strips the inline styles, so this will be always false for charts
+		if (!empty($match[1])) {
+			$html .= ' style="' . $match[1] . '"';
+		}
+
+		if (!empty($class)) {
+			$html .= ' class="' . $class . '"';
+		}
+
+		$html .= ' src="' . $this->getAssetPublicUrl($path) . '">';
+
+		return $html;
 	}
 }

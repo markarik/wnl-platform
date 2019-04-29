@@ -43,7 +43,7 @@
 		position: absolute
 		bottom: 0
 		right: 0
-		background: #fff
+		background: $color-white
 
 </style>
 <script>

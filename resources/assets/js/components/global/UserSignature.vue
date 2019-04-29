@@ -16,7 +16,7 @@
 		text-transform: uppercase
 		font-weight: $font-weight-bold
 		line-height: initial
-		color: #6F7285
+		color: $color-slightly-lighter-gray
 
 		&.regular
 			height: 10px
@@ -41,11 +41,11 @@ const VALID_SIZES = ['regular', 'big'];
 
 export default {
 	props: {
-		'roles': {
+		roles: {
 			type: Array,
 			default: () => [],
 		},
-		'size': {
+		size: {
 			type: String,
 			default: 'regular',
 			validator: (size) => VALID_SIZES.indexOf(size) !== -1

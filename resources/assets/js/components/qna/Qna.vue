@@ -117,7 +117,6 @@
 		word-wrap: break-word
 
 	.qna-meta
-		/*align-items: center*/
 		color: $color-gray
 		display: flex
 		flex-wrap: wrap

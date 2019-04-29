@@ -28,6 +28,7 @@ class CommentTransformer extends ApiTransformer
 			'commentable_type' => $comment->commentable_type,
 			'created_at'       => $comment->created_at->timestamp,
 			'updated_at'       => $comment->updated_at->timestamp,
+			'verified_at'       => $comment->verified_at->timestamp ?? null,
 		];
 
 		if ($this->parent) {

@@ -1,108 +1,71 @@
 <template>
 	<div class="qna-thread" :class="{'is-mobile': isMobile}">
 		<div ref="highlight" class="qna-question">
-			<wnl-vote
-				type="up"
-				:reactable-id="questionId"
-				:reactable-resource="reactableResource"
-				:state="voteState"
-				module="qna"
-			/>
-			<div class="qna-container">
-				<div class="qna-wrapper">
-					<div class="qna-question-content content" v-html="content" />
-					<wnl-bookmark
-						class="qna-bookmark"
-						:reactable-id="questionId"
-						:reactable-resource="reactableResource"
-						:state="bookmarkState"
-						:reactions-disabled="reactionsDisabled"
-						module="qna"
-					/>
-				</div>
-				<div v-if="tags.length > 0" class="tags">
-					<span
-						v-for="(tag, key) in tags"
-						:key="key"
-						class="tag is-light"
-					>
-						<span>{{tag}}</span>
-					</span>
-				</div>
-				<div class="qna-question-meta qna-meta">
-					<div
-						class="modal-activator"
-						:class="{'author-forgotten': author.deleted_at}"
-						@click="showModal"
-					>
-						<wnl-avatar
-							class="avatar"
-							:full-name="author.full_name"
-							:url="author.avatar"
-							size="medium"
-						/>
-						<span class="qna-meta-info">
-							{{author.full_name}}
+			<div class="qna-meta qna-question__header">
+				<wnl-user-generated-content-header
+					resolvable
+					:author="author"
+					:delete-target="deleteTarget"
+					:delete-resource-rotue="resourceRoute"
+					:content="question"
+					@resolveResource="resolveQuestion(id)"
+					@unresolveResource="unresolveQuestion(id)"
+					@verify="verifyQuestion(id)"
+					@unverify="unverifyQuestion(id)"
+				/>
+				<wnl-bookmark
+					:reactable-id="questionId"
+					:reactable-resource="reactableResource"
+					:state="bookmarkState"
+					:reactions-disabled="reactionsDisabled"
+					module="qna"
+				/>
+			</div>
+			<div class="qna-question__content" v-html="content" />
+			<slot name="context" />
+			<div class="qna-question__actions">
+				<wnl-vote
+					class="qna-question__actions__action"
+					type="up"
+					:reactable-id="questionId"
+					:reactable-resource="reactableResource"
+					:state="voteState"
+					module="qna"
+				/>
+				<template v-if="!readOnly">
+					<wnl-rectangle-button class="qna-question__actions__action" @click="showAnswerForm = !showAnswerForm">
+						<span>
+							<template v-if="!showAnswerForm">
+								<span>Odpowiedz</span>
+								<span class="icon is-small answer-icon">
+									<i class="fa fa-comment-o" />
+								</span>
+							</template>
+							<span v-else>Ukryj</span>
 						</span>
-					</div>
-					<span class="qna-meta-info">
-						· {{time}}
-					</span>
-					<span v-if="(isCurrentUserAuthor && !readOnly) || $moderatorFeatures.isAllowed('access')">
-						&nbsp;·&nbsp;<wnl-delete
-							:target="deleteTarget"
-							:request-route="resourceRoute"
-							@deleteSuccess="onDeleteSuccess"
-						/>
-					</span>
-					<wnl-resolve
-						:resource="question"
-						@resolveResource="resolveQuestion(id)"
-						@unresolveResource="unresolveQuestion(id)"
-					/>
-				</div>
-				<slot name="context" />
+					</wnl-rectangle-button>
+				</template>
+				<wnl-watch
+					class="qna-question__actions__action"
+					:reactable-id="questionId"
+					:reactable-resource="reactableResource"
+					:state="watchState"
+					:reactions-disabled="reactionsDisabled"
+					module="qna"
+				/>
 			</div>
 		</div>
-		<div :class="{'qna-answers': true, 'disabled': question.resolved}">
-			<div class="level">
-				<div class="level-left qna-answers-heading">
-					<p>Odpowiedzi ({{answersFromHighestUpvoteCount.length}})</p>
-					<wnl-watch
-						:reactable-id="questionId"
-						:reactable-resource="reactableResource"
-						:state="watchState"
-						:reactions-disabled="reactionsDisabled"
-						module="qna"
-					/>
-				</div>
-				<div v-if="!readOnly" class="level-right">
-					<a
-						v-if="!showAnswerForm"
-						class="button is-small"
-						@click="showAnswerForm = true"
-					>
-						<span>Odpowiedz</span>
-						<span class="icon is-small answer-icon">
-							<i class="fa fa-comment-o" />
-						</span>
-					</a>
-					<a
-						v-if="showAnswerForm"
-						class="button is-small"
-						@click="showAnswerForm = false"
-					>
-						<span>Ukryj</span>
-					</a>
-				</div>
+		<transition name="fade">
+			<wnl-qna-new-answer-form
+				v-if="showAnswerForm"
+				:question-id="id"
+				@submitSuccess="onSubmitSuccess"
+			/>
+		</transition>
+		<div v-if="hasAnswers" :class="{'qna-answers': true, 'disabled': question.resolved}">
+			<div class="qna-question__answers-counter">
+				<span class="qna-question__answers-counter__text">Odpowiedzi: {{allAnswers.length}}</span>
 			</div>
-			<transition name="fade">
-				<wnl-qna-new-answer-form
-					v-if="showAnswerForm"
-					:question-id="id"
-					@submitSuccess="onSubmitSuccess"
-				/>
-			</transition>
 			<wnl-qna-answer
 				v-if="hasAnswers && !showAllAnswers"
 				:answer="latestAnswer"
@@ -127,55 +90,77 @@
 				<span class="icon is-small"><i class="fa fa-angle-down" /></span> Pokaż pozostałe odpowiedzi ({{otherAnswers.length}})
 			</a>
 		</div>
-		<wnl-modal v-if="isVisible" @closeModal="closeModal">
-			<wnl-user-profile-modal :author="author" />
-		</wnl-modal>
 	</div>
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+	@import 'resources/assets/sass/mixins'
 
 	.qna-thread
 		border: $border-light-gray
 		margin-bottom: $margin-huge
 
-	.button .icon.answer-icon
-		margin-left: $margin-small
-		margin-right: $margin-tiny
-
 	.qna-question
 		background: $color-background-lighter-gray
 		border-bottom: $border-light-gray
 		padding: $margin-base
-
-	.modal-activator
 		display: flex
-		flex-direction: row
-		cursor: pointer
-		align-items: center
-		color: $color-sky-blue
+		flex-direction: column
 
-		&.author-forgotten
+		&__header
+			display: flex
+			align-items: flex-start
+			margin-bottom: $margin-base
+
+			@media #{$media-query-tablet}
+				align-items: center
+
+		&__content
+			font-size: $font-size-plus-1
+			justify-content: flex-start
+			padding-right: $margin-base
+			width: 100%
+			word-wrap: break-word
+			word-break: break-word
+			margin-bottom: $margin-big
+
+			strong
+				font-weight: $font-weight-black
+
+		&__actions
+			display: flex
+
+			&__action
+				margin-right: $margin-base
+				.icon.answer-icon
+					margin-left: $margin-small
+
+				&:last-child
+					margin-right: 0
+
+		&__answers-counter
+			font-weight: 600
 			color: $color-gray
-			pointer-events: none
+			text-align: center
+			position: relative
 
-	.qna-question-content
-		font-size: $font-size-plus-1
-		justify-content: flex-start
-		padding-right: $margin-base
-		width: 100%
-		word-wrap: break-word
-		word-break: break-word
+			&:before
+				left: 0
+				top: 50%
+				content: ' '
+				border-bottom: 1px solid $color-light-gray
+				width: 100%
+				position: absolute
+				z-index: -1
 
-		strong
-			font-weight: $font-weight-black
-
-	.qna-answers-heading
-		color: $color-gray
+			&__text
+				display: inline-block
+				background-color: $color-white
+				padding: 0 $margin-medium
 
 	.qna-answers
-		margin: $margin-base $margin-huge $margin-huge $margin-huge
+		margin: $margin-base
 		position: relative
 
 		&.disabled:before
@@ -188,10 +173,6 @@
 			top: -$margin-base
 			width: calc(100% + #{$margin-huge} + #{$margin-huge})
 			z-index: $z-index-overlay
-
-	.qna-thread.is-mobile
-		.qna-answers
-			margin: $margin-base
 
 	.qna-answers-show-all
 		display: block
@@ -207,47 +188,31 @@
 
 		&:hover
 			color: $color-darkest-gray
-
-	.qna-wrapper
-		display: flex
-		align-items: flex-start
-
-	.qna-bookmark
-		justify-content: flex-end
-
-	.tag
-		margin-right: $margin-small
-		margin-top: $margin-small
 </style>
 
 <script>
 import _ from 'lodash';
 import { mapGetters, mapActions } from 'vuex';
 
-import UserProfileModal from 'js/components/users/UserProfileModal';
-import Delete from 'js/components/global/form/Delete';
-import Resolve from 'js/components/global/form/Resolve';
+import WnlUserGeneratedContentHeader from 'js/components/UserGeneratedContentHeader';
 import NewAnswerForm from 'js/components/qna/NewAnswerForm';
 import QnaAnswer from 'js/components/qna/QnaAnswer';
 import Vote from 'js/components/global/reactions/Vote';
 import Bookmark from 'js/components/global/reactions/Bookmark';
 import highlight from 'js/mixins/highlight';
 import Watch from 'js/components/global/reactions/Watch';
-import Modal from 'js/components/global/Modal';
 import moderatorFeatures from 'js/perimeters/moderator';
-import { timeFromS } from 'js/utils/time';
+import WnlRectangleButton from 'js/components/RecatangleButton';
 
 export default {
 	components: {
-		'wnl-delete': Delete,
-		'wnl-resolve': Resolve,
+		WnlUserGeneratedContentHeader,
+		WnlRectangleButton,
 		'wnl-vote': Vote,
 		'wnl-qna-answer': QnaAnswer,
 		'wnl-qna-new-answer-form': NewAnswerForm,
 		'wnl-bookmark': Bookmark,
 		'wnl-watch': Watch,
-		'wnl-modal': Modal,
-		'wnl-user-profile-modal': UserProfileModal,
 	},
 	mixins: [highlight],
 	perimeters: [moderatorFeatures],
@@ -258,7 +223,6 @@ export default {
 			showAnswerForm: false,
 			reactableResource: 'qna_questions',
 			highlightableResources: ['qna_question', 'reaction'],
-			isVisible: false,
 		};
 	},
 	computed: {
@@ -266,7 +230,6 @@ export default {
 			'profile',
 			'getQuestion',
 			'questionAnswersFromHighestUpvoteCount',
-			'questionTags',
 			'getReaction',
 			'questionAnswers',
 			'answer'
@@ -293,9 +256,6 @@ export default {
 		deleteTarget() {
 			return 'to pytanie';
 		},
-		time() {
-			return timeFromS(this.question.created_at);
-		},
 		answersFromHighestUpvoteCount() {
 			return this.questionAnswersFromHighestUpvoteCount(this.id);
 		},
@@ -315,9 +275,6 @@ export default {
 		},
 		allAnswers() {
 			return this.answersFromHighestUpvoteCount;
-		},
-		tags() {
-			return this.questionTags(this.questionId).map((tag) => tag.name) || [];
 		},
 		bookmarkState() {
 			return this.getReaction(this.reactableResource, this.questionId, 'bookmark');
@@ -373,13 +330,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion']),
-		showModal() {
-			this.isVisible = true;
-		},
-		closeModal() {
-			this.isVisible = false;
-		},
+		...mapActions('qna', ['fetchQuestion', 'removeQuestion', 'resolveQuestion', 'unresolveQuestion', 'verifyQuestion', 'unverifyQuestion']),
 		dispatchFetchQuestion() {
 			return this.fetchQuestion(this.id)
 				.catch((error) => {

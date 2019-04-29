@@ -1,37 +1,30 @@
 <template>
-	<div
-		class="vote"
-		:class="iconClass"
-		@click="toggleReaction"
-	>
-		<span class="icon is-small">
-			<i class="fa" :class="hasReactedClass" />
-		</span>
-		<span class="count">{{count}}</span>
-		<span class="flash-bg" :class="{'flash': wasJustClicked}" />
-	</div>
+	<wnl-rectangle-button :class="iconClass" @click="toggleReaction">
+		<div>
+			<span class="icon is-small">
+				<i class="fa" :class="hasReactedClass" />
+			</span>
+			<span class="count">{{count}}</span>
+			<span class="flash-bg" :class="{'flash': wasJustClicked}" />
+		</div>
+	</wnl-rectangle-button>
+
 </template>
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
 
 	.vote
-		align-items: center
-		cursor: pointer
-		display: flex
-		font-size: $font-size-minus-2
-		font-weight: $font-weight-bold
-		padding: 0 $margin-small
-		position: relative
-		transition: all 0.2s
+		border: 1px solid currentColor
 
-	.vote-up
-		color: $color-green
-		flex-direction: column
+		.count
+			margin-left: $margin-small
 
-	.vote-down
-		color: $color-red
-		flex-direction: column-reverse
+		&.vote-up
+			color: $color-green
+
+		&.vote-down
+			color: $color-red
 
 	.flash-bg
 		border-radius: 100px
@@ -59,12 +52,12 @@
 </style>
 
 <script>
-import {
-	reaction
-} from 'js/mixins/reaction';
+import { reaction } from 'js/mixins/reaction';
+import WnlRectangleButton from 'js/components/RecatangleButton';
 
 export default {
 	name: 'Vote',
+	components: { WnlRectangleButton },
 	mixins: [reaction],
 	props: ['type'],
 	data() {
@@ -75,7 +68,7 @@ export default {
 	},
 	computed: {
 		iconClass() {
-			return `vote-${this.type}`;
+			return `vote vote-${this.type}`;
 		},
 		hasReactedClass() {
 			return this.hasReacted ? 'fa-thumbs-up' : 'fa-thumbs-o-up';

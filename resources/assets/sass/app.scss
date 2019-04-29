@@ -48,6 +48,10 @@ html {
 	@include scrollbar-body($color-light-gray);
 }
 
+svg {
+	fill: currentColor;
+}
+
 #app {
 	display: flex;
 	flex-direction: column;

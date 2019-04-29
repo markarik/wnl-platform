@@ -16,6 +16,7 @@
 				</span>
 				<wnl-watch
 					v-if="!hideWatchlist"
+					class="wnl-comments__watch"
 					:reactable-id="commentableId"
 					:reactable-resource="commentableResource"
 					:state="watchState"
@@ -34,6 +35,8 @@
 				@removeComment="onRemoveComment"
 				@resolveComment="onResolveComment"
 				@unresolveComment="onUnresolveComment"
+				@verify="onVerify(comment.id)"
+				@unverify="onUnverify(comment.id)"
 			/>
 			<div class="form-container">
 				<transition name="fade">
@@ -52,6 +55,9 @@
 
 <style lang="sass" rel="stylesheet/sass" scoped>
 	@import 'resources/assets/sass/variables'
+
+	.wnl-comments__watch
+		margin-left: $margin-base
 
 	.separate-controls
 		display: flex
@@ -228,6 +234,20 @@ export default {
 		},
 		onUnresolveComment(id) {
 			this.action('unresolveComment', {
+				commentableResource: this.commentableResource,
+				commentableId: this.commentableId,
+				id,
+			});
+		},
+		onVerify(id) {
+			this.action('verifyComment', {
+				commentableResource: this.commentableResource,
+				commentableId: this.commentableId,
+				id,
+			});
+		},
+		onUnverify(id) {
+			this.action('unverifyComment', {
 				commentableResource: this.commentableResource,
 				commentableId: this.commentableId,
 				id,

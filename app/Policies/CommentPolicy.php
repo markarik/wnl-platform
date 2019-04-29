@@ -12,7 +12,7 @@ class CommentPolicy
 
 	public function before($user, $ability)
 	{
-		if ($user->isAdmin()) {
+		if ($user->isAdmin() || $user->isModerator()) {
 			return true;
 		}
 	}

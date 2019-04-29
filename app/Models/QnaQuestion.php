@@ -16,7 +16,7 @@ class QnaQuestion extends Model implements WithReactions, WithTags, Recordable
 {
 	use Cached, Searchable, SoftDeletes, RecordableTrait;
 
-	protected $fillable = ['text', 'user_id', 'meta', 'discussion_id'];
+	protected $fillable = ['text', 'user_id', 'meta', 'discussion_id', 'verified_at'];
 
 	protected $casts = [
 		'meta' => 'array',
@@ -26,7 +26,7 @@ class QnaQuestion extends Model implements WithReactions, WithTags, Recordable
 		'created' => QnaQuestionPosted::class,
 	];
 
-	protected $dates = ['deleted_at'];
+	protected $dates = ['deleted_at', 'verified_at'];
 
 	public function discussion() {
 		return $this->belongsTo('App\Models\Discussion');

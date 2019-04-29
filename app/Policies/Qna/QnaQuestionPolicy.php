@@ -12,7 +12,7 @@ class QnaQuestionPolicy
 
 	public function before($user, $ability)
 	{
-		if ($user->isAdmin()) {
+		if ($user->isAdmin() || $user->isModerator()) {
 			return true;
 		}
 	}
@@ -49,7 +49,7 @@ class QnaQuestionPolicy
 	 */
 	public function update(User $user, QnaQuestion $qnaQuestion)
 	{
-		return $user->id === $qnaQuestion;
+		return $user->id === $qnaQuestion->user_id;
 	}
 
 	/**

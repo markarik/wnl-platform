@@ -14,11 +14,13 @@ class QnaAnswer extends Model implements WithReactions, Recordable
 {
 	use Cached, Searchable, RecordableTrait;
 
-	protected $fillable = ['text', 'user_id', 'question_id'];
+	protected $fillable = ['text', 'user_id', 'question_id', 'verified_at'];
 
 	protected $dispatchesEvents = [
 		'created' => QnaAnswerPosted::class,
 	];
+
+	protected $dates = ['verified_at'];
 
 	public function question()
 	{

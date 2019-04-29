@@ -5,6 +5,7 @@ namespace Tests\Api\Comments;
 use App\Models\Comment;
 use App\Models\QnaAnswer;
 use App\Models\QnaQuestion;
+use App\Models\Role;
 use App\Models\Screen;
 use App\Models\Tag;
 use App\Models\User;
@@ -68,4 +69,35 @@ class CommentsTest extends ApiTestCase
 			->assertStatus(200);
 	}
 
+	public function testCommentVerifyUnverify()
+	{
+		Comment::flushEventListeners();
+		QnaQuestion::flushEventListeners();
+		QnaAnswer::flushEventListeners();
+
+		/** @var User $user */
+		$user = factory(User::class)->create();
+		$moderatorRole = Role::byName('moderator');
+		$user->roles()->attach($moderatorRole);
+
+		$comment = factory(Comment::class)->create();
+
+		$response = $this
+			->actingAs($user)
+			->json('GET', $this->url("/comments/{$comment->id}"));
+		$response->assertStatus(200);
+		$this->assertEquals(null, $response->json()['verified_at']);
+
+		$response = $this
+			->actingAs($user)
+			->json('PUT', $this->url("/comments/{$comment->id}"), [ 'verified' => true ]);
+		$response->assertStatus(200);
+		$this->assertNotEquals(null, $response->json()['verified_at']);
+
+		$response = $this
+			->actingAs($user)
+			->json('PUT', $this->url("/comments/{$comment->id}"), [ 'verified' => false ]);
+		$response->assertStatus(200);
+		$this->assertEquals(null, $response->json()['verified_at']);
+	}
 }

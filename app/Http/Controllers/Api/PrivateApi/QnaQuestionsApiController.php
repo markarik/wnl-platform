@@ -63,10 +63,9 @@ class QnaQuestionsApiController extends ApiController
 			$qnaQuestion->text = $request->input('text');
 		}
 
-		if ($request->input('verified')) {
-			$qnaQuestion->verified_at = Carbon::now();
+		if ($request->has('verified')) {
+			$qnaQuestion->verified_at = $request->input('verified') ? Carbon::now() : null;
 		}
-
 
 		$qnaQuestion->save();
 
@@ -81,7 +80,7 @@ class QnaQuestionsApiController extends ApiController
 			}
 		}
 
-		return $this->respondOk();
+		return $this->transformAndRespond($qnaQuestion);
 	}
 
 	public function context(Request $request)

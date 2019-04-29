@@ -5,14 +5,17 @@ import { getApiUrl } from 'js/utils/env';
 import { set, delete as destroy } from 'vue';
 import { reactionsGetters, reactionsMutations, reactionsActions } from 'js/store/modules/reactions';
 import { commentsGetters, commentsMutations, commentsActions, commentsState } from 'js/store/modules/comments';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 const include = 'profiles,reactions,qna_answers.profiles,qna_answers.comments,qna_answers.comments.profiles';
 const discussionsInclude = 'qna_questions,qna_questions.profiles,qna_questions.reactions,qna_questions.qna_answers.profiles,qna_questions.qna_answers.comments,qna_questions.qna_answers.comments.profiles';
 
-function _resolveQuestion(questionId, status = true) {
-	return axios.put(getApiUrl(`qna_questions/${questionId}`), {
-		resolved: status
-	});
+function _updateQuestion(questionId, payload) {
+	return axios.put(getApiUrl(`qna_questions/${questionId}`), payload);
+}
+
+function _updateAnswer(answerId, payload) {
+	return axios.put(getApiUrl(`qna_answers/${answerId}`), payload);
 }
 
 function _getQuestionsByTagName(tagName, ids) {
@@ -333,13 +336,53 @@ const actions = {
 			resolve();
 		});
 	},
-	resolveQuestion({ commit }, questionId) {
-		return _resolveQuestion(questionId)
-			.then(() => commit(types.QNA_RESOLVE_QUESTION, { questionId }));
+	async resolveQuestion({ commit, dispatch }, questionId) {
+		try {
+			await _updateQuestion(questionId, { resolved: true });
+			commit(types.QNA_RESOLVE_QUESTION, { questionId });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
 	},
-	unresolveQuestion({ commit }, questionId) {
-		return _resolveQuestion(questionId, false)
-			.then(() => commit(types.QNA_UNRESOLVE_QUESTION, { questionId }));
+	async unresolveQuestion({ commit, dispatch }, questionId) {
+		try {
+			await _updateQuestion(questionId, { resolved: false });
+			commit(types.QNA_UNRESOLVE_QUESTION, { questionId });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
+	},
+	async verifyQuestion({ commit, dispatch }, questionId) {
+		try {
+			const { data: question } = await _updateQuestion(questionId, { verified: true });
+			commit(types.QNA_UPDATE_QUESTION, { questionId, data: { verified_at: question.verified_at } });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
+	},
+	async unverifyQuestion({ commit, dispatch }, questionId) {
+		try {
+			const { data: question } = await _updateQuestion(questionId, { verified: false });
+			commit(types.QNA_UPDATE_QUESTION, { questionId, data: { verified_at: question.verified_at } });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
 	},
 	removeAnswer({ commit }, payload) {
 		return new Promise((resolve) => {
@@ -350,6 +393,32 @@ const actions = {
 			resolve();
 		});
 	},
+	async verifyAnswer({ commit, dispatch }, answerId) {
+		try {
+			const { data: answer } = await _updateAnswer(answerId, { verified: true });
+			commit(types.QNA_UPDATE_ANSWER, { answerId, data: { verified_at: answer.verified_at } });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
+	},
+
+	async unverifyAnswer({ commit, dispatch }, answerId) {
+		try {
+			const { data: answer } = await _updateAnswer(answerId, { verified: false });
+			commit(types.QNA_UPDATE_ANSWER, { answerId, data: { verified_at: answer.verified_at } });
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
+	},
+
 	destroyQna({ commit }) {
 		commit(types.QNA_DESTROY);
 	},

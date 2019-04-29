@@ -30,6 +30,20 @@ if (mix.inProduction()) {
 	mix.version();
 }
 
+// Disable loading svgs by file-loaderto be able to use vue-svg-loader
+Mix.listen('configReady', function(config) {
+	const rules = config.module.rules;
+	const targetRe = /(\.(png|jpe?g|gif|webp)$)/;
+	const originalRegex = /(\.(png|jpe?g|gif|webp)$|^((?!font).)*\.svg$)/;
+
+	for (let rule of rules) {
+		if (rule.test.toString() === originalRegex.toString()) {
+			rule.test = targetRe;
+			break;
+		}
+	}
+});
+
 const webpackConfig = {
 	resolve: {
 		extensions: ['*', '.js', '.jsx', '.vue'],
@@ -38,8 +52,17 @@ const webpackConfig = {
 			'vue$': 'vue/dist/vue.common.js',
 			'js': path.resolve(__dirname, 'resources/assets/js'),
 			'sass': path.resolve(__dirname, 'resources/assets/sass'),
-			'vendor': path.resolve(__dirname, 'resources/vendor')
+			'vendor': path.resolve(__dirname, 'resources/vendor'),
+			'images': path.resolve(__dirname, 'resources/assets/images'),
 		},
+	},
+	module: {
+		rules: [
+			{
+				test: /\.svg$/,
+				loader: 'vue-svg-loader',
+			},
+		],
 	},
 };
 

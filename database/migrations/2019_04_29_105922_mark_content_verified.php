@@ -30,11 +30,12 @@ class MarkContentVerified extends Migration
 			->update(['verified_at' => $now]);
 
 		Comment::whereIn('user_id', self::USERS_TO_MARK)
-			->whereDoesntHave('commentable', function($query) use ($excludedAnswers) {
+			->where(function ($query) use ($excludedAnswers) {
 				$query
 					->where('commentable_type', QnaAnswer::class)
-					->whereIn('commentable_id', $excludedAnswers);
+					->whereNotIn('commentable_id', $excludedAnswers);
 			})
+			->orWhere('commentable_type', '<>', QnaAnswer::class)
 			->update(['verified_at' => $now]);
 	}
 

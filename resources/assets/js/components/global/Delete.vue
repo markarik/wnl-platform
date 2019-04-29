@@ -28,7 +28,7 @@
 </style>
 
 <script>
-import axios from 'axios/index';
+import axios from 'axios';
 
 import Alert from 'js/components/global/Alert';
 

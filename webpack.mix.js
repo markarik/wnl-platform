@@ -30,7 +30,7 @@ if (mix.inProduction()) {
 	mix.version();
 }
 
-// Exclude quill icons
+// Disable loading svgs by file-loaderto be able to use vue-svg-loader
 Mix.listen('configReady', function(config) {
 	const rules = config.module.rules;
 	const targetRe = /(\.(png|jpe?g|gif|webp)$)/;

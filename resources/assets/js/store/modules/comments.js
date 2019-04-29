@@ -6,6 +6,7 @@ import * as types from 'js/store/mutations-types';
 import { getApiUrl } from 'js/utils/env';
 import { getModelByResource, modelToResourceMap } from 'js/utils/config';
 import { reactionsGetters, reactionsMutations, reactionsActions, convertToReactable } from 'js/store/modules/reactions';
+import { ALERT_TYPES } from 'js/consts/alert';
 
 function _fetchComments({ ...commentsQuery }) {
 	if (!commentsQuery.hasOwnProperty('commentable_type')) {
@@ -156,41 +157,73 @@ export const commentsActions = {
 	removeComment({ commit }, payload) {
 		commit(types.REMOVE_COMMENT, payload);
 	},
-	async resolveComment({ commit }, payload) {
-		await _updateComment(payload.id, { resolved: true });
-		commit(types.UPDATE_COMMENT, {
-			id: payload.id,
-			resource: payload.commentableResource,
-			resourceId: payload.commentableId,
-			updatedComment: { resolved: true }
-		});
+	async resolveComment({ commit, dispatch }, payload) {
+		try {
+			await _updateComment(payload.id, { resolved: true });
+			commit(types.UPDATE_COMMENT, {
+				id: payload.id,
+				resource: payload.commentableResource,
+				resourceId: payload.commentableId,
+				updatedComment: { resolved: true }
+			});
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
 	},
-	async unresolveComment({ commit }, payload) {
-		await _updateComment(payload.id, { resolved: false });
-		commit(types.UPDATE_COMMENT, {
-			id: payload.id,
-			resource: payload.commentableResource,
-			resourceId: payload.commentableId,
-			updatedComment: { resolved: false }
-		});
+	async unresolveComment({ commit, dispatch }, payload) {
+		try {
+			await _updateComment(payload.id, { resolved: false });
+			commit(types.UPDATE_COMMENT, {
+				id: payload.id,
+				resource: payload.commentableResource,
+				resourceId: payload.commentableId,
+				updatedComment: { resolved: false }
+			});
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
 	},
-	async verifyComment({ commit }, payload) {
-		const { data: updatedComment } = await _updateComment(payload.id, { verified: true });
-		commit(types.UPDATE_COMMENT, {
-			id: payload.id,
-			resource: payload.commentableResource,
-			resourceId: payload.commentableId,
-			updatedComment
-		});
+	async verifyComment({ commit, dispatch }, payload) {
+		try {
+			const { data: updatedComment } = await _updateComment(payload.id, { verified: true });
+			commit(types.UPDATE_COMMENT, {
+				id: payload.id,
+				resource: payload.commentableResource,
+				resourceId: payload.commentableId,
+				updatedComment
+			});
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
 	},
-	async unverifyComment({ commit }, payload) {
-		const { data: updatedComment } = await _updateComment(payload.id, { verified: false });
-		commit(types.UPDATE_COMMENT, {
-			id: payload.id,
-			resource: payload.commentableResource,
-			resourceId: payload.commentableId,
-			updatedComment
-		});
+	async unverifyComment({ commit, dispatch }, payload) {
+		try {
+			const { data: updatedComment } = await _updateComment(payload.id, { verified: false });
+			commit(types.UPDATE_COMMENT, {
+				id: payload.id,
+				resource: payload.commentableResource,
+				resourceId: payload.commentableId,
+				updatedComment
+			});
+		} catch (e) {
+			$wnl.logger.error(e);
+			dispatch('addAutoDismissableAlert', {
+				text: 'Ups, coś poszło nie tak. Spróbuj ponownie, a jeżeli to nie pomoże to daj nam znać o błędzie.',
+				type: ALERT_TYPES.ERROR,
+			}, { root: true });
+		}
 	},
 	setComments({ commit }, { included, ...comments }) {
 		commit(types.SET_COMMENTS, comments);

@@ -25,7 +25,7 @@ class QnaAnswerObserver
 		$excludedDiscussions = Page::whereNotNull('discussion_id')->pluck('discussion_id')->toArray();
 		$excluded = in_array($qnaAnswer->question->discussion_id, $excludedDiscussions);
 
-		if($qnaAnswer->user->isModerator() || !$excluded){
+		if($qnaAnswer->user->isModerator() && !$excluded){
 			$qnaAnswer->verified_at = now();
 		}
 	}

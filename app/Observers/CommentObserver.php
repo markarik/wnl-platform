@@ -17,8 +17,8 @@ class CommentObserver
 	{
 		$excludedDiscussions = Page::whereNotNull('discussion_id')->pluck('discussion_id')->toArray();
 		$excludedAnswers = QnaAnswer::select()
-			->whereDoesntHave('question', function ($query) use ($excludedDiscussions) {
-				$query->whereNotIn('discussion_id', $excludedDiscussions);
+			->whereHas('question', function ($query) use ($excludedDiscussions) {
+				$query->whereIn('discussion_id', $excludedDiscussions);
 			})->pluck('id')->toArray();
 		$excluded = in_array($comment->commentable_id, $excludedAnswers);
 

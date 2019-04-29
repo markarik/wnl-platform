@@ -4,18 +4,6 @@
 
 	<div class="wnl-login-view">
 		<div class="wnl-login-container">
-			@if($signupsOpen)
-				<div class="notification is-success has-text-centered">
-					<p class="strong">Odkryj naukę na nowo!</p>
-					<p>Zapisy już trwają!</p>
-					<p>
-						<a href="{{ url('/payment/account') }}" class="button is-small is-success is-inverted">
-							<span>Zapisz się na kurs</span>
-							<span class="icon is-small"><i class="fa fa-thumbs-o-up"></i></span>
-						</a>
-					</p>
-				</div>
-			@endif
 			@if(session('logout'))
 				<div class="notification has-text-centered">Wylogowano, do zobaczenia!</div>
 			@endif

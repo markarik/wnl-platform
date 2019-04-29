@@ -46,14 +46,7 @@ class LoginController extends Controller
 	 */
 	public function showLoginForm()
 	{
-		$now = now();
-		$signupsOpen = App\Models\Product::select()
-			->where('slug', App\Models\Product::SLUG_WNL_ONLINE)
-			->whereDate('signups_start', '<=', $now)
-			->whereDate('signups_end', '>=', $now)
-			->count() > 0;
-
-		return view('auth.login', ['signupsOpen' => $signupsOpen]);
+		return view('auth.login');
 	}
 
 	/**

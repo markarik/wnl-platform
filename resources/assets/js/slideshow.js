@@ -246,6 +246,16 @@ function handleControlClick(event) {
 
 function createAnnotations(annotations) {
 	let annotationsHtml = '';
+	const badge = (profile) => {
+		if (profile.roles.indexOf('moderator') !== -1) {
+			return `
+				<div class="annotation-meta-signature">
+					<img src="http://lek.platform.local/images/wnl-crew-badge.svg"> ZESPÓŁ WNL
+				</div>
+			`;
+		}
+		return '';
+	};
 
 	annotations.forEach(annotation => {
 		annotationsHtml += `
@@ -254,6 +264,7 @@ function createAnnotations(annotations) {
 					<span class="author">${ annotation.profiles[0].full_name}</span> ·
 					<span class="time">${ timeFromS(annotation.created_at)}</span>
 				</div>
+				${ badge(annotation.profiles[0]) }
 				<div class="annotation-content">${ annotation.text}</div>
 			</div>`;
 	});

@@ -1,12 +1,10 @@
 <template>
 	<wnl-rectangle-button :class="iconClass" @click="toggleReaction">
-		<div>
-			<span class="icon is-small">
-				<i class="fa" :class="hasReactedClass" />
-			</span>
-			<span class="count">{{count}}</span>
-			<span class="flash-bg" :class="{'flash': wasJustClicked}" />
-		</div>
+		<span class="icon is-small">
+			<i class="fa" :class="hasReactedClass" />
+		</span>
+		<span class="count">{{count}}</span>
+		<span class="flash-bg" :class="{'flash': wasJustClicked}" />
 	</wnl-rectangle-button>
 
 </template>

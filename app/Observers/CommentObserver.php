@@ -11,10 +11,11 @@ class CommentObserver
 {
 	use DispatchesJobs;
 
-
-	public function created(Comment $comment)
+	public function creating(Comment $comment)
 	{
-		//
+		if($comment->user->isModerator()){
+			$comment->verified_at = now();
+		}
 	}
 
 	public function deleted(Comment $comment)

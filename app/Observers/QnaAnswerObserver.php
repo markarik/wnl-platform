@@ -19,9 +19,10 @@ class QnaAnswerObserver
 		$this->dispatch(new DetachReactions($qnaAnswer));
 	}
 
-	public function created(QnaAnswer $qnaAnswer)
+	public function creating(QnaAnswer $qnaAnswer)
 	{
-		//
+		if($qnaAnswer->user->isModerator()){
+			$qnaAnswer->verified_at = now();
+		}
 	}
-
 }

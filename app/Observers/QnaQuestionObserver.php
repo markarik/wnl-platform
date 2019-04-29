@@ -14,9 +14,4 @@ class QnaQuestionObserver
 		$this->dispatch(new DeleteModels($qnaQuestion->qnaAnswers));
 		$this->dispatch(new DetachReactions($qnaQuestion));
 	}
-
-	public function created(QnaQuestion $qnaQuestion)
-	{
-		//
-	}
 }
